@@ -22,6 +22,7 @@ export const appRoutes = {
   etoWidgetView: "/embed/eto/widget/:previewCode",
 
   kyc: "/kyc",
+  onfido: "/onfido",
   wallet: "/wallet",
   dashboard: "/dashboard",
   documents: "/documents",

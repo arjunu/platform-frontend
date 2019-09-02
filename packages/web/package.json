@@ -221,6 +221,8 @@
     "jstimezonedetect": "^1.0.6",
     "lodash": "^4.17.11",
     "moment": "^2.21.0",
+    "onfido": "^4.2.0",
+    "onfido-sdk-ui": "^5.2.3",
     "promise-all": "^1.0.0",
     "proper-url-join": "^1.2.0",
     "qrcode": "^1.2.0",

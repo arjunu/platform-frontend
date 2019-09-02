@@ -37,6 +37,7 @@ import { EmbeddedWidget } from "./testing/embeded-widget/TestEmbededWidget";
 import { WalletRecoverMain } from "./wallet-selector/wallet-recover/WalletRecoverMain";
 import { WalletSelector } from "./wallet-selector/WalletSelector";
 import { Wallet } from "./wallet/Wallet";
+import { Onfido } from "./onfido/Onfido"
 
 // TEMPORARY CONSTANTS -------->
 const GREYP_URL = "/greyp";
@@ -151,6 +152,13 @@ export const AppRouter: React.FunctionComponent = () => (
         component={() => <Redirect to={appRoutes.restore} />}
       />,
     ]}
+
+    {/* onfido prototype */}
+    <OnlyAuthorizedRoute
+      path={appRoutes.onfido}
+      investorComponent={Onfido}
+      exact
+    />
 
     {/* only investors routes */}
     {process.env.NF_PORTFOLIO_PAGE_VISIBLE === "1" && (
