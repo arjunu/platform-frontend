@@ -76,6 +76,7 @@ $_active-color: lighten($_hover-color, 20%);
       }
 
       border: px-to-rem(2px) solid currentColor;
+      border-radius: inherit;
     }
 
     &:hover,
@@ -244,6 +245,11 @@ $_active-color: lighten($_hover-color, 20%);
 
     :local(.content) {
       border-color: $neu-neon-yellow;
+    }
+
+    &:hover {
+      color: $neu-greyish-brown;
+      background-color: $neu-bitter-lemon;
     }
 
     &:disabled {

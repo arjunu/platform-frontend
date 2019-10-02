@@ -5,16 +5,18 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { EEtoDocumentType } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { TTranslatedString } from "../../types";
 import { ETOAddDocuments } from "../eto/shared/EtoAddDocument";
-import { Button, ButtonSize, EButtonLayout, EButtonTheme, EIconPosition } from "./buttons/Button";
-import { RoundedButton } from "./buttons/RoudnedButton";
+import { Button, ButtonSize, EButtonLayout } from "./buttons/Button";
+import { UploadButton } from "./buttons/RoundedButton";
 import { DocumentTile } from "./Document";
 import { InlineIcon } from "./icons/InlineIcon";
 
-import * as upload from "../../assets/img/inline_icons/cloud.svg";
 import * as error from "../../assets/img/inline_icons/error.svg";
-import * as spinner from "../../assets/img/inline_icons/spinner.svg";
+import * as spinner from "../../assets/img/inline_icons/loading_spinner.svg";
 import * as warning from "../../assets/img/inline_icons/warning.svg";
 import * as styles from "./Document.module.scss";
+
+const MAX_UPLOADABLE_SIZE = 20 * 1024;
+const MAX_UPLOADABLE_SIZE_LABEL = "20MB";
 
 interface IUploadableDocumentTileProps {
   documentKey: EEtoDocumentType;
@@ -26,7 +28,124 @@ interface IUploadableDocumentTileProps {
   documentDownloadLinkInactive: boolean;
   busy?: boolean;
   disabled?: boolean;
+  uploadedFileName?: string;
 }
+
+interface IUploadableDocumentDropzone {
+  isDisabled?: boolean;
+  documentKey: EEtoDocumentType;
+  active: boolean;
+  typedFileName: TTranslatedString;
+  busy?: boolean;
+  isFileUploaded: boolean;
+  downloadDocumentStart: (documentType: EEtoDocumentType) => void;
+  uploadedFileName?: string;
+}
+
+const DocumentUploadSpinner: React.FunctionComponent = () => (
+  <div className={styles.documentBusy}>
+    <InlineIcon svgIcon={spinner} className={styles.spinner} />
+    <FormattedMessage id="documents.uploading" />
+  </div>
+);
+
+const DocumentDropzoneContent: React.FunctionComponent<{
+  isDisabled?: boolean;
+  documentKey: EEtoDocumentType;
+}> = ({ isDisabled, documentKey }) => (
+  <>
+    <UploadButton isDisabled={isDisabled} data-test-id={`form.name.${documentKey}.upload`}>
+      <FormattedMessage id="documents.upload.upload" />
+    </UploadButton>
+    <p className={cn(styles.dragDescription)}>
+      <FormattedMessage id="documents.upload.drag-n-drop" />
+    </p>
+  </>
+);
+
+const DocumentUploadDropzoneError: React.FunctionComponent = () => (
+  <div className={styles.error}>
+    <InlineIcon svgIcon={error} className={styles.errorIcon} />
+    <p>
+      <FormattedMessage id="documents.upload.file-rejected" />
+    </p>
+  </div>
+);
+
+const DocumentUploadTypeDescription: React.FunctionComponent<{
+  typedFileName: TTranslatedString;
+}> = ({ typedFileName }) => (
+  <>
+    <p className={styles.uploadTitle}>{typedFileName}</p>
+    <p className={styles.fileSize}>
+      <FormattedMessage
+        id="documents.upload.file-size"
+        values={{ size: MAX_UPLOADABLE_SIZE_LABEL }}
+      />
+    </p>
+  </>
+);
+
+const DocumentUploadTermsChanged: React.FunctionComponent<{
+  documentKey: EEtoDocumentType;
+  downloadDocumentStart: (documentType: EEtoDocumentType) => void;
+  uploadedFileName?: string;
+}> = ({ downloadDocumentStart, documentKey, uploadedFileName }) => (
+  <>
+    <Button
+      data-test-id="documents-download-document"
+      onClick={() => downloadDocumentStart(documentKey)}
+      layout={EButtonLayout.INLINE}
+      size={ButtonSize.SMALL}
+    >
+      {uploadedFileName}
+    </Button>
+    <div className={styles.warning}>
+      <InlineIcon svgIcon={warning} className={styles.warningIcon} />
+      <p>
+        <FormattedMessage id="documents.upload.terms-changed" />
+      </p>
+    </div>
+  </>
+);
+
+export const DocumentUploadableDropzone: React.FunctionComponent<IUploadableDocumentDropzone> = ({
+  isDisabled,
+  documentKey,
+  active,
+  typedFileName,
+  busy,
+  isFileUploaded,
+  downloadDocumentStart,
+  uploadedFileName,
+}) => {
+  const [rejected, setRejected] = React.useState(false);
+
+  return (
+    <>
+      <ETOAddDocuments
+        documentType={documentKey}
+        disabled={isDisabled}
+        maxSize={MAX_UPLOADABLE_SIZE}
+        onDropRejected={() => setRejected(true)}
+        onDropAccepted={() => setRejected(false)}
+      >
+        {busy && <DocumentUploadSpinner />}
+        <DocumentDropzoneContent documentKey={documentKey} isDisabled={isDisabled} />
+      </ETOAddDocuments>
+      <DocumentUploadTypeDescription typedFileName={typedFileName} />
+      {rejected && <DocumentUploadDropzoneError />}
+      {/* TODO: Show when ETO terms changed*/}
+      {active && isFileUploaded && (
+        <DocumentUploadTermsChanged
+          documentKey={documentKey}
+          downloadDocumentStart={downloadDocumentStart}
+          uploadedFileName={uploadedFileName}
+        />
+      )}
+    </>
+  );
+};
 
 export const DocumentUploadableTile: React.FunctionComponent<IUploadableDocumentTileProps> = ({
   documentKey,
@@ -38,10 +157,10 @@ export const DocumentUploadableTile: React.FunctionComponent<IUploadableDocument
   busy,
   disabled,
   startDocumentRemove,
+  uploadedFileName,
 }) => {
-  const [rejected, setRejected] = React.useState(false);
-
   const linkDisabled = documentDownloadLinkInactive || busy;
+  const isDisabled = !active || busy || disabled;
 
   return (
     <div data-test-id={`form.name.${documentKey}`}>
@@ -50,76 +169,26 @@ export const DocumentUploadableTile: React.FunctionComponent<IUploadableDocument
           <DocumentTile
             title={typedFileName}
             extension={".pdf"}
-            active={active}
+            activeUpload={active}
             blank={!isFileUploaded}
-            busy={linkDisabled}
+            busy={busy}
             downloadAction={() => downloadDocumentStart(documentKey)}
-            fileName={documentKey}
+            fileName={uploadedFileName}
             removeAction={() => startDocumentRemove(documentKey)}
+            linkDisabled={linkDisabled}
           />
         </>
       ) : (
-        <>
-          <ETOAddDocuments
-            documentType={documentKey}
-            disabled={!active || busy || disabled}
-            maxSize={20 * 1024}
-            onDropRejected={() => setRejected(true)}
-            onDropAccepted={() => setRejected(false)}
-          >
-            {busy && (
-              <div className={styles.documentBusy}>
-                <InlineIcon svgIcon={spinner} className={styles.spinner} />
-                <FormattedMessage id="documents.uploading" />
-              </div>
-            )}
-            <RoundedButton
-              disabled={!active || busy || disabled}
-              layout={EButtonLayout.SECONDARY}
-              theme={EButtonTheme.NEON}
-              data-test-id={`form.name.${documentKey}.upload`}
-              iconPosition={EIconPosition.ICON_BEFORE}
-              svgIcon={upload}
-              iconStyle={cn("inline-icon", styles.uploadIcon)}
-            >
-              <FormattedMessage id="documents.upload.upload" />
-            </RoundedButton>
-            <p className={cn(styles.dragDescription)}>
-              <FormattedMessage id="documents.upload.drag-n-drop" />
-            </p>
-          </ETOAddDocuments>
-          <p className={styles.uploadTitle}>{typedFileName}</p>
-          <p className={styles.fileSize}>
-            <FormattedMessage id="documents.upload.file-size" values={{ size: "20MB" }} />
-          </p>
-          {rejected && (
-            <div className={styles.error}>
-              <InlineIcon svgIcon={error} className={styles.errorIcon} />
-              <p>
-                <FormattedMessage id="documents.upload.file-rejected" />
-              </p>
-            </div>
-          )}
-          {/* TODO: Show when ETO terms changed*/}
-          {active && isFileUploaded && (
-            <>
-              <Button
-                data-test-id="documents-download-document"
-                onClick={() => downloadDocumentStart(documentKey)}
-                layout={EButtonLayout.INLINE}
-                size={ButtonSize.SMALL}
-              >
-                {documentKey}.pdf
-              </Button>
-              <div className={styles.warning}>
-                <InlineIcon svgIcon={warning} className={styles.warningIcon} />
-                <p>
-                  <FormattedMessage id="documents.upload.terms-changed" />
-                </p>
-              </div>
-            </>
-          )}
-        </>
+        <DocumentUploadableDropzone
+          isDisabled={isDisabled}
+          documentKey={documentKey}
+          active={active}
+          typedFileName={typedFileName}
+          busy={busy}
+          isFileUploaded={isFileUploaded}
+          downloadDocumentStart={downloadDocumentStart}
+          uploadedFileName={uploadedFileName}
+        />
       )}
     </div>
   );

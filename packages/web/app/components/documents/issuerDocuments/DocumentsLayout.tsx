@@ -10,6 +10,7 @@ import { ProductTemplates } from "../../shared/SingleColDocumentWidget";
 import { DocumentList } from "../DocumentList";
 import {
   getInvestorDocumentTitles,
+  getUploadedDocumentName,
   isBusy,
   isFileUploaded,
   renameDocuments,
@@ -83,6 +84,7 @@ const DocumentsLayout: React.FunctionComponent<TComponentProps> = ({
                   Boolean(documentsUploading[key]) || Boolean(documentsDownloading[key])
                 }
                 startDocumentRemove={startDocumentRemove}
+                uploadedFileName={getUploadedDocumentName(etoDocuments, key)}
               />
             ))}
         </section>

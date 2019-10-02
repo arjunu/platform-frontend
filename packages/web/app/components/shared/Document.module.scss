@@ -56,7 +56,7 @@ $loading-background: rgba($neu-charcoal-grey, .8);
   .title {
     font-family: $font-family-roboto;
     color: $neu-charcoal-grey;
-    font-size: px-to-rem(13px);
+    font-size: px-to-rem(14px);
     margin-bottom: 0;
     margin-top: px-to-rem(6px);
   }
@@ -69,29 +69,17 @@ $loading-background: rgba($neu-charcoal-grey, .8);
   .file-name {
     font-family: $font-family-roboto;
     color: $neu-shuttle-gray;
-    font-size: px-to-rem(11px);
-    word-break: break-all;
+    font-size: px-to-rem(12px);
     margin-bottom: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   .buttons {
+    display: flex;
     margin-top: auto;
-
-    .button-icon {
-      width: 28px;
-      height: 28px;
-      color: $neu-charcoal-grey;
-      background-color: $neu-pale-grey;
-      border-radius: 50%;
-      padding: 6px;
-      margin-right: px-to-rem(4px);
-
-      &:hover,
-      &:focus {
-        color: $neu-charcoal-grey;
-        background-color: $neu-bitter-lemon;
-      }
-    }
+    align-items: center;
   }
 }
 
@@ -206,25 +194,5 @@ $loading-background: rgba($neu-charcoal-grey, .8);
   margin: {
     top: 8px;
     bottom: 0;
-  }
-}
-
-.upload-icon {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  color: inherit;
-  flex-shrink: 0;
-
-  &,
-  svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  svg,
-  g {
-    color: inherit;
-    stroke: currentColor;
   }
 }

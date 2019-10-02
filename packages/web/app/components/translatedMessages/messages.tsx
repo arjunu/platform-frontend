@@ -148,6 +148,7 @@ export enum EtoDocumentsMessage {
   ETO_DOCUMENTS_CONFIRM_REMOVE_DOCUMENT_DESCRIPTION = "etoDocumentsConfirmRemoveDocumentDescription",
   ETO_DOCUMENTS_FILE_UPLOADED = "etoDocumentsFileUploaded",
   ETO_DOCUMENTS_FILE_REMOVED = "etoDocumentsFileRemoved",
+  ETO_DOCUMENTS_FILE_REMOVE_FAILED = "etoDocumentsFileRemoveFailed",
   ETO_DOCUMENTS_FILE_EXISTS = "etoDocumentsFileExists",
   ETO_DOCUMENTS_FILE_UPLOAD_FAILED = "etoDocumentsFileUploadFailed",
   ETO_DOCUMENTS_FAILED_TO_DOWNLOAD_FILE = "etoDocumentsFailedToDownloadFile",
@@ -470,6 +471,8 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
       return <FormattedMessage id="eto.modal.file-uploaded" />;
     case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVED:
       return <FormattedMessage id="eto.modal.file-removed" />;
+    case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVE_FAILED:
+      return <FormattedMessage id="eto.modal.file-remove-failed" />;
     case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_EXISTS:
       return <FormattedMessage id="eto.modal.file-already-exists" />;
     case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_UPLOAD_FAILED:

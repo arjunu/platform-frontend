@@ -5,6 +5,7 @@ import { IPFS_PROTOCOL } from "../../config/constants";
 import { EEtoState, EtoStateToCamelcase } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import {
   EEtoDocumentType,
+  IEtoDocument,
   TEtoDocumentTemplates,
   TStateInfo,
 } from "../../lib/api/eto/EtoFileApi.interfaces";
@@ -186,3 +187,19 @@ export const investmentAgreementNotSigned = (
 ) =>
   signedInvestmentAgreementUrl === undefined ||
   signedInvestmentAgreementUrl !== ipfsLinkFromHash(ipfsHash);
+
+export const getUploadedDocumentName = (
+  documentsList: TEtoDocumentTemplates,
+  documentType: string,
+) => {
+  const document = Object.values(documentsList).find(
+    (doc: IEtoDocument) => doc.documentType === documentType,
+  );
+
+  if (document) {
+    // Some file names has path included, return only file name
+    // This probably applies to fixture accounts only
+    return document.name.split("/").pop();
+  }
+  return undefined;
+};

@@ -2,12 +2,12 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { ButtonIcon } from "./buttons/ButtonIcon";
+import { CircleButtonIcon, CircleButtonWarning } from "./buttons/RoundedButton";
 import { InlineIcon } from "./icons/InlineIcon";
 
 import * as remove from "../../assets/img/inline_icons/delete.svg";
 import * as download from "../../assets/img/inline_icons/download.svg";
-import * as spinner from "../../assets/img/inline_icons/spinner.svg";
+import * as spinner from "../../assets/img/inline_icons/loading_spinner.svg";
 import * as styles from "./Document.module.scss";
 
 interface IDocumentProps {
@@ -21,11 +21,12 @@ interface IDocumentTileProps {
   className?: string;
   onlyDownload?: boolean;
   blank?: boolean;
-  active?: boolean;
+  activeUpload?: boolean;
   busy?: boolean;
   fileName?: string;
   downloadAction?: () => void;
   removeAction?: () => void;
+  linkDisabled?: boolean;
 }
 
 export const Document: React.FunctionComponent<IDocumentProps> = ({
@@ -76,55 +77,67 @@ export const DocumentTile: React.FunctionComponent<IDocumentProps & IDocumentTil
   onlyDownload,
   busy,
   fileName,
-  active,
+  activeUpload,
   downloadAction,
   removeAction,
-}) => (
-  <div className={cn(styles.tile, className)}>
-    {busy && (
-      <div className={styles.documentBusy}>
-        <InlineIcon svgIcon={spinner} className={styles.spinner} />
-        {onlyDownload ? (
-          <FormattedMessage id="documents.generating" />
-        ) : (
-          <FormattedMessage id="documents.downloading" />
-        )}
-      </div>
-    )}
-    <DocumentExtension extension={extension} />
-    <p
-      className={cn(styles.title, {
-        [styles.blankTitle]: blank,
-      })}
-    >
-      {title}
-    </p>
-    <p className={styles.fileName}>
-      {fileName}
-      {extension}
-    </p>
-    <div className={styles.buttons}>
-      <ButtonIcon
-        data-test-id="documents-download-document"
-        className={styles.buttonIcon}
-        onClick={downloadAction}
-        type="button"
-        svgIcon={download}
-        alt={<FormattedMessage id="button-icon.down" />}
-      />
-      {active && (
-        <ButtonIcon
-          data-test-id="documents-remove-document"
-          className={styles.buttonIcon}
-          onClick={removeAction}
-          type="button"
-          svgIcon={remove}
-          alt={<FormattedMessage id="button-icon.down" />}
-        />
+  linkDisabled,
+}) => {
+  const [confirmRemove, toggleConfirmRemove] = React.useState(false);
+
+  return (
+    <div className={cn(styles.tile, className)}>
+      {busy && (
+        <div className={styles.documentBusy}>
+          <InlineIcon svgIcon={spinner} className={styles.spinner} />
+          {onlyDownload ? (
+            <FormattedMessage id="documents.generating" />
+          ) : (
+            <FormattedMessage id="documents.downloading" />
+          )}
+        </div>
       )}
+      <DocumentExtension extension={extension} />
+      <p
+        className={cn(styles.title, {
+          [styles.blankTitle]: blank,
+        })}
+      >
+        {title}
+      </p>
+      {/* Show name only for uploaded files */}
+      {!onlyDownload && <p className={styles.fileName}>{fileName}</p>}
+      <div className={styles.buttons}>
+        <CircleButtonIcon
+          data-test-id="documents-download-document"
+          onClick={downloadAction}
+          type="button"
+          svgIcon={download}
+          disabled={busy || linkDisabled}
+          alt={<FormattedMessage id="documents.download.alt" />}
+        />
+        {activeUpload &&
+          (confirmRemove ? (
+            <CircleButtonWarning
+              data-test-id="documents-remove-document-confirm"
+              onClick={removeAction}
+              type="button"
+              disabled={busy}
+            >
+              Remove?
+            </CircleButtonWarning>
+          ) : (
+            <CircleButtonIcon
+              data-test-id="documents-remove-document"
+              onClick={() => toggleConfirmRemove(!confirmRemove)}
+              type="button"
+              svgIcon={remove}
+              alt={<FormattedMessage id="documents.remove.alt" />}
+            />
+          ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 DocumentTile.defaultProps = {
   busy: false,

@@ -199,16 +199,18 @@ function* uploadEtoFileEffect(
 }
 
 function* removeEtoFileEffect(
-  { apiEtoFileService, notificationCenter }: TGlobalDependencies,
+  { apiEtoFileService, notificationCenter, logger }: TGlobalDependencies,
   documentType: EEtoDocumentType,
 ): Iterator<any> {
   const matchingDocument = yield getDocumentOfType(documentType);
 
   if (matchingDocument) {
     yield apiEtoFileService.deleteSpecificEtoDocument(matchingDocument.ipfsHash);
+    notificationCenter.info(createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVED));
+  } else {
+    logger.error("Could not remove, missing ETO document", documentType);
+    notificationCenter.error(createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVE_FAILED));
   }
-
-  notificationCenter.info(createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVED));
 }
 
 function* uploadEtoFile(
