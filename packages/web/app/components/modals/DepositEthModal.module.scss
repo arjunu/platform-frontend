@@ -33,7 +33,7 @@
 
 .address {
   @include media-breakpoint-up(sm) {
-    max-width: px-to-rem(360px);
+    max-width: px-to-rem(400px);
   }
   margin: 0 auto;
 }
