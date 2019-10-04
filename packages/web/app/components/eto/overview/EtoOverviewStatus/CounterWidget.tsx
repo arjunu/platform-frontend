@@ -54,11 +54,12 @@ const CounterBase: React.FunctionComponent<TCounterWidgetProps> = ({
     </div>
     <Counter endDate={endDate} onFinish={setCounterFinished} />
     {countdownFinished && (
-      <FormattedMessage
-        tagName={"p"}
-        id="shared-component.eto-overview.waiting-for-next-block-with-state"
-        values={{ stateName }}
-      />
+      <p>
+        <FormattedMessage
+          id="shared-component.eto-overview.waiting-for-next-block-with-state"
+          values={{ stateName }}
+        />
+      </p>
     )}
   </div>
 );

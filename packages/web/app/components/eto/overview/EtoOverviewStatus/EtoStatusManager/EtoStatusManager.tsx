@@ -4,6 +4,7 @@ import { compose } from "recompose";
 import { selectIsAuthorized } from "../../../../../modules/auth/selectors";
 import { selectEtoOnChainStateById } from "../../../../../modules/eto/selectors";
 import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { isOnChain } from "../../../../../modules/eto/utils";
 import {
   selectInitialMaxCapExceeded,
   selectIsEligibleToPreEto,
@@ -43,7 +44,7 @@ const EtoStatusComponentChooser: React.FunctionComponent<IStateProps & IExternal
   isEmbedded,
 }) => {
   // It's possible for contract to be undefined if eto is not on chain yet
-  const timedState = eto.contract ? eto.contract.timedState : EETOStateOnChain.Setup;
+  const timedState = isOnChain(eto) ? eto.contract.timedState : EETOStateOnChain.Setup;
   const isEtoActive =
     (isEligibleToPreEto && timedState === EETOStateOnChain.Whitelist) ||
     timedState === EETOStateOnChain.Public;
@@ -59,19 +60,17 @@ const EtoStatusComponentChooser: React.FunctionComponent<IStateProps & IExternal
         const nextStateStartDate = eto.contract ? eto.contract.startOfStates[nextState] : undefined;
 
         return (
-          <>
-            <CampaigningActivatedWidget
-              investmentCalculatedValues={eto.investmentCalculatedValues}
-              minPledge={eto.minTicketEur}
-              etoId={eto.etoId}
-              investorsLimit={eto.maxPledges}
-              nextState={nextState}
-              nextStateStartDate={nextStateStartDate}
-              whitelistingIsActive={eto.isBookbuilding}
-              canEnableBookbuilding={eto.canEnableBookbuilding}
-              keyQuoteFounder={eto.company.keyQuoteFounder}
-            />
-          </>
+          <CampaigningActivatedWidget
+            investmentCalculatedValues={eto.investmentCalculatedValues}
+            minPledge={eto.minTicketEur}
+            etoId={eto.etoId}
+            investorsLimit={eto.maxPledges}
+            nextState={nextState}
+            nextStateStartDate={nextStateStartDate}
+            whitelistingIsActive={eto.isBookbuilding}
+            canEnableBookbuilding={eto.canEnableBookbuilding}
+            keyQuoteFounder={eto.company.keyQuoteFounder}
+          />
         );
       } else {
         return <RegisterNowWidget isEmbedded={isEmbedded} />;

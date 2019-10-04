@@ -12,16 +12,24 @@ import { Message } from "../Message";
 type TWhitelistingLimitReached = {
   pledgedAmount: number;
   investorsCount: number;
+  isPledgedByUser: boolean;
 };
 
 export const WhitelistingLimitReached: React.FunctionComponent<TWhitelistingLimitReached> = ({
   pledgedAmount,
   investorsCount,
+  isPledgedByUser,
 }) => (
   <Message
     data-test-id="eto-overview-status-whitelisting-limit-reached"
     showTick={false}
-    title={<FormattedMessage id="shared-component.eto-overview.whitelist.success" />}
+    title={
+      isPledgedByUser ? (
+        <FormattedMessage id="shared-component.eto-overview.whitelist.success-signed" />
+      ) : (
+        <FormattedMessage id="shared-component.eto-overview.whitelist.success" />
+      )
+    }
     summary={
       <FormattedMessage
         id="shared-component.eto-overview.whitelist.success.summary"
