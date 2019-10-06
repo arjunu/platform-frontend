@@ -10,6 +10,40 @@ import { CampaigningActivatedWidgetLayout } from "./CampaigningActivatedWidget";
 
 storiesOf("ETO/CampaigningActivatedWidgetLayout", module)
   .addDecorator(story => <Panel>{story()}</Panel>)
+  .add("Active, not authorized, no investors pledged", () => (
+    <CampaigningActivatedWidgetLayout
+      whitelistingState={EWhitelistingState.ACTIVE}
+      countdownDate={undefined}
+      etoId="test"
+      investorsLimit={500}
+      minPledge={10}
+      nextState={EETOStateOnChain.Whitelist}
+      keyQuoteFounder="Quotes are like boats"
+      pledgedAmount={0}
+      investorsCount={0}
+      isInvestor={false}
+      isVerifiedInvestor={false}
+      isAuthorized={false}
+      isEmbedded={false}
+    />
+  ))
+  .add("Active, not authorized, some investors pledged", () => (
+    <CampaigningActivatedWidgetLayout
+      whitelistingState={EWhitelistingState.ACTIVE}
+      countdownDate={undefined}
+      etoId="test"
+      investorsLimit={500}
+      minPledge={10}
+      nextState={EETOStateOnChain.Whitelist}
+      keyQuoteFounder="Quotes are like boats"
+      pledgedAmount={10000}
+      investorsCount={5}
+      isInvestor={false}
+      isVerifiedInvestor={false}
+      isAuthorized={false}
+      isEmbedded={false}
+    />
+  ))
   .add("Active, verified investor view, investor didn't pledge", () => (
     <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.ACTIVE}

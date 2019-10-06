@@ -3,11 +3,11 @@ import * as React from "react";
 import { EWhitelistingState } from "../../../../../modules/bookbuilding-flow/utils";
 import { assertNever } from "../../../../../utils/assertNever";
 import { CounterWidget } from "../CounterWidget";
-import { RegisterNowWidget } from "../RegisterNowWidget";
 import {
   connectCampaigningActivatedWidget,
   TComponentProps,
 } from "./connectCampaigningActivatedWidget";
+import { RegisterNowWidget } from "./RegisterNowWidget";
 import { StartDateNotSet } from "./StartDateNotSet";
 import { WhitelistingActive } from "./WhitelistingActive";
 import { WhitelistingLimitReached } from "./WhitelistingLimitReached";
