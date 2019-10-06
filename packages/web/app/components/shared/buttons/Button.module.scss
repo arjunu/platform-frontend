@@ -137,8 +137,13 @@ $_active-color: lighten($_hover-color, 20%);
 
     &#{$button}-neon {
       &:disabled {
-        color: $neu-gull-gray;
-        background-color: $neu-pale-grey;
+        &,
+        &:hover,
+        & > .content {
+          color: $neu-gull-gray;
+          background-color: $neu-pale-grey;
+          border-radius: inherit;
+        }
       }
     }
   }
