@@ -1,4 +1,3 @@
-import BigNumber from "bignumber.js";
 import * as cn from "classnames";
 import * as moment from "moment";
 import * as React from "react";
@@ -45,7 +44,7 @@ import * as styles from "./ChooseEtoStartDateWidget.module.scss";
 
 interface IStateProps {
   etoDate?: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   newDateSaving: boolean;
   transactionMining: boolean;
   issuerEtoLoading: boolean;
@@ -55,7 +54,7 @@ interface IStateProps {
 
 interface IChangeDateStateProps {
   etoDate: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   canChangeEtoStartDate: boolean;
 }
 
@@ -70,7 +69,7 @@ interface IDispatchProps {
 
 interface IDateChooserProps {
   etoDate?: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   uploadDate: (time: moment.Moment) => void;
   canChangeEtoStartDate: boolean;
 }
@@ -200,7 +199,7 @@ const DateChooserClosed = ({
 );
 
 class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserState> {
-  minOffsetPeriodInMinutes = Math.floor(this.props.minOffsetPeriod.div(60).toNumber());
+  minOffsetPeriodInMinutes = Math.floor(this.props.minOffsetPeriod / 60);
   // dates get rounded down. Add 3 minutes so that it shows "in 14 days" instead of "in 13 days 23 hours"
   defaultOffsetInMinutes = this.minOffsetPeriodInMinutes * 2 + 3;
 
@@ -336,7 +335,7 @@ const EtoStartDateWidgetComponent: React.ComponentType<
       <FormattedHTMLMessage
         tagName="span"
         id="settings.choose-pre-eto-date.book-building-will-stop"
-        values={{ minOffsetPeriod: props.minOffsetPeriod.div(DAY).toNumber() }}
+        values={{ minOffsetPeriod: props.minOffsetPeriod / DAY }}
       />
     }
     columnSpan={columnSpan}

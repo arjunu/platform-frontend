@@ -10,6 +10,8 @@ import { createMessage } from "../../components/translatedMessages/utils";
 import { EEtoState } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { EETOStateOnChain } from "../eto/types";
 
+// TODO: remove state machine duplication! EEtoSubState has same role
+// use one state machine to drive both thumbnail and this widget!
 export enum EWhitelistingState {
   ACTIVE = "active",
   NOT_ACTIVE = "notActive",

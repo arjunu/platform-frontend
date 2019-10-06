@@ -62,7 +62,6 @@ export const NEW_SHARES_TO_ISSUE_IN_WHITELIST = 1;
 export const NEW_SHARES_TO_ISSUE_IN_FIXED_SLOTS = 1;
 export const BOOKBUILDING_WATCHER_DELAY = 6000;
 export const COMPANY_TAGS_LIMIT = 6;
-export const DEFAULT_DATE_TO_WHITELIST_MIN_DURATION = 7 * 24 * 60 * 60;
 export const DAY = 24 * 60 * 60;
 export const MAX_PERCENTAGE = 100;
 /**

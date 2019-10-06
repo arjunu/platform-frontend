@@ -1,8 +1,6 @@
-import BigNumber from "bignumber.js";
 import { find, some } from "lodash";
 import { createSelector } from "reselect";
 
-import { DEFAULT_DATE_TO_WHITELIST_MIN_DURATION } from "../../config/constants";
 import {
   EEtoState,
   TCompanyEtoData,
@@ -158,12 +156,9 @@ export const selectIssuerEtoOfferingDocumentType = (
   return undefined;
 };
 
-export const selectIssuerEtoDateToWhitelistMinDuration = (state: IAppState): BigNumber => {
+export const selectIssuerEtoDateToWhitelistMinDuration = (state: IAppState): number => {
   const eto = selectIssuerEto(state);
-  // in case of undefined return platform default (7 days)
-  return new BigNumber(
-    eto ? eto.product.dateToWhitelistMinDuration : DEFAULT_DATE_TO_WHITELIST_MIN_DURATION,
-  );
+  return eto!.product.dateToWhitelistMinDuration;
 };
 
 export const selectIssuerEtoLoading = (state: IAppState): boolean => state.etoIssuer.loading;

@@ -1,6 +1,7 @@
 import * as cn from "classnames";
 import * as moment from "moment";
 import * as React from "react";
+import { FormattedRelative } from "react-intl";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EEtoState } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
@@ -16,7 +17,6 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../shared/formatters/utils";
-import { CounterWidget } from "../EtoOverviewStatus/CounterWidget";
 import { getCurrentInvestmentProgressPercentage } from "../utils";
 import { InvestmentStatus } from "./InvestmentStatus/InvestmentStatus";
 import { Whitelist } from "./Whitelist/Whitelist";
@@ -59,30 +59,27 @@ const EtoCardStatusManager = ({ eto }: IExternalProps) => {
     case EETOStateOnChain.Setup: {
       return <Whitelist eto={eto} />;
     }
-    case EETOStateOnChain.Whitelist: {
-      const endDate = eto.contract!.startOfStates[EETOStateOnChain.Public]!;
 
-      if (eto.subState === EEtoSubState.COUNTDOWN_TO_PUBLIC_SALE) {
-        return (
-          <CounterWidget
-            endDate={endDate}
-            awaitedState={EETOStateOnChain.Public}
-            etoId={eto.etoId}
-          />
-        );
-      } else {
-        return (
-          <>
-            <InvestmentStatus eto={eto} />
-            <p className={styles.info}>
+    case EETOStateOnChain.Whitelist: {
+      const publicSaleStartDate = eto.contract!.startOfStates[EETOStateOnChain.Public]!;
+
+      return (
+        <>
+          <InvestmentStatus eto={eto} />
+
+          <p className={styles.info}>
+            {/* user is not allowed to invest in presale */}
+            {eto.subState === EEtoSubState.COUNTDOWN_TO_PUBLIC_SALE ? (
               <FormattedMessage
                 id="eto-overview-thumbnail.presale.days-to-public-sale"
-                values={{ endDate: moment(new Date()).to(endDate, true) }}
+                values={{ startDate: <FormattedRelative value={publicSaleStartDate} /> }}
               />
-            </p>
-          </>
-        );
-      }
+            ) : (
+              <FormattedMessage id="eto-overview-thumbnail.presale.view-offer" />
+            )}
+          </p>
+        </>
+      );
     }
 
     case EETOStateOnChain.Public: {

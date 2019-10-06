@@ -1,4 +1,3 @@
-import BigNumber from "bignumber.js";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { branch, renderComponent } from "recompose";
@@ -46,7 +45,7 @@ interface IStateProps {
   etoId: string;
   canEnableBookbuilding: boolean;
   columnSpan?: EColumnSpan;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
 }
 
 interface IExternalProps {
@@ -191,7 +190,7 @@ export const BookBuildingWidgetComponent: React.FunctionComponent<IProps> = ({
           <FormattedHTMLMessage
             tagName="span"
             id="settings.book-building-widget.book-building-enabled-text"
-            values={{ minOffsetPeriod: minOffsetPeriod.div(DAY).toNumber() }}
+            values={{ minOffsetPeriod: minOffsetPeriod / DAY }}
           />
         }
         buttonText={<FormattedMessage id="settings.book-building-widget.stop-book-building" />}
