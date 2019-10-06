@@ -4,11 +4,13 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { appRoutes } from "../../../appRoutes";
 import { ButtonLink } from "../../../shared/buttons/ButtonLink";
 
-const RegisterNowWidget: React.FunctionComponent<{ isEmbedded: boolean }> = ({ isEmbedded }) => (
+type TExternalProps = { isEmbedded: boolean; pledgedAmount: number; investorsCount: number };
+
+const RegisterNowWidget: React.FunctionComponent<TExternalProps> = ({ isEmbedded }) => (
   <>
-    <div>
+    <p className="mb-0">
       <FormattedMessage id="shared-component.eto-overview.register-cta" />
-    </div>
+    </p>
     <ButtonLink
       innerClassName="mt-3"
       to={appRoutes.register}

@@ -1,7 +1,9 @@
 import * as React from "react";
 
 import { EWhitelistingState } from "../../../../../modules/bookbuilding-flow/utils";
+import { assertNever } from "../../../../../utils/assertNever";
 import { CounterWidget } from "../CounterWidget";
+import { RegisterNowWidget } from "../RegisterNowWidget";
 import {
   connectCampaigningActivatedWidget,
   TComponentProps,
@@ -26,7 +28,19 @@ const CampaigningActivatedWidgetLayout: React.FunctionComponent<TComponentProps>
   pledge,
   isVerifiedInvestor,
   whitelistingState,
+  isAuthorized,
+  isEmbedded,
 }) => {
+  if (!isAuthorized) {
+    return (
+      <RegisterNowWidget
+        isEmbedded={isEmbedded}
+        investorsCount={investorsCount}
+        pledgedAmount={pledgedAmount}
+      />
+    );
+  }
+
   switch (whitelistingState) {
     case EWhitelistingState.ACTIVE:
       return (
@@ -74,8 +88,10 @@ const CampaigningActivatedWidgetLayout: React.FunctionComponent<TComponentProps>
         </>
       );
     case EWhitelistingState.NOT_ACTIVE:
-    default:
       return <WhitelistingNotActive keyQuoteFounder={keyQuoteFounder} />;
+
+    default:
+      return assertNever(whitelistingState);
   }
 };
 

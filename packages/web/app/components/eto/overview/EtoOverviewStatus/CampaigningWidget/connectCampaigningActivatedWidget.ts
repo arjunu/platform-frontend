@@ -2,7 +2,11 @@ import { branch, compose, renderComponent, setDisplayName, withProps } from "rec
 
 import { TEtoInvestmentCalculatedValues } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IPledge } from "../../../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
-import { selectIsInvestor, selectIsVerifiedInvestor } from "../../../../../modules/auth/selectors";
+import {
+  selectIsAuthorized,
+  selectIsInvestor,
+  selectIsVerifiedInvestor,
+} from "../../../../../modules/auth/selectors";
 import {
   selectInvestorCount,
   selectMyPledge,
@@ -14,6 +18,7 @@ import {
 } from "../../../../../modules/bookbuilding-flow/utils";
 import { EETOStateOnChain } from "../../../../../modules/eto/types";
 import { appConnect } from "../../../../../store";
+import { OmitKeys } from "../../../../../types";
 import { LoadingIndicator } from "../../../../shared/loading-indicator/LoadingIndicator";
 
 interface IExternalProps {
@@ -26,43 +31,36 @@ interface IExternalProps {
   whitelistingIsActive: boolean;
   keyQuoteFounder: string;
   canEnableBookbuilding: boolean;
+  isEmbedded: boolean;
 }
 
 interface IStateProps {
   pledgedAmount: number;
   investorsCount: number;
+  isAuthorized: boolean;
   isInvestor: boolean;
-  pledge?: IPledge;
   isVerifiedInvestor: boolean;
+  pledge?: IPledge;
 }
 
 interface IWithProps {
   whitelistingState: EWhitelistingState;
   countdownDate: Date | undefined;
+  maxPledge?: number;
 }
 
-type TComponentProps = {
-  investorsLimit: number;
-  pledgedAmount: number;
-  investorsCount: number;
-  isInvestor: boolean;
-  etoId: string;
-  minPledge: number;
-  maxPledge?: number;
-  nextState: EETOStateOnChain;
-  countdownDate: Date | undefined;
-  keyQuoteFounder: string;
-  pledge?: IPledge;
-  isVerifiedInvestor: boolean;
-  whitelistingState: EWhitelistingState;
-};
+type TComponentProps = OmitKeys<IExternalProps, "canEnableBookbuilding" | "whitelistingIsActive"> &
+  IStateProps &
+  IWithProps;
 
 const connectCampaigningActivatedWidget = (
-  WrappedComponent: React.FunctionComponent<TComponentProps>,
+  WrappedComponent: React.ComponentType<TComponentProps>,
 ) =>
   compose<TComponentProps, IExternalProps>(
+    setDisplayName("CampaigningActivatedWidget"),
     appConnect<IStateProps, {}, IExternalProps>({
       stateToProps: (state, props) => ({
+        isAuthorized: selectIsAuthorized(state.auth),
         isInvestor: selectIsInvestor(state),
         isVerifiedInvestor: selectIsVerifiedInvestor(state),
         pledgedAmount: selectPledgedAmount(state, props.etoId),
@@ -70,6 +68,8 @@ const connectCampaigningActivatedWidget = (
         pledge: selectMyPledge(state, props.etoId),
       }),
     }),
+
+    // TODO: check why with `maxPledge` missing error is not shown
     withProps<IWithProps, IStateProps & IExternalProps>(
       ({
         nextStateStartDate,
@@ -100,7 +100,6 @@ const connectCampaigningActivatedWidget = (
         whitelistingState === EWhitelistingState.ACTIVE && !investmentCalculatedValues,
       renderComponent(LoadingIndicator),
     ),
-    setDisplayName("CampaigningActivatedWidget"),
   )(WrappedComponent);
 
 export { connectCampaigningActivatedWidget, TComponentProps };
