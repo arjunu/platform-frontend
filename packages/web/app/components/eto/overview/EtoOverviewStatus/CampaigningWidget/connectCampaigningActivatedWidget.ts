@@ -68,8 +68,6 @@ const connectCampaigningActivatedWidget = (
         pledge: selectMyPledge(state, props.etoId),
       }),
     }),
-
-    // TODO: check why with `maxPledge` missing error is not shown
     withProps<IWithProps, IStateProps & IExternalProps>(
       ({
         nextStateStartDate,
