@@ -22,7 +22,6 @@ export const WhitelistingSuspended: React.FunctionComponent<TWhitelistingLimitSu
 }) => (
   <Message
     data-test-id="eto-overview-status-whitelisting-suspended"
-    showTick={false}
     title={
       isPledgedByUser ? (
         <FormattedMessage id="shared-component.eto-overview.whitelist.suspended-signed" />

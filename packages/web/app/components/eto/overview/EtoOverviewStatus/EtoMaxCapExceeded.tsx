@@ -17,7 +17,7 @@ import {
 } from "../../../shared/formatters/utils";
 import { CounterWidget } from "./CounterWidget";
 import { InvestmentProgress } from "./InvestmentWidget/InvestmentProgress";
-import { Message } from "./Message";
+import { SuccessMessage } from "./Message";
 
 import * as styles from "./EtoMaxCapExceeded.module.scss";
 
@@ -53,7 +53,7 @@ const EtoMaxCapExceededComponent: React.FunctionComponent<
     <div className={styles.maxCapExceeded}>
       <div className={cn(styles.header, styles.center)}>
         <div>
-          <Message title={<FormattedMessage id="shared-component.eto-overview.success" />} />
+          <SuccessMessage title={<FormattedMessage id="shared-component.eto-overview.success" />} />
         </div>
       </div>
       <div className={styles.header}>

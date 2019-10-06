@@ -24,7 +24,6 @@ const RegisterNowWidget: React.FunctionComponent<TExternalProps> = ({
     <>
       <Message
         data-test-id="eto-overview-status-whitelisting-suspended"
-        showTick={false}
         title={
           wasPledged ? (
             <FormattedMessage
