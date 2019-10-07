@@ -84,7 +84,7 @@ $_active-color: lighten($_hover-color, 20%);
       .content {
         background-color: $_hover-color;
         border-color: $_hover-color;
-        color: $neu-white-two;
+        color: $neu-solid-white;
       }
     }
 
@@ -92,7 +92,7 @@ $_active-color: lighten($_hover-color, 20%);
       .content {
         background-color: $_active-color;
         border-color: $_active-color;
-        color: $neu-white-two;
+        color: $neu-solid-white;
       }
     }
 
@@ -216,7 +216,7 @@ $_active-color: lighten($_hover-color, 20%);
 
   // themes
   &-white {
-    color: $neu-white-two;
+    color: $neu-solid-white;
   }
 
   &-dark {

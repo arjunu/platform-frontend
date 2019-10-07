@@ -73,7 +73,7 @@ $_logo-padding-sm: 16px;
 .short-description {
   @include font-headline;
 
-  color: $neu-white-two;
+  color: $neu-solid-white;
   font-weight: $font-weight-bold;
   text-transform: uppercase;
   overflow: hidden;

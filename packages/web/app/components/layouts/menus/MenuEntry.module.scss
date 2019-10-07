@@ -44,7 +44,7 @@ $dropdown-entry-height: px-to-rem(48px);
   align-items: center;
   justify-content: flex-start;
   text-decoration: none;
-  background-color: $neu-white-two;
+  background-color: $neu-solid-white;
   width: 100%;
 
   padding: 0;
@@ -75,7 +75,7 @@ $dropdown-entry-height: px-to-rem(48px);
 
 .dropdown-separator {
   height: $dropdown-entry-height;
-  background-color: $neu-white-two;
+  background-color: $neu-solid-white;
 }
 
 .name {

@@ -1,4 +1,3 @@
-import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
@@ -6,12 +5,11 @@ import { EEtoDocumentType } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { TTranslatedString } from "../../types";
 import { ETOAddDocuments } from "../eto/shared/EtoAddDocument";
 import { Button, ButtonSize, EButtonLayout } from "./buttons/Button";
-import { UploadButton } from "./buttons/RoundedButton";
 import { DocumentTile } from "./Document";
 import { InlineIcon } from "./icons/InlineIcon";
+import {SingleFileUploadInner, SingleFileUploadSpinner} from "./SingleFileUpload";
 
 import * as error from "../../assets/img/inline_icons/error.svg";
-import * as spinner from "../../assets/img/inline_icons/loading_spinner.svg";
 import * as warning from "../../assets/img/inline_icons/warning.svg";
 import * as styles from "./Document.module.scss";
 
@@ -41,27 +39,6 @@ interface IUploadableDocumentDropzone {
   downloadDocumentStart: (documentType: EEtoDocumentType) => void;
   uploadedFileName?: string;
 }
-
-const DocumentUploadSpinner: React.FunctionComponent = () => (
-  <div className={styles.documentBusy}>
-    <InlineIcon svgIcon={spinner} className={styles.spinner} />
-    <FormattedMessage id="documents.uploading" />
-  </div>
-);
-
-const DocumentDropzoneContent: React.FunctionComponent<{
-  isDisabled?: boolean;
-  documentKey: EEtoDocumentType;
-}> = ({ isDisabled, documentKey }) => (
-  <>
-    <UploadButton isDisabled={isDisabled} data-test-id={`form.name.${documentKey}.upload`}>
-      <FormattedMessage id="documents.upload.upload" />
-    </UploadButton>
-    <p className={cn(styles.dragDescription)}>
-      <FormattedMessage id="documents.upload.drag-n-drop" />
-    </p>
-  </>
-);
 
 const DocumentUploadDropzoneError: React.FunctionComponent = () => (
   <div className={styles.error}>
@@ -130,8 +107,8 @@ export const DocumentUploadableDropzone: React.FunctionComponent<IUploadableDocu
         onDropRejected={() => setRejected(true)}
         onDropAccepted={() => setRejected(false)}
       >
-        {busy && <DocumentUploadSpinner />}
-        <DocumentDropzoneContent documentKey={documentKey} isDisabled={isDisabled} />
+        {busy && <SingleFileUploadSpinner />}
+        <SingleFileUploadInner data-test-id={`form.name.${documentKey}.upload`} isDisabled={isDisabled} />
       </ETOAddDocuments>
       <DocumentUploadTypeDescription typedFileName={typedFileName} />
       {rejected && <DocumentUploadDropzoneError />}

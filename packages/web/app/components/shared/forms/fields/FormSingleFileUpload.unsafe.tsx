@@ -120,6 +120,7 @@ export class FormSingleFileUploadComponent extends React.Component<
             className={className}
             style={style}
             disabled={disabled}
+            removeAction={() => this.setValue(undefined)}
           />
         )}
       />

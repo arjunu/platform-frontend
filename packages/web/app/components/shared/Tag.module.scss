@@ -71,11 +71,11 @@
 
   &:global(.dark) {
     background-color: $neu-charcoal-grey;
-    color: $neu-white-two;
+    color: $neu-solid-white;
   }
 
   &:global(.white) {
-    color: $neu-white-two;
+    color: $neu-solid-white;
   }
 
   :global(.inline-icon) {

@@ -44,7 +44,7 @@
   .icon {
     &,
     &:hover {
-      color: $neu-white-two;
+      color: $neu-solid-white;
     }
   }
 }
@@ -69,7 +69,7 @@
   }
 
   .content {
-    background-color: $neu-white-two;
+    background-color: $neu-solid-white;
     padding: 5px 7px;
     z-index: $z-index-base;
   }
@@ -77,7 +77,7 @@
   .ornament {
     @include rect(9px);
 
-    background-color: $neu-white-two;
+    background-color: $neu-solid-white;
     content: "";
     position: absolute;
     left: 50%;

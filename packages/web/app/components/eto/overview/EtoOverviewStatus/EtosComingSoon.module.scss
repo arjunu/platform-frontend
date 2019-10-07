@@ -1,6 +1,6 @@
 $left-background: url("../../../../assets/img/etos-comings-soon/left-placeholder.png") no-repeat;
 $right-background: url("../../../../assets/img/etos-comings-soon/right-placeholder.png") no-repeat;
-$background-color: $neu-white-two;
+$background-color: $neu-solid-white;
 
 .etos-coming-soon {
   @include media-breakpoint-down(md) {

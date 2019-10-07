@@ -1,15 +1,3 @@
-$loading-background: rgba($neu-charcoal-grey, .8);
-
-@keyframes rotate {
-  from {
-    transform: rotateZ(360deg);
-  }
-
-  to {
-    transform: rotateZ(0deg);
-  }
-}
-
 .document {
   &:global(.doc),
   &:global(.docx) {
@@ -38,7 +26,7 @@ $loading-background: rgba($neu-charcoal-grey, .8);
 
 .tile {
   position: relative;
-  background-color: $neu-white-two;
+  background-color: $neu-solid-white;
   width: px-to-rem(162px);
   height: px-to-rem(162px);
   border-radius: px-to-rem(4px);
@@ -74,50 +62,6 @@ $loading-background: rgba($neu-charcoal-grey, .8);
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-  }
-
-  .buttons {
-    display: flex;
-    margin-top: auto;
-    align-items: center;
-  }
-}
-
-.document-busy {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: -2px;
-  background-color: $loading-background;
-  color: $neu-white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  border-radius: 3px;
-}
-
-.spinner {
-  animation: rotate 7s linear infinite;
-  margin: px-to-rem(8px);
-
-  svg {
-    width: 14px;
-    height: 14px;
-    color: inherit;
-    fill: currentColor;
-
-    // temporary solution
-    path,
-    polygon,
-    g {
-      fill: currentColor;
-      stroke-width: 2;
-      width: 2px;
-    }
   }
 }
 
@@ -166,7 +110,6 @@ $loading-background: rgba($neu-charcoal-grey, .8);
 }
 
 .file-size,
-.drag-description,
 .warning,
 .error {
   font-family: $font-family-roboto;
@@ -190,9 +133,3 @@ $loading-background: rgba($neu-charcoal-grey, .8);
   }
 }
 
-.drag-description {
-  margin: {
-    top: 8px;
-    bottom: 0;
-  }
-}

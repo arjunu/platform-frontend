@@ -1,13 +1,36 @@
-$component-height: px-to-rem(120px);
+$component-size: px-to-rem(162px);
+$loading-background: rgba($neu-charcoal-grey, .8);
+
+@keyframes rotate {
+  from {
+    transform: rotateZ(360deg);
+  }
+
+  to {
+    transform: rotateZ(0deg);
+  }
+}
 
 .single-file-upload {
   display: flex;
 }
 
 .dropzone {
+  cursor: pointer;
   display: flex;
-  height: $component-height;
+  border-radius: px-to-rem(4px);
+  border: dashed 2px $neu-gull-gray;
+  background-color: $neu-solid-white;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: $component-size;
+  height: $component-size;
+
+  &:hover,
+  &:focus {
+    border: solid 2px $neu-bitter-lemon;
+  }
 
   &:global(.reject) {
     .fake-dropzone-area {
@@ -26,28 +49,94 @@ $component-height: px-to-rem(120px);
   }
 }
 
-.fake-dropzone-area {
-  @include font-tab;
-
-  border: px-to-rem(2px) dashed $neu-silver;
-  color: $neu-slate-grey;
-  cursor: pointer;
-  display: flex;
-  font-weight: $font-weight-bold;
-  justify-content: center;
-  align-items: center;
-  height: $component-height;
-  padding: px-to-rem(12px);
-  width: px-to-rem(120px);
-  flex-shrink: 0;
-
-  img {
-    max-height: 90%;
-    max-width: 90%;
-  }
-}
-
 .accepted-files {
   color: $neu-slate-grey;
   margin-left: px-to-rem(20px);
+}
+
+.dropzone--disabled {
+  &,
+  &:disabled,
+  &:hover {
+    border: dashed 2px $neu-light-blue-grey-two;
+    cursor: not-allowed;
+  }
+}
+
+
+
+.drag-description {
+  font-family: $font-family-roboto;
+  color: $neu-shuttle-gray;
+  font-size: px-to-rem(12px);
+  margin: {
+    top: 8px;
+    bottom: 0;
+  }
+}
+
+.file-busy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: -2px;
+  background-color: $loading-background;
+  color: $neu-white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: 3px;
+}
+
+.spinner {
+  animation: rotate 7s linear infinite;
+  margin: px-to-rem(8px);
+
+  svg {
+    width: 14px;
+    height: 14px;
+    color: inherit;
+    fill: currentColor;
+
+    // temporary solution
+    path,
+    polygon,
+    g {
+      fill: currentColor;
+      stroke-width: 2;
+      width: 2px;
+    }
+  }
+}
+
+.file-container {
+  position: relative;
+  display: flex;
+  width: $component-size;
+  height: $component-size;
+  border-radius: 4px;
+  border: solid 1px $neu-gull-gray;
+  background-color: $neu-solid-white;
+
+  img {
+    width: 100%;
+    height: auto;
+    align-self: center;
+  }
+
+  .actions {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+  }
+}
+
+.buttons {
+  display: flex;
+  margin-top: auto;
+  align-items: center;
 }
