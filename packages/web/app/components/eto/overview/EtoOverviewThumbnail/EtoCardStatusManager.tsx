@@ -1,6 +1,5 @@
 import * as moment from "moment";
 import * as React from "react";
-import { FormattedRelative } from "react-intl";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EEtoState } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
@@ -62,23 +61,28 @@ const EtoCardStatusManager = ({ eto }: IExternalProps) => {
     case EETOStateOnChain.Whitelist: {
       const publicSaleStartDate = eto.contract!.startOfStates[EETOStateOnChain.Public]!;
 
-      return (
-        <>
-          <InvestmentStatus eto={eto} />
+      if (eto.subState === EEtoSubState.COUNTDOWN_TO_PUBLIC_SALE) {
+        {
+          /* user is not allowed to invest in presale or user is not logged in */
+        }
+        return (
+          <CounterWidget
+            endDate={publicSaleStartDate}
+            awaitedState={EETOStateOnChain.Public}
+            etoId={eto.etoId}
+          />
+        );
+      } else {
+        return (
+          <>
+            <InvestmentStatus eto={eto} />
 
-          <Info>
-            {/* user is not allowed to invest in presale */}
-            {eto.subState === EEtoSubState.COUNTDOWN_TO_PUBLIC_SALE ? (
-              <FormattedMessage
-                id="eto-overview-thumbnail.presale.days-to-public-sale"
-                values={{ startDate: <FormattedRelative value={publicSaleStartDate} /> }}
-              />
-            ) : (
+            <Info>
               <FormattedMessage id="eto-overview-thumbnail.presale.view-offer" />
-            )}
-          </Info>
-        </>
-      );
+            </Info>
+          </>
+        );
+      }
     }
 
     case EETOStateOnChain.Public: {
