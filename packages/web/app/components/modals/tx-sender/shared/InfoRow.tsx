@@ -3,19 +3,25 @@ import { isString } from "lodash";
 import * as React from "react";
 import { ListGroupItem } from "reactstrap";
 
-import { TDataTestId } from "../../../../types";
+import { TDataTestId, XOR } from "../../../../types";
 import { CopyToClipboardButton } from "../../../shared/CopyToClipboardButton";
 
 import * as styles from "./InfoRow.module.scss";
 
-type TInfoRowCopyProps = {};
-
 type TInfoRowCommonProps = {
   caption: React.ReactNode;
-  allowClipboardCopy?: boolean;
-  value: React.ReactNode | string;
   clipboardCopyValue?: string;
 };
+
+type TInfoRowCopyProps =
+  | XOR<
+      { allowClipboardCopy: true; value: string },
+      { allowClipboardCopy?: false; value: React.ReactNode }
+    >
+  | XOR<
+      { allowClipboardCopy: true; value: string; clipboardCopyValue?: string },
+      { allowClipboardCopy: true; value: React.ReactNode; clipboardCopyValue: string }
+    >;
 
 const selectCopyValue = (
   value: string | React.ReactNode,
