@@ -44,8 +44,9 @@ export const obtainPathComponentsFromDerivationPath = (derivationPath: string) =
 
 export const testConnection = async (getTransport: () => any): Promise<boolean> => {
   try {
+    // todo: can always return true or skip on windows 10
     // this check will successfully detect if ledger is locked or disconnected
-    await getLedgerConfig(getTransport);
+    // await getLedgerConfig(getTransport);
     return true;
   } catch {
     return false;
@@ -116,6 +117,8 @@ export const createWeb3WithLedgerProvider = async (
 
 export const connectToLedger = async (): Promise<() => any> => {
   const getTransport = () => TransportU2F.create();
+  // todo: this below must be done just once: at first connection in wallet chooser
+  // we can assume that it's same ledger later on
   const ledgerConfig = await getLedgerConfig(getTransport);
   if (semver.lt(ledgerConfig.version, minimumLedgerVersion)) {
     // We support versions newer than 1.2.4

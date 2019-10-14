@@ -28,6 +28,13 @@ export class LedgerWalletConnector {
 
   public async connect(): Promise<void> {
     try {
+      // todo: we must change how it works. now we just create new ledger connection
+      // for each call to ledger. that does not make sense
+      // we should simply cache transport instance not a function to take transport
+      // and simply use it but via a method similar to ensureWalletConnection
+      // which will take a method (like getConfig) as side effect and execute it with the open transport
+      // if execution fails due to transport being dead etc. (that we need to detect), we just re-open transport
+      // and try again ONCE. the infinite loop is done by ensureWalletConnection so no worries about it
       this.getTransport = await connectToLedger();
     } catch (e) {
       if (e instanceof LedgerError) {

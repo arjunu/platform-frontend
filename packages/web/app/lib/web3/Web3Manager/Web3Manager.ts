@@ -79,10 +79,12 @@ export class Web3Manager extends EventEmitter {
   }
 
   public async plugPersonalWallet(personalWallet: IPersonalWallet): Promise<void> {
-    const isWalletConnected = await personalWallet.testConnection(this.networkId);
+    // why we are testing connection here? this method is called directly after successful sync
+    // todo: remove
+    /* const isWalletConnected = await personalWallet.testConnection(this.networkId);
     if (!isWalletConnected) {
       throw new WalletNotConnectedError(personalWallet);
-    }
+    }*/
 
     this.personalWallet = personalWallet;
 

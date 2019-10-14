@@ -15,6 +15,10 @@ import { mapBrowserWalletErrorToErrorMessage } from "./errors";
 
 export function* browserWalletConnectionWatcher(): any {
   while (true) {
+    // does it really wait to connection to finish? if my machine is slow then I can get
+    // many connection request to Metamask: I accept first one but then after some time next sign message appears
+    // each of those result in valid login action and going to dashboard, even if I'm already logged in
+    // so we have races/calls done without waiting for the connect action to complete
     yield neuCall(tryConnectingWithBrowserWallet);
 
     const { success } = yield race({
@@ -42,6 +46,7 @@ export function* tryConnectingWithBrowserWallet({
       const browserWallet: BrowserWallet = yield browserWalletConnector.connect(
         web3Manager.networkId,
       );
+      // todo: why to do it here if ensureWalletConnection does it?
       yield web3Manager.plugPersonalWallet(browserWallet);
       yield put(actions.walletSelector.connected());
     } catch (e) {
@@ -59,5 +64,6 @@ export function* tryConnectingWithBrowserWallet({
 }
 
 export function* browserWalletSagas(): Iterator<any> {
+  // todo: seems that we have another watcher over web3ConnectionWatcher
   yield fork(neuTakeEvery, "BROWSER_WALLET_TRY_CONNECTING", browserWalletConnectionWatcher);
 }

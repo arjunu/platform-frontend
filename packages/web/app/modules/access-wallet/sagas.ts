@@ -68,6 +68,7 @@ export function* ensureWalletConnection(
   //  - user attaches different ledger device
   const isSameAddress = wallet.ethereumAddress.toLowerCase() === metadata.address.toLowerCase();
   if (!isSameAddress) {
+    // todo: logout user immediately, do not throw errors
     throw new MismatchedWalletAddressError(metadata.address, wallet.ethereumAddress);
   }
 
@@ -79,6 +80,8 @@ async function connectLedger(
   web3Manager: Web3Manager,
   metadata: ILedgerWalletMetadata,
 ): Promise<IPersonalWallet> {
+  // todo: only here do a full connect check (firmware version etc.)
+  // which should be side effect of getting valid transport
   await ledgerWalletConnector.connect();
   return await ledgerWalletConnector.finishConnecting(
     metadata.derivationPath,
@@ -149,6 +152,7 @@ export function* connectWalletAndRunEffect(effect: Effect | Iterator<Effect>): a
       if (e instanceof SignerError || error.messageType === GenericErrorMessage.GENERIC_ERROR)
         throw e;
 
+      // todo: clear chance to have infinite loop. please explain how this saga is cancelled
       yield delay(500);
     }
   }

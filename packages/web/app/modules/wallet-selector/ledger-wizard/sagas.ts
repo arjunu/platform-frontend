@@ -99,16 +99,16 @@ export function* goToPreviousPageAndLoadData(): any {
   yield put(actions.walletSelector.ledgerLoadAccounts());
 }
 
-export function* finishSettingUpLedgerConnector(
-  { ledgerWalletConnector, web3Manager }: TGlobalDependencies,
-  action: TAction,
-): any {
+export function* finishSettingUpLedgerConnector({ ledgerWalletConnector, web3Manager }: TGlobalDependencies, action: TAction): any {
   if (action.type !== "LEDGER_FINISH_SETTING_UP_LEDGER_CONNECTOR") return;
-  const ledgerWallet = yield ledgerWalletConnector.finishConnecting(
+  // todo: why this is done here and in saga? (access-wallet).
+  // this saga is clearly called when doing first connection so what's the point of doing it here?
+  /*const ledgerWallet = yield ledgerWalletConnector.finishConnecting(
     action.payload.derivationPath,
     web3Manager.networkId,
-  );
-  yield web3Manager.plugPersonalWallet(ledgerWallet);
+  );*/
+  // todo: see ensureWalletConnection - all of this is done there
+  // yield web3Manager.plugPersonalWallet(ledgerWallet);
   yield put(actions.walletSelector.connected());
 }
 
@@ -137,5 +137,7 @@ export function* ledgerSagas(): Iterator<any> {
     "LEDGER_FINISH_SETTING_UP_LEDGER_CONNECTOR",
     finishSettingUpLedgerConnector,
   );
-  yield fork(neuTakeEvery, "LEDGER_VERIFY_IF_LEDGER_STILL_CONNECTED", verifyIfLedgerStillConnected);
+  // it's the third place that checks if ledger is stil connected. first in WalletLedgerChooser,
+  // then there's a wallet watched in web3ConnectionWatcher, now this
+  // yield fork(neuTakeEvery, "LEDGER_VERIFY_IF_LEDGER_STILL_CONNECTED", verifyIfLedgerStillConnected);
 }
