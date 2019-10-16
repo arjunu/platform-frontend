@@ -200,7 +200,7 @@
     "@neufund/shared": "^1.0.0",
     "@sentry/browser": "^4.3.0",
     "babel-regenerator-runtime": "^6.5.0",
-    "bignumber.js": "^5.0.0",
+    "bignumber.js": "^9.0.0",
     "bootstrap": "^4.1.3",
     "broadcast-channel": "^2.2.0",
     "chart.js": "^2.7.2",
