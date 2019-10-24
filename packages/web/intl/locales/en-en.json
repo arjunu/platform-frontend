@@ -327,6 +327,7 @@
   "eto.form.eto-terms.title": "Equity Token Offering Terms",
   "eto.form.investment-terms.errors.fixed-slots-must-be-at-least-as-big-as-public-discount": "Maximum fixed slots discount must be bigger or equal to public discount",
   "eto.form.investment-terms.errors.whitelist-discount-must-at-least-as-big-as-public-discount": "Whitelist discount must be bigger or equal to public discount",
+  "eto.form.investment-terms.errors.existing-share-capital-too-small": "Please provide a valid amount for existing share capital",
   "eto.form.investment-terms.max-investment-amount-warning": "Please note that the maximum investment amount is above the product limit",
   "eto.form.investment-terms.min-investment-amount-warning": "Minimum investment amount is above the product limit, please change the terms in order to save the form",
   "eto.form.investment-terms.title": "Investment Terms",

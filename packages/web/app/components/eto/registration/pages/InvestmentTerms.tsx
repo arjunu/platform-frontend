@@ -1,8 +1,5 @@
-import BigNumber from "bignumber.js";
-import { FormikConsumer } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { Col, Row } from "reactstrap";
 import { branch, renderNothing, setDisplayName } from "recompose";
 import { compose } from "redux";
 
@@ -11,12 +8,6 @@ import {
   TEtoSpecsData,
 } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { etoFormIsReadonly } from "../../../../lib/api/eto/EtoApiUtils";
-import {
-  calcCapFraction,
-  calcInvestmentAmount,
-  calcNumberOfTokens,
-  calcShareAndTokenPrice,
-} from "../../../../lib/api/eto/EtoUtils";
 import { actions } from "../../../../modules/actions";
 import {
   selectIssuerEto,
@@ -34,14 +25,8 @@ import {
   ENumberFormat,
   ENumberInputFormat,
   ENumberOutputFormat,
-  EPriceFormat,
-  formatNumber,
-  selectDecimalPlaces,
-  selectUnits,
-  THumanReadableFormat,
-  TValueFormat,
 } from "../../../shared/formatters/utils";
-import { FormFieldLayout, FormHighlightGroup, FormMaskedNumberInput } from "../../../shared/forms";
+import { FormMaskedNumberInput } from "../../../shared/forms";
 import { FormField } from "../../../shared/forms/fields/FormField";
 import {
   convert,
@@ -55,6 +40,8 @@ import { EtoFormBase } from "../EtoFormBase";
 import { Section } from "../Shared";
 
 import * as styles from "../Shared.module.scss";
+import { MIN_EXISTING_SHARE_CAPITAL } from "../../../../config/constants";
+import { InvestmentCalculator } from "./InvestmentTerms/investmentCalculator";
 
 interface IExternalProps {
   readonly: boolean;
@@ -66,205 +53,31 @@ interface IStateProps {
   eto: TEtoSpecsData;
 }
 
-interface ICalculatorProps {
-  etoProductMaxInvestmentAmount: number;
-}
-
 interface IDispatchProps {
   saveData: (values: TEtoSpecsData) => void;
 }
 
 type IProps = IExternalProps & IStateProps & IDispatchProps;
 
-interface ICalculatorField {
-  value: string | number | BigNumber;
-  name: string;
-  label: TTranslatedString;
-  valueType: TValueFormat;
-  outputFormat: THumanReadableFormat;
-}
-
-const CalculatorField: React.FunctionComponent<ICalculatorField> = ({
-  value,
-  name,
-  label,
-  valueType,
-  outputFormat,
-}) => (
-  <FormFieldLayout
-    label={label}
-    suffix={selectUnits(valueType)}
-    name={name}
-    value={formatNumber({
-      value: value,
-      inputFormat: ENumberInputFormat.FLOAT,
-      outputFormat: outputFormat,
-      decimalPlaces: selectDecimalPlaces(valueType, outputFormat),
-    })}
-    readOnly={true}
-  />
-);
-
-const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
-  etoProductMaxInvestmentAmount,
-}) => (
-  <FormikConsumer>
-    {({ values }) => {
-      const fixedSlotsMaximumDiscountFraction = parseStringToFloat()(
-        values.fixedSlotsMaximumDiscountFraction,
-      );
-      const whitelistDiscountFraction = parseStringToFloat()(values.whitelistDiscountFraction);
-      const publicDiscountFraction = parseStringToFloat()(values.publicDiscountFraction);
-
-      const calculatorValues = {
-        newSharesToIssue: parseStringToFloat()(values.newSharesToIssue),
-        minimumNewSharesToIssue: parseStringToFloat()(values.minimumNewSharesToIssue),
-        existingShareCapital: parseStringToFloat()(values.existingShareCapital),
-        newShareNominalValue: parseStringToFloat()(values.newShareNominalValue),
-        preMoneyValuationEur: parseStringToFloat()(values.preMoneyValuationEur),
-        newSharesToIssueInFixedSlots: parseStringToFloat()(values.newSharesToIssueInFixedSlots),
-        newSharesToIssueInWhitelist: parseStringToFloat()(values.newSharesToIssueInWhitelist),
-        fixedSlotsMaximumDiscountFraction: fixedSlotsMaximumDiscountFraction
-          ? convertPercentageToFraction()(fixedSlotsMaximumDiscountFraction)
-          : 0,
-        whitelistDiscountFraction: fixedSlotsMaximumDiscountFraction
-          ? convertPercentageToFraction()(whitelistDiscountFraction)
-          : 0,
-        publicDiscountFraction: fixedSlotsMaximumDiscountFraction
-          ? convertPercentageToFraction()(publicDiscountFraction)
-          : 0,
-      };
-      const { sharePrice, tokenPrice, tokensPerShare } = calcShareAndTokenPrice(calculatorValues);
-      const { computedMaxNumberOfTokens, computedMinNumberOfTokens } = calcNumberOfTokens(
-        calculatorValues,
-      );
-      const { computedMaxCapPercent, computedMinCapPercent } = calcCapFraction(calculatorValues);
-      const { minInvestmentAmount, maxInvestmentAmount } = calcInvestmentAmount(
-        calculatorValues,
-        sharePrice,
-      );
-
-      return (
-        <FormHighlightGroup>
-          <CalculatorField
-            value={sharePrice}
-            name="newSharePrice"
-            label={<FormattedMessage id="eto.form.section.investment-terms.new-share-price" />}
-            valueType={EPriceFormat.SHARE_PRICE}
-            outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-          />
-          <CalculatorField
-            value={tokensPerShare}
-            name="equityTokensPerShare"
-            label={<FormattedMessage id="eto.form.section.investment-terms.tokens-per-share" />}
-            valueType={EPriceFormat.SHARE_PRICE}
-            outputFormat={ENumberOutputFormat.INTEGER}
-          />
-          <CalculatorField
-            value={tokenPrice}
-            name="equityTokenPrice"
-            label={<FormattedMessage id="eto.form.section.investment-terms.equity-token-price" />}
-            valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
-            outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-          />
-          <Row>
-            <Col sm={12} md={6}>
-              <CalculatorField
-                value={minInvestmentAmount}
-                name="minInvestmentAmount"
-                label={<FormattedMessage id="eto.form.section.investment-terms.minimum-amount" />}
-                valueType={ECurrency.EUR}
-                outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-              />
-            </Col>
-            <Col sm={12} md={6}>
-              <CalculatorField
-                value={maxInvestmentAmount}
-                name="totalInvestment"
-                label={<FormattedMessage id="eto.form.section.investment-terms.total-investment" />}
-                valueType={ECurrency.EUR}
-                outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-              />
-            </Col>
-            {etoProductMaxInvestmentAmount !== 0 &&
-              etoProductMaxInvestmentAmount < minInvestmentAmount && (
-                <Col sm={12}>
-                  <p className="text-error">
-                    <FormattedMessage id="eto.form.investment-terms.min-investment-amount-warning" />
-                  </p>
-                </Col>
-              )}
-            {etoProductMaxInvestmentAmount !== 0 &&
-              etoProductMaxInvestmentAmount < maxInvestmentAmount && (
-                <Col sm={12}>
-                  <p className="text-warning">
-                    <FormattedMessage id="eto.form.investment-terms.max-investment-amount-warning" />
-                  </p>
-                </Col>
-              )}
-            <Col sm={12} md={6}>
-              <CalculatorField
-                value={computedMinNumberOfTokens}
-                name="minCapEur"
-                label={
-                  <FormattedMessage id="eto.form.section.investment-terms.minimum-token-cap" />
-                }
-                valueType={ECurrency.EUR}
-                outputFormat={ENumberOutputFormat.INTEGER}
-              />
-            </Col>
-            <Col sm={12} md={6}>
-              <CalculatorField
-                value={computedMaxNumberOfTokens}
-                name="maxCapEur"
-                label={
-                  <FormattedMessage id="eto.form.section.investment-terms.maximum-token-cap" />
-                }
-                valueType={ECurrency.EUR}
-                outputFormat={ENumberOutputFormat.INTEGER}
-              />
-            </Col>
-            <Col sm={12} md={6}>
-              <CalculatorField
-                value={computedMinCapPercent}
-                name="minSharesGenerated"
-                label={
-                  <FormattedMessage id="eto.form.section.investment-terms.minimum-shares-generated" />
-                }
-                valueType={ENumberFormat.PERCENTAGE}
-                outputFormat={ENumberOutputFormat.FULL}
-              />
-            </Col>
-            <Col sm={12} md={6}>
-              <CalculatorField
-                value={computedMaxCapPercent}
-                name="maxSharesGenerated"
-                label={
-                  <FormattedMessage id="eto.form.section.investment-terms.maximum-shares-generated" />
-                }
-                valueType={ENumberFormat.PERCENTAGE}
-                outputFormat={ENumberOutputFormat.FULL}
-              />
-            </Col>
-          </Row>
-        </FormHighlightGroup>
-      );
-    }}
-  </FormikConsumer>
-);
-
 const validate = (values: TEtoSpecsData) => {
   const errors: { -readonly [P in keyof (typeof values)]?: TTranslatedString } = {};
 
   if ((values.publicDiscountFraction || 0) > (values.whitelistDiscountFraction || 0)) {
     errors.whitelistDiscountFraction = (
-      <FormattedMessage id="eto.form.investment-terms.errors.whitelist-discount-must-at-least-as-big-as-public-discount" />
+      <FormattedMessage
+        id="eto.form.investment-terms.errors.whitelist-discount-must-at-least-as-big-as-public-discount" />
     );
   }
 
   if ((values.fixedSlotsMaximumDiscountFraction || 0) < (values.publicDiscountFraction || 0)) {
     errors.fixedSlotsMaximumDiscountFraction = (
       <FormattedMessage id="eto.form.investment-terms.errors.fixed-slots-must-be-at-least-as-big-as-public-discount" />
+    );
+  }
+
+  if (values.existingShareCapital < MIN_EXISTING_SHARE_CAPITAL) {
+    errors.fixedSlotsMaximumDiscountFraction = (
+      <FormattedMessage id="eto.form.investment-terms.errors.existing-share-capital-too-small" />
     );
   }
 
