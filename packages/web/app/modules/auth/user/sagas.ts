@@ -78,7 +78,6 @@ export function* signInUser({
   try {
     // we will try to create with user type from URL but it could happen that account already exists and has different user type
     const probableUserType: EUserType = yield select((s: IAppState) => selectUrlUserType(s.router));
-    yield put(actions.walletSelector.messageSigning());
 
     yield neuCall(createJwt, [EJwtPermissions.SIGN_TOS]); // by default we have the sign-tos permission, as this is the first thing a user will have to do after signup
     yield call(loadOrCreateUser, probableUserType);
@@ -91,10 +90,12 @@ export function* signInUser({
     };
     walletStorage.set(storedWalletMetadata);
 
-    const redirectionUrl = yield select(selectRedirectURLFromQueryString);
-
     // For other open browser pages
     yield userStorage.set(REGISTRATION_LOGIN_DONE);
+
+    const redirectionUrl = yield select(selectRedirectURLFromQueryString);
+
+    yield put(actions.auth.finishSigning());
 
     if (redirectionUrl) {
       yield put(actions.routing.push(redirectionUrl));
@@ -209,7 +210,7 @@ function* handleLogOutUser(
   logger.setUser(null);
 }
 
-function* handleSignInUser({ logger }: TGlobalDependencies): Iterator<any> {
+export function* handleSignInUser({ logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield neuCall(signInUser);
   } catch (e) {
@@ -261,7 +262,6 @@ function* profileMonitor({ logger }: TGlobalDependencies): Iterator<any> {
 export function* authUserSagas(): Iterator<Effect> {
   yield fork(neuTakeLatest, actions.auth.logout, handleLogOutUser);
   yield fork(neuTakeEvery, actions.auth.setUser, setUser);
-  yield fork(neuTakeEvery, actions.walletSelector.connected, handleSignInUser);
   yield fork(neuTakeUntil, actions.auth.setUser, actions.auth.logout, waitForUserActiveOrLogout);
   yield fork(neuTakeLatestUntil, actions.auth.setUser, actions.auth.logout, profileMonitor);
 }

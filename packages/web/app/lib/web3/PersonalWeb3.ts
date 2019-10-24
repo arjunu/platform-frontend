@@ -30,4 +30,6 @@ export interface IPersonalWallet {
   sendTransaction(txData: TxData): Promise<string>;
 
   getMetadata(): TWalletMetadata;
+
+  isUnlocked(): boolean;
 }

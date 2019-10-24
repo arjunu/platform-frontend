@@ -133,6 +133,7 @@ function* txSendProcess(
 
     // accept transaction on wallet
     yield call(connectWallet);
+
     yield put(actions.txSender.txSenderWalletPlugged());
 
     // send transaction

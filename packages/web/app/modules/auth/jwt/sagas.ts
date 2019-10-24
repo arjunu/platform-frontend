@@ -28,7 +28,7 @@ export function* loadJwt({ jwtStorage }: TGlobalDependencies): Iterator<Effect> 
 export function* setJwt({ jwtStorage }: TGlobalDependencies, jwt: string): Iterator<any> {
   jwtStorage.set(jwt);
 
-  yield put(actions.auth.loadJWT(jwt));
+  yield put(actions.auth.setJWT(jwt));
 }
 
 /**
@@ -213,5 +213,5 @@ export function* handleJwtTimeout({ logger }: TGlobalDependencies): Iterator<any
 }
 
 export function* authJwtSagas(): Iterator<Effect> {
-  yield fork(neuTakeLatest, actions.auth.loadJWT, handleJwtTimeout);
+  yield fork(neuTakeLatest, actions.auth.setJWT, handleJwtTimeout);
 }

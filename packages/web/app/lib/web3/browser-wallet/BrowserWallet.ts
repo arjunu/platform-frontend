@@ -96,15 +96,15 @@ export class BrowserWallet implements IPersonalWallet {
       walletSubType: this.walletSubType,
     };
   }
+
+  public isUnlocked(): boolean {
+    return true;
+  }
 }
 
 @injectable()
 export class BrowserWalletConnector {
-  dataApprovalPending: boolean;
-
-  constructor() {
-    this.dataApprovalPending = false;
-  }
+  dataApprovalPending = false;
 
   public async connect(networkId: EthereumNetworkId): Promise<BrowserWallet> {
     let newMetamask = true;

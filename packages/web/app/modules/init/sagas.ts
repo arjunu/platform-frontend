@@ -56,6 +56,7 @@ function* initApp({ logger }: TGlobalDependencies): any {
 
           yield neuCall(setJwt, jwt);
           yield neuCall(loadUser);
+          yield put(actions.auth.finishSigning());
         } catch (e) {
           yield put(actions.auth.logout());
           logger.error(

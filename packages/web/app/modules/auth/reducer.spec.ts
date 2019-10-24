@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { EthereumAddressWithChecksum } from "../../types";
 import { EWalletSubType, EWalletType } from "../web3/types";
-import { IAuthState } from "./reducer";
+import { EAuthStatus, IAuthState } from "./reducer";
 import { selectIsAuthorized, selectUserEmail } from "./selectors";
 
 describe("auth > selectors", () => {
@@ -17,6 +17,8 @@ describe("auth > selectors", () => {
           walletType: EWalletType.LIGHT,
           walletSubtype: EWalletSubType.UNKNOWN,
         },
+        status: EAuthStatus.AUTHORIZED,
+        currentAgreementHash: undefined,
       };
 
       const actualValue = selectIsAuthorized(state);
@@ -29,6 +31,8 @@ describe("auth > selectors", () => {
       const state: IAuthState = {
         jwt: "eyjwt",
         user: undefined,
+        status: EAuthStatus.NON_AUTHORIZED,
+        currentAgreementHash: undefined,
       };
 
       const actualValue = selectIsAuthorized(state);
@@ -49,6 +53,8 @@ describe("auth > selectors", () => {
           walletType: EWalletType.LIGHT,
           walletSubtype: EWalletSubType.UNKNOWN,
         },
+        status: EAuthStatus.AUTHORIZED,
+        currentAgreementHash: undefined,
       };
 
       const actualValue = selectUserEmail(state);
@@ -59,6 +65,9 @@ describe("auth > selectors", () => {
     it("should return undefined when user is missing", () => {
       const state: IAuthState = {
         jwt: "eyjwt",
+        user: undefined,
+        status: EAuthStatus.NON_AUTHORIZED,
+        currentAgreementHash: undefined,
       };
 
       const actualValue = selectUserEmail(state);

@@ -2,6 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { selectIsAccessWalletModalOpen } from "../../../modules/access-wallet/selectors";
 import { actions } from "../../../modules/actions";
 import {
   selectIsUnlocked,
@@ -11,7 +12,9 @@ import {
 import { EWalletSubType, EWalletType } from "../../../modules/web3/types";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
+import { Button } from "../../shared/buttons";
 import { HiResImage, ISrcSet } from "../../shared/HiResImage";
+import { WarningAlert } from "../../shared/WarningAlert";
 import { getMessageTranslation } from "../../translatedMessages/messages";
 import { Modal } from "../Modal";
 import { AccessLightWalletPrompt } from "./AccessLightWalletPrompt";
@@ -38,6 +41,7 @@ interface IStateProps {
 
 interface IDispatchProps {
   onAccept: (password?: string) => void;
+  tryToAccessWalletAgain: () => void;
 }
 
 interface IExternalProps {
@@ -65,6 +69,7 @@ export const AccessWalletContainerComponent: React.FunctionComponent<
   errorMessage,
   isUnlocked,
   onAccept,
+  tryToAccessWalletAgain,
   walletType,
   walletSubType,
   inputLabel,
@@ -84,7 +89,7 @@ export const AccessWalletContainerComponent: React.FunctionComponent<
     )}
     {walletType === EWalletType.LEDGER && (
       <div>
-        <img src={ledgerConfirm} className="mt-1 mb-3" />
+        <img src={ledgerConfirm} className="mt-1 mb-3" alt="" />
         <div className={cn("mt-2", styles.info)}>
           <FormattedMessage id="modal.access-wallet.ledger-info" />
         </div>
@@ -107,21 +112,32 @@ export const AccessWalletContainerComponent: React.FunctionComponent<
         </div>
       </div>
     )}
-    {errorMessage && <p className={cn("mt-3", "text-warning")}>{errorMessage}</p>}
+    {errorMessage && (
+      <>
+        <WarningAlert className="my-4" data-test-id="access-wallet.error-msg">
+          {errorMessage}
+        </WarningAlert>
+
+        {walletType !== EWalletType.LIGHT && (
+          <Button onClick={tryToAccessWalletAgain} data-test-id="access-wallet.try-again">
+            <FormattedMessage id="common.try-again" />
+          </Button>
+        )}
+      </>
+    )}
   </div>
 );
 
 export const AccessWalletContainer = appConnect<IStateProps, IDispatchProps, IExternalProps>({
-  stateToProps: (s, external) => ({
-    isOpen: s.accessWallet.isModalOpen,
+  stateToProps: (s, props) => ({
     errorMessage: s.accessWallet.errorMessage
       ? getMessageTranslation(s.accessWallet.errorMessage)
       : undefined,
-    title: external.title
-      ? external.title
+    title: props.title
+      ? props.title
       : s.accessWallet.modalTitle && getMessageTranslation(s.accessWallet.modalTitle),
-    message: external.message
-      ? external.message
+    message: props.message
+      ? props.message
       : s.accessWallet.modalMessage && getMessageTranslation(s.accessWallet.modalMessage),
     inputLabel: s.accessWallet.inputLabel && getMessageTranslation(s.accessWallet.inputLabel),
     walletType: selectWalletType(s.web3),
@@ -129,7 +145,11 @@ export const AccessWalletContainer = appConnect<IStateProps, IDispatchProps, IEx
     isUnlocked: selectIsUnlocked(s.web3),
   }),
   dispatchToProps: dispatch => ({
-    onAccept: (password?: string) => dispatch(actions.accessWallet.accept(password)),
+    onAccept: (password?: string) => {
+      dispatch(actions.accessWallet.tryToAccessWalletAgain());
+      dispatch(actions.accessWallet.accept(password));
+    },
+    tryToAccessWalletAgain: () => dispatch(actions.accessWallet.tryToAccessWalletAgain()),
   }),
 })(AccessWalletContainerComponent);
 
@@ -151,7 +171,7 @@ const AccessWalletModalComponent: React.FunctionComponent<
 
 export const AccessWalletModal = appConnect<IModalStateProps, IModalDispatchProps>({
   stateToProps: s => ({
-    isOpen: s.accessWallet.isModalOpen,
+    isOpen: selectIsAccessWalletModalOpen(s),
   }),
   dispatchToProps: dispatch => ({
     onCancel: () => dispatch(actions.accessWallet.hideAccessWalletModal()),

@@ -80,6 +80,7 @@
   "common.number-quantity.unlimited": "Unlimited",
   "common.text.etherscan": "etherscan.io",
   "common.text.read-more": "Read more",
+  "common.try-again": "Try again",
   "components.dashboard.my-wallet.my-wallet-widget.header-text": "My Wallet",
   "components.settings.backup-seed-display.backup-seed": "Backup Codes",
   "components.settings.private-key-display.copied-to-clipboard": "Private Key is saved in your clipboard",

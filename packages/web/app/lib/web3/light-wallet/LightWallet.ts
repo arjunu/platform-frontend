@@ -146,13 +146,19 @@ export class LightWallet implements IPersonalWallet {
     return await testWalletPassword(this.vault.walletInstance, newPassword);
   }
 
-  public getMetadata = (): ILightWalletMetadata => ({
-    address: this.ethereumAddress,
-    email: this.email,
-    salt: this.vault.salt,
-    walletType: this.walletType,
-    walletSubType: this.walletSubType,
-  });
+  public getMetadata(): ILightWalletMetadata {
+    return {
+      address: this.ethereumAddress,
+      email: this.email,
+      salt: this.vault.salt,
+      walletType: this.walletType,
+      walletSubType: this.walletSubType,
+    };
+  }
+
+  public isUnlocked(): boolean {
+    return !!this.password;
+  }
 }
 
 @injectable()

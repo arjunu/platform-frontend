@@ -27,7 +27,6 @@ import {
   loadLedgerAccounts,
   setDerivationPathPrefix,
   tryEstablishingConnectionWithLedger,
-  verifyIfLedgerStillConnected,
 } from "./sagas";
 
 describe("Wallet selector > Ledger wizard > actions", () => {
@@ -263,40 +262,6 @@ describe("Wallet selector > Ledger wizard > actions", () => {
         expectedNetworkId,
       );
       expect(web3ManagerMock.plugPersonalWallet).to.be.calledWithExactly(ledgerWalletMock);
-    });
-  });
-
-  describe("verifyIfLedgerStillConnected", () => {
-    const errorAction = actions.walletSelector.ledgerConnectionEstablishedError(
-      createMessage(LedgerErrorMessage.GENERIC_ERROR),
-    );
-
-    it("should do nothing if ledger is connected", async () => {
-      const ledgerWalletConnectorMock = createMock(LedgerWalletConnector, {
-        testConnection: async () => true,
-      });
-
-      await expectSaga(verifyIfLedgerStillConnected, {
-        ledgerWalletConnector: ledgerWalletConnectorMock,
-      })
-        .not.put(errorAction)
-        .run();
-
-      expect(ledgerWalletConnectorMock.testConnection).to.be.calledOnce;
-    });
-
-    it("should issue error action if ledger is not connected", async () => {
-      const ledgerWalletConnectorMock = createMock(LedgerWalletConnector, {
-        testConnection: async () => false,
-      });
-
-      await expectSaga(verifyIfLedgerStillConnected, {
-        ledgerWalletConnector: ledgerWalletConnectorMock,
-      })
-        .put(errorAction)
-        .run();
-
-      expect(ledgerWalletConnectorMock.testConnection).to.be.calledOnce;
     });
   });
 });

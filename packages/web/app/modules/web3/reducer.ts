@@ -1,4 +1,5 @@
 import { AppReducer } from "../../store";
+import { actions } from "../actions";
 import { TWalletMetadata } from "./types";
 
 export interface IDisconnectedWeb3State {
@@ -37,7 +38,7 @@ export const web3Reducer: AppReducer<IWeb3State> = (
         wallet: action.payload.walletMetadata,
         isUnlocked: action.payload.isUnlocked,
       };
-    case "PERSONAL_WALLET_DISCONNECTED":
+    case actions.web3.personalWalletDisconnected.getType():
       return {
         connected: false,
         previousConnectedWallet: state.connected ? state.wallet : state.previousConnectedWallet,

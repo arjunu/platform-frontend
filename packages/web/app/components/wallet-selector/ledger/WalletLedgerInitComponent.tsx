@@ -8,7 +8,7 @@ import { externalRoutes } from "../../../config/externalRoutes";
 import { minimumLedgerVersion } from "../../../lib/web3/ledger-wallet/ledgerUtils";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
-import { withActionWatcher } from "../../../utils/withActionWatcher.unsafe";
+import { Button } from "../../shared/buttons";
 import { ExternalLink } from "../../shared/links";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { WarningAlert } from "../../shared/WarningAlert";
@@ -23,8 +23,6 @@ import * as imgStep4 from "../../../assets/img/wallet_selector/ledger_login_step
 import * as imgStep5 from "../../../assets/img/wallet_selector/ledger_login_step_5.svg";
 import * as imgStep6 from "../../../assets/img/wallet_selector/ledger_login_step_6.svg";
 import * as styles from "./WalletLedgerInitComponent.module.scss";
-
-export const LEDGER_RECONNECT_INTERVAL = 2000;
 
 interface IInitStep {
   header: string | React.ReactNode;
@@ -79,24 +77,39 @@ const LedgerConnectionSteps: React.FunctionComponent = () => (
   </>
 );
 
-interface IWalletLedgerInitComponentProps {
+interface IStateProps {
   isInitialConnectionInProgress: boolean;
   errorMessage?: TMessage;
 }
 
-export const WalletLedgerInitComponent: React.FunctionComponent<
-  IWalletLedgerInitComponentProps
-> = ({ errorMessage, isInitialConnectionInProgress }) => (
+interface IDispatchProps {
+  tryToEstablishConnectionWithLedger: () => void;
+}
+
+export const WalletLedgerInitComponent: React.FunctionComponent<IStateProps & IDispatchProps> = ({
+  errorMessage,
+  isInitialConnectionInProgress,
+  tryToEstablishConnectionWithLedger,
+}) => (
   <>
     <LedgerHeader />
 
     {isInitialConnectionInProgress && <LoadingIndicator />}
 
     {errorMessage && (
-      <WarningAlert className="my-4">
-        <FormattedMessage id="wallet-selector.ledger.start.connection-status" />{" "}
-        <span data-test-id="ledger-wallet-error-msg">{getMessageTranslation(errorMessage)}</span>
-      </WarningAlert>
+      <section className="text-center my-5">
+        <WarningAlert className="mb-4">
+          <FormattedMessage id="wallet-selector.ledger.start.connection-status" />{" "}
+          <span data-test-id="ledger-wallet-error-msg">{getMessageTranslation(errorMessage)}</span>
+        </WarningAlert>
+
+        <Button
+          onClick={tryToEstablishConnectionWithLedger}
+          data-test-id="ledger-wallet-init.try-again"
+        >
+          <FormattedMessage id="common.try-again" />
+        </Button>
+      </section>
     )}
 
     {/* If there is a need for more visual cases then we will need to implement a full solution */}
@@ -127,16 +140,15 @@ export const WalletLedgerInitComponent: React.FunctionComponent<
   </>
 );
 
-export const WalletLedgerInit = compose<IWalletLedgerInitComponentProps, {}>(
-  withActionWatcher({
-    actionCreator: dispatch =>
-      dispatch(actions.walletSelector.ledgerTryEstablishingConnectionWithLedger()),
-    interval: LEDGER_RECONNECT_INTERVAL,
-  }),
-  appConnect<IWalletLedgerInitComponentProps>({
+export const WalletLedgerInit = compose<IStateProps & IDispatchProps, {}>(
+  appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
       isInitialConnectionInProgress: state.ledgerWizardState.isInitialConnectionInProgress,
       errorMessage: state.ledgerWizardState.errorMsg,
+    }),
+    dispatchToProps: dispatch => ({
+      tryToEstablishConnectionWithLedger: () =>
+        dispatch(actions.walletSelector.ledgerTryEstablishingConnectionWithLedger()),
     }),
   }),
 )(WalletLedgerInitComponent);

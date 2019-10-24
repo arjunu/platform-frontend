@@ -1,6 +1,6 @@
+import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { noop } from "redux-saga/utils";
 
 import { BrowserWalletErrorMessage } from "../../translatedMessages/messages";
 import { createMessage } from "../../translatedMessages/utils";
@@ -10,26 +10,26 @@ storiesOf("Wallet selector/Browser", module)
   .add("initial loading state", () => (
     <WalletBrowserComponent
       isLoading={true}
-      isLoginRoute
+      isLoginRoute={true}
       approvalRejected={false}
-      handleReset={noop}
+      tryConnectingWithBrowserWallet={action("tryConnectingWithBrowserWallet")}
     />
   ))
   .add("error message", () => (
     <WalletBrowserComponent
       isLoading={false}
       errorMessage={createMessage(BrowserWalletErrorMessage.GENERIC_ERROR)}
-      isLoginRoute
+      isLoginRoute={true}
       approvalRejected={false}
-      handleReset={noop}
+      tryConnectingWithBrowserWallet={action("tryConnectingWithBrowserWallet")}
     />
   ))
   .add("approval rejected", () => (
     <WalletBrowserComponent
       isLoading={false}
       errorMessage={createMessage(BrowserWalletErrorMessage.GENERIC_ERROR)}
-      isLoginRoute
+      isLoginRoute={true}
       approvalRejected={true}
-      handleReset={noop}
+      tryConnectingWithBrowserWallet={action("tryConnectingWithBrowserWallet")}
     />
   ));

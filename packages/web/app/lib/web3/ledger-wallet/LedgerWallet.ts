@@ -92,4 +92,8 @@ export class LedgerWallet implements IPersonalWallet {
       this.waitingForCommand = false;
     }
   }
+
+  public isUnlocked(): boolean {
+    return true;
+  }
 }
