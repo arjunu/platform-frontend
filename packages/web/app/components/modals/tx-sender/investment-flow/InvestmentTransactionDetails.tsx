@@ -175,7 +175,7 @@ const InvestmentTransactionDetails: TransactionDetailsComponent<ETxSenderType.IN
   );
 
   const fullTokenPrice = divideBigNumbers(
-    additionalData.eto.sharePrice,
+    additionalData.eto.sharePrice.toString(),
     additionalData.eto.equityTokensPerShare,
   );
 
