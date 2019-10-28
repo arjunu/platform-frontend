@@ -5,12 +5,12 @@ import { actions } from "../actions";
 import {
   ENomineeLinkBankAccountStatus,
   ENomineeRedeemShareholderCapitalStatus,
-  ENomineeRequestError,
+  ENomineeRequestError, ENomineeTask,
   ENomineeUploadIshaStatus,
   TNomineeRequestStorage,
 } from "./types";
 
-export interface INomineeFlowState {
+export type TNomineeFlowState = {
   loading: boolean;
   error: ENomineeRequestError;
   activeNomineeEtoPreviewCode: string | undefined;
@@ -20,9 +20,10 @@ export interface INomineeFlowState {
   linkBankAccount: ENomineeLinkBankAccountStatus;
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus;
   uploadIsha: ENomineeUploadIshaStatus;
+  nomineeTask:ENomineeTask
 }
 
-const nomineeFlowInitialState: INomineeFlowState = {
+const nomineeFlowInitialState: TNomineeFlowState = {
   loading: false,
   error: ENomineeRequestError.NONE,
   activeNomineeEtoPreviewCode: undefined,
@@ -32,12 +33,13 @@ const nomineeFlowInitialState: INomineeFlowState = {
   linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
   uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
+  nomineeTask:ENomineeTask.NONE
 };
 
-export const nomineeFlowReducer: AppReducer<INomineeFlowState> = (
+export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
   state = nomineeFlowInitialState,
   action,
-): DeepReadonly<INomineeFlowState> => {
+): DeepReadonly<TNomineeFlowState> => {
   switch (action.type) {
     case actions.nomineeFlow.createNomineeRequest.getType():
     case actions.nomineeFlow.loadNomineeTaskData.getType():
@@ -50,6 +52,7 @@ export const nomineeFlowReducer: AppReducer<INomineeFlowState> = (
         ...state,
         loading: false,
         nomineeRequests: action.payload.tasks.nomineeRequests,
+        nomineeTask:action.payload.tasks.actualTask
       };
     case actions.nomineeFlow.storeNomineeRequest.getType():
       return {

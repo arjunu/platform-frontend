@@ -7,7 +7,6 @@ import { nomineeIgnoredTemplates } from "../../lib/api/eto/EtoFileUtils";
 import { IAppState } from "../../store";
 import { nonNullable } from "../../utils/nonNullable";
 import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
-import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
 import {
   selectAgreementsStatus,
   selectEtoContract,
@@ -20,10 +19,9 @@ import {
   TOfferingAgreementsStatus,
 } from "../eto/types";
 import { selectRouter } from "../routing/selectors";
-import { selectIsVerificationFullyDone } from "../selectors";
 import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
 import { ENomineeRequestStatus, TNomineeRequestStorage } from "./types";
-import { getActiveEtoPreviewCodeFromQueryString, getNomineeTaskStep } from "./utils";
+import { getActiveEtoPreviewCodeFromQueryString } from "./utils";
 
 export const selectNomineeFlow = (state: IAppState) => state.nomineeFlow;
 
@@ -145,27 +143,8 @@ export const selectIsISHASignedByIssuer = (state: IAppState) => {
   return undefined;
 };
 
-export const selectNomineeTaskStep = createSelector(
-  selectIsVerificationFullyDone,
-  selectNomineeEtoWithCompanyAndContract,
-  selectIsBankAccountVerified,
-  selectNomineeEtoDocumentsStatus,
-  selectIsISHASignedByIssuer,
-  (
-    verificationIsComplete,
-    nomineeEto,
-    isBankAccountVerified,
-    documentsStatus,
-    isISHASignedByNominee,
-  ) =>
-    getNomineeTaskStep(
-      verificationIsComplete,
-      nomineeEto,
-      isBankAccountVerified,
-      documentsStatus,
-      isISHASignedByNominee,
-    ),
-);
+export const selectNomineeTaskStep = (state:IAppState) =>
+  state.nomineeFlow.nomineeTask;
 
 export const selectActiveEtoPreviewCodeFromQueryString = createSelector(
   selectRouter,

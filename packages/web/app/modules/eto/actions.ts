@@ -107,7 +107,7 @@ export const etoActions = {
   ),
   loadSignedInvestmentAgreement: createActionFactory(
     "ETO_LOAD_INVESTMENT_AGREEMENT",
-    (eto: TEtoWithCompanyAndContract) => ({ eto }),
+    (etoId: string, previewCode: string) => ({ etoId,previewCode }),
   ),
   setInvestmentAgreementHash: createActionFactory(
     "ETO_SET_INVESTMENT_AGREEMENT_URL",

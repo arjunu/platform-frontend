@@ -665,7 +665,7 @@ export function* loadBankAccountDetails({
 }
 
 export function* waitForKycStatus(): Iterator<any> {
-  const kycLoading = yield select((s: IAppState) => selectKycLoading(s.kyc));
+  const kycLoading = yield select((s: IAppState) => selectKycLoading(s));
   if (kycLoading) {
     yield take("KYC_FINISHED_LOADING_DATA");
   }

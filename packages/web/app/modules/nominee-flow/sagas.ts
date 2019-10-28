@@ -27,7 +27,7 @@ import { isOnChain } from "../eto/utils";
 import { loadBankAccountDetails } from "../kyc/sagas";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../sagasUtils";
 import {
-  selectActiveEtoPreviewCodeFromQueryString,
+  selectActiveEtoPreviewCodeFromQueryString, selectIsISHASignedByIssuer, selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
   selectNomineeEtoWithCompanyAndContract,
 } from "./selectors";
@@ -39,7 +39,9 @@ import {
   INomineeRequest,
   TNomineeRequestStorage,
 } from "./types";
-import { nomineeApiDataToNomineeRequests, nomineeRequestResponseToRequestStatus } from "./utils";
+import { getNomineeTaskStep, nomineeApiDataToNomineeRequests, nomineeRequestResponseToRequestStatus } from "./utils";
+import { selectIsVerificationFullyDone } from "../selectors";
+import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
 
 export function* loadNomineeTaskData({
   apiEtoNomineeService,
@@ -63,29 +65,39 @@ export function* loadNomineeTaskData({
         selectNomineeEtoWithCompanyAndContract,
       );
 
+      const requestedData:{[key:string]:unknown} = {
+        nomineeRequests: apiEtoNomineeService.getNomineeRequests(), //fixme move to a separate saga
+        bankAccountDetails: neuCall(loadBankAccountDetails),
+        bankAccountDetailsLoaded: take(actions.kyc.setBankAccountDetails),
+      };
+
       if (eto && isOnChain(eto) && eto.contract.timedState === EETOStateOnChain.Signing) {
-        yield neuCall(loadNomineeSignedInvestmentAgreements);
+        requestedData.isha = put(actions.eto.loadSignedInvestmentAgreement(eto.etoId,eto.previewCode));
+        requestedData.ishaLoaded = take(actions.eto.setInvestmentAgreementHash);
+        requestedData.etoAgreementsStatus = put(actions.eto.loadEtoAgreementsStatus(eto)); //fixme no need to push whole eto, only eto.etoId,eto.previewCode
+        requestedData.etoAgreementsStatusLoaded = take(actions.eto.setAgreementsStatus)
       }
 
-      const taskData = yield all({
-        nomineeRequests: apiEtoNomineeService.getNomineeRequests(),
-        etoAgreementsStatus: neuCall(loadNomineeAgreements),
-        bankAccountDetails: neuCall(loadBankAccountDetails),
-        // todo query here if data not in the store yet
-        // linkBankAccount:
-        // acceptTha:
-        // redeemShareholderCapital:
-        // uploadIsha:
-      });
+      const taskData = yield all(requestedData);
 
       const nomineeRequestsConverted: TNomineeRequestStorage = nomineeApiDataToNomineeRequests(
         taskData.nomineeRequests,
       );
-      // todo convert data
+      // todo convert data if needed
       // const linkBankAccountConverted = ...
       // const acceptThaConverted = ...
       // const redeemShareholderCapitalConverted = ...
       // const uploadIshaConverted = ...
+
+      const selectData = yield all({
+        verificationIsComplete:select(selectIsVerificationFullyDone),
+        nomineeEto:select(selectNomineeEtoWithCompanyAndContract),
+        isBankAccountVerified:select(selectIsBankAccountVerified),
+        documentsStatus:select(selectNomineeEtoDocumentsStatus),
+        isISHASignedByIssuer:select(selectIsISHASignedByIssuer),
+      });
+
+      const actualTask = yield getNomineeTaskStep(selectData);
 
       yield put(
         actions.nomineeFlow.storeNomineeTaskData({
@@ -93,18 +105,17 @@ export function* loadNomineeTaskData({
           linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
           redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
           uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
+          actualTask
         }),
       );
-    } else {
-      yield put(actions.nomineeFlow.loadingDone());
     }
   } catch (e) {
     logger.error("Failed to load Nominee tasks", e);
     notificationCenter.error(
       createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
     );
-    //show the user what's already loaded
-    yield put(actions.nomineeFlow.loadingDone());
+  } finally {
+      yield put(actions.nomineeFlow.loadingDone());
   }
 }
 
@@ -187,7 +198,7 @@ export function* loadNomineeSignedInvestmentAgreements(): Iterator<any> {
   );
 
   if (nomineeEto) {
-    yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto));
+    yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto.etoId,nomineeEto.previewCode));
   }
 }
 

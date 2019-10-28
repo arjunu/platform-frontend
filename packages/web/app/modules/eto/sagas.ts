@@ -725,13 +725,13 @@ export function* loadInvestmentAgreement(
   action: TActionFromCreator<typeof actions.eto.loadSignedInvestmentAgreement>,
 ): Iterator<any> {
   const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(
-    action.payload.eto.etoId,
+    action.payload.etoId,
   );
   const url: string = yield contract.signedInvestmentAgreementUrl;
 
   const parsedUrl = url === "" ? undefined : url;
 
-  yield put(actions.eto.setInvestmentAgreementHash(action.payload.eto.previewCode, parsedUrl));
+  yield put(actions.eto.setInvestmentAgreementHash(action.payload.previewCode, parsedUrl));
 }
 
 export function* loadEtoGeneralTokenDiscounts(

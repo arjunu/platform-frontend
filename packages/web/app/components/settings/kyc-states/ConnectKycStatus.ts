@@ -55,7 +55,7 @@ const connectKycStatusWidget = <T extends {}>(
             requestStatus: selectKycRequestStatus(state),
             requestOutsourcedStatus: selectKycRequestOutsourcedStatus(state.kyc),
             externalKycUrl: selectExternalKycUrl(state.kyc),
-            isLoading: selectKycLoading(state.kyc),
+            isLoading: selectKycLoading(state),
             error: selectWidgetError(state.kyc),
           };
         } else {

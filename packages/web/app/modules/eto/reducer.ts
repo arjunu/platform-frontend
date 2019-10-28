@@ -125,7 +125,7 @@ export const etoReducer: AppReducer<IEtoState> = (
         ...state,
         signedInvestmentAgreements: {
           ...state.signedInvestmentAgreements,
-          [action.payload.eto.previewCode]: { isLoading: true, url: undefined },
+          [action.payload.previewCode]: { isLoading: true, url: undefined },
         },
       };
   }
