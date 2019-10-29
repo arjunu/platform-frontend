@@ -73,7 +73,7 @@ describe("Wallet selector integration", () => {
     });
     const ledgerWalletConnectorMock = createMock(LedgerWalletConnector, {});
     const internalWeb3AdapterMock = createMock(Web3Adapter, {
-      getBalance: async () => new BigNumber(1),
+      getBalance: async () => new BigNumber("1"),
     });
     const signatureAuthApiMock = createMock(SignatureAuthApi, {
       challenge: async () => ({
@@ -99,7 +99,7 @@ describe("Wallet selector integration", () => {
 
     const contractsMock = createMock(ContractsService, {
       neumark: createMock(Neumark, {
-        balanceOf: (_address: string) => Promise.resolve(new BigNumber(1)),
+        balanceOf: (_address: string) => Promise.resolve(new BigNumber("1")),
       }),
       identityRegistry: createMock(IdentityRegistry, {
         getClaims: (_userId: string) => Promise.resolve("01001110"),
@@ -242,7 +242,7 @@ describe("Wallet selector integration", () => {
       },
     });
     const internalWeb3AdapterMock = createMock(Web3Adapter, {
-      getBalance: async () => new BigNumber(1),
+      getBalance: async () => new BigNumber("1"),
     });
     const signatureAuthApiMock = createMock(SignatureAuthApi, {
       challenge: async () => ({

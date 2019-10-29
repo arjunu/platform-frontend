@@ -22,8 +22,8 @@ const InvestmentAmount: React.FunctionComponent<TExternalProps> = ({ etoData }) 
     : undefined;
   return (
     <MoneyRange
-      valueFrom={minInvestmentAmount}
-      valueUpto={maxInvestmentAmount}
+      valueFrom={minInvestmentAmount ? minInvestmentAmount.toString() : undefined}
+      valueUpto={maxInvestmentAmount ? maxInvestmentAmount.toString() : undefined}
       inputFormat={ENumberInputFormat.FLOAT}
       valueType={ECurrency.EUR}
       outputFormat={EAbbreviatedNumberOutputFormat.SHORT}

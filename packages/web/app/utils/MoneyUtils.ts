@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
 
 import { ERoundingMode } from "../components/shared/formatters/utils";
+import { TBigNumberVariants } from "./../lib/web3/types";
 /*
  * @deprecated
  * use "/app/components/shared/formatters/utils.ts"
@@ -30,14 +31,14 @@ export function formatToFixed(
  * use "/app/components/shared/formatters/Money.tsx" and utils
  */
 export function formatMoney(
-  value: string | BigNumber | number,
+  value: TBigNumberVariants,
   currencyDecimals: number,
   decimalPlaces?: number,
   roundingMode?: ERoundingMode,
 ): string {
   //convert value to string to avoid 'more than 15 chars' error
   const money = value instanceof BigNumber ? value : new BigNumber(value.toString());
-  const moneyInPrimaryBase = money.div(new BigNumber(10).pow(currencyDecimals));
+  const moneyInPrimaryBase = money.div(new BigNumber("10").pow(currencyDecimals));
   return decimalPlaces !== undefined
     ? formatToFixed(moneyInPrimaryBase, decimalPlaces, roundingMode)
     : moneyInPrimaryBase.toString();

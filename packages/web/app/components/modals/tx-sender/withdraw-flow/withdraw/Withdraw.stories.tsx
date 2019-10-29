@@ -11,7 +11,7 @@ storiesOf("Withdraw", module)
   .addDecorator(withModalBody())
   .add("default", () => (
     <WithdrawLayout
-      ethAmount={convertToUlps(124124)}
+      ethAmount={convertToUlps("124124")}
       onAccept={action("onAccept")}
       onValidateHandler={() => {}}
       notifications={[]}
@@ -21,16 +21,16 @@ storiesOf("Withdraw", module)
         inputValue: "0",
         inputValueEuro: "0",
         inputTo: "0",
-        transactionCost: convertToUlps(0.002),
-        transactionCostEur: convertToUlps(0.2),
-        totalValue: convertToUlps(124124.002),
-        totalValueEur: convertToUlps(124124.2),
+        transactionCost: convertToUlps("0.002"),
+        transactionCostEur: convertToUlps("0.2"),
+        totalValue: convertToUlps("124124.002"),
+        totalValueEur: convertToUlps("124124.2"),
       }}
     />
   ))
   .add("verified user", () => (
     <WithdrawLayout
-      ethAmount={convertToUlps(124124)}
+      ethAmount={convertToUlps("124124")}
       onAccept={action("onAccept")}
       onValidateHandler={() => {}}
       notifications={[EAdditionalValidationDataNotifications.IS_VERIFIED_PLATFORM_USER]}
@@ -40,16 +40,16 @@ storiesOf("Withdraw", module)
         inputValue: "0",
         inputValueEuro: "0",
         inputTo: "0",
-        transactionCost: convertToUlps(0.002),
-        transactionCostEur: convertToUlps(0.2),
-        totalValue: convertToUlps(124124.002),
-        totalValueEur: convertToUlps(124124.2),
+        transactionCost: convertToUlps("0.002"),
+        transactionCostEur: convertToUlps("0.2"),
+        totalValue: convertToUlps("124124.002"),
+        totalValueEur: convertToUlps("124124.2"),
       }}
     />
   ))
   .add("Error", () => (
     <WithdrawLayout
-      ethAmount={convertToUlps(124124)}
+      ethAmount={convertToUlps("124124")}
       onAccept={action("onAccept")}
       onValidateHandler={() => {}}
       notifications={[EAdditionalValidationDataNotifications.IS_VERIFIED_PLATFORM_USER]}
@@ -59,10 +59,10 @@ storiesOf("Withdraw", module)
         inputValue: "0",
         inputValueEuro: "0",
         inputTo: "0",
-        transactionCost: convertToUlps(0.002),
-        transactionCostEur: convertToUlps(0.2),
-        totalValue: convertToUlps(124124.002),
-        totalValueEur: convertToUlps(124124.2),
+        transactionCost: convertToUlps("0.002"),
+        transactionCostEur: convertToUlps("0.2"),
+        totalValue: convertToUlps("124124.002"),
+        totalValueEur: convertToUlps("124124.2"),
       }}
     />
   ));

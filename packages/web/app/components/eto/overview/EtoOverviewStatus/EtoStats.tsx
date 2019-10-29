@@ -58,7 +58,7 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
       <span className={styles.value}>
         <Money
           className={styles.value}
-          value={eto.preMoneyValuationEur}
+          value={eto.preMoneyValuationEur ? eto.preMoneyValuationEur.toString() : undefined}
           inputFormat={ENumberInputFormat.FLOAT}
           valueType={ECurrency.EUR}
           outputFormat={ENumberOutputFormat.INTEGER}
@@ -74,6 +74,8 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
         <Money
           value={
             eto.investmentCalculatedValues && eto.investmentCalculatedValues.maxInvestmentAmount
+              ? eto.investmentCalculatedValues.maxInvestmentAmount.toString()
+              : undefined
           }
           inputFormat={ENumberInputFormat.FLOAT}
           valueType={ECurrency.EUR}
@@ -88,8 +90,8 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
       </span>
       <span className={styles.value}>
         <MoneyRange
-          valueFrom={computedMinCapPercent}
-          valueUpto={computedMaxCapPercent}
+          valueFrom={computedMinCapPercent.toString()}
+          valueUpto={computedMaxCapPercent.toString()}
           inputFormat={ENumberInputFormat.FLOAT}
           outputFormat={ENumberOutputFormat.FULL}
           valueType={ENumberFormat.PERCENTAGE}
@@ -103,7 +105,7 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
       </span>
       <span className={styles.value}>
         <Money
-          value={tokenPrice}
+          value={tokenPrice ? tokenPrice.toString() : undefined}
           inputFormat={ENumberInputFormat.FLOAT}
           valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
           outputFormat={ENumberOutputFormat.FULL}

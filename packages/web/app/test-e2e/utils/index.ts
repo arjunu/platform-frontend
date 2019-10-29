@@ -369,7 +369,7 @@ export const removePendingExternalTransaction = () => {
 };
 
 export const getFormattedNumber = (
-  value: number | undefined,
+  value: string | undefined,
   roundingMode = ERoundingMode.UP,
   decimalPlaces = 4,
   inputFormat = ENumberInputFormat.FLOAT,
@@ -388,7 +388,7 @@ export const getFormattedNumber = (
     : "Unlimited";
 
 export const getShortFormattedNumber = (
-  value: number,
+  value: string,
   roundingMode = ERoundingMode.UP,
   decimalPlaces = 4,
   outputFormat = EAbbreviatedNumberOutputFormat.LONG,

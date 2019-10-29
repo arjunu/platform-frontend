@@ -49,7 +49,7 @@ const convertToDate = (startOf: BigNumber): Date | undefined => {
     return undefined;
   }
 
-  return new Date(startOf.mul(1000).toNumber());
+  return new Date(startOf.mul("1000").toNumber());
 };
 
 export const convertToStateStartDate = (

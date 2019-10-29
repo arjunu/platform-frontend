@@ -116,7 +116,7 @@ const feeDisbursalMock = createMock(FeeDisbursal, {
 
 const contractsMock = createMock(ContractsService, {
   neumark: createMock(Neumark, {
-    balanceOf: (_address: string) => Promise.resolve(new BigNumber(1)),
+    balanceOf: (_address: string) => Promise.resolve(new BigNumber("1")),
     currentSnapshotId: Promise.resolve(
       new BigNumber("6.173402700679665604152542128027138892234753e+42"),
     ),

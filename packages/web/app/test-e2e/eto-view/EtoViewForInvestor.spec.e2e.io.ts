@@ -40,7 +40,7 @@ describe("Eto Investor View", () => {
         cy.get(tid("eto-public-view-pre-money-valuation")).should(
           "contain",
           getFormattedNumber(
-            etoData.preMoneyValuationEur,
+            etoData.preMoneyValuationEur.toString(),
             undefined,
             undefined,
             undefined,
@@ -50,7 +50,7 @@ describe("Eto Investor View", () => {
         cy.get(tid("eto-public-view-existing-share-capital")).should(
           "contain",
           getFormattedNumber(
-            etoData.existingShareCapital,
+            etoData.existingShareCapital.toString(),
             undefined,
             undefined,
             undefined,
@@ -59,14 +59,14 @@ describe("Eto Investor View", () => {
         );
 
         const minimumNewSharesToIssue = getFormattedNumber(
-          etoData.minimumNewSharesToIssue,
+          etoData.minimumNewSharesToIssue.toString(),
           undefined,
           undefined,
           undefined,
           ENumberOutputFormat.INTEGER,
         );
         const newSharesToIssue = getFormattedNumber(
-          etoData.newSharesToIssue,
+          etoData.newSharesToIssue.toString(),
           undefined,
           undefined,
           undefined,
@@ -80,7 +80,7 @@ describe("Eto Investor View", () => {
         cy.get(tid("eto-public-view-new-shares-to-issue-in-whitelist")).should(
           "contain",
           getFormattedNumber(
-            etoData.newSharesToIssueInWhitelist,
+            etoData.newSharesToIssueInWhitelist!.toString(),
             undefined,
             undefined,
             undefined,
@@ -92,7 +92,7 @@ describe("Eto Investor View", () => {
         const computedNewSharePrice = etoData.preMoneyValuationEur / etoData.existingShareCapital;
         cy.get(tid("eto-public-view-new-share-price")).should(
           "contain",
-          getFormattedNumber(computedNewSharePrice, ERoundingMode.DOWN, 2),
+          getFormattedNumber(computedNewSharePrice.toString(), ERoundingMode.DOWN, 2),
         );
         cy.get(tid("eto-public-view-whitelist-discount")).should(
           "contain",
@@ -103,8 +103,12 @@ describe("Eto Investor View", () => {
           etoData,
           sharePrice,
         );
-        const minInvestmentAmountFormatted = getShortFormattedNumber(minInvestmentAmount);
-        const maxInvestmentAmountFormatted = getShortFormattedNumber(maxInvestmentAmount);
+        const minInvestmentAmountFormatted = getShortFormattedNumber(
+          minInvestmentAmount.toString(),
+        );
+        const maxInvestmentAmountFormatted = getShortFormattedNumber(
+          maxInvestmentAmount.toString(),
+        );
 
         cy.get(tid("eto-public-view-investment-amount")).should(
           "contain",
@@ -115,7 +119,7 @@ describe("Eto Investor View", () => {
         cy.get(tid("eto-public-view-tokens-per-share")).should(
           "contain",
           getFormattedNumber(
-            etoData.equityTokensPerShare,
+            etoData.equityTokensPerShare.toString(),
             undefined,
             undefined,
             undefined,
@@ -124,20 +128,20 @@ describe("Eto Investor View", () => {
         );
 
         const tokenPrice = getFormattedNumber(
-          computedNewSharePrice / etoData.equityTokensPerShare,
+          (computedNewSharePrice / etoData.equityTokensPerShare).toString(),
           ERoundingMode.DOWN,
         );
         cy.get(tid("eto-public-view-token-price")).should("contain", `${tokenPrice} EUR`);
 
         const minTicketEur = getFormattedNumber(
-          etoData.minTicketEur,
+          etoData.minTicketEur.toString(),
           undefined,
           undefined,
           undefined,
           ENumberOutputFormat.INTEGER,
         );
         const maxTicketEur = getFormattedNumber(
-          etoData.maxTicketEur,
+          etoData.maxTicketEur!.toString(),
           undefined,
           undefined,
           undefined,

@@ -13,8 +13,8 @@ storiesOf("AccountBalance", module)
       icon={ethIcon}
       currency={ECurrency.ETH}
       currencyTotal={ECurrency.EUR}
-      largeNumber={Q18.mul(847213.1954).toString()}
-      value={Q18.mul(123145.12).toString()}
+      largeNumber={Q18.mul("847213.1954").toString()}
+      value={Q18.mul("123145.12").toString()}
     />
   ))
   .add("with actions", () => (
@@ -22,8 +22,8 @@ storiesOf("AccountBalance", module)
       icon={ethIcon}
       currency={ECurrency.ETH}
       currencyTotal={ECurrency.EUR}
-      largeNumber={Q18.mul(847213.1954).toString()}
-      value={Q18.mul(123145.12).toString()}
+      largeNumber={Q18.mul("847213.1954").toString()}
+      value={Q18.mul("123145.12").toString()}
       actions={[
         {
           name: "Purchase",

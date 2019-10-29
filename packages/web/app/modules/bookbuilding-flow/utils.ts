@@ -62,7 +62,7 @@ export const isPledgeNotAboveMaximum = (maxPledge?: number): TestOptions => ({
   test: function(this: TestContext, value: string): boolean {
     return (
       isValidNumber(value) &&
-      new BigNumber(value).lessThanOrEqualTo(maxPledge ? maxPledge.toString() : Infinity)
+      new BigNumber(value).lessThanOrEqualTo(maxPledge ? maxPledge.toString() : Infinity.toString())
     );
   },
 });

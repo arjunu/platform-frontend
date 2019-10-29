@@ -67,7 +67,7 @@ export const selectMaximumInvestment = (state: IAppState): string => {
 
   // Round balance value to fixed number with precision based on investment type
   const roundedBalance = new BigNumber(walletBalanceUlps)
-    .div(new BigNumber(10).pow(MONEY_DECIMALS))
+    .div(new BigNumber("10").pow(MONEY_DECIMALS))
     .toFixed(decimalsPrecision, BigNumber.ROUND_DOWN);
 
   // Compare rounded balance to value provided by user

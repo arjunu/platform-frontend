@@ -21,8 +21,8 @@ storiesOf("Unlocked EUR Wallet", module)
       onPurchase={action("onPurchase")}
       onRedeem={action("redeem")}
       onVerify={action("onVerify")}
-      neuroAmount={Q18.mul(847213).toString()}
-      neuroEuroAmount={Q18.mul(847213).toString()}
+      neuroAmount={Q18.mul("847213").toString()}
+      neuroEuroAmount={Q18.mul("847213").toString()}
       isUserFullyVerified={true}
     />
   ));

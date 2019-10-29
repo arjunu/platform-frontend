@@ -3,6 +3,7 @@ import { includes } from "lodash/fp";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TBigNumberVariants } from "../../../../lib/web3/types";
 import {
   EInvestmentErrorState,
   EInvestmentType,
@@ -142,7 +143,7 @@ export function getInputErrorMessage(
           values={{
             maxEurAmount: (
               <Money
-                value={maxTicketEur || 0}
+                value={maxTicketEur || "0"}
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={ECurrency.EUR}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
@@ -159,7 +160,7 @@ export function getInputErrorMessage(
             investmentCurrency,
             minEurAmount: (
               <Money
-                value={minTicketEur || 0}
+                value={minTicketEur || "0"}
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={ECurrency.EUR}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
@@ -167,7 +168,7 @@ export function getInputErrorMessage(
             ),
             minEthAmount: (
               <Money
-                value={minTicketEth || 0}
+                value={minTicketEth || "0"}
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={ECurrency.ETH}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS_ROUND_UP}
@@ -189,7 +190,7 @@ export function getInputErrorMessage(
   return undefined;
 }
 
-export const formatMinMaxTickets = (value: string | BigNumber, roundingMode: ERoundingMode) =>
+export const formatMinMaxTickets = (value: TBigNumberVariants, roundingMode: ERoundingMode) =>
   toFixedPrecision({
     value,
     inputFormat: ENumberInputFormat.ULPS,
@@ -203,17 +204,17 @@ export function getActualTokenPriceEur(
   equityTokenCount: string | number,
 ): string {
   return formatNumber({
-    value: divideBigNumbers(investmentEurUlps, equityTokenCount).toString(),
+    value: divideBigNumbers(investmentEurUlps, equityTokenCount.toString()).toString(),
     decimalPlaces: selectDecimalPlaces(EPriceFormat.EQUITY_TOKEN_PRICE_EUR_TOKEN),
   });
 }
 
 export const getTokenPriceDiscount = (fullTokenPrice: string, actualTokenPrice: string) => {
   // round up effective discount
-  const discount = new BigNumber(1)
+  const discount = new BigNumber("1")
     .sub(new BigNumber(actualTokenPrice).div(new BigNumber(fullTokenPrice)))
-    .mul(100)
+    .mul("100")
     .round(0, BigNumber.ROUND_HALF_UP);
 
-  return discount.gte(1) ? discount.toString() : null;
+  return discount.gte("1") ? discount.toString() : null;
 };

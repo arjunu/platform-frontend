@@ -92,7 +92,7 @@ export function* generateEthWithdrawTransaction(
       to: contractsService.etherToken.address,
       from,
       data: txInput,
-      value: difference.comparedTo(0) > 0 ? difference.toString() : "0",
+      value: difference.comparedTo("0") > 0 ? difference.toString() : "0",
       gasPrice: gasPriceWithOverhead,
     };
 
@@ -104,10 +104,13 @@ export function* generateEthWithdrawTransaction(
       } = window as IWindowWithData;
       if (disableNotAcceptingEtherCheck) {
         // For the specific test cases return txDetails directly without estimating gas
-        return { ...txDetails, gas: calculateGasLimitWithOverhead(DEFAULT_UPPER_GAS_LIMIT) };
+        return {
+          ...txDetails,
+          gas: calculateGasLimitWithOverhead(DEFAULT_UPPER_GAS_LIMIT.toString()),
+        };
       } else if (forceLowGas) {
         // Return really low gas
-        return { ...txDetails, gas: calculateGasLimitWithOverhead(1000) };
+        return { ...txDetails, gas: calculateGasLimitWithOverhead("1000") };
       } else if (forceStandardGas) {
         // Return really low gas
         return { ...txDetails, gas: 21000 };

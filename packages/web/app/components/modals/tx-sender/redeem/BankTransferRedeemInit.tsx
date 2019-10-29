@@ -189,7 +189,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                       // ex value, convertToBigNumber(0.005) * 100 = 0.5%
                       fee: (
                         <FormatNumber
-                          value={new BigNumber(bankFee).mul(100)}
+                          value={new BigNumber(bankFee).mul("100")}
                           inputFormat={ENumberInputFormat.ULPS}
                           outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
                           roundingMode={ERoundingMode.DOWN}

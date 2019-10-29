@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
 
 import { DEFAULT_DECIMAL_PLACES } from "../../../config/constants";
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import { invariant } from "../../../utils/invariant";
 import { convertFromUlps } from "../../../utils/NumberUtils";
 import { EquityToken } from "../../../utils/opaque-types/types";
@@ -57,7 +58,7 @@ export enum ESpecialNumber {
 export type TValueFormat = ECurrency | EPriceFormat | ENumberFormat | EquityToken;
 
 interface IToFixedPrecision {
-  value: string | BigNumber | number;
+  value: TBigNumberVariants;
   roundingMode?: ERoundingMode;
   inputFormat?: ENumberInputFormat;
   decimalPlaces: number | undefined;
@@ -66,7 +67,7 @@ interface IToFixedPrecision {
 }
 
 interface IFormatNumber {
-  value: string | BigNumber | number;
+  value: TBigNumberVariants;
   roundingMode?: ERoundingMode;
   inputFormat?: ENumberInputFormat;
   decimalPlaces?: number;

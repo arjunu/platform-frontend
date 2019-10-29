@@ -9,8 +9,8 @@ import { tid } from "../../../../test/testUtils";
 import { Q18 } from "../../../config/constants";
 import { AccountRow, WalletLedgerChooserTableAdvanced } from "./WalletLedgerChooserTableAdvanced";
 
-const weiBalance = new BigNumber(1.6495).mul(Q18).toString();
-const neuWeiBalance = new BigNumber(10.6495).mul(Q18).toString();
+const weiBalance = new BigNumber("1.6495").mul(Q18).toString();
+const neuWeiBalance = new BigNumber("10.6495").mul(Q18).toString();
 
 const defaultProps = () => ({
   loading: false,

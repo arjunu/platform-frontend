@@ -2,7 +2,7 @@ import { isAddress, randomHex, toChecksumAddress } from "web3-utils";
 
 import { ERoundingMode } from "../../components/shared/formatters/utils";
 import { ETHEREUM_ADDRESS_LENGTH, MONEY_DECIMALS } from "../../config/constants";
-import { TBigNumberVariant } from "../../lib/web3/types";
+import { TBigNumberVariants } from "../../lib/web3/types";
 import { compareBigNumbers } from "../../utils/BigNumberUtils";
 import { formatMoney } from "../../utils/MoneyUtils";
 import { convertToUlps } from "../../utils/NumberUtils";
@@ -41,16 +41,16 @@ export const isAddressValid = (value: string): value is EthereumAddress =>
   !!(value && isAddress(value));
 
 export const doesUserHaveEnoughEther = (
-  value: TBigNumberVariant,
-  maxEther: TBigNumberVariant,
+  value: TBigNumberVariants,
+  maxEther: TBigNumberVariants,
 ): boolean => {
   if (value === "") return false;
   return compareBigNumbers(convertToUlps(value || "0"), maxEther) < 0;
 };
 
 export const doesUserHaveEnoughNEuro = (
-  value: TBigNumberVariant,
-  maxNEuro: TBigNumberVariant,
+  value: TBigNumberVariants,
+  maxNEuro: TBigNumberVariants,
 ): boolean => {
   if (value === "") return false;
   const formattedMax = formatMoney(maxNEuro, MONEY_DECIMALS, 2, ERoundingMode.DOWN);
@@ -59,8 +59,8 @@ export const doesUserHaveEnoughNEuro = (
 };
 
 export const doesUserWithdrawMinimal = (
-  value: TBigNumberVariant,
-  minNEuro: TBigNumberVariant,
+  value: TBigNumberVariants,
+  minNEuro: TBigNumberVariants,
 ): boolean => {
   if (value === "") return false;
   return compareBigNumbers(convertToUlps(value || "0"), minNEuro) >= 0;

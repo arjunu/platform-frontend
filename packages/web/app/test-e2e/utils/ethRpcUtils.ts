@@ -74,9 +74,9 @@ export const sendEth = (fixture: string, to: string, amount: BigNumber | "all") 
   const account = new Web3Accounts(NODE_ADDRESS).privateKeyToAccount(privateKey);
 
   getBalanceRpc(account.address).then(balanceResponse => {
-    const availableAmount = new BigNumber(balanceResponse.body.result).minus(21000);
+    const availableAmount = new BigNumber(balanceResponse.body.result).minus("21000");
 
-    if (availableAmount.greaterThan(0)) {
+    if (availableAmount.greaterThan("0")) {
       cy.log("Sending ethereum");
 
       const amountToSend = new BigNumber(amount === "all" ? availableAmount : amount);

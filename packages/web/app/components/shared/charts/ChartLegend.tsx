@@ -37,7 +37,7 @@ export const ChartLegend: React.FunctionComponent<IProps> = ({ data }) => (
               data.labels[index]
             )}{" "}
             <Money
-              value={value}
+              value={value.toString()}
               inputFormat={ENumberInputFormat.FLOAT}
               outputFormat={ENumberOutputFormat.FULL}
               valueType={ENumberFormat.PERCENTAGE}

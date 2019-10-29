@@ -13,10 +13,10 @@ export const getRequiredAmount = (token: ECurrency) => {
 
   switch (token) {
     case ECurrency.ETH: {
-      return convertToUlps(0.01);
+      return convertToUlps("0.01");
     }
     case ECurrency.EUR_TOKEN: {
-      return convertToUlps(1);
+      return convertToUlps("1");
     }
     default:
       return "0";

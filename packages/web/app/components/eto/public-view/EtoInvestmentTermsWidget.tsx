@@ -11,6 +11,7 @@ import { getDocumentByType } from "../../../modules/eto-documents/utils";
 import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { TDataTestId, TTranslatedString } from "../../../types";
+import { divideBigNumbers } from "../../../utils/BigNumberUtils";
 import { DocumentButton } from "../../shared/DocumentLink";
 import { FormatNumber } from "../../shared/formatters/FormatNumber";
 import { FormatNumberRange } from "../../shared/formatters/FormatNumberRange";
@@ -123,7 +124,7 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
               label={<FormattedMessage id="eto.public-view.token-terms.pre-money-valuation" />}
               value={
                 <Money
-                  value={eto.preMoneyValuationEur}
+                  value={eto.preMoneyValuationEur ? eto.preMoneyValuationEur.toString() : undefined}
                   inputFormat={ENumberInputFormat.FLOAT}
                   valueType={ECurrency.EUR}
                   outputFormat={ENumberOutputFormat.INTEGER}
@@ -137,7 +138,9 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
               value={
                 <>
                   <FormatNumber
-                    value={eto.existingShareCapital}
+                    value={
+                      eto.existingShareCapital ? eto.existingShareCapital.toString() : undefined
+                    }
                     outputFormat={ENumberOutputFormat.INTEGER}
                     inputFormat={ENumberInputFormat.FLOAT}
                     defaultValue={<ToBeAnnounced />}
@@ -153,7 +156,7 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
                 value={
                   <>
                     <FormatNumber
-                      value={eto.authorizedCapital}
+                      value={eto.authorizedCapital.toString()}
                       outputFormat={ENumberOutputFormat.INTEGER}
                       inputFormat={ENumberInputFormat.FLOAT}
                       defaultValue={<ToBeAnnounced />}
@@ -170,7 +173,7 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
                 value={
                   <>
                     <FormatNumber
-                      value={eto.newShareNominalValue}
+                      value={eto.newShareNominalValue.toString()}
                       outputFormat={ENumberOutputFormat.INTEGER}
                       inputFormat={ENumberInputFormat.FLOAT}
                       defaultValue={<ToBeAnnounced />}
@@ -185,8 +188,10 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
               label={<FormattedMessage id="eto.public-view.token-terms.new-shares-to-issue" />}
               value={
                 <FormatNumberRange
-                  valueFrom={eto.minimumNewSharesToIssue}
-                  valueUpto={eto.newSharesToIssue}
+                  valueFrom={
+                    eto.minimumNewSharesToIssue ? eto.minimumNewSharesToIssue.toString() : undefined
+                  }
+                  valueUpto={eto.newSharesToIssue ? eto.newSharesToIssue.toString() : undefined}
                   outputFormat={ENumberOutputFormat.INTEGER}
                   inputFormat={ENumberInputFormat.FLOAT}
                   defaultValue={<ToBeAnnounced />}
@@ -201,7 +206,7 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
                 }
                 value={
                   <FormatNumber
-                    value={eto.newSharesToIssueInWhitelist}
+                    value={eto.newSharesToIssueInWhitelist.toString()}
                     outputFormat={ENumberOutputFormat.INTEGER}
                     inputFormat={ENumberInputFormat.FLOAT}
                     defaultValue={<ToBeAnnounced />}
@@ -214,7 +219,7 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
               label={<FormattedMessage id="eto.public-view.token-terms.new-share-price" />}
               value={
                 <Money
-                  value={newSharePrice}
+                  value={newSharePrice ? newSharePrice.toString() : undefined}
                   valueType={EPriceFormat.SHARE_PRICE}
                   inputFormat={ENumberInputFormat.FLOAT}
                   outputFormat={ENumberOutputFormat.FULL}
@@ -247,7 +252,7 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
               label={<FormattedMessage id="eto.public-view.token-terms.tokens-per-share" />}
               value={
                 <FormatNumber
-                  value={eto.equityTokensPerShare}
+                  value={eto.equityTokensPerShare.toString()}
                   outputFormat={ENumberOutputFormat.INTEGER}
                   inputFormat={ENumberInputFormat.FLOAT}
                   defaultValue={<ToBeAnnounced />}
@@ -261,7 +266,10 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
                 <Money
                   value={
                     newSharePrice && eto.equityTokensPerShare
-                      ? newSharePrice / eto.equityTokensPerShare
+                      ? divideBigNumbers(
+                          newSharePrice.toString(),
+                          eto.equityTokensPerShare.toString(),
+                        )
                       : undefined
                   }
                   inputFormat={ENumberInputFormat.FLOAT}
@@ -290,8 +298,10 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
               label={<FormattedMessage id="eto.public-view.token-terms.ticket-size" />}
               value={
                 <MoneyRange
-                  valueFrom={eto.minTicketEur}
-                  valueUpto={eto.maxTicketEur ? eto.maxTicketEur : ESpecialNumber.UNLIMITED}
+                  valueFrom={eto.minTicketEur.toString()}
+                  valueUpto={
+                    eto.maxTicketEur ? eto.maxTicketEur.toString() : ESpecialNumber.UNLIMITED
+                  }
                   inputFormat={ENumberInputFormat.FLOAT}
                   valueType={ECurrency.EUR}
                   outputFormat={ENumberOutputFormat.INTEGER}

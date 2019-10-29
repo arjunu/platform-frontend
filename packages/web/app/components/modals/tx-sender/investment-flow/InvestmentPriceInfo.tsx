@@ -31,9 +31,9 @@ const InvestmentPriceInfo: React.FunctionComponent<IExternalProps> = ({
       // do not show personal discount if the amount left is less than 1 cent
       const isTherePersonalWhitelistDiscount = convertFromUlps(
         etoTokenPersonalDiscount.whitelistDiscountAmountLeft,
-      ).greaterThanOrEqualTo(0.01);
+      ).greaterThanOrEqualTo("0.01");
       const isThereGeneralWhitelistDiscount = !isZero(
-        etoTokenGeneralDiscounts.whitelistDiscountFrac,
+        etoTokenGeneralDiscounts.whitelistDiscountFrac.toString(),
       );
 
       if (isTherePersonalWhitelistDiscount) {
@@ -93,7 +93,7 @@ const InvestmentPriceInfo: React.FunctionComponent<IExternalProps> = ({
                 values={{
                   tokenPriceEur: (
                     <Money
-                      value={etoTokenStandardPrice}
+                      value={etoTokenStandardPrice.toString()}
                       inputFormat={ENumberInputFormat.FLOAT}
                       valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
                       outputFormat={ENumberOutputFormat.FULL}
@@ -136,7 +136,7 @@ const InvestmentPriceInfo: React.FunctionComponent<IExternalProps> = ({
           values={{
             tokenPriceEur: (
               <Money
-                value={etoTokenStandardPrice}
+                value={etoTokenStandardPrice.toString()}
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
                 outputFormat={ENumberOutputFormat.FULL}
@@ -147,7 +147,7 @@ const InvestmentPriceInfo: React.FunctionComponent<IExternalProps> = ({
       );
     }
     case EETOStateOnChain.Public:
-      if (!isZero(etoTokenGeneralDiscounts.publicDiscountFrac)) {
+      if (!isZero(etoTokenGeneralDiscounts.publicDiscountFrac.toString())) {
         return (
           <FormattedMessage
             id="investment-flow.token-price-info.general-discount"
@@ -175,7 +175,7 @@ const InvestmentPriceInfo: React.FunctionComponent<IExternalProps> = ({
             tokenPriceEur: (
               <Money
                 data-test-id="investment-flow.token-price.no-discount.price"
-                value={etoTokenStandardPrice}
+                value={etoTokenStandardPrice.toString()}
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
                 outputFormat={ENumberOutputFormat.FULL}

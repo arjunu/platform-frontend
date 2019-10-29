@@ -23,7 +23,7 @@ const CalculatedFee: React.FunctionComponent<{ amount: string; bankFee: string }
           false,
           ERoundingMode.HALF_UP,
         )
-      : 0;
+      : "0";
   const calculatedFee = multiplyBigNumbers([providedAmount, bankFee]);
 
   return (

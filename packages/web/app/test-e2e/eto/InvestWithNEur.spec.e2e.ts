@@ -66,7 +66,7 @@ describe("Invest with nEur", () => {
       cy.get(`${tid("investment-widget-total-nEur-invested")} ${tid("value")}`).should(
         "contain",
         getFormattedNumber(
-          previousAmount.plus(INVESTED_NEUR_AMOUNT).toNumber(),
+          previousAmount.plus(INVESTED_NEUR_AMOUNT.toString()).toString(),
           ERoundingMode.UP,
           2,
           ENumberInputFormat.FLOAT,

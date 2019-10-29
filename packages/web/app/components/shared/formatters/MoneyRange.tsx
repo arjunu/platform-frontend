@@ -1,7 +1,7 @@
-import BigNumber from "bignumber.js";
 import * as cn from "classnames";
 import * as React from "react";
 
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import { CommonHtmlProps } from "../../../types";
 import { FormatNumberRange } from "./FormatNumberRange";
 import { FormatShortNumberRange } from "./FormatShortNumber";
@@ -19,8 +19,8 @@ import {
 import * as styles from "./Money.module.scss";
 
 interface IMoneyRangeProps {
-  valueFrom: string | BigNumber | number | null | undefined;
-  valueUpto: string | BigNumber | number | null | undefined | ESpecialNumber;
+  valueFrom: TBigNumberVariants | null | undefined;
+  valueUpto: TBigNumberVariants | null | undefined | ESpecialNumber;
   separator?: string;
 }
 

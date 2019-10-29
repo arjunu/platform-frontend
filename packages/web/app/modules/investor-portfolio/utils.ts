@@ -16,7 +16,7 @@ import {
 
 // when calculating minimum ticket, this is defult value for subsequent investments
 // in the same ETO
-export const MIMIMUM_RETAIL_TICKET_EUR_ULPS = Q18.mul(10);
+export const MIMIMUM_RETAIL_TICKET_EUR_ULPS = Q18.mul("10");
 
 export const convertToCalculatedContribution = ([
   isWhitelisted,
@@ -92,7 +92,7 @@ export const convertToTokenDisbursal = (
   amountToBeClaimed: amountToBeClaimed.toString(),
   totalDisbursedAmount: totalDisbursedAmount.toString(),
   // convert seconds timestamp to milliseconds
-  timeToFirstDisbursalRecycle: timeToFirstDisbursalRecycle.mul(1000).toNumber(),
+  timeToFirstDisbursalRecycle: timeToFirstDisbursalRecycle.mul("1000").toNumber(),
 });
 
 export const convertToWhitelistTicket = ([
@@ -125,10 +125,10 @@ export const getRequiredIncomingAmount = (token: ECurrency) => {
 
   switch (token) {
     case ECurrency.ETH: {
-      return convertToUlps(1);
+      return convertToUlps("1");
     }
     case ECurrency.EUR_TOKEN: {
-      return convertToUlps(100);
+      return convertToUlps("100");
     }
     default:
       return "0";

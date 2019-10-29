@@ -16,7 +16,7 @@ import { ETxSenderType } from "../../../types";
 
 // Use highest possible solidity uint256 to accept all disbursals for token
 // see https://github.com/Neufund/platform-contracts/blob/59e88f6881bf5adbced8462f1925496467ea4c18/contracts/FeeDisbursal/FeeDisbursal.sol#L164
-const ACCEPT_ALL_DISBURSALS = new BigNumber(2).pow(256).minus(1);
+const ACCEPT_ALL_DISBURSALS = new BigNumber("2").pow(256).minus("1");
 
 function* generatePayoutAcceptSingleTokenTransaction(
   { contractsService, web3Manager }: TGlobalDependencies,

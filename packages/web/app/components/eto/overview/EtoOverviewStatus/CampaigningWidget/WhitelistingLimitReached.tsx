@@ -35,7 +35,7 @@ export const WhitelistingLimitReached: React.FunctionComponent<TWhitelistingLimi
         values={{
           totalAmount: (
             <Money
-              value={pledgedAmount}
+              value={pledgedAmount ? pledgedAmount.toString() : undefined}
               inputFormat={ENumberInputFormat.FLOAT}
               valueType={ECurrency.EUR}
               outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}

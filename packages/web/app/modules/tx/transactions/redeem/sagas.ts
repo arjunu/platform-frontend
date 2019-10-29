@@ -51,7 +51,7 @@ function* startNEuroRedeemGenerator(_: TGlobalDependencies): any {
   const nEURBalanceUlps = yield select(selectLiquidEuroTokenBalance);
 
   const nEURBalance = new BigNumber(nEURBalanceUlps)
-    .div(new BigNumber(10).pow(MONEY_DECIMALS))
+    .div(new BigNumber("10").pow(MONEY_DECIMALS))
     .toFixed(2, BigNumber.ROUND_DOWN);
 
   // Whole precision number should be passed when there is whole balance redeemed

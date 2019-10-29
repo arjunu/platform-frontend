@@ -18,4 +18,4 @@ export interface IEthereumNetworkConfig {
   rpcUrl: string;
 }
 
-export type TBigNumberVariant = number | string | BigNumber;
+export type TBigNumberVariants = string | BigNumber;

@@ -2,23 +2,23 @@ import BigNumber from "bignumber.js";
 import { curry } from "lodash/fp";
 
 import { Q18 } from "../config/constants";
-import { TBigNumberVariant } from "../lib/web3/types";
+import { TBigNumberVariants } from "../lib/web3/types";
 
-export function isZero(value: TBigNumberVariant): boolean {
+export function isZero(value: TBigNumberVariants): boolean {
   const bigNumberValue = new BigNumber(value);
 
   return bigNumberValue.isZero();
 }
 
-export function isLessThanOrEqualToZero(value: TBigNumberVariant): boolean {
+export function isLessThanOrEqualToZero(value: TBigNumberVariants): boolean {
   const bigNumberValue = new BigNumber(value);
 
-  return bigNumberValue.lessThanOrEqualTo(0);
+  return bigNumberValue.lessThanOrEqualTo("0");
 }
 
-export const convertFromUlps = (value: TBigNumberVariant) => new BigNumber(value).div(Q18);
+export const convertFromUlps = (value: TBigNumberVariants) => new BigNumber(value).div(Q18);
 
-export const convertToUlps = (value: TBigNumberVariant) =>
+export const convertToUlps = (value: TBigNumberVariants) =>
   Q18.mul(value).toFixed(0, BigNumber.ROUND_UP);
 
 /*

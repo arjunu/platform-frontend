@@ -84,7 +84,7 @@ storiesOf("ETO/EtoOverviewThumbnail", module)
       brandName: "ICBM Capital Raise",
       url: "https://commit.neufund.org",
       companyPreviewCardBanner: icbmThumbnail,
-      totalAmount: Q18.mul(12500000).toString(),
+      totalAmount: Q18.mul("12500000").toString(),
       id: "icbm",
       categories: ["Technology", "Blockchain"],
       keyQuoteFounder:

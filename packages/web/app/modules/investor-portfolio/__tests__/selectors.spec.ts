@@ -85,7 +85,7 @@ describe("investor-portfolio > selectors", () => {
 
     it("returns at least ticket size", () => {
       (investorTicketSelectors.selectInvestorTicket as sinon.SinonStub).returns({
-        equivEurUlps: new BigNumber(30).mul(Q18),
+        equivEurUlps: new BigNumber("30").mul(Q18),
       });
       let result = selectCalculatedEtoTicketSizesUlpsById(state, etoId);
       expect(result).to.deep.equal({
@@ -94,7 +94,7 @@ describe("investor-portfolio > selectors", () => {
       });
 
       (investorTicketSelectors.selectInvestorTicket as sinon.SinonStub).returns({
-        equivEurUlps: new BigNumber(3000).mul(Q18),
+        equivEurUlps: new BigNumber("3000").mul(Q18),
       });
       result = selectCalculatedEtoTicketSizesUlpsById(state, etoId);
       expect(result).to.deep.equal({

@@ -1,8 +1,8 @@
-import BigNumber from "bignumber.js";
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import { TTranslatedString } from "../../../types";
 import { assertNever } from "../../../utils/assertNever";
 import {
@@ -17,8 +17,8 @@ import {
 import * as styles from "./FormatNumber.module.scss";
 
 interface INumberRangeProps {
-  valueFrom: string | BigNumber | number | undefined | null;
-  valueUpto: string | BigNumber | number | undefined | null | ESpecialNumber;
+  valueFrom: TBigNumberVariants | undefined | null;
+  valueUpto: TBigNumberVariants | undefined | null | ESpecialNumber;
   defaultValue?: React.ReactChild;
   decimalPlaces?: number;
   inputFormat: ENumberInputFormat;

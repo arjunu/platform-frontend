@@ -8,7 +8,7 @@ import { BankTransferVerifyInfoLayout } from "./BankTransferVerifyAgreement";
 
 const props = {
   goToAgreement: action("goToAgreement"),
-  minEuroUlps: convertToUlps(1),
+  minEuroUlps: convertToUlps("1"),
 };
 
 storiesOf("BankTransferVerifyAgreement", module)

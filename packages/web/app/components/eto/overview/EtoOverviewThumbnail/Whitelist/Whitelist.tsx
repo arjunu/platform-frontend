@@ -83,7 +83,7 @@ const WhitelistLayout: React.FunctionComponent<IProps> = ({
               values={{
                 pledgedAmount: (
                   <Money
-                    value={pledgedAmount}
+                    value={pledgedAmount ? pledgedAmount.toString() : null}
                     inputFormat={ENumberInputFormat.FLOAT}
                     valueType={ECurrency.EUR}
                     outputFormat={EAbbreviatedNumberOutputFormat.SHORT}
@@ -114,7 +114,7 @@ const WhitelistLayout: React.FunctionComponent<IProps> = ({
               values={{
                 pledgedAmount: (
                   <Money
-                    value={pledgedAmount}
+                    value={pledgedAmount ? pledgedAmount.toString() : null}
                     inputFormat={ENumberInputFormat.FLOAT}
                     valueType={ECurrency.EUR}
                     outputFormat={EAbbreviatedNumberOutputFormat.SHORT}

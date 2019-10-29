@@ -112,14 +112,14 @@ describe("Wallet selector > Ledger wizard > actions", () => {
       const web3ManagerMock = createMock(Web3Manager, {
         internalWeb3Adapter: createMock(Web3Adapter, {
           getBalance: (address: string) =>
-            Promise.resolve(new BigNumber(expectedAccountsToBalancesETH[address])),
+            Promise.resolve(new BigNumber(expectedAccountsToBalancesETH[address].toString())),
         }),
       });
 
       const contractsMock = createMock(ContractsService, {
         neumark: createMock(Neumark, {
           balanceOf: (address: string) =>
-            Promise.resolve(new BigNumber(expectedAccountsToBalancesNEU[address])),
+            Promise.resolve(new BigNumber(expectedAccountsToBalancesNEU[address].toString())),
         }),
       });
 

@@ -147,21 +147,21 @@ export const selectCalculatedEtoTicketSizesUlpsById = (state: IAppState, etoId: 
   const eto = selectEtoById(state, etoId);
   const contrib = selectCalculatedContribution(state, etoId);
   const investorTicket = selectInvestorTicket(state, etoId);
-  const zero = new BigNumber(0);
+  const zero = new BigNumber("0");
 
   // todo: check if contrib is ever undefined and simplify this condition
   let min =
     (contrib && new BigNumber(contrib.minTicketEurUlps)) ||
-    (eto && Q18.mul(eto.minTicketEur || zero));
+    (eto && Q18.mul(eto.minTicketEur.toString() || zero));
   let max =
     (contrib && new BigNumber(contrib.maxTicketEurUlps)) ||
-    (eto && eto.maxTicketEur && Q18.mul(eto.maxTicketEur || zero));
+    (eto && eto.maxTicketEur && Q18.mul(eto.maxTicketEur.toString() || zero));
 
   if (min && max) {
     if (eto && investorTicket) {
       // todo: replace with price taken from smart contract
       const tokenPrice = eto.investmentCalculatedValues!.sharePrice / eto.equityTokensPerShare;
-      max = BigNumber.max(max.sub(investorTicket.equivEurUlps), 0);
+      max = BigNumber.max(max.sub(investorTicket.equivEurUlps), "0");
       // when already invested, you can invest less than minimum ticket however we set this value
       // to more than just one token: we have official retail min ticket at 10 EUR so use it
       min = BigNumber.max(

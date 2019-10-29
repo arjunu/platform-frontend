@@ -88,7 +88,7 @@ const BookBuildingStats = ({ bookBuildingStats, maxPledges, downloadCSV }: IBook
       </span>
       <Money
         data-test-id="bookbuilding-widget.stats.amount-backed"
-        value={bookBuildingStats.pledgedAmount}
+        value={bookBuildingStats.pledgedAmount.toString()}
         inputFormat={ENumberInputFormat.FLOAT}
         valueType={ECurrency.EUR}
         outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}

@@ -79,7 +79,7 @@ export const LegalInformationWidget: React.FunctionComponent<IProps> = ({
               </span>
               <span className={styles.value}>
                 <FormatNumber
-                  value={companyData.numberOfFounders}
+                  value={companyData.numberOfFounders.toString()}
                   outputFormat={ENumberOutputFormat.INTEGER}
                   inputFormat={ENumberInputFormat.FLOAT}
                 />
@@ -109,7 +109,7 @@ export const LegalInformationWidget: React.FunctionComponent<IProps> = ({
               </span>
               <span className={styles.value}>
                 <Money
-                  value={companyData.lastFundingSizeEur}
+                  value={companyData.lastFundingSizeEur.toString()}
                   inputFormat={ENumberInputFormat.FLOAT}
                   valueType={ECurrency.EUR}
                   outputFormat={ENumberOutputFormat.INTEGER}
@@ -124,7 +124,7 @@ export const LegalInformationWidget: React.FunctionComponent<IProps> = ({
               </span>
               <span className={styles.value}>
                 <FormatNumber
-                  value={companyData.companyShareCapital}
+                  value={companyData.companyShareCapital.toString()}
                   outputFormat={ENumberOutputFormat.INTEGER}
                   inputFormat={ENumberInputFormat.FLOAT}
                 />

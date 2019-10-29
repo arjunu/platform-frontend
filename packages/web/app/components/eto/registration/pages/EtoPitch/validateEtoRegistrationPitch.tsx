@@ -102,7 +102,8 @@ const conversion2 = (data: TPartialCompanyEtoData) => {
   if (dataCopy.useOfCapitalList) {
     dataCopy.useOfCapitalList = dataCopy.useOfCapitalList.reduce(
       // use big number representation to prevent floating points precision errors
-      (acc: number, { percent }: { percent: number }) => +addBigNumbers([acc, percent]),
+      (acc: number, { percent }: { percent: number }) =>
+        +addBigNumbers([acc.toString(), percent.toString()]),
       0,
     );
   }

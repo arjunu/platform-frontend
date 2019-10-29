@@ -37,7 +37,7 @@ export const selectIsReadyToInvest = (state: IAppState) => {
     ethValue &&
     !selectInvestmentErrorState(state) &&
     selectIsInvestmentInputValidated(state) &&
-    compareBigNumbers(ethValue, 0) > 0 &&
+    compareBigNumbers(ethValue, "0") > 0 &&
     selectTxValidationState(state) === EValidationState.VALIDATION_OK
   );
 };

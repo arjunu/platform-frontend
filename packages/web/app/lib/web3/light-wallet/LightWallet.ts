@@ -117,11 +117,15 @@ export class LightWallet implements IPersonalWallet {
     const encodedTxData: IRawTxData = {
       from: txData.from,
       to: addHexPrefix(txData.to!),
-      gas: addHexPrefix(new BigNumber(txData.gas || 0).toString(16)),
-      gasPrice: addHexPrefix(new BigNumber(txData.gasPrice || 0).toString(16)),
-      nonce: addHexPrefix(new BigNumber(nonce || 0).toString(16)),
-      value: addHexPrefix(new BigNumber(txData.value! || 0).toString(16)),
-      data: addHexPrefix(txData.data || ""),
+      gas: addHexPrefix(new BigNumber((txData.gas && txData.gas.toString()) || "0").toString(16)),
+      gasPrice: addHexPrefix(
+        new BigNumber((txData.gasPrice && txData.gasPrice.toString()) || "0").toString(16),
+      ),
+      nonce: addHexPrefix(new BigNumber((nonce && nonce.toString()) || "0").toString(16)),
+      value: addHexPrefix(
+        new BigNumber((txData.value && txData.value.toString()) || "0").toString(16),
+      ),
+      data: addHexPrefix((txData.data && txData.data.toString()) || ""),
     };
 
     const rawData = LightWalletProvider.signing.signTx(
@@ -133,7 +137,10 @@ export class LightWallet implements IPersonalWallet {
     return await this.web3Adapter.sendRawTransaction(addHexPrefix(rawData));
   };
 
-  public getWalletPrivateData = async (): Promise<{ seed: string; privateKey: string }> => {
+  public getWalletPrivateData = async (): Promise<{
+    seed: string;
+    privateKey: string;
+  }> => {
     if (!this.password) {
       throw new LightWalletMissingPasswordError();
     }
@@ -165,7 +172,8 @@ export class LightWallet implements IPersonalWallet {
 export class LightWalletConnector {
   private web3Adapter?: Web3Adapter;
   public constructor(
-    @inject(symbols.ethereumNetworkConfig) public readonly web3Config: IEthereumNetworkConfig,
+    @inject(symbols.ethereumNetworkConfig)
+    public readonly web3Config: IEthereumNetworkConfig,
     @inject(symbols.logger) public readonly logger: ILogger,
   ) {}
 

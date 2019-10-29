@@ -1,6 +1,5 @@
-import BigNumber from "bignumber.js";
-
 import { MONEY_DECIMALS } from "../../config/constants";
+import { TBigNumberVariants } from "../../lib/web3/types";
 import { formatMoney } from "../../utils/MoneyUtils";
 import { ECurrency, ENumberInputFormat, ERoundingMode } from "./formatters/utils";
 
@@ -37,7 +36,7 @@ function getFormatDecimals(format: ENumberInputFormat): number {
  * Use app/components/shared/formatters/Money or app/components/shared/formatters/FormatNumber
  * */
 export function getFormattedMoney(
-  value: string | number | BigNumber,
+  value: TBigNumberVariants,
   currency: ECurrency,
   format: ENumberInputFormat,
   isPrice?: boolean,

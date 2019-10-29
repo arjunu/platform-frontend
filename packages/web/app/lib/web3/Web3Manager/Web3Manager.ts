@@ -117,6 +117,8 @@ export class Web3Manager extends EventEmitter {
       return DEFAULT_UPPER_GAS_LIMIT.toString();
     }
     // If gas is 21000 it means its a regular transaction
-    return gas === DEFAULT_LOWER_GAS_LIMIT ? gas.toString() : calculateGasLimitWithOverhead(gas);
+    return gas === DEFAULT_LOWER_GAS_LIMIT
+      ? gas.toString()
+      : calculateGasLimitWithOverhead(gas.toString());
   }
 }

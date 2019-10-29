@@ -6,7 +6,7 @@ import { invariant } from "../../utils/invariant";
 import { formatFlexiPrecision } from "../../utils/NumberUtils";
 import { TShareholder } from "./public-view/LegalInformationWidget";
 
-const HUNDRED_PERCENT = new BigNumber(100);
+const HUNDRED_PERCENT = new BigNumber("100");
 export const OTHERS_NAME = "Others";
 
 export interface ICompoundField {
@@ -260,7 +260,7 @@ export const generateShareholders = (
               ? shareCapitalPercentage
               : HUNDRED_PERCENT.sub(acc.totalPercentage);
 
-          if (shareCapitalPercentageCorrected.greaterThan(0)) {
+          if (shareCapitalPercentageCorrected.greaterThan("0")) {
             acc.shareholders.push({
               fullName: shareholder.fullName,
               percentageOfShares: shareCapitalPercentageCorrected.toNumber(),
@@ -271,7 +271,7 @@ export const generateShareholders = (
         }
         return acc;
       },
-      { totalPercentage: new BigNumber(0), shareholders: [] },
+      { totalPercentage: new BigNumber("0"), shareholders: [] },
     );
 
     return chartData.shareholders;

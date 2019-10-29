@@ -670,7 +670,7 @@ function* loadAgreementStatus(
     }
 
     // agreement indexing starts from 0 so we have to subtract 1 from amendments count
-    const currentAgreementIndex = amendmentsCount.sub(1);
+    const currentAgreementIndex = amendmentsCount.sub("1");
 
     const pastAgreement = yield contract.pastAgreement(currentAgreementIndex);
     const pastAgreementHash = hashFromIpfsLink(pastAgreement[2]);

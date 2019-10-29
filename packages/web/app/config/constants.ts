@@ -36,7 +36,7 @@ export enum EJwtPermissions {
 /**
  * Useful for money related calculations
  */
-export const Q18 = new BigNumber(10).pow(MONEY_DECIMALS);
+export const Q18 = new BigNumber("10").pow(MONEY_DECIMALS);
 
 /**
  * Represent zero address on Ethereum - non existing address used by ERC20 to mark minting and burning
