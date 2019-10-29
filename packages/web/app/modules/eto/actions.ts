@@ -113,4 +113,6 @@ export const etoActions = {
     "ETO_SET_INVESTMENT_AGREEMENT_URL",
     (previewCode: string, url: SignedISHAStatus["url"]) => ({ url, previewCode }),
   ),
+  loadCapitalIncrease: createActionFactory("ETO_LOAD_CAPITAL_INCREASE", (etoId:string, previewCode: string) => ({etoId,previewCode})),
+  setCapitalIncrease: createActionFactory("ETO_SET_CAPITAL_INCREASE", (previewCode: string, capitalIncrease: string) => ({previewCode, capitalIncrease}))
 };

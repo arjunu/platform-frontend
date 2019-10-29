@@ -26,7 +26,10 @@ import { EETOStateOnChain } from "../eto/types";
 import { isOnChain } from "../eto/utils";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../sagasUtils";
 import {
-  selectActiveEtoPreviewCodeFromQueryString, selectIsISHASignedByIssuer, selectNomineeEtoDocumentsStatus,
+  selectActiveEtoPreviewCodeFromQueryString,
+  selectCapitalIncrease,
+  selectIsISHASignedByIssuer,
+  selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
   selectNomineeEtoWithCompanyAndContract,
 } from "./selectors";
@@ -56,7 +59,7 @@ export function* loadNomineeTaskData({
         selectNomineeEtoWithCompanyAndContract,
       );
 
-      const requestedData: { [key: string]: unknown } = {
+      const requiredData: { [key: string]: unknown } = {
         nomineeRequests: put(actions.nomineeFlow.loadNomineeRequests()),
         nomineeRequestsLoaded: take(actions.nomineeFlow.setNomineeRequests),
         bankAccountDetails: put(actions.kyc.loadBankAccountDetails()),
@@ -64,13 +67,15 @@ export function* loadNomineeTaskData({
       };
 
       if (eto && isOnChain(eto) && eto.contract.timedState === EETOStateOnChain.Signing) {
-        requestedData.isha = put(actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode));
-        requestedData.ishaLoaded = take(actions.eto.setInvestmentAgreementHash);
-        requestedData.etoAgreementsStatus = put(actions.eto.loadEtoAgreementsStatus(eto));
-        requestedData.etoAgreementsStatusLoaded = take(actions.eto.setAgreementsStatus)
+        requiredData.isha = put(actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode));
+        requiredData.ishaLoaded = take(actions.eto.setInvestmentAgreementHash);
+        requiredData.etoAgreementsStatus = put(actions.eto.loadEtoAgreementsStatus(eto));
+        requiredData.etoAgreementsStatusLoaded = take(actions.eto.setAgreementsStatus);
+        requiredData.capitalIncrease = put(actions.eto.loadCapitalIncrease(eto.etoId, eto.previewCode));
+        requiredData.capitalIncreaseLoaded = take(actions.eto.setCapitalIncrease);
+        console.log(eto.contract)
       }
-
-      yield all(requestedData);
+      yield all(requiredData);
     }
   } catch (e) {
     logger.error("Failed to load Nominee tasks data", e);
@@ -91,6 +96,7 @@ export function* calculateNomineeTask() {
     isBankAccountVerified: select(selectIsBankAccountVerified),
     documentsStatus: select(selectNomineeEtoDocumentsStatus),
     isISHASignedByIssuer: select(selectIsISHASignedByIssuer),
+    capitalIncrease: select(selectCapitalIncrease),
   });
 
   const actualTask = yield getNomineeTaskStep(selectData);

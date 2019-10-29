@@ -734,6 +734,20 @@ export function* loadInvestmentAgreement(
   yield put(actions.eto.setInvestmentAgreementHash(action.payload.previewCode, parsedUrl));
 }
 
+export function* loadCapitalIncrease(
+  { contractsService }: TGlobalDependencies,
+  {payload}: TActionFromCreator<typeof actions.eto.loadCapitalIncrease>,
+): Iterator<any> {
+  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(
+    payload.etoId,
+  );
+
+  const [,capitalIncrease] = yield contract.contributionSummary();
+
+  yield put(actions.eto.setCapitalIncrease(payload.previewCode, capitalIncrease.toString()))
+}
+
+
 export function* loadEtoGeneralTokenDiscounts(
   { contractsService }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.eto.loadTokenTerms>,
@@ -773,6 +787,7 @@ export function* loadEtoGeneralTokenDiscounts(
 }
 
 export function* etoSagas(): Iterator<any> {
+  yield fork(neuTakeEvery, actions.eto.loadCapitalIncrease, loadCapitalIncrease);
   yield fork(neuTakeEvery, actions.eto.loadEtoPreview, loadEtoPreview);
   yield fork(neuTakeEvery, actions.eto.loadEto, loadEto);
   yield fork(neuTakeEvery, actions.eto.loadEtos, loadEtos);

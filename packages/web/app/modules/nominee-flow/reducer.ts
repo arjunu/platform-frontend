@@ -21,7 +21,8 @@ export type TNomineeFlowState = {
   linkBankAccount: ENomineeLinkBankAccountStatus;
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus;
   uploadIsha: ENomineeUploadIshaStatus;
-  nomineeTask:ENomineeTask
+  nomineeTask:ENomineeTask,
+  capitalIncrease: string | undefined
 }
 
 const nomineeFlowInitialState: TNomineeFlowState = {
@@ -35,7 +36,8 @@ const nomineeFlowInitialState: TNomineeFlowState = {
   linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
   uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
-  nomineeTask:ENomineeTask.NONE
+  nomineeTask:ENomineeTask.NONE,
+  capitalIncrease: undefined
 };
 
 export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
@@ -43,6 +45,11 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
   action,
 ): DeepReadonly<TNomineeFlowState> => {
   switch (action.type) {
+    case actions.eto.setCapitalIncrease.getType():
+      return {
+        ...state,
+        capitalIncrease: action.payload.capitalIncrease
+      };
     case actions.nomineeFlow.createNomineeRequest.getType():
     case actions.nomineeFlow.loadNomineeTaskData.getType():
       return {

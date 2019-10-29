@@ -145,6 +145,20 @@ export const selectIsISHASignedByIssuer = (state: IAppState) => {
   return undefined;
 };
 
+export const selectCapitalIncrease = (state: IAppState) => {
+  const eto = selectNomineeEtoWithCompanyAndContract(state);
+
+  if (eto) {
+    const investmentAgreement = selectInvestmentAgreement(state, eto.previewCode);
+
+    if (investmentAgreement) {
+      return investmentAgreement.isLoading ? undefined : !!investmentAgreement.url;
+    }
+  }
+
+  return undefined;
+};
+
 export const selectNomineeTaskStep = (state:IAppState) =>
   state.nomineeFlow.nomineeTask;
 
