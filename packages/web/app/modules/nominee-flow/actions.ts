@@ -2,7 +2,7 @@ import { createActionFactory } from "@neufund/shared";
 
 import { TCompanyEtoData, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { Dictionary } from "../../types";
-import { ENomineeRequestError, INomineeRequest } from "./types";
+import { ENomineeRequestError, INomineeRequest, TNomineeRequestStorage } from "./types";
 
 export const nomineeFlowActions = {
   loadNomineeEtos: createActionFactory("NOMINEE_FLOW_LOAD_ETOS"),
@@ -16,7 +16,14 @@ export const nomineeFlowActions = {
     "NOMINEE_FLOW_CREATE_NOMINEE_REQUEST",
     (issuerId: string) => ({ issuerId }),
   ),
-  storeNomineeRequest: createActionFactory(
+  loadNomineeRequests: createActionFactory(
+    "NOMINEE_FLOW_LOAD_NOMINEE_REQUESTS"
+  ),
+  setNomineeRequests: createActionFactory( //for saving all of them
+    "NOMINEE_FLOW_SET_NOMINEE_REQUESTS",
+    (nomineeRequests: TNomineeRequestStorage) => ({nomineeRequests})
+  ),
+  storeNomineeRequest: createActionFactory( //for saving the newly created one
     "NOMINEE_FLOW_SET_NOMINEE_LINK_REQUEST",
     (etoId: string, nomineeRequest: INomineeRequest) => ({ etoId, nomineeRequest }),
   ),

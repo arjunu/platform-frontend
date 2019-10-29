@@ -5,7 +5,7 @@ import { all, fork, put, select, take } from "redux-saga/effects";
 import {
   EEtoNomineeActiveEtoNotifications,
   ENomineeRequestErrorNotifications,
-  EtoMessage,
+  EtoMessage, KycFlowMessage,
 } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
 import { NOMINEE_REQUESTS_WATCHER_DELAY } from "../../config/constants";
@@ -24,7 +24,6 @@ import { selectIsUserFullyVerified } from "../auth/selectors";
 import { loadEtoContract } from "../eto/sagas";
 import { EETOStateOnChain } from "../eto/types";
 import { isOnChain } from "../eto/utils";
-import { loadBankAccountDetails } from "../kyc/sagas";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../sagasUtils";
 import {
   selectActiveEtoPreviewCodeFromQueryString, selectIsISHASignedByIssuer, selectNomineeEtoDocumentsStatus,
@@ -40,11 +39,9 @@ import {
   TNomineeRequestStorage,
 } from "./types";
 import { getNomineeTaskStep, nomineeApiDataToNomineeRequests, nomineeRequestResponseToRequestStatus } from "./utils";
-import { selectIsVerificationFullyDone } from "../selectors";
 import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
 
 export function* loadNomineeTaskData({
-  apiEtoNomineeService,
   logger,
   notificationCenter,
 }: TGlobalDependencies): Iterator<any> {
@@ -54,54 +51,42 @@ export function* loadNomineeTaskData({
     );
 
     if (isVerified) {
-      // load information that's needed to properly calculate nominee current task
       yield put(actions.nomineeFlow.loadNomineeEtos());
 
-      // wait for active eto to be set
-      // even when eto is not yet linked `setActiveNomineeEto` get's dispatched
       yield take(actions.nomineeFlow.setActiveNomineeEto);
 
       const eto: ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
         selectNomineeEtoWithCompanyAndContract,
       );
 
-      const requestedData:{[key:string]:unknown} = {
-        nomineeRequests: apiEtoNomineeService.getNomineeRequests(), //fixme move to a separate saga
-        bankAccountDetails: neuCall(loadBankAccountDetails),
+      const requestedData: { [key: string]: unknown } = {
+        nomineeRequests: put(actions.nomineeFlow.loadNomineeRequests()),
+        nomineeRequestsLoaded: take(actions.nomineeFlow.setNomineeRequests),
+        bankAccountDetails: put(actions.kyc.loadBankAccountDetails()),
         bankAccountDetailsLoaded: take(actions.kyc.setBankAccountDetails),
       };
 
       if (eto && isOnChain(eto) && eto.contract.timedState === EETOStateOnChain.Signing) {
-        requestedData.isha = put(actions.eto.loadSignedInvestmentAgreement(eto.etoId,eto.previewCode));
+        requestedData.isha = put(actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode));
         requestedData.ishaLoaded = take(actions.eto.setInvestmentAgreementHash);
-        requestedData.etoAgreementsStatus = put(actions.eto.loadEtoAgreementsStatus(eto)); //fixme no need to push whole eto, only eto.etoId,eto.previewCode
+        requestedData.etoAgreementsStatus = put(actions.eto.loadEtoAgreementsStatus(eto));
         requestedData.etoAgreementsStatusLoaded = take(actions.eto.setAgreementsStatus)
       }
 
-      const taskData = yield all(requestedData);
-
-      const nomineeRequestsConverted: TNomineeRequestStorage = nomineeApiDataToNomineeRequests(
-        taskData.nomineeRequests,
-      );
-      // todo convert data if needed
-      // const linkBankAccountConverted = ...
-      // const acceptThaConverted = ...
-      // const redeemShareholderCapitalConverted = ...
-      // const uploadIshaConverted = ...
+      yield all(requestedData);
 
       const selectData = yield all({
-        verificationIsComplete:select(selectIsVerificationFullyDone),
-        nomineeEto:select(selectNomineeEtoWithCompanyAndContract),
-        isBankAccountVerified:select(selectIsBankAccountVerified),
-        documentsStatus:select(selectNomineeEtoDocumentsStatus),
-        isISHASignedByIssuer:select(selectIsISHASignedByIssuer),
+        verificationIsComplete: isVerified,
+        nomineeEto: select(selectNomineeEtoWithCompanyAndContract),
+        isBankAccountVerified: select(selectIsBankAccountVerified),
+        documentsStatus: select(selectNomineeEtoDocumentsStatus),
+        isISHASignedByIssuer: select(selectIsISHASignedByIssuer),
       });
 
       const actualTask = yield getNomineeTaskStep(selectData);
 
       yield put(
         actions.nomineeFlow.storeNomineeTaskData({
-          nomineeRequests: nomineeRequestsConverted,
           linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
           redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
           uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
@@ -115,7 +100,7 @@ export function* loadNomineeTaskData({
       createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
     );
   } finally {
-      yield put(actions.nomineeFlow.loadingDone());
+    yield put(actions.nomineeFlow.loadingDone());
   }
 }
 
@@ -129,6 +114,28 @@ export function* nomineeRequestsWatcher({ logger }: TGlobalDependencies): Iterat
     }
 
     yield delay(NOMINEE_REQUESTS_WATCHER_DELAY);
+  }
+}
+
+export function* loadNomineeRequests({
+    apiEtoNomineeService,
+    logger,
+    notificationCenter
+  }: TGlobalDependencies,
+) {
+  logger.info("loading nominee requests");
+  try{
+    const nomineeRequests = yield apiEtoNomineeService.getNomineeRequests();
+    const nomineeRequestsConverted: TNomineeRequestStorage = yield nomineeApiDataToNomineeRequests(
+      nomineeRequests,
+    );
+    yield put(actions.nomineeFlow.setNomineeRequests(nomineeRequestsConverted))
+  } catch (e) {
+    notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_LOADING_BANK_DETAILS));
+
+    logger.error("Error while loading kyc bank details", e);
+  } finally {
+
   }
 }
 
@@ -198,7 +205,7 @@ export function* loadNomineeSignedInvestmentAgreements(): Iterator<any> {
   );
 
   if (nomineeEto) {
-    yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto.etoId,nomineeEto.previewCode));
+    yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto.etoId, nomineeEto.previewCode));
   }
 }
 
@@ -246,9 +253,7 @@ export function* guardActiveEto({
     if (etos === undefined || isEmpty(etos)) {
       yield put(actions.nomineeFlow.setActiveNomineeEto(undefined));
     } else {
-      const forcedActiveEtoPreviewCode: ReturnType<
-        typeof selectActiveEtoPreviewCodeFromQueryString
-      > = yield select(selectActiveEtoPreviewCodeFromQueryString);
+      const forcedActiveEtoPreviewCode: ReturnType<typeof selectActiveEtoPreviewCodeFromQueryString> = yield select(selectActiveEtoPreviewCodeFromQueryString);
 
       // For testing purpose we can force another ETO to be active (by default it's the first one)
       const shouldForceSpecificEtoToBeActive =
@@ -274,6 +279,7 @@ export function* guardActiveEto({
 
 export function* nomineeFlowSagas(): Iterator<any> {
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeEtos, loadNomineeEtos);
+  yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeTaskData, loadNomineeTaskData);
   yield fork(neuTakeLatest, actions.nomineeFlow.setNomineeEtos, guardActiveEto);
