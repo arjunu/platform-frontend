@@ -5,6 +5,7 @@ import { Dictionary } from "../../types";
 import { ENomineeRequestError, INomineeRequest, TNomineeRequestStorage } from "./types";
 
 export const nomineeFlowActions = {
+  calculateNomineeTask: createActionFactory("NOMINEE_CALCULATE_TASK"),
   loadNomineeEtos: createActionFactory("NOMINEE_FLOW_LOAD_ETOS"),
   loadNomineeTaskData: createActionFactory("NOMINEE_FLOW_LOAD_NOMINEE_TASK_DATA"),
   storeNomineeTaskData: createActionFactory("NOMINEE_FLOW_SET_NOMINEE_TASKS_STATUS", tasks => ({

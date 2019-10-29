@@ -29,7 +29,7 @@ export const NomineeDashboard = compose<RequiredByKeys<IStateProps, "nomineeTask
   }),
   onEnterAction({
     actionCreator: dispatch => {
-      dispatch(actions.nomineeFlow.loadNomineeTaskData());
+      dispatch(actions.nomineeFlow.calculateNomineeTask());
     },
   }),
   branch<IStateProps>(

@@ -5,7 +5,7 @@ import { all, fork, put, select, take } from "redux-saga/effects";
 import {
   EEtoNomineeActiveEtoNotifications,
   ENomineeRequestErrorNotifications,
-  EtoMessage, KycFlowMessage,
+  EtoMessage,
 } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
 import { NOMINEE_REQUESTS_WATCHER_DELAY } from "../../config/constants";
@@ -31,10 +31,7 @@ import {
   selectNomineeEtoWithCompanyAndContract,
 } from "./selectors";
 import {
-  ENomineeLinkBankAccountStatus,
-  ENomineeRedeemShareholderCapitalStatus,
   ENomineeRequestError,
-  ENomineeUploadIshaStatus,
   INomineeRequest,
   TNomineeRequestStorage,
 } from "./types";
@@ -45,17 +42,17 @@ export function* loadNomineeTaskData({
   logger,
   notificationCenter,
 }: TGlobalDependencies): Iterator<any> {
+
   try {
-    const isVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
+    const isVerified:ReturnType<typeof selectIsUserFullyVerified>  = yield select(
       selectIsUserFullyVerified,
     );
 
     if (isVerified) {
       yield put(actions.nomineeFlow.loadNomineeEtos());
-
       yield take(actions.nomineeFlow.setActiveNomineeEto);
 
-      const eto: ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
+      const eto:ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
         selectNomineeEtoWithCompanyAndContract,
       );
 
@@ -74,34 +71,35 @@ export function* loadNomineeTaskData({
       }
 
       yield all(requestedData);
-
-      const selectData = yield all({
-        verificationIsComplete: isVerified,
-        nomineeEto: select(selectNomineeEtoWithCompanyAndContract),
-        isBankAccountVerified: select(selectIsBankAccountVerified),
-        documentsStatus: select(selectNomineeEtoDocumentsStatus),
-        isISHASignedByIssuer: select(selectIsISHASignedByIssuer),
-      });
-
-      const actualTask = yield getNomineeTaskStep(selectData);
-
-      yield put(
-        actions.nomineeFlow.storeNomineeTaskData({
-          linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
-          redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
-          uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
-          actualTask
-        }),
-      );
     }
   } catch (e) {
-    logger.error("Failed to load Nominee tasks", e);
+    logger.error("Failed to load Nominee tasks data", e);
     notificationCenter.error(
       createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
     );
   } finally {
     yield put(actions.nomineeFlow.loadingDone());
   }
+}
+
+export function* calculateNomineeTask() {
+  yield neuCall(loadNomineeTaskData);
+
+  const selectData = yield all({
+    verificationIsComplete: select(selectIsUserFullyVerified),
+    nomineeEto: select(selectNomineeEtoWithCompanyAndContract),
+    isBankAccountVerified: select(selectIsBankAccountVerified),
+    documentsStatus: select(selectNomineeEtoDocumentsStatus),
+    isISHASignedByIssuer: select(selectIsISHASignedByIssuer),
+  });
+
+  const actualTask = yield getNomineeTaskStep(selectData);
+
+  yield put(
+    actions.nomineeFlow.storeNomineeTaskData({
+      actualTask
+    }),
+  );
 }
 
 export function* nomineeRequestsWatcher({ logger }: TGlobalDependencies): Iterator<any> {
@@ -131,9 +129,9 @@ export function* loadNomineeRequests({
     );
     yield put(actions.nomineeFlow.setNomineeRequests(nomineeRequestsConverted))
   } catch (e) {
-    notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_LOADING_BANK_DETAILS));
+    notificationCenter.error(createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR));
 
-    logger.error("Error while loading kyc bank details", e);
+    logger.error("Error while loading nominee requests", e);
   } finally {
 
   }
@@ -278,9 +276,11 @@ export function* guardActiveEto({
 }
 
 export function* nomineeFlowSagas(): Iterator<any> {
+  yield fork(neuTakeLatest, actions.nomineeFlow.calculateNomineeTask, calculateNomineeTask);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeEtos, loadNomineeEtos);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
+  yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeTaskData, loadNomineeTaskData);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeTaskData, loadNomineeTaskData);
   yield fork(neuTakeLatest, actions.nomineeFlow.setNomineeEtos, guardActiveEto);
   yield fork(
