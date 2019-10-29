@@ -11,6 +11,7 @@ import {
 } from "./types";
 
 export type TNomineeFlowState = {
+  ready:boolean;
   loading: boolean;
   error: ENomineeRequestError;
   activeNomineeEtoPreviewCode: string | undefined;
@@ -24,6 +25,7 @@ export type TNomineeFlowState = {
 }
 
 const nomineeFlowInitialState: TNomineeFlowState = {
+  ready: false,
   loading: false,
   error: ENomineeRequestError.NONE,
   activeNomineeEtoPreviewCode: undefined,
@@ -51,6 +53,7 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
       return {
         ...state,
         loading: false,
+        ready: true,
         nomineeRequests: action.payload.tasks.nomineeRequests,
         nomineeTask:action.payload.tasks.actualTask
       };

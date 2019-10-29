@@ -27,6 +27,8 @@ export const selectNomineeFlow = (state: IAppState) => state.nomineeFlow;
 
 export const selectNomineeStateIsLoading = (state: IAppState) => state.nomineeFlow.loading;
 
+export const selectNomineeDashboardIsReady = (state: IAppState) => state.nomineeFlow.ready;
+
 export const selectNomineeStateError = (state: IAppState) => state.nomineeFlow.error;
 
 export const selectNomineeRequests = (state: IAppState): TNomineeRequestStorage =>

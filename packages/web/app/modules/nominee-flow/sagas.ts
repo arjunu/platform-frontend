@@ -281,7 +281,6 @@ export function* nomineeFlowSagas(): Iterator<any> {
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeTaskData, loadNomineeTaskData);
-  yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeTaskData, loadNomineeTaskData);
   yield fork(neuTakeLatest, actions.nomineeFlow.setNomineeEtos, guardActiveEto);
   yield fork(
     neuTakeUntil,

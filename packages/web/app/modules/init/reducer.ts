@@ -4,7 +4,7 @@ import { actions } from "../actions";
 
 export enum EInitType {
   APP_INIT = "appInit",
-  START_CONTRACTS_INIT = "smartcontractsInit",
+  SMART_CONTRACTS_INIT = "smartcontractsInit",
   WALLET_INIT = "walletInit",
 }
 
