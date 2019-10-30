@@ -89,14 +89,14 @@ export function* loadComputedContributionFromContract(
 
   const etoContract: ETOCommitment = yield contractsService.getETOCommitmentContract(eto.etoId);
 
-  const newInvestorContributionEurUlps =
-    amountEuroUlps || convertToUlps((eto.minTicketEur && eto.minTicketEur.toString()) || "0");
+  const minTicketEur = (eto.minTicketEur && eto.minTicketEur.toString()) || "0";
+  const newInvestorContributionEurUlps = amountEuroUlps || convertToUlps(minTicketEur);
 
   const from: ReturnType<typeof selectEthereumAddressWithChecksum> = yield select(
     selectEthereumAddressWithChecksum,
   );
 
-  // TODO: check whether typechain but still is not fixed
+  // TODO: check whether typechain bug still is not fixed
   // sorry no typechain, typechain has a bug with boolean casting
   const contributionRaw = yield promisify(etoContract.rawWeb3Contract.calculateContribution, [
     from,

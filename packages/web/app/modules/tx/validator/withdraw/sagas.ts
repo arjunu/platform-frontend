@@ -197,8 +197,9 @@ export function* validateWalletAlmostEmpty({ gasPrice, gas, value }: ITxData): I
   const maximumCost = multiplyBigNumbers([gasPrice, gas]);
   const maximumAvailableEther = subtractBigNumbers([allEther, maximumCost]);
 
-  if (compareBigNumbers(addBigNumbers([value, requiredGasReserve]), maximumAvailableEther) >= 0)
+  if (compareBigNumbers(addBigNumbers([value, requiredGasReserve]), maximumAvailableEther) >= 0) {
     warnings.push(EAdditionalValidationDataNotifications.WILL_EMPTY_WALLET);
+  }
 
   return warnings;
 }

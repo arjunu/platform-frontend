@@ -33,8 +33,9 @@ export function* generateEthWithdrawTransaction(
   if (
     !valueUlps ||
     (new BigNumber(valueUlps).isNegative() && !new BigNumber(valueUlps).isInteger())
-  )
+  ) {
     throw new WrongValuesError();
+  }
   const valueUlpsAsBigN = new BigNumber(valueUlps);
 
   const etherTokenBalance: BigNumber = yield select(selectEtherTokenBalanceAsBigNumber);

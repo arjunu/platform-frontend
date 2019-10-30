@@ -1,6 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { addHexPrefix } from "ethereumjs-util";
-import { delay, END, eventChannel } from "redux-saga";
+import { delay } from "redux-saga";
 import { fork, put, select } from "redux-saga/effects";
 import * as Web3 from "web3";
 
@@ -11,13 +11,13 @@ import { OutOfGasError, RevertedTransactionError } from "../../../lib/web3/Web3A
 import { invariant } from "../../../utils/invariant";
 import { actions } from "../../actions";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../../sagasUtils";
+import { getTransactionOrThrow } from "../event-channel/sagas";
 import { ETransactionErrorType, ETxSenderState } from "../sender/reducer";
 import { txMonitorSaga } from "../sender/sagas";
 import { InvestmentAdditionalDataSchema } from "../transactions/investment/types";
 import { ETxSenderType, TSpecificTransactionState } from "../types";
 import { SchemaMismatchError } from "./errors";
 import { selectPlatformPendingTransaction } from "./selectors";
-import { EEventEmitterChannelEvents, TEventEmitterChannelEvents } from "./types";
 
 const TX_MONITOR_DELAY = 30000;
 
@@ -135,11 +135,7 @@ export function* ensumrePendingTransactionSchemaIsValid(
   }
 }
 
-export function* updatePendingTxs({
-  apiUserService,
-  web3Manager,
-  logger,
-}: TGlobalDependencies): any {
+export function* updatePendingTxs({ apiUserService, logger }: TGlobalDependencies): Iterator<any> {
   let apiPendingTx: TPendingTxs = yield apiUserService.pendingTxs();
 
   // check whether transaction was mined
@@ -154,9 +150,7 @@ export function* updatePendingTxs({
     }
 
     try {
-      const transaction: Web3.Transaction | null = yield web3Manager.internalWeb3Adapter.getTransactionOrThrow(
-        txHash,
-      );
+      const transaction: Web3.Transaction | null = yield neuCall(getTransactionOrThrow, txHash);
 
       if (transaction) {
         apiPendingTx = {
@@ -212,7 +206,7 @@ export function* updatePendingTxs({
   }
 }
 
-function* txMonitor({ logger }: TGlobalDependencies): any {
+function* txMonitor({ logger }: TGlobalDependencies): Iterator<any> {
   while (true) {
     logger.info("Querying for pending txs...");
     try {
@@ -224,31 +218,6 @@ function* txMonitor({ logger }: TGlobalDependencies): any {
     yield delay(TX_MONITOR_DELAY);
   }
 }
-
-export const createWatchTxChannel = ({ web3Manager }: TGlobalDependencies, txHash: string) =>
-  eventChannel<TEventEmitterChannelEvents>(emitter => {
-    web3Manager.internalWeb3Adapter
-      .waitForTx({
-        txHash,
-        onNewBlock: async blockId => {
-          emitter({ type: EEventEmitterChannelEvents.NEW_BLOCK, blockId });
-        },
-      })
-      .then(tx => emitter({ type: EEventEmitterChannelEvents.TX_MINED, tx }))
-      .catch(error => {
-        if (error instanceof RevertedTransactionError) {
-          emitter({ type: EEventEmitterChannelEvents.REVERTED_TRANSACTION, error });
-        } else if (error instanceof OutOfGasError) {
-          emitter({ type: EEventEmitterChannelEvents.OUT_OF_GAS, error });
-        } else {
-          emitter({ type: EEventEmitterChannelEvents.ERROR, error });
-        }
-      })
-      .then(() => emitter(END));
-    return () => {
-      // @todo missing unsubscribe
-    };
-  });
 
 function* removePendingTransaction({ logger }: TGlobalDependencies): Iterator<any> {
   try {

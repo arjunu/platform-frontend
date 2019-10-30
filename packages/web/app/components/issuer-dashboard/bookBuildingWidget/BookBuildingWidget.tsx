@@ -1,8 +1,6 @@
 import * as React from "react";
-import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { branch, compose, renderComponent, renderNothing, withProps } from "recompose";
 
-import { DAY } from "../../../config/constants";
 import { IBookBuildingStats } from "../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
 import { actions } from "../../../modules/actions";
 import { selectBookbuildingStats } from "../../../modules/bookbuilding-flow/selectors";
@@ -27,18 +25,14 @@ import { nonNullable } from "../../../utils/nonNullable";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { onLeaveAction } from "../../../utils/OnLeaveAction";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight } from "../../shared/buttons/index";
-import { DashboardWidget } from "../../shared/dashboard-widget/DashboardWidget";
-import { Document } from "../../shared/Document";
-import { DocumentButton } from "../../shared/DocumentLink";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryPanel } from "../../shared/errorBoundary/ErrorBoundaryPanel";
-import { Money } from "../../shared/formatters/Money";
-import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../../shared/formatters/utils";
-import { LoadingIndicator } from "../../shared/loading-indicator/index";
+import { LoadingIndicator } from "../../shared/loading-indicator";
 import { Panel } from "../../shared/Panel";
-
-import * as styles from "./BookBuildingWidget.module.scss";
+import { BookBuildingActiveWidget } from "./BookBuildingActiveWidget";
+import { BookBuildingNotActiveWidget } from "./BookBuildingNotActiveWidget";
+import { BookBuildingStoppedWidget } from "./BookBuildingStoppedWidget";
+import { BookBuildingSuspendedWidget } from "./BookBuildingSuspendedWidget";
 
 interface IExternalProps {
   columnSpan?: EColumnSpan;
@@ -69,52 +63,10 @@ interface IPanelProps {
   columnSpan?: EColumnSpan;
 }
 
-interface IBookBuilding {
-  bookBuildingStats: IBookBuildingStats;
-  downloadCSV: () => void;
-  maxPledges: number | null;
-}
-
 type TProps = IWithProps &
   IDispatchProps &
   OmitKeys<IStateProps, "onChainState" | "canEnableBookbuilding" | "bookBuildingEnabled"> &
   IExternalProps;
-
-const BookBuildingStats = ({ bookBuildingStats, maxPledges, downloadCSV }: IBookBuilding) => (
-  <>
-    <div className={styles.groupWrapper}>
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview.amount-backed" />
-      </span>
-      <Money
-        data-test-id="bookbuilding-widget.stats.amount-backed"
-        value={bookBuildingStats.pledgedAmount.toString()}
-        inputFormat={ENumberInputFormat.FLOAT}
-        valueType={ECurrency.EUR}
-        outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-      />
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview.investors-backed" />
-      </span>
-      {maxPledges !== null ? (
-        <span data-test-id="bookbuilding-widget.stats.number-of-pledges">
-          <FormattedMessage
-            id="settings.book-building-stats-widget.number-of-pledges"
-            values={{ pledges: bookBuildingStats.investorsCount, maxPledges }}
-          />
-        </span>
-      ) : null}
-    </div>
-    {bookBuildingStats.investorsCount > 0 ? (
-      <DocumentButton
-        onClick={downloadCSV}
-        title={<FormattedMessage id="eto-bookbuilding-widget.download-bookbuilding-stats" />}
-        altIcon={<Document extension="csv" />}
-        data-test-id="bookbuilding-widget.stats.download"
-      />
-    ) : null}
-  </>
-);
 
 export const BookBuildingWidgetComponent: React.FunctionComponent<TProps> = ({
   startBookBuilding,
@@ -130,88 +82,44 @@ export const BookBuildingWidgetComponent: React.FunctionComponent<TProps> = ({
   switch (whitelistingState) {
     case EWhitelistingState.ACTIVE:
       return (
-        <DashboardWidget
-          title={<FormattedMessage id="settings.book-building-widget.book-building-enabled" />}
-          text={
-            <FormattedHTMLMessage
-              tagName="span"
-              id="settings.book-building-widget.book-building-enabled-text"
-              values={{ minOffsetPeriod: minOffsetPeriod / DAY }}
-            />
-          }
+        <BookBuildingActiveWidget
           columnSpan={columnSpan}
-        >
-          <BookBuildingStats
-            bookBuildingStats={bookBuildingStats}
-            downloadCSV={downloadCSV}
-            maxPledges={maxPledges}
-          />
-
-          <div className="m-auto">
-            <ButtonArrowRight
-              onClick={() => stopBookBuilding(etoId)}
-              data-test-id="eto-flow-start-bookbuilding"
-            >
-              <FormattedMessage id="settings.book-building-widget.stop-book-building" />
-            </ButtonArrowRight>
-          </div>
-        </DashboardWidget>
+          bookBuildingStats={bookBuildingStats}
+          downloadCSV={downloadCSV}
+          maxPledges={maxPledges}
+          minOffsetPeriod={minOffsetPeriod}
+          stopBookBuilding={stopBookBuilding}
+          etoId={etoId}
+        />
       );
     case EWhitelistingState.NOT_ACTIVE:
       return (
-        <DashboardWidget
-          title={<FormattedMessage id="settings.book-building-widget.start-book-building" />}
-          text={<FormattedMessage id="settings.book-building-widget.proposal-accepted" />}
+        <BookBuildingNotActiveWidget
+          etoId={etoId}
+          startBookBuilding={startBookBuilding}
           columnSpan={columnSpan}
-        >
-          <div className="m-auto">
-            <ButtonArrowRight
-              onClick={() => startBookBuilding(etoId)}
-              data-test-id="eto-flow-start-bookbuilding"
-            >
-              <FormattedMessage id="settings.book-building-widget.start-book-building" />
-            </ButtonArrowRight>
-          </div>
-        </DashboardWidget>
+        />
       );
     case EWhitelistingState.SUSPENDED:
       return (
-        <DashboardWidget
-          title={<FormattedMessage id="settings.book-building-widget.book-building-disabled" />}
-          text={<FormattedMessage id="settings.book-building-widget.book-building-disabled-text" />}
+        <BookBuildingSuspendedWidget
           columnSpan={columnSpan}
-        >
-          <BookBuildingStats
-            bookBuildingStats={bookBuildingStats}
-            downloadCSV={downloadCSV}
-            maxPledges={maxPledges}
-          />
-
-          <div className="m-auto">
-            <ButtonArrowRight
-              onClick={() => startBookBuilding(etoId)}
-              data-test-id="eto-flow-start-bookbuilding"
-            >
-              <FormattedMessage id="settings.book-building-widget.reactivate-book-building" />
-            </ButtonArrowRight>
-          </div>
-        </DashboardWidget>
+          bookBuildingStats={bookBuildingStats}
+          downloadCSV={downloadCSV}
+          maxPledges={maxPledges}
+          startBookBuilding={startBookBuilding}
+          etoId={etoId}
+        />
       );
     case EWhitelistingState.STOPPED:
     case EWhitelistingState.LIMIT_REACHED:
       return (
-        <DashboardWidget
-          data-test-id="bookbuilding-widget.closed"
-          title={<FormattedMessage id="settings.book-building-widget.book-building-closed" />}
-          text={<FormattedMessage id="settings.book-building-widget.book-building-closed-text" />}
+        <BookBuildingStoppedWidget
           columnSpan={columnSpan}
-        >
-          <BookBuildingStats
-            bookBuildingStats={bookBuildingStats}
-            downloadCSV={downloadCSV}
-            maxPledges={maxPledges}
-          />
-        </DashboardWidget>
+          bookBuildingStats={bookBuildingStats}
+          downloadCSV={downloadCSV}
+          maxPledges={maxPledges}
+        />
       );
     case EWhitelistingState.LOADING:
       return <LoadingIndicator />;
@@ -221,14 +129,8 @@ export const BookBuildingWidgetComponent: React.FunctionComponent<TProps> = ({
 };
 
 const WidgetLoading: React.ComponentType<IPanelProps> = ({ columnSpan }) => (
-  <WidgetPanel columnSpan={columnSpan}>
+  <Panel columnSpan={columnSpan}>
     <LoadingIndicator />
-  </WidgetPanel>
-);
-
-const WidgetPanel: React.ComponentType<IPanelProps> = ({ columnSpan, headerText, children }) => (
-  <Panel headerText={headerText} columnSpan={columnSpan}>
-    {children}
   </Panel>
 );
 

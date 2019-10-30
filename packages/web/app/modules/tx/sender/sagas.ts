@@ -1,3 +1,4 @@
+import { Channel } from "redux-saga";
 import { call, Effect, put, race, select, take, takeLatest } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -24,8 +25,9 @@ import { actions } from "../../actions";
 import { IGasState } from "../../gas/reducer";
 import { selectGasPrice } from "../../gas/selectors";
 import { neuCall, neuRepeatIf, neuSpawn } from "../../sagasUtils";
+import { createWatchTxChannel } from "../event-channel/sagas";
+import { EEventEmitterChannelEvents, TEventEmitterChannelEvents } from "../event-channel/types";
 import {
-  createWatchTxChannel,
   deletePendingTransaction,
   markTransactionAsPending,
   updatePendingTxs,
@@ -35,7 +37,6 @@ import {
   selectAreTherePlatformPendingTxs,
   selectExternalPendingTransaction,
 } from "../monitor/selectors";
-import { EEventEmitterChannelEvents, TEventEmitterChannelEvents } from "../monitor/types";
 import { ETxSenderType, TAdditionalDataByType } from "../types";
 import { validateGas } from "../validator/sagas";
 import { ETransactionErrorType, ETxSenderState } from "./reducer";
@@ -268,10 +269,11 @@ function* sendTxSubSaga({ web3Manager }: TGlobalDependencies): any {
 function* watchPendingOOOTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
   logger.info(`Watching for out of bound transaction: ${txHash}`);
 
-  const watchTxChannel = yield neuCall(createWatchTxChannel, txHash);
-  try {
+  yield createWatchTxChannel(txHash, function*(
+    txChannel: Channel<TEventEmitterChannelEvents>,
+  ): Iterator<any> {
     while (true) {
-      const result: TEventEmitterChannelEvents = yield take(watchTxChannel);
+      const result: TEventEmitterChannelEvents = yield take(txChannel);
       if (result.type === EEventEmitterChannelEvents.NEW_BLOCK) {
         yield put(actions.txSender.txSenderReportBlock(result.blockId));
       } else {
@@ -281,19 +283,17 @@ function* watchPendingOOOTxSubSaga({ logger }: TGlobalDependencies, txHash: stri
         return;
       }
     }
-  } finally {
-    watchTxChannel.close();
-    logger.info("Stopped Watching for TX", { txHash });
-  }
+  });
 }
 
 function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
   logger.info(`Watching for transaction: ${txHash}`);
 
-  const watchTxChannel = yield neuCall(createWatchTxChannel, txHash);
-  try {
+  yield createWatchTxChannel(txHash, function*(
+    txChannel: Channel<TEventEmitterChannelEvents>,
+  ): Iterator<any> {
     while (true) {
-      const result: TEventEmitterChannelEvents = yield take(watchTxChannel);
+      const result: TEventEmitterChannelEvents = yield take(txChannel);
       switch (result.type) {
         case EEventEmitterChannelEvents.NEW_BLOCK:
           yield put(actions.txSender.txSenderReportBlock(result.blockId));
@@ -314,10 +314,7 @@ function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
           return yield put(actions.txSender.txSenderError(ETransactionErrorType.REVERTED_TX));
       }
     }
-  } finally {
-    watchTxChannel.close();
-    logger.info("Stopped Watching for TXs", { txHash });
-  }
+  });
 }
 
 function* cleanUpTxSender(): Iterator<any> {

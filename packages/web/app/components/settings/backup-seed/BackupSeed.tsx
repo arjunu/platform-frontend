@@ -37,9 +37,10 @@ class BackupSeedComponent extends React.Component<IDispatchProps & IStateProps> 
   }
 
   componentDidUpdate(prevProps: IStateProps): void {
-    if (prevProps.walletPrivateData && !this.props.walletPrivateData)
+    if (prevProps.walletPrivateData && !this.props.walletPrivateData) {
       // request seed phrase and private key again after password cache expire
       this.props.getSeed();
+    }
   }
 
   componentWillUnmount(): void {
@@ -47,7 +48,7 @@ class BackupSeedComponent extends React.Component<IDispatchProps & IStateProps> 
   }
 
   render(): React.ReactNode {
-    if (this.props.walletPrivateData)
+    if (this.props.walletPrivateData) {
       return (
         <BackupSeedFlowContainer
           backupCodesVerified={this.props.backupCodesVerified}
@@ -56,6 +57,7 @@ class BackupSeedComponent extends React.Component<IDispatchProps & IStateProps> 
           walletPrivateData={this.props.walletPrivateData}
         />
       );
+    }
     return <LoadingIndicator />;
   }
 }

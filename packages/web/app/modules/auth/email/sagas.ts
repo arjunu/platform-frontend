@@ -79,9 +79,11 @@ export async function verifyUserEmailPromise(
     await apiUserService.verifyUserEmail(userCode);
     notificationCenter.info(createMessage(AuthMessage.AUTH_EMAIL_VERIFIED));
   } catch (e) {
-    if (e instanceof EmailAlreadyExists)
+    if (e instanceof EmailAlreadyExists) {
       notificationCenter.error(createMessage(AuthMessage.AUTH_EMAIL_ALREADY_EXISTS));
-    else notificationCenter.error(createMessage(AuthMessage.AUTH_EMAIL_VERIFICATION_FAILED));
+    } else {
+      notificationCenter.error(createMessage(AuthMessage.AUTH_EMAIL_VERIFICATION_FAILED));
+    }
   }
 }
 

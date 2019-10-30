@@ -134,8 +134,9 @@ export class ContractsService {
   }
 
   async getEquityToken(equityTokenAddress: string): Promise<IEquityToken> {
-    if (this.equityTokensCache[equityTokenAddress])
+    if (this.equityTokensCache[equityTokenAddress]) {
       return this.equityTokensCache[equityTokenAddress];
+    }
 
     const contract = await create(IEquityToken, this.web3, equityTokenAddress);
     this.equityTokensCache[equityTokenAddress] = contract;
@@ -151,8 +152,9 @@ export class ContractsService {
   }
 
   async getControllerGovernance(controllerAddress: string): Promise<IControllerGovernance> {
-    if (this.controllerGovernanceCache[controllerAddress])
+    if (this.controllerGovernanceCache[controllerAddress]) {
       return this.controllerGovernanceCache[controllerAddress];
+    }
 
     const contract = await create(IControllerGovernance, this.web3, controllerAddress);
     this.controllerGovernanceCache[controllerAddress] = contract;
