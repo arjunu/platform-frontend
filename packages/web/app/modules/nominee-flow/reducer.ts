@@ -1,4 +1,3 @@
-import { TCompanyEtoData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
@@ -9,7 +8,7 @@ import {
   ENomineeUploadIshaStatus,
   TNomineeRequestStorage,
 } from "./types";
-import { TEtoContractData, TEtoWithCompanyAndContractReadonly } from "../eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../eto/types";
 
 export type TNomineeFlowState = {
   ready:boolean;
@@ -18,8 +17,6 @@ export type TNomineeFlowState = {
   activeNomineeEtoPreviewCode: string | undefined;
   nomineeRequests: TNomineeRequestStorage;
   nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContractReadonly };
-  companies: { [companyId: string]: TCompanyEtoData | undefined };
-  contracts: { [previewCode: string]: TEtoContractData | undefined };
   linkBankAccount: ENomineeLinkBankAccountStatus;
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus;
   uploadIsha: ENomineeUploadIshaStatus;
@@ -34,8 +31,6 @@ const nomineeFlowInitialState: TNomineeFlowState = {
   activeNomineeEtoPreviewCode: undefined,
   nomineeRequests: {},
   nomineeEtos: {},
-  companies: {},
-  contracts: {},
   linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
   uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
