@@ -101,33 +101,15 @@ export const etoReducer: AppReducer<IEtoState> = (
           [action.payload.etoId]: action.payload.tokenGeneralDiscounts,
         },
       };
-    case actions.eto.setAgreementsStatus.getType():
-      return {
-        ...state,
-        offeringAgreementsStatus: {
-          ...state.offeringAgreementsStatus,
-          [action.payload.previewCode]: action.payload.statuses,
-        },
-      };
-    case actions.eto.setInvestmentAgreementHash.getType():
-      return {
-        ...state,
-        signedInvestmentAgreements: {
-          ...state.signedInvestmentAgreements,
-          [action.payload.previewCode]: {
-            isLoading: false,
-            url: action.payload.url,
-          },
-        },
-      };
-    case actions.eto.loadSignedInvestmentAgreement.getType():
-      return {
-        ...state,
-        signedInvestmentAgreements: {
-          ...state.signedInvestmentAgreements,
-          [action.payload.previewCode]: { isLoading: true, url: undefined },
-        },
-      };
+    // case actions.eto.setAgreementsStatus.getType():
+    //   return {
+    //     ...state,
+    //     offeringAgreementsStatus: {
+    //       ...state.offeringAgreementsStatus,
+    //       [action.payload.previewCode]: action.payload.statuses,
+    //     },
+    //   };
+
   }
 
   return state;

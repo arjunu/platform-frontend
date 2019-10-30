@@ -85,7 +85,7 @@ export function* loadNomineeTaskData({
   }
 }
 
-export function* calculateNomineeTask() {
+export function* nomineeDashboardView() {
   yield neuCall(loadNomineeTaskData);
 
   const selectData = yield all({
@@ -96,7 +96,7 @@ export function* calculateNomineeTask() {
     isISHASignedByIssuer: select(selectIsISHASignedByIssuer),
     capitalIncrease: select(selectCapitalIncrease),
   });
-  console.log("selectData",selectData)
+
   const actualTask = yield getNomineeTaskStep(selectData);
 
   yield put(
@@ -247,7 +247,7 @@ export function* loadNomineeEtos({
   }
 }
 
-export function* guardActiveEto({
+export function* setActiveNomineeEto({
   logger,
   notificationCenter,
 }: TGlobalDependencies): Iterable<any> {
@@ -282,12 +282,12 @@ export function* guardActiveEto({
 }
 
 export function* nomineeFlowSagas(): Iterator<any> {
-  yield fork(neuTakeLatest, actions.nomineeFlow.calculateNomineeTask, calculateNomineeTask);
+  yield fork(neuTakeLatest, actions.nomineeFlow.calculateNomineeTask, nomineeDashboardView);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeEtos, loadNomineeEtos);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeTaskData, loadNomineeTaskData);
-  yield fork(neuTakeLatest, actions.nomineeFlow.setNomineeEtos, guardActiveEto);
+  yield fork(neuTakeLatest, actions.nomineeFlow.setNomineeEtos, setActiveNomineeEto);
   yield fork(
     neuTakeUntil,
     actions.nomineeFlow.startNomineeRequestsWatcher,

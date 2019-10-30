@@ -17,6 +17,7 @@ export type TNomineeFlowState = {
   activeNomineeEtoPreviewCode: string | undefined;
   nomineeRequests: TNomineeRequestStorage;
   nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContractReadonly };
+  nomineeEtosAdditionalData: { [previewCode: string]: any }, //fixme typings
   linkBankAccount: ENomineeLinkBankAccountStatus;
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus;
   uploadIsha: ENomineeUploadIshaStatus;
@@ -31,6 +32,7 @@ const nomineeFlowInitialState: TNomineeFlowState = {
   activeNomineeEtoPreviewCode: undefined,
   nomineeRequests: {},
   nomineeEtos: {},
+  nomineeEtosAdditionalData: {},
   linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
   uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
@@ -43,11 +45,6 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
   action,
 ): DeepReadonly<TNomineeFlowState> => {
   switch (action.type) {
-    case actions.eto.setCapitalIncrease.getType(): //eto
-      return {
-        ...state,
-        capitalIncrease: action.payload.capitalIncrease
-      };
     case actions.nomineeFlow.createNomineeRequest.getType():
     case actions.nomineeFlow.loadNomineeTaskData.getType():
       return {
@@ -86,6 +83,39 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
       return {
         ...state,
         nomineeEtos: action.payload.etos,
+      };
+    case actions.eto.setInvestmentAgreementHash.getType():
+      return {
+        ...state,
+        nomineeEtosAdditionalData: {
+          ...state.nomineeEtosAdditionalData,
+          [action.payload.previewCode]: {
+            ...state.nomineeEtosAdditionalData[action.payload.previewCode],
+            investmentAgreementUrl: action.payload.url
+          }
+        },
+      };
+    case actions.eto.setAgreementsStatus.getType():
+      return {
+        ...state,
+        nomineeEtosAdditionalData: {
+          ...state.nomineeEtosAdditionalData,
+          [action.payload.previewCode]: {
+            ...state.nomineeEtosAdditionalData[action.payload.previewCode],
+            offeringAgreementsStatus: action.payload.statuses,
+          },
+        },
+      };
+    case actions.eto.setCapitalIncrease.getType():
+      return {
+        ...state,
+        nomineeEtosAdditionalData: {
+          ...state.nomineeEtosAdditionalData,
+          [action.payload.previewCode]: {
+            ...state.nomineeEtosAdditionalData[action.payload.previewCode],
+            capitalIncrease: action.payload.capitalIncrease
+          }
+        }
       };
     default:
       return state;
