@@ -28,7 +28,7 @@ describe("selectKycRequestStatus", () => {
 
     const actual = selectKycRequestStatus({ ...appState, auth: authState } as any);
 
-    expect(actual).to.be.equal("Pending");
+    expect(actual).to.be.equal("pending");
   });
   it("should return approved if kyc is approved and on chain claim is true", () => {
     const appState: DeepPartial<IAppState> = {
@@ -43,7 +43,7 @@ describe("selectKycRequestStatus", () => {
 
     const actual = selectKycRequestStatus({ ...appState, auth: authState } as any);
 
-    expect(actual).to.be.equal("Draft");
+    expect(actual).to.be.equal("draft");
   });
   it("should return approved if kyc is approved and on chain claim is true", () => {
     const appState: DeepPartial<IAppState> = {
@@ -58,6 +58,6 @@ describe("selectKycRequestStatus", () => {
 
     const actual = selectKycRequestStatus({ ...appState, auth: authState } as any);
 
-    expect(actual).to.be.equal("Pending");
+    expect(actual).to.be.equal("pending");
   });
 });
