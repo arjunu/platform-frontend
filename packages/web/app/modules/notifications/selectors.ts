@@ -24,7 +24,7 @@ export const selectIsActionRequiredSettings = (state: IAppState): boolean => {
   return (
     !selectIsUserEmailVerified(state.auth) ||
     !selectBackupCodesVerified(state) ||
-    !includes(["Outsourced", "Pending", "Accepted"], selectKycRequestStatus(state))
+    !includes(["outsourced", "pending", "accepted"], selectKycRequestStatus(state))
   );
 };
 

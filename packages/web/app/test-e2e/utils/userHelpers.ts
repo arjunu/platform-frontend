@@ -103,7 +103,7 @@ export const createAndLoginNewUser = (
     const kycData = await getKycData(jwt);
     cy.log(userData.verified_email as string);
     cy.log(params.kyc ? (kycData[params.kyc] as string) : "No KYC");
-    if ((params.kyc && kycData[params.kyc] !== "Accepted") || !userData.verified_email) {
+    if ((params.kyc && kycData[params.kyc] !== "accepted") || !userData.verified_email) {
       if (attempts > NUMBER_OF_ATTEMPTS) {
         throw new Error("Cannot create user something wrong happened in the backend");
       }

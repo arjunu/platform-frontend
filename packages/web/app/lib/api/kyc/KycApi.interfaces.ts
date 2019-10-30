@@ -140,12 +140,12 @@ export const KycFileInfoShape = Yup.object().shape({
 
 // request state
 export enum EKycRequestStatus {
-  DRAFT = "Draft",
-  PENDING = "Pending",
-  OUTSOURCED = "Outsourced",
-  REJECTED = "Rejected",
-  ACCEPTED = "Accepted",
-  IGNORED = "Ignored",
+  DRAFT = "draft",
+  PENDING = "pending",
+  OUTSOURCED = "outsourced",
+  REJECTED = "rejected",
+  ACCEPTED = "accepted",
+  IGNORED = "ignored",
 }
 
 export enum ERequestOutsourcedStatus {
