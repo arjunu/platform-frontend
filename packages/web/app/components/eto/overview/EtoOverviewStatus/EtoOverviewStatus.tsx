@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { Link } from "react-router-dom";
 
 import { EJurisdiction } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { etoPublicViewLink } from "../../../appRouteUtils";
 import { Container, EColumnSpan } from "../../../layouts/Container";
 import { ETOInvestorState, ETOIssuerState } from "../../shared/ETOState";
@@ -16,13 +16,13 @@ import { TagsWidget } from "./TagsWidget";
 import * as styles from "./EtoOverviewStatus.module.scss";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   publicView: boolean;
   isEmbedded: boolean;
 }
 
 interface IStatusOfEtoProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   publicView: boolean;
 }
 

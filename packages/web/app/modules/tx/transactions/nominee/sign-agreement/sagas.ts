@@ -12,10 +12,10 @@ import { EthereumAddressWithChecksum } from "../../../../../utils/opaque-types/t
 import { actions } from "../../../../actions";
 import { InvalidETOStateError } from "../../../../eto/errors";
 import { selectSignedInvestmentAgreementHash } from "../../../../eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../../../eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../../../eto/types";
 import { isOnChain } from "../../../../eto/utils";
 import { selectStandardGasPriceWithOverHead } from "../../../../gas/selectors";
-import { selectNomineeEtoWithCompanyAndContract } from "../../../../nominee-flow/selectors";
+import { selectActiveNomineeEto } from "../../../../nominee-flow/selectors";
 import { neuCall, neuTakeLatest } from "../../../../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../../../../web3/selectors";
 import { txSendSaga } from "../../../sender/sagas";
@@ -26,7 +26,7 @@ import { EAgreementType, IAgreementContractAndHash } from "./types";
 export function* getAgreementContractAndHash(
   { contractsService }: TGlobalDependencies,
   agreementType: EAgreementType,
-  eto: TEtoWithCompanyAndContract,
+  eto: TEtoWithCompanyAndContractReadonly,
 ): Iterator<any> {
   if (!isOnChain(eto)) {
     throw new InvalidETOStateError(eto.state, EEtoState.ON_CHAIN);
@@ -66,8 +66,8 @@ function* generateNomineeSignAgreementTx(
 ): Iterator<any> {
   const agreementType =
     transactionType === ETxSenderType.NOMINEE_RAAA_SIGN ? EAgreementType.RAAA : EAgreementType.THA;
-  const nomineeEto: TEtoWithCompanyAndContract = yield select(
-    selectNomineeEtoWithCompanyAndContract,
+  const nomineeEto: TEtoWithCompanyAndContractReadonly = yield select(
+    selectActiveNomineeEto,
   );
 
   const { contract, currentAgreementHash }: IAgreementContractAndHash = yield neuCall(
@@ -127,8 +127,8 @@ function* generateSignNomineeInvestmentAgreementTx({
   contractsService,
   web3Manager,
 }: TGlobalDependencies): Iterator<any> {
-  const nomineeEto: TEtoWithCompanyAndContract = yield nonNullable(
-    select(selectNomineeEtoWithCompanyAndContract),
+  const nomineeEto: TEtoWithCompanyAndContractReadonly = yield nonNullable(
+    select(selectActiveNomineeEto),
   );
 
   // Only allowed in `Signing` on chain state

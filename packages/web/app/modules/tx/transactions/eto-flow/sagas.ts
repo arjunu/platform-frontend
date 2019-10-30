@@ -14,7 +14,7 @@ import {
   selectNewPreEtoStartDate,
   selectPreEtoStartDate,
 } from "../../../eto-flow/selectors";
-import { TEtoWithCompanyAndContract } from "../../../eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../eto/types";
 import { selectStandardGasPriceWithOverHead } from "../../../gas/selectors";
 import { neuCall, neuTakeLatest } from "../../../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../../../web3/selectors";
@@ -59,7 +59,7 @@ function* generateSetStartDateTransaction({
   return txDetails;
 }
 
-type TExtraParams = { eto: TEtoWithCompanyAndContract; agreementHash: string };
+type TExtraParams = { eto: TEtoWithCompanyAndContractReadonly; agreementHash: string };
 
 function* generateSignInvestmentAgreementTx(
   { contractsService, web3Manager }: TGlobalDependencies,

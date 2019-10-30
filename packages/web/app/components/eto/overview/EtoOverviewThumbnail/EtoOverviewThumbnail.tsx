@@ -4,7 +4,7 @@ import { branch, compose, renderComponent } from "recompose";
 
 import { TMockEto } from "../../../../data/etoCompanies";
 import { NEXT_FUNDING_ROUNDS } from "../../../../lib/api/eto/EtoApiUtils";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { isComingSoon } from "../../../../modules/eto/utils";
 import { routingActions } from "../../../../modules/routing/actions";
 import { appConnect } from "../../../../store";
@@ -33,7 +33,7 @@ type TMockEtoProps = {
 };
 
 type TEtoProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 };
 
 type TCommonExternalProps = { shouldOpenInNewWindow?: boolean };
@@ -46,7 +46,7 @@ interface IDispatchProps {
 
 const defaultEmpty = "-";
 
-const getCompanyHeadquarters = (eto: TEtoWithCompanyAndContract) => {
+const getCompanyHeadquarters = (eto: TEtoWithCompanyAndContractReadonly) => {
   if (eto.company.city && eto.company.country) {
     return `${eto.company.city}, ${VALUES[eto.company.country]}`;
   }
@@ -54,7 +54,7 @@ const getCompanyHeadquarters = (eto: TEtoWithCompanyAndContract) => {
   return undefined;
 };
 
-const getNextFundingRound = ({ company }: TEtoWithCompanyAndContract) => {
+const getNextFundingRound = ({ company }: TEtoWithCompanyAndContractReadonly) => {
   if (company.companyStage) {
     const nextFundingRound = NEXT_FUNDING_ROUNDS[company.companyStage];
 

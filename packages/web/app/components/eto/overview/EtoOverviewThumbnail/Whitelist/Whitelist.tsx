@@ -8,7 +8,7 @@ import {
   calculateWhitelistingState,
   EWhitelistingState,
 } from "../../../../../modules/bookbuilding-flow/utils";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { appConnect } from "../../../../../store";
 import { assertNever } from "../../../../../utils/assertNever";
 import { onEnterAction } from "../../../../../utils/OnEnterAction";
@@ -23,7 +23,7 @@ import { GreyInfo, Info } from "../Info";
 import { WhitelistStatus } from "./WhitelistStatus";
 
 export interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IStateProps {

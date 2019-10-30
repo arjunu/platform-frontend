@@ -6,20 +6,20 @@ import * as React from "react";
 import { testEto } from "../../../../../../test/fixtures";
 import { wrapWithIntl } from "../../../../../../test/integrationTestUtils.unsafe";
 import { tid } from "../../../../../../test/testUtils";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { DeepWritable } from "../../../../../types";
 import { InvestmentLayout } from "./InvestmentStatus";
 
 describe("InvestmentStatus", () => {
   let initialEnv: any;
-  let testData: DeepWritable<TEtoWithCompanyAndContract>;
+  let testData: DeepWritable<TEtoWithCompanyAndContractReadonly>;
 
   beforeEach(() => {
     initialEnv = process.env.NF_MAY_SHOW_INVESTOR_STATS;
     process.env.NF_MAY_SHOW_INVESTOR_STATS = "1";
 
     // tslint:disable-next-line:no-useless-cast
-    testData = cloneDeep(testEto) as DeepWritable<TEtoWithCompanyAndContract>;
+    testData = cloneDeep(testEto) as DeepWritable<TEtoWithCompanyAndContractReadonly>;
   });
 
   afterEach(() => {

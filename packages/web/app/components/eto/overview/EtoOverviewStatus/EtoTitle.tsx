@@ -3,7 +3,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 
 import { EJurisdiction } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { etoPublicViewLink } from "../../../appRouteUtils";
 import { TokenSymbolWidget } from "./TokenSymbolWidget";
 
@@ -15,7 +15,7 @@ interface IExternalProps {
 }
 
 interface IEtoProp {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface ITitleProps {

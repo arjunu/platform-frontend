@@ -29,7 +29,7 @@ import {
   calculateMarketingEtoData,
   calculateVotingRightsEtoData,
 } from "../../modules/eto-flow/utils";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { isOnChain } from "../../modules/eto/utils";
 import { selectKycRequestStatus } from "../../modules/kyc/selectors";
 import { selectIsLightWallet } from "../../modules/web3/selectors";
@@ -73,7 +73,7 @@ interface IStateProps {
   isLightWallet: boolean;
   userHasKycAndEmailVerified: boolean;
   requestStatus?: EKycRequestStatus;
-  eto?: TEtoWithCompanyAndContract;
+  eto?: TEtoWithCompanyAndContractReadonly;
   combinedEtoCompanyData: ReturnType<typeof selectCombinedEtoCompanyData>;
   isTermSheetSubmitted?: boolean;
   isOfferingDocumentSubmitted: boolean | undefined;
@@ -116,7 +116,7 @@ const SubmitDashBoardSection: React.FunctionComponent<{
   );
 
 interface IEtoStateRender {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   shouldViewSubmissionSection?: boolean;
   isTermSheetSubmitted?: boolean;
   isOfferingDocumentSubmitted?: boolean;

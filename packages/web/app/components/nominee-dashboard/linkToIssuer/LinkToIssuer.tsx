@@ -3,9 +3,9 @@ import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { branch, compose, renderComponent, renderNothing, withProps } from "recompose";
 
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import {
-  selectNomineeEtoWithCompanyAndContract,
+  selectActiveNomineeEto,
   selectNomineeRequests,
   selectNomineeStateError,
 } from "../../../modules/nominee-flow/selectors";
@@ -28,7 +28,7 @@ import * as styles from "./LinkToIssuer.module.scss";
 interface IStateProps {
   nomineeRequest: INomineeRequest | undefined;
   nomineeRequestError: ENomineeRequestError;
-  nomineeEto: TEtoWithCompanyAndContract | undefined;
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
 }
 
 interface IRepeatRequestProps {
@@ -129,7 +129,7 @@ export const NomineeRequestContainer: React.FunctionComponent = ({ children }) =
 export const LinkToIssuer = compose<IStateProps, {}>(
   appConnect<IStateProps>({
     stateToProps: state => ({
-      nomineeEto: selectNomineeEtoWithCompanyAndContract(state),
+      nomineeEto: selectActiveNomineeEto(state),
       nomineeRequest: takeLatestNomineeRequest(selectNomineeRequests(state)), //only take the latest one for now
       nomineeRequestError: selectNomineeStateError(state),
     }),

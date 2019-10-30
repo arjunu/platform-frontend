@@ -23,7 +23,7 @@ import {
   EOfferingDocumentType,
   EProductName,
 } from "../app/lib/api/eto/EtoProductsApi.interfaces";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../app/modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../app/modules/eto/types";
 import {
   EthereumAddress,
   EthereumAddressWithChecksum,
@@ -793,7 +793,7 @@ export const testProduct = {
   dateToWhitelistMinDuration: 7 * 24 * 60 * 60,
 };
 
-export const testEto: TEtoWithCompanyAndContract = {
+export const testEto: TEtoWithCompanyAndContractReadonly = {
   authorizedCapital: undefined,
   newSharesToIssueInFixedSlots: undefined,
   canEnableBookbuilding: false,

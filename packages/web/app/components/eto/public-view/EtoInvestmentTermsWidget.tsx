@@ -8,7 +8,7 @@ import { canShowDocument } from "../../../lib/api/eto/EtoFileUtils";
 import { EAssetType, EJurisdiction } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { getDocumentByType } from "../../../modules/eto-documents/utils";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { TDataTestId, TTranslatedString } from "../../../types";
 import { divideBigNumbers } from "../../../utils/BigNumberUtils";
@@ -33,7 +33,7 @@ import { ToBeAnnounced, ToBeAnnouncedTooltip } from "../shared/ToBeAnnouncedTool
 import * as styles from "./EtoInvestmentTermsWidget.module.scss";
 
 type TExternalProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   isUserFullyVerified: boolean;
 };
 

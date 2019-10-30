@@ -12,7 +12,7 @@ import {
 import { IImmutableFileId } from "../../../lib/api/immutable-storage/ImmutableStorage.interfaces";
 import { actions } from "../../../modules/actions";
 import { selectEtoWithCompanyAndContractById } from "../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { selectPendingDownloads } from "../../../modules/immutable-file/selectors";
 import { appConnect } from "../../../store";
 import { getInvestorDocumentTitles } from "../../documents/utils";
@@ -32,7 +32,7 @@ import * as styles from "./DownloadTokenAgreementModal.module.scss";
 
 interface IStateProps {
   isOpen: boolean;
-  eto: TEtoWithCompanyAndContract | undefined;
+  eto: TEtoWithCompanyAndContractReadonly | undefined;
   pendingDownloads: ReturnType<typeof selectPendingDownloads>;
 }
 

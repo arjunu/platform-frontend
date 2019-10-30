@@ -6,13 +6,13 @@ import {
   selectEtoWidgetError,
   selectInvestorEtoWithCompanyAndContract,
 } from "../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { etoWidgetViewLink } from "../../appRouteUtils";
 
 interface IStateProps {
-  eto: TEtoWithCompanyAndContract | undefined;
+  eto: TEtoWithCompanyAndContractReadonly | undefined;
   widgetError: boolean | undefined;
 }
 

@@ -17,7 +17,7 @@ import {
   selectEtoWithCompanyAndContractById,
   selectTokenData,
 } from "../eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../eto/types";
 import { isOnChain } from "../eto/utils";
 import { selectLockedWalletConnected } from "../wallet/selectors";
 import {
@@ -75,7 +75,7 @@ export const selectEtoWithInvestorTickets = (
   return undefined;
 };
 
-export const selectMyAssets = (state: IAppState): TEtoWithCompanyAndContract[] | undefined => {
+export const selectMyAssets = (state: IAppState): TEtoWithCompanyAndContractReadonly[] | undefined => {
   const etos = selectEtos(state);
 
   if (etos) {
@@ -244,7 +244,7 @@ export const selectPayoutAvailable = (state: IAppState) => {
 export const selectMyAssetsWithTokenData = (state: IAppState): TETOWithTokenData[] | undefined => {
   const myAsssets = selectMyAssets(state);
   if (myAsssets) {
-    return myAsssets.map((asset: TEtoWithCompanyAndContract) => ({
+    return myAsssets.map((asset: TEtoWithCompanyAndContractReadonly) => ({
       ...asset,
       tokenData: selectTokenData(state.eto, asset.previewCode)!,
     }));

@@ -28,7 +28,7 @@ import { selectAgreementsStatus, selectEtoContract, selectEtoSubState } from "..
 import {
   EEtoAgreementStatus,
   EETOStateOnChain,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
   TOfferingAgreementsStatus,
 } from "../eto/types";
 import { isOnChain } from "../eto/utils";
@@ -80,7 +80,7 @@ const selectIssuerEtoWithCompanyAndContractInternal = createSelector(
 
 export const selectIssuerEtoWithCompanyAndContract = (
   state: IAppState,
-): TEtoWithCompanyAndContract | undefined => {
+): TEtoWithCompanyAndContractReadonly | undefined => {
   const eto = selectIssuerEto(state);
 
   if (eto) {

@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
 import { calcCapFraction } from "../../../../lib/api/eto/EtoUtils";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import {
   selectShouldShowPublicDiscount,
   selectShouldShowWhitelistDiscount,
@@ -33,7 +33,7 @@ interface IStateProps {
 }
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({

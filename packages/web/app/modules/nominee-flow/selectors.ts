@@ -1,21 +1,16 @@
 import { isEmpty } from "lodash/fp";
 import { createSelector } from "reselect";
 
-import { TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { nomineeIgnoredTemplates } from "../../lib/api/eto/EtoFileUtils";
 import { IAppState } from "../../store";
-import { nonNullable } from "../../utils/nonNullable";
 import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
 import {
   selectAgreementsStatus,
-  selectEtoContract,
-  selectEtoSubState,
   selectInvestmentAgreement,
 } from "../eto/selectors";
 import {
-  EEtoAgreementStatus,
-  TEtoWithCompanyAndContract,
+  EEtoAgreementStatus, TEtoWithCompanyAndContract,
   TOfferingAgreementsStatus,
 } from "../eto/types";
 import { selectRouter } from "../routing/selectors";
@@ -43,7 +38,7 @@ export const selectLinkedNomineeEtoId = (state: IAppState): string | undefined =
 
 export const selectNomineeEtos = (
   state: IAppState,
-): { [previewCode: string]: TEtoSpecsData | undefined } | undefined =>
+): { [previewCode: string]: TEtoWithCompanyAndContract | undefined } | undefined =>
   state.nomineeFlow.nomineeEtos;
 
 export const selectNomineeActiveEtoPreviewCode = (state: IAppState) =>
@@ -61,46 +56,13 @@ export const selectActiveNomineeEto = createSelector(
   },
 );
 
-export const selectActiveNomineeEtoCompany = createSelector(
-  selectActiveNomineeEto,
-  selectNomineeFlow,
-  (activeEto, nomineeFlow) =>
-    activeEto ? nomineeFlow.nomineeEtosCompanies[activeEto.companyId] : undefined,
-);
-
-const selectNomineeEtoWithCompanyAndContractInternal = createSelector(
-  // forward eto param to combiner
-  (_: IAppState, eto: TEtoSpecsData) => eto,
-  (state: IAppState, eto: TEtoSpecsData) => selectEtoContract(state, eto.previewCode),
-  (state: IAppState) => nonNullable(selectActiveNomineeEtoCompany(state)),
-  (state: IAppState, eto: TEtoSpecsData) => selectEtoSubState(state, eto),
-  (eto, contract, company, subState) => ({
-    ...eto,
-    contract,
-    company,
-    subState,
-  }),
-);
-
-export const selectNomineeEtoWithCompanyAndContract = (
-  state: IAppState,
-): TEtoWithCompanyAndContract | undefined => {
-  const eto = selectActiveNomineeEto(state);
-
-  if (eto) {
-    return selectNomineeEtoWithCompanyAndContractInternal(state, eto);
-  }
-
-  return undefined;
-};
-
 export const selectNomineeEtoState = (state: IAppState) => {
-  const eto = selectNomineeEtoWithCompanyAndContract(state);
+  const eto = selectActiveNomineeEto(state);
   return eto ? eto.state : undefined;
 };
 
 export const selectNomineeEtoTemplatesArray = (state: IAppState): IEtoDocument[] => {
-  const eto = selectNomineeEtoWithCompanyAndContract(state);
+  const eto = selectActiveNomineeEto(state);
   const filterFunction = (key: string) =>
     !nomineeIgnoredTemplates.some((templateKey: string) => templateKey === key);
 
@@ -122,7 +84,7 @@ export const selectNomineeEtoDocumentsStatus = (
       };
     }
 
-    const eto = selectNomineeEtoWithCompanyAndContract(state);
+    const eto = selectActiveNomineeEto(state);
     if (eto !== undefined) {
       return selectAgreementsStatus(state, eto.previewCode);
     }
@@ -132,7 +94,7 @@ export const selectNomineeEtoDocumentsStatus = (
 };
 
 export const selectIsISHASignedByIssuer = (state: IAppState) => {
-  const eto = selectNomineeEtoWithCompanyAndContract(state);
+  const eto = selectActiveNomineeEto(state);
 
   if (eto) {
     const investmentAgreement = selectInvestmentAgreement(state, eto.previewCode);
@@ -146,7 +108,7 @@ export const selectIsISHASignedByIssuer = (state: IAppState) => {
 };
 
 export const selectCapitalIncrease = (state: IAppState) => {
-  const eto = selectNomineeEtoWithCompanyAndContract(state);
+  const eto = selectActiveNomineeEto(state);
 
   if (eto) {
     const investmentAgreement = selectInvestmentAgreement(state, eto.previewCode);

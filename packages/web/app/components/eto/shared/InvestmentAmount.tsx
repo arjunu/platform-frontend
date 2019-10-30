@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { MoneyRange } from "../../shared/formatters/MoneyRange";
 import {
   EAbbreviatedNumberOutputFormat,
@@ -10,7 +10,7 @@ import {
 import { ToBeAnnounced } from "./ToBeAnnouncedTooltip";
 
 type TExternalProps = {
-  etoData: TEtoWithCompanyAndContract;
+  etoData: TEtoWithCompanyAndContractReadonly;
 };
 
 const InvestmentAmount: React.FunctionComponent<TExternalProps> = ({ etoData }) => {

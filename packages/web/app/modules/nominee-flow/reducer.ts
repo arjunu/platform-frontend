@@ -1,4 +1,4 @@
-import { TCompanyEtoData, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { TCompanyEtoData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
@@ -9,6 +9,7 @@ import {
   ENomineeUploadIshaStatus,
   TNomineeRequestStorage,
 } from "./types";
+import { TEtoContractData, TEtoWithCompanyAndContractReadonly } from "../eto/types";
 
 export type TNomineeFlowState = {
   ready:boolean;
@@ -16,8 +17,9 @@ export type TNomineeFlowState = {
   error: ENomineeRequestError;
   activeNomineeEtoPreviewCode: string | undefined;
   nomineeRequests: TNomineeRequestStorage;
-  nomineeEtos: { [previewCode: string]: TEtoSpecsData | undefined } | undefined;
-  nomineeEtosCompanies: { [companyId: string]: TCompanyEtoData | undefined };
+  nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContractReadonly };
+  companies: { [companyId: string]: TCompanyEtoData | undefined };
+  contracts: { [previewCode: string]: TEtoContractData | undefined };
   linkBankAccount: ENomineeLinkBankAccountStatus;
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus;
   uploadIsha: ENomineeUploadIshaStatus;
@@ -31,8 +33,9 @@ const nomineeFlowInitialState: TNomineeFlowState = {
   error: ENomineeRequestError.NONE,
   activeNomineeEtoPreviewCode: undefined,
   nomineeRequests: {},
-  nomineeEtos: undefined,
-  nomineeEtosCompanies: {},
+  nomineeEtos: {},
+  companies: {},
+  contracts: {},
   linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
   redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
   uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
@@ -45,7 +48,7 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
   action,
 ): DeepReadonly<TNomineeFlowState> => {
   switch (action.type) {
-    case actions.eto.setCapitalIncrease.getType():
+    case actions.eto.setCapitalIncrease.getType(): //eto
       return {
         ...state,
         capitalIncrease: action.payload.capitalIncrease
@@ -88,7 +91,6 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
       return {
         ...state,
         nomineeEtos: action.payload.etos,
-        nomineeEtosCompanies: action.payload.companies,
       };
     default:
       return state;

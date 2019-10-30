@@ -1,4 +1,4 @@
-import { compose, isEmpty, keyBy, map, omit } from "lodash/fp";
+import { isEmpty } from "lodash/fp";
 import { delay } from "redux-saga";
 import { all, fork, put, select, take } from "redux-saga/effects";
 
@@ -12,17 +12,14 @@ import { NOMINEE_REQUESTS_WATCHER_DELAY } from "../../config/constants";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import {
   EEtoState,
-  TCompanyEtoData,
-  TEtoDataWithCompany,
-  TEtoSpecsData,
   TNomineeRequestResponse,
 } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IssuerIdInvalid, NomineeRequestExists } from "../../lib/api/eto/EtoNomineeApi";
 import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserFullyVerified } from "../auth/selectors";
-import { loadEtoContract } from "../eto/sagas";
-import { EETOStateOnChain } from "../eto/types";
+import { getEtoContract } from "../eto/sagas";
+import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../eto/types";
 import { isOnChain } from "../eto/utils";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../sagasUtils";
 import {
@@ -31,7 +28,7 @@ import {
   selectIsISHASignedByIssuer,
   selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
-  selectNomineeEtoWithCompanyAndContract,
+  selectActiveNomineeEto,
 } from "./selectors";
 import {
   ENomineeRequestError,
@@ -40,6 +37,8 @@ import {
 } from "./types";
 import { getNomineeTaskStep, nomineeApiDataToNomineeRequests, nomineeRequestResponseToRequestStatus } from "./utils";
 import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
+import { Dictionary } from "../../types";
+import { selectEtoSubStateEtoEtoWithContract } from "../eto/selectors";
 
 export function* loadNomineeTaskData({
   logger,
@@ -55,8 +54,8 @@ export function* loadNomineeTaskData({
       yield put(actions.nomineeFlow.loadNomineeEtos());
       yield take(actions.nomineeFlow.setActiveNomineeEto);
 
-      const eto:ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
-        selectNomineeEtoWithCompanyAndContract,
+      const eto:ReturnType<typeof selectActiveNomineeEto> = yield select(
+        selectActiveNomineeEto,
       );
 
       const requiredData: { [key: string]: unknown } = {
@@ -73,7 +72,6 @@ export function* loadNomineeTaskData({
         requiredData.etoAgreementsStatusLoaded = take(actions.eto.setAgreementsStatus);
         requiredData.capitalIncrease = put(actions.eto.loadCapitalIncrease(eto.etoId, eto.previewCode));
         requiredData.capitalIncreaseLoaded = take(actions.eto.setCapitalIncrease);
-        console.log(eto.contract)
       }
       yield all(requiredData);
     }
@@ -92,13 +90,13 @@ export function* calculateNomineeTask() {
 
   const selectData = yield all({
     verificationIsComplete: select(selectIsUserFullyVerified),
-    nomineeEto: select(selectNomineeEtoWithCompanyAndContract),
+    nomineeEto: select(selectActiveNomineeEto),
     isBankAccountVerified: select(selectIsBankAccountVerified),
     documentsStatus: select(selectNomineeEtoDocumentsStatus),
     isISHASignedByIssuer: select(selectIsISHASignedByIssuer),
     capitalIncrease: select(selectCapitalIncrease),
   });
-
+  console.log("selectData",selectData)
   const actualTask = yield getNomineeTaskStep(selectData);
 
   yield put(
@@ -194,8 +192,8 @@ export function* createNomineeRequest(
 }
 
 export function* loadNomineeAgreements(): Iterator<any> {
-  const nomineeEto: ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
-    selectNomineeEtoWithCompanyAndContract,
+  const nomineeEto: ReturnType<typeof selectActiveNomineeEto> = yield select(
+    selectActiveNomineeEto,
   );
 
   if (nomineeEto) {
@@ -204,13 +202,25 @@ export function* loadNomineeAgreements(): Iterator<any> {
 }
 
 export function* loadNomineeSignedInvestmentAgreements(): Iterator<any> {
-  const nomineeEto: ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
-    selectNomineeEtoWithCompanyAndContract,
+  const nomineeEto: ReturnType<typeof selectActiveNomineeEto> = yield select(
+    selectActiveNomineeEto,
   );
 
   if (nomineeEto) {
     yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto.etoId, nomineeEto.previewCode));
   }
+}
+
+export function* loadNomineeEto(
+  _:TGlobalDependencies,
+  eto:TEtoWithCompanyAndContract
+){
+  if(eto.state === EEtoState.ON_CHAIN){
+    eto.contract = yield neuCall(getEtoContract, eto.etoId,eto.state);
+  }
+
+  eto.subState = yield select(selectEtoSubStateEtoEtoWithContract,eto);
+  return eto
 }
 
 export function* loadNomineeEtos({
@@ -219,27 +229,17 @@ export function* loadNomineeEtos({
   notificationCenter,
 }: TGlobalDependencies): Iterable<any> {
   try {
-    const etos: TEtoDataWithCompany[] = yield apiEtoService.loadNomineeEtos();
+    const etos: TEtoWithCompanyAndContract[] = yield apiEtoService.loadNomineeEtos();
 
-    yield all(
+    const etosByPreviewCode = yield all(
       etos
-        .filter(eto => eto.state === EEtoState.ON_CHAIN)
-        .map(eto => neuCall(loadEtoContract, eto)),
+        .reduce((acc:{[key:string]:unknown},eto) => {
+          acc[eto.previewCode] = neuCall(loadNomineeEto,eto);
+          return acc
+        },{})
     );
 
-    const companies = compose(
-      keyBy((eto: TCompanyEtoData) => eto.companyId),
-      map((eto: TEtoDataWithCompany) => eto.company),
-    )(etos);
-
-    const etosByPreviewCode = compose(
-      keyBy((eto: TEtoSpecsData) => eto.previewCode),
-      // remove company prop from eto
-      // it's saved separately for consistency with other endpoints
-      map(omit("company")),
-    )(etos);
-
-    yield put(actions.nomineeFlow.setNomineeEtos({ etos: etosByPreviewCode, companies }));
+    yield put(actions.nomineeFlow.setNomineeEtos({ etos: etosByPreviewCode as Dictionary<TEtoWithCompanyAndContract,string> }));
   } catch (e) {
     logger.error("Nominee ETOs could not be loaded", e);
 

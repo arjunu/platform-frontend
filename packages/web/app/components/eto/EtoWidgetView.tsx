@@ -9,7 +9,7 @@ import {
   selectEtoWidgetError,
   selectInvestorEtoWithCompanyAndContract,
 } from "../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
@@ -19,7 +19,7 @@ import { EtoOverviewStatus } from "./overview/EtoOverviewStatus/EtoOverviewStatu
 import * as styles from "./overview/EtoOverviewStatus/EtoOverviewStatus.module.scss";
 
 interface IStateProps {
-  eto?: TEtoWithCompanyAndContract;
+  eto?: TEtoWithCompanyAndContractReadonly;
   widgetError: boolean | undefined;
 }
 
@@ -28,7 +28,7 @@ interface IRouterParams {
 }
 
 type TProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   widgetError: boolean | undefined;
 };
 

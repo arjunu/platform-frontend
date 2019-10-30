@@ -3,7 +3,7 @@ import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
 import {
-  IEtoContractData,
+  TEtoContractData,
   IEtoTokenData,
   IEtoTokenGeneralDiscounts,
   SignedISHAStatus,
@@ -13,7 +13,7 @@ import {
 export interface IEtoState {
   etos: { [previewCode: string]: TEtoSpecsData | undefined };
   companies: { [companyId: string]: TCompanyEtoData | undefined };
-  contracts: { [previewCode: string]: IEtoContractData | undefined };
+  contracts: { [previewCode: string]: TEtoContractData | undefined };
   displayOrder: string[] | undefined;
   maxCapExceeded: { [previewCode: string]: boolean | undefined };
   etoWidgetError: boolean | undefined;

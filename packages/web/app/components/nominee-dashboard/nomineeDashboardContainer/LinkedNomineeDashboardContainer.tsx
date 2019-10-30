@@ -1,19 +1,19 @@
 import * as React from "react";
 import { compose } from "recompose";
 
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
-import { selectNomineeEtoWithCompanyAndContract } from "../../../modules/nominee-flow/selectors";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
+import { selectActiveNomineeEto } from "../../../modules/nominee-flow/selectors";
 import { appConnect } from "../../../store";
 import { NomineeEtoOverviewThumbnail } from "../../eto/overview/EtoOverviewThumbnail/EtoOverviewThumbnail";
 
 import * as styles from "../NomineeDashboard.module.scss";
 
 interface ILinkedNomineeStateProps {
-  eto: TEtoWithCompanyAndContract | undefined;
+  eto: TEtoWithCompanyAndContractReadonly | undefined;
 }
 
 interface ILinkedNomineeComponentProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 const LinkedNomineeDashboardContainerLayout: React.FunctionComponent<
@@ -28,7 +28,7 @@ const LinkedNomineeDashboardContainerLayout: React.FunctionComponent<
 export const LinkedNomineeDashboardContainer = compose<ILinkedNomineeComponentProps, {}>(
   appConnect<ILinkedNomineeStateProps, {}, {}>({
     stateToProps: state => ({
-      eto: selectNomineeEtoWithCompanyAndContract(state),
+      eto: selectActiveNomineeEto(state),
     }),
   }),
 )(LinkedNomineeDashboardContainerLayout);

@@ -4,7 +4,7 @@ import { branch, compose, renderComponent } from "recompose";
 
 import { actions } from "../../../../modules/actions";
 import { selectInvestorEtoWithCompanyAndContract } from "../../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { appConnect } from "../../../../store";
 import { onEnterAction } from "../../../../utils/OnEnterAction";
 import { withContainer } from "../../../../utils/withContainer.unsafe";
@@ -13,7 +13,7 @@ import { Layout } from "../../../layouts/Layout";
 import { LoadingIndicator } from "../../../shared/loading-indicator";
 
 interface IStateProps {
-  eto?: TEtoWithCompanyAndContract;
+  eto?: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IRouterParams {
@@ -21,7 +21,7 @@ interface IRouterParams {
 }
 
 type TProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 };
 
 const RedirectToEtoLinkComponent: React.FunctionComponent<TProps> = ({ eto }) => (

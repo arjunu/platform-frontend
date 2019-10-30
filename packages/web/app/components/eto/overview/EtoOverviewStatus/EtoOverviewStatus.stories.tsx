@@ -7,8 +7,8 @@ import { EKycRequestStatus } from "../../../../lib/api/kyc/KycApi.interfaces";
 import { EUserType } from "../../../../lib/api/users/interfaces";
 import {
   EETOStateOnChain,
-  IEtoContractData,
-  TEtoWithCompanyAndContract,
+  TEtoContractData,
+  TEtoWithCompanyAndContractReadonly,
 } from "../../../../modules/eto/types";
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withStore } from "../../../../utils/storeDecorator.unsafe";
@@ -16,7 +16,7 @@ import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
 import { ECurrency } from "../../../shared/formatters/utils";
 import { EtoOverviewStatus } from "./EtoOverviewStatus";
 
-const eto: TEtoWithCompanyAndContract = {
+const eto: TEtoWithCompanyAndContractReadonly = {
   ...testEto,
   preMoneyValuationEur: 10000,
   existingShareCapital: 10,
@@ -99,7 +99,7 @@ storiesOf("ETO/EtoOverviewStatus", module)
       eto={{
         ...eto,
         isBookbuilding: true,
-        contract: { ...eto.contract, timedState: EETOStateOnChain.Claim } as IEtoContractData,
+        contract: { ...eto.contract, timedState: EETOStateOnChain.Claim } as TEtoContractData,
       }}
       isEmbedded={true}
       publicView={false}
@@ -122,7 +122,7 @@ storiesOf("ETO/EtoOverviewStatus", module)
               .add(7, "days")
               .toDate(),
           },
-        } as IEtoContractData,
+        } as TEtoContractData,
       }}
       isEmbedded={true}
       publicView={false}
@@ -180,7 +180,7 @@ storiesOf("ETO/EtoOverviewStatus", module)
               .add(7, "days")
               .toDate(),
           },
-        } as IEtoContractData,
+        } as TEtoContractData,
       }}
       isEmbedded={true}
       publicView={false}
@@ -193,7 +193,7 @@ storiesOf("ETO/EtoOverviewStatus", module)
         contract: {
           ...eto.contract,
           timedState: EETOStateOnChain.Public,
-        } as IEtoContractData,
+        } as TEtoContractData,
       }}
       isEmbedded={true}
       publicView={false}
@@ -258,7 +258,7 @@ storiesOf("ETO/EtoOverviewStatus/whitelisting, investor limit reached", module)
               .add(7, "days")
               .toDate(),
           },
-        } as IEtoContractData,
+        } as TEtoContractData,
       }}
       isEmbedded={true}
       publicView={false}

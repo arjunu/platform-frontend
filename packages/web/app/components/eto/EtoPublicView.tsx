@@ -3,7 +3,7 @@ import { branch, compose, renderComponent, withProps } from "recompose";
 import { actions } from "../../modules/actions";
 import { selectIsUserFullyVerified } from "../../modules/auth/selectors";
 import { selectEtoWithCompanyAndContract } from "../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
@@ -16,7 +16,7 @@ import { withJurisdictionDisclaimer } from "./shared/routing/withJurisdictionDis
 import { withJurisdictionRoute } from "./shared/routing/withJurisdictionRoute";
 
 interface IStateProps {
-  eto?: TEtoWithCompanyAndContract;
+  eto?: TEtoWithCompanyAndContractReadonly;
   isUserFullyVerified: boolean;
 }
 
@@ -26,7 +26,7 @@ interface IRouterParams {
 }
 
 type TProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   publicView: boolean;
   isUserFullyVerified: boolean;
 };

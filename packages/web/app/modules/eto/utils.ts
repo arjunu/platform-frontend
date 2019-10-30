@@ -12,10 +12,10 @@ import { isPastInvestment } from "../investor-portfolio/utils";
 import {
   EETOStateOnChain,
   EEtoSubState,
-  IEtoContractData,
+  TEtoContractData,
   IEtoTotalInvestment,
   TEtoStartOfStates,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "./types";
 
 export const amendEtoToCompatibleFormat = (
@@ -77,15 +77,15 @@ export const convertToStateStartDate = (
 };
 
 export function isOnChain(
-  eto: TEtoWithCompanyAndContract,
+  eto: TEtoWithCompanyAndContractReadonly,
 ): eto is Overwrite<
-  TEtoWithCompanyAndContract,
-  { contract: Exclude<TEtoWithCompanyAndContract["contract"], undefined> }
+  TEtoWithCompanyAndContractReadonly,
+  { contract: Exclude<TEtoWithCompanyAndContractReadonly["contract"], undefined> }
 > {
   return eto.state === EEtoState.ON_CHAIN && eto.contract !== undefined;
 }
 
-export const isRestrictedEto = (eto: TEtoWithCompanyAndContract): boolean =>
+export const isRestrictedEto = (eto: TEtoWithCompanyAndContractReadonly): boolean =>
   eto.product.jurisdiction === EJurisdiction.GERMANY && !isPastInvestment(eto.contract!.timedState);
 
 /**
@@ -93,13 +93,13 @@ export const isRestrictedEto = (eto: TEtoWithCompanyAndContract): boolean =>
  * @returns true if user is either the issuer or nominee of the eto
  */
 export const isUserAssociatedWithEto = (
-  eto: TEtoWithCompanyAndContract,
+  eto: TEtoWithCompanyAndContractReadonly,
   userId: EthereumAddressWithChecksum,
 ) => eto.companyId === userId || eto.nominee === userId;
 
 type TCalculateSubStateOptions = {
   eto: TEtoSpecsData;
-  contract: IEtoContractData | undefined;
+  contract: TEtoContractData | undefined;
   isEligibleToPreEto: boolean;
 };
 

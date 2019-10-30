@@ -4,11 +4,11 @@ import { branch, compose, renderComponent, setDisplayName } from "recompose";
 
 import { IEtoDocument } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { actions } from "../../../modules/actions";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { selectPendingDownloads } from "../../../modules/immutable-file/selectors";
 import {
   selectNomineeEtoTemplatesArray,
-  selectNomineeEtoWithCompanyAndContract,
+  selectActiveNomineeEto,
   selectNomineeStateIsLoading,
 } from "../../../modules/nominee-flow/selectors";
 import { selectIsVerificationFullyDone } from "../../../modules/selectors";
@@ -31,7 +31,7 @@ type TStateProps = {
 type TGuardProps = {
   isLoading: boolean;
   verificationIsComplete: boolean;
-  nomineeEto: TEtoWithCompanyAndContract | undefined;
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
 };
 
 interface IDispatchProps {
@@ -39,7 +39,7 @@ interface IDispatchProps {
 }
 
 type TComponentProps = {
-  nomineeEto: TEtoWithCompanyAndContract | undefined;
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
   etoTemplates: IEtoDocument[];
   documentsGenerated: { [ipfsHash: string]: boolean };
   generateTemplate: (document: IEtoDocument) => void;
@@ -51,7 +51,7 @@ const NomineeDocuments = compose<TComponentProps, {}>(
   appConnect<TGuardProps>({
     stateToProps: state => ({
       isLoading: selectNomineeStateIsLoading(state),
-      nomineeEto: selectNomineeEtoWithCompanyAndContract(state),
+      nomineeEto: selectActiveNomineeEto(state),
       verificationIsComplete: selectIsVerificationFullyDone(state),
     }),
   }),

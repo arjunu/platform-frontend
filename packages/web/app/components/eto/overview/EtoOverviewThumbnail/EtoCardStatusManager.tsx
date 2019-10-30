@@ -5,7 +5,7 @@ import { EEtoState } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import {
   EETOStateOnChain,
   EEtoSubState,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "../../../../modules/eto/types";
 import { isOnChain } from "../../../../modules/eto/utils";
 import { nonNullable } from "../../../../utils/nonNullable";
@@ -23,7 +23,7 @@ import { InvestmentStatus } from "./InvestmentStatus/InvestmentStatus";
 import { Whitelist } from "./Whitelist/Whitelist";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 const EtoCardStatusManager = ({ eto }: IExternalProps) => {

@@ -13,7 +13,7 @@ import {
   selectInvestmentAgreementLoading,
   selectSignedInvestmentAgreementHash,
 } from "../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { investmentAgreementNotSigned } from "../../documents/utils";
@@ -26,11 +26,11 @@ import {
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 
 interface IDispatchProps {
-  signInvestmentAgreement: (eto: TEtoWithCompanyAndContract, agreementHash: string) => void;
+  signInvestmentAgreement: (eto: TEtoWithCompanyAndContractReadonly, agreementHash: string) => void;
 }
 
 interface IStateProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   uploadedAgreement: IEtoDocument;
   signedInvestmentAgreementUrlLoading: boolean;
   signedInvestmentAgreementUrl: string | undefined;
@@ -50,10 +50,10 @@ export const WaitingForNominee: React.FunctionComponent<IExternalProps> = ({ col
 );
 
 interface IWaitingToBeSigned {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   ipfsHash: string;
   signedInvestmentAgreementUrl: undefined | string;
-  signInvestmentAgreement: (eto: TEtoWithCompanyAndContract, ipfsHash: string) => void;
+  signInvestmentAgreement: (eto: TEtoWithCompanyAndContractReadonly, ipfsHash: string) => void;
 }
 
 export const WaitingToBeSigned: React.FunctionComponent<IWaitingToBeSigned & IExternalProps> = ({
@@ -128,7 +128,7 @@ export const SignInvestmentAgreement = compose<React.FunctionComponent<IExternal
       }
     },
     dispatchToProps: dispatch => ({
-      signInvestmentAgreement: (eto: TEtoWithCompanyAndContract, agreementHash: string) =>
+      signInvestmentAgreement: (eto: TEtoWithCompanyAndContractReadonly, agreementHash: string) =>
         dispatch(actions.etoFlow.signInvestmentAgreement(eto, agreementHash)),
     }),
   }),

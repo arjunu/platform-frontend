@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, withProps } from "recompose";
 
 import { selectEtoOnChainStateById } from "../../../../modules/eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { selectEtherPriceEur } from "../../../../modules/shared/tokenPrice/selectors";
 import { appConnect } from "../../../../store";
 import { divideBigNumbers } from "../../../../utils/BigNumberUtils";
@@ -22,7 +22,7 @@ import { SuccessMessage } from "./Message";
 import * as styles from "./EtoMaxCapExceeded.module.scss";
 
 export interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IStateProps {

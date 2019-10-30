@@ -7,7 +7,7 @@ import { actions } from "../../../../../modules/actions";
 import { selectIsAuthorized, selectIsInvestor } from "../../../../../modules/auth/selectors";
 import { InvalidETOStateError } from "../../../../../modules/eto/errors";
 import { selectEtoOnChainNextStateStartDate } from "../../../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { isOnChain } from "../../../../../modules/eto/utils";
 import { selectIsUserVerifiedOnBlockchain } from "../../../../../modules/kyc/selectors";
 import { appConnect } from "../../../../../store";
@@ -29,12 +29,12 @@ import { FundraisingBreakdownTooltip } from "./FundraisingBreakdownTooltip";
 import * as styles from "./InvestmentWidget.module.scss";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   isEmbedded: boolean;
 }
 
 interface IInvestmentStatsProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IStateProps {

@@ -1,10 +1,10 @@
 import { TEtoSpecsData } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 
 export const getInvestmentCalculatedPercentage = (eto: TEtoSpecsData) =>
   (eto.newSharesToIssue / eto.minimumNewSharesToIssue) * 100;
 
-export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndContract) => {
+export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndContractReadonly) => {
   const totalTokensInt = eto.contract!.totalInvestment.totalTokensInt;
 
   return (

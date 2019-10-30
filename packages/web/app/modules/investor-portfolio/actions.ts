@@ -3,7 +3,7 @@ import { createActionFactory } from "@neufund/shared";
 import { TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { Dictionary } from "../../types";
 import { createAction } from "../actionsUtils";
-import { TEtoWithCompanyAndContract } from "../eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../eto/types";
 import {
   ICalculatedContribution,
   IIncomingPayoutsData,
@@ -19,7 +19,7 @@ export const investorEtoTicketActions = {
     createAction("INVESTOR_TICKET_ETOS_LOAD", { etos }),
   loadTokenPersonalDiscount: createActionFactory(
     "INVESTOR_TICKET_LOAD_TOKEN_PERSONAL_DISCOUNT",
-    (eto: TEtoWithCompanyAndContract) => ({ eto }),
+    (eto: TEtoWithCompanyAndContractReadonly) => ({ eto }),
   ),
 
   claim: (etoId: string) => createAction("INVESTOR_TICKET_CLAIM", { etoId }),
