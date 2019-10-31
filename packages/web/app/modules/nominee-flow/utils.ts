@@ -12,7 +12,13 @@ import {
 } from "../eto/types";
 import { isOnChain } from "../eto/utils";
 import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
-import { ENomineeRequestStatus, ENomineeTask, INomineeRequest, TNomineeRequestStorage, } from "./types";
+import {
+  ENomineeEtoSpecificTask,
+  ENomineeRequestStatus,
+  ENomineeTask,
+  INomineeRequest,
+  TNomineeRequestStorage,
+} from "./types";
 
 export const nomineeRequestToTranslationMessage = (status: ENomineeRequestStatus): TMessage => {
   switch (status) {
@@ -105,14 +111,13 @@ export type TGetNomineeTaskStepData= {
   isISHASignedByIssuer: boolean,
 }
 
-// TODO: Move to redux selector
 export const getNomineeTaskStep = ({
   verificationIsComplete,
   nomineeEto,
   isBankAccountVerified,
   documentsStatus,
   isISHASignedByIssuer,
-}:TGetNomineeTaskStepData): ENomineeTask | undefined => {
+}:TGetNomineeTaskStepData): ENomineeTask | ENomineeEtoSpecificTask => {
   if (!verificationIsComplete) {
     return ENomineeTask.ACCOUNT_SETUP;
   } else if (nomineeEto === undefined) {
@@ -121,13 +126,13 @@ export const getNomineeTaskStep = ({
     documentsStatus[EAgreementType.THA] !== EEtoAgreementStatus.DONE &&
     nomineeIsEligibleToSignTHAOrRAA(nomineeEto)
   ) {
-    return ENomineeTask.ACCEPT_THA;
+    return ENomineeEtoSpecificTask.ACCEPT_THA;
   } else if (
     documentsStatus[EAgreementType.THA] === EEtoAgreementStatus.DONE &&
     documentsStatus[EAgreementType.RAAA] !== EEtoAgreementStatus.DONE &&
     nomineeIsEligibleToSignTHAOrRAA(nomineeEto)
   ) {
-    return ENomineeTask.ACCEPT_RAAA;
+    return ENomineeEtoSpecificTask.ACCEPT_RAAA;
   } else if (!isBankAccountVerified) {
     return ENomineeTask.LINK_BANK_ACCOUNT;
   } else if (
@@ -135,13 +140,13 @@ export const getNomineeTaskStep = ({
     nomineeEto.contract &&
     nomineeEto.contract.timedState === EETOStateOnChain.Signing &&
     !isISHASignedByIssuer) {
-    return ENomineeTask.REDEEM_SHARE_CAPITAL
+    return ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
   } else if (
     documentsStatus[EAgreementType.ISHA] !== EEtoAgreementStatus.DONE &&
     nomineeIsEligibleToSignISHA(nomineeEto) &&
     isISHASignedByIssuer
   ) {
-    return ENomineeTask.ACCEPT_ISHA;
+    return ENomineeEtoSpecificTask.ACCEPT_ISHA;
   }
 
   return ENomineeTask.NONE;

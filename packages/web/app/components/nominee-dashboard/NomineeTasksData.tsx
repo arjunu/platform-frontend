@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ENomineeTask } from "../../modules/nominee-flow/types";
+import { ENomineeEtoSpecificTask, ENomineeTask } from "../../modules/nominee-flow/types";
 import { AcceptRAAA, AcceptTHA } from "./AcceptAgreement";
 import { AcceptISHA } from "./AcceptIsha";
 import { AccountSetup } from "./accountSetup/AccountSetup";
@@ -10,7 +10,7 @@ import { NoTasks } from "./NoTasks";
 import { RedeemShareCapital } from "./RedeemShareCapital";
 
 export interface ITaskData {
-  key: ENomineeTask;
+  key: ENomineeTask | ENomineeEtoSpecificTask;
   taskRootComponent: React.ComponentType;
 }
 
@@ -19,7 +19,7 @@ export interface ITask {
   taskRootComponent: React.ComponentType;
 }
 
-type TNomineeTasksData = { [key in ENomineeTask]: ITaskData };
+type TNomineeTasksData = { [key in ENomineeTask]: ITaskData } & { [key in ENomineeEtoSpecificTask]: ITaskData };
 
 export const nomineeTasksData: TNomineeTasksData = {
   [ENomineeTask.ACCOUNT_SETUP]: {
@@ -34,20 +34,20 @@ export const nomineeTasksData: TNomineeTasksData = {
     key: ENomineeTask.LINK_BANK_ACCOUNT,
     taskRootComponent: LinkBankAccount,
   },
-  [ENomineeTask.ACCEPT_THA]: {
-    key: ENomineeTask.ACCEPT_THA,
+  [ENomineeEtoSpecificTask.ACCEPT_THA]: {
+    key: ENomineeEtoSpecificTask.ACCEPT_THA,
     taskRootComponent: AcceptTHA,
   },
-  [ENomineeTask.ACCEPT_RAAA]: {
-    key: ENomineeTask.ACCEPT_RAAA,
+  [ENomineeEtoSpecificTask.ACCEPT_RAAA]: {
+    key: ENomineeEtoSpecificTask.ACCEPT_RAAA,
     taskRootComponent: AcceptRAAA,
   },
-  [ENomineeTask.REDEEM_SHARE_CAPITAL]: {
-    key: ENomineeTask.REDEEM_SHARE_CAPITAL,
+  [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: {
+    key: ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL,
     taskRootComponent: RedeemShareCapital,
   },
-  [ENomineeTask.ACCEPT_ISHA]: {
-    key: ENomineeTask.ACCEPT_ISHA,
+  [ENomineeEtoSpecificTask.ACCEPT_ISHA]: {
+    key: ENomineeEtoSpecificTask.ACCEPT_ISHA,
     taskRootComponent: AcceptISHA,
   },
   [ENomineeTask.NONE]: {
@@ -56,4 +56,4 @@ export const nomineeTasksData: TNomineeTasksData = {
   },
 };
 
-export const getNomineeTasks = (data: TNomineeTasksData, step: ENomineeTask) => [data[step]];
+export const getNomineeTasks = (data: TNomineeTasksData, step: ENomineeTask | ENomineeEtoSpecificTask) => [data[step]];
