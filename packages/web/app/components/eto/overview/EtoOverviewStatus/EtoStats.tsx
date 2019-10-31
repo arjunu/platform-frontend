@@ -13,7 +13,6 @@ import { appConnect } from "../../../../store";
 import { Money } from "../../../shared/formatters/Money";
 import { MoneyRange } from "../../../shared/formatters/MoneyRange";
 import {
-  EAbbreviatedNumberOutputFormat,
   ECurrency,
   ENumberFormat,
   ENumberInputFormat,
@@ -63,6 +62,7 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
           valueType={ECurrency.EUR}
           outputFormat={ENumberOutputFormat.INTEGER}
           defaultValue={<ToBeAnnouncedTooltip />}
+          data-test-id="eto-overview.stats.pre-money-valuation"
         />
       </span>
     </div>
@@ -79,8 +79,9 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
           }
           inputFormat={ENumberInputFormat.FLOAT}
           valueType={ECurrency.EUR}
-          outputFormat={EAbbreviatedNumberOutputFormat.SHORT}
+          outputFormat={ENumberOutputFormat.INTEGER}
           defaultValue={<ToBeAnnounced />}
+          data-test-id="eto-overview.stats.target-investment-amount"
         />
       </span>
     </div>
@@ -96,6 +97,7 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
           outputFormat={ENumberOutputFormat.FULL}
           valueType={ENumberFormat.PERCENTAGE}
           defaultValue={<ToBeAnnounced />}
+          data-test-id="eto-overview.stats.new-shares-generated"
         />
       </span>
     </div>
@@ -110,26 +112,27 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
           valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
           outputFormat={ENumberOutputFormat.FULL}
           defaultValue={<ToBeAnnounced />}
+          data-test-id="eto-overview.stats.equity-token-price"
         />
         {showWhitelistDiscount && (
-          <>
+          <span data-test-id="eto-overview.stats.equity-token-price.public-discount">
             {" ("}
             <FormattedMessage
               id="shared-component.eto-overview-status.included-discount-percentage"
               values={{ percentage: eto.whitelistDiscountFraction! * 100 }}
             />
             {")"}
-          </>
+          </span>
         )}
         {showPublicDiscount && (
-          <>
+          <span data-test-id="eto-overview.stats.equity-token-price-whitelist-discount">
             {" ("}
             <FormattedMessage
               id="shared-component.eto-overview-status.included-discount-percentage"
               values={{ percentage: eto.publicDiscountFraction! * 100 }}
             />
             {")"}
-          </>
+          </span>
         )}
       </span>
     </div>

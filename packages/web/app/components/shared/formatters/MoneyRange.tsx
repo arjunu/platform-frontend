@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 
 import { TBigNumberVariants } from "../../../lib/web3/types";
-import { CommonHtmlProps } from "../../../types";
+import { CommonHtmlProps, TDataTestId } from "../../../types";
 import { FormatNumberRange } from "./FormatNumberRange";
 import { FormatShortNumberRange } from "./FormatShortNumber";
 import { ECurrencySymbol, IMoneyCommonProps } from "./Money";
@@ -25,7 +25,7 @@ interface IMoneyRangeProps {
 }
 
 export const MoneyRange: React.FunctionComponent<
-  IMoneyRangeProps & IMoneyCommonProps & CommonHtmlProps
+  IMoneyRangeProps & IMoneyCommonProps & CommonHtmlProps & TDataTestId
 > = ({
   valueFrom,
   valueUpto,
@@ -39,6 +39,7 @@ export const MoneyRange: React.FunctionComponent<
   transfer,
   theme,
   className,
+  ["data-test-id"]: dataTestId,
 }) => {
   let formattedValue = null;
 
@@ -60,9 +61,8 @@ export const MoneyRange: React.FunctionComponent<
         />
       );
     } else if (
-      Object.values(ENumberOutputFormat).includes(outputFormat) &&
-      (outputFormat === ENumberOutputFormat.FULL_ROUND_UP ||
-        outputFormat === ENumberOutputFormat.ONLY_NONZERO_DECIMALS_ROUND_UP)
+      outputFormat === ENumberOutputFormat.FULL_ROUND_UP ||
+      outputFormat === ENumberOutputFormat.ONLY_NONZERO_DECIMALS_ROUND_UP
     ) {
       formattedValue = (
         <FormatNumberRange
@@ -91,7 +91,7 @@ export const MoneyRange: React.FunctionComponent<
   }
 
   return (
-    <span className={cn(styles.money, transfer, className, theme)}>
+    <span className={cn(styles.money, transfer, className, theme)} data-test-id={dataTestId}>
       <span className={cn(styles.value)}>{formattedValue || defaultValue}</span>
       {formattedValue && currencySymbol === ECurrencySymbol.CODE && (
         <span className={cn(styles.currency, currencyClassName)} data-test-id="units">
