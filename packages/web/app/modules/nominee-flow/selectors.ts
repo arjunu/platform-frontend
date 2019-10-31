@@ -98,7 +98,7 @@ export const selectCapitalIncrease = (state: IAppState) => {
 };
 
 export const selectNomineeTaskStep = (state: IAppState) =>
-  state.nomineeFlow.nomineeTask;
+  state.nomineeFlow.activeNomineeTask;
 
 export const selectActiveEtoPreviewCodeFromQueryString = createSelector(
   selectRouter,

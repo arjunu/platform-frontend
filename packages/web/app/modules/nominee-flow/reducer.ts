@@ -2,42 +2,49 @@ import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
 import {
-  ENomineeLinkBankAccountStatus,
-  ENomineeRedeemShareholderCapitalStatus,
-  ENomineeRequestError, ENomineeTask,
-  ENomineeUploadIshaStatus,
+  ENomineeEtoSpecificTask,
+  ENomineeRequestError, ENomineeTask, ENomineeTaskStatus,
   TNomineeRequestStorage,
 } from "./types";
 import { TEtoWithCompanyAndContractReadonly } from "../eto/types";
 
+
 export type TNomineeFlowState = {
-  ready:boolean;
+  ready: boolean;
   loading: boolean;
   error: ENomineeRequestError;
+  activeNomineeTask: ENomineeTask,
   activeNomineeEtoPreviewCode: string | undefined;
   nomineeRequests: TNomineeRequestStorage;
   nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContractReadonly };
   nomineeEtosAdditionalData: { [previewCode: string]: any }, //fixme typings
-  linkBankAccount: ENomineeLinkBankAccountStatus;
-  redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus;
-  uploadIsha: ENomineeUploadIshaStatus;
-  nomineeTask:ENomineeTask,
-  capitalIncrease: string | undefined
+  nomineeTasksStatus: { [key in ENomineeTask]: ENomineeTaskStatus } &
+    {
+      byPreviewCode:
+        {
+          [previewCode: string]: {
+            [key in ENomineeEtoSpecificTask]: ENomineeTaskStatus
+          }
+        },
+    }
 }
 
 const nomineeFlowInitialState: TNomineeFlowState = {
   ready: false,
   loading: false,
   error: ENomineeRequestError.NONE,
+  activeNomineeTask: ENomineeTask.NONE,
   activeNomineeEtoPreviewCode: undefined,
   nomineeRequests: {},
   nomineeEtos: {},
   nomineeEtosAdditionalData: {},
-  linkBankAccount: ENomineeLinkBankAccountStatus.NOT_DONE,
-  redeemShareholderCapital: ENomineeRedeemShareholderCapitalStatus.NOT_DONE,
-  uploadIsha: ENomineeUploadIshaStatus.NOT_DONE,
-  nomineeTask:ENomineeTask.NONE,
-  capitalIncrease: undefined
+  nomineeTasksStatus: {
+    [ENomineeTask.NONE]: ENomineeTaskStatus.NOT_DONE,
+    [ENomineeTask.ACCOUNT_SETUP]: ENomineeTaskStatus.NOT_DONE,
+    [ENomineeTask.LINK_TO_ISSUER]: ENomineeTaskStatus.NOT_DONE,
+    [ENomineeTask.LINK_BANK_ACCOUNT]: ENomineeTaskStatus.NOT_DONE,
+    byPreviewCode: {},
+  },
 };
 
 export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
@@ -57,7 +64,7 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
         loading: false,
         ready: true,
         nomineeRequests: action.payload.tasks.nomineeRequests,
-        nomineeTask:action.payload.tasks.actualTask
+        activeNomineeTask: action.payload.tasks.actualTask
       };
     case actions.nomineeFlow.storeNomineeRequest.getType():
       return {

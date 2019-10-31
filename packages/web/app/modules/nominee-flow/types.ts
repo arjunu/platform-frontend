@@ -16,6 +16,12 @@ export enum ENomineeRequestError {
   GENERIC_ERROR = "nominee_request_generic_error",
 }
 
+export enum ENomineeTaskStatus {
+  NOT_DONE = "not_done",
+  DONE = "done",
+  ERROR = "error",
+}
+
 export enum ENomineeRedeemShareholderCapitalStatus {
   NOT_DONE = "not_done",
   DONE = "done",
@@ -63,8 +69,13 @@ export enum ENomineeTask {
   ACCOUNT_SETUP = "accountSetup",
   LINK_TO_ISSUER = "linkToIssuer",
   LINK_BANK_ACCOUNT = "linkBankAccount",
+}
+
+export enum ENomineeEtoSpecificTask {
   ACCEPT_THA = "acceptTha",
   ACCEPT_RAAA = "acceptRaaa",
   REDEEM_SHARE_CAPITAL = "redeemShareCapital",
   ACCEPT_ISHA = "acceptIsha",
 }
+
+export type TNomineeTask =  ENomineeTask & ENomineeEtoSpecificTask
