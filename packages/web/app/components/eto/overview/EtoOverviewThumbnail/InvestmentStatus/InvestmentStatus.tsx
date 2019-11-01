@@ -3,7 +3,10 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
 import { selectEtoOnChainNextStateStartDate } from "../../../../../modules/eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
+import {
+  EETOStateOnChain,
+  TEtoWithCompanyAndContractReadonly,
+} from "../../../../../modules/eto/types";
 import { appConnect } from "../../../../../store";
 import { FormatNumber } from "../../../../shared/formatters/FormatNumber";
 import { Money } from "../../../../shared/formatters/Money";

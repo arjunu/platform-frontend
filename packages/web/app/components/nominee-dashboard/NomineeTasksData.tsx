@@ -15,11 +15,12 @@ export interface ITaskData {
 }
 
 export interface ITask {
-  key: ENomineeTask;
+  key: ENomineeTask | ENomineeEtoSpecificTask;
   taskRootComponent: React.ComponentType;
 }
 
-type TNomineeTasksData = { [key in ENomineeTask]: ITaskData } & { [key in ENomineeEtoSpecificTask]: ITaskData };
+type TNomineeTasksData = { [key in ENomineeTask]: ITaskData } &
+  { [key in ENomineeEtoSpecificTask]: ITaskData };
 
 export const nomineeTasksData: TNomineeTasksData = {
   [ENomineeTask.ACCOUNT_SETUP]: {
@@ -56,4 +57,7 @@ export const nomineeTasksData: TNomineeTasksData = {
   },
 };
 
-export const getNomineeTasks = (data: TNomineeTasksData, step: ENomineeTask | ENomineeEtoSpecificTask) => [data[step]];
+export const getNomineeTasks = (
+  data: TNomineeTasksData,
+  step: ENomineeTask | ENomineeEtoSpecificTask,
+) => [data[step]];

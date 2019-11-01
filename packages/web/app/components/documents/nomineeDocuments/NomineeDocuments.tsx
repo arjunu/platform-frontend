@@ -7,8 +7,8 @@ import { actions } from "../../../modules/actions";
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { selectPendingDownloads } from "../../../modules/immutable-file/selectors";
 import {
-  selectNomineeEtoTemplatesArray,
   selectActiveNomineeEto,
+  selectNomineeEtoTemplatesArray,
   selectNomineeStateIsLoading,
 } from "../../../modules/nominee-flow/selectors";
 import { selectIsVerificationFullyDone } from "../../../modules/selectors";

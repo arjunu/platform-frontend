@@ -1,5 +1,5 @@
 import { isEmpty } from "lodash/fp";
-import { delay } from "redux-saga";
+import { delay, Effect } from "redux-saga";
 import { all, fork, put, select, take } from "redux-saga/effects";
 
 import {
@@ -10,22 +10,27 @@ import {
 import { createMessage } from "../../components/translatedMessages/utils";
 import { NOMINEE_REQUESTS_WATCHER_DELAY } from "../../config/constants";
 import { TGlobalDependencies } from "../../di/setupBindings";
-import { EEtoState, TNomineeRequestResponse, } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { EEtoState, TNomineeRequestResponse } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IssuerIdInvalid, NomineeRequestExists } from "../../lib/api/eto/EtoNomineeApi";
+import { Dictionary } from "../../types";
 import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserFullyVerified } from "../auth/selectors";
+import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
 import { getEtoContract } from "../eto/sagas";
+import { selectEtoSubStateEtoEtoWithContract } from "../eto/selectors";
 import { EEtoAgreementStatus, EETOStateOnChain, TEtoWithCompanyAndContract } from "../eto/types";
 import { isOnChain } from "../eto/utils";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../sagasUtils";
+import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
 import {
   selectActiveEtoPreviewCodeFromQueryString,
   selectActiveNomineeEto,
-  selectCapitalIncrease,
   selectIsISHASignedByIssuer,
+  selectNomineeActiveEtoPreviewCode,
   selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
+  selectNomineeTasksStatus,
 } from "./selectors";
 import {
   ENomineeEtoSpecificTask,
@@ -38,212 +43,180 @@ import {
 import {
   getNomineeTaskStep,
   nomineeApiDataToNomineeRequests,
-  nomineeIsEligibleToSignTHAOrRAA,
-  nomineeRequestResponseToRequestStatus
+  nomineeRequestResponseToRequestStatus,
 } from "./utils";
-import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
-import { Dictionary } from "../../types";
-import { selectEtoSubStateEtoEtoWithContract } from "../eto/selectors";
-import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
-
-// export function* loadNomineeTaskData({
-//   logger,
-//   notificationCenter,
-// }: TGlobalDependencies): Iterator<any> {
-//
-//   try {
-//     yield put(actions.nomineeFlow.loadNomineeEtos());
-//     yield take(actions.nomineeFlow.setActiveNomineeEto);
-//
-//     const eto: ReturnType<typeof selectActiveNomineeEto> = yield select(
-//       selectActiveNomineeEto,
-//     );
-//
-//     const requiredData: { [key: string]: unknown } = {
-//       nomineeRequests: put(actions.nomineeFlow.loadNomineeRequests()),
-//       nomineeRequestsLoaded: take(actions.nomineeFlow.setNomineeRequests),
-//       bankAccountDetails: put(actions.kyc.loadBankAccountDetails()),
-//       bankAccountDetailsLoaded: take(actions.kyc.setBankAccountDetails),
-//     };
-//
-//     if (eto && isOnChain(eto) && eto.contract.timedState === EETOStateOnChain.Signing) {
-//       requiredData.isha = put(actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode));
-//       requiredData.ishaLoaded = take(actions.eto.setInvestmentAgreementHash);
-//       requiredData.etoAgreementsStatus = put(actions.eto.loadEtoAgreementsStatus(eto));
-//       requiredData.etoAgreementsStatusLoaded = take(actions.eto.setAgreementsStatus);
-//       requiredData.capitalIncrease = put(actions.eto.loadCapitalIncrease(eto.etoId, eto.previewCode));
-//       requiredData.capitalIncreaseLoaded = take(actions.eto.setCapitalIncrease);
-//     }
-//     yield all(requiredData);
-//
-//   } catch (e) {
-//     logger.error("Failed to load Nominee tasks data", e);
-//     notificationCenter.error(
-//       createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
-//     );
-//   } finally {
-//     yield put(actions.nomineeFlow.loadingDone());
-//   }
-// }
 
 export function* initNomineeEtoSpecificTasks(
-  _: TGlobalDependencies,
-  eto: TEtoWithCompanyAndContract
-) {
-  const nomineeEtoSpecificTasks = {
-    [ENomineeEtoSpecificTask.ACCEPT_THA]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeEtoSpecificTask.ACCEPT_RAAA]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeEtoSpecificTask.ACCEPT_ISHA]: ENomineeTaskStatus.NOT_DONE,
-  };
+  { logger, notificationCenter }: TGlobalDependencies,
+  eto: TEtoWithCompanyAndContract,
+): Iterator<any> {
+  try {
+    const nomineeEtoSpecificTasks = {
+      [ENomineeEtoSpecificTask.ACCEPT_THA]: ENomineeTaskStatus.NOT_DONE,
+      [ENomineeEtoSpecificTask.ACCEPT_RAAA]: ENomineeTaskStatus.NOT_DONE,
+      [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: ENomineeTaskStatus.NOT_DONE,
+      [ENomineeEtoSpecificTask.ACCEPT_ISHA]: ENomineeTaskStatus.NOT_DONE,
+    };
 
-  if (isOnChain(eto)) {
-    yield put(actions.eto.loadEtoAgreementsStatus(eto));
-    yield take(actions.eto.setAgreementsStatus);
-    const documentsStatus = yield select(selectNomineeEtoDocumentsStatus);
+    if (isOnChain(eto)) {
+      yield put(actions.eto.loadEtoAgreementsStatus(eto));
+      yield take(actions.eto.setAgreementsStatus);
 
-    if (documentsStatus[EAgreementType.THA] !== EEtoAgreementStatus.DONE &&
-      nomineeIsEligibleToSignTHAOrRAA(eto)
-    ) {
-      return nomineeEtoSpecificTasks
+      const documentsStatus = yield select(selectNomineeEtoDocumentsStatus, eto.previewCode);
+
+      if (documentsStatus[EAgreementType.THA] === EEtoAgreementStatus.DONE) {
+        nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.ACCEPT_THA] = ENomineeTaskStatus.DONE;
+      }
+
+      if (documentsStatus[EAgreementType.RAAA] === EEtoAgreementStatus.DONE) {
+        nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.ACCEPT_RAAA] = ENomineeTaskStatus.DONE;
+      }
     }
 
-    if (documentsStatus[EAgreementType.THA] === EEtoAgreementStatus.DONE && //fixme fix this, it shouldn't rely on nomineeIsEligibleToSignTHAOrRAA
-      nomineeIsEligibleToSignTHAOrRAA(eto)
-    ) {
-      nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.ACCEPT_THA] = ENomineeTaskStatus.DONE;
-      return nomineeEtoSpecificTasks
-    }
-
-    if (eto.contract.timedState === EETOStateOnChain.Signing) {
-
+    if (isOnChain(eto) && eto.contract.timedState >= EETOStateOnChain.Signing) {
       yield all({
         isha: put(actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode)),
         ishaLoaded: take(actions.eto.setInvestmentAgreementHash),
-        capitalIncrease: put(actions.eto.loadCapitalIncrease(eto.etoId, eto.previewCode)),
-        capitalIncreaseLoaded: take(actions.eto.setCapitalIncrease),
+      });
+
+      const data = yield all({
+        isISHASignedByIssuer: select(selectIsISHASignedByIssuer, eto.previewCode),
+      });
+
+      if (data.isISHASignedByIssuer) {
+        nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL] =
+          ENomineeTaskStatus.DONE;
+      }
+    }
+
+    if (isOnChain(eto) && eto.contract.timedState > EETOStateOnChain.Signing) {
+      nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.ACCEPT_ISHA] = ENomineeTaskStatus.DONE;
+    }
+
+    return nomineeEtoSpecificTasks;
+  } catch (e) {
+    logger.error("error in initNomineeTasks", e);
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
+  }
+}
+
+export function* initNomineeTasks({
+  logger,
+  notificationCenter,
+}: TGlobalDependencies): Iterator<any> {
+  try {
+    const nomineeTasksStatus = {
+      [ENomineeTask.ACCOUNT_SETUP]: ENomineeTaskStatus.NOT_DONE,
+      [ENomineeTask.LINK_BANK_ACCOUNT]: ENomineeTaskStatus.NOT_DONE,
+      [ENomineeTask.LINK_TO_ISSUER]: ENomineeTaskStatus.NOT_DONE,
+      [ENomineeTask.NONE]: ENomineeTaskStatus.NOT_DONE,
+      byPreviewCode: {},
+    };
+
+    const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
+      selectIsUserFullyVerified,
+    );
+
+    if (!userIsVerified) {
+      return nomineeTasksStatus; //no reason to go further
+    } else {
+      nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] = ENomineeTaskStatus.DONE;
+
+      yield all({
+        loadBankAccountDetails: put(actions.kyc.loadBankAccountDetails()),
+        bankAccountDetailsLoaded: take(actions.kyc.setBankAccountDetails),
+        loadNomineeEtos: put(actions.nomineeFlow.loadNomineeEtos()),
+        nomineeEtosLoaded: take(actions.nomineeFlow.setNomineeEtos),
       });
 
       const result = yield all({
-        isISHASignedByIssuer: select(selectIsISHASignedByIssuer),
-        capitalIncrease: select(selectCapitalIncrease),
+        bankAccountIsVerified: select(selectIsBankAccountVerified),
+        nomineeEtos: select(selectNomineeEtos),
       });
 
-      if(!result.isISHASignedByIssuer){
-        nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.ACCEPT_RAAA] = ENomineeTaskStatus.DONE;
-        return nomineeEtoSpecificTasks
-      } else {
-        nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL] = ENomineeTaskStatus.DONE;
-        return nomineeEtoSpecificTasks
+      if (result.bankAccountIsVerified) {
+        nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] = ENomineeTaskStatus.DONE;
       }
-    } else {
-      return nomineeEtoSpecificTasks
+
+      if (!result.nomineeEtos) {
+        return nomineeTasksStatus;
+      } else {
+        nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] = ENomineeTaskStatus.DONE;
+      }
+
+      nomineeTasksStatus.byPreviewCode = yield all(
+        Object.keys(result.nomineeEtos).reduce(
+          (acc: { [key: string]: Iterator<Effect> }, previewCode: string) => {
+            acc[previewCode] = neuCall(
+              initNomineeEtoSpecificTasks,
+              result.nomineeEtos[previewCode],
+            );
+            return acc;
+          },
+          {} as { [key: string]: Iterator<Effect> },
+        ),
+      );
+
+      yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
     }
+  } catch (e) {
+    logger.error("error in initNomineeTasks", e);
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
   }
 }
 
-export function* initNomineeTasks() {
-  const tasks = {
-    [ENomineeTask.ACCOUNT_SETUP]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeTask.LINK_BANK_ACCOUNT]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeTask.LINK_TO_ISSUER]: ENomineeTaskStatus.NOT_DONE,
-    byPreviewCode: {}
-  };
+//TODO add watchers !!!!
+export function* nomineeDashboardView({ logger }: TGlobalDependencies): Iterator<any> {
+  try {
+    yield put(actions.nomineeFlow.initNomineeTasks());
+    yield take(actions.nomineeFlow.storeNomineeTasksStatus);
 
-  const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
-    selectIsUserFullyVerified,
-  );
+    const selectStepReq: { [key: string]: Effect } = {
+      nomineeTasksStatus: select(selectNomineeTasksStatus),
+    };
 
-  if (!userIsVerified) {
-    return tasks;
-  } else {
-    yield all({
-      loadBankAccountDetails: put(actions.kyc.loadBankAccountDetails()),
-      bankAccountDetailsLoaded: take(actions.kyc.setBankAccountDetails),
-      loadNomineeEtos: put(actions.nomineeFlow.loadNomineeEtos()),
-      nomineeEtosLoaded: take(actions.nomineeFlow.setNomineeEtos),
-    });
+    //check the conditions and start watchers  here
+    const verificationIsComplete = yield select(selectIsUserFullyVerified);
 
-    const result = yield all({
-      bankAccountIsVerified: select(selectIsBankAccountVerified),
-      nomineeEtos: select(selectNomineeEtos),
-    });
+    if (verificationIsComplete) {
+      yield all({
+        startWatcher: put(actions.nomineeFlow.startNomineeRequestsWatcher()),
+        setActiveEto: put(actions.nomineeFlow.startSetingActiveNomineeEtoPreviewCode()),
+        activeEtoSet: take(actions.nomineeFlow.setActiveNomineeEtoPreviewCode),
+      });
 
-    if (result.bankAccountIsVerified) {
-      tasks[ENomineeTask.LINK_BANK_ACCOUNT] = ENomineeTaskStatus.DONE
+      selectStepReq.activeEtoPreviewCode = select(selectNomineeActiveEtoPreviewCode);
+      selectStepReq.nomineeEtos = select(selectNomineeEtos);
     }
 
-    if (!result.nomineeEtos) {
-      return tasks
-    } else {
-      tasks[ENomineeTask.LINK_TO_ISSUER] = ENomineeTaskStatus.DONE
-    }
+    const selectStepData = yield all(selectStepReq);
 
-    tasks.byPreviewCode = yield all(
-      Object.keys(result.nomineeEtos).reduce((acc:any, previewCode: string) => { //fixme typings
-        acc[previewCode] = neuCall(initNomineeEtoSpecificTasks, result.nomineeEtos[previewCode]);
-        return acc
-      },{})
+    const activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask = yield getNomineeTaskStep(
+      selectStepData,
     );
 
-    return tasks
-  }
-}
-//fixme *********************
-//fixme
-//fixme add try/catch to init sagas
-//fixme redo nomineeDocumentStatus
-//fixme add nominee requests
-//fixme add watchers !!!!
-//fixme
-//fixme *********************
+    //start task specific watchers here
 
-
-export function* nomineeDashboardView() {
-  try{
-    yield neuCall(initNomineeTasks);
-
-    //fixme check the conditions and start watchers etc here
-    const verificationIsComplete = select(selectIsUserFullyVerified);
-    if(verificationIsComplete){
-      yield put(actions.nomineeFlow.startNomineeRequestsWatcher());
-      yield neuCall(setActiveNomineeEto); //fixme make an action for it
-    }
-
-
-    const selectData = yield all({
-      verificationIsComplete: select(selectIsUserFullyVerified),
-      nomineeEto: select(selectActiveNomineeEto),
-      isBankAccountVerified: select(selectIsBankAccountVerified),
-      documentsStatus: select(selectNomineeEtoDocumentsStatus),
-      isISHASignedByIssuer: select(selectIsISHASignedByIssuer),
-      capitalIncrease: select(selectCapitalIncrease),
-    });
-
-    const actualTask = yield getNomineeTaskStep(selectData);
-
-    //fixme start task specific watchers here
-
-    yield put(
-      actions.nomineeFlow.storeNomineeTaskData({
-        actualTask
-      }),
-    );
-  } catch(e){
-
+    yield put(actions.nomineeFlow.storeActiveNomineeTask(activeNomineeTask));
+  } catch (e) {
+    logger.error(e);
+    //TODO save error to state
   } finally {
     yield put(actions.nomineeFlow.stopNomineeRequestsWatcher());
   }
-
 }
 
 export function* nomineeRequestsWatcher({ logger }: TGlobalDependencies): Iterator<any> {
   while (true) {
-    logger.info("Getting nominee task data");
+    logger.info("Getting nominee requests");
     try {
       yield neuCall(loadNomineeRequests);
     } catch (e) {
-      logger.error("Error getting nominee task data", e);
+      logger.error("Error getting nominee requests", e);
     }
 
     yield delay(NOMINEE_REQUESTS_WATCHER_DELAY);
@@ -251,24 +224,24 @@ export function* nomineeRequestsWatcher({ logger }: TGlobalDependencies): Iterat
 }
 
 export function* loadNomineeRequests({
-    apiEtoNomineeService,
-    logger,
-    notificationCenter
-  }: TGlobalDependencies,
-) {
+  apiEtoNomineeService,
+  logger,
+  notificationCenter,
+}: TGlobalDependencies): Iterator<any> {
   logger.info("loading nominee requests");
   try {
     const nomineeRequests = yield apiEtoNomineeService.getNomineeRequests();
     const nomineeRequestsConverted: TNomineeRequestStorage = yield nomineeApiDataToNomineeRequests(
       nomineeRequests,
     );
-    yield put(actions.nomineeFlow.setNomineeRequests(nomineeRequestsConverted))
+    yield put(actions.nomineeFlow.setNomineeRequests(nomineeRequestsConverted));
   } catch (e) {
-    notificationCenter.error(createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR));
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
 
     logger.error("Error while loading nominee requests", e);
   } finally {
-
   }
 }
 
@@ -344,14 +317,14 @@ export function* loadNomineeSignedInvestmentAgreements(): Iterator<any> {
 
 export function* loadNomineeEto(
   _: TGlobalDependencies,
-  eto: TEtoWithCompanyAndContract
-) {
+  eto: TEtoWithCompanyAndContract,
+): Iterator<any> {
   if (eto.state === EEtoState.ON_CHAIN) {
     eto.contract = yield neuCall(getEtoContract, eto.etoId, eto.state);
   }
 
   eto.subState = yield select(selectEtoSubStateEtoEtoWithContract, eto);
-  return eto
+  return eto;
 }
 
 export function* loadNomineeEtos({
@@ -362,15 +335,17 @@ export function* loadNomineeEtos({
   try {
     const etos: TEtoWithCompanyAndContract[] = yield apiEtoService.loadNomineeEtos();
 
-    const etosByPreviewCode = yield all(
-      etos
-        .reduce((acc: { [key: string]: unknown }, eto) => {
+    const etosByPreviewCode: Dictionary<TEtoWithCompanyAndContract, string> = yield all(
+      etos.reduce(
+        (acc: { [key: string]: Iterator<Effect> }, eto: TEtoWithCompanyAndContract) => {
           acc[eto.previewCode] = neuCall(loadNomineeEto, eto);
-          return acc
-        }, {})
+          return acc;
+        },
+        {} as { [key: string]: Iterator<Effect> },
+      ),
     );
 
-    yield put(actions.nomineeFlow.setNomineeEtos({ etos: etosByPreviewCode as Dictionary<TEtoWithCompanyAndContract, string> }));
+    yield put(actions.nomineeFlow.setNomineeEtos({ etos: etosByPreviewCode }));
   } catch (e) {
     logger.error("Nominee ETOs could not be loaded", e);
 
@@ -386,23 +361,25 @@ export function* setActiveNomineeEto({
     const etos: ReturnType<typeof selectNomineeEtos> = yield select(selectNomineeEtos);
 
     if (etos === undefined || isEmpty(etos)) {
-      yield put(actions.nomineeFlow.setActiveNomineeEto(undefined));
+      yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(undefined));
     } else {
-      const forcedActiveEtoPreviewCode: ReturnType<typeof selectActiveEtoPreviewCodeFromQueryString> = yield select(selectActiveEtoPreviewCodeFromQueryString);
+      const forcedActiveEtoPreviewCode: ReturnType<
+        typeof selectActiveEtoPreviewCodeFromQueryString
+      > = yield select(selectActiveEtoPreviewCodeFromQueryString);
 
       // For testing purpose we can force another ETO to be active (by default it's the first one)
       const shouldForceSpecificEtoToBeActive =
         forcedActiveEtoPreviewCode !== undefined && etos[forcedActiveEtoPreviewCode] !== undefined;
 
       if (shouldForceSpecificEtoToBeActive) {
-        yield put(actions.nomineeFlow.setActiveNomineeEto(forcedActiveEtoPreviewCode));
+        yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(forcedActiveEtoPreviewCode));
 
         notificationCenter.info(
           createMessage(EEtoNomineeActiveEtoNotifications.ACTIVE_ETO_SET_SUCCESS),
         );
       } else {
         const firstEto = nonNullable(Object.values(etos)[0]);
-        yield put(actions.nomineeFlow.setActiveNomineeEto(firstEto.previewCode));
+        yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(firstEto.previewCode));
       }
     }
   } catch (e) {
@@ -413,12 +390,16 @@ export function* setActiveNomineeEto({
 }
 
 export function* nomineeFlowSagas(): Iterator<any> {
+  yield fork(neuTakeLatest, actions.nomineeFlow.initNomineeTasks, initNomineeTasks);
   yield fork(neuTakeLatest, actions.nomineeFlow.calculateNomineeTask, nomineeDashboardView);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeEtos, loadNomineeEtos);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
-  // yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeTaskData, loadNomineeTaskData);
-  // yield fork(neuTakeLatest, actions.nomineeFlow.setNomineeEtos, setActiveNomineeEto);
+  yield fork(
+    neuTakeLatest,
+    actions.nomineeFlow.startSetingActiveNomineeEtoPreviewCode,
+    setActiveNomineeEto,
+  );
   yield fork(
     neuTakeUntil,
     actions.nomineeFlow.startNomineeRequestsWatcher,

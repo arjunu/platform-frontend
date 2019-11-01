@@ -1,7 +1,10 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
+import {
+  EETOStateOnChain,
+  TEtoWithCompanyAndContractReadonly,
+} from "../../../../modules/eto/types";
 import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
 import { EtoMaxCapExceededComponent } from "./EtoMaxCapExceeded";
 

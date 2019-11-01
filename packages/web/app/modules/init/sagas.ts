@@ -43,7 +43,6 @@ function* makeSureWalletMetaDataExists({ walletStorage }: TGlobalDependencies): 
 }
 
 function* initApp({ logger }: TGlobalDependencies): any {
-  console.log("---initApp")
   try {
     yield neuCall(detectUserAgent);
 
@@ -125,14 +124,14 @@ export function* waitUntilSmartContractsAreInitialized(): Iterator<any> {
   return;
 }
 
-export function* waitForAppInit() {
-  let appIsReady:boolean = yield select(selectIsAppReady);
+export function* waitForAppInit(): Iterator<any> {
+  let appIsReady: boolean = yield select(selectIsAppReady);
 
-  if(!appIsReady){
+  if (!appIsReady) {
     yield take(actions.init.appReady);
     appIsReady = true;
   }
-  return appIsReady
+  return appIsReady;
 }
 
 export const initSagas = function*(): Iterator<effects.Effect> {

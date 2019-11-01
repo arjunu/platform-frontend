@@ -3,19 +3,19 @@ import * as queryString from "query-string";
 
 import { ENomineeRequestStatusTranslation } from "../../components/translatedMessages/messages";
 import { createMessage, TMessage } from "../../components/translatedMessages/utils";
-import { EEtoState, TNomineeRequestResponse } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { TNomineeRequestResponse } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import {
-  EEtoAgreementStatus,
   EETOStateOnChain,
+  TEtoWithCompanyAndContract,
   TEtoWithCompanyAndContractReadonly,
-  TOfferingAgreementsStatus,
 } from "../eto/types";
 import { isOnChain } from "../eto/utils";
-import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
+import { TNomineeTasksStatus } from "./reducer";
 import {
   ENomineeEtoSpecificTask,
   ENomineeRequestStatus,
   ENomineeTask,
+  ENomineeTaskStatus,
   INomineeRequest,
   TNomineeRequestStorage,
 } from "./types";
@@ -95,7 +95,10 @@ export const nomineeRequestsToArray = (requests: TNomineeRequestStorage): INomin
     .sort(compareByDate);
 };
 
-export const nomineeIsEligibleToSignTHAOrRAA = (nomineeEto: TEtoWithCompanyAndContractReadonly) =>
+export const nomineeIsEligibleToSignTHAOrRAA = (
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined,
+) =>
+  !!nomineeEto &&
   isOnChain(nomineeEto) &&
   nomineeEto.contract.timedState === EETOStateOnChain.Setup &&
   nomineeEto.contract.startOfStates[EETOStateOnChain.Whitelist] === undefined;
@@ -103,53 +106,51 @@ export const nomineeIsEligibleToSignTHAOrRAA = (nomineeEto: TEtoWithCompanyAndCo
 export const nomineeIsEligibleToSignISHA = (nomineeEto: TEtoWithCompanyAndContractReadonly) =>
   isOnChain(nomineeEto) && nomineeEto.contract.timedState === EETOStateOnChain.Signing;
 
-export type TGetNomineeTaskStepData= {
-  verificationIsComplete: boolean,
-  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined,
-  isBankAccountVerified: boolean,
-  documentsStatus: TOfferingAgreementsStatus,
-  isISHASignedByIssuer: boolean,
-}
+export type TGetNomineeTaskStepData = {
+  activeEtoPreviewCode: string;
+  nomineeTasksStatus: TNomineeTasksStatus;
+  nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContract | undefined } | undefined;
+};
 
 export const getNomineeTaskStep = ({
-  verificationIsComplete,
-  nomineeEto,
-  isBankAccountVerified,
-  documentsStatus,
-  isISHASignedByIssuer,
-}:TGetNomineeTaskStepData): ENomineeTask | ENomineeEtoSpecificTask => {
-  if (!verificationIsComplete) {
+  activeEtoPreviewCode,
+  nomineeTasksStatus,
+  nomineeEtos,
+}: TGetNomineeTaskStepData): ENomineeTask | ENomineeEtoSpecificTask => {
+  if (nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] !== ENomineeTaskStatus.DONE) {
     return ENomineeTask.ACCOUNT_SETUP;
-  } else if (nomineeEto === undefined) {
+  } else if (nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] !== ENomineeTaskStatus.DONE) {
+    return ENomineeTask.LINK_BANK_ACCOUNT;
+  } else if (nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] !== ENomineeTaskStatus.DONE) {
     return ENomineeTask.LINK_TO_ISSUER;
   } else if (
-    documentsStatus[EAgreementType.THA] !== EEtoAgreementStatus.DONE &&
-    nomineeIsEligibleToSignTHAOrRAA(nomineeEto)
+    nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][ENomineeEtoSpecificTask.ACCEPT_THA] !==
+      ENomineeTaskStatus.DONE &&
+    nomineeEtos &&
+    nomineeIsEligibleToSignTHAOrRAA(nomineeEtos[activeEtoPreviewCode])
   ) {
     return ENomineeEtoSpecificTask.ACCEPT_THA;
   } else if (
-    documentsStatus[EAgreementType.THA] === EEtoAgreementStatus.DONE &&
-    documentsStatus[EAgreementType.RAAA] !== EEtoAgreementStatus.DONE &&
-    nomineeIsEligibleToSignTHAOrRAA(nomineeEto)
+    nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][ENomineeEtoSpecificTask.ACCEPT_RAAA] !==
+      ENomineeTaskStatus.DONE &&
+    nomineeEtos &&
+    nomineeIsEligibleToSignTHAOrRAA(nomineeEtos[activeEtoPreviewCode])
   ) {
     return ENomineeEtoSpecificTask.ACCEPT_RAAA;
-  } else if (!isBankAccountVerified) {
-    return ENomineeTask.LINK_BANK_ACCOUNT;
   } else if (
-    nomineeEto.state === EEtoState.ON_CHAIN &&
-    nomineeEto.contract &&
-    nomineeEto.contract.timedState === EETOStateOnChain.Signing &&
-    !isISHASignedByIssuer) {
-    return ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
+    nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][
+      ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
+    ] !== ENomineeTaskStatus.DONE
+  ) {
+    return ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL;
   } else if (
-    documentsStatus[EAgreementType.ISHA] !== EEtoAgreementStatus.DONE &&
-    nomineeIsEligibleToSignISHA(nomineeEto) &&
-    isISHASignedByIssuer
+    nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][ENomineeEtoSpecificTask.ACCEPT_ISHA] !==
+    ENomineeTaskStatus.DONE
   ) {
     return ENomineeEtoSpecificTask.ACCEPT_ISHA;
+  } else {
+    return ENomineeTask.NONE;
   }
-
-  return ENomineeTask.NONE;
 };
 
 export const getActiveEtoPreviewCodeFromQueryString = (query: string) => {

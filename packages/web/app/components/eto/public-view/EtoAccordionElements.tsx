@@ -12,9 +12,9 @@ import { CHART_COLORS } from "../shared/EtoView";
 
 import * as styles from "./PublicView.module.scss";
 
-const EtoAccordionElements: React.FunctionComponent<{ eto: TEtoWithCompanyAndContractReadonly }> = ({
-  eto,
-}) => {
+const EtoAccordionElements: React.FunctionComponent<{
+  eto: TEtoWithCompanyAndContractReadonly;
+}> = ({ eto }) => {
   const {
     keyBenefitsForInvestors,
     targetMarketAndIndustry,

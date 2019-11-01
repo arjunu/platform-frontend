@@ -27,7 +27,7 @@ import * as styles from "./LinkToIssuer.module.scss";
 
 interface IStateProps {
   nomineeRequest: INomineeRequest | undefined;
-  nomineeRequestError: ENomineeRequestError;
+  nomineeRequestError: ENomineeRequestError | string; //todo nominee request errors should be stored elsewhere
   nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
 }
 

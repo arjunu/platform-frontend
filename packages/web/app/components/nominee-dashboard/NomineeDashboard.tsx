@@ -4,7 +4,7 @@ import {
   selectNomineeDashboardIsReady,
   selectNomineeTaskStep,
 } from "../../modules/nominee-flow/selectors";
-import { ENomineeTask } from "../../modules/nominee-flow/types";
+import { ENomineeEtoSpecificTask, ENomineeTask } from "../../modules/nominee-flow/types";
 import { appConnect } from "../../store";
 import { RequiredByKeys } from "../../types";
 import { withContainer } from "../../utils/withContainer.unsafe";
@@ -14,11 +14,11 @@ import { NomineeDashboardTasks } from "./NomineeDashboardTasks";
 
 interface IStateProps {
   isReady: boolean;
-  nomineeTaskStep: ENomineeTask | undefined;
+  nomineeTaskStep: ENomineeTask | ENomineeEtoSpecificTask | undefined;
 }
 
 interface IComponentProps {
-  nomineeTaskStep: ENomineeTask | undefined;
+  nomineeTaskStep: ENomineeTask | ENomineeEtoSpecificTask | undefined;
 }
 
 export const NomineeDashboard = compose<RequiredByKeys<IComponentProps, "nomineeTaskStep">, {}>(
@@ -29,8 +29,5 @@ export const NomineeDashboard = compose<RequiredByKeys<IComponentProps, "nominee
       nomineeTaskStep: selectNomineeTaskStep(state),
     }),
   }),
-  branch<IStateProps>(
-    props => !props.isReady,
-    renderComponent(LoadingIndicator),
-  ),
+  branch<IStateProps>(props => !props.isReady, renderComponent(LoadingIndicator)),
 )(NomineeDashboardTasks);

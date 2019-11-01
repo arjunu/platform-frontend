@@ -5,5 +5,8 @@ import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { EtoWidget } from "./EtoWidgetView";
 
 storiesOf("ETO/EtoWidgetView", module).add("widget not found", () => (
-  <EtoWidget widgetError={true} eto={{ previewCode: "error" } as TEtoWithCompanyAndContractReadonly} />
+  <EtoWidget
+    widgetError={true}
+    eto={{ previewCode: "error" } as TEtoWithCompanyAndContractReadonly}
+  />
 ));

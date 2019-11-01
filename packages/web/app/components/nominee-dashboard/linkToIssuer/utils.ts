@@ -45,7 +45,7 @@ export const validateEthAddress = (value: string | undefined) => {
 
 export const getNomineeRequestComponentState = (
   nomineeRequest: INomineeRequest | undefined,
-  nomineeRequestError: ENomineeRequestError,
+  nomineeRequestError: ENomineeRequestError | string, //todo refactor when nominee request errors storage fixed
   nomineeEto: TEtoWithCompanyAndContractReadonly | undefined,
 ) => {
   if (!nomineeRequest && nomineeRequestError === ENomineeRequestError.REQUEST_EXISTS) {

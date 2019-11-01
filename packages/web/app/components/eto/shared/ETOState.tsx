@@ -95,7 +95,9 @@ const stateToClassName: Partial<Record<EEtoState | EETOStateOnChain | EEtoSubSta
   [EEtoSubState.COUNTDOWN_TO_PRESALE]: styles.green,
 };
 
-const getState = (eto: TEtoWithCompanyAndContractReadonly): EETOStateOnChain | EEtoState | EEtoSubState => {
+const getState = (
+  eto: TEtoWithCompanyAndContractReadonly,
+): EETOStateOnChain | EEtoState | EEtoSubState => {
   if (eto.subState) {
     return eto.subState;
   } else if (isOnChain(eto)) {

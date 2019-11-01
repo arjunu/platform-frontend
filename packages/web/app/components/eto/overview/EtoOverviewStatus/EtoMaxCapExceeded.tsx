@@ -4,7 +4,10 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, withProps } from "recompose";
 
 import { selectEtoOnChainStateById } from "../../../../modules/eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
+import {
+  EETOStateOnChain,
+  TEtoWithCompanyAndContractReadonly,
+} from "../../../../modules/eto/types";
 import { selectEtherPriceEur } from "../../../../modules/shared/tokenPrice/selectors";
 import { appConnect } from "../../../../store";
 import { divideBigNumbers } from "../../../../utils/BigNumberUtils";

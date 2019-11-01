@@ -29,20 +29,16 @@ export type TEtoContractData = {
   startOfStates: TEtoStartOfStates;
   equityTokenAddress: string;
   etoTermsAddress: string;
-}
+};
 
-export type TEtoWithCompanyAndContract =
-  TEtoSpecsData & {
+export type TEtoWithCompanyAndContract = TEtoSpecsData & {
   // contract is undefined when ETO is not on blockchain
   contract: TEtoContractData | undefined;
   company: TCompanyEtoData;
   subState: EEtoSubState | undefined;
-}
+};
 
-
-export type TEtoWithCompanyAndContractReadonly = DeepReadonly<
-  TEtoWithCompanyAndContract
->;
+export type TEtoWithCompanyAndContractReadonly = DeepReadonly<TEtoWithCompanyAndContract>;
 
 export type TEtoWithCompanyAndContractTypeChecked = Overwrite<
   TEtoWithCompanyAndContractReadonly,

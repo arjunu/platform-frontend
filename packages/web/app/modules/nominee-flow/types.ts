@@ -78,4 +78,4 @@ export enum ENomineeEtoSpecificTask {
   ACCEPT_ISHA = "acceptIsha",
 }
 
-export type TNomineeTask =  ENomineeTask & ENomineeEtoSpecificTask
+export type TNomineeTask = ENomineeTask & ENomineeEtoSpecificTask;

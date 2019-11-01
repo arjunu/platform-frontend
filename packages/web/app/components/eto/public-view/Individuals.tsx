@@ -9,7 +9,9 @@ import { TabContent, Tabs } from "../../shared/Tabs";
 import { DashboardHeading } from "../shared/DashboardHeading";
 import { areThereIndividuals, selectActiveCarouselTab } from "../shared/EtoViewUtils";
 
-const Individuals: React.FunctionComponent<{ eto: TEtoWithCompanyAndContractReadonly }> = ({ eto }) => {
+const Individuals: React.FunctionComponent<{ eto: TEtoWithCompanyAndContractReadonly }> = ({
+  eto,
+}) => {
   const {
     advisors,
     team,

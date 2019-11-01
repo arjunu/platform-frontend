@@ -12,8 +12,8 @@ import { isPastInvestment } from "../investor-portfolio/utils";
 import {
   EETOStateOnChain,
   EEtoSubState,
-  TEtoContractData,
   IEtoTotalInvestment,
+  TEtoContractData,
   TEtoStartOfStates,
   TEtoWithCompanyAndContractReadonly,
 } from "./types";

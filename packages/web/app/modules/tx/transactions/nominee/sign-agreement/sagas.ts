@@ -66,9 +66,7 @@ function* generateNomineeSignAgreementTx(
 ): Iterator<any> {
   const agreementType =
     transactionType === ETxSenderType.NOMINEE_RAAA_SIGN ? EAgreementType.RAAA : EAgreementType.THA;
-  const nomineeEto: TEtoWithCompanyAndContractReadonly = yield select(
-    selectActiveNomineeEto,
-  );
+  const nomineeEto: TEtoWithCompanyAndContractReadonly = yield select(selectActiveNomineeEto);
 
   const { contract, currentAgreementHash }: IAgreementContractAndHash = yield neuCall(
     getAgreementContractAndHash,

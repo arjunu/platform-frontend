@@ -216,16 +216,16 @@ export function* getEtoContract(
     ]);
 
     return {
-        equityTokenAddress,
-        etoTermsAddress,
-        timedState: timedStateRaw.toNumber(),
-        totalInvestment: convertToEtoTotalInvestment(
-          totalInvestmentRaw,
-          euroTokenBalance,
-          etherTokenBalance,
-        ),
-        startOfStates: convertToStateStartDate(startOfStatesRaw),
-    }
+      equityTokenAddress,
+      etoTermsAddress,
+      timedState: timedStateRaw.toNumber(),
+      totalInvestment: convertToEtoTotalInvestment(
+        totalInvestmentRaw,
+        euroTokenBalance,
+        etherTokenBalance,
+      ),
+      startOfStates: convertToStateStartDate(startOfStatesRaw),
+    };
   } catch (e) {
     logger.error("ETO contract data could not be loaded", e, { etoId: etoId });
 
@@ -238,10 +238,8 @@ export function* loadEtoContract(
   _: TGlobalDependencies,
   { etoId, previewCode, state }: TEtoSpecsData,
 ): Iterator<any> {
-  const contract = yield neuCall(getEtoContract,etoId, state);
-    yield put(
-      actions.eto.setEtoDataFromContract(previewCode, contract),
-    );
+  const contract = yield neuCall(getEtoContract, etoId, state);
+  yield put(actions.eto.setEtoDataFromContract(previewCode, contract));
 }
 
 function* watchEtoSetAction(
@@ -745,17 +743,14 @@ export function* loadInvestmentAgreement(
 
 export function* loadCapitalIncrease(
   { contractsService }: TGlobalDependencies,
-  {payload}: TActionFromCreator<typeof actions.eto.loadCapitalIncrease>,
+  { payload }: TActionFromCreator<typeof actions.eto.loadCapitalIncrease>,
 ): Iterator<any> {
-  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(
-    payload.etoId,
-  );
+  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(payload.etoId);
 
-  const [,capitalIncrease] = yield contract.contributionSummary();
-
-  yield put(actions.eto.setCapitalIncrease(payload.previewCode, capitalIncrease.toString()))
+  const [, capitalIncrease] = yield contract.contributionSummary();
+  //fixme check for undefined
+  yield put(actions.eto.setCapitalIncrease(payload.previewCode, capitalIncrease.toString()));
 }
-
 
 export function* loadEtoGeneralTokenDiscounts(
   { contractsService }: TGlobalDependencies,

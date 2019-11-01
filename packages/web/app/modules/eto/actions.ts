@@ -4,10 +4,10 @@ import { TCompanyEtoData, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfa
 import { EEtoDocumentType, IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { Dictionary } from "../../types";
 import {
-  TEtoContractData,
   IEtoTokenData,
   IEtoTokenGeneralDiscounts,
   SignedISHAStatus,
+  TEtoContractData,
   TEtoWithCompanyAndContractReadonly,
   TOfferingAgreementsStatus,
 } from "./types";
@@ -107,12 +107,18 @@ export const etoActions = {
   ),
   loadSignedInvestmentAgreement: createActionFactory(
     "ETO_LOAD_INVESTMENT_AGREEMENT",
-    (etoId: string, previewCode: string) => ({ etoId,previewCode }),
+    (etoId: string, previewCode: string) => ({ etoId, previewCode }),
   ),
   setInvestmentAgreementHash: createActionFactory(
     "ETO_SET_INVESTMENT_AGREEMENT_URL",
     (previewCode: string, url: SignedISHAStatus["url"]) => ({ url, previewCode }),
   ),
-  loadCapitalIncrease: createActionFactory("ETO_LOAD_CAPITAL_INCREASE", (etoId:string, previewCode: string) => ({etoId,previewCode})),
-  setCapitalIncrease: createActionFactory("ETO_SET_CAPITAL_INCREASE", (previewCode: string, capitalIncrease: string) => ({previewCode, capitalIncrease}))
+  loadCapitalIncrease: createActionFactory(
+    "ETO_LOAD_CAPITAL_INCREASE",
+    (etoId: string, previewCode: string) => ({ etoId, previewCode }),
+  ),
+  setCapitalIncrease: createActionFactory(
+    "ETO_SET_CAPITAL_INCREASE",
+    (previewCode: string, capitalIncrease: string) => ({ previewCode, capitalIncrease }),
+  ),
 };

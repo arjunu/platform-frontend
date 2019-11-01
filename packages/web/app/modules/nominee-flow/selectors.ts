@@ -4,12 +4,8 @@ import { IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { nomineeIgnoredTemplates } from "../../lib/api/eto/EtoFileUtils";
 import { IAppState } from "../../store";
 import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
-import {
-  EEtoAgreementStatus, TEtoWithCompanyAndContract,
-  TOfferingAgreementsStatus,
-} from "../eto/types";
+import { TEtoWithCompanyAndContract, TOfferingAgreementsStatus } from "../eto/types";
 import { selectRouter } from "../routing/selectors";
-import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
 import { ENomineeRequestStatus, TNomineeRequestStorage } from "./types";
 import { getActiveEtoPreviewCodeFromQueryString } from "./utils";
 
@@ -35,6 +31,16 @@ export const selectNomineeEtos = (
   state: IAppState,
 ): { [previewCode: string]: TEtoWithCompanyAndContract | undefined } | undefined =>
   state.nomineeFlow.nomineeEtos;
+
+export const selectNomineeEto = (
+  state: IAppState,
+  previewCode: string,
+): TEtoWithCompanyAndContract | undefined => {
+  const nomineeEtos = selectNomineeEtos(state);
+  return nomineeEtos && nomineeEtos[previewCode];
+};
+
+export const selectNomineeTasksStatus = (state: IAppState) => state.nomineeFlow.nomineeTasksStatus;
 
 export const selectNomineeActiveEtoPreviewCode = (state: IAppState) =>
   state.nomineeFlow.activeNomineeEtoPreviewCode;
@@ -66,39 +72,30 @@ export const selectNomineeEtoTemplatesArray = (state: IAppState): IEtoDocument[]
 
 export const selectNomineeEtoDocumentsStatus = (
   state: IAppState,
+  previewCode: string,
 ): TOfferingAgreementsStatus | undefined => {
-  const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
-  if (!activeNomineeEtoPreviewCode || !state.nomineeFlow.nomineeEtosAdditionalData[activeNomineeEtoPreviewCode]) {
-    return {
-      [EAgreementType.RAAA]: EEtoAgreementStatus.NOT_DONE,
-      [EAgreementType.THA]: EEtoAgreementStatus.NOT_DONE,
-      [EAgreementType.ISHA]: EEtoAgreementStatus.NOT_DONE,
-    };
-  } else {
-    return state.nomineeFlow.nomineeEtosAdditionalData[activeNomineeEtoPreviewCode].offeringAgreementsStatus
-  }
+  const statuses = state.nomineeFlow.nomineeEtosAdditionalData[previewCode];
+  return statuses && statuses.offeringAgreementsStatus;
 };
 
-export const selectIsISHASignedByIssuer = (state: IAppState) => {
-  const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
-  if (!activeNomineeEtoPreviewCode || !state.nomineeFlow.nomineeEtosAdditionalData[activeNomineeEtoPreviewCode]) {
-    return undefined;
-  } else {
-    return state.nomineeFlow.nomineeEtosAdditionalData[activeNomineeEtoPreviewCode].investmentAgreementUrl
-  }
+export const selectIsISHASignedByIssuer = (state: IAppState, previewCode: string) => {
+  const etoData = state.nomineeFlow.nomineeEtosAdditionalData[previewCode];
+  return etoData && etoData.investmentAgreementUrl;
 };
 
 export const selectCapitalIncrease = (state: IAppState) => {
   const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
-  if (!activeNomineeEtoPreviewCode || !state.nomineeFlow.nomineeEtosAdditionalData[activeNomineeEtoPreviewCode]) {
+  if (
+    !activeNomineeEtoPreviewCode ||
+    !state.nomineeFlow.nomineeEtosAdditionalData[activeNomineeEtoPreviewCode]
+  ) {
     return undefined;
   } else {
-    return state.nomineeFlow.nomineeEtosAdditionalData[activeNomineeEtoPreviewCode].capitalIncrease
+    return state.nomineeFlow.nomineeEtosAdditionalData[activeNomineeEtoPreviewCode].capitalIncrease;
   }
 };
 
-export const selectNomineeTaskStep = (state: IAppState) =>
-  state.nomineeFlow.activeNomineeTask;
+export const selectNomineeTaskStep = (state: IAppState) => state.nomineeFlow.activeNomineeTask;
 
 export const selectActiveEtoPreviewCodeFromQueryString = createSelector(
   selectRouter,

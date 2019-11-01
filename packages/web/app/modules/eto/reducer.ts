@@ -3,10 +3,10 @@ import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
 import {
-  TEtoContractData,
   IEtoTokenData,
   IEtoTokenGeneralDiscounts,
   SignedISHAStatus,
+  TEtoContractData,
   TOfferingAgreementsStatus,
 } from "./types";
 
@@ -109,7 +109,6 @@ export const etoReducer: AppReducer<IEtoState> = (
     //       [action.payload.previewCode]: action.payload.statuses,
     //     },
     //   };
-
   }
 
   return state;

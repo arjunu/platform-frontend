@@ -4,8 +4,8 @@ import { selectBackupCodesVerified, selectIsUserEmailVerified } from "./auth/sel
 import { selectKycRequestStatus } from "./kyc/selectors";
 
 /*
-* @deprecated
-* */
+ * @deprecated
+ * */
 export const selectIsVerificationFullyDone = (state: IAppState) =>
   !!(
     selectIsUserEmailVerified(state.auth) &&

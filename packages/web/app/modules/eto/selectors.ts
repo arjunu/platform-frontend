@@ -87,8 +87,9 @@ export const selectEtoSubState = createCachedSelector(
 export const selectEtoSubStateEtoEtoWithContract = createCachedSelector(
   // forward eto param to combiner
   (_: IAppState, eto: TEtoWithCompanyAndContractReadonly) => eto,
-  (state: IAppState, eto: TEtoWithCompanyAndContractReadonly) => selectIsEligibleToPreEto(state, eto.etoId),
-  (eto, isEligibleToPreEto) => getEtoSubState({ eto, contract:eto.contract, isEligibleToPreEto }),
+  (state: IAppState, eto: TEtoWithCompanyAndContractReadonly) =>
+    selectIsEligibleToPreEto(state, eto.etoId),
+  (eto, isEligibleToPreEto) => getEtoSubState({ eto, contract: eto.contract, isEligibleToPreEto }),
 )((_: IAppState, eto: TEtoWithCompanyAndContractReadonly) => eto.previewCode);
 
 const selectEtoWithCompanyAndContractInternal = createCachedSelector(

@@ -153,7 +153,12 @@ function* etoSignInvestmentAgreementSaga(
   } catch (e) {
     logger.info("Signing investment agreement was cancelled", e);
   } finally {
-    yield put(actions.eto.loadSignedInvestmentAgreement(action.payload.eto.etoId, action.payload.eto.previewCode));
+    yield put(
+      actions.eto.loadSignedInvestmentAgreement(
+        action.payload.eto.etoId,
+        action.payload.eto.previewCode,
+      ),
+    );
   }
 }
 

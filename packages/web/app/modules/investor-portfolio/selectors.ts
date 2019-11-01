@@ -75,7 +75,9 @@ export const selectEtoWithInvestorTickets = (
   return undefined;
 };
 
-export const selectMyAssets = (state: IAppState): TEtoWithCompanyAndContractReadonly[] | undefined => {
+export const selectMyAssets = (
+  state: IAppState,
+): TEtoWithCompanyAndContractReadonly[] | undefined => {
   const etos = selectEtos(state);
 
   if (etos) {

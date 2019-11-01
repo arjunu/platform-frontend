@@ -10,7 +10,9 @@ import { EtoTimeline } from "../shared/timeline/EtoTimeline";
 
 import * as styles from "./ETOTimeline.module.scss";
 
-const ETOTimeline: React.FunctionComponent<{ eto: TEtoWithCompanyAndContractReadonly }> = ({ eto }) => (
+const ETOTimeline: React.FunctionComponent<{ eto: TEtoWithCompanyAndContractReadonly }> = ({
+  eto,
+}) => (
   <Container columnSpan={EColumnSpan.THREE_COL}>
     <DashboardHeading
       title={

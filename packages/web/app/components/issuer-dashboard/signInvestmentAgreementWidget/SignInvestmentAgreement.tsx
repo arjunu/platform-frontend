@@ -135,7 +135,7 @@ export const SignInvestmentAgreement = compose<React.FunctionComponent<IExternal
   branch<IStateProps | null>(props => props === null, renderNothing),
   onEnterAction<IStateProps>({
     actionCreator: (dispatch, props) =>
-      dispatch(actions.eto.loadSignedInvestmentAgreement(props.eto.etoId,props.eto.previewCode)),
+      dispatch(actions.eto.loadSignedInvestmentAgreement(props.eto.etoId, props.eto.previewCode)),
   }),
   branch<IStateProps>(
     props => props.signedInvestmentAgreementUrlLoading,
