@@ -108,7 +108,7 @@ const OnlyAuthorizedRouteComponent: React.FunctionComponent<
 export const OnlyAuthorizedRoute = compose<IComponentProps & IExternalProps, IExternalProps>(
   appConnect<IStateProps, {}, IExternalProps>({
     stateToProps: state => ({
-      isAuthorized: selectIsAuthorized(state.auth),
+      isAuthorized: selectIsAuthorized(state),
       userType: selectUserType(state),
       walletType: selectWalletTypeFromQueryString(state),
       routerState: state.router,

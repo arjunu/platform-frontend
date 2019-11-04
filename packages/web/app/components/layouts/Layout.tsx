@@ -82,7 +82,7 @@ const LayoutComponent: React.FunctionComponent<
 const Layout = compose<IStateProps, TDataTestId & TContentExternalProps & ILayoutUnauthProps>(
   appConnect<IStateProps, {}, {}>({
     stateToProps: state => ({
-      userIsAuthorized: selectIsAuthorized(state.auth),
+      userIsAuthorized: selectIsAuthorized(state),
     }),
   }),
 )(LayoutComponent);

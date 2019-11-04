@@ -9,7 +9,7 @@ import { selectIsAuthorized, selectUserEmail } from "./selectors";
 describe("auth > selectors", () => {
   describe("selectIsAuthorized", () => {
     it("should return true for authorized users", () => {
-      const state: IAuthState = {
+      const authState: IAuthState = {
         jwt: "eyjwt",
         user: {
           userId: "user-id" as EthereumAddressWithChecksum,
@@ -21,21 +21,21 @@ describe("auth > selectors", () => {
         currentAgreementHash: undefined,
       };
 
-      const actualValue = selectIsAuthorized(state);
+      const actualValue = selectIsAuthorized({auth: authState});
 
       expect(actualValue).to.be.true;
     });
 
     it("should return false for not authorized users", () => {
       // this should only happen in the middle of auth process
-      const state: IAuthState = {
+      const authState: IAuthState = {
         jwt: "eyjwt",
         user: undefined,
         status: EAuthStatus.NON_AUTHORIZED,
         currentAgreementHash: undefined,
       };
 
-      const actualValue = selectIsAuthorized(state);
+      const actualValue = selectIsAuthorized({auth: authState});
 
       expect(actualValue).to.be.false;
     });

@@ -25,14 +25,14 @@ function* openInNewWindowSaga(
   }
 }
 
-function* startLocationBasedSagas(
+function* startRouteBasedSagas(
   _: TGlobalDependencies,
   { payload: { location } }: LocationChangeAction,
 ): Iterator<any> {
   const appIsReady = yield waitForAppInit();
   const userIsAuthorized: boolean = yield select((state: IAppState) =>
-    selectIsAuthorized(state.auth),
-  ); //todo refactor selector to use full state
+    selectIsAuthorized(state),
+  );
   const userType: EUserType | undefined = yield select(selectUserType);
 
   if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
@@ -44,5 +44,5 @@ function* startLocationBasedSagas(
 
 export function* routingSagas(): Iterator<Effect> {
   yield fork(neuTakeEvery, actions.routing.openInNewWindow, openInNewWindowSaga);
-  yield fork(neuTakeEvery, "@@router/LOCATION_CHANGE", startLocationBasedSagas);
+  yield fork(neuTakeEvery, "@@router/LOCATION_CHANGE", startRouteBasedSagas);
 }

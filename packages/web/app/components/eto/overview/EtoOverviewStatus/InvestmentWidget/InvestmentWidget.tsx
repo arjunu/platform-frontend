@@ -167,7 +167,7 @@ const InvestmentWidgetLayout: React.FunctionComponent<TInvestWidgetProps> = prop
 const InvestmentWidget = compose<TInvestWidgetProps, IExternalProps>(
   appConnect<IStateProps, IDispatchProps, IExternalProps>({
     stateToProps: (state, props) => ({
-      isAuthorized: selectIsAuthorized(state.auth),
+      isAuthorized: selectIsAuthorized(state),
       isAllowedToInvest: selectIsUserVerifiedOnBlockchain(state),
       isInvestor: selectIsInvestor(state),
       nextStateDate: selectEtoOnChainNextStateStartDate(state, props.eto.previewCode),

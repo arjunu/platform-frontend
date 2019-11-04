@@ -31,6 +31,6 @@ export const FooterLayout: React.FunctionComponent<IStateProps> = ({ isAuthorize
 
 export const Footer = appConnect<IStateProps>({
   stateToProps: state => ({
-    isAuthorized: selectIsAuthorized(state.auth),
+    isAuthorized: selectIsAuthorized(state),
   }),
 })(FooterLayout);
