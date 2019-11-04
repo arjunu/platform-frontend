@@ -29,7 +29,7 @@ import {
 import { DeepPartial, DeepReadonly } from "../../../types";
 import { EquityToken, EthereumAddressWithChecksum } from "../../../utils/opaque-types/types";
 import * as YupTS from "../../yup-ts.unsafe";
-import { currencyCodeSchema, dateSchema, percentage } from "../util/customSchemas.unsafe";
+import { currencyCodeSchema, dateSchema, percentage } from "../util/customSchemas";
 import { TEtoDocumentTemplates } from "./EtoFileApi.interfaces";
 import { TEtoProduct } from "./EtoProductsApi.interfaces";
 

@@ -3,9 +3,11 @@ import { call, put, race } from "redux-saga/effects";
 import * as Web3 from "web3";
 
 import { TGlobalDependencies } from "../../../di/setupBindings";
+import { TPendingTxs } from "../../../lib/api/users/interfaces";
 import { OutOfGasError, RevertedTransactionError } from "../../../lib/web3/Web3Adapter";
 import { neuCall } from "../../sagasUtils";
 import { BLOCK_MINING_TIME_DELAY } from "./../../../config/constants";
+import { TransactionCancelledError } from "./errors";
 import { EEventEmitterChannelEvents, TEventEmitterChannelEvents } from "./types";
 
 enum TRANSACTION_STATUS {
@@ -19,7 +21,7 @@ enum TRANSACTION_STATUS {
  */
 
 export function* getTransactionOrThrow(
-  { web3Manager }: TGlobalDependencies,
+  { web3Manager, apiUserService }: TGlobalDependencies,
   txHash: string,
 ): Iterator<any> {
   const tx: Web3.Transaction = yield web3Manager.getTransactionByHash(txHash);
@@ -27,7 +29,19 @@ export function* getTransactionOrThrow(
     txHash,
   );
 
-  // Both requests `getTx` and `getTransactionReceipt` can end up in two seperate nodes
+  // If the proxy transactional node fails to post the transaction
+  const pendingTx: TPendingTxs = yield apiUserService.pendingTxs();
+
+  if (
+    pendingTx &&
+    pendingTx.pendingTransaction &&
+    pendingTx.pendingTransaction.transaction &&
+    pendingTx.pendingTransaction.transaction.status === "failed"
+  ) {
+    throw new TransactionCancelledError(pendingTx.pendingTransaction.transaction.failedRpcError);
+  }
+
+  // Both requests `getTx` and `getTransactionReceipt` can end up in two separate nodes
   const isMined = tx && tx.blockNumber && txReceipt && txReceipt.blockNumber;
 
   if (!isMined) {
@@ -71,7 +85,9 @@ export function* watchForTx(
       yield delay(BLOCK_MINING_TIME_DELAY);
     }
   } catch (error) {
-    if (error instanceof RevertedTransactionError) {
+    if (error instanceof TransactionCancelledError) {
+      yield put(txChannel, { type: EEventEmitterChannelEvents.CANCELLED, error });
+    } else if (error instanceof RevertedTransactionError) {
       yield put(txChannel, { type: EEventEmitterChannelEvents.REVERTED_TRANSACTION, error });
     } else if (error instanceof OutOfGasError) {
       yield put(txChannel, { type: EEventEmitterChannelEvents.OUT_OF_GAS, error });

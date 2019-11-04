@@ -6,7 +6,7 @@ import {
   EtoPitchType,
   TPartialCompanyEtoData,
 } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { percentage } from "../../../../../lib/api/util/customSchemas.unsafe";
+import { percentage } from "../../../../../lib/api/util/customSchemas";
 import { addBigNumbers } from "../../../../../utils/BigNumberUtils";
 import {
   convertAndValidatePipeline,

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { ECountries } from "../../../lib/api/util/countries.enum";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
+import { ECountries } from "../../../utils/enums/countriesEnum";
 import { Message } from "../../modals/Message";
 import { ButtonArrowRight, EButtonLayout } from "../../shared/buttons/Button";
 import { VALUES } from "../../shared/forms/fields/FormSelectCountryField.unsafe";

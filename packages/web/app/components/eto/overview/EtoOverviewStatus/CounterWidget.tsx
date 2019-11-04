@@ -1,5 +1,5 @@
-import * as moment from "moment";
 import * as React from "react";
+import { FormattedDate, FormattedTime } from "react-intl";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, withProps, withStateHandlers } from "recompose";
 
@@ -47,14 +47,29 @@ const CounterBase: React.FunctionComponent<TCounterWidgetProps> = ({
         <FormattedMessage id="shared-component.eto-overview.count-down-to" values={{ stateName }} />
       )}
     </div>
-    <div className={styles.zone}>
-      <time dateTime={endDate.toISOString()}>
-        {`${moment.utc(endDate).format("ddd, MMM Do YYYY, HH:mm:ss")} UTC`}
-      </time>
-    </div>
+
     <Counter endDate={endDate} onFinish={setCounterFinished} />
+
+    <time className={styles.endsAt} dateTime={endDate.toISOString()}>
+      <FormattedMessage
+        id="shared-component.eto-overview.ends-at"
+        values={{
+          date: (
+            <FormattedDate
+              value={endDate}
+              year="numeric"
+              month="short"
+              day="numeric"
+              weekday="long"
+            />
+          ),
+          time: <FormattedTime value={endDate} timeZone="UTC" timeZoneName="short" />,
+        }}
+      />
+    </time>
+
     {countdownFinished && (
-      <p>
+      <p className="mt-2 mb-0">
         <FormattedMessage
           id="shared-component.eto-overview.waiting-for-next-block-with-state"
           values={{ stateName }}

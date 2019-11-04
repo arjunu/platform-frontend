@@ -28,6 +28,7 @@ const baseTxData = {
     blockNumber: undefined,
     chainId: undefined,
     transactionIndex: undefined,
+    failedRpcError: undefined,
   },
   error: ETransactionErrorType.REVERTED_TX,
 };

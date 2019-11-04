@@ -6,7 +6,9 @@ import { createMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { ITxData } from "../../../lib/web3/types";
 import { NotEnoughEtherForGasError } from "../../../lib/web3/Web3Adapter";
+import { IAppState } from "../../../store";
 import {
+  addBigNumbers,
   compareBigNumbers,
   multiplyBigNumbers,
   subtractBigNumbers,
@@ -14,9 +16,11 @@ import {
 import { actions, TAction } from "../../actions";
 import { neuCall, neuTakeLatestUntil } from "../../sagasUtils";
 import { selectEtherBalance } from "../../wallet/selectors";
+import { selectWalletType } from "../../web3/selectors";
 import { generateInvestmentTransaction } from "../transactions/investment/sagas";
 import { selectMaximumInvestment } from "../transactions/investment/selectors";
 import { ETxSenderType } from "../types";
+import { STIPEND_ELIGIBLE_WALLETS } from "./../../../lib/web3/constants";
 import { EValidationState } from "./reducer";
 import { selectInvestmentFLow } from "./selectors";
 import { txValidateWithdraw } from "./withdraw/sagas";
@@ -32,7 +36,7 @@ export function* txValidateInvestment(): Iterator<any> {
       investAmountUlps: new BigNumber(investAmountUlps),
     });
 
-    yield validateGas(generatedTxDetails);
+    yield neuCall(validateGas, generatedTxDetails);
 
     yield put(actions.txValidator.setValidationState(EValidationState.VALIDATION_OK));
     return generatedTxDetails;
@@ -74,14 +78,26 @@ export function* txValidateSaga(
   }
 }
 
-export function* validateGas(txDetails: ITxData): any {
+export function* validateGas({ apiUserService }: TGlobalDependencies, txDetails: ITxData): any {
   const maxEtherUlps = yield select(selectEtherBalance);
 
   const costUlps = multiplyBigNumbers([txDetails.gasPrice, txDetails.gas]);
   const valueUlps = subtractBigNumbers([maxEtherUlps, costUlps]);
 
   if (compareBigNumbers(txDetails.value, valueUlps) > 0) {
-    throw new NotEnoughEtherForGasError("Not enough Ether to pay the Gas for this transaction");
+    const walletType = yield select((state: IAppState) => selectWalletType(state.web3));
+    if (STIPEND_ELIGIBLE_WALLETS.includes(walletType)) {
+      // @SEE https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2015.md
+      // @SEE https://github.com/MetaMask/metamask-extension/issues/5101
+      const { gasStipend } = yield apiUserService.getGasStipend(txDetails);
+      const etherUlpsWithStipend = addBigNumbers([gasStipend, maxEtherUlps]);
+      const valueUlpsWithStipend = subtractBigNumbers([etherUlpsWithStipend, costUlps]);
+      if (compareBigNumbers(txDetails.value, valueUlpsWithStipend) > 0) {
+        throw new NotEnoughEtherForGasError("Not enough Ether to pay the Gas for this transaction");
+      }
+    } else {
+      throw new NotEnoughEtherForGasError("Not enough Ether to pay the Gas for this transaction");
+    }
   }
 }
 

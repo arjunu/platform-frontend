@@ -1,5 +1,7 @@
-import { EquityToken } from "./types";
+import { EquityToken, EthereumAddress } from "./types";
 
 const toEquityTokenSymbol = (symbol: string) => symbol as EquityToken;
 
-export { toEquityTokenSymbol };
+const toEthereumAddress = (address: string) => address as EthereumAddress;
+
+export { toEquityTokenSymbol, toEthereumAddress };

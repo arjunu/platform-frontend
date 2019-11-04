@@ -114,6 +114,23 @@ export const selectClientJurisdiction = createSelector(
     (state.individualData && state.individualData.country),
 );
 
+export const selectIndividualAddress = createSelector(
+  selectKyc,
+  (state: DeepReadonly<IKycState>) => {
+    if (state.individualData) {
+      return {
+        street: state.individualData.street,
+        city: state.individualData.city,
+        zipCode: state.individualData.zipCode,
+        country: state.individualData.country,
+        usState: state.individualData.usState,
+      };
+    }
+
+    return undefined;
+  },
+);
+
 export const selectClaims = (state: IAppState) => state.kyc.claims;
 
 export const selectIsClaimsVerified = createSelector(

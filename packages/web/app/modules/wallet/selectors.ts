@@ -2,12 +2,17 @@ import BigNumber from "bignumber.js";
 import { createSelector } from "reselect";
 import * as Web3Utils from "web3-utils";
 
-import { ETHEREUM_ZERO_ADDRESS } from "../../config/constants";
+import { ETHEREUM_ZERO_ADDRESS, NEUR_ALLOWED_US_STATES } from "../../config/constants";
+import { EKycRequestType } from "../../lib/api/kyc/KycApi.interfaces";
 import { IAppState } from "../../store";
 import { addBigNumbers, multiplyBigNumbers, subtractBigNumbers } from "../../utils/BigNumberUtils";
+import { ECountries } from "../../utils/enums/countriesEnum";
+import { selectIsUserFullyVerified } from "../auth/selectors";
+import { selectIndividualAddress, selectKycRequestType } from "../kyc/selectors";
 import { selectEtherPriceEur, selectNeuPriceEur } from "../shared/tokenPrice/selectors";
 import { selectTxGasCostEthUlps } from "../tx/sender/selectors";
 import { IWalletState, IWalletStateData } from "./reducer";
+import { ENEURWalletStatus } from "./types";
 
 export const selectWalletData = (state: IAppState): IWalletStateData | undefined =>
   state.wallet.data;
@@ -202,6 +207,31 @@ export const selectIsEuroUpgradeTargetSet = (state: IAppState): boolean =>
     state.wallet.data.euroTokenUpgradeTarget !== ETHEREUM_ZERO_ADDRESS
   );
 
-/**General State Selectors */
+/* General State Selectors */
 export const selectMaxAvailableEther = (state: IAppState): string =>
   subtractBigNumbers([selectLiquidEtherBalance(state), selectTxGasCostEthUlps(state)]);
+
+export const selectNEURStatus = (state: IAppState): ENEURWalletStatus => {
+  const isUserFullyVerified = selectIsUserFullyVerified(state);
+
+  if (!isUserFullyVerified) {
+    return ENEURWalletStatus.DISABLED_NON_VERIFIED;
+  }
+
+  const kycType = selectKycRequestType(state);
+  const address = selectIndividualAddress(state);
+
+  // In case it's Individual request and country is US we need to apply additional checks
+  if (
+    kycType === EKycRequestType.INDIVIDUAL &&
+    address &&
+    address.country === ECountries.UNITED_STATES
+  ) {
+    // It's likely possible `usState` is not defined but in case it's is assume NEUR access is restricted
+    if (address.usState === undefined || !NEUR_ALLOWED_US_STATES.includes(address.usState)) {
+      return ENEURWalletStatus.DISABLED_RESTRICTED_US_STATE;
+    }
+  }
+
+  return ENEURWalletStatus.ENABLED;
+};

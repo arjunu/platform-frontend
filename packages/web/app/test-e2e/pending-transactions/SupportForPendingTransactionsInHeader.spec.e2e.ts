@@ -1,12 +1,17 @@
 import {
   accountFixtureAddress,
+  addFailedPendingTransactions,
   addPendingExternalTransaction,
   closeModal,
   goToDashboard,
+  goToWallet,
   removePendingExternalTransaction,
   tid,
 } from "../utils";
 import { loginFixtureAccount } from "../utils/userHelpers";
+import { assertTxErrorDialogueNoCost } from "./../utils/assertions";
+import { addPendingTransactions } from "./../utils/userHelpers";
+import { generalPendingTxFixture } from "./generalPendingTxFixture";
 import { assertPendingWithdrawModal, assertSuccessWithdrawModal, doWithdraw } from "./utils";
 
 describe("Pending Transactions In Header", () => {
@@ -109,6 +114,37 @@ describe("Pending Transactions In Header", () => {
       // after success modal is closed should remove transaction for pending list
       closeModal();
       cy.get(tid("pending-transactions-status.no-pending-transactions")).should("exist");
+    });
+  });
+
+  it("should test failed tx", () => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
+      kyc: "business",
+      signTosAgreement: true,
+      clearPendingTransactions: true,
+    }).then(() => {
+      const txHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
+      const tx = generalPendingTxFixture;
+
+      addPendingTransactions(tx);
+
+      goToWallet();
+
+      cy.reload();
+
+      cy.get(tid("pending-transactions-status.mining")).should("exist");
+
+      addFailedPendingTransactions(
+        accountFixtureAddress("INV_EUR_ICBM_HAS_KYC_SEED"),
+        txHash,
+        "ERROR MARK",
+      );
+
+      cy.get(tid("pending-transactions-status.error"))
+        .should("exist")
+        .click();
+
+      assertTxErrorDialogueNoCost();
     });
   });
 

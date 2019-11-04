@@ -64,7 +64,7 @@ export function* txValidateWithdraw(userInput: IWithdrawDraftType): Iterator<any
       valueUlps: new BigNumber(modifiedUserInput.value).mul(Q18).toString(),
     });
 
-    yield validateGas(generatedTxDetails);
+    yield neuCall(validateGas, generatedTxDetails);
 
     const addressNotifications: EAdditionalValidationDataNotifications[] =
       isAddressValid && !shouldPassSmartContractAcceptEtherTest

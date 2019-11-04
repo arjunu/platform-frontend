@@ -86,6 +86,9 @@ export const createWeb3WithLedgerProvider = async (
     }),
   );
   engine.start();
+  // stop immediately to not poll for new block which does not have any use
+  // todo: implement null block provider and pass it in opts.blockTracker
+  engine.stop();
   const promisifiedLedgerProvider: IPromisifiedHookedWalletSubProvider = {
     approveMessage: promisify<string>(ledgerProvider.approveMessage),
     approvePersonalMessage: promisify<boolean>(ledgerProvider.approvePersonalMessage),

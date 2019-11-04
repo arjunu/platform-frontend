@@ -15,6 +15,7 @@ import { EWalletSubType, EWalletType, ILightWalletMetadata } from "../../../modu
 import { EthereumAddress } from "../../../utils/opaque-types/types";
 import { ILogger } from "../../dependencies/logger";
 import { IPersonalWallet, SignerType } from "../PersonalWeb3";
+import { STIPEND_ELIGIBLE_WALLETS } from "./../constants";
 import { IEthereumNetworkConfig, IRawTxData } from "./../types";
 import { Web3Adapter } from "./../Web3Adapter";
 import {
@@ -230,13 +231,15 @@ export class LightWalletConnector {
       engine.addProvider(web3Provider);
       engine.addProvider(
         new RpcSubprovider({
-          rpcUrl: this.web3Config.rpcUrl,
+          rpcUrl: STIPEND_ELIGIBLE_WALLETS.includes(EWalletType.LIGHT)
+            ? this.web3Config.backendRpcUrl
+            : this.web3Config.rpcUrl,
         }),
       );
       engine.start();
-      engine.on("block", (block: any) => {
-        this.logger.info(block);
-      });
+      // stop immediately to not poll for new block which does not have any use
+      // todo: implement null block provider and pass it in opts.blockTracker
+      engine.stop();
       return new Web3(engine);
     } catch (e) {
       if (engine) {

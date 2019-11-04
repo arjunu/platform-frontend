@@ -2,7 +2,6 @@ import * as cn from "classnames";
 import * as React from "react";
 
 import { CommonHtmlProps } from "../../../types";
-import { LoadingIndicator } from "../../shared/loading-indicator";
 import { IPanelProps, Panel } from "../../shared/Panel";
 
 import * as styles from "./WalletBalance.module.scss";
@@ -14,12 +13,6 @@ export interface IWalletValues {
   neuroEuroAmount: string;
   totalEuroAmount: string;
 }
-
-export const LoadingWallet: React.FunctionComponent<IPanelProps> = props => (
-  <WalletBalanceContainer {...props}>
-    <LoadingIndicator />
-  </WalletBalanceContainer>
-);
 
 export const WalletBalanceContainer: React.FunctionComponent<
   IPanelProps &

@@ -357,6 +357,24 @@ export const addPendingTransactions = (
     })
     .then(response => response.body);
 
+const MOCKED_PENDING_TX_PATH = "/api/external-services-mock/e2e-tests/pending_transactions/";
+
+export const addFailedPendingTransactions = (
+  uid: string,
+  txHash: string,
+  error: string,
+): Cypress.Chainable<ReadonlyArray<{ transaction_type: string }>> =>
+  cy
+    .request({
+      url: `${MOCKED_PENDING_TX_PATH}${uid}/failed/${txHash}?error=${error}`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${getJwtToken()}`,
+      },
+    })
+    .then(response => response.body);
+
 export const clearPendingTransactions = () =>
   cy
     .request({

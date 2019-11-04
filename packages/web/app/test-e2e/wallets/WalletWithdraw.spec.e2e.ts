@@ -1,7 +1,14 @@
 import Web3Accounts from "web3-eth-accounts";
 
 import { Q18 } from "../../config/constants";
-import { accountFixtureByName, confirmAccessModal, goToDashboard, parseAmount } from "../utils";
+import {
+  accountFixtureByName,
+  assertTxErrorDialogueWithCost,
+  confirmAccessModal,
+  goToDashboard,
+  parseAmount,
+} from "../utils";
+import { assertTxErrorDialogueNoCost } from "../utils/assertions";
 import { sendEth } from "../utils/ethRpcUtils";
 import { fillForm } from "../utils/forms";
 import { accountFixtureAddress } from "../utils/index";
@@ -451,9 +458,7 @@ describe("Wallet Withdraw", () => {
         confirmAccessModal(DEFAULT_PASSWORD);
 
         cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
-
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).contains(/0\.\d{4}/);
+        assertTxErrorDialogueWithCost();
       });
     });
 
@@ -492,9 +497,7 @@ describe("Wallet Withdraw", () => {
         confirmAccessModal(DEFAULT_PASSWORD);
 
         cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
-
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).should("not.exist");
+        assertTxErrorDialogueNoCost();
       });
     });
 
@@ -533,9 +536,8 @@ describe("Wallet Withdraw", () => {
         confirmAccessModal(DEFAULT_PASSWORD);
 
         cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
 
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).contains(/0\.\d{4}/);
+        assertTxErrorDialogueWithCost();
       });
     });
   });

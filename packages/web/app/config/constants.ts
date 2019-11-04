@@ -1,5 +1,7 @@
 import BigNumber from "bignumber.js";
 
+import { EUSState } from "../utils/enums/usStatesEnum";
+
 export const LIGHT_WALLET_PASSWORD_CACHE_TIME = 1000 * 10;
 // If running in cypress wait for a short time
 export const LIGHT_WALLET_PRIVATE_DATA_CACHE_TIME =
@@ -96,3 +98,9 @@ export const NEXT_ETO_STATE_POLLING_DELAY = 5000;
 
 /* WEB3 Related Constants */
 export const BLOCK_MINING_TIME_DELAY = 12000;
+
+/**
+ * NEUR is only allowed (by legal) for a couple of US states
+ * For now we need to disable NEUR for all US states
+ */
+export const NEUR_ALLOWED_US_STATES: EUSState[] = [];

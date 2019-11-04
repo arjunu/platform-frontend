@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import { MIN_COMPANY_SHARE_CAPITAL } from "../../../../../config/constants";
 import { EtoLegalInformationType } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { currencyCodeSchema, dateSchema } from "../../../../../lib/api/util/customSchemas.unsafe";
+import { currencyCodeSchema, dateSchema } from "../../../../../lib/api/util/customSchemas";
 import { convertAndValidatePipeline } from "../../../../shared/forms/utils";
 import {
   convert,

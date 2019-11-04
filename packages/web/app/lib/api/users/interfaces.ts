@@ -43,6 +43,9 @@ export interface IUserInput {
 export interface IVerifyEmailUser {
   verificationCode: string;
 }
+export const GasStipendValidator = Yup.object()
+  .shape({ gasStipend: Yup.number().required() })
+  .required();
 
 export const UserValidator = Yup.object()
   .shape({
@@ -63,6 +66,7 @@ export const emailStatus = Yup.object().shape({
 });
 
 export const TxSchema = YupTS.object({
+  failedRpcError: YupTS.string().optional(),
   blockHash: YupTS.string().optional(),
   blockNumber: YupTS.string().optional(),
   chainId: YupTS.string().optional(),

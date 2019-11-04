@@ -52,7 +52,8 @@ export class KycApi {
     return await this.httpClient.get<IKycBusinessData>({
       baseUrl: BASE_PATH,
       url: INDIVIDUAL_DATA_PATH,
-      responseSchema: KycIndividualDataSchema,
+      // TODO: Move back when KYC flow for us investor is done
+      // responseSchema: KycIndividualDataSchema,
     });
   }
 

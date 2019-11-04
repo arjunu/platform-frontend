@@ -134,7 +134,7 @@ function* loadIdentityClaim({ contractsService }: TGlobalDependencies): Iterator
  * Individual Request
  */
 function* loadIndividualData(
-  { apiKycService }: TGlobalDependencies,
+  { apiKycService, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_LOAD_INDIVIDUAL_DATA") return;
@@ -142,13 +142,17 @@ function* loadIndividualData(
     yield put(actions.kyc.kycUpdateIndividualData(true));
     const result: IHttpResponse<IKycIndividualData> = yield apiKycService.getIndividualData();
     yield put(actions.kyc.kycUpdateIndividualData(false, result.body));
-  } catch {
+  } catch (e) {
+    if (e.status !== 404) {
+      logger.error("Failed to load KYC individual data", e);
+    }
+
     yield put(actions.kyc.kycUpdateIndividualData(false));
   }
 }
 
 function* submitIndividualData(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_SUBMIT_INDIVIDUAL_FORM") return;
@@ -160,11 +164,13 @@ function* submitIndividualData(
     yield put(actions.routing.goToKYCIndividualDocumentVerification());
   } catch (e) {
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
+
+    logger.error("Failed to submit KYC individual data", e);
   }
 }
 
 function* uploadIndividualFile(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_UPLOAD_INDIVIDUAL_FILE") return;
@@ -174,14 +180,17 @@ function* uploadIndividualFile(
     const result: IHttpResponse<IKycFileInfo> = yield apiKycService.uploadIndividualDocument(file);
     yield put(actions.kyc.kycUpdateIndividualDocument(false, result.body));
     notificationCenter.info(createMessage(KycFlowMessage.KYC_UPLOAD_SUCCESSFUL));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateIndividualDocument(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_UPLOAD_FAILED));
+
+    logger.error("Failed to upload KYC individual file", e);
   }
 }
 
 function* loadIndividualFiles(
-  { apiKycService }: TGlobalDependencies,
+  { apiKycService, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_LOAD_INDIVIDUAL_FILE_LIST") return;
@@ -189,8 +198,12 @@ function* loadIndividualFiles(
     yield put(actions.kyc.kycUpdateIndividualDocuments(true));
     const result: IHttpResponse<IKycFileInfo[]> = yield apiKycService.getIndividualDocuments();
     yield put(actions.kyc.kycUpdateIndividualDocuments(false, result.body));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateIndividualDocuments(false));
+
+    if (e.status !== 404) {
+      logger.error("Failed to load KYC individual files", e);
+    }
   }
 }
 
@@ -230,7 +243,7 @@ function* submitIndividualRequestEffect({ apiKycService }: TGlobalDependencies):
 }
 
 function* submitIndividualRequest(
-  { notificationCenter }: TGlobalDependencies,
+  { notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_SUBMIT_INDIVIDUAL_REQUEST") return;
@@ -242,9 +255,12 @@ function* submitIndividualRequest(
       createMessage(KycFlowMessage.KYC_SUBMIT_TITLE),
       createMessage(KycFlowMessage.KYC_SUBMIT_DESCRIPTION),
     );
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateIndividualRequestState(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
+
+    logger.error("Failed to submit KYC individual request", e);
   }
 }
 
@@ -262,8 +278,9 @@ function* startIndividualInstantId({
 
     yield put(actions.kyc.kycUpdateIndividualRequestState(false, result.body));
   } catch (e) {
-    logger.warn("KYC instant id failed to start", e);
-    notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED)); //module.kyc.sagas.problem.submitting
+    logger.error("KYC instant id failed to start", e);
+
+    notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
   }
 }
 
@@ -278,7 +295,8 @@ function* cancelIndividualInstantId({
       actions.kyc.kycUpdateIndividualRequestState(false, { status: EKycRequestStatus.DRAFT }),
     );
   } catch (e) {
-    logger.warn("KYC instant id failed to stop", e);
+    logger.error("KYC instant id failed to stop", e);
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED)); //module.kyc.sagas.problem.submitting
   }
 }
@@ -289,7 +307,7 @@ function* cancelIndividualInstantId({
 
 // legal representative
 function* loadLegalRepresentative(
-  { apiKycService }: TGlobalDependencies,
+  { apiKycService, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_LOAD_LEGAL_REPRESENTATIVE") return;
@@ -299,13 +317,17 @@ function* loadLegalRepresentative(
       IKycLegalRepresentative
     > = yield apiKycService.getLegalRepresentative();
     yield put(actions.kyc.kycUpdateLegalRepresentative(false, result.body));
-  } catch {
+  } catch (e) {
+    // TODO: There is something wrong here as reponse parsing error is thrown.
+    // Will review the code and fix in the separate PR
+    logger.error("Failed to load KYC representative", e);
+
     yield put(actions.kyc.kycUpdateLegalRepresentative(false));
   }
 }
 
 function* submitLegalRepresentative(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_SUBMIT_LEGAL_REPRESENTATIVE") return;
@@ -315,14 +337,16 @@ function* submitLegalRepresentative(
       IKycLegalRepresentative
     > = yield apiKycService.putLegalRepresentative(action.payload.data);
     yield put(actions.kyc.kycUpdateLegalRepresentative(false, result.body));
-  } catch {
+  } catch (e) {
+    logger.error("Failed to submit KYC legal representative", e);
+
     yield put(actions.kyc.kycUpdateLegalRepresentative(false));
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
   }
 }
 
 function* uploadLegalRepresentativeFile(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_UPLOAD_LEGAL_REPRESENTATIVE_FILE") return;
@@ -333,14 +357,17 @@ function* uploadLegalRepresentativeFile(
       IKycFileInfo
     > = yield apiKycService.uploadLegalRepresentativeDocument(file);
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocument(false, result.body));
-  } catch {
+  } catch (e) {
+    logger.error("Failed to upload KYC legal representative file", e);
+
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocument(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_UPLOAD_FAILED));
   }
 }
 
 function* loadLegalRepresentativeFiles(
-  { apiKycService }: TGlobalDependencies,
+  { apiKycService, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_LOAD_LEGAL_REPRESENTATIVE_FILE_LIST") return;
@@ -350,20 +377,23 @@ function* loadLegalRepresentativeFiles(
       IKycFileInfo[]
     > = yield apiKycService.getLegalRepresentativeDocuments();
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocuments(false, result.body));
-  } catch {
+  } catch (e) {
+    logger.error("Failed to load KYC legal representative file", e);
+
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocuments(false));
   }
 }
 
 // business data
 function* setBusinessType(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_SET_BUSINESS_TYPE") return;
   try {
     yield put(actions.kyc.kycUpdateBusinessData(true));
     let institutionData: IKycBusinessData = {};
+    // TODO: Pretty bad use of `catch` we need to log an error if it's not 404
     try {
       const result: IHttpResponse<IKycBusinessData> = yield apiKycService.getBusinessData();
       institutionData = result.body;
@@ -372,26 +402,37 @@ function* setBusinessType(
     yield apiKycService.putBusinessData(institutionData);
     yield put(actions.kyc.kycUpdateBusinessData(false, institutionData));
     yield put(actions.routing.goToKYCBusinessData());
-  } catch (_e) {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBusinessData(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
+
+    logger.error("Failed to set KYC business", e);
   }
 }
 
 // legal representative
-function* loadBusinessData({ apiKycService }: TGlobalDependencies, action: TAction): Iterator<any> {
+function* loadBusinessData(
+  { apiKycService, logger }: TGlobalDependencies,
+  action: TAction,
+): Iterator<any> {
   if (action.type !== "KYC_LOAD_BUSINESS_DATA") return;
   try {
     yield put(actions.kyc.kycUpdateBusinessData(true));
     const result: IHttpResponse<IKycBusinessData> = yield apiKycService.getBusinessData();
+
     yield put(actions.kyc.kycUpdateBusinessData(false, result.body));
-  } catch {
+  } catch (e) {
+    if (e.status !== 404) {
+      logger.error("Failed to load KYC business data", e);
+    }
+
     yield put(actions.kyc.kycUpdateBusinessData(false));
   }
 }
 
 function* submitBusinessData(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_SUBMIT_BUSINESS_DATA") return;
@@ -401,14 +442,17 @@ function* submitBusinessData(
       action.payload.data,
     );
     yield put(actions.kyc.kycUpdateBusinessData(false, result.body));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBusinessData(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
+
+    logger.error("Failed to submit KYC business data", e);
   }
 }
 
 function* uploadBusinessFile(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_UPLOAD_BUSINESS_FILE") return;
@@ -418,14 +462,17 @@ function* uploadBusinessFile(
     const result: IHttpResponse<IKycFileInfo> = yield apiKycService.uploadBusinessDocument(file);
     yield put(actions.kyc.kycUpdateBusinessDocument(false, result.body));
     notificationCenter.info(createMessage(KycFlowMessage.KYC_UPLOAD_SUCCESSFUL));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBusinessDocument(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_UPLOAD_FAILED));
+
+    logger.error("Failed to upload KYC business file", e);
   }
 }
 
 function* loadBusinessFiles(
-  { apiKycService }: TGlobalDependencies,
+  { apiKycService, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_LOAD_BUSINESS_FILE_LIST") return;
@@ -433,14 +480,18 @@ function* loadBusinessFiles(
     yield put(actions.kyc.kycUpdateBusinessDocuments(true));
     const result: IHttpResponse<IKycFileInfo[]> = yield apiKycService.getBusinessDocuments();
     yield put(actions.kyc.kycUpdateBusinessDocuments(false, result.body));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBusinessDocuments(false));
+
+    if (e.status !== 404) {
+      logger.error("Failed to load KYC business files", e);
+    }
   }
 }
 
 // beneficial owners
 function* loadBeneficialOwners(
-  { apiKycService }: TGlobalDependencies,
+  { apiKycService, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_LOAD_BENEFICIAL_OWNERS") return;
@@ -448,13 +499,15 @@ function* loadBeneficialOwners(
     yield put(actions.kyc.kycUpdateBeneficialOwners(true));
     const result: IHttpResponse<IKycBeneficialOwner[]> = yield apiKycService.getBeneficialOwners();
     yield put(actions.kyc.kycUpdateBeneficialOwners(false, result.body));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBeneficialOwners(false));
+
+    logger.error("Failed to load KYC beneficial owners", e);
   }
 }
 
 function* createBeneficialOwner(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_ADD_BENEFICIAL_OWNER") return;
@@ -462,14 +515,17 @@ function* createBeneficialOwner(
     yield put(actions.kyc.kycUpdateBeneficialOwner(true));
     const result: IHttpResponse<IKycBeneficialOwner> = yield apiKycService.postBeneficialOwner({});
     yield put(actions.kyc.kycUpdateBeneficialOwner(false, result.body.id, result.body));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBeneficialOwner(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
+
+    logger.error("Failed to create KYC beneficial owner", e);
   }
 }
 
 function* submitBeneficialOwner(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_SUBMIT_BENEFICIAL_OWNER") return;
@@ -479,14 +535,17 @@ function* submitBeneficialOwner(
       action.payload.owner,
     );
     yield put(actions.kyc.kycUpdateBeneficialOwner(false, result.body.id, result.body));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBeneficialOwner(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SAVING_DATA));
+
+    logger.error("Failed to submit KYC beneficial owner", e);
   }
 }
 
-function* deleteBeneficalOwner(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+function* deleteBeneficialOwner(
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_DELETE_BENEFICIAL_OWNER") return;
@@ -494,14 +553,17 @@ function* deleteBeneficalOwner(
     yield put(actions.kyc.kycUpdateBeneficialOwner(true));
     yield apiKycService.deleteBeneficialOwner(action.payload.id);
     yield put(actions.kyc.kycUpdateBeneficialOwner(false, action.payload.id, undefined));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBeneficialOwner(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
+
+    logger.error("Failed to delete KYC beneficial owner", e);
   }
 }
 
 function* uploadBeneficialOwnerFile(
-  { apiKycService, notificationCenter }: TGlobalDependencies,
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_UPLOAD_BENEFICIAL_OWNER_FILE") return;
@@ -514,14 +576,17 @@ function* uploadBeneficialOwnerFile(
     );
     yield put(actions.kyc.kycUpdateBeneficialOwnerDocument(boid, false, result.body));
     notificationCenter.info(createMessage(KycFlowMessage.KYC_UPLOAD_SUCCESSFUL));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBeneficialOwnerDocument(boid, false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_UPLOAD_FAILED));
+
+    logger.error("Failed to upload KYC beneficial owner file", e);
   }
 }
 
 function* loadBeneficialOwnerFiles(
-  { apiKycService }: TGlobalDependencies,
+  { apiKycService, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_LOAD_BENEFICIAL_OWNER_FILE_LIST") return;
@@ -532,8 +597,10 @@ function* loadBeneficialOwnerFiles(
       boid,
     );
     yield put(actions.kyc.kycUpdateBeneficialOwnerDocuments(boid, false, result.body));
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBeneficialOwnerDocuments(boid, false));
+
+    logger.error("Failed to load KYC beneficial owner file", e);
   }
 }
 
@@ -554,6 +621,7 @@ function* loadBusinessRequest(
     yield put(actions.kyc.kycUpdateBusinessRequestState(false, result.body));
   } catch (e) {
     logger.error("Error while getting business KYC data", e);
+
     yield put(actions.kyc.kycUpdateBusinessRequestState(false, undefined, e.message));
   }
 }
@@ -583,7 +651,7 @@ function* submitBusinessRequestEffect({ apiKycService }: TGlobalDependencies): I
 }
 
 function* submitBusinessRequest(
-  { notificationCenter }: TGlobalDependencies,
+  { notificationCenter, logger }: TGlobalDependencies,
   action: TAction,
 ): Iterator<any> {
   if (action.type !== "KYC_SUBMIT_BUSINESS_REQUEST") return;
@@ -606,9 +674,12 @@ function* submitBusinessRequest(
       createMessage(KycFlowMessage.KYC_SUBMIT_TITLE),
       createMessage(KycFlowMessage.KYC_SUBMIT_DESCRIPTION),
     );
-  } catch {
+  } catch (e) {
     yield put(actions.kyc.kycUpdateBusinessRequestState(false));
+
     notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
+
+    logger.error("Failed to submit KYC business request", e);
   }
 }
 
@@ -676,7 +747,7 @@ function* waitForKycStatusLoad(): Iterator<any> {
   yield put(actions.kyc.kycFinishedLoadingData());
 }
 
-export function* loadKycRequestData(): any {
+export function* loadKycRequestData(): Iterator<any> {
   // Wait for contracts to init
   yield waitUntilSmartContractsAreInitialized();
 
@@ -726,7 +797,7 @@ export function* kycSagas(): any {
   yield fork(neuTakeEvery, "KYC_LOAD_BENEFICIAL_OWNERS", loadBeneficialOwners);
   yield fork(neuTakeEvery, "KYC_ADD_BENEFICIAL_OWNER", createBeneficialOwner);
   yield fork(neuTakeEvery, "KYC_SUBMIT_BENEFICIAL_OWNER", submitBeneficialOwner);
-  yield fork(neuTakeEvery, "KYC_DELETE_BENEFICIAL_OWNER", deleteBeneficalOwner);
+  yield fork(neuTakeEvery, "KYC_DELETE_BENEFICIAL_OWNER", deleteBeneficialOwner);
   yield fork(neuTakeEvery, "KYC_UPLOAD_BENEFICIAL_OWNER_FILE", uploadBeneficialOwnerFile);
   yield fork(neuTakeEvery, "KYC_LOAD_BENEFICIAL_OWNER_FILE_LIST", loadBeneficialOwnerFiles);
 

@@ -37,6 +37,7 @@ import * as companyPreviewCardBanner from "./assets/company-preview-banner.png";
 export const dummyConfig: IConfig = {
   ethereumNetwork: {
     rpcUrl: "https://localhost:8080",
+    backendRpcUrl: "https://localhost:8080",
   },
   contractsAddresses: {
     universeContractAddress: "UNIVERSE_ADDRESS",

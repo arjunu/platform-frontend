@@ -94,7 +94,7 @@ export const confirmAccessModal = (password: string = DEFAULT_PASSWORD) => {
   cy.get(tid("access-light-wallet-password-input")).type(password);
   cy.get(tid("access-light-wallet-confirm"))
     .should("be.enabled")
-    .click();
+    .awaitedClick();
 };
 
 export const confirmAccessModalNoPW = () => {

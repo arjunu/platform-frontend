@@ -16,10 +16,11 @@ import { ETransactionErrorType, ETxSenderState } from "../sender/reducer";
 import { txMonitorSaga } from "../sender/sagas";
 import { InvestmentAdditionalDataSchema } from "../transactions/investment/types";
 import { ETxSenderType, TSpecificTransactionState } from "../types";
+import { TransactionCancelledError } from "./../event-channel/errors";
 import { SchemaMismatchError } from "./errors";
 import { selectPlatformPendingTransaction } from "./selectors";
 
-const TX_MONITOR_DELAY = 30000;
+const TX_MONITOR_DELAY = process.env.NF_CYPRESS_RUN === "1" ? 5000 : 30000;
 
 export function* deletePendingTransaction({
   apiUserService,
@@ -85,6 +86,7 @@ export function* markTransactionAsPending(
       chainId: undefined,
       status: undefined,
       transactionIndex: undefined,
+      failedRpcError: undefined,
     },
     transactionType: type,
     transactionAdditionalData: txAdditionalData,
@@ -162,27 +164,26 @@ export function* updatePendingTxs({ apiUserService, logger }: TGlobalDependencie
         };
       }
     } catch (error) {
-      if (error instanceof RevertedTransactionError) {
-        apiPendingTx = {
-          ...apiPendingTx,
-          pendingTransaction: {
-            ...pendingTransaction,
-            transactionStatus: ETxSenderState.ERROR_SIGN,
-            transactionError: ETransactionErrorType.REVERTED_TX,
-          },
-        };
+      let transactionError = ETransactionErrorType.UNKNOWN_ERROR;
+
+      if (error instanceof TransactionCancelledError) {
+        transactionError = ETransactionErrorType.TX_WAS_REJECTED;
+      } else if (error instanceof RevertedTransactionError) {
+        transactionError = ETransactionErrorType.REVERTED_TX;
+      } else if (error instanceof OutOfGasError) {
+        transactionError = ETransactionErrorType.NOT_ENOUGH_ETHER_FOR_GAS;
+      } else {
+        logger.error(new Error("Unknown Pending Tx Error from 'updatePendingTxs'"));
       }
 
-      if (error instanceof OutOfGasError) {
-        apiPendingTx = {
-          ...apiPendingTx,
-          pendingTransaction: {
-            ...pendingTransaction,
-            transactionStatus: ETxSenderState.ERROR_SIGN,
-            transactionError: ETransactionErrorType.OUT_OF_GAS,
-          },
-        };
-      }
+      apiPendingTx = {
+        ...apiPendingTx,
+        pendingTransaction: {
+          ...pendingTransaction,
+          transactionStatus: ETxSenderState.ERROR_SIGN,
+          transactionError,
+        },
+      };
     }
   }
 

@@ -4,12 +4,17 @@ export enum EEventEmitterChannelEvents {
   ERROR = "ERROR",
   REVERTED_TRANSACTION = "REVERTED_TRANSACTION",
   OUT_OF_GAS = "OUT_OF_GAS",
+  CANCELLED = "CANCELLED",
 }
 
 export type TEventEmitterChannelEvents =
   | {
       type: EEventEmitterChannelEvents.NEW_BLOCK;
       blockId: number;
+    }
+  | {
+      type: EEventEmitterChannelEvents.CANCELLED;
+      error: Error;
     }
   | {
       type: EEventEmitterChannelEvents.TX_MINED;

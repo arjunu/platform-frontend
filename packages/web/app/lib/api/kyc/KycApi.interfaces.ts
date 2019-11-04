@@ -1,13 +1,9 @@
 import * as Yup from "yup";
 
+import { EUSState } from "../../../utils/enums/usStatesEnum";
 import { makeAllRequired } from "../../../utils/yupUtils";
 import * as YupTS from "../../yup-ts.unsafe";
-import {
-  countryCode,
-  percentage,
-  personBirthDate,
-  restrictedCountry,
-} from "../util/customSchemas.unsafe";
+import { countryCode, percentage, personBirthDate, restrictedCountry } from "../util/customSchemas";
 
 export enum EKycRequestType {
   BUSINESS = "business",
@@ -21,6 +17,7 @@ export interface IKycPerson {
   city?: string;
   zipCode?: string;
   country?: string;
+  usState?: EUSState;
   birthDate?: string;
   placeOfBirth?: string;
   nationality?: string;

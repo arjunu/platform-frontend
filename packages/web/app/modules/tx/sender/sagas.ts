@@ -130,7 +130,7 @@ function* txSendProcess(
 
     const txData = yield select(selectTxDetails);
     // Check if gas amount is correct
-    yield validateGas(txData);
+    yield neuCall(validateGas, txData);
 
     // accept transaction on wallet
     yield call(connectWallet);
@@ -306,6 +306,11 @@ function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
           logger.error("Error while tx watching: ", result.error, { txHash });
           break;
         // Terminal errors - Tx Mining should exit
+        case EEventEmitterChannelEvents.CANCELLED:
+          logger.warn("Error Transaction was cancelled from transactional node: ", result.error, {
+            txHash,
+          });
+          return yield put(actions.txSender.txSenderError(ETransactionErrorType.TX_WAS_REJECTED));
         case EEventEmitterChannelEvents.OUT_OF_GAS:
           logger.warn("Error Transaction out of gas: ", result.error, { txHash });
           return yield put(actions.txSender.txSenderError(ETransactionErrorType.OUT_OF_GAS));

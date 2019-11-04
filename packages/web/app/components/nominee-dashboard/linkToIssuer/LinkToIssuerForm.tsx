@@ -6,7 +6,7 @@ import { actions } from "../../../modules/actions";
 import { selectNomineeStateIsLoading } from "../../../modules/nominee-flow/selectors";
 import { appConnect } from "../../../store";
 import { TDataTestId } from "../../../types";
-import { EKeys } from "../../../utils/enums/keys.enum";
+import { EKeys } from "../../../utils/enums/keysEnum";
 import { IIntlProps, injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/Button";
 import { FormError } from "../../shared/forms/fields/FormFieldError";

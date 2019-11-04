@@ -36,8 +36,10 @@ import {
   selectLiquidEuroTokenBalance,
   selectLockedEtherBalance,
   selectLockedEuroTokenBalance,
+  selectNEURStatus,
   selectWalletData,
 } from "../wallet/selectors";
+import { ENEURWalletStatus } from "../wallet/types";
 import { EInvestmentErrorState, EInvestmentType } from "./reducer";
 import {
   selectInvestmentEthValueUlps,
@@ -76,17 +78,21 @@ function* computeAndSetCurrencies(value: string, currency: ECurrency): any {
     yield put(actions.investmentFlow.setEthValue(""));
     yield put(actions.investmentFlow.setEurValue(""));
   } else if (etherPriceEur && etherPriceEur !== "0") {
-    const bignumber = new BigNumber(value);
+    const valueAsBigNumber = new BigNumber(value);
     switch (currency) {
       case ECurrency.ETH:
-        const eurVal = bignumber.mul(etherPriceEur);
-        yield put(actions.investmentFlow.setEthValue(bignumber.toFixed(0, BigNumber.ROUND_UP)));
+        const eurVal = valueAsBigNumber.mul(etherPriceEur);
+        yield put(
+          actions.investmentFlow.setEthValue(valueAsBigNumber.toFixed(0, BigNumber.ROUND_UP)),
+        );
         yield put(actions.investmentFlow.setEurValue(eurVal.toFixed(0, BigNumber.ROUND_UP)));
         return;
       case ECurrency.EUR_TOKEN:
-        const ethVal = bignumber.mul(eurPriceEther);
+        const ethVal = valueAsBigNumber.mul(eurPriceEther);
         yield put(actions.investmentFlow.setEthValue(ethVal.toFixed(0, BigNumber.ROUND_UP)));
-        yield put(actions.investmentFlow.setEurValue(bignumber.toFixed(0, BigNumber.ROUND_UP)));
+        yield put(
+          actions.investmentFlow.setEurValue(valueAsBigNumber.toFixed(0, BigNumber.ROUND_UP)),
+        );
         return;
     }
   }
@@ -253,12 +259,18 @@ export function* onInvestmentTxModalHide(): any {
   yield put(actions.investmentFlow.resetInvestment());
 }
 
-function* getActiveInvestmentTypes(): any {
+function* getActiveInvestmentTypes(): Iterator<any> {
   const state: IAppState = yield select();
   const etoId = selectInvestmentEtoId(state);
   const etoOnChainState = selectEtoOnChainStateById(state, etoId);
+  const neurStatus = selectNEURStatus(state);
 
-  let activeTypes: EInvestmentType[] = [EInvestmentType.Eth, EInvestmentType.NEur];
+  let activeTypes: EInvestmentType[] = [EInvestmentType.Eth];
+
+  // if neur is not restricted because of the us state
+  if (neurStatus !== ENEURWalletStatus.DISABLED_RESTRICTED_US_STATE) {
+    activeTypes.unshift(EInvestmentType.NEur);
+  }
 
   // no regular investment if not whitelisted in pre eto
   if (etoOnChainState === EETOStateOnChain.Whitelist && !selectIsWhitelisted(state, etoId)) {

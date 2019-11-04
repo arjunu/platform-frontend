@@ -46,15 +46,17 @@ function* getEtherTokenTransaction(
     // Call IERC223 compliant transfer function
     // otherwise ETOCommitment is not aware of any investment
     // TODO: Fix when TypeChain support overloads
-    const txInput = contractsService.etherToken.rawWeb3Contract.transfer[
+    const data = contractsService.etherToken.rawWeb3Contract.transfer[
       "address,uint256,bytes"
     ].getData(etoId, investAmountUlps, "");
-    return { data: txInput, to: contractsService.etherToken.address };
+    return { data, to: contractsService.etherToken.address };
   } else {
     // fill up etherToken with ether from wallet
     const ethVal = new BigNumber(investAmountUlps);
     const value = ethVal.sub(etherTokenBalance);
-    const txCall = contractsService.etherToken.depositAndTransferTx(etoId, ethVal, [""]).getData();
+    const txCall = contractsService.etherToken.rawWeb3Contract.depositAndTransfer[
+      "address,uint256,bytes"
+    ].getData(etoId, ethVal, "");
 
     return {
       value: value.toFixed(0, BigNumber.ROUND_DOWN),
@@ -84,17 +86,27 @@ export function* generateInvestmentTransaction(
       to = contractsService.etherToken.address;
       break;
     case EInvestmentType.NEur:
+      // @see https://github.com/ethereum-ts/TypeChain/issues/123
+      // current version of typescript miss-type bytes as array of bytes.
       data = yield contractsService.euroToken.rawWeb3Contract.transfer[
         "address,uint256,bytes"
       ].getData(etoId, investAmountUlps, "");
       to = contractsService.euroToken.address;
       break;
     case EInvestmentType.ICBMEth:
-      data = yield contractsService.etherLock.transferTx(etoId, investAmountUlps, [""]).getData();
+      // @see https://github.com/ethereum-ts/TypeChain/issues/123
+      // current version of typescript miss-type bytes as array of bytes.
+      data = yield contractsService.etherLock.rawWeb3Contract.transfer[
+        "address,uint256,bytes"
+      ].getData(etoId, investAmountUlps, "");
       to = contractsService.etherLock.address;
       break;
     case EInvestmentType.ICBMnEuro:
-      data = yield contractsService.euroLock.transferTx(etoId, investAmountUlps, [""]).getData();
+      // @see https://github.com/ethereum-ts/TypeChain/issues/123
+      // current version of typescript miss-type bytes as array of bytes.
+      data = yield contractsService.euroLock.rawWeb3Contract.transfer[
+        "address,uint256,bytes"
+      ].getData(etoId, investAmountUlps, "");
       to = contractsService.euroLock.address;
       break;
   }
