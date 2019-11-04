@@ -391,7 +391,7 @@ export function* setActiveNomineeEto({
 
 export function* nomineeFlowSagas(): Iterator<any> {
   yield fork(neuTakeLatest, actions.nomineeFlow.initNomineeTasks, initNomineeTasks);
-  yield fork(neuTakeLatest, actions.nomineeFlow.calculateNomineeTask, nomineeDashboardView);
+  yield fork(neuTakeLatest, actions.nomineeFlow.nomineeDashboardView, nomineeDashboardView);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeEtos, loadNomineeEtos);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);

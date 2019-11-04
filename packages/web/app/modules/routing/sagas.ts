@@ -4,7 +4,6 @@ import { Effect, fork, put, select } from "redux-saga/effects";
 import { appRoutes } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EUserType } from "../../lib/api/users/interfaces";
-import { IAppState } from "../../store";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsAuthorized, selectUserType } from "../auth/selectors";
 import { waitForAppInit } from "../init/sagas";
@@ -25,19 +24,17 @@ function* openInNewWindowSaga(
   }
 }
 
-function* startRouteBasedSagas(
+export function* startRouteBasedSagas(
   _: TGlobalDependencies,
-  { payload: { location } }: LocationChangeAction,
-): Iterator<any> {
+  { payload }: LocationChangeAction,
+): IterableIterator<any> {
   const appIsReady = yield waitForAppInit();
-  const userIsAuthorized: boolean = yield select((state: IAppState) =>
-    selectIsAuthorized(state),
-  );
+  const userIsAuthorized: boolean = yield select(selectIsAuthorized);
   const userType: EUserType | undefined = yield select(selectUserType);
 
   if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
-    if (location.pathname === appRoutes.dashboard) {
-      yield put(actions.nomineeFlow.calculateNomineeTask());
+    if (payload.location.pathname === appRoutes.dashboard) {
+      yield put(actions.nomineeFlow.nomineeDashboardView());
     }
   }
 }

@@ -17,7 +17,7 @@ export const nomineeFlowActions = {
     "NOMINEE_STORE_TASK_STATUS",
     (nomineeTasksStatus: TNomineeTasksStatus) => ({ nomineeTasksStatus }),
   ),
-  calculateNomineeTask: createActionFactory("NOMINEE_CALCULATE_TASK"),
+  nomineeDashboardView: createActionFactory("NOMINEE_DASHBOARD_VIEW"),
   loadNomineeEtos: createActionFactory("NOMINEE_FLOW_LOAD_ETOS"),
   loadNomineeTaskData: createActionFactory("NOMINEE_FLOW_LOAD_NOMINEE_TASK_DATA"),
   storeActiveNomineeTask: createActionFactory(
