@@ -19,6 +19,7 @@ export const nomineeFlowActions = {
   ),
   nomineeDashboardView: createActionFactory("NOMINEE_DASHBOARD_VIEW"),
   nomineeEtoView: createActionFactory("NOMINEE_ETO_VIEW"),
+  nomineeDocumentsView: createActionFactory("NOMINEE_DOCUMENTS_VIEW"),
   loadNomineeEtos: createActionFactory("NOMINEE_FLOW_LOAD_ETOS"),
   loadNomineeTaskData: createActionFactory("NOMINEE_FLOW_LOAD_NOMINEE_TASK_DATA"),
   storeActiveNomineeTask: createActionFactory(
@@ -56,8 +57,16 @@ export const nomineeFlowActions = {
     "NOMINEE_FLOW_SET_ACTIVE_ETO",
     (previewCode: string | undefined) => ({ previewCode }),
   ),
+  setActiveNomineeEtoPreviewCodeError: createActionFactory(
+    "NOMINEE_FLOW_SET_ACTIVE_ETO_ERROR",
+    (error: unknown) => ({ error }),
+  ),
   setNomineeEtos: createActionFactory(
     "NOMINEE_FLOW_SET_ETOS",
     ({ etos }: { etos: Dictionary<TEtoWithCompanyAndContract> }) => ({ etos }),
+  ),
+  setNomineeEtosError: createActionFactory(
+    "NOMINEE_FLOW_SET_ETOS_ERROR",
+    (error: unknown) => ({ error }),
   ),
 };

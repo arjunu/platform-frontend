@@ -9,11 +9,8 @@ import { selectPendingDownloads } from "../../../modules/immutable-file/selector
 import {
   selectActiveNomineeEto,
   selectNomineeEtoTemplatesArray,
-  selectNomineeStateIsLoading,
 } from "../../../modules/nominee-flow/selectors";
-import { selectIsVerificationFullyDone } from "../../../modules/selectors";
 import { appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
 import { withContainer } from "../../../utils/withContainer.unsafe";
 import { withMetaTags } from "../../../utils/withMetaTags.unsafe";
 import { appRoutes } from "../../appRoutes";
@@ -22,6 +19,7 @@ import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.un
 import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { NomineeDocumentsLayout } from "./NomineeDocumentsLayout";
+import { selectIsUserFullyVerified } from "../../../modules/auth/selectors";
 
 type TStateProps = {
   etoTemplates: IEtoDocument[];
@@ -29,8 +27,7 @@ type TStateProps = {
 };
 
 type TGuardProps = {
-  isLoading: boolean;
-  verificationIsComplete: boolean;
+  isUserFullyVerified: boolean;
   nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
 };
 
@@ -50,23 +47,16 @@ const NomineeDocuments = compose<TComponentProps, {}>(
   setDisplayName("Documents"),
   appConnect<TGuardProps>({
     stateToProps: state => ({
-      isLoading: selectNomineeStateIsLoading(state),
       nomineeEto: selectActiveNomineeEto(state),
-      verificationIsComplete: selectIsVerificationFullyDone(state),
+      isUserFullyVerified: selectIsUserFullyVerified(state),
     }),
   }),
   branch<TGuardProps>(
-    props => !props.verificationIsComplete,
+    props => !props.isUserFullyVerified,
     renderComponent(() => <Redirect to={appRoutes.dashboard} />),
   ),
-  onEnterAction({
-    actionCreator: dispatch => dispatch(actions.nomineeFlow.loadNomineeTaskData()),
-  }),
   withContainer(Layout),
-  branch<TGuardProps>(
-    props => props.isLoading || !props.nomineeEto,
-    renderComponent(LoadingIndicator),
-  ),
+  branch<TGuardProps>(props => !props.nomineeEto, renderComponent(LoadingIndicator)),
   appConnect<TStateProps, IDispatchProps>({
     stateToProps: state => ({
       etoTemplates: selectNomineeEtoTemplatesArray(state),
