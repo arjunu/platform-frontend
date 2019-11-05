@@ -1,11 +1,9 @@
 .eto-overview-status {
-  display: block;
   background-color: $neu-white-two;
   box-shadow: $shadow-bottom-black;
   color: $neu-slate-grey;
   padding: px-to-rem(8px) px-to-rem(10px);
 }
-
 
 .overview-wrapper {
   $divider-width: 41px;
@@ -21,8 +19,6 @@
     align-items: center;
   }
 
-  width: 100%;
-  height: 100%;
   display: grid;
   grid-template: repeat(9, auto) / 1fr;
   grid-template-areas: "eto-status" "eto-title" "eto-tags" "." "eto-stats" "." "eto-data" "powered-by-neufund";

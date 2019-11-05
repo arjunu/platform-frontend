@@ -1,16 +1,21 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { compose } from "recompose";
+import { branch, compose, renderComponent } from "recompose";
 
 import { EEtoState } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { actions } from "../../../../../modules/actions";
-import { selectIsAuthorized, selectIsInvestor } from "../../../../../modules/auth/selectors";
+import {
+  selectIsAuthorized,
+  selectIsInvestor,
+  selectIsUSInvestor,
+} from "../../../../../modules/auth/selectors";
 import { InvalidETOStateError } from "../../../../../modules/eto/errors";
 import { selectEtoOnChainNextStateStartDate } from "../../../../../modules/eto/selectors";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { isOnChain } from "../../../../../modules/eto/utils";
 import { selectIsUserVerifiedOnBlockchain } from "../../../../../modules/kyc/selectors";
 import { appConnect } from "../../../../../store";
+import { OmitKeys } from "../../../../../types";
 import { invariant } from "../../../../../utils/invariant";
 import { appRoutes } from "../../../../appRoutes";
 import { etoPublicViewLink } from "../../../../appRouteUtils";
@@ -25,6 +30,7 @@ import {
 import { InvestmentProgress } from "../../InvestmentProgress";
 import { EndTimeWidget } from "../../shared/EndTimeWidget";
 import { FundraisingBreakdownTooltip } from "./FundraisingBreakdownTooltip";
+import { USInvestorMessage } from "./USInvestorMessage";
 
 import * as styles from "./InvestmentWidget.module.scss";
 
@@ -41,6 +47,7 @@ interface IStateProps {
   isAuthorized: boolean;
   isAllowedToInvest: boolean;
   isInvestor: boolean;
+  isUsInvestor: boolean;
   nextStateDate: Date | undefined;
 }
 
@@ -48,7 +55,7 @@ interface IDispatchProps {
   startInvestmentFlow: () => void;
 }
 
-type TInvestWidgetProps = IExternalProps & IStateProps & IDispatchProps;
+type TInvestWidgetProps = IExternalProps & OmitKeys<IStateProps, "isUsInvestor"> & IDispatchProps;
 
 const InvestNowButton: React.FunctionComponent<TInvestWidgetProps> = ({
   eto,
@@ -170,12 +177,14 @@ const InvestmentWidget = compose<TInvestWidgetProps, IExternalProps>(
       isAuthorized: selectIsAuthorized(state),
       isAllowedToInvest: selectIsUserVerifiedOnBlockchain(state),
       isInvestor: selectIsInvestor(state),
+      isUsInvestor: selectIsUSInvestor(state),
       nextStateDate: selectEtoOnChainNextStateStartDate(state, props.eto.previewCode),
     }),
     dispatchToProps: (dispatch, props) => ({
       startInvestmentFlow: () => dispatch(actions.investmentFlow.startInvestment(props.eto.etoId)),
     }),
   }),
+  branch<IStateProps>(props => props.isUsInvestor, renderComponent(USInvestorMessage)),
 )(InvestmentWidgetLayout);
 
 export { InvestmentWidgetLayout, InvestmentWidget };

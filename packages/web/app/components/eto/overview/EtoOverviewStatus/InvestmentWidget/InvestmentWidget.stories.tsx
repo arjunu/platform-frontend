@@ -9,6 +9,7 @@ import { InvestmentWidgetLayout } from "./InvestmentWidget";
 const defaultProps = {
   eto: testEto,
   startInvestmentFlow: action("startInvestmentFlow"),
+  nextStateDate: new Date("10/3/2019"),
 };
 
 storiesOf("ETO/InvestmentWidget", module)
@@ -21,7 +22,6 @@ storiesOf("ETO/InvestmentWidget", module)
       isAuthorized={true}
       isInvestor={true}
       isAllowedToInvest={true}
-      nextStateDate={new Date("10/3/2019")}
     />
   ))
   .add("embedded", () => (
@@ -41,7 +41,6 @@ storiesOf("ETO/InvestmentWidget", module)
       isAuthorized={false}
       isInvestor={false}
       isAllowedToInvest={false}
-      nextStateDate={new Date("10/3/2019")}
     />
   ))
   .add("authorized, investor, not allowed to invest, not embedded", () => (
@@ -51,6 +50,5 @@ storiesOf("ETO/InvestmentWidget", module)
       isAuthorized={true}
       isInvestor={true}
       isAllowedToInvest={false}
-      nextStateDate={new Date("10/3/2019")}
     />
   ));

@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, setDisplayName, withProps } from "recompose";
 
 import { actions } from "../../../../../modules/actions";
+import { selectIsAuthorized } from "../../../../../modules/auth/selectors";
 import { selectBookbuildingStats } from "../../../../../modules/bookbuilding-flow/selectors";
 import {
   calculateWhitelistingState,
@@ -29,6 +30,7 @@ export interface IExternalProps {
 interface IStateProps {
   pledgedAmount: number | null;
   investorsCount: number;
+  isAuthorized: boolean;
 }
 
 interface IWithProps {
@@ -140,10 +142,11 @@ const Whitelist = compose<IProps, IExternalProps>(
       return {
         pledgedAmount: stats ? stats.pledgedAmount : null,
         investorsCount: stats ? stats.investorsCount : 0,
+        isAuthorized: selectIsAuthorized(state.auth),
       };
     },
   }),
-  withProps<IWithProps, IStateProps & IExternalProps>(({ eto, investorsCount }) => {
+  withProps<IWithProps, IStateProps & IExternalProps>(({ eto, investorsCount, isAuthorized }) => {
     const bookbuildingLimitReached = eto.maxPledges - investorsCount <= 0;
 
     return {
@@ -153,6 +156,7 @@ const Whitelist = compose<IProps, IExternalProps>(
         bookbuildingLimitReached,
         investorsCount,
         investmentCalculatedValues: eto.investmentCalculatedValues,
+        isAuthorized,
       }),
     };
   }),

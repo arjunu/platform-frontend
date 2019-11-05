@@ -3,6 +3,7 @@ import { branch, compose, renderComponent, renderNothing, withProps } from "reco
 
 import { IBookBuildingStats } from "../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
 import { actions } from "../../../modules/actions";
+import { selectIsAuthorized } from "../../../modules/auth/selectors";
 import { selectBookbuildingStats } from "../../../modules/bookbuilding-flow/selectors";
 import {
   calculateWhitelistingState,
@@ -52,6 +53,7 @@ interface IStateProps {
   canEnableBookbuilding: boolean;
   onChainState: EETOStateOnChain | undefined;
   minOffsetPeriod: number;
+  isAuthorized: boolean;
 }
 
 interface IWithProps {
@@ -148,6 +150,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
         canEnableBookbuilding: selectCanEnableBookBuilding(state),
         onChainState: selectIssuerEtoOnChainState(state),
         minOffsetPeriod: selectIssuerEtoDateToWhitelistMinDuration(state),
+        isAuthorized: selectIsAuthorized(state.auth),
       };
     },
     dispatchToProps: dispatch => ({
@@ -182,7 +185,13 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
   }),
   branch<IStateProps>(props => !props.bookBuildingStats, renderComponent(WidgetLoading)),
   withProps<IWithProps, IStateProps>(
-    ({ bookBuildingStats, maxPledges, canEnableBookbuilding, bookBuildingEnabled }) => {
+    ({
+      bookBuildingStats,
+      maxPledges,
+      canEnableBookbuilding,
+      bookBuildingEnabled,
+      isAuthorized,
+    }) => {
       if (maxPledges === null || bookBuildingEnabled === undefined) {
         throw new InvariantError(
           "Max pledges and bookbuilding status should be defined at this point",
@@ -197,6 +206,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
           whitelistingIsActive: bookBuildingEnabled,
           bookbuildingLimitReached,
           investorsCount: bookBuildingStats.investorsCount,
+          isAuthorized,
         }),
       };
     },

@@ -1,26 +1,9 @@
-import { AppActionTypes, AppReducer } from "../../store";
+import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
 import { routingActions } from "../routing/actions";
 import { notificationActions } from "./actions";
-
-export enum ENotificationType {
-  INFO = "info",
-  WARNING = "warning",
-}
-
-export enum ENotificationText {
-  COMPLETE_REQUEST_NOTIFICATION = "completeRequestNotification",
-  COMPLETE_UPDATE_ACCOUNT = "completeUpdateAccount",
-  AUTH_SESSION_TIMEOUT = "authSessionTimeout",
-}
-
-export interface INotification {
-  id: number;
-  type: ENotificationType;
-  text: ENotificationText;
-  onClickAction: AppActionTypes;
-}
+import { ENotificationText, ENotificationType, INotification } from "./types";
 
 export interface INotificationsState {
   notifications: Array<INotification>;

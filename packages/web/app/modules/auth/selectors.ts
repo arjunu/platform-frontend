@@ -3,8 +3,13 @@ import { createSelector } from "reselect";
 import { EKycRequestStatus } from "../../lib/api/kyc/KycApi.interfaces";
 import { EUserType, IUser } from "../../lib/api/users/interfaces";
 import { IAppState } from "../../store";
+import { ECountries } from "../../utils/enums/countriesEnum";
 import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
-import { selectIsUserVerifiedOnBlockchain, selectKycRequestStatus } from "../kyc/selectors";
+import {
+  selectClientCountry,
+  selectIsUserVerifiedOnBlockchain,
+  selectKycRequestStatus,
+} from "../kyc/selectors";
 import { selectIsLightWallet } from "../web3/selectors";
 import { EAuthStatus, IAuthState } from "./reducer";
 
@@ -57,6 +62,13 @@ export const selectIsUserFullyVerified = (state: IAppState): boolean =>
 
 export const selectIsInvestor = (state: IAppState): boolean =>
   selectUserType(state) === EUserType.INVESTOR;
+
+export const selectIsUSInvestor = (state: IAppState): boolean => {
+  const isInvestor = selectIsInvestor(state);
+  const country = selectClientCountry(state);
+
+  return isInvestor && country === ECountries.UNITED_STATES;
+};
 
 export const selectIsIssuer = (state: IAppState): boolean =>
   selectUserType(state) === EUserType.ISSUER;

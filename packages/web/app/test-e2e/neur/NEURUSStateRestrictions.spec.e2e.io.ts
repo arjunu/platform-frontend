@@ -1,11 +1,4 @@
-import { startInvestmentFlow } from "../eto/utils";
-import {
-  etoFixtureAddressByName,
-  goToProfile,
-  goToWallet,
-  loginFixtureAccount,
-  tid,
-} from "../utils";
+import { goToProfile, goToWallet, loginFixtureAccount, tid } from "../utils";
 
 describe("NEUR US States restrictions", () => {
   it("should not allow to use neur in case user is from US, Alabama", () => {
@@ -27,13 +20,6 @@ describe("NEUR US States restrictions", () => {
       goToProfile();
 
       cy.get(tid("linked-bank-account-widget")).should("not.exist");
-
-      // assert neur is hidden during investment flow
-      const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
-
-      startInvestmentFlow(PUBLIC_ETO_ID);
-
-      cy.get(tid("investment-type.selector.NEUR")).should("not.exist");
     });
   });
 
@@ -57,13 +43,6 @@ describe("NEUR US States restrictions", () => {
       goToProfile();
 
       cy.get(tid("linked-bank-account-widget")).should("exist");
-
-      // assert neur is hidden during investment flow
-      const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
-
-      startInvestmentFlow(PUBLIC_ETO_ID);
-
-      cy.get(tid("investment-type.selector.NEUR")).should("exist");
     });
   });
 });

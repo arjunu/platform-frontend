@@ -18,12 +18,3 @@
   width: px-to-rem(162px);
   height: px-to-rem(162px);
 }
-
-.dropzone--disabled {
-  &,
-  &:disabled,
-  &:hover {
-    border: dashed 2px $neu-light-blue-grey-two;
-    cursor: not-allowed;
-  }
-}

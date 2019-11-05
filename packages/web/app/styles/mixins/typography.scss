@@ -127,6 +127,11 @@
   font-size: px-to-rem(12px);
 }
 
+@mixin font-medium-roboto {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(14px);
+}
+
 // Typography utils
 
 @mixin line-clamp ($lines, $line-height: false) {

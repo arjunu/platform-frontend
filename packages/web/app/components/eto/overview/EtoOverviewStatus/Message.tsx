@@ -15,14 +15,14 @@ const Message: React.FunctionComponent<IExternalProps & TDataTestId> = ({
   tick,
   title,
   summary,
+  children,
   "data-test-id": dataTestId,
 }) => (
   <section className={styles.widget} data-test-id={dataTestId}>
     {tick}
-    <header className={styles.message}>
-      {title && <h5>{title}</h5>}
-      {summary && <p>{summary}</p>}
-    </header>
+    {title && <h5 className={styles.title}>{title}</h5>}
+    {summary && <p className="mb-0">{summary}</p>}
+    {children}
   </section>
 );
 

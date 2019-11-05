@@ -13,6 +13,7 @@ const data = {
   bookBuildingStats: { investorsCount: 0, pledgedAmount: 0 },
   maxPledges: 500,
   minOffsetPeriod: 17345,
+  isAuthorized: true,
 };
 
 storiesOf("BookBuildingWidget", module)

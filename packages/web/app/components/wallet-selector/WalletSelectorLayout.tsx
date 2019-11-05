@@ -8,7 +8,7 @@ import { Col, Row } from "reactstrap";
 import { externalRoutes } from "../../config/externalRoutes";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { ELogoutReason } from "../../modules/auth/types";
-import { ENotificationText, ENotificationType } from "../../modules/notifications/reducer";
+import { ENotificationText, ENotificationType } from "../../modules/notifications/types";
 import { TLoginRouterState } from "../../modules/routing/types";
 import { appRoutes } from "../appRoutes";
 import { Button, ButtonLink, EButtonLayout } from "../shared/buttons";

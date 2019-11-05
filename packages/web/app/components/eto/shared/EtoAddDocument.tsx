@@ -1,11 +1,11 @@
 import * as cn from "classnames";
 import * as React from "react";
-import Dropzone, { DropFileEventHandler } from "react-dropzone";
 import { compose } from "redux";
 
 import { EEtoDocumentType } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
+import { DropFileEventHandler, Dropzone } from "../../shared/Dropzone";
 
 import * as styles from "./EtoAddDocument.module.scss";
 
@@ -20,6 +20,7 @@ interface IOwnProps {
   maxSize?: number;
   onDropRejected?: DropFileEventHandler;
   onDropAccepted?: DropFileEventHandler;
+  isUploading?: boolean;
 }
 //todo dropzone should accept all files dropped, not only the first one, see #2243
 export const ETOAddDocumentsComponent: React.FunctionComponent<IDispatchProps & IOwnProps> = ({
@@ -31,6 +32,7 @@ export const ETOAddDocumentsComponent: React.FunctionComponent<IDispatchProps & 
   maxSize,
   onDropRejected,
   onDropAccepted,
+  isUploading,
 }) => {
   const onDrop = (accepted: File[]) => accepted[0] && onDropFile(accepted[0], documentType);
 
@@ -42,12 +44,13 @@ export const ETOAddDocumentsComponent: React.FunctionComponent<IDispatchProps & 
       activeClassName={styles.invisible}
       acceptClassName={styles.invisible}
       rejectClassName={styles.invisible}
-      disabledClassName={cn(styles.dropzoneDisabled, styles.invisible)}
       className={cn(className, styles.dropzone, styles.invisible)}
       disabled={disabled}
       maxSize={maxSize}
       onDropRejected={onDropRejected}
       onDropAccepted={onDropAccepted}
+      isUploading={isUploading}
+      name={documentType}
     >
       {children}
     </Dropzone>

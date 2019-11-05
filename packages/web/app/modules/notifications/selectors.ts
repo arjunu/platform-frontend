@@ -11,7 +11,8 @@ import {
   selectUserType,
 } from "../auth/selectors";
 import { selectKycLoading, selectKycRequestStatus } from "../kyc/selectors";
-import { INotification, settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
+import { settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
+import { INotification } from "./types";
 
 export const selectNotifications = (state: IAppState): ReadonlyArray<INotification> =>
   state.notifications.notifications;

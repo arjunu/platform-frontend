@@ -37,8 +37,8 @@ export const kycActions = {
    */
 
   // data
-  kycSubmitIndividualData: (data: IKycIndividualData) =>
-    createAction("KYC_SUBMIT_INDIVIDUAL_FORM", { data }),
+  kycSubmitIndividualData: (data: IKycIndividualData, skipContinue = false) =>
+    createAction("KYC_SUBMIT_INDIVIDUAL_FORM", { data, skipContinue }),
 
   kycLoadIndividualData: () => createSimpleAction("KYC_LOAD_INDIVIDUAL_DATA"),
 

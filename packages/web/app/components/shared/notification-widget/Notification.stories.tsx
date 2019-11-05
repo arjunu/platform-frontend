@@ -2,7 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { ENotificationText, ENotificationType } from "../../../modules/notifications/reducer";
+import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { Notification } from "./Notification";
 
 storiesOf("Core|Atoms/Notification", module)

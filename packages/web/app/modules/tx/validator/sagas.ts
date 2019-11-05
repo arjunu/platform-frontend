@@ -21,6 +21,7 @@ import { generateInvestmentTransaction } from "../transactions/investment/sagas"
 import { selectMaximumInvestment } from "../transactions/investment/selectors";
 import { ETxSenderType } from "../types";
 import { STIPEND_ELIGIBLE_WALLETS } from "./../../../lib/web3/constants";
+import { isGaslessTxEnabled } from "./../../../utils/isGaslessTxEnabled";
 import { EValidationState } from "./reducer";
 import { selectInvestmentFLow } from "./selectors";
 import { txValidateWithdraw } from "./withdraw/sagas";
@@ -86,7 +87,7 @@ export function* validateGas({ apiUserService }: TGlobalDependencies, txDetails:
 
   if (compareBigNumbers(txDetails.value, valueUlps) > 0) {
     const walletType = yield select((state: IAppState) => selectWalletType(state.web3));
-    if (STIPEND_ELIGIBLE_WALLETS.includes(walletType)) {
+    if (isGaslessTxEnabled && STIPEND_ELIGIBLE_WALLETS.includes(walletType)) {
       // @SEE https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2015.md
       // @SEE https://github.com/MetaMask/metamask-extension/issues/5101
       const { gasStipend } = yield apiUserService.getGasStipend(txDetails);

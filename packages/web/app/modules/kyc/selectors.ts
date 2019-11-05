@@ -104,7 +104,16 @@ export const selectBusinessClientName = (state: IAppState) =>
   state.kyc.businessData && state.kyc.businessData.name;
 
 export const selectClientName = (state: IAppState) =>
-  (state.kyc.businessData && state.kyc.businessData.name) || selectIndividualClientName(state);
+  selectBusinessClientName(state) || selectIndividualClientName(state);
+
+export const selectIndividualClientCountry = ({ kyc }: IAppState) =>
+  kyc.individualData && kyc.individualData.country;
+
+export const selectBusinessClientCountry = ({ kyc }: IAppState) =>
+  kyc.businessData && kyc.businessData.country;
+
+export const selectClientCountry = (state: IAppState) =>
+  selectIndividualClientCountry(state) || selectBusinessClientCountry(state);
 
 export const selectClientJurisdiction = createSelector(
   selectKyc,

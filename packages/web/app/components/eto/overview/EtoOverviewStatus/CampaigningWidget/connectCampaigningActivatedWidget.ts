@@ -90,6 +90,7 @@ const connectCampaigningActivatedWidget = (
         investorsLimit,
         investorsCount,
         investmentCalculatedValues,
+        isAuthorized,
       }) => {
         const bookbuildingLimitReached =
           investorsCount !== undefined && investorsLimit - investorsCount === 0;
@@ -100,6 +101,7 @@ const connectCampaigningActivatedWidget = (
             bookbuildingLimitReached,
             investorsCount,
             investmentCalculatedValues,
+            isAuthorized,
           }),
           maxPledge: investmentCalculatedValues && investmentCalculatedValues.effectiveMaxTicket,
           countdownDate: nextStateStartDate,

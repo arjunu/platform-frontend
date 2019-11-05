@@ -46,6 +46,19 @@ export const kycInvidualForm: TFormFixture = {
   },
 };
 
+export const kycInvidualFormUS: TFormFixture = {
+  ...kycPersonBaseForm,
+  ...highIncome,
+  nationality: {
+    value: "US",
+    type: "select",
+  },
+  isAccreditedUsCitizen: {
+    value: "true",
+    type: "select",
+  },
+};
+
 export const kycLegalRepForm: TFormFixture = {
   ...kycPersonBaseForm,
   "kyc-company-legal-representative-save": {

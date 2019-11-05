@@ -3,10 +3,14 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
+import {
+  getCurrentInvestmentProgressPercentage,
+  getInvestmentCalculatedPercentage,
+  isEtoSoftCapReached,
+} from "../../../modules/eto/utils";
 import { TTranslatedString } from "../../../types";
 import { normalize } from "../../../utils/NumberUtils";
 import { PercentageIndicatorBar, TProgressBarProps } from "../../shared/PercentageIndicatorBar";
-import { getCurrentInvestmentProgressPercentage, getInvestmentCalculatedPercentage } from "./utils";
 
 import * as styles from "./InvestmentProgress.module.scss";
 
@@ -42,6 +46,7 @@ const Label = React.forwardRef<SVGTextElement, TLabelExternalProps>(
 const InvestmentProgress: React.FunctionComponent<TProps> = ({ eto }) => {
   const calculatedPercentage = getInvestmentCalculatedPercentage(eto);
   const currentProgressPercentage = getCurrentInvestmentProgressPercentage(eto);
+  const isSoftCapReached = isEtoSoftCapReached(eto);
 
   const getNormalizedValue = normalize({ min: 0, max: calculatedPercentage });
 
@@ -91,7 +96,7 @@ const InvestmentProgress: React.FunctionComponent<TProps> = ({ eto }) => {
       <Label
         ref={labelRef}
         label={
-          currentProgressPercentage >= 100 ? (
+          isSoftCapReached ? (
             <FormattedMessage id="shared-component.eto-overview.invest.min-amount-reached" />
           ) : (
             <FormattedMessage id="shared-component.eto-overview.invest.min-amount" />

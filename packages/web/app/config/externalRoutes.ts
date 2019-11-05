@@ -21,4 +21,7 @@ export const externalRoutes = {
   privacyPolicy: "https://neufund.org/privacy-policy",
   ipfsDocument: "https://ipfs.io/ipfs/:ipfsHash",
   icoMonitorStats: "https://icomonitor.io/#/stats/:etoId",
+  accreditationHelp: "https://www.sec.gov/fast-answers/answers-accredhtm.html",
+  accreditationHelpSecond:
+    "https://www.ecfr.gov/cgi-bin/retrieveECFR?gp=&SID=8edfd12967d69c024485029d968ee737&r=SECTION&n=17y3.0.1.1.12.0.46.176",
 };

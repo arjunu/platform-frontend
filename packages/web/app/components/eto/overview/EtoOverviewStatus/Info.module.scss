@@ -1,0 +1,11 @@
+@import "../../../shared/Panel.module";
+
+.grey-info {
+  @include remove-panel-padding($narrow: true);
+  @include font-headline-small-roboto;
+
+  background: $neu-pale-grey-three;
+  color: $neu-grey-blue;
+  padding: .8em;
+  text-align: center;
+}

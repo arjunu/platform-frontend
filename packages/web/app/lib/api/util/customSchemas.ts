@@ -68,8 +68,6 @@ export const foundingDate = date.test(
   },
 );
 
-export const citizen = Yup.bool();
-
 export const countryCode = Yup.string();
 
 export const RESTRICTED_COUNTRIES = [

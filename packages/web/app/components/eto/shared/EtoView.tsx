@@ -2,6 +2,7 @@ import * as cn from "classnames";
 import { some } from "lodash";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
+import { match as routerMatch, Route, RouteComponentProps, withRouter } from "react-router";
 import { branch, compose, renderComponent } from "recompose";
 
 import { ETHEREUM_ZERO_ADDRESS } from "../../../config/constants";
@@ -18,6 +19,7 @@ import {
 } from "../../../modules/eto/types";
 import { isOnChain } from "../../../modules/eto/utils";
 import { appConnect } from "../../../store";
+import { SwitchConnected } from "../../../utils/connectedRouting";
 import { withMetaTags } from "../../../utils/withMetaTags.unsafe";
 import { Container, EColumnSpan, EContainerType } from "../../layouts/Container";
 import { WidgetGrid } from "../../layouts/WidgetGrid";
@@ -57,6 +59,13 @@ interface IProps {
 
 interface IEtoViewTabsState {
   isIssuer: boolean;
+}
+
+interface IEtoViewTabsExternalProps {
+  match: routerMatch<unknown>;
+  isUserFullyVerified: boolean;
+  publicView: boolean;
+  eto: TEtoWithCompanyAndContract;
 }
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());
@@ -167,38 +176,55 @@ const EtoViewCampaignOverview: React.FunctionComponent<IProps> = ({ eto, isUserF
   );
 };
 
-const EtoViewTabsLayout: React.FunctionComponent<IProps & IEtoViewTabsState> = ({
+const EtoViewTabsLayout: React.FunctionComponent<IEtoViewTabsState & IEtoViewTabsExternalProps> = ({
   eto,
   publicView,
   isUserFullyVerified,
+  match,
 }) => (
-  <Container columnSpan={EColumnSpan.THREE_COL}>
+  <Container id="eto-view-tabs" columnSpan={EColumnSpan.THREE_COL}>
     <Tabs
       className="mb-3"
       layoutSize="large"
       layoutOrnament={false}
       data-test-id="eto.public-view.campaign-overview"
     >
-      <TabContent tab={<FormattedMessage id="eto.public-view.campaign-overview" />}>
-        <WidgetGrid className={styles.etoLayout} data-test-id="eto.public-view">
-          <EtoViewCampaignOverview
-            eto={eto}
-            isUserFullyVerified={isUserFullyVerified}
-            publicView={publicView}
-          />
-        </WidgetGrid>
-      </TabContent>
+      <TabContent
+        tab={<FormattedMessage id="eto.public-view.campaign-overview" />}
+        routerPath={match.url}
+      />
       <TabContent
         tab={<FormattedMessage id="eto.public-view.fundraising-statistics" />}
         data-test-id="eto.public-view.fundraising-statistics"
-      >
-        <EtoViewFundraisingStatistics etoId={eto.etoId} />
-      </TabContent>
+        routerPath={`${match.url}/stats`}
+      />
     </Tabs>
+    <SwitchConnected>
+      <Route
+        path={match.path}
+        render={() => (
+          <WidgetGrid className={styles.etoLayout} data-test-id="eto.public-view">
+            <EtoViewCampaignOverview
+              eto={eto}
+              isUserFullyVerified={isUserFullyVerified}
+              publicView={publicView}
+            />
+          </WidgetGrid>
+        )}
+        exact
+      />
+      <Route
+        path={`${match.path}/stats`}
+        render={() => <EtoViewFundraisingStatistics etoId={eto.etoId} />}
+      />
+    </SwitchConnected>
   </Container>
 );
 
-const EtoViewTabs = compose<IProps & IEtoViewTabsState, IProps>(
+const EtoViewTabs = compose<
+  IEtoViewTabsExternalProps & IEtoViewTabsState,
+  IEtoViewTabsExternalProps
+>(
   appConnect<IEtoViewTabsState, {}, IProps>({
     stateToProps: state => ({
       isIssuer: selectIsIssuer(state),
@@ -235,10 +261,11 @@ const EtoViewTabs = compose<IProps & IEtoViewTabsState, IProps>(
   ),
 )(EtoViewCampaignOverview);
 
-const EtoViewLayout: React.FunctionComponent<IProps> = ({
+const EtoViewLayout: React.FunctionComponent<IProps & RouteComponentProps<unknown>> = ({
   eto,
   publicView,
   isUserFullyVerified,
+  match,
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
 
@@ -265,14 +292,19 @@ const EtoViewLayout: React.FunctionComponent<IProps> = ({
           }}
           tags={categories}
         />
-        <EtoOverviewStatus eto={eto} publicView={publicView} isEmbedded={false} />
-        <EtoViewTabs eto={eto} publicView={publicView} isUserFullyVerified={isUserFullyVerified} />
+        <EtoOverviewStatus eto={eto} publicView={publicView} isEmbedded={false} url={match.url} />
+        <EtoViewTabs
+          match={match}
+          eto={eto}
+          publicView={publicView}
+          isUserFullyVerified={isUserFullyVerified}
+        />
       </WidgetGrid>
     </FieldSchemaProvider>
   );
 };
 
-const EtoView = compose<IProps, IProps>(
+const EtoView = compose<IProps & RouteComponentProps<unknown>, IProps>(
   withMetaTags<IProps>(({ eto }, intl) => {
     const requiredDataPresent =
       eto.company.brandName && eto.equityTokenName && eto.equityTokenSymbol;
@@ -283,6 +315,7 @@ const EtoView = compose<IProps, IProps>(
         : intl.formatIntlMessage("menu.eto-page"),
     };
   }),
+  withRouter,
 )(EtoViewLayout);
 
 export { EtoView, EtoViewLayout };

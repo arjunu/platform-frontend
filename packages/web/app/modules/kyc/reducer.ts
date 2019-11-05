@@ -60,6 +60,7 @@ export interface IKycState {
   // api bank details
   bankAccount: TBankAccount | undefined;
   quintessenceBankAccount: KycBankQuintessenceBankAccount | undefined;
+  kycSaving: boolean | undefined;
 }
 
 const kycInitialState: IKycState = {
@@ -73,6 +74,7 @@ const kycInitialState: IKycState = {
   claims: undefined,
   bankAccount: undefined,
   quintessenceBankAccount: undefined,
+  kycSaving: undefined,
 };
 
 function appendIfExists<T>(array: ReadonlyArray<T>, item: T | undefined): ReadonlyArray<T> {
@@ -107,8 +109,11 @@ export const kycReducer: AppReducer<IKycState> = (
 ): DeepReadonly<IKycState> => {
   switch (action.type) {
     // individual
-    case "KYC_UPDATE_INDIVIDUAL_REQUEST_STATE":
+    case "KYC_SUBMIT_INDIVIDUAL_FORM":
+      return { ...state, kycSaving: action.payload.skipContinue };
     case "KYC_UPDATE_INDIVIDUAL_DATA":
+      return { ...state, kycSaving: false, ...omitUndefined(action.payload) };
+    case "KYC_UPDATE_INDIVIDUAL_REQUEST_STATE":
     case "KYC_UPDATE_INDIVIDUAL_FILES_INFO":
       return { ...state, ...omitUndefined(action.payload) };
     case "KYC_UPDATE_INDIVIDUAL_FILE_INFO":

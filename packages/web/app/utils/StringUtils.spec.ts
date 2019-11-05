@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { extractNumber, isExternalUrl } from "./StringUtils";
+import { extractNumber, getHostname, isExternalUrl } from "./StringUtils";
 
 describe("StringUtils", () => {
   describe("extractNumber", () => {
@@ -21,5 +21,18 @@ describe("StringUtils", () => {
     it("should return false for local url", () => {
       expect(isExternalUrl("/register")).to.be.false;
     });
+  });
+});
+
+describe("getHostname", () => {
+  it("should return hostname from link", () => {
+    expect(getHostname("https://www.sec.gov/fast-answers/answers-accredhtm.html")).to.eq(
+      "www.sec.gov",
+    );
+    expect(
+      getHostname(
+        "https://www.ecfr.gov/cgi-bin/retrieveECFR?gp=&SID=8edfd12967d69c024485029d968ee737&r=SECTION&n=17y3.0.1.1.12.0.46.176",
+      ),
+    ).to.eq("www.ecfr.gov");
   });
 });

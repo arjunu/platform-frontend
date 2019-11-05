@@ -3,11 +3,10 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { CircleButtonIcon, CircleButtonWarning } from "./buttons/RoundedButton";
-import { InlineIcon } from "./icons/InlineIcon";
+import { ELoadingIndicator, LoadingIndicator } from "./loading-indicator/LoadingIndicator";
 
 import * as remove from "../../assets/img/inline_icons/delete.svg";
 import * as download from "../../assets/img/inline_icons/download.svg";
-import * as spinner from "../../assets/img/inline_icons/loading_spinner.svg";
 import * as styles from "./Document.module.scss";
 
 interface IDocumentProps {
@@ -88,7 +87,7 @@ export const DocumentTile: React.FunctionComponent<IDocumentProps & IDocumentTil
     <div className={cn(styles.tile, className)}>
       {busy && (
         <div className={styles.documentBusy}>
-          <InlineIcon svgIcon={spinner} className={styles.spinner} />
+          <LoadingIndicator type={ELoadingIndicator.SPINNER_SMALL} />
           {onlyDownload ? (
             <FormattedMessage id="documents.generating" />
           ) : (

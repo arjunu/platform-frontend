@@ -157,11 +157,19 @@ function* submitIndividualData(
 ): Iterator<any> {
   if (action.type !== "KYC_SUBMIT_INDIVIDUAL_FORM") return;
   try {
-    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putIndividualData(
-      action.payload.data,
+    const { data, skipContinue } = action.payload;
+    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putIndividualData(data);
+
+    yield put(
+      actions.kyc.kycUpdateIndividualData(false, {
+        ...result.body,
+        isAccreditedUsCitizen: data.isAccreditedUsCitizen,
+      }),
     );
-    yield put(actions.kyc.kycUpdateIndividualData(false, result.body));
-    yield put(actions.routing.goToKYCIndividualDocumentVerification());
+
+    if (!skipContinue) {
+      yield put(actions.routing.goToKYCIndividualDocumentVerification());
+    }
   } catch (e) {
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
 

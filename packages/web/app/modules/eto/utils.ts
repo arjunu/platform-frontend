@@ -111,6 +111,20 @@ export const isComingSoon = (state: EEtoState): boolean =>
   EEtoState.PREVIEW === state || EEtoState.PENDING === state;
 
 /**
+ * Check if eto is active (either presale or public sale)
+ */
+export const isFundraisingActive = (eto: TEtoWithCompanyAndContract): boolean => {
+  if (isOnChain(eto)) {
+    return (
+      eto.contract.timedState === EETOStateOnChain.Whitelist ||
+      eto.contract.timedState === EETOStateOnChain.Public
+    );
+  }
+
+  return false;
+};
+
+/**
  * Calculates sub state of the ETO
  * Should not be connected with issuer or investor states
  * @todo Remove `isEligibleToPreEto` as it's related to investor
@@ -177,4 +191,25 @@ export const getEtoSubState = ({
       return undefined;
     }
   }
+};
+
+export const getInvestmentCalculatedPercentage = (eto: TEtoSpecsData) =>
+  (eto.newSharesToIssue / eto.minimumNewSharesToIssue) * 100;
+
+export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndContract) => {
+  const totalTokensInt = eto.contract!.totalInvestment.totalTokensInt;
+
+  return (
+    (parseInt(totalTokensInt, 10) / (eto.minimumNewSharesToIssue * eto.equityTokensPerShare)) * 100
+  );
+};
+
+export const isEtoSoftCapReached = (eto: TEtoWithCompanyAndContract) => {
+  if (isOnChain(eto)) {
+    const currentProgress = getCurrentInvestmentProgressPercentage(eto);
+
+    return currentProgress >= 100;
+  }
+
+  return false;
 };

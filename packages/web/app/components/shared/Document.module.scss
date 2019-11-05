@@ -1,15 +1,5 @@
 $loading-background: rgba($neu-charcoal-grey, .8);
 
-@keyframes rotate {
-  from {
-    transform: rotateZ(360deg);
-  }
-
-  to {
-    transform: rotateZ(0deg);
-  }
-}
-
 .document {
   &:global(.doc),
   &:global(.docx) {
@@ -98,27 +88,6 @@ $loading-background: rgba($neu-charcoal-grey, .8);
   align-items: center;
   z-index: 10;
   border-radius: 3px;
-}
-
-.spinner {
-  animation: rotate 7s linear infinite;
-  margin: px-to-rem(8px);
-
-  svg {
-    width: 14px;
-    height: 14px;
-    color: inherit;
-    fill: currentColor;
-
-    // temporary solution
-    path,
-    polygon,
-    g {
-      fill: currentColor;
-      stroke-width: 2;
-      width: 2px;
-    }
-  }
 }
 
 .extension {

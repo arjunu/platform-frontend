@@ -5,11 +5,14 @@ import { Col, Row } from "reactstrap";
 import { compose } from "redux";
 
 import {
+  EKycRequestType,
   IKycIndividualData,
-  KycIndividualDataSchemaRequired,
+  KycIndividualDataSchemaRequiredWithAdditionalData,
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
+import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { appConnect } from "../../../store";
+import { ECountries } from "../../../utils/enums/countriesEnum";
 import { injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
@@ -26,9 +29,12 @@ import {
   NONE_KEY,
   unboolify,
 } from "../../shared/forms";
+import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
+import { Notification } from "../../shared/notification-widget/Notification";
 import { Tooltip } from "../../shared/tooltips";
 import { KycPanel } from "../KycPanel";
 import { kycRoutes } from "../routes";
+import { KYCAddDocuments } from "../shared/AddDocuments";
 import { KycDisclaimer } from "../shared/KycDisclaimer";
 
 export const personalSteps = [
@@ -50,7 +56,7 @@ export const personalSteps = [
   },
 ];
 
-const PEP_VALUES = {
+const GENERIC_SHORT_ANSWERS = {
   [NONE_KEY]: <FormattedMessage id="form.select.please-select" />,
   [BOOL_TRUE_KEY]: <FormattedMessage id="form.select.yes-i-am" />,
   [BOOL_FALSE_KEY]: <FormattedMessage id="form.select.no-i-am-not" />,
@@ -65,17 +71,21 @@ const HIGH_INCOME_VALUES = {
 interface IStateProps {
   currentValues?: IKycIndividualData;
   loadingData: boolean;
+  isSavingForm: boolean;
 }
 
 interface IDispatchProps {
-  submitForm: (values: IKycIndividualData) => void;
+  submitForm: (values: IKycIndividualData, skipContinue?: boolean) => void;
 }
 
 type IProps = IStateProps & IDispatchProps & FormikProps<IKycIndividualData>;
 
-const KYCForm = injectIntlHelpers<IProps & IKycIndividualData>(
+const KYCForm = injectIntlHelpers<IProps & IKycIndividualData & IDispatchProps>(
   ({ intl: { formatIntlMessage }, ...props }) => (
     <FormDeprecated>
+      <h5 className="mb-3">
+        <FormattedMessage id="kyc.personal.personal-information" />
+      </h5>
       <FormField
         label={formatIntlMessage("form.label.first-name")}
         name="firstName"
@@ -91,35 +101,6 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData>(
         name="birthDate"
         data-test-id="kyc-personal-start-birth-date"
       />
-      <h5 className="my-5">
-        <FormattedMessage tagName="span" id="kyc.personal.current.address" />
-      </h5>
-      <FormField
-        label={formatIntlMessage("form.label.street-and-number")}
-        name="street"
-        data-test-id="kyc-personal-start-street"
-      />
-      <Row>
-        <Col xs={12} md={6} lg={8}>
-          <FormField
-            label={formatIntlMessage("form.label.city")}
-            name="city"
-            data-test-id="kyc-personal-start-city"
-          />
-        </Col>
-        <Col xs={12} md={6} lg={4}>
-          <FormField
-            label={formatIntlMessage("form.label.zip-code")}
-            name="zipCode"
-            data-test-id="kyc-personal-start-zip-code"
-          />
-        </Col>
-      </Row>
-      <FormSelectCountryField
-        label={formatIntlMessage("form.label.country")}
-        name="country"
-        data-test-id="kyc-personal-start-country"
-      />
       <FormSelectCountryField
         label={formatIntlMessage("form.label.place-of-birth")}
         name="placeOfBirth"
@@ -132,7 +113,7 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData>(
       />
       <br />
       <FormSelectField
-        values={PEP_VALUES}
+        values={GENERIC_SHORT_ANSWERS}
         label={
           <>
             <FormattedMessage id={"kyc.personal.politically-exposed.question"} />
@@ -165,6 +146,83 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData>(
           data-test-id="kyc-personal-start-has-high-income"
         />
       )}
+      <h5 className="mb-3 mt-5">
+        <FormattedMessage id="kyc.personal.current.address" />
+      </h5>
+      <FormSelectCountryField
+        label={formatIntlMessage("form.label.country")}
+        name="country"
+        data-test-id="kyc-personal-start-country"
+      />
+      <FormField
+        label={formatIntlMessage("form.label.street-and-number")}
+        name="street"
+        data-test-id="kyc-personal-start-street"
+      />
+      <Row>
+        <Col xs={12} md={6} lg={8}>
+          <FormField
+            label={formatIntlMessage("form.label.city")}
+            name="city"
+            data-test-id="kyc-personal-start-city"
+          />
+        </Col>
+        <Col xs={12} md={6} lg={4}>
+          <FormField
+            label={formatIntlMessage("form.label.zip-code")}
+            name="zipCode"
+            data-test-id="kyc-personal-start-zip-code"
+          />
+        </Col>
+      </Row>
+      {props.values.country === ECountries.UNITED_STATES && (
+        <FormSelectStateField
+          label={formatIntlMessage("form.label.us-state")}
+          name="usState"
+          data-test-id="kyc-personal-start-us-state"
+        />
+      )}
+      {[props.values.country, props.values.nationality].includes(ECountries.UNITED_STATES) && (
+        <>
+          <h5 className="mb-3 mt-5">
+            <FormattedMessage id="kyc.personal.accreditation-status" />
+          </h5>
+          <FormSelectField
+            values={GENERIC_SHORT_ANSWERS}
+            label={
+              <>
+                <FormattedMessage id={"kyc.personal.accredited-us-citizen.question"} />
+                <Tooltip
+                  content={
+                    <FormattedHTMLMessage
+                      tagName="span"
+                      id="kyc.personal.accredited-us-citizen.tooltip"
+                    />
+                  }
+                />
+              </>
+            }
+            name="isAccreditedUsCitizen"
+            data-test-id="kyc-personal-start-is-accredited-us-citizen"
+          />
+
+          {props.values.isAccreditedUsCitizen === BOOL_FALSE_KEY && (
+            <Notification
+              text={ENotificationText.NOT_ACCREDITED_INVESTOR}
+              type={ENotificationType.WARNING}
+            />
+          )}
+          {props.values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
+            <KYCAddDocuments
+              uploadType={EKycRequestType.US_ACCREDITATION}
+              /* TODO: Remove in future this is temporary solution for uploading documents
+                which is not working without saved form first */
+              onEnter={actions.kyc.kycSubmitIndividualData(boolify(props.values), true)}
+              isLoading={props.isSavingForm}
+            />
+          )}
+        </>
+      )}
       <div className="p-4 text-center">
         <Button
           type="submit"
@@ -179,8 +237,9 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData>(
 );
 
 const KYCEnhancedForm = withFormik<IStateProps & IDispatchProps, IKycIndividualData>({
-  validationSchema: KycIndividualDataSchemaRequired,
-  isInitialValid: (props: any) => KycIndividualDataSchemaRequired.isValidSync(props.currentValues),
+  validationSchema: KycIndividualDataSchemaRequiredWithAdditionalData,
+  isInitialValid: (props: any) =>
+    KycIndividualDataSchemaRequiredWithAdditionalData.isValidSync(props.currentValues),
   mapPropsToValues: props => unboolify(props.currentValues as IKycIndividualData),
   enableReinitialize: true,
   handleSubmit: (values, props) => {
@@ -207,10 +266,12 @@ export const KYCPersonalStart = compose<React.FunctionComponent>(
     stateToProps: state => ({
       currentValues: state.kyc.individualData,
       loadingData: !!state.kyc.individualDataLoading,
+      // TODO: Remove after getting rid of upload document hack
+      isSavingForm: !!state.kyc.kycSaving,
     }),
     dispatchToProps: dispatch => ({
-      submitForm: (values: IKycIndividualData) =>
-        dispatch(actions.kyc.kycSubmitIndividualData(values)),
+      submitForm: (values: IKycIndividualData, skipContinue = false) =>
+        dispatch(actions.kyc.kycSubmitIndividualData(values, skipContinue)),
     }),
   }),
   onEnterAction({
