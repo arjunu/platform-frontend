@@ -24,8 +24,9 @@ export const nomineeFlowActions = {
   loadNomineeTaskData: createActionFactory("NOMINEE_FLOW_LOAD_NOMINEE_TASK_DATA"),
   storeActiveNomineeTask: createActionFactory(
     "NOMINEE_FLOW_SET_NOMINEE_TASKS_STATUS",
-    (activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask) => ({
+    (activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask, activeTaskData: unknown) => ({
       activeNomineeTask,
+      activeTaskData,
     }),
   ),
   startNomineeRequestsWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_REQUESTS_WATCHER"),

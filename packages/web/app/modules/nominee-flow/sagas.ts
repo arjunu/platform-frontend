@@ -2,6 +2,7 @@ import { isEmpty } from "lodash/fp";
 import { delay, Effect } from "redux-saga";
 import { all, fork, put, select, take } from "redux-saga/effects";
 
+import { getNomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/utils";
 import {
   EEtoNomineeActiveEtoNotifications,
   ENomineeRequestErrorNotifications,
@@ -34,6 +35,8 @@ import {
   selectNomineeActiveEtoPreviewCode,
   selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
+  selectNomineeRequests,
+  selectNomineeStateError,
   selectNomineeTasksStatus,
 } from "./selectors";
 import {
@@ -48,6 +51,7 @@ import {
   getNomineeTaskStep,
   nomineeApiDataToNomineeRequests,
   nomineeRequestResponseToRequestStatus,
+  takeLatestNomineeRequest,
 } from "./utils";
 
 export function* initNomineeEtoSpecificTasks(
@@ -144,6 +148,7 @@ export function* initNomineeTasks({
       }
 
       nomineeTasksStatus.byPreviewCode = yield all(
+        //todo we need this all the time, write a utils fn for this
         Object.keys(result.nomineeEtos).reduce(
           (acc: { [key: string]: Iterator<Effect> }, previewCode: string) => {
             acc[previewCode] = neuCall(
@@ -192,12 +197,40 @@ export function* nomineeDashboardView({ logger }: TGlobalDependencies): Iterator
       selectStepData,
     );
 
+    const taskSpecificData = yield neuCall(getTaskSpecificData, activeNomineeTask);
+
     yield put(actions.nomineeFlow.startNomineeTaskWatcher());
-    yield put(actions.nomineeFlow.storeActiveNomineeTask(activeNomineeTask));
+    yield put(actions.nomineeFlow.storeActiveNomineeTask(activeNomineeTask, taskSpecificData));
   } catch (e) {
     logger.error(e);
     //TODO save error to state and show and error UI
   }
+}
+
+export function* getTaskSpecificData(
+  _: TGlobalDependencies,
+  activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask,
+): Iterator<any> {
+  const taskSpecificData: Partial<{ [key in ENomineeTask]: unknown }> = {};
+
+  if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
+    yield neuCall(loadNomineeRequests); //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
+
+    const data = yield all({
+      nomineeEto: select(selectActiveNomineeEto),
+      nomineeRequest: select(selectNomineeRequests),
+      nomineeRequestError: select(selectNomineeStateError),
+    });
+    const dataConverted = {
+      ...data,
+      nomineeRequest: takeLatestNomineeRequest(data.nomineeRequest),
+    };
+
+    taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = {
+      nextState: yield getNomineeRequestComponentState(dataConverted),
+    };
+  }
+  return taskSpecificData;
 }
 
 export function* nomineeEtoView({ logger }: TGlobalDependencies): Iterator<any> {

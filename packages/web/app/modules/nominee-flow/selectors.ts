@@ -6,7 +6,7 @@ import { IAppState } from "../../store";
 import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
 import { TEtoWithCompanyAndContract, TOfferingAgreementsStatus } from "../eto/types";
 import { selectRouter } from "../routing/selectors";
-import { ENomineeRequestStatus, TNomineeRequestStorage } from "./types";
+import { ENomineeRequestStatus, ENomineeTask, TNomineeRequestStorage } from "./types";
 import { getActiveEtoPreviewCodeFromQueryString } from "./utils";
 
 export const selectNomineeFlow = (state: IAppState) => state.nomineeFlow;
@@ -16,6 +16,16 @@ export const selectNomineeStateIsLoading = (state: IAppState) => state.nomineeFl
 export const selectNomineeDashboardIsReady = (state: IAppState) => state.nomineeFlow.ready;
 
 export const selectNomineeStateError = (state: IAppState) => state.nomineeFlow.error;
+
+export const selectActiveTaskData = (state: IAppState) => state.nomineeFlow.activeTaskData;
+
+export const selectLinkToIssuerNextState = (state: IAppState) => {
+  const activeTaskData = selectActiveTaskData(state);
+  return (
+    activeTaskData[ENomineeTask.LINK_TO_ISSUER] &&
+    activeTaskData[ENomineeTask.LINK_TO_ISSUER].nextState
+  );
+};
 
 export const selectNomineeRequests = (state: IAppState): TNomineeRequestStorage =>
   state.nomineeFlow.nomineeRequests;

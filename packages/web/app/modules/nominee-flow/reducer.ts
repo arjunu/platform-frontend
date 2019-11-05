@@ -18,6 +18,11 @@ export type TNomineeTasksStatus = { [key in ENomineeTask]: ENomineeTaskStatus } 
   byPreviewCode: ENomineeEtoSpecificTasksStatus;
 };
 
+export type TActiveTaskData = Partial<{ [key in ENomineeTask]: any }> & {
+  //todo fix typings
+  byPreviewCode: { [previewCode: string]: Partial<{ [key in ENomineeEtoSpecificTask]: any }> }; //todo fix typings
+};
+
 export type TNomineeEtosAdditionalData = {
   investmentAgreementUrl: string | undefined;
   offeringAgreementsStatus: TOfferingAgreementsStatus;
@@ -29,6 +34,7 @@ export type TNomineeFlowState = {
   loading: boolean;
   error: ENomineeRequestError | string; //TODO ENomineeRequestError is for backward compat, this has to be fixed
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask;
+  activeTaskData: TActiveTaskData;
   activeNomineeEtoPreviewCode: string | undefined;
   nomineeRequests: TNomineeRequestStorage;
   nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContractReadonly };
@@ -41,6 +47,9 @@ const nomineeFlowInitialState: TNomineeFlowState = {
   loading: false,
   error: ENomineeRequestError.NONE,
   activeNomineeTask: ENomineeTask.NONE,
+  activeTaskData: {
+    byPreviewCode: {},
+  },
   activeNomineeEtoPreviewCode: undefined,
   nomineeRequests: {},
   nomineeEtos: {},
@@ -76,6 +85,10 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
         loading: false,
         ready: true,
         activeNomineeTask: action.payload.activeNomineeTask,
+        activeTaskData: {
+          ...state.activeTaskData,
+          ...action.payload.activeTaskData,
+        },
       };
     case actions.nomineeFlow.setNomineeRequests.getType():
       return {
