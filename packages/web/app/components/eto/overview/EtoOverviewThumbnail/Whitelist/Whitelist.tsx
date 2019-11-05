@@ -142,7 +142,7 @@ const Whitelist = compose<IProps, IExternalProps>(
       return {
         pledgedAmount: stats ? stats.pledgedAmount : null,
         investorsCount: stats ? stats.investorsCount : 0,
-        isAuthorized: selectIsAuthorized(state.auth),
+        isAuthorized: selectIsAuthorized(state),
       };
     },
   }),

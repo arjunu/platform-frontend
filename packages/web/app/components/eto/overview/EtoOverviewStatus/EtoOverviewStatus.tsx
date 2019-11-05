@@ -31,7 +31,7 @@ interface IStatusOfEtoProps {
 }
 
 interface IInfoProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   url: string;
 }
 

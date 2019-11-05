@@ -65,7 +65,7 @@ interface IEtoViewTabsExternalProps {
   match: routerMatch<unknown>;
   isUserFullyVerified: boolean;
   publicView: boolean;
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());

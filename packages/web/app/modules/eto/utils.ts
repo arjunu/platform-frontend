@@ -113,7 +113,7 @@ export const isComingSoon = (state: EEtoState): boolean =>
 /**
  * Check if eto is active (either presale or public sale)
  */
-export const isFundraisingActive = (eto: TEtoWithCompanyAndContract): boolean => {
+export const isFundraisingActive = (eto: TEtoWithCompanyAndContractReadonly): boolean => {
   if (isOnChain(eto)) {
     return (
       eto.contract.timedState === EETOStateOnChain.Whitelist ||
@@ -196,7 +196,7 @@ export const getEtoSubState = ({
 export const getInvestmentCalculatedPercentage = (eto: TEtoSpecsData) =>
   (eto.newSharesToIssue / eto.minimumNewSharesToIssue) * 100;
 
-export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndContract) => {
+export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndContractReadonly) => {
   const totalTokensInt = eto.contract!.totalInvestment.totalTokensInt;
 
   return (
@@ -204,7 +204,7 @@ export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndCo
   );
 };
 
-export const isEtoSoftCapReached = (eto: TEtoWithCompanyAndContract) => {
+export const isEtoSoftCapReached = (eto: TEtoWithCompanyAndContractReadonly) => {
   if (isOnChain(eto)) {
     const currentProgress = getCurrentInvestmentProgressPercentage(eto);
 
