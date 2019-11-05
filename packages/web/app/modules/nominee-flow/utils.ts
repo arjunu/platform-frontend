@@ -107,7 +107,7 @@ export const nomineeIsEligibleToSignISHA = (nomineeEto: TEtoWithCompanyAndContra
   isOnChain(nomineeEto) && nomineeEto.contract.timedState === EETOStateOnChain.Signing;
 
 export type TGetNomineeTaskStepData = {
-  activeEtoPreviewCode: string;
+  activeEtoPreviewCode: string | undefined;
   nomineeTasksStatus: TNomineeTasksStatus;
   nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContract | undefined } | undefined;
 };
@@ -117,13 +117,13 @@ export const getNomineeTaskStep = ({
   nomineeTasksStatus,
   nomineeEtos,
 }: TGetNomineeTaskStepData): ENomineeTask | ENomineeEtoSpecificTask => {
+  console.log("getNomineeTaskStep", nomineeTasksStatus)
   if (nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] !== ENomineeTaskStatus.DONE) {
     return ENomineeTask.ACCOUNT_SETUP;
-  } else if (nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] !== ENomineeTaskStatus.DONE) {
-    return ENomineeTask.LINK_BANK_ACCOUNT;
   } else if (nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] !== ENomineeTaskStatus.DONE) {
     return ENomineeTask.LINK_TO_ISSUER;
   } else if (
+    activeEtoPreviewCode &&
     nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][ENomineeEtoSpecificTask.ACCEPT_THA] !==
       ENomineeTaskStatus.DONE &&
     nomineeEtos &&
@@ -131,19 +131,24 @@ export const getNomineeTaskStep = ({
   ) {
     return ENomineeEtoSpecificTask.ACCEPT_THA;
   } else if (
+    activeEtoPreviewCode &&
     nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][ENomineeEtoSpecificTask.ACCEPT_RAAA] !==
       ENomineeTaskStatus.DONE &&
     nomineeEtos &&
     nomineeIsEligibleToSignTHAOrRAA(nomineeEtos[activeEtoPreviewCode])
   ) {
     return ENomineeEtoSpecificTask.ACCEPT_RAAA;
+  } else if (nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] !== ENomineeTaskStatus.DONE) {
+    return ENomineeTask.LINK_BANK_ACCOUNT;
   } else if (
+    activeEtoPreviewCode &&
     nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][
       ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
     ] !== ENomineeTaskStatus.DONE
   ) {
     return ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL;
   } else if (
+    activeEtoPreviewCode &&
     nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][ENomineeEtoSpecificTask.ACCEPT_ISHA] !==
     ENomineeTaskStatus.DONE
   ) {

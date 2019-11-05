@@ -42,7 +42,7 @@ export const selectNomineeEto = (
 
 export const selectNomineeTasksStatus = (state: IAppState) => state.nomineeFlow.nomineeTasksStatus;
 
-export const selectNomineeActiveEtoPreviewCode = (state: IAppState) =>
+export const selectNomineeActiveEtoPreviewCode = (state: IAppState):string | undefined  =>
   state.nomineeFlow.activeNomineeEtoPreviewCode;
 
 export const selectActiveNomineeEto = createSelector(

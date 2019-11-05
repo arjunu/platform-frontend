@@ -31,10 +31,13 @@ export function* startRouteBasedSagas(
   const appIsReady = yield waitForAppInit();
   const userIsAuthorized: boolean = yield select(selectIsAuthorized);
   const userType: EUserType | undefined = yield select(selectUserType);
-
+  console.log("userIsAuthorized",userIsAuthorized,userType );
   if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
     if (payload.location.pathname === appRoutes.dashboard) {
       yield put(actions.nomineeFlow.nomineeDashboardView());
+    }
+    if(payload.location.pathname === appRoutes.etoIssuerView){
+      yield put(actions.nomineeFlow.nomineeEtoView())
     }
   }
 }

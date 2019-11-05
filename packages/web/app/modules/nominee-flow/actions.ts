@@ -18,6 +18,7 @@ export const nomineeFlowActions = {
     (nomineeTasksStatus: TNomineeTasksStatus) => ({ nomineeTasksStatus }),
   ),
   nomineeDashboardView: createActionFactory("NOMINEE_DASHBOARD_VIEW"),
+  nomineeEtoView: createActionFactory("NOMINEE_ETO_VIEW"),
   loadNomineeEtos: createActionFactory("NOMINEE_FLOW_LOAD_ETOS"),
   loadNomineeTaskData: createActionFactory("NOMINEE_FLOW_LOAD_NOMINEE_TASK_DATA"),
   storeActiveNomineeTask: createActionFactory(
@@ -28,6 +29,8 @@ export const nomineeFlowActions = {
   ),
   startNomineeRequestsWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_REQUESTS_WATCHER"),
   stopNomineeRequestsWatcher: createActionFactory("NOMINEE_FLOW_STOP_NOMINEE_REQUESTS_WATCHER"),
+  startNomineeTaskWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_TASKS_WATCHER"),
+  stopNomineeTaskWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_TASKS_WATCHER"),
   createNomineeRequest: createActionFactory(
     "NOMINEE_FLOW_CREATE_NOMINEE_REQUEST",
     (issuerId: string) => ({ issuerId }),

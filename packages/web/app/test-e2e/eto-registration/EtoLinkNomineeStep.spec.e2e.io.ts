@@ -46,7 +46,7 @@ describe("Eto Forms link nominee", () => {
 
         fillEtoToLinkNomineeStep(issuerAddress);
         logoutViaAccountMenu();
-
+        cy.log("-----nominee-----")
         createAndLoginNewUser({ type: "nominee", kyc: "business" }).then(
           ({ address: nomineeAddress }) => {
             cy.saveLocalStorage(nomineeAddress);
@@ -54,6 +54,7 @@ describe("Eto Forms link nominee", () => {
             linkEtoToNominee(issuerAddress);
 
             // get back issuer
+            cy.log("-----issuer-----")
             cy.restoreLocalStorage(issuerAddress);
 
             // should await nominee acceptation on dashboard
@@ -73,6 +74,7 @@ describe("Eto Forms link nominee", () => {
             assertUploadSignedTermsheetStep();
 
             // get back to nominee
+            cy.log("-----nominee-----")
             cy.restoreLocalStorage(nomineeAddress);
 
             // should have eto linked

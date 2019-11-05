@@ -1,12 +1,10 @@
 import * as React from "react";
 import { branch, compose, renderComponent, withProps } from "recompose";
 
-import { actions } from "../../modules/actions";
 import { selectIsUserFullyVerified } from "../../modules/auth/selectors";
 import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { selectActiveNomineeEto } from "../../modules/nominee-flow/selectors";
 import { appConnect } from "../../store";
-import { onEnterAction } from "../../utils/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
 import { Layout } from "../layouts/Layout";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
@@ -39,9 +37,6 @@ export const connectToNomineeEto = <T extends {}>(
         eto: selectActiveNomineeEto(state),
         isUserFullyVerified: selectIsUserFullyVerified(state),
       }),
-    }),
-    onEnterAction({
-      actionCreator: dispatch => dispatch(actions.nomineeFlow.loadNomineeEtos()),
     }),
   )(WrappedComponent);
 
