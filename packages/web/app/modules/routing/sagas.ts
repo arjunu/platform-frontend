@@ -25,24 +25,28 @@ function* openInNewWindowSaga(
 }
 
 export function* startRouteBasedSagas(
-  {logger}: TGlobalDependencies,
+  { logger }: TGlobalDependencies,
   { payload }: LocationChangeAction,
 ): IterableIterator<any> {
   const appIsReady = yield waitForAppInit();
   const userIsAuthorized: boolean = yield select(selectIsAuthorized);
   const userType: EUserType | undefined = yield select(selectUserType);
 
-  logger.info(`userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${payload.location.pathname}` );
+  logger.info(
+    `userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
+      payload.location.pathname
+    }`,
+  );
 
   if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
     if (payload.location.pathname === appRoutes.dashboard) {
       yield put(actions.nomineeFlow.nomineeDashboardView());
     }
-    if(payload.location.pathname === appRoutes.etoIssuerView){
-      yield put(actions.nomineeFlow.nomineeEtoView())
+    if (payload.location.pathname === appRoutes.etoIssuerView) {
+      yield put(actions.nomineeFlow.nomineeEtoView());
     }
-    if(payload.location.pathname === appRoutes.documents){
-      yield put(actions.nomineeFlow.nomineeEtoView())
+    if (payload.location.pathname === appRoutes.documents) {
+      yield put(actions.nomineeFlow.nomineeDocumentsView());
     }
   }
 }

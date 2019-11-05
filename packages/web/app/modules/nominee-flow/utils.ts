@@ -117,7 +117,6 @@ export const getNomineeTaskStep = ({
   nomineeTasksStatus,
   nomineeEtos,
 }: TGetNomineeTaskStepData): ENomineeTask | ENomineeEtoSpecificTask => {
-  console.log("getNomineeTaskStep", nomineeTasksStatus)
   if (nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] !== ENomineeTaskStatus.DONE) {
     return ENomineeTask.ACCOUNT_SETUP;
   } else if (nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] !== ENomineeTaskStatus.DONE) {
@@ -150,7 +149,7 @@ export const getNomineeTaskStep = ({
   } else if (
     activeEtoPreviewCode &&
     nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][ENomineeEtoSpecificTask.ACCEPT_ISHA] !==
-    ENomineeTaskStatus.DONE
+      ENomineeTaskStatus.DONE
   ) {
     return ENomineeEtoSpecificTask.ACCEPT_ISHA;
   } else {

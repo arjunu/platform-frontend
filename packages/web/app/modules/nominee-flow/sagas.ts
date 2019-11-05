@@ -8,7 +8,10 @@ import {
   EtoMessage,
 } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
-import { NOMINEE_RECALCULATE_TASKS_DELAY, NOMINEE_REQUESTS_WATCHER_DELAY } from "../../config/constants";
+import {
+  NOMINEE_RECALCULATE_TASKS_DELAY,
+  NOMINEE_REQUESTS_WATCHER_DELAY,
+} from "../../config/constants";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EEtoState, TNomineeRequestResponse } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IssuerIdInvalid, NomineeRequestExists } from "../../lib/api/eto/EtoNomineeApi";
@@ -21,6 +24,7 @@ import { getEtoContract, loadInvestmentAgreement } from "../eto/sagas";
 import { selectEtoSubStateEtoEtoWithContract } from "../eto/selectors";
 import { EEtoAgreementStatus, EETOStateOnChain, TEtoWithCompanyAndContract } from "../eto/types";
 import { isOnChain } from "../eto/utils";
+import { loadBankAccountDetails } from "../kyc/sagas";
 import { neuCall, neuTakeLatest, neuTakeLatestUntil } from "../sagasUtils";
 import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
 import {
@@ -45,7 +49,6 @@ import {
   nomineeApiDataToNomineeRequests,
   nomineeRequestResponseToRequestStatus,
 } from "./utils";
-import { loadBankAccountDetails } from "../kyc/sagas";
 
 export function* initNomineeEtoSpecificTasks(
   { logger, notificationCenter }: TGlobalDependencies,
@@ -119,14 +122,11 @@ export function* initNomineeTasks({
 
     if (!userIsVerified) {
       yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus)); //no reason to go further
-      return
+      return;
     } else {
       nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] = ENomineeTaskStatus.DONE;
 
-      yield all([
-        neuCall(loadBankAccountDetails),
-        neuCall(loadNomineeEtos),
-      ]);
+      yield all([neuCall(loadBankAccountDetails), neuCall(loadNomineeEtos)]);
 
       const result = yield all({
         bankAccountIsVerified: select(selectIsBankAccountVerified),
@@ -180,7 +180,7 @@ export function* nomineeDashboardView({ logger }: TGlobalDependencies): Iterator
     if (verificationIsComplete) {
       yield all({
         startRequestWatcher: put(actions.nomineeFlow.startNomineeRequestsWatcher()),
-        setActiveEto: neuCall(setActiveNomineeEto)
+        setActiveEto: neuCall(setActiveNomineeEto),
       });
 
       selectStepReq.activeEtoPreviewCode = select(selectNomineeActiveEtoPreviewCode);
@@ -224,7 +224,7 @@ export function* nomineeDocumentsView({ logger }: TGlobalDependencies): Iterator
   }
 }
 
-export function* loadActiveNomineeEto() {
+export function* loadActiveNomineeEto(): IterableIterator<any> {
   yield neuCall(loadNomineeEtos);
   yield neuCall(setActiveNomineeEto);
 }
@@ -233,7 +233,7 @@ export function* nomineeTasksWatcher({ logger }: TGlobalDependencies): Iterator<
   while (true) {
     logger.info("Getting nominee tasks");
     yield put(actions.nomineeFlow.initNomineeTasks());
-    yield delay(NOMINEE_RECALCULATE_TASKS_DELAY)
+    yield delay(NOMINEE_RECALCULATE_TASKS_DELAY);
   }
 }
 
@@ -383,7 +383,9 @@ export function* setActiveNomineeEto({
     if (etos === undefined || isEmpty(etos)) {
       yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(undefined));
     } else {
-      const forcedActiveEtoPreviewCode: ReturnType<typeof selectActiveEtoPreviewCodeFromQueryString> = yield select(selectActiveEtoPreviewCodeFromQueryString);
+      const forcedActiveEtoPreviewCode: ReturnType<
+        typeof selectActiveEtoPreviewCodeFromQueryString
+      > = yield select(selectActiveEtoPreviewCodeFromQueryString);
 
       // For testing purpose we can force another ETO to be active (by default it's the first one)
       const shouldForceSpecificEtoToBeActive =
@@ -409,10 +411,30 @@ export function* setActiveNomineeEto({
 }
 
 export function* nomineeFlowSagas(): Iterator<any> {
-  yield fork(neuTakeLatestUntil, actions.nomineeFlow.nomineeDashboardView, "@@router/LOCATION_CHANGE", nomineeDashboardView);
-  yield fork(neuTakeLatestUntil, actions.nomineeFlow.nomineeEtoView, "@@router/LOCATION_CHANGE", nomineeEtoView);
-  yield fork(neuTakeLatestUntil, actions.nomineeFlow.nomineeDocumentsView, "@@router/LOCATION_CHANGE", nomineeDocumentsView);
-  yield fork(neuTakeLatestUntil, actions.nomineeFlow.initNomineeTasks, "@@router/LOCATION_CHANGE", initNomineeTasks);
+  yield fork(
+    neuTakeLatestUntil,
+    actions.nomineeFlow.nomineeDashboardView,
+    "@@router/LOCATION_CHANGE",
+    nomineeDashboardView,
+  );
+  yield fork(
+    neuTakeLatestUntil,
+    actions.nomineeFlow.nomineeEtoView,
+    "@@router/LOCATION_CHANGE",
+    nomineeEtoView,
+  );
+  yield fork(
+    neuTakeLatestUntil,
+    actions.nomineeFlow.nomineeDocumentsView,
+    "@@router/LOCATION_CHANGE",
+    nomineeDocumentsView,
+  );
+  yield fork(
+    neuTakeLatestUntil,
+    actions.nomineeFlow.initNomineeTasks,
+    "@@router/LOCATION_CHANGE",
+    initNomineeTasks,
+  );
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeEtos, loadNomineeEtos);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
@@ -431,6 +453,6 @@ export function* nomineeFlowSagas(): Iterator<any> {
     neuTakeLatestUntil,
     actions.nomineeFlow.startNomineeTaskWatcher,
     [actions.nomineeFlow.stopNomineeTaskWatcher, "@@router/LOCATION_CHANGE"],
-    nomineeTasksWatcher
-  )
+    nomineeTasksWatcher,
+  );
 }

@@ -1,6 +1,7 @@
 import { expect } from "chai";
 
 import { EUserType } from "../../lib/api/users/interfaces";
+import { IAppState } from "../../store";
 import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
 import { EWalletSubType, EWalletType } from "../web3/types";
 import { EAuthStatus, IAuthState } from "./reducer";
@@ -21,7 +22,7 @@ describe("auth > selectors", () => {
         currentAgreementHash: undefined,
       };
 
-      const actualValue = selectIsAuthorized({auth: authState});
+      const actualValue = selectIsAuthorized({ auth: authState } as IAppState);
 
       expect(actualValue).to.be.true;
     });
@@ -35,7 +36,7 @@ describe("auth > selectors", () => {
         currentAgreementHash: undefined,
       };
 
-      const actualValue = selectIsAuthorized({auth: authState});
+      const actualValue = selectIsAuthorized({ auth: authState } as IAppState);
 
       expect(actualValue).to.be.false;
     });

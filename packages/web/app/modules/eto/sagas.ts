@@ -729,7 +729,7 @@ export function* loadAgreementsStatus(
 
 export function* callLoadInvestmentAgreement(
   _: TGlobalDependencies,
-  {payload}: TActionFromCreator<typeof actions.eto.loadSignedInvestmentAgreement>,
+  { payload }: TActionFromCreator<typeof actions.eto.loadSignedInvestmentAgreement>,
 ): Iterator<any> {
   neuCall(loadInvestmentAgreement, payload.etoId, payload.previewCode);
 }
@@ -737,11 +737,9 @@ export function* callLoadInvestmentAgreement(
 export function* loadInvestmentAgreement(
   { contractsService }: TGlobalDependencies,
   etoId: string,
-  previewCode: string
+  previewCode: string,
 ): Iterator<any> {
-  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(
-    etoId,
-  );
+  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
   const url: string = yield contract.signedInvestmentAgreementUrl;
 
   const parsedUrl = url === "" ? undefined : url;

@@ -65,8 +65,7 @@ export const nomineeFlowActions = {
     "NOMINEE_FLOW_SET_ETOS",
     ({ etos }: { etos: Dictionary<TEtoWithCompanyAndContract> }) => ({ etos }),
   ),
-  setNomineeEtosError: createActionFactory(
-    "NOMINEE_FLOW_SET_ETOS_ERROR",
-    (error: unknown) => ({ error }),
-  ),
+  setNomineeEtosError: createActionFactory("NOMINEE_FLOW_SET_ETOS_ERROR", (error: unknown) => ({
+    error,
+  })),
 };

@@ -4,6 +4,7 @@ import { branch, compose, renderComponent, setDisplayName } from "recompose";
 
 import { IEtoDocument } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { actions } from "../../../modules/actions";
+import { selectIsUserFullyVerified } from "../../../modules/auth/selectors";
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { selectPendingDownloads } from "../../../modules/immutable-file/selectors";
 import {
@@ -19,7 +20,6 @@ import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.un
 import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { NomineeDocumentsLayout } from "./NomineeDocumentsLayout";
-import { selectIsUserFullyVerified } from "../../../modules/auth/selectors";
 
 type TStateProps = {
   etoTemplates: IEtoDocument[];
