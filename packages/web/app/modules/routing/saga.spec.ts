@@ -8,7 +8,13 @@ import { actions } from "../actions";
 import { EAuthStatus } from "../auth/reducer";
 import { startRouteBasedSagas } from "./sagas";
 
-const globalDependencies = {} as TGlobalDependencies;
+const globalDependencies = {
+  //todo write out the full context, move to utils
+  logger: {
+    info: (_: string) => {},
+    error: (_: string) => {},
+  },
+} as TGlobalDependencies;
 
 const routerAction = {
   type: "@@router/LOCATION_CHANGE",
@@ -63,7 +69,7 @@ describe("startRouteBasedSagas", () => {
       .put(actions.nomineeFlow.nomineeEtoView())
       .run();
   });
-  it("runs nomineeDashboardView when going to /eto/view as Nominee", () => {
+  it("runs nomineeDashboardView when going to /documents as Nominee", () => {
     routerAction.payload.location.pathname = appRoutes.documents;
 
     return expectSaga(startRouteBasedSagas, globalDependencies, routerAction)

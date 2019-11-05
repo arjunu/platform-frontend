@@ -31,7 +31,7 @@ export const nomineeFlowActions = {
   startNomineeRequestsWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_REQUESTS_WATCHER"),
   stopNomineeRequestsWatcher: createActionFactory("NOMINEE_FLOW_STOP_NOMINEE_REQUESTS_WATCHER"),
   startNomineeTaskWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_TASKS_WATCHER"),
-  stopNomineeTaskWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_TASKS_WATCHER"),
+  stopNomineeTaskWatcher: createActionFactory("NOMINEE_FLOW_STOP_NOMINEE_TASKS_WATCHER"),
   createNomineeRequest: createActionFactory(
     "NOMINEE_FLOW_CREATE_NOMINEE_REQUEST",
     (issuerId: string) => ({ issuerId }),
