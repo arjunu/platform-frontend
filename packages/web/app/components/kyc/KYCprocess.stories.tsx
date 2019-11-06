@@ -45,6 +45,8 @@ storiesOf("KYC/process", module).add("personal/start", () => {
       loadingData={false}
       submitForm={() => {}}
       isSavingForm={false}
+      uploadedFiles={[]}
+      uploadedFilesLoading={false}
     />
   );
 });

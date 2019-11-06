@@ -13,6 +13,15 @@ import { TBankAccount } from "./types";
 
 export const selectKyc = (state: IAppState) => state.kyc;
 
+export const selectIndividualFiles = (state: IAppState) => state.kyc.individualFiles;
+export const selectIndividualFilesLoading = (state: IAppState) => state.kyc.individualFilesLoading;
+
+export const selectBusinessFiles = (state: IAppState) => state.kyc.businessFiles;
+export const selectLegalRepFiles = (state: IAppState) => state.kyc.legalRepresentativeFiles;
+
+export const selectKycUploadedFiles = (state: IAppState) =>
+  selectIndividualFiles(state) || selectBusinessFiles(state) || selectLegalRepFiles(state);
+
 export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus | undefined => {
   const userKycType = selectKycRequestType(state);
   switch (userKycType) {

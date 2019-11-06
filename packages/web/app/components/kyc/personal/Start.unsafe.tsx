@@ -10,10 +10,14 @@ import {
   KycIndividualDataSchemaRequiredWithAdditionalData,
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
+import {
+  selectIndividualFiles,
+  selectIndividualFilesLoading,
+  selectKycUploadedFiles,
+} from "../../../modules/kyc/selectors";
 import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { appConnect } from "../../../store";
 import { ECountries } from "../../../utils/enums/countriesEnum";
-import { injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import {
@@ -72,42 +76,55 @@ interface IStateProps {
   currentValues?: IKycIndividualData;
   loadingData: boolean;
   isSavingForm: boolean;
+  uploadedFiles: ReturnType<typeof selectKycUploadedFiles>;
+  uploadedFilesLoading: ReturnType<typeof selectIndividualFilesLoading>;
 }
 
 interface IDispatchProps {
   submitForm: (values: IKycIndividualData, skipContinue?: boolean) => void;
 }
 
-type IProps = IStateProps & IDispatchProps & FormikProps<IKycIndividualData>;
+type TProps = IStateProps & IDispatchProps & FormikProps<IKycIndividualData>;
 
-const KYCForm = injectIntlHelpers<IProps & IKycIndividualData & IDispatchProps>(
-  ({ intl: { formatIntlMessage }, ...props }) => (
+const KYCForm: React.FunctionComponent<TProps> = ({
+  uploadedFiles,
+  values,
+  uploadedFilesLoading,
+  ...props
+}) => {
+  const shouldAddAccreditedInvestorFlow = [values.country, values.nationality].includes(
+    ECountries.UNITED_STATES,
+  );
+  const shouldDisableUntilAccreditationIsUploaded =
+    shouldAddAccreditedInvestorFlow && uploadedFiles.length === 0;
+
+  return (
     <FormDeprecated>
       <h5 className="mb-3">
         <FormattedMessage id="kyc.personal.personal-information" />
       </h5>
       <FormField
-        label={formatIntlMessage("form.label.first-name")}
+        label={<FormattedMessage id="form.label.first-name" />}
         name="firstName"
         data-test-id="kyc-personal-start-first-name"
       />
       <FormField
-        label={formatIntlMessage("form.label.last-name")}
+        label={<FormattedMessage id="form.label.last-name" />}
         name="lastName"
         data-test-id="kyc-personal-start-last-name"
       />
       <FormFieldDate
-        label={formatIntlMessage("form.label.birth-date")}
+        label={<FormattedMessage id="form.label.birth-date" />}
         name="birthDate"
         data-test-id="kyc-personal-start-birth-date"
       />
       <FormSelectCountryField
-        label={formatIntlMessage("form.label.place-of-birth")}
+        label={<FormattedMessage id="form.label.place-of-birth" />}
         name="placeOfBirth"
         data-test-id="kyc-personal-start-place-of-birth"
       />
       <FormSelectNationalityField
-        label={formatIntlMessage("form.label.nationality")}
+        label={<FormattedMessage id="form.label.nationality" />}
         name="nationality"
         data-test-id="kyc-personal-start-nationality"
       />
@@ -129,7 +146,7 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData & IDispatchProps>(
         }
         name="isPoliticallyExposed"
         extraMessage={
-          props.values.isPoliticallyExposed === ("true" as any) ? (
+          values.isPoliticallyExposed === ("true" as any) ? (
             <FormattedMessage id={"kyc.personal.politically-exposed.disclaimer"} />
           ) : (
             undefined
@@ -140,7 +157,7 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData & IDispatchProps>(
       {process.env.NF_DISABLE_HIGH_INCOME !== "1" && (
         <FormSelectField
           values={HIGH_INCOME_VALUES}
-          label={formatIntlMessage("kyc.personal.high-income")}
+          label={<FormattedMessage id="kyc.personal.high-income" />}
           name="isHighIncome"
           extraMessage={<FormattedMessage id={"kyc.personal.income.disclaimer"} />}
           data-test-id="kyc-personal-start-has-high-income"
@@ -150,39 +167,39 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData & IDispatchProps>(
         <FormattedMessage id="kyc.personal.current.address" />
       </h5>
       <FormSelectCountryField
-        label={formatIntlMessage("form.label.country")}
+        label={<FormattedMessage id="form.label.country" />}
         name="country"
         data-test-id="kyc-personal-start-country"
       />
       <FormField
-        label={formatIntlMessage("form.label.street-and-number")}
+        label={<FormattedMessage id="form.label.street-and-number" />}
         name="street"
         data-test-id="kyc-personal-start-street"
       />
       <Row>
         <Col xs={12} md={6} lg={8}>
           <FormField
-            label={formatIntlMessage("form.label.city")}
+            label={<FormattedMessage id="form.label.city" />}
             name="city"
             data-test-id="kyc-personal-start-city"
           />
         </Col>
         <Col xs={12} md={6} lg={4}>
           <FormField
-            label={formatIntlMessage("form.label.zip-code")}
+            label={<FormattedMessage id="form.label.zip-code" />}
             name="zipCode"
             data-test-id="kyc-personal-start-zip-code"
           />
         </Col>
       </Row>
-      {props.values.country === ECountries.UNITED_STATES && (
+      {values.country === ECountries.UNITED_STATES && (
         <FormSelectStateField
-          label={formatIntlMessage("form.label.us-state")}
+          label={<FormattedMessage id="form.label.us-state" />}
           name="usState"
           data-test-id="kyc-personal-start-us-state"
         />
       )}
-      {[props.values.country, props.values.nationality].includes(ECountries.UNITED_STATES) && (
+      {shouldAddAccreditedInvestorFlow && (
         <>
           <h5 className="mb-3 mt-5">
             <FormattedMessage id="kyc.personal.accreditation-status" />
@@ -206,18 +223,18 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData & IDispatchProps>(
             data-test-id="kyc-personal-start-is-accredited-us-citizen"
           />
 
-          {props.values.isAccreditedUsCitizen === BOOL_FALSE_KEY && (
+          {values.isAccreditedUsCitizen === BOOL_FALSE_KEY && (
             <Notification
               text={ENotificationText.NOT_ACCREDITED_INVESTOR}
               type={ENotificationType.WARNING}
             />
           )}
-          {props.values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
+          {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
             <KYCAddDocuments
               uploadType={EKycRequestType.US_ACCREDITATION}
               /* TODO: Remove in future this is temporary solution for uploading documents
                 which is not working without saved form first */
-              onEnter={actions.kyc.kycSubmitIndividualData(boolify(props.values), true)}
+              onEnter={actions.kyc.kycSubmitIndividualData(boolify(values), true)}
               isLoading={props.isSavingForm}
             />
           )}
@@ -226,15 +243,20 @@ const KYCForm = injectIntlHelpers<IProps & IKycIndividualData & IDispatchProps>(
       <div className="p-4 text-center">
         <Button
           type="submit"
-          disabled={!props.isValid || props.loadingData}
+          disabled={
+            uploadedFilesLoading ||
+            !props.isValid ||
+            props.loadingData ||
+            shouldDisableUntilAccreditationIsUploaded
+          }
           data-test-id="kyc-personal-start-submit-form"
         >
           <FormattedMessage id={"form.save-and-submit"} />
         </Button>
       </div>
     </FormDeprecated>
-  ),
-);
+  );
+};
 
 const KYCEnhancedForm = withFormik<IStateProps & IDispatchProps, IKycIndividualData>({
   validationSchema: KycIndividualDataSchemaRequiredWithAdditionalData,
@@ -268,6 +290,8 @@ export const KYCPersonalStart = compose<React.FunctionComponent>(
       loadingData: !!state.kyc.individualDataLoading,
       // TODO: Remove after getting rid of upload document hack
       isSavingForm: !!state.kyc.kycSaving,
+      uploadedFiles: selectIndividualFiles(state),
+      uploadedFilesLoading: selectIndividualFilesLoading(state),
     }),
     dispatchToProps: dispatch => ({
       submitForm: (values: IKycIndividualData, skipContinue = false) =>
