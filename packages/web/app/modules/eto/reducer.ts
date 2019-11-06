@@ -101,14 +101,17 @@ export const etoReducer: AppReducer<IEtoState> = (
           [action.payload.etoId]: action.payload.tokenGeneralDiscounts,
         },
       };
-    // case actions.eto.setAgreementsStatus.getType():
-    //   return {
-    //     ...state,
-    //     offeringAgreementsStatus: {
-    //       ...state.offeringAgreementsStatus,
-    //       [action.payload.previewCode]: action.payload.statuses,
-    //     },
-    //   };
+    case actions.eto.setAgreementsStatus.getType():
+      //todo actions.eto.setAgreementsStatus writes to both nominee-flow reducer and here.
+      // This is for the backwards compat. until the issuer flow is refactored to use sagas
+      // in the same way as nominee flow.
+      return {
+        ...state,
+        offeringAgreementsStatus: {
+          ...state.offeringAgreementsStatus,
+          [action.payload.previewCode]: action.payload.statuses,
+        },
+      };
   }
 
   return state;
