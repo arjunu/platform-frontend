@@ -99,6 +99,16 @@ const getValidators = (minAmount: string, neuroAmount: string) =>
     ),
   }).toYup();
 
+const formatForFormik = (value:string) => toFixedPrecision({
+    value: value,
+    roundingMode: ERoundingMode.DOWN,
+    inputFormat: ENumberInputFormat.ULPS,
+    decimalPlaces: selectDecimalPlaces(
+      ECurrency.EUR_TOKEN,
+      ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
+    ),
+  });
+
 const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
   neuroAmount,
   neuroEuroAmount,
@@ -133,9 +143,9 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
     </section>
 
     <FormikConsumer>
-      {({ values, setFieldValue, isValid, setFieldTouched }: FormikProps<IReedemData>) => (
+      {({ values, setFieldValue, isValid, setFieldTouched, errors }: FormikProps<IReedemData>) => (
         <>
-          {console.log("FormikConsumer", values)}
+          {console.log("FormikConsumer", values, isValid, errors)}
           <section className={styles.section}>
             <FormLabel for="amount" className={styles.label}>
               <FormattedMessage id="bank-transfer.redeem.init.redeem-amount" />
@@ -146,15 +156,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
               onClick={() => {
                 setFieldValue(
                   "amount",
-                  toFixedPrecision({
-                    value: neuroAmount,
-                    roundingMode: ERoundingMode.DOWN,
-                    inputFormat: ENumberInputFormat.ULPS,
-                    decimalPlaces: selectDecimalPlaces(
-                      ECurrency.EUR_TOKEN,
-                      ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
-                    ),
-                  }),
+                  formatForFormik(neuroAmount),
                   true,
                 );
                 setFieldTouched("amount", true, true);
@@ -179,6 +181,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
               }}
               returnInvalidValues={true}
               showUnits={true}
+              validateOnMount={true}
             />
 
             <section className={cn(styles.section, "mt-4")}>
@@ -264,20 +267,16 @@ const BankTransferRedeemInit = compose<IProps, {}>(
     }),
   }),
   withFormik<IStateProps & IDispatchProps, IReedemData>({
-    mapPropsToValues: props =>
-      ({
+    mapPropsToValues: props => {
+      return ({
         ...props,
-        amount: props.initialAmount && toFixedPrecision({
-          value: props.initialAmount,
-          roundingMode: ERoundingMode.DOWN,
-          inputFormat: ENumberInputFormat.ULPS,
-          decimalPlaces: selectDecimalPlaces(
-            ECurrency.EUR_TOKEN,
-            ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
-          ),
-        })
-      }),
+        amount: props.initialAmount && formatForFormik(props.initialAmount)
+      })
+    },
     validationSchema: (props: IStateProps) => getValidators(props.minAmount, props.neuroAmount),
+    isInitialValid: (props) =>
+      //casting is necessary because formik has incorrect typings for isInitialValid()
+      !!(props as IStateProps).initialAmount && new BigNumber((props as IStateProps).initialAmount!).lessThanOrEqualTo((props as IStateProps).neuroAmount),
     handleSubmit: (values, { props }) => {
       props.confirm({ value: values.amount });
     },
@@ -285,3 +284,11 @@ const BankTransferRedeemInit = compose<IProps, {}>(
 )(BankTransferRedeemLayout);
 
 export { BankTransferRedeemLayout, BankTransferRedeemInit };
+
+
+
+///TODO
+///TODO check the countdown in notification
+///TODO add condition to show the step only if wallet balance is sufficient
+///TODO tests
+///TODO

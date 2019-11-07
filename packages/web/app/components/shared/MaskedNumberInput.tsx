@@ -42,6 +42,7 @@ interface IProps {
   prefix?: TTranslatedString;
   suffix?: TTranslatedString;
   size?: EInputSize;
+  validateOnMount?: boolean;//this is a workaround to validate initial values on mount before we upgraded formik to 2.0. Please do not use it!
 }
 
 export class MaskedNumberInput extends React.Component<IProps> {
@@ -129,6 +130,12 @@ export class MaskedNumberInput extends React.Component<IProps> {
 
   hasFocus = (id: string) => !!document.activeElement && document.activeElement.id === id;
 
+  componentDidMount(): void {
+    if(this.props.validateOnMount){
+      this.changeValue(this.props.value === undefined ? "" : this.props.value)
+    }
+  }
+
   componentDidUpdate(): void {
     if (!(this.props.value === undefined || typeof this.props.value === "string")) {
       throw new FormInputError("MaskedNumberInput accepts only string|undefined");
@@ -149,9 +156,7 @@ export class MaskedNumberInput extends React.Component<IProps> {
       <>
         {units} {this.props.suffix}
       </>
-    ) : (
-      undefined
-    );
+    ) : undefined;
   };
 
   render(): React.ReactNode {
