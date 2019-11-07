@@ -5,7 +5,6 @@ import { toChecksumAddress } from "web3-utils";
 
 import { accountFixtureByName, removePendingExternalTransaction } from ".";
 import { TEtoDataWithCompany } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { EKycRequestStatus } from "../../lib/api/kyc/KycApi.interfaces";
 import { IUser, OOO_TRANSACTION_TYPE, TxPendingWithMetadata } from "../../lib/api/users/interfaces";
 import { getVaultKey } from "../../modules/wallet-selector/light-wizard/utils";
 import { promisify } from "../../utils/PromiseUtils";
@@ -105,7 +104,7 @@ export const createAndLoginNewUser = (
     cy.log(userData.verified_email as string);
     cy.log(params.kyc ? (kycData[params.kyc] as string) : "No KYC");
     if (
-      (params.kyc && kycData[params.kyc] !== EKycRequestStatus.ACCEPTED) ||
+      (params.kyc && kycData[params.kyc] !== "accepted") ||
       !userData.verified_email
     ) {
       if (attempts > NUMBER_OF_ATTEMPTS) {
