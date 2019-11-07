@@ -106,7 +106,7 @@ const selectEtoWithCompanyAndContractInternal = createCachedSelector(
   }),
 )((_: IAppState, eto: TEtoSpecsData) => eto.previewCode);
 
-export const selectEtoWithCompanyAndContractReadonly = (state: IAppState, previewCode?: string) => {
+export const selectEtoWithCompanyAndContract = (state: IAppState, previewCode?: string) => {
   const userType = selectUserType(state);
   switch (userType) {
     case EUserType.NOMINEE:
