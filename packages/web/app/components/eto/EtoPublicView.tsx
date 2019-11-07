@@ -35,7 +35,7 @@ export const EtoPublicView = compose<TProps, IRouterParams>(
   createErrorBoundary(ErrorBoundaryLayout),
   appConnect<IStateProps, {}, IRouterParams>({
     stateToProps: (state, props) => ({
-      eto: selectEtoWithCompanyAndContract(state, props.previewCode),
+      eto: selectEtoWithCompanyAndContractReadonly(state, props.previewCode),
       isUserFullyVerified: selectIsUserFullyVerified(state),
     }),
   }),
