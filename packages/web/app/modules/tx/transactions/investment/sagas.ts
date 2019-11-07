@@ -178,7 +178,7 @@ function* investSaga(
 ): Iterator<any> {
   try {
     yield txSendSaga({
-      type: ETxSenderType.INVEST,
+      transactionType: ETxSenderType.INVEST,
       transactionFlowGenerator: investmentFlowGenerator,
     });
     logger.info("Investment successful");

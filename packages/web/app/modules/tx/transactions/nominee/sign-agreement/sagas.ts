@@ -180,7 +180,7 @@ function* nomineeSignInvestmentAgreementGenerator(_: TGlobalDependencies): Itera
 function* startNomineeTHASignSaga({ logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield txSendSaga({
-      type: ETxSenderType.NOMINEE_THA_SIGN,
+      transactionType: ETxSenderType.NOMINEE_THA_SIGN,
       transactionFlowGenerator: startNomineeAgreementSign,
     });
     logger.info("THA sign successful");
@@ -194,7 +194,7 @@ function* startNomineeTHASignSaga({ logger }: TGlobalDependencies): Iterator<any
 function* startNomineeRAAASignSaga({ logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield txSendSaga({
-      type: ETxSenderType.NOMINEE_RAAA_SIGN,
+      transactionType: ETxSenderType.NOMINEE_RAAA_SIGN,
       transactionFlowGenerator: startNomineeAgreementSign,
     });
     logger.info("RAAA sign successful");
@@ -208,7 +208,7 @@ function* startNomineeRAAASignSaga({ logger }: TGlobalDependencies): Iterator<an
 function* startNomineeISHASignSaga({ logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield txSendSaga({
-      type: ETxSenderType.NOMINEE_ISHA_SIGN,
+      transactionType: ETxSenderType.NOMINEE_ISHA_SIGN,
       transactionFlowGenerator: nomineeSignInvestmentAgreementGenerator,
     });
     logger.info("ISHA sign successful");

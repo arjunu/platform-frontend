@@ -16,7 +16,7 @@ function* investorPayoutRedistributeSaga(
 
   try {
     yield txSendSaga({
-      type: ETxSenderType.INVESTOR_REDISTRIBUTE_PAYOUT,
+      transactionType: ETxSenderType.INVESTOR_REDISTRIBUTE_PAYOUT,
       transactionFlowGenerator: startInvestorPayoutRedistributionGenerator,
       extraParam: tokenDisbursals,
     });
@@ -37,7 +37,7 @@ function* investorPayoutAcceptSaga(
 
   try {
     yield txSendSaga({
-      type: ETxSenderType.INVESTOR_ACCEPT_PAYOUT,
+      transactionType: ETxSenderType.INVESTOR_ACCEPT_PAYOUT,
       transactionFlowGenerator: startInvestorPayoutAcceptGenerator,
       extraParam: tokensDisbursals,
     });

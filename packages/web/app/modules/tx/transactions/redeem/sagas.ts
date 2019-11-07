@@ -103,7 +103,7 @@ function* neurRedeemSaga(
 
   try {
     yield txSendSaga({
-      type: ETxSenderType.NEUR_REDEEM,
+      transactionType: ETxSenderType.NEUR_REDEEM,
       transactionFlowGenerator: startNEuroRedeemGenerator,
       initialState: {initialAmount: payload.initialAmount}
     });

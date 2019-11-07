@@ -99,7 +99,7 @@ function* upgradeSaga({ logger }: TGlobalDependencies, action: TAction): Iterato
 
     const tokenType = action.payload;
     const params: ITxSendParams = {
-      type: ETxSenderType.UPGRADE,
+      transactionType: ETxSenderType.UPGRADE,
       transactionFlowGenerator: upgradeTransactionFlow,
       extraParam: tokenType,
     };

@@ -129,7 +129,7 @@ function* etoSetDateSaga({ logger }: TGlobalDependencies): Iterator<any> {
     yield put(actions.etoFlow.setEtoDateStart());
 
     yield txSendSaga({
-      type: ETxSenderType.ETO_SET_DATE,
+      transactionType: ETxSenderType.ETO_SET_DATE,
       transactionFlowGenerator: etoSetDateGenerator,
     });
     logger.info("Setting ETO date successful");
@@ -145,7 +145,7 @@ function* etoSignInvestmentAgreementSaga(
 ): Iterator<any> {
   try {
     yield txSendSaga({
-      type: ETxSenderType.SIGN_INVESTMENT_AGREEMENT,
+      transactionType: ETxSenderType.SIGN_INVESTMENT_AGREEMENT,
       transactionFlowGenerator: etoSignInvestmentAgreementGenerator,
       extraParam: action.payload,
     });

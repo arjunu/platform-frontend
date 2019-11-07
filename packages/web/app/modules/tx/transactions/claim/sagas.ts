@@ -64,7 +64,7 @@ function* userClaimSaga({ logger }: TGlobalDependencies, action: TAction): Itera
   const etoId = action.payload;
   try {
     yield txSendSaga({
-      type: ETxSenderType.USER_CLAIM,
+      transactionType: ETxSenderType.USER_CLAIM,
       transactionFlowGenerator: startClaimGenerator,
       extraParam: etoId,
     });

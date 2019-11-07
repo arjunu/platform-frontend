@@ -44,7 +44,7 @@ import { selectTxAdditionalData, selectTxDetails, selectTxType } from "./selecto
 import { getTxSenderErrorType } from "./utils";
 
 export interface ITxSendParams {
-  type: ETxSenderType;
+  transactionType: ETxSenderType;
   transactionFlowGenerator: any;
   extraParam?: any;
   initialState?: {initialAmount: string}
@@ -110,10 +110,10 @@ function* txControllerSaga(controlledEffect: Iterator<Effect>): any {
   yield put(actions.wallet.loadWalletData());
 }
 
-export function* txSendSaga({ type, transactionFlowGenerator, extraParam,initialState }: ITxSendParams): any {
+export function* txSendSaga({ transactionType, transactionFlowGenerator, extraParam,initialState }: ITxSendParams): any {
   yield neuCall(ensureNoPendingTx);
 
-  const sendProcessEffect = neuCall(txSendProcess, type, transactionFlowGenerator, extraParam,initialState);
+  const sendProcessEffect = neuCall(txSendProcess, transactionType, transactionFlowGenerator, extraParam,initialState);
 
   yield call(txControllerSaga, sendProcessEffect);
 }
