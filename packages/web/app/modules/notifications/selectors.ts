@@ -1,3 +1,4 @@
+import { EKycRequestStatus } from "./../../lib/api/kyc/KycApi.interfaces";
 import { includes, some } from "lodash";
 import { createSelector } from "reselect";
 
@@ -24,7 +25,10 @@ export const selectIsActionRequiredSettings = (state: IAppState): boolean => {
   return (
     !selectIsUserEmailVerified(state.auth) ||
     !selectBackupCodesVerified(state) ||
-    !includes(["outsourced", "pending", "accepted"], selectKycRequestStatus(state))
+    !includes(
+      [EKycRequestStatus.OUTSOURCED, EKycRequestStatus.PENDING, EKycRequestStatus.ACCEPTED],
+      selectKycRequestStatus(state),
+    )
   );
 };
 

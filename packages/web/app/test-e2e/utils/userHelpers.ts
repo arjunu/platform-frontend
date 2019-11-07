@@ -12,6 +12,7 @@ import { toCamelCase } from "../../utils/transformObjectKeys";
 import { assertLanding } from "./assertions";
 import { getAgreementHash } from "./getAgreementHash";
 import { tid } from "./selectors";
+import { EKycRequestStatus } from "../../lib/api/kyc/KycApi.interfaces";
 
 const VAULT_API_ROOT = "/api/wallet";
 export const WALLET_STORAGE_KEY = "NF_WALLET_METADATA";
@@ -103,7 +104,10 @@ export const createAndLoginNewUser = (
     const kycData = await getKycData(jwt);
     cy.log(userData.verified_email as string);
     cy.log(params.kyc ? (kycData[params.kyc] as string) : "No KYC");
-    if ((params.kyc && kycData[params.kyc] !== "accepted") || !userData.verified_email) {
+    if (
+      (params.kyc && kycData[params.kyc] !== EKycRequestStatus.ACCEPTED) ||
+      !userData.verified_email
+    ) {
       if (attempts > NUMBER_OF_ATTEMPTS) {
         throw new Error("Cannot create user something wrong happened in the backend");
       }

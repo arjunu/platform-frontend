@@ -44,7 +44,7 @@ export const selectKycRequestOutsourcedStatus = (
   state: DeepReadonly<IKycState>,
 ): ERequestOutsourcedStatus | undefined => {
   const requestState =
-    state.individualRequestState && state.individualRequestState.status === "draft"
+    state.individualRequestState && state.individualRequestState.status === EKycRequestStatus.DRAFT
       ? state.businessRequestState
       : state.individualRequestState;
   if (requestState) return requestState.outsourcedStatus;
@@ -53,7 +53,7 @@ export const selectKycRequestOutsourcedStatus = (
 
 export const selectExternalKycUrl = (state: DeepReadonly<IKycState>): string | undefined => {
   const requestState =
-    state.individualRequestState && state.individualRequestState.status === "draft"
+    state.individualRequestState && state.individualRequestState.status === EKycRequestStatus.DRAFT
       ? state.businessRequestState
       : state.individualRequestState;
   if (requestState) return requestState.redirectUrl;
@@ -63,20 +63,32 @@ export const selectExternalKycUrl = (state: DeepReadonly<IKycState>): string | u
 export const selectPendingKycRequestType = (
   state: DeepReadonly<IKycState>,
 ): EKycRequestType | undefined => {
-  if (state.individualRequestState && state.individualRequestState.status === "pending") {
+  if (
+    state.individualRequestState &&
+    state.individualRequestState.status === EKycRequestStatus.PENDING
+  ) {
     return EKycRequestType.INDIVIDUAL;
   }
-  if (state.businessRequestState && state.businessRequestState.status === "pending") {
+  if (
+    state.businessRequestState &&
+    state.businessRequestState.status === EKycRequestStatus.PENDING
+  ) {
     return EKycRequestType.BUSINESS;
   }
   return undefined;
 };
 
 export const selectKycRequestType = (state: IAppState): EKycRequestType | undefined => {
-  if (state.kyc.individualRequestState && state.kyc.individualRequestState.status !== "draft") {
+  if (
+    state.kyc.individualRequestState &&
+    state.kyc.individualRequestState.status !== EKycRequestStatus.DRAFT
+  ) {
     return EKycRequestType.INDIVIDUAL;
   }
-  if (state.kyc.businessRequestState && state.kyc.businessRequestState.status !== "draft") {
+  if (
+    state.kyc.businessRequestState &&
+    state.kyc.businessRequestState.status !== EKycRequestStatus.DRAFT
+  ) {
     return EKycRequestType.BUSINESS;
   }
   return undefined;
