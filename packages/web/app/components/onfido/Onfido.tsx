@@ -53,7 +53,7 @@ const onfidoSteps = [
   //   }, {
         type: "face",
         options: {
-          requestedVariant: 'image',
+          requestedVariant: 'image',  // TODO: should be 'video' in production
           uploadFallback: true
         }
     }, {
@@ -124,7 +124,7 @@ class OnfidoComponent extends React.Component<IStateProps, IState> {
         fetch('/api/kyc/individual/data', {
             headers: this.headers, 
             method: "put",
-            body: JSON.stringify({first_name: "Dave", last_name: 'Scharf'})
+            body: JSON.stringify({first_name: "Donald", last_name: "Trump"})
         }).then(function(){
             _this.getIndividualData();
         });
