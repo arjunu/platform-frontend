@@ -10,7 +10,7 @@ import * as YupTS from "../../../../lib/yup-ts.unsafe";
 import { actions } from "../../../../modules/actions";
 import { EBankTransferType } from "../../../../modules/bank-transfer-flow/reducer";
 import {
-  selectBankRedeemMinAmount,
+  selectBankRedeemMinAmount, selectInitialAmount,
   selectRedeemFeeUlps,
 } from "../../../../modules/bank-transfer-flow/selectors";
 import { selectLiquidEuroTokenBalance } from "../../../../modules/wallet/selectors";
@@ -47,6 +47,7 @@ interface IStateProps {
   neuroAmount: string;
   neuroEuroAmount: string;
   bankFee: string;
+  initialAmount: string | undefined
 }
 
 interface IDispatchProps {
@@ -57,7 +58,7 @@ interface IDispatchProps {
 type IProps = IStateProps & IDispatchProps;
 
 export interface IReedemData {
-  amount: string;
+  amount: string | undefined;
 }
 
 const getValidators = (minAmount: string, neuroAmount: string) =>
@@ -134,6 +135,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
     <FormikConsumer>
       {({ values, setFieldValue, isValid, setFieldTouched }: FormikProps<IReedemData>) => (
         <>
+          {console.log("FormikConsumer", values)}
           <section className={styles.section}>
             <FormLabel for="amount" className={styles.label}>
               <FormattedMessage id="bank-transfer.redeem.init.redeem-amount" />
@@ -206,7 +208,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                 </Heading>
               </Tooltip>
               <span className="text-warning">
-                {"-"} {isValid && <CalculatedFee bankFee={bankFee} amount={values.amount} />}
+                {"-"} {values.amount && isValid && <CalculatedFee bankFee={bankFee} amount={values.amount} />}
               </span>
             </section>
 
@@ -215,7 +217,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                 <FormattedMessage id="bank-transfer.redeem.init.total-redeemed" />
               </Heading>
               <span className="text-success">
-                {isValid ? <TotalRedeemed bankFee={bankFee} amount={values.amount} /> : "-"}
+                {(values.amount && isValid) ? <TotalRedeemed bankFee={bankFee} amount={values.amount} /> : "-"}
               </span>
             </section>
 
@@ -253,6 +255,7 @@ const BankTransferRedeemInit = compose<IProps, {}>(
       neuroEuroAmount: selectLiquidEuroTokenBalance(state),
       bankFee: selectRedeemFeeUlps(state),
       minAmount: selectBankRedeemMinAmount(state),
+      initialAmount: selectInitialAmount(state)
     }),
     dispatchToProps: dispatch => ({
       verifyBankAccount: () =>
@@ -261,7 +264,19 @@ const BankTransferRedeemInit = compose<IProps, {}>(
     }),
   }),
   withFormik<IStateProps & IDispatchProps, IReedemData>({
-    mapPropsToValues: props => {console.log("------withFormik",props);return {...props, amount: "25"}},
+    mapPropsToValues: props =>
+      ({
+        ...props,
+        amount: props.initialAmount && toFixedPrecision({
+          value: props.initialAmount,
+          roundingMode: ERoundingMode.DOWN,
+          inputFormat: ENumberInputFormat.ULPS,
+          decimalPlaces: selectDecimalPlaces(
+            ECurrency.EUR_TOKEN,
+            ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
+          ),
+        })
+      }),
     validationSchema: (props: IStateProps) => getValidators(props.minAmount, props.neuroAmount),
     handleSubmit: (values, { props }) => {
       props.confirm({ value: values.amount });

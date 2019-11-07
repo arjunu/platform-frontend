@@ -47,9 +47,16 @@ export interface ITxSendParams {
   transactionType: ETxSenderType;
   transactionFlowGenerator: any;
   extraParam?: any;
-  initialState?: {initialAmount: string}
+  initialValues?: { initialAmount: string }
   // Design extraParam to be a tuple that handles any number of params
   // @see neuCall
+}
+
+export type TTxSendProcessParams = {
+  transactionType: ETxSenderType,
+  transactionFlowGenerator: any,
+  extraParam?: any,
+  initialValues?: any //fixme
 }
 
 export function* txMonitorSaga(): any {
@@ -110,24 +117,31 @@ function* txControllerSaga(controlledEffect: Iterator<Effect>): any {
   yield put(actions.wallet.loadWalletData());
 }
 
-export function* txSendSaga({ transactionType, transactionFlowGenerator, extraParam,initialState }: ITxSendParams): any {
+export function* txSendSaga({ transactionType, transactionFlowGenerator, extraParam, initialValues }: ITxSendParams): any {
   yield neuCall(ensureNoPendingTx);
-
-  const sendProcessEffect = neuCall(txSendProcess, transactionType, transactionFlowGenerator, extraParam,initialState);
+  console.log("----txSendSaga", initialValues)
+  const sendProcessEffect = neuCall(txSendProcess, {
+    transactionType,
+    transactionFlowGenerator,
+    extraParam,
+    initialValues
+  });
 
   yield call(txControllerSaga, sendProcessEffect);
 }
 
 function* txSendProcess(
   { logger }: TGlobalDependencies,
-  transactionType: ETxSenderType,
-  transactionFlowGenerator: any,
-  extraParam?: any,
-  initialState?: any //fixme
+  {
+    transactionType,
+    transactionFlowGenerator,
+    extraParam,
+    initialValues,
+  }: TTxSendProcessParams
 ): any {
   try {
     console.log("----->txSendProcess, txSenderShowModal")
-    yield put(actions.txSender.txSenderShowModal({ type: transactionType, initialValues:initialState }));
+    yield put(actions.txSender.txSenderShowModal({ type: transactionType, initialValues }));
 
     yield neuRepeatIf("TX_SENDER_CHANGE", "TX_SENDER_ACCEPT", transactionFlowGenerator, extraParam);
 
@@ -272,7 +286,7 @@ function* sendTxSubSaga({ web3Manager }: TGlobalDependencies): any {
 function* watchPendingOOOTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
   logger.info(`Watching for out of bound transaction: ${txHash}`);
 
-  yield createWatchTxChannel(txHash, function*(
+  yield createWatchTxChannel(txHash, function* (
     txChannel: Channel<TEventEmitterChannelEvents>,
   ): Iterator<any> {
     while (true) {
@@ -292,7 +306,7 @@ function* watchPendingOOOTxSubSaga({ logger }: TGlobalDependencies, txHash: stri
 function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
   logger.info(`Watching for transaction: ${txHash}`);
 
-  yield createWatchTxChannel(txHash, function*(
+  yield createWatchTxChannel(txHash, function* (
     txChannel: Channel<TEventEmitterChannelEvents>,
   ): Iterator<any> {
     while (true) {
@@ -336,7 +350,7 @@ function* updateWalletValues(): Iterator<any> {
   yield put(actions.wallet.loadWalletData());
 }
 
-export const txSenderSagasWatcher = function*(): Iterator<any> {
+export const txSenderSagasWatcher = function* (): Iterator<any> {
   yield takeLatest("TX_SENDER_HIDE_MODAL", cleanUpTxSender);
   yield takeLatest(["TX_SENDER_TX_MINED", "TX_SENDER_ERROR"], updateWalletValues);
 };

@@ -45,6 +45,7 @@ interface ITxSenderCommonState {
   blockId?: number;
   txHash?: string;
   error?: ETransactionErrorType;
+  initialValues?: any //fixme
 }
 
 type TTransactionState = TSpecificTransactionState | ITxSenderDefaultState;
@@ -60,6 +61,7 @@ const initialState: ITxSenderState = {
   additionalData: undefined,
   state: ETxSenderState.UNINITIALIZED,
   txDetails: undefined,
+  initialValues: undefined
 };
 
 export const txSenderReducer: AppReducer<ITxSenderState> = (

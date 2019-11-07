@@ -25,7 +25,7 @@ interface IProps {
   storageFormat: ENumberInputFormat; // how is this value stored in the app state (ULPS or FLOAT)
   outputFormat: ENumberOutputFormat; // how should this value be visualized
   valueType?: TValueFormat;
-  value: string;
+  value?: string;
   onChangeFn: (value: string) => void;
   returnInvalidValues?: boolean;
   setError?: (v: boolean) => void;

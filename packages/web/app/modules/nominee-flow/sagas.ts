@@ -120,7 +120,7 @@ export function* initNomineeTasks({
     const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
       selectIsUserFullyVerified,
     );
-
+    console.log("userIsVerified", userIsVerified)
     if (!userIsVerified) {
       yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus)); //no reason to go further
       return;

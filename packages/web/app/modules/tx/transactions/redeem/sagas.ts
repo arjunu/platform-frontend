@@ -105,7 +105,7 @@ function* neurRedeemSaga(
     yield txSendSaga({
       transactionType: ETxSenderType.NEUR_REDEEM,
       transactionFlowGenerator: startNEuroRedeemGenerator,
-      initialState: {initialAmount: payload.initialAmount}
+      initialValues: {initialAmount: payload.initialAmount}
     });
 
     logger.info("Investor nEUR withdrawal successful");
