@@ -749,13 +749,13 @@ export function* loadInvestmentAgreement(
 
 export function* loadCapitalIncrease(
   { contractsService }: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.eto.loadCapitalIncrease>,
+  etoId: string,
 ): Iterator<any> {
-  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(payload.etoId);
+  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
 
   const [, capitalIncrease] = yield contract.contributionSummary();
-  //fixme check for undefined
-  yield put(actions.eto.setCapitalIncrease(payload.previewCode, capitalIncrease.toString()));
+  //fixme check for errors
+  return capitalIncrease.toString()
 }
 
 export function* loadEtoGeneralTokenDiscounts(

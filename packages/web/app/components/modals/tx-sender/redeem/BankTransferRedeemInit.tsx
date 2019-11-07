@@ -261,6 +261,7 @@ const BankTransferRedeemInit = compose<IProps, {}>(
     }),
   }),
   withFormik<IStateProps & IDispatchProps, IReedemData>({
+    mapPropsToValues: props => {console.log("------withFormik",props);return {...props, amount: "25"}},
     validationSchema: (props: IStateProps) => getValidators(props.minAmount, props.neuroAmount),
     handleSubmit: (values, { props }) => {
       props.confirm({ value: values.amount });

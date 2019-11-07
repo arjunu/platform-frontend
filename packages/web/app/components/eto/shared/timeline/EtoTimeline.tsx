@@ -67,7 +67,8 @@ const MINIMUM_VALID_TIME_EPOCH = 1;
 const isValidDate = (date: Date | undefined): boolean =>
   !!(date && date.getTime() >= MINIMUM_VALID_TIME_EPOCH);
 
-const getStartOfState = (state: EETOStateOnChain, startOfStates: TEtoStartOfStates | undefined) => {
+//fixme move to utils
+export const getStartOfState = (state: EETOStateOnChain, startOfStates: TEtoStartOfStates | undefined) => {
   const startDate = startOfStates && startOfStates[state];
 
   const preEtoStartDate = startOfStates && startOfStates[EETOStateOnChain.Whitelist];

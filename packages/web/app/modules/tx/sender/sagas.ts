@@ -47,6 +47,7 @@ export interface ITxSendParams {
   type: ETxSenderType;
   transactionFlowGenerator: any;
   extraParam?: any;
+  initialState?: {initialAmount: string}
   // Design extraParam to be a tuple that handles any number of params
   // @see neuCall
 }
@@ -109,10 +110,10 @@ function* txControllerSaga(controlledEffect: Iterator<Effect>): any {
   yield put(actions.wallet.loadWalletData());
 }
 
-export function* txSendSaga({ type, transactionFlowGenerator, extraParam }: ITxSendParams): any {
+export function* txSendSaga({ type, transactionFlowGenerator, extraParam,initialState }: ITxSendParams): any {
   yield neuCall(ensureNoPendingTx);
 
-  const sendProcessEffect = neuCall(txSendProcess, type, transactionFlowGenerator, extraParam);
+  const sendProcessEffect = neuCall(txSendProcess, type, transactionFlowGenerator, extraParam,initialState);
 
   yield call(txControllerSaga, sendProcessEffect);
 }
@@ -122,9 +123,11 @@ function* txSendProcess(
   transactionType: ETxSenderType,
   transactionFlowGenerator: any,
   extraParam?: any,
+  initialState?: any //fixme
 ): any {
   try {
-    yield put(actions.txSender.txSenderShowModal({ type: transactionType }));
+    console.log("----->txSendProcess, txSenderShowModal")
+    yield put(actions.txSender.txSenderShowModal({ type: transactionType, initialValues:initialState }));
 
     yield neuRepeatIf("TX_SENDER_CHANGE", "TX_SENDER_ACCEPT", transactionFlowGenerator, extraParam);
 

@@ -9,10 +9,7 @@ import {
   EtoMessage,
 } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
-import {
-  NOMINEE_RECALCULATE_TASKS_DELAY,
-  NOMINEE_REQUESTS_WATCHER_DELAY,
-} from "../../config/constants";
+import { NOMINEE_RECALCULATE_TASKS_DELAY, NOMINEE_REQUESTS_WATCHER_DELAY, } from "../../config/constants";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EEtoState, TNomineeRequestResponse } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IssuerIdInvalid, NomineeRequestExists } from "../../lib/api/eto/EtoNomineeApi";
@@ -21,7 +18,7 @@ import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserFullyVerified } from "../auth/selectors";
 import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
-import { getEtoContract, loadInvestmentAgreement } from "../eto/sagas";
+import { getEtoContract, loadCapitalIncrease, loadInvestmentAgreement } from "../eto/sagas";
 import { selectEtoSubStateEtoEtoWithContract } from "../eto/selectors";
 import { EEtoAgreementStatus, EETOStateOnChain, TEtoWithCompanyAndContract } from "../eto/types";
 import { isOnChain } from "../eto/utils";
@@ -211,7 +208,8 @@ export function* getTaskSpecificData(
   _: TGlobalDependencies,
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask,
 ): Iterator<any> {
-  const taskSpecificData: Partial<{ [key in ENomineeTask]: unknown }> = {};
+  //fixme create type
+  const taskSpecificData: Partial<{ [key in ENomineeTask]: unknown }> & {byPreviewCode: {[previewCode:string]:Partial<{ [key in ENomineeEtoSpecificTask]: unknown }>}} = {byPreviewCode:{}};
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
     yield neuCall(loadNomineeRequests); //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
@@ -229,6 +227,16 @@ export function* getTaskSpecificData(
     taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = {
       nextState: yield getNomineeRequestComponentState(dataConverted),
     };
+  }
+  if(activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL){
+    const nomineeEto:TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
+    const capitalIncrease = yield neuCall(loadCapitalIncrease, nomineeEto.etoId);
+
+    taskSpecificData.byPreviewCode[nomineeEto.previewCode] = {
+      [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: {
+        capitalIncrease,
+      }
+    }
   }
   return taskSpecificData;
 }
