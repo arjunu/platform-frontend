@@ -1,4 +1,3 @@
-import { EKycRequestStatus } from "./../../lib/api/kyc/KycApi.interfaces";
 import { includes, some } from "lodash";
 import { createSelector } from "reselect";
 
@@ -12,6 +11,7 @@ import {
   selectUserType,
 } from "../auth/selectors";
 import { selectKycLoading, selectKycRequestStatus } from "../kyc/selectors";
+import { EKycRequestStatus } from "./../../lib/api/kyc/KycApi.interfaces";
 import { settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
 import { INotification } from "./types";
 

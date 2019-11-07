@@ -5,6 +5,7 @@ import { toChecksumAddress } from "web3-utils";
 
 import { accountFixtureByName, removePendingExternalTransaction } from ".";
 import { TEtoDataWithCompany } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { EKycRequestStatus } from "../../lib/api/kyc/KycApi.interfaces";
 import { IUser, OOO_TRANSACTION_TYPE, TxPendingWithMetadata } from "../../lib/api/users/interfaces";
 import { getVaultKey } from "../../modules/wallet-selector/light-wizard/utils";
 import { promisify } from "../../utils/PromiseUtils";
@@ -12,7 +13,6 @@ import { toCamelCase } from "../../utils/transformObjectKeys";
 import { assertLanding } from "./assertions";
 import { getAgreementHash } from "./getAgreementHash";
 import { tid } from "./selectors";
-import { EKycRequestStatus } from "../../lib/api/kyc/KycApi.interfaces";
 
 const VAULT_API_ROOT = "/api/wallet";
 export const WALLET_STORAGE_KEY = "NF_WALLET_METADATA";
