@@ -11,6 +11,7 @@ import {
   selectUserType,
 } from "../auth/selectors";
 import { selectKycLoading, selectKycRequestStatus } from "../kyc/selectors";
+import { EKycRequestStatus } from "./../../lib/api/kyc/KycApi.interfaces";
 import { settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
 import { INotification } from "./types";
 
@@ -24,7 +25,10 @@ export const selectIsActionRequiredSettings = (state: IAppState): boolean => {
   return (
     !selectIsUserEmailVerified(state.auth) ||
     !selectBackupCodesVerified(state) ||
-    !includes(["Outsourced", "Pending", "Accepted"], selectKycRequestStatus(state))
+    !includes(
+      [EKycRequestStatus.OUTSOURCED, EKycRequestStatus.PENDING, EKycRequestStatus.ACCEPTED],
+      selectKycRequestStatus(state),
+    )
   );
 };
 
