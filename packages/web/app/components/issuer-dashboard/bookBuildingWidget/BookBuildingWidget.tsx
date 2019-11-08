@@ -34,6 +34,8 @@ import { BookBuildingActiveWidget } from "./BookBuildingActiveWidget";
 import { BookBuildingNotActiveWidget } from "./BookBuildingNotActiveWidget";
 import { BookBuildingStoppedWidget } from "./BookBuildingStoppedWidget";
 import { BookBuildingSuspendedWidget } from "./BookBuildingSuspendedWidget";
+import { selectIssuerEtoInvestmentCalculatedValues } from "../../../modules/eto/selectors";
+import { TEtoInvestmentCalculatedValues } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 
 interface IExternalProps {
   columnSpan?: EColumnSpan;
@@ -54,6 +56,7 @@ interface IStateProps {
   onChainState: EETOStateOnChain | undefined;
   minOffsetPeriod: number;
   isAuthorized: boolean;
+  investmentCalculatedValues: TEtoInvestmentCalculatedValues | undefined
 }
 
 interface IWithProps {
@@ -144,6 +147,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
 
       return {
         etoId,
+        investmentCalculatedValues: selectIssuerEtoInvestmentCalculatedValues(state),
         bookBuildingEnabled: selectIsBookBuilding(state),
         bookBuildingStats: selectBookbuildingStats(state, etoId),
         maxPledges: selectMaxPledges(state),
@@ -191,6 +195,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
       canEnableBookbuilding,
       bookBuildingEnabled,
       isAuthorized,
+      investmentCalculatedValues
     }) => {
       if (maxPledges === null || bookBuildingEnabled === undefined) {
         throw new InvariantError(
@@ -205,6 +210,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
           canEnableBookbuilding: canEnableBookbuilding,
           whitelistingIsActive: bookBuildingEnabled,
           bookbuildingLimitReached,
+          investmentCalculatedValues,
           investorsCount: bookBuildingStats.investorsCount,
           isAuthorized,
         }),
