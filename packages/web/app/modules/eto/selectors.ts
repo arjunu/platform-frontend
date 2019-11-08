@@ -4,7 +4,8 @@ import { createSelector } from "reselect";
 
 import {
   EEtoState,
-  TEtoDataWithCompany, TEtoInvestmentCalculatedValues,
+  TEtoDataWithCompany,
+  TEtoInvestmentCalculatedValues,
   TEtoSpecsData,
 } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { calcShareAndTokenPrice } from "../../lib/api/eto/EtoUtils";
@@ -303,7 +304,9 @@ export const selectSignedInvestmentAgreementHash = createSelector(
   },
 );
 
-export const selectIssuerEtoInvestmentCalculatedValues = (state: IAppState):  TEtoInvestmentCalculatedValues | undefined => {
+export const selectIssuerEtoInvestmentCalculatedValues = (
+  state: IAppState,
+): TEtoInvestmentCalculatedValues | undefined => {
   const eto = selectIssuerEto(state);
-  return eto && eto.investmentCalculatedValues
+  return eto && eto.investmentCalculatedValues;
 };

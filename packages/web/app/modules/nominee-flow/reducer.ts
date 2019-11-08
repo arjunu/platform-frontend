@@ -74,7 +74,7 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
         nomineeTasksStatus: action.payload.nomineeTasksStatus,
       };
     case actions.nomineeFlow.createNomineeRequest.getType():
-    case actions.nomineeFlow.loadNomineeTaskData.getType():
+    case actions.nomineeFlow.loadNomineeTaskData.getType(): //todo remove this
       return {
         ...state,
         loading: true,

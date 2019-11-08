@@ -63,6 +63,7 @@ export const assertNomineeAgreementsSigningFlow = () => {
   goToNomineeDashboard();
 
   signTHA();
+  cy.wait(10000);
   signRAAA();
 
   assertNoTasks();

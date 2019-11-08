@@ -33,6 +33,7 @@ import {
   selectActiveNomineeEto,
   selectIsISHASignedByIssuer,
   selectNomineeActiveEtoPreviewCode,
+  selectNomineeDashboardIsReady,
   selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
   selectNomineeRequests,
@@ -199,7 +200,10 @@ export function* nomineeDashboardView({ logger }: TGlobalDependencies): Iterator
 
     const taskSpecificData = yield neuCall(getTaskSpecificData, activeNomineeTask);
 
-    yield put(actions.nomineeFlow.startNomineeTaskWatcher());
+    const dataReady = yield select(selectNomineeDashboardIsReady);
+    if (!dataReady) {
+      yield put(actions.nomineeFlow.startNomineeViewWatcher());
+    }
     yield put(actions.nomineeFlow.storeActiveNomineeTask(activeNomineeTask, taskSpecificData));
   } catch (e) {
     logger.error(e);
@@ -262,10 +266,10 @@ export function* loadActiveNomineeEto(): IterableIterator<any> {
   yield neuCall(setActiveNomineeEto);
 }
 
-export function* nomineeTasksWatcher({ logger }: TGlobalDependencies): Iterator<any> {
+export function* nomineeViewWatcher({ logger }: TGlobalDependencies): Iterator<any> {
   while (true) {
     logger.info("Getting nominee tasks");
-    yield put(actions.nomineeFlow.initNomineeTasks());
+    yield put(actions.nomineeFlow.nomineeDashboardView());
     yield delay(NOMINEE_RECALCULATE_TASKS_DELAY);
   }
 }
@@ -484,8 +488,8 @@ export function* nomineeFlowSagas(): Iterator<any> {
   );
   yield fork(
     neuTakeLatestUntil,
-    actions.nomineeFlow.startNomineeTaskWatcher,
+    actions.nomineeFlow.startNomineeViewWatcher,
     [actions.nomineeFlow.stopNomineeTaskWatcher, "@@router/LOCATION_CHANGE"],
-    nomineeTasksWatcher,
+    nomineeViewWatcher,
   );
 }
