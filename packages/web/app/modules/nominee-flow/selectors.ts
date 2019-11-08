@@ -3,6 +3,7 @@ import { createSelector } from "reselect";
 import { IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { nomineeIgnoredTemplates } from "../../lib/api/eto/EtoFileUtils";
 import { IAppState } from "../../store";
+import { DataUnavailableError } from "../../utils/errors";
 import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
 import { TEtoWithCompanyAndContract, TOfferingAgreementsStatus } from "../eto/types";
 import { selectRouter } from "../routing/selectors";
@@ -11,10 +12,9 @@ import {
   ENomineeRequestStatus,
   ENomineeTask,
   ERedeemShareCapitalTaskSubstate,
-  TNomineeRequestStorage
+  TNomineeRequestStorage,
 } from "./types";
 import { getActiveEtoPreviewCodeFromQueryString } from "./utils";
-import { DataUnavailableError } from "../../utils/errors";
 
 export const selectNomineeFlow = (state: IAppState) => state.nomineeFlow;
 
@@ -28,10 +28,8 @@ export const selectActiveTaskData = (state: IAppState) => state.nomineeFlow.acti
 
 export const selectLinkToIssuerNextState = (state: IAppState) => {
   const activeTaskData = selectActiveTaskData(state);
-  return (
-    activeTaskData[ENomineeTask.LINK_TO_ISSUER] &&
-    activeTaskData[ENomineeTask.LINK_TO_ISSUER].nextState
-  );
+  const linkToIssuerData = activeTaskData[ENomineeTask.LINK_TO_ISSUER];
+  return linkToIssuerData && linkToIssuerData.nextState;
 };
 
 export const selectNomineeRequests = (state: IAppState): TNomineeRequestStorage =>
@@ -108,16 +106,29 @@ export const selectCapitalIncrease = (state: IAppState) => {
   ) {
     return undefined;
   } else {
-    return state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode][ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL].capitalIncrease;
+    const taskData =
+      state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode][
+        ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
+      ];
+    return taskData && taskData.capitalIncrease;
   }
 };
 
-export const selectRedeemShareCapitalTaskSubstate = (state: IAppState) :ERedeemShareCapitalTaskSubstate => {
+export const selectRedeemShareCapitalTaskSubstate = (
+  state: IAppState,
+): ERedeemShareCapitalTaskSubstate | undefined => {
   const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
-  if(activeNomineeEtoPreviewCode && state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode]) {
-    return state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode][ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL].taskSubstate
+  if (
+    activeNomineeEtoPreviewCode &&
+    state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode]
+  ) {
+    const taskData =
+      state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode][
+        ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
+      ];
+    return taskData && taskData.taskSubstate;
   } else {
-    throw new DataUnavailableError("active nominee eto preview code is missing!")
+    throw new DataUnavailableError("active nominee eto preview code is missing!");
   }
 };
 

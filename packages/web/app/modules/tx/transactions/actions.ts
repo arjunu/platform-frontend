@@ -25,8 +25,10 @@ export const txTransactionsActions = {
       tokenDisbursals,
     }),
   ),
-  startWithdrawNEuro: createActionFactory("TRANSACTIONS_START_WITHDRAW_NEUR",
-    (initialAmount = "0") => ({initialAmount})),
+  startWithdrawNEuro: createActionFactory(
+    "TRANSACTIONS_START_WITHDRAW_NEUR",
+    (initialAmount?: string) => ({ initialAmount }),
+  ),
   startUnlockEtherFunds: createActionFactory("TRANSACTIONS_START_UNLOCK_ETHER_FUNDS"),
   startInvestorRefund: createActionFactory(
     "TRANSACTION_START_INVESTOR_REFUND",

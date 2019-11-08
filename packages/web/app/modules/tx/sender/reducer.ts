@@ -2,7 +2,11 @@ import { ITxData } from "../../../lib/web3/types";
 import { AppReducer } from "../../../store";
 import { Overwrite } from "../../../types";
 import { actions } from "../../actions";
-import { ITxTypeWithData, TSpecificTransactionState } from "../types";
+import {
+  ITxTypeWithData,
+  TSpecificTransactionState,
+  TTxSenderNEurRedeemInitialValues,
+} from "../types";
 
 export enum ETransactionErrorType {
   // Flow Specific Errors
@@ -45,7 +49,7 @@ interface ITxSenderCommonState {
   blockId?: number;
   txHash?: string;
   error?: ETransactionErrorType;
-  initialValues?: any //fixme
+  initialValues?: TTxSenderNEurRedeemInitialValues;
 }
 
 type TTransactionState = TSpecificTransactionState | ITxSenderDefaultState;
@@ -61,7 +65,7 @@ const initialState: ITxSenderState = {
   additionalData: undefined,
   state: ETxSenderState.UNINITIALIZED,
   txDetails: undefined,
-  initialValues: undefined
+  initialValues: undefined,
 };
 
 export const txSenderReducer: AppReducer<ITxSenderState> = (

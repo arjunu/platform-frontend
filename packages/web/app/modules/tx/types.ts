@@ -69,6 +69,8 @@ type TTxSenderNEurRedeemState = ITxTypeWithData<
   TNEurRedeemAdditionalDetails
 >;
 
+export type TTxSenderNEurRedeemInitialValues = { initialAmount?: string };
+
 type TTxSenderUnlockState = ITxTypeWithData<ETxSenderType.UNLOCK_FUNDS, TUnlockAdditionalData>;
 
 type TTxSenderUpgradeState = ITxTypeWithData<ETxSenderType.UPGRADE, TUpgradeAdditionalData>;

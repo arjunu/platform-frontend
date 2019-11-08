@@ -10,7 +10,8 @@ import * as YupTS from "../../../../lib/yup-ts.unsafe";
 import { actions } from "../../../../modules/actions";
 import { EBankTransferType } from "../../../../modules/bank-transfer-flow/reducer";
 import {
-  selectBankRedeemMinAmount, selectInitialAmount,
+  selectBankRedeemMinAmount,
+  selectInitialAmount,
   selectRedeemFeeUlps,
 } from "../../../../modules/bank-transfer-flow/selectors";
 import { selectLiquidEuroTokenBalance } from "../../../../modules/wallet/selectors";
@@ -47,7 +48,7 @@ interface IStateProps {
   neuroAmount: string;
   neuroEuroAmount: string;
   bankFee: string;
-  initialAmount: string | undefined
+  initialAmount: string | undefined;
 }
 
 interface IDispatchProps {
@@ -55,7 +56,14 @@ interface IDispatchProps {
   verifyBankAccount: () => void;
 }
 
-type IProps = IStateProps & IDispatchProps;
+type TComponentProps = {
+  minAmount: string;
+  neuroAmount: string;
+  neuroEuroAmount: string;
+  bankFee: string;
+  confirm: (tx: Partial<ITxData>) => void;
+  verifyBankAccount: () => void;
+};
 
 export interface IReedemData {
   amount: string | undefined;
@@ -99,7 +107,8 @@ const getValidators = (minAmount: string, neuroAmount: string) =>
     ),
   }).toYup();
 
-const formatForFormik = (value:string) => toFixedPrecision({
+const formatForFormik = (value: string) =>
+  toFixedPrecision({
     value: value,
     roundingMode: ERoundingMode.DOWN,
     inputFormat: ENumberInputFormat.ULPS,
@@ -109,7 +118,7 @@ const formatForFormik = (value:string) => toFixedPrecision({
     ),
   });
 
-const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
+const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
   neuroAmount,
   neuroEuroAmount,
   verifyBankAccount,
@@ -143,9 +152,8 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
     </section>
 
     <FormikConsumer>
-      {({ values, setFieldValue, isValid, setFieldTouched, errors }: FormikProps<IReedemData>) => (
+      {({ values, setFieldValue, isValid, setFieldTouched }: FormikProps<IReedemData>) => (
         <>
-          {console.log("FormikConsumer", values, isValid, errors)}
           <section className={styles.section}>
             <FormLabel for="amount" className={styles.label}>
               <FormattedMessage id="bank-transfer.redeem.init.redeem-amount" />
@@ -154,11 +162,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
               data-test-id="bank-transfer.reedem-init.redeem-whole-balance"
               className={styles.linkButton}
               onClick={() => {
-                setFieldValue(
-                  "amount",
-                  formatForFormik(neuroAmount),
-                  true,
-                );
+                setFieldValue("amount", formatForFormik(neuroAmount), true);
                 setFieldTouched("amount", true, true);
               }}
               layout={EButtonLayout.INLINE}
@@ -211,7 +215,10 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                 </Heading>
               </Tooltip>
               <span className="text-warning">
-                {"-"} {values.amount && isValid && <CalculatedFee bankFee={bankFee} amount={values.amount} />}
+                {"-"}{" "}
+                {values.amount && isValid && (
+                  <CalculatedFee bankFee={bankFee} amount={values.amount} />
+                )}
               </span>
             </section>
 
@@ -220,7 +227,11 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                 <FormattedMessage id="bank-transfer.redeem.init.total-redeemed" />
               </Heading>
               <span className="text-success">
-                {(values.amount && isValid) ? <TotalRedeemed bankFee={bankFee} amount={values.amount} /> : "-"}
+                {values.amount && isValid ? (
+                  <TotalRedeemed bankFee={bankFee} amount={values.amount} />
+                ) : (
+                  "-"
+                )}
               </span>
             </section>
 
@@ -246,7 +257,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
   </>
 );
 
-const BankTransferRedeemInit = compose<IProps, {}>(
+const BankTransferRedeemInit = compose<TComponentProps, {}>(
   onEnterAction({
     actionCreator: d => {
       d(actions.bankTransferFlow.getRedeemData());
@@ -258,7 +269,7 @@ const BankTransferRedeemInit = compose<IProps, {}>(
       neuroEuroAmount: selectLiquidEuroTokenBalance(state),
       bankFee: selectRedeemFeeUlps(state),
       minAmount: selectBankRedeemMinAmount(state),
-      initialAmount: selectInitialAmount(state)
+      initialAmount: selectInitialAmount(state),
     }),
     dispatchToProps: dispatch => ({
       verifyBankAccount: () =>
@@ -267,16 +278,17 @@ const BankTransferRedeemInit = compose<IProps, {}>(
     }),
   }),
   withFormik<IStateProps & IDispatchProps, IReedemData>({
-    mapPropsToValues: props => {
-      return ({
-        ...props,
-        amount: props.initialAmount && formatForFormik(props.initialAmount)
-      })
-    },
+    mapPropsToValues: props => ({
+      ...props,
+      amount: props.initialAmount && formatForFormik(props.initialAmount),
+    }),
     validationSchema: (props: IStateProps) => getValidators(props.minAmount, props.neuroAmount),
-    isInitialValid: (props) =>
+    isInitialValid: props =>
       //casting is necessary because formik has incorrect typings for isInitialValid()
-      !!(props as IStateProps).initialAmount && new BigNumber((props as IStateProps).initialAmount!).lessThanOrEqualTo((props as IStateProps).neuroAmount),
+      !!(props as IStateProps).initialAmount &&
+      new BigNumber((props as IStateProps).initialAmount!).lessThanOrEqualTo(
+        (props as IStateProps).neuroAmount,
+      ),
     handleSubmit: (values, { props }) => {
       props.confirm({ value: values.amount });
     },
@@ -285,10 +297,6 @@ const BankTransferRedeemInit = compose<IProps, {}>(
 
 export { BankTransferRedeemLayout, BankTransferRedeemInit };
 
-
-
 ///TODO
-///TODO check the countdown in notification
-///TODO add condition to show the step only if wallet balance is sufficient
 ///TODO tests
 ///TODO

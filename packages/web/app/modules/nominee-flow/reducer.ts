@@ -1,3 +1,4 @@
+import { ENomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/types";
 import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
@@ -7,6 +8,7 @@ import {
   ENomineeRequestError,
   ENomineeTask,
   ENomineeTaskStatus,
+  ERedeemShareCapitalTaskSubstate,
   TNomineeRequestStorage,
 } from "./types";
 
@@ -18,23 +20,36 @@ export type TNomineeTasksStatus = { [key in ENomineeTask]: ENomineeTaskStatus } 
   byPreviewCode: ENomineeEtoSpecificTasksStatus;
 };
 
-export type TActiveTaskData = Partial<{ [key in ENomineeTask]: any }> & {
-  //todo fix typings
-  byPreviewCode: { [previewCode: string]: Partial<{ [key in ENomineeEtoSpecificTask]: any }> }; //todo fix typings
-};
-
 export type TNomineeEtosAdditionalData = {
   investmentAgreementUrl: string | undefined;
   offeringAgreementsStatus: TOfferingAgreementsStatus;
   capitalIncrease: string | undefined;
 };
 
+export type TNomineeTaskLinkToIssuerData = { nextState: ENomineeRequestComponentState };
+
+export type TNomineeTaskRedeemShareCapitalData = {
+  capitalIncrease: string;
+  walletBalance: string;
+  taskSubstate: ERedeemShareCapitalTaskSubstate;
+};
+
+export type TTaskSpecificData = Partial<{ [key in ENomineeTask]: unknown }> &
+  Partial<{ [ENomineeTask.LINK_TO_ISSUER]: TNomineeTaskLinkToIssuerData }> & {
+    byPreviewCode: {
+      [previewCode: string]: Partial<{ [key in ENomineeEtoSpecificTask]: unknown }> &
+        Partial<{
+          [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: TNomineeTaskRedeemShareCapitalData;
+        }>;
+    };
+  };
+
 export type TNomineeFlowState = {
   ready: boolean;
   loading: boolean;
   error: ENomineeRequestError | string; //TODO ENomineeRequestError is for backward compat, this has to be fixed
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask;
-  activeTaskData: TActiveTaskData;
+  activeTaskData: TTaskSpecificData;
   activeNomineeEtoPreviewCode: string | undefined;
   nomineeRequests: TNomineeRequestStorage;
   nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContractReadonly };

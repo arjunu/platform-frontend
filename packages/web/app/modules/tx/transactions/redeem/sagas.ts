@@ -91,9 +91,8 @@ function* startNEuroRedeemGenerator(_: TGlobalDependencies): any {
 
 function* neurRedeemSaga(
   { logger }: TGlobalDependencies,
-  {payload}: TActionFromCreator<typeof actions.txTransactions.startWithdrawNEuro>
+  { payload }: TActionFromCreator<typeof actions.txTransactions.startWithdrawNEuro>,
 ): Iterator<any> {
-
   const isVerified: boolean = yield select(selectIsBankAccountVerified);
 
   if (!isVerified) {
@@ -105,7 +104,7 @@ function* neurRedeemSaga(
     yield txSendSaga({
       transactionType: ETxSenderType.NEUR_REDEEM,
       transactionFlowGenerator: startNEuroRedeemGenerator,
-      initialValues: {initialAmount: payload.initialAmount}
+      initialValues: { initialAmount: payload.initialAmount },
     });
 
     logger.info("Investor nEUR withdrawal successful");

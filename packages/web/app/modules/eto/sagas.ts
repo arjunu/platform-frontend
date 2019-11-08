@@ -755,7 +755,7 @@ export function* loadCapitalIncrease(
 
   const [, capitalIncrease] = yield contract.contributionSummary();
   //fixme check for errors
-  return capitalIncrease.toString()
+  return capitalIncrease.toString();
 }
 
 export function* loadEtoGeneralTokenDiscounts(
@@ -797,7 +797,6 @@ export function* loadEtoGeneralTokenDiscounts(
 }
 
 export function* etoSagas(): Iterator<any> {
-  yield fork(neuTakeEvery, actions.eto.loadCapitalIncrease, loadCapitalIncrease);
   yield fork(neuTakeEvery, actions.eto.loadEtoPreview, loadEtoPreview);
   yield fork(neuTakeEvery, actions.eto.loadEto, loadEto);
   yield fork(neuTakeEvery, actions.eto.loadEtos, loadEtos);
