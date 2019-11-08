@@ -124,7 +124,7 @@ class OnfidoComponent extends React.Component<IStateProps, IState> {
         fetch('/api/kyc/individual/data', {
             headers: this.headers, 
             method: "put",
-            body: JSON.stringify({first_name: "Agnieszka", last_name: "Sarnecka"})
+            body: JSON.stringify({first_name: "David", last_name: "Scharf", birth_date: "1982-09-26"})
         }).then(function(){
             _this.getIndividualData();
         });
