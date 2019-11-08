@@ -22,10 +22,9 @@ export enum ENomineeTaskStatus {
   ERROR = "error",
 }
 
-export enum ENomineeRedeemShareholderCapitalStatus {
-  NOT_DONE = "not_done",
-  DONE = "done",
-  ERROR = "error",
+export enum  ERedeemShareCapitalTaskSubstate {
+  REDEEM_CAPITAL_INCREASE = "redeemCapitalIncrease",
+  WAITING_FOR_ISSUER_TO_SIGN_ISHA = "waitingForIssuerToSignIsha",
 }
 
 export enum ENomineeLinkBankAccountStatus {

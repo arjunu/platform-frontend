@@ -1,26 +1,23 @@
 import * as React from "react";
 import { FormattedRelative } from "react-intl";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { compose } from "recompose";
+import { branch, compose, renderComponent } from "recompose";
 
 import { actions } from "../../modules/actions";
-import { EETOStateOnChain } from "../../modules/eto/types";
-import { selectActiveNomineeEto, selectCapitalIncrease } from "../../modules/nominee-flow/selectors";
+import { EETOStateOnChain, TEtoStartOfStates } from "../../modules/eto/types";
+import {
+  selectActiveNomineeEto,
+  selectCapitalIncrease,
+  selectRedeemShareCapitalTaskSubstate
+} from "../../modules/nominee-flow/selectors";
 import { appConnect } from "../../store";
 import { DataUnavailableError } from "../../utils/errors";
-import { getStartOfState } from "../eto/shared/timeline/EtoTimeline";
 import { Button, EButtonLayout, EButtonTheme } from "../shared/buttons/Button";
 import { Money } from "../shared/formatters/Money";
 import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../shared/formatters/utils";
+import { ERedeemShareCapitalTaskSubstate } from "../../modules/nominee-flow/types";
 
 import * as styles from "./NomineeDashboard.module.scss"
-
-type TRedeemShareCapitalProps = {
-  companyName: string,
-  amount: string,
-  deadline: number,
-  redeemFunds: ()=>void
-}
 
 type TRedeemShareCapitalStateProps = {
   companyName: string,
@@ -28,10 +25,10 @@ type TRedeemShareCapitalStateProps = {
   deadline: number,
 }
 type RedeemShareCapitalDispatchProps = {
-  redeemFunds: ()=>void
+  redeemFunds: (amount: string) => void
 }
 
-const RedeemShareCapitalLayout: React.FunctionComponent<TRedeemShareCapitalProps> = ({
+const RedeemShareCapitalLayout: React.FunctionComponent<TRedeemShareCapitalStateProps & RedeemShareCapitalDispatchProps> = ({
   companyName,
   amount,
   deadline,
@@ -60,7 +57,7 @@ const RedeemShareCapitalLayout: React.FunctionComponent<TRedeemShareCapitalProps
       </p>
       <p className={styles.textBold}>
         <FormattedMessage id="nominee-flow.redeem-share-capital.text-note" />
-        <FormattedRelative value={deadline} initialNow={new Date()} />
+        <FormattedRelative value={deadline} initialNow={new Date()} style={"numeric"} />
       </p>
     </div>
     <Button
@@ -68,37 +65,62 @@ const RedeemShareCapitalLayout: React.FunctionComponent<TRedeemShareCapitalProps
       layout={EButtonLayout.PRIMARY}
       theme={EButtonTheme.BRAND}
       data-test-id="eto-nominee-sign-agreement-action"
-      onClick={redeemFunds}
+      onClick={() => redeemFunds(amount)}
     >
       <FormattedMessage id="nominee-flow.redeem-share-capital.button-redeem-funds" />
     </Button>
   </section>;
 
-const RedeemShareCapital = compose<TRedeemShareCapitalProps, {}>(
-  appConnect<TRedeemShareCapitalStateProps,{}>({
+
+export const WaitForIshaSigning = () =>
+  <section
+    className={styles.nomineeStepWidget}
+    data-test-id="nominee-flow-redeem-share-capital-waiting-for-isha-signing"
+  >
+    <h4 className={styles.nomineeStepWidgetTitle}>
+      <FormattedMessage id="nominee-flow.redeem-share-capital.wait-for-isha-signing.title" />
+    </h4>
+    <p className={styles.nomineeStepWidgetContent}>
+      <FormattedMessage id="nominee-flow.redeem-share-capital.wait-for-isha-signing.text" />
+    </p>
+  </section>;
+
+export const getStartOfClaimState = (startOfStates: TEtoStartOfStates) => {
+  const startOfClaimState = startOfStates && startOfStates[EETOStateOnChain.Claim];
+  if (startOfClaimState === undefined) {
+    throw new DataUnavailableError("start of claim state is undefined")
+  }
+  const timeLeft = startOfClaimState.getTime() - Date.now();
+  return timeLeft > 0 ? startOfClaimState.getTime() : Date.now()
+};
+
+const RedeemShareCapital = compose<TRedeemShareCapitalStateProps & RedeemShareCapitalDispatchProps, {}>(
+  appConnect<{ taskSubstate: ERedeemShareCapitalTaskSubstate }>({
+    stateToProps: (state) => ({
+      taskSubstate: selectRedeemShareCapitalTaskSubstate(state)
+    })
+  }),
+  branch<{ taskSubstate: ERedeemShareCapitalTaskSubstate }>(
+    ({ taskSubstate }) => taskSubstate === ERedeemShareCapitalTaskSubstate.WAITING_FOR_ISSUER_TO_SIGN_ISHA,
+    renderComponent(WaitForIshaSigning)),
+  appConnect<TRedeemShareCapitalStateProps, RedeemShareCapitalDispatchProps>({
     stateToProps: (state) => {
       const nomineeEto = selectActiveNomineeEto(state);
       if (nomineeEto && nomineeEto.contract) {
-
         return ({
           companyName: nomineeEto.company.name,
           amount: selectCapitalIncrease(state),
-          deadline: getStartOfState(EETOStateOnChain.Claim, nomineeEto.contract.startOfStates)
+          deadline: getStartOfClaimState(nomineeEto.contract.startOfStates)
         })
       } else {
         throw new DataUnavailableError("nominee eto is undefined")
       }
     },
-
+    dispatchToProps: (dispatch) => ({
+      redeemFunds: (amount: string) => dispatch(actions.txTransactions.startWithdrawNEuro(amount))
+    })
   }),
-appConnect<{},{},TRedeemShareCapitalStateProps>({
-  dispatchToProps: (dispatch,props) =>({
-    redeemFunds: () => dispatch(actions.txTransactions.startWithdrawNEuro(props.amount))
-  })
-})
-  //fixme use withProps
-  //fixme guard against negative deadline,
-  //fixme set deadline to days OR hours
-)(RedeemShareCapitalLayout);
+)
+(RedeemShareCapitalLayout);
 
 export { RedeemShareCapitalLayout, RedeemShareCapital }

@@ -998,6 +998,8 @@
   "nominee-flow.redeem-share-capital.text": "{companyName} successfully completed it’s fundraising campaign and {amount} of share capital has been transferred to your wallet. Please redeem the funds to your bank account. Thereafter wire transfer those funds to {companyName}’s bank account as payment of shares sold during the fundraising campaign. Please contact {companyName} for bank details.",
   "nominee-flow.redeem-share-capital.text-note": "Note: You must complete Investment and Shareholder Agreement signing process ",
   "nominee-flow.redeem-share-capital.title": "Register newly issued shares",
+  "nominee-flow.redeem-share-capital.wait-for-isha-signing.title": "Waiting for ISHA",
+  "nominee-flow.redeem-share-capital.wait-for-isha-signing.text": "Please wait for ETO issuer to sign the ISHA",
   "nominee-flow.redeem-share-capital.button-redeem-funds": "Redeem funds",
   "nominee-link-request.status.approved": "request approved",
   "nominee-link-request.status.pending": "approval pending",

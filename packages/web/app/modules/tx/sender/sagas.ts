@@ -119,7 +119,7 @@ function* txControllerSaga(controlledEffect: Iterator<Effect>): any {
 
 export function* txSendSaga({ transactionType, transactionFlowGenerator, extraParam, initialValues }: ITxSendParams): any {
   yield neuCall(ensureNoPendingTx);
-  console.log("----txSendSaga", initialValues)
+
   const sendProcessEffect = neuCall(txSendProcess, {
     transactionType,
     transactionFlowGenerator,
@@ -140,7 +140,6 @@ function* txSendProcess(
   }: TTxSendProcessParams
 ): any {
   try {
-    console.log("----->txSendProcess, txSenderShowModal")
     yield put(actions.txSender.txSenderShowModal({ type: transactionType, initialValues }));
 
     yield neuRepeatIf("TX_SENDER_CHANGE", "TX_SENDER_ACCEPT", transactionFlowGenerator, extraParam);

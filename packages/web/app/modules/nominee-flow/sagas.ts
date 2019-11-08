@@ -1,6 +1,7 @@
 import { isEmpty } from "lodash/fp";
 import { delay, Effect } from "redux-saga";
 import { all, fork, put, select, take } from "redux-saga/effects";
+import BigNumber from "bignumber.js";
 
 import { getNomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/utils";
 import {
@@ -40,7 +41,7 @@ import {
   ENomineeEtoSpecificTask,
   ENomineeRequestError,
   ENomineeTask,
-  ENomineeTaskStatus,
+  ENomineeTaskStatus, ERedeemShareCapitalTaskSubstate,
   INomineeRequest,
   TNomineeRequestStorage,
 } from "./types";
@@ -50,6 +51,7 @@ import {
   nomineeRequestResponseToRequestStatus,
   takeLatestNomineeRequest,
 } from "./utils";
+import { selectLiquidEuroTokenBalance } from "../wallet/selectors";
 
 export function* initNomineeEtoSpecificTasks(
   { logger, notificationCenter }: TGlobalDependencies,
@@ -82,10 +84,10 @@ export function* initNomineeEtoSpecificTasks(
       yield neuCall(loadInvestmentAgreement, eto.etoId, eto.previewCode);
 
       const data = yield all({
-        isISHASignedByIssuer: select(selectIsISHASignedByIssuer, eto.previewCode),
+        ishaIsSignedByIssuer: select(selectIsISHASignedByIssuer, eto.previewCode),
       });
 
-      if (data.isISHASignedByIssuer) {
+      if (data.ishaIsSignedByIssuer) {
         nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL] =
           ENomineeTaskStatus.DONE;
       }
@@ -120,7 +122,6 @@ export function* initNomineeTasks({
     const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
       selectIsUserFullyVerified,
     );
-    console.log("userIsVerified", userIsVerified)
     if (!userIsVerified) {
       yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus)); //no reason to go further
       return;
@@ -204,12 +205,36 @@ export function* nomineeDashboardView({ logger }: TGlobalDependencies): Iterator
   }
 }
 
+export type TGetRedeemShareCapitalTaskStateParams = {
+  capitalIncrease: string,
+  walletBalance: string
+}
+
+
+
+export function* getRedeemShareCapitalTaskState(
+  _: TGlobalDependencies,
+  { capitalIncrease, walletBalance }:TGetRedeemShareCapitalTaskStateParams
+) {
+  // capital increase is transferred to Nominee's wallet automatically when eto enters signing state.
+  // if wallet balance is less than capital increase, we ASSUME that capital increase already
+  // has been transferred to the issuer's bank account and nominee now has to wait until issuer signs the ISHA.
+  // this won't work with multiple nominee etos but ok for now.
+  // After that nominee flow will go to the next stage - ACCEPT_ISHA
+  // @see https://github.com/Neufund/platform-frontend/issues/3320, technical notes
+  if(new BigNumber(walletBalance).lessThan(capitalIncrease)){
+    return ERedeemShareCapitalTaskSubstate.WAITING_FOR_ISSUER_TO_SIGN_ISHA
+  } else {
+    return ERedeemShareCapitalTaskSubstate.REDEEM_CAPITAL_INCREASE
+  }
+}
+
 export function* getTaskSpecificData(
   _: TGlobalDependencies,
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask,
 ): Iterator<any> {
   //fixme create type
-  const taskSpecificData: Partial<{ [key in ENomineeTask]: unknown }> & {byPreviewCode: {[previewCode:string]:Partial<{ [key in ENomineeEtoSpecificTask]: unknown }>}} = {byPreviewCode:{}};
+  const taskSpecificData: Partial<{ [key in ENomineeTask]: unknown }> & { byPreviewCode: { [previewCode: string]: Partial<{ [key in ENomineeEtoSpecificTask]: unknown }> } } = { byPreviewCode: {} };
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
     yield neuCall(loadNomineeRequests); //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
@@ -228,13 +253,17 @@ export function* getTaskSpecificData(
       nextState: yield getNomineeRequestComponentState(dataConverted),
     };
   }
-  if(activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL){
-    const nomineeEto:TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
+  if (activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL) {
+    const nomineeEto: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
     const capitalIncrease = yield neuCall(loadCapitalIncrease, nomineeEto.etoId);
+    const walletBalance = yield select(selectLiquidEuroTokenBalance);
+    const taskSubstate:ERedeemShareCapitalTaskSubstate = yield neuCall(getRedeemShareCapitalTaskState, { capitalIncrease, walletBalance });
 
     taskSpecificData.byPreviewCode[nomineeEto.previewCode] = {
       [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: {
         capitalIncrease,
+        walletBalance,
+        taskSubstate
       }
     }
   }
@@ -424,9 +453,7 @@ export function* setActiveNomineeEto({
     if (etos === undefined || isEmpty(etos)) {
       yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(undefined));
     } else {
-      const forcedActiveEtoPreviewCode: ReturnType<
-        typeof selectActiveEtoPreviewCodeFromQueryString
-      > = yield select(selectActiveEtoPreviewCodeFromQueryString);
+      const forcedActiveEtoPreviewCode: ReturnType<typeof selectActiveEtoPreviewCodeFromQueryString> = yield select(selectActiveEtoPreviewCodeFromQueryString);
 
       // For testing purpose we can force another ETO to be active (by default it's the first one)
       const shouldForceSpecificEtoToBeActive =

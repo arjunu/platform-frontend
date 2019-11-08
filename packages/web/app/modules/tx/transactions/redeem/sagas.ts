@@ -93,7 +93,7 @@ function* neurRedeemSaga(
   { logger }: TGlobalDependencies,
   {payload}: TActionFromCreator<typeof actions.txTransactions.startWithdrawNEuro>
 ): Iterator<any> {
-  console.log("-----neurRedeemSaga",payload.initialAmount);
+
   const isVerified: boolean = yield select(selectIsBankAccountVerified);
 
   if (!isVerified) {
