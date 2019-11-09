@@ -21,9 +21,10 @@ describe("Eto Nominee accepts agreements", function(): void {
     cy.saveLocalStorage("ISSUER_SETUP_NO_ST");
 
     logout();
-
+    cy.log("----nominee---");
     assertNomineeAgreementsSigningFlow();
 
+    cy.log("----issuer---");
     cy.restoreLocalStorage("ISSUER_SETUP_NO_ST");
 
     goToIssuerDashboard();

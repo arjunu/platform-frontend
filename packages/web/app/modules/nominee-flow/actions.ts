@@ -5,6 +5,7 @@ import { TEtoWithCompanyAndContract } from "../eto/types";
 import { TNomineeTasksStatus } from "./reducer";
 import {
   ENomineeEtoSpecificTask,
+  ENomineeFlowError,
   ENomineeRequestError,
   ENomineeTask,
   INomineeRequest,
@@ -17,7 +18,12 @@ export const nomineeFlowActions = {
     "NOMINEE_STORE_TASK_STATUS",
     (nomineeTasksStatus: TNomineeTasksStatus) => ({ nomineeTasksStatus }),
   ),
+  storeError: createActionFactory(
+    "NOMINEE_STORE_ERROR",
+    (error: ENomineeRequestError | ENomineeFlowError) => ({ error }),
+  ),
   nomineeDashboardView: createActionFactory("NOMINEE_DASHBOARD_VIEW"),
+  getNomineeDashboardData: createActionFactory("NOMINEE_DASHBOARD_GET_DATA"),
   nomineeEtoView: createActionFactory("NOMINEE_ETO_VIEW"),
   nomineeDocumentsView: createActionFactory("NOMINEE_DOCUMENTS_VIEW"),
   loadNomineeEtos: createActionFactory("NOMINEE_FLOW_LOAD_ETOS"),
@@ -31,7 +37,7 @@ export const nomineeFlowActions = {
   ),
   startNomineeRequestsWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_REQUESTS_WATCHER"),
   stopNomineeRequestsWatcher: createActionFactory("NOMINEE_FLOW_STOP_NOMINEE_REQUESTS_WATCHER"),
-  startNomineeTaskWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_TASKS_WATCHER"),
+  startNomineeViewWatcher: createActionFactory("NOMINEE_FLOW_START_NOMINEE_TASKS_WATCHER"),
   stopNomineeTaskWatcher: createActionFactory("NOMINEE_FLOW_STOP_NOMINEE_TASKS_WATCHER"),
   createNomineeRequest: createActionFactory(
     "NOMINEE_FLOW_CREATE_NOMINEE_REQUEST",

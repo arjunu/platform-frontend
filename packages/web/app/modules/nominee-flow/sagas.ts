@@ -44,6 +44,7 @@ import {
 } from "./selectors";
 import {
   ENomineeEtoSpecificTask,
+  ENomineeFlowError,
   ENomineeRequestError,
   ENomineeTask,
   ENomineeTaskStatus,
@@ -111,18 +112,14 @@ export function* initNomineeEtoSpecificTasks(
   }
 }
 
-export function* initNomineeTasks({
-  logger,
-  notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
-  try {
-    const nomineeTasksStatus = {
-      [ENomineeTask.ACCOUNT_SETUP]: ENomineeTaskStatus.NOT_DONE,
-      [ENomineeTask.LINK_BANK_ACCOUNT]: ENomineeTaskStatus.NOT_DONE,
-      [ENomineeTask.LINK_TO_ISSUER]: ENomineeTaskStatus.NOT_DONE,
-      [ENomineeTask.NONE]: ENomineeTaskStatus.NOT_DONE,
-      byPreviewCode: {},
-    };
+export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
+  const nomineeTasksStatus = {
+    [ENomineeTask.ACCOUNT_SETUP]: ENomineeTaskStatus.NOT_DONE,
+    [ENomineeTask.LINK_BANK_ACCOUNT]: ENomineeTaskStatus.NOT_DONE,
+    [ENomineeTask.LINK_TO_ISSUER]: ENomineeTaskStatus.NOT_DONE,
+    [ENomineeTask.NONE]: ENomineeTaskStatus.NOT_DONE,
+    byPreviewCode: {},
+  };
 
     const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
       selectIsUserFullyVerified,
@@ -133,80 +130,89 @@ export function* initNomineeTasks({
     } else {
       nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] = ENomineeTaskStatus.DONE;
 
-      yield all([neuCall(loadBankAccountDetails), neuCall(loadNomineeEtos)]);
+    yield all([neuCall(loadBankAccountDetails), neuCall(loadNomineeEtos)]);
 
-      const result = yield all({
-        bankAccountIsVerified: select(selectIsBankAccountVerified),
-        nomineeEtos: select(selectNomineeEtos),
-      });
+    const result = yield all({
+      bankAccountIsVerified: select(selectIsBankAccountVerified),
+      nomineeEtos: select(selectNomineeEtos),
+    });
 
-      if (result.bankAccountIsVerified) {
-        nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] = ENomineeTaskStatus.DONE;
-      }
-      if (!result.nomineeEtos || isEmpty(result.nomineeEtos)) {
-        yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
-        return;
-      } else {
-        nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] = ENomineeTaskStatus.DONE;
-      }
-
-      nomineeTasksStatus.byPreviewCode = yield all(
-        //todo we need this all the time, write a utils fn for this
-        Object.keys(result.nomineeEtos).reduce(
-          (acc: { [key: string]: Iterator<Effect> }, previewCode: string) => {
-            acc[previewCode] = neuCall(
-              initNomineeEtoSpecificTasks,
-              result.nomineeEtos[previewCode],
-            );
-            return acc;
-          },
-          {} as { [key: string]: Iterator<Effect> },
-        ),
-      );
-
-      yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
+    if (result.bankAccountIsVerified) {
+      nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] = ENomineeTaskStatus.DONE;
     }
-  } catch (e) {
-    logger.error("error in initNomineeTasks", e);
-    notificationCenter.error(
-      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    if (!result.nomineeEtos || isEmpty(result.nomineeEtos)) {
+      yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
+      return;
+    } else {
+      nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] = ENomineeTaskStatus.DONE;
+    }
+
+    nomineeTasksStatus.byPreviewCode = yield all(
+      //todo we need this all the time, write a utils fn for this
+      Object.keys(result.nomineeEtos).reduce(
+        (acc: { [key: string]: Iterator<Effect> }, previewCode: string) => {
+          acc[previewCode] = neuCall(initNomineeEtoSpecificTasks, result.nomineeEtos[previewCode]);
+          return acc;
+        },
+        {} as { [key: string]: Iterator<Effect> },
+      ),
     );
+
+    yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
   }
 }
 
-export function* nomineeDashboardView({ logger }: TGlobalDependencies): Iterator<any> {
+export function* getNomineeDashboardData(): Iterator<any> {
+  yield neuCall(initNomineeTasks);
+
+  const selectStepReq: { [key: string]: Effect } = {
+    nomineeTasksStatus: select(selectNomineeTasksStatus),
+  };
+
+  //check the conditions and start watchers  here
+  const verificationIsComplete = yield select(selectIsUserFullyVerified);
+
+  if (verificationIsComplete) {
+    yield all({
+      startRequestWatcher: put(actions.nomineeFlow.startNomineeRequestsWatcher()),
+      setActiveEto: neuCall(setActiveNomineeEto),
+    });
+
+    selectStepReq.activeEtoPreviewCode = select(selectNomineeActiveEtoPreviewCode);
+    selectStepReq.nomineeEtos = select(selectNomineeEtos);
+  }
+  const selectStepData = yield all(selectStepReq);
+
+  const activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask = yield getNomineeTaskStep(
+    selectStepData,
+  );
+
+  const taskSpecificData = yield neuCall(getTaskSpecificData, activeNomineeTask);
+
+  yield put(actions.nomineeFlow.storeActiveNomineeTask(activeNomineeTask, taskSpecificData));
+}
+
+export function* nomineeDashboardView({
+  logger,
+  notificationCenter,
+}: TGlobalDependencies): Iterator<any> {
   try {
-    yield neuCall(initNomineeTasks);
-
-    const selectStepReq: { [key: string]: Effect } = {
-      nomineeTasksStatus: select(selectNomineeTasksStatus),
-    };
-
-    //check the conditions and start watchers  here
-    const verificationIsComplete = yield select(selectIsUserFullyVerified);
-
-    if (verificationIsComplete) {
-      yield all({
-        startRequestWatcher: put(actions.nomineeFlow.startNomineeRequestsWatcher()),
-        setActiveEto: neuCall(setActiveNomineeEto),
-      });
-
-      selectStepReq.activeEtoPreviewCode = select(selectNomineeActiveEtoPreviewCode);
-      selectStepReq.nomineeEtos = select(selectNomineeEtos);
-    }
-    const selectStepData = yield all(selectStepReq);
-
-    const activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask = yield getNomineeTaskStep(
-      selectStepData,
-    );
-
-    const taskSpecificData = yield neuCall(getTaskSpecificData, activeNomineeTask);
-
-    yield put(actions.nomineeFlow.startNomineeTaskWatcher());
-    yield put(actions.nomineeFlow.storeActiveNomineeTask(activeNomineeTask, taskSpecificData));
+    yield neuCall(nomineeViewDataWatcher);
   } catch (e) {
     logger.error(e);
-    //TODO save error to state and show and error UI
+
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
+    yield put(actions.nomineeFlow.storeError(ENomineeFlowError.FETCH_DATA_ERROR));
+  }
+}
+
+export function* nomineeViewDataWatcher({ logger }: TGlobalDependencies): Iterator<any> {
+  while (true) {
+    logger.info("Getting nominee data and tasks");
+    yield neuCall(getNomineeDashboardData);
+    yield delay(NOMINEE_RECALCULATE_TASKS_DELAY);
   }
 }
 
@@ -277,7 +283,10 @@ export function* getTaskSpecificData(
   return taskSpecificData;
 }
 
-export function* nomineeEtoView({ logger }: TGlobalDependencies): Iterator<any> {
+export function* nomineeEtoView({
+  logger,
+  notificationCenter,
+}: TGlobalDependencies): Iterator<any> {
   try {
     const verificationIsComplete = yield select(selectIsUserFullyVerified);
     if (verificationIsComplete) {
@@ -285,11 +294,17 @@ export function* nomineeEtoView({ logger }: TGlobalDependencies): Iterator<any> 
     }
   } catch (e) {
     logger.error(e);
-    //TODO save error to state and show and error UI
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
+    yield put(actions.nomineeFlow.storeError(ENomineeFlowError.FETCH_DATA_ERROR));
   }
 }
 
-export function* nomineeDocumentsView({ logger }: TGlobalDependencies): Iterator<any> {
+export function* nomineeDocumentsView({
+  logger,
+  notificationCenter,
+}: TGlobalDependencies): Iterator<any> {
   try {
     const verificationIsComplete = yield select(selectIsUserFullyVerified);
     if (verificationIsComplete) {
@@ -297,21 +312,16 @@ export function* nomineeDocumentsView({ logger }: TGlobalDependencies): Iterator
     }
   } catch (e) {
     logger.error(e);
-    //TODO save error to state and show and error UI
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
+    yield put(actions.nomineeFlow.storeError(ENomineeFlowError.FETCH_DATA_ERROR));
   }
 }
 
 export function* loadActiveNomineeEto(): IterableIterator<any> {
   yield neuCall(loadNomineeEtos);
   yield neuCall(setActiveNomineeEto);
-}
-
-export function* nomineeTasksWatcher({ logger }: TGlobalDependencies): Iterator<any> {
-  while (true) {
-    logger.info("Getting nominee tasks");
-    yield put(actions.nomineeFlow.initNomineeTasks());
-    yield delay(NOMINEE_RECALCULATE_TASKS_DELAY);
-  }
 }
 
 export function* nomineeRequestsWatcher({ logger }: TGlobalDependencies): Iterator<any> {
@@ -506,12 +516,6 @@ export function* nomineeFlowSagas(): Iterator<any> {
     "@@router/LOCATION_CHANGE",
     nomineeDocumentsView,
   );
-  yield fork(
-    neuTakeLatestUntil,
-    actions.nomineeFlow.initNomineeTasks,
-    "@@router/LOCATION_CHANGE",
-    initNomineeTasks,
-  );
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeEtos, loadNomineeEtos);
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
@@ -528,8 +532,8 @@ export function* nomineeFlowSagas(): Iterator<any> {
   );
   yield fork(
     neuTakeLatestUntil,
-    actions.nomineeFlow.startNomineeTaskWatcher,
+    actions.nomineeFlow.startNomineeViewWatcher,
     [actions.nomineeFlow.stopNomineeTaskWatcher, "@@router/LOCATION_CHANGE"],
-    nomineeTasksWatcher,
+    nomineeViewDataWatcher,
   );
 }

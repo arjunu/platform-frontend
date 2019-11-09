@@ -51,14 +51,14 @@ describe("startRouteBasedSagas", () => {
   it("runs nomineeDashboardView when going to /dashboard as Nominee", () =>
     expectSaga(startRouteBasedSagas, globalDependencies, routerAction)
       .withState(state)
-      .put(actions.nomineeFlow.nomineeDashboardView())
+      .put(actions.nomineeFlow.getNomineeDashboardData())
       .run());
   it("doesn't run nomineeDashboardView when location is not /dashboard", () => {
     routerAction.payload.location.pathname = "/";
 
     return expectSaga(startRouteBasedSagas, globalDependencies, routerAction)
       .withState(state)
-      .not.put(actions.nomineeFlow.nomineeDashboardView())
+      .not.put(actions.nomineeFlow.getNomineeDashboardData())
       .run();
   });
   it("runs nomineeDashboardView when going to /eto/view as Nominee", () => {
