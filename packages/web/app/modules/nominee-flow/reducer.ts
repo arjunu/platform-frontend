@@ -4,6 +4,7 @@ import { actions } from "../actions";
 import { TEtoWithCompanyAndContractReadonly, TOfferingAgreementsStatus } from "../eto/types";
 import {
   ENomineeEtoSpecificTask,
+  ENomineeFlowError,
   ENomineeRequestError,
   ENomineeTask,
   ENomineeTaskStatus,
@@ -32,7 +33,7 @@ export type TNomineeEtosAdditionalData = {
 export type TNomineeFlowState = {
   ready: boolean;
   loading: boolean;
-  error: ENomineeRequestError | string; //TODO ENomineeRequestError is for backward compat, this has to be fixed
+  error: ENomineeRequestError | ENomineeFlowError; //TODO ENomineeRequestError should be stored in taskData after the linkToIssuer flow is moved to sagas
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask;
   activeTaskData: TActiveTaskData;
   activeNomineeEtoPreviewCode: string | undefined;
@@ -45,7 +46,7 @@ export type TNomineeFlowState = {
 const nomineeFlowInitialState: TNomineeFlowState = {
   ready: false,
   loading: false,
-  error: ENomineeRequestError.NONE,
+  error: ENomineeFlowError.NONE,
   activeNomineeTask: ENomineeTask.NONE,
   activeTaskData: {
     byPreviewCode: {},
@@ -72,6 +73,11 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
       return {
         ...state,
         nomineeTasksStatus: action.payload.nomineeTasksStatus,
+      };
+    case actions.nomineeFlow.storeError.getType():
+      return {
+        ...state,
+        error: action.payload.error,
       };
     case actions.nomineeFlow.createNomineeRequest.getType():
     case actions.nomineeFlow.loadNomineeTaskData.getType(): //todo remove this

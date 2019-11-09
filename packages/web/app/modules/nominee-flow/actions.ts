@@ -5,6 +5,7 @@ import { TEtoWithCompanyAndContract } from "../eto/types";
 import { TNomineeTasksStatus } from "./reducer";
 import {
   ENomineeEtoSpecificTask,
+  ENomineeFlowError,
   ENomineeRequestError,
   ENomineeTask,
   INomineeRequest,
@@ -16,6 +17,10 @@ export const nomineeFlowActions = {
   storeNomineeTasksStatus: createActionFactory(
     "NOMINEE_STORE_TASK_STATUS",
     (nomineeTasksStatus: TNomineeTasksStatus) => ({ nomineeTasksStatus }),
+  ),
+  storeError: createActionFactory(
+    "NOMINEE_STORE_ERROR",
+    (error: ENomineeRequestError | ENomineeFlowError) => ({ error }),
   ),
   nomineeDashboardView: createActionFactory("NOMINEE_DASHBOARD_VIEW"),
   getNomineeDashboardData: createActionFactory("NOMINEE_DASHBOARD_GET_DATA"),

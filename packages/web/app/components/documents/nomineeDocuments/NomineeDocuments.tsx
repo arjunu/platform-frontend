@@ -10,6 +10,7 @@ import { selectPendingDownloads } from "../../../modules/immutable-file/selector
 import {
   selectActiveNomineeEto,
   selectNomineeEtoTemplatesArray,
+  selectNomineeFlowHasError,
 } from "../../../modules/nominee-flow/selectors";
 import { appConnect } from "../../../store";
 import { withContainer } from "../../../utils/withContainer.unsafe";
@@ -17,7 +18,10 @@ import { withMetaTags } from "../../../utils/withMetaTags.unsafe";
 import { appRoutes } from "../../appRoutes";
 import { Layout } from "../../layouts/Layout";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
-import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
+import {
+  ErrorBoundaryComponent,
+  ErrorBoundaryLayout,
+} from "../../shared/errorBoundary/ErrorBoundaryLayout";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { NomineeDocumentsLayout } from "./NomineeDocumentsLayout";
 
@@ -29,6 +33,7 @@ type TStateProps = {
 type TGuardProps = {
   isUserFullyVerified: boolean;
   nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
+  hasError: boolean;
 };
 
 interface IDispatchProps {
@@ -49,8 +54,10 @@ const NomineeDocuments = compose<TComponentProps, {}>(
     stateToProps: state => ({
       nomineeEto: selectActiveNomineeEto(state),
       isUserFullyVerified: selectIsUserFullyVerified(state),
+      hasError: selectNomineeFlowHasError(state),
     }),
   }),
+  branch<TGuardProps>(props => props.hasError, renderComponent(ErrorBoundaryComponent)),
   branch<TGuardProps>(
     props => !props.isUserFullyVerified,
     renderComponent(() => <Redirect to={appRoutes.dashboard} />),

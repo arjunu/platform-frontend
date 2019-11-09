@@ -41,6 +41,7 @@ import {
 } from "./selectors";
 import {
   ENomineeEtoSpecificTask,
+  ENomineeFlowError,
   ENomineeRequestError,
   ENomineeTask,
   ENomineeTaskStatus,
@@ -196,7 +197,19 @@ export function* nomineeDashboardView({
     yield neuCall(nomineeViewDataWatcher);
   } catch (e) {
     logger.error(e);
-    //TODO save error to state and show and error UI
+
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
+    yield put(actions.nomineeFlow.storeError(ENomineeFlowError.FETCH_DATA_ERROR));
+  }
+}
+
+export function* nomineeViewDataWatcher({ logger }: TGlobalDependencies): Iterator<any> {
+  while (true) {
+    logger.info("Getting nominee data and tasks");
+    yield neuCall(getNomineeDashboardData);
+    yield delay(NOMINEE_RECALCULATE_TASKS_DELAY);
   }
 }
 
@@ -226,7 +239,10 @@ export function* getTaskSpecificData(
   return taskSpecificData;
 }
 
-export function* nomineeEtoView({ logger }: TGlobalDependencies): Iterator<any> {
+export function* nomineeEtoView({
+  logger,
+  notificationCenter,
+}: TGlobalDependencies): Iterator<any> {
   try {
     const verificationIsComplete = yield select(selectIsUserFullyVerified);
     if (verificationIsComplete) {
@@ -234,11 +250,17 @@ export function* nomineeEtoView({ logger }: TGlobalDependencies): Iterator<any> 
     }
   } catch (e) {
     logger.error(e);
-    //TODO save error to state and show and error UI
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
+    yield put(actions.nomineeFlow.storeError(ENomineeFlowError.FETCH_DATA_ERROR));
   }
 }
 
-export function* nomineeDocumentsView({ logger }: TGlobalDependencies): Iterator<any> {
+export function* nomineeDocumentsView({
+  logger,
+  notificationCenter,
+}: TGlobalDependencies): Iterator<any> {
   try {
     const verificationIsComplete = yield select(selectIsUserFullyVerified);
     if (verificationIsComplete) {
@@ -246,7 +268,10 @@ export function* nomineeDocumentsView({ logger }: TGlobalDependencies): Iterator
     }
   } catch (e) {
     logger.error(e);
-    //TODO save error to state and show and error UI
+    notificationCenter.error(
+      createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
+    );
+    yield put(actions.nomineeFlow.storeError(ENomineeFlowError.FETCH_DATA_ERROR));
   }
 }
 
