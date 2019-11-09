@@ -48,9 +48,10 @@ const RedeemShareCapitalLayout: React.FunctionComponent<TProps> = ({
             companyName,
             amount: (
               <Money
+                data-test-id="nominee-redeem-share-capital-amount"
                 value={amount}
                 inputFormat={ENumberInputFormat.ULPS}
-                outputFormat={ENumberOutputFormat.INTEGER}
+                outputFormat={ENumberOutputFormat.FULL}
                 valueType={ECurrency.EUR_TOKEN}
               />
             ),
@@ -66,7 +67,7 @@ const RedeemShareCapitalLayout: React.FunctionComponent<TProps> = ({
       className={styles.nomineeStepWidgetButton}
       layout={EButtonLayout.PRIMARY}
       theme={EButtonTheme.BRAND}
-      data-test-id="eto-nominee-sign-agreement-action"
+      data-test-id="nominee-redeem-share-capital-button"
       onClick={() => redeemFunds(amount)}
     >
       <FormattedMessage id="nominee-flow.redeem-share-capital.button-redeem-funds" />

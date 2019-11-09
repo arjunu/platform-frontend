@@ -121,14 +121,14 @@ export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
     byPreviewCode: {},
   };
 
-    const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
-      selectIsUserFullyVerified,
-    );
-    if (!userIsVerified) {
-      yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus)); //no reason to go further
-      return;
-    } else {
-      nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] = ENomineeTaskStatus.DONE;
+  const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
+    selectIsUserFullyVerified,
+  );
+  if (!userIsVerified) {
+    yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus)); //no reason to go further
+    return;
+  } else {
+    nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] = ENomineeTaskStatus.DONE;
 
     yield all([neuCall(loadBankAccountDetails), neuCall(loadNomineeEtos)]);
 
