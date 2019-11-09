@@ -16,6 +16,11 @@ export enum ENomineeRequestError {
   GENERIC_ERROR = "nominee_request_generic_error",
 }
 
+export enum ENomineeFlowError {
+  NONE = "none",
+  FETCH_DATA_ERROR = "nominee_fetch_data_error",
+}
+
 export enum ENomineeTaskStatus {
   NOT_DONE = "not_done",
   DONE = "done",
