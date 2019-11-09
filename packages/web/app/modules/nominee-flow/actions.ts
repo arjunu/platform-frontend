@@ -18,6 +18,7 @@ export const nomineeFlowActions = {
     (nomineeTasksStatus: TNomineeTasksStatus) => ({ nomineeTasksStatus }),
   ),
   nomineeDashboardView: createActionFactory("NOMINEE_DASHBOARD_VIEW"),
+  getNomineeDashboardData: createActionFactory("NOMINEE_DASHBOARD_GET_DATA"),
   nomineeEtoView: createActionFactory("NOMINEE_ETO_VIEW"),
   nomineeDocumentsView: createActionFactory("NOMINEE_DOCUMENTS_VIEW"),
   loadNomineeEtos: createActionFactory("NOMINEE_FLOW_LOAD_ETOS"),

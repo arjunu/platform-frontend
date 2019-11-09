@@ -187,7 +187,7 @@ function* startNomineeTHASignSaga({ logger }: TGlobalDependencies): Iterator<any
   } catch (e) {
     logger.info("THA sign cancelled", e);
   } finally {
-    yield put(actions.nomineeFlow.nomineeDashboardView());
+    yield put(actions.nomineeFlow.getNomineeDashboardData());
   }
 }
 
@@ -201,7 +201,7 @@ function* startNomineeRAAASignSaga({ logger }: TGlobalDependencies): Iterator<an
   } catch (e) {
     logger.info("RAAA sign cancelled", e);
   } finally {
-    yield put(actions.nomineeFlow.nomineeDashboardView());
+    yield put(actions.nomineeFlow.getNomineeDashboardData());
   }
 }
 
@@ -215,7 +215,7 @@ function* startNomineeISHASignSaga({ logger }: TGlobalDependencies): Iterator<an
   } catch (e) {
     logger.info("ISHA sign cancelled", e);
   } finally {
-    yield put(actions.nomineeFlow.nomineeDashboardView());
+    yield put(actions.nomineeFlow.getNomineeDashboardData());
   }
 }
 

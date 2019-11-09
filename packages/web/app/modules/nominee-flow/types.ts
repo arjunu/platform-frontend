@@ -61,7 +61,7 @@ export interface INomineeRequest {
   metadata: INomineeRequestMetadata;
 }
 
-// TODO: Refactor to store separately, nominee-flow module should be used for issuer
+// TODO: Refactor to store separately, nominee-flow module should not be used for issuer
 export type TNomineeRequestStorage = { [id: string]: INomineeRequest }; //can be etoId or nomineeId
 
 export enum ENomineeTask {
@@ -77,5 +77,3 @@ export enum ENomineeEtoSpecificTask {
   REDEEM_SHARE_CAPITAL = "redeemShareCapital",
   ACCEPT_ISHA = "acceptIsha",
 }
-
-export type TNomineeTask = ENomineeTask & ENomineeEtoSpecificTask;
