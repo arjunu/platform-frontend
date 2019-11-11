@@ -135,6 +135,7 @@ export const loginFixtureAccount = (
     // cut last element which corresponds to account, will be added by light wallet
     hdPath = hdPath.substr(0, hdPath.lastIndexOf("/"));
   }
+  //m/44'/60'/0'/0
   return createAndLoginNewUser({
     type: fixture.type,
     seed: fixture.definition.seed,
