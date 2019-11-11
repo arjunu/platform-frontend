@@ -268,7 +268,10 @@ export function* getTaskSpecificData(
   }
   if (activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL) {
     const nomineeEto: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
-    const capitalIncrease: string = yield neuCall(loadCapitalIncrease, nomineeEto.etoId);
+    const capitalIncrease: string = yield neuCall(
+      loadCapitalIncrease,
+      actions.eto.loadCapitalIncrease(nomineeEto.etoId, nomineeEto.previewCode),
+    );
     const walletBalance: string = yield select(selectLiquidEuroTokenBalance);
     const taskSubstate: ERedeemShareCapitalTaskSubstate = yield neuCall(
       getRedeemShareCapitalTaskState,

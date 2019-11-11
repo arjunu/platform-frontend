@@ -12,15 +12,16 @@ describe("Nominee flow", () => {
       kyc: "business",
       signTosAgreement: true,
       clearPendingTransactions: true,
+      customDerivationPath: "m/44'/60'/0'/0",
     });
     goToNomineeDashboard();
 
     cy.get(tid("nominee-flow-redeem-share-capital")).should("exist");
 
-    cy.get(tid(`${tid("nominee-flow-redeem-share-capital")} ${tid("value")}`)).then($element => {
+    cy.get(`${tid("nominee-flow-redeem-share-capital")} ${tid("value")}`).then($element => {
       const amountFormatted = $element.text();
 
-      cy.get(tid("eto-nominee-redeem-share-capital-button")).click();
+      cy.get(tid("nominee-redeem-share-capital-button")).click();
 
       checkField("amount", amountFormatted);
 

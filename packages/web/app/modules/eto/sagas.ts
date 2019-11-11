@@ -745,7 +745,7 @@ export function* loadCapitalIncrease(
   { contractsService }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.eto.loadCapitalIncrease>,
 ): Iterator<any> {
-  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
+  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(payload.etoId);
 
   const [, capitalIncrease]: [
     BigNumber,
@@ -758,7 +758,7 @@ export function* loadCapitalIncrease(
     BigNumber
   ] = yield contract.contributionSummary();
 
-  yield put(actions.eto.setCapitalIncrease(payload.previewCode, capitalIncrease.toString()));
+  return capitalIncrease.toString();
 }
 
 export function* loadEtoGeneralTokenDiscounts(

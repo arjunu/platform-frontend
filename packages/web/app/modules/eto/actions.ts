@@ -3,6 +3,7 @@ import { createActionFactory } from "@neufund/shared";
 import { TCompanyEtoData, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { EEtoDocumentType, IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { Dictionary } from "../../types";
+import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
 import {
   IEtoTokenData,
   IEtoTokenGeneralDiscounts,
@@ -115,10 +116,6 @@ export const etoActions = {
   ),
   loadCapitalIncrease: createActionFactory(
     "ETO_LOAD_CAPITAL_INCREASE",
-    (etoId: string, previewCode: string) => ({ etoId, previewCode }),
-  ),
-  setCapitalIncrease: createActionFactory(
-    "ETO_SET_CAPITAL_INCREASE",
-    (previewCode: string, capitalIncrease: string) => ({ previewCode, capitalIncrease }),
+    (etoId: EthereumAddressWithChecksum, previewCode: string) => ({ etoId, previewCode }),
   ),
 };

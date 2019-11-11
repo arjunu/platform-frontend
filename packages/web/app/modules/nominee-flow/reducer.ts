@@ -167,17 +167,6 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
           },
         },
       };
-    case actions.eto.setCapitalIncrease.getType():
-      return {
-        ...state,
-        nomineeEtosAdditionalData: {
-          ...state.nomineeEtosAdditionalData,
-          [action.payload.previewCode]: {
-            ...state.nomineeEtosAdditionalData[action.payload.previewCode],
-            capitalIncrease: action.payload.capitalIncrease,
-          },
-        },
-      };
     default:
       return state;
   }
