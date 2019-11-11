@@ -727,17 +727,11 @@ export function* loadAgreementsStatus(
   yield put(actions.eto.setAgreementsStatus(payload.eto.previewCode, statuses));
 }
 
-export function* callLoadInvestmentAgreement(
-  _: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.eto.loadSignedInvestmentAgreement>,
-): Iterator<any> {
-  neuCall(loadInvestmentAgreement, payload.etoId, payload.previewCode);
-}
-
 export function* loadInvestmentAgreement(
   { contractsService }: TGlobalDependencies,
-  etoId: string,
-  previewCode: string,
+  {
+    payload: { etoId, previewCode },
+  }: TActionFromCreator<typeof actions.eto.loadSignedInvestmentAgreement>,
 ): Iterator<any> {
   const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
   const url: string = yield contract.signedInvestmentAgreementUrl;
@@ -749,13 +743,22 @@ export function* loadInvestmentAgreement(
 
 export function* loadCapitalIncrease(
   { contractsService }: TGlobalDependencies,
-  etoId: string,
+  { payload }: TActionFromCreator<typeof actions.eto.loadCapitalIncrease>,
 ): Iterator<any> {
   const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
 
-  const [, capitalIncrease] = yield contract.contributionSummary();
-  //fixme check for errors
-  return capitalIncrease.toString();
+  const [, capitalIncrease]: [
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber
+  ] = yield contract.contributionSummary();
+
+  yield put(actions.eto.setCapitalIncrease(payload.previewCode, capitalIncrease.toString()));
 }
 
 export function* loadEtoGeneralTokenDiscounts(
@@ -807,7 +810,7 @@ export function* etoSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.eto.downloadEtoDocument, downloadDocument);
   yield fork(neuTakeEvery, actions.eto.downloadEtoTemplateByType, downloadTemplateByType);
 
-  yield fork(neuTakeLatest, actions.eto.loadSignedInvestmentAgreement, callLoadInvestmentAgreement);
+  yield fork(neuTakeLatest, actions.eto.loadSignedInvestmentAgreement, loadInvestmentAgreement);
 
   yield fork(neuTakeLatest, actions.eto.verifyEtoAccess, verifyEtoAccess);
   yield fork(neuTakeLatest, actions.eto.ensureEtoJurisdiction, ensureEtoJurisdiction);

@@ -95,7 +95,6 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
         error: action.payload.error,
       };
     case actions.nomineeFlow.createNomineeRequest.getType():
-    case actions.nomineeFlow.loadNomineeTaskData.getType(): //todo remove this
       return {
         ...state,
         loading: true,

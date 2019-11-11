@@ -87,7 +87,10 @@ export function* initNomineeEtoSpecificTasks(
     }
 
     if (isOnChain(eto) && eto.contract.timedState >= EETOStateOnChain.Signing) {
-      yield neuCall(loadInvestmentAgreement, eto.etoId, eto.previewCode);
+      yield neuCall(
+        loadInvestmentAgreement,
+        actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode),
+      );
 
       const data = yield all({
         ishaIsSignedByIssuer: select(selectIsISHASignedByIssuer, eto.previewCode),
@@ -410,16 +413,6 @@ export function* loadNomineeAgreements(): Iterator<any> {
 
   if (nomineeEto) {
     yield put(actions.eto.loadEtoAgreementsStatus(nomineeEto));
-  }
-}
-
-export function* loadNomineeSignedInvestmentAgreements(): Iterator<any> {
-  const nomineeEto: ReturnType<typeof selectActiveNomineeEto> = yield select(
-    selectActiveNomineeEto,
-  );
-
-  if (nomineeEto) {
-    yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto.etoId, nomineeEto.previewCode));
   }
 }
 
