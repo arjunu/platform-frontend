@@ -23,7 +23,7 @@ import { investorEtoTicketActions } from "./investor-portfolio/actions";
 import { kycActions } from "./kyc/actions";
 import { marketingEmailsActions } from "./marketing-emails/actions";
 import { nomineeFlowActions } from "./nominee-flow/actions";
-import { notificationModalActions } from "./notificationModal/actions";
+import { notificationModalActions } from "./notification-modal/actions";
 import { notificationActions } from "./notifications/actions";
 import { personProfileModalActions } from "./person-profile-modal/actions";
 import { profileActions } from "./profile/actions";

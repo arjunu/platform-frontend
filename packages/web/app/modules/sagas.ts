@@ -18,7 +18,7 @@ import { investorTicketsSagas } from "./investor-portfolio/sagas";
 import { kycSagas } from "./kyc/sagas";
 import { marketingEmailsSagas } from "./marketing-emails/sagas";
 import { nomineeFlowSagas } from "./nominee-flow/sagas";
-import { notificationModalSagas } from "./notificationModal/sagas";
+import { notificationModalSagas } from "./notification-modal/sagas";
 import { profileSagas } from "./profile/sagas";
 import { routingSagas } from "./routing/sagas";
 import { neuRestartIf } from "./sagasUtils";

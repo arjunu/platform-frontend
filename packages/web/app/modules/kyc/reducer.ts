@@ -109,27 +109,27 @@ export const kycReducer: AppReducer<IKycState> = (
 ): DeepReadonly<IKycState> => {
   switch (action.type) {
     // individual
-    case "KYC_SUBMIT_INDIVIDUAL_FORM":
+    case actions.kyc.kycSubmitIndividualData.getType():
       return { ...state, kycSaving: action.payload.skipContinue };
-    case "KYC_UPDATE_INDIVIDUAL_DATA":
+    case actions.kyc.kycUpdateIndividualData.getType():
       return { ...state, kycSaving: false, ...omitUndefined(action.payload) };
-    case "KYC_UPDATE_INDIVIDUAL_REQUEST_STATE":
-    case "KYC_UPDATE_INDIVIDUAL_FILES_INFO":
+    case actions.kyc.kycUpdateIndividualRequestState.getType():
+    case actions.kyc.kycUpdateIndividualDocuments.getType():
       return { ...state, ...omitUndefined(action.payload) };
-    case "KYC_UPDATE_INDIVIDUAL_FILE_INFO":
+    case actions.kyc.kycUpdateIndividualDocument.getType():
       return {
         ...state,
         individualFileUploading: action.payload.individualFileUploading,
         individualFiles: appendIfExists(state.individualFiles, action.payload.file),
       };
-    case "KYC_UPDATE_BUSINESS_DATA":
-    case "KYC_UPDATE_BUSINESS_REQUEST_STATE":
-    case "KYC_UPDATE_BUSINESS_FILES_INFO":
-    case "KYC_UPDATE_LEGAL_REPRESENTATIVE":
-    case "KYC_UPDATE_LEGAL_REPRESENTATIVE_FILES_INFO":
-    case "KYC_UPDATE_BENEFICIAL_OWNERS":
+    case actions.kyc.kycUpdateBusinessData.getType():
+    case actions.kyc.kycUpdateBusinessRequestState.getType():
+    case actions.kyc.kycUpdateBusinessDocuments.getType():
+    case actions.kyc.kycUpdateLegalRepresentative.getType():
+    case actions.kyc.kycUpdateLegalRepresentativeDocuments.getType():
+    case actions.kyc.kycUpdateBeneficialOwners.getType():
       return { ...state, ...omitUndefined(action.payload) };
-    case "KYC_UPDATE_LEGAL_REPRESENTATIVE_FILE_INFO":
+    case actions.kyc.kycUpdateLegalRepresentativeDocument.getType():
       return {
         ...state,
         legalRepresentativeFileUploading: action.payload.legalRepresentativeUploading,
@@ -138,13 +138,13 @@ export const kycReducer: AppReducer<IKycState> = (
           action.payload.file,
         ),
       };
-    case "KYC_UPDATE_BUSINESS_FILE_INFO":
+    case actions.kyc.kycUpdateBusinessDocument.getType():
       return {
         ...state,
         businessFileUploading: action.payload.businessFileUploading,
         businessFiles: appendIfExists(state.businessFiles, action.payload.file),
       };
-    case "KYC_UPDATE_BENEFICIAL_OWNER":
+    case actions.kyc.kycUpdateBeneficialOwner.getType():
       return {
         ...state,
         loadingBeneficialOwner: action.payload.loadingBeneficialOwner,
@@ -154,7 +154,7 @@ export const kycReducer: AppReducer<IKycState> = (
           action.payload.beneficialOwner,
         ),
       };
-    case "KYC_UPDATE_BENEFICIAL_OWNER_FILES_INFO":
+    case actions.kyc.kycUpdateBeneficialOwnerDocuments.getType():
       return {
         ...state,
         beneficialOwnerFilesLoading: {
@@ -166,7 +166,7 @@ export const kycReducer: AppReducer<IKycState> = (
           [action.payload.boid]: action.payload.beneficialOwnerFiles,
         },
       };
-    case "KYC_UPDATE_BENEFICIAL_OWNER_FILE_INFO":
+    case actions.kyc.kycUpdateBeneficialOwnerDocument.getType():
       const { boid } = action.payload;
       return {
         ...state,
@@ -180,7 +180,7 @@ export const kycReducer: AppReducer<IKycState> = (
         },
       };
     // contract claims
-    case "KYC_SET_CLAIMS":
+    case actions.kyc.kycSetClaims.getType():
       return { ...state, claims: action.payload.claims };
 
     // api bank account
