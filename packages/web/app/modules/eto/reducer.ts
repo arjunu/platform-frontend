@@ -116,7 +116,6 @@ export const etoReducer: AppReducer<IEtoState> = (
     // This is for the backwards compat. until the issuer flow is refactored to use sagas
     // in the same way as nominee flow.
     case actions.eto.setInvestmentAgreementHash.getType():
-      console.log("setInvestmentAgreementHash")
       return {
         ...state,
         signedInvestmentAgreements: {

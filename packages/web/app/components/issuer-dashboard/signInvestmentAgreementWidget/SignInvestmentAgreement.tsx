@@ -92,9 +92,8 @@ export const SignInvestmentAgreementLayout: React.FunctionComponent<
   uploadedAgreement,
   signInvestmentAgreement,
   columnSpan,
-}) => {
-  console.log("----SignInvestmentAgreementLayout",investmentAgreementNotSigned(signedInvestmentAgreementUrl, uploadedAgreement.ipfsHash));
-  return investmentAgreementNotSigned(signedInvestmentAgreementUrl, uploadedAgreement.ipfsHash) ? (
+}) =>
+  investmentAgreementNotSigned(signedInvestmentAgreementUrl, uploadedAgreement.ipfsHash) ? (
     <WaitingToBeSigned
       eto={eto}
       ipfsHash={uploadedAgreement.ipfsHash}
@@ -105,8 +104,6 @@ export const SignInvestmentAgreementLayout: React.FunctionComponent<
   ) : (
     <WaitingForNominee columnSpan={columnSpan} />
   );
-}
-
 
 export const SignInvestmentAgreement = compose<React.FunctionComponent<IExternalProps>>(
   appConnect<IStateProps | null, IDispatchProps>({
@@ -135,7 +132,7 @@ export const SignInvestmentAgreement = compose<React.FunctionComponent<IExternal
         dispatch(actions.etoFlow.signInvestmentAgreement(eto, agreementHash)),
     }),
   }),
-  branch<IStateProps | null>(props => {console.log("SignInvestmentAgreement",props);return props === null}, renderNothing),
+  branch<IStateProps | null>(props => props === null, renderNothing),
   onEnterAction<IStateProps>({
     actionCreator: (dispatch, props) =>
       dispatch(actions.eto.loadSignedInvestmentAgreement(props.eto.etoId, props.eto.previewCode)),

@@ -184,12 +184,9 @@ export const hashFromIpfsLink = (ipfsLink: string): string => {
 export const investmentAgreementNotSigned = (
   signedInvestmentAgreementUrl: undefined | string,
   ipfsHash: string,
-) => {
-  console.log("signedInvestmentAgreementUrl",signedInvestmentAgreementUrl, ipfsLinkFromHash(ipfsHash))
-  return signedInvestmentAgreementUrl === undefined ||
+) =>
+  signedInvestmentAgreementUrl === undefined ||
   signedInvestmentAgreementUrl !== ipfsLinkFromHash(ipfsHash);
-}
-
 
 export const getUploadedDocumentName = (
   documentsList: TEtoDocumentTemplates,
