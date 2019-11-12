@@ -38,8 +38,8 @@ import {
   selectNomineeActiveEtoPreviewCode,
   selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
+  selectNomineeRequestError,
   selectNomineeRequests,
-  selectNomineeStateError,
   selectNomineeTasksStatus,
 } from "./selectors";
 import {
@@ -246,24 +246,9 @@ export function* getTaskSpecificData(
   const taskSpecificData: TTaskSpecificData = { byPreviewCode: {} };
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
-    //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
-    yield neuCall(loadNomineeRequests);
-
-    const data = yield all({
-      nomineeEto: select(selectActiveNomineeEto),
-      nomineeRequest: select(selectNomineeRequests),
-      nomineeRequestError: select(selectNomineeStateError),
-    });
-    const dataConverted = {
-      ...data,
-      nomineeRequest: takeLatestNomineeRequest(data.nomineeRequest),
-    };
-    //todo move account setup step calculations here
-
-    taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = {
-      nextState: yield getNomineeRequestComponentState(dataConverted),
-    };
+    taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = yield neuCall(getNomineeTaskLinkToIssuerData);
   }
+
   if (activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL) {
     const nomineeEto: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
     const capitalIncrease: string = yield neuCall(
@@ -282,6 +267,27 @@ export function* getTaskSpecificData(
         walletBalance,
         taskSubstate,
       },
+    };
+  }
+
+  return taskSpecificData;
+}
+
+export function* getNomineeTaskLinkToIssuerData(_: TGlobalDependencies): Iterator<any> {
+  yield neuCall(loadNomineeRequests); //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
+
+    const data = yield all({
+      nomineeEto: select(selectActiveNomineeEto),
+      nomineeRequest: select(selectNomineeRequests),
+      nomineeRequestError: select(selectNomineeStateError),
+    });
+    const dataConverted = {
+      ...data,
+      nomineeRequest: takeLatestNomineeRequest(data.nomineeRequest),
+    };
+
+    taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = {
+      nextState: yield getNomineeRequestComponentState(dataConverted),
     };
   }
   return taskSpecificData;

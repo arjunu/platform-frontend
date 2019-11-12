@@ -1,5 +1,5 @@
 import { effects } from "redux-saga";
-import { fork, put, select, take } from "redux-saga/effects";
+import { fork, put, select } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { IAppState } from "../../store";
@@ -70,7 +70,6 @@ function* initApp({ logger }: TGlobalDependencies): any {
     }
 
     yield put(actions.init.done(EInitType.APP_INIT));
-    yield put(actions.init.appReady());
   } catch (e) {
     if (e instanceof WalletMetadataNotFoundError) {
       logger.error("User has JWT but no Wallet Metadata", e);
@@ -128,7 +127,7 @@ export function* waitForAppInit(): Iterator<any> {
   let appIsReady: boolean = yield select(selectIsAppReady);
 
   if (!appIsReady) {
-    yield take(actions.init.appReady);
+    yield neuTakeOnly(actions.init.done, { initType: EInitType.APP_INIT });
     appIsReady = true;
   }
   return appIsReady;

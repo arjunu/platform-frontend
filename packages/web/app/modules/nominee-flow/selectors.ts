@@ -28,10 +28,15 @@ export const selectNomineeFlowError = (state: IAppState) => state.nomineeFlow.er
 
 export const selectNomineeFlowHasError = (state: IAppState) => {
   const error = selectNomineeFlowError(state);
-  return error !== ENomineeRequestError.NONE && error !== ENomineeFlowError.NONE;
+  return error !== ENomineeFlowError.NONE;
 };
 
-export const selectNomineeStateError = (state: IAppState) => state.nomineeFlow.error;
+export const selectNomineeRequestError = (state: IAppState): ENomineeRequestError => {
+  if (state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER] === undefined) {
+    throw new DataUnavailableError("activeTaskData for the 'LINK_TO_ISSUER' step is missing");
+  }
+  return state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER].error;
+};
 
 export const selectActiveTaskData = (state: IAppState) => state.nomineeFlow.activeTaskData;
 

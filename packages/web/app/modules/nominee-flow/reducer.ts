@@ -48,7 +48,7 @@ export type TTaskSpecificData = Partial<{ [key in ENomineeTask]: unknown }> &
 export type TNomineeFlowState = {
   ready: boolean;
   loading: boolean;
-  error: ENomineeRequestError | ENomineeFlowError; //TODO ENomineeRequestError should be stored in taskData after the linkToIssuer flow is moved to sagas
+  error: ENomineeFlowError;
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask;
   activeTaskData: TTaskSpecificData;
   activeNomineeEtoPreviewCode: string | undefined;
@@ -64,6 +64,10 @@ const nomineeFlowInitialState: TNomineeFlowState = {
   error: ENomineeFlowError.NONE,
   activeNomineeTask: ENomineeTask.NONE,
   activeTaskData: {
+    [ENomineeTask.LINK_TO_ISSUER]: {
+      nextStep: ENomineeRequestComponentState.CREATE_REQUEST,
+      error: ENomineeRequestError.NONE,
+    },
     byPreviewCode: {},
   },
   activeNomineeEtoPreviewCode: undefined,
@@ -117,7 +121,13 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
           ...state.nomineeRequests,
           ...action.payload.nomineeRequests,
         },
-        error: ENomineeRequestError.NONE,
+        activeTaskData: {
+          ...state.activeTaskData,
+          [ENomineeTask.LINK_TO_ISSUER]: {
+            ...state.activeTaskData[ENomineeTask.LINK_TO_ISSUER],
+            error: ENomineeRequestError.NONE,
+          },
+        },
         loading: false,
       };
     case actions.nomineeFlow.storeNomineeRequest.getType():
@@ -127,7 +137,25 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
           ...state.nomineeRequests,
           [action.payload.etoId]: action.payload.nomineeRequest,
         },
-        error: ENomineeRequestError.NONE,
+        activeTaskData: {
+          ...state.activeTaskData,
+          [ENomineeTask.LINK_TO_ISSUER]: {
+            ...state.activeTaskData[ENomineeTask.LINK_TO_ISSUER],
+            error: ENomineeRequestError.NONE,
+          },
+        },
+        loading: false,
+      };
+    case actions.nomineeFlow.storeNomineeRequestError.getType():
+      return {
+        ...state,
+        activeTaskData: {
+          ...state.activeTaskData,
+          [ENomineeTask.LINK_TO_ISSUER]: {
+            ...state.activeTaskData[ENomineeTask.LINK_TO_ISSUER],
+            error: action.payload.requestError,
+          },
+        },
         loading: false,
       };
     case actions.nomineeFlow.loadingDone.getType():

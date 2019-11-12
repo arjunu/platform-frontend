@@ -18,10 +18,7 @@ export const nomineeFlowActions = {
     "NOMINEE_STORE_TASK_STATUS",
     (nomineeTasksStatus: TNomineeTasksStatus) => ({ nomineeTasksStatus }),
   ),
-  storeError: createActionFactory(
-    "NOMINEE_STORE_ERROR",
-    (error: ENomineeRequestError | ENomineeFlowError) => ({ error }),
-  ),
+  storeError: createActionFactory("NOMINEE_STORE_ERROR", (error: ENomineeFlowError) => ({ error })),
   nomineeDashboardView: createActionFactory("NOMINEE_DASHBOARD_VIEW"),
   getNomineeDashboardData: createActionFactory("NOMINEE_DASHBOARD_GET_DATA"),
   nomineeEtoView: createActionFactory("NOMINEE_ETO_VIEW"),
