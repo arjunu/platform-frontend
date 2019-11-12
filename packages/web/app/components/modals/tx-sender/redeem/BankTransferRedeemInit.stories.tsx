@@ -35,10 +35,10 @@ storiesOf("BankTransferRedeem/Init", module)
   .add("default", () => (
     <Formik initialValues={{}} onSubmit={() => {}}>
       <BankTransferRedeemLayout
-        minAmount={Q18.mul(5).toString()}
-        neuroAmount={Q18.mul(1305.89).toString()}
-        neuroEuroAmount={Q18.mul(1305.89).toString()}
-        bankFee={Q18.mul(0.005).toString()}
+        minAmount={Q18.mul("5").toString()}
+        neuroAmount={Q18.mul("1305.89").toString()}
+        neuroEuroAmount={Q18.mul("1305.89").toString()}
+        bankFee={Q18.mul("0.005").toString()}
         confirm={action("CONFIRM")}
         verifyBankAccount={action("LINK_ACCOUNT")}
         calculateData={action("CALCULATE_DATA")}
@@ -54,16 +54,16 @@ storiesOf("BankTransferRedeem/Init", module)
   .add("with data", () => (
     <Formik initialValues={{ amount: "10.50" }} isInitialValid={true} onSubmit={() => {}}>
       <BankTransferRedeemLayout
-        minAmount={Q18.mul(5).toString()}
-        neuroAmount={Q18.mul(1305.89).toString()}
-        neuroEuroAmount={Q18.mul(1305.89).toString()}
-        bankFee={Q18.mul(0.005).toString()}
+        minAmount={Q18.mul("5").toString()}
+        neuroAmount={Q18.mul("1305.89").toString()}
+        neuroEuroAmount={Q18.mul("1305.89").toString()}
+        bankFee={Q18.mul("0.005").toString()}
         confirm={action("CONFIRM")}
         verifyBankAccount={action("LINK_ACCOUNT")}
         calculateData={action("CALCULATE_DATA")}
         calculatedData={{
           amount: "100.50",
-          amountUlps: Q18.mul(100.5).toString(),
+          amountUlps: Q18.mul("100.5").toString(),
           bankFee: "0.25",
           totalRedeemed: "100.25",
         }}

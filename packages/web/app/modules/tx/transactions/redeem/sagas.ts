@@ -6,15 +6,12 @@ import { ITxData } from "../../../../lib/web3/types";
 import { DeepReadonly } from "../../../../types";
 import { actions } from "../../../actions";
 import { EBankTransferType } from "../../../bank-transfer-flow/reducer";
-import {
-  selectIsBankAccountVerified,
-} from "../../../bank-transfer-flow/selectors";
 import { calculateRedeemData } from "../../../bank-transfer-flow/sagas";
+import { selectIsBankAccountVerified } from "../../../bank-transfer-flow/selectors";
 import { ICalculatedRedeemData } from "../../../bank-transfer-flow/types";
 import { selectStandardGasPriceWithOverHead } from "../../../gas/selectors";
 import { selectBankAccount } from "../../../kyc/selectors";
 import { TBankAccount } from "../../../kyc/types";
-import { neuCall } from "../../../sagasUtils";
 import { neuCall, neuTakeLatest } from "../../../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../../../web3/selectors";
 import { txSendSaga } from "../../sender/sagas";

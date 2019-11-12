@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 
 import { BANKING_AMOUNT_SCALE } from "../../../../config/constants";
 import { compareBigNumbers } from "../../../../utils/BigNumberUtils";
-import { convertToBigInt } from "../../../../utils/Number.utils";
+import { convertToUlps } from "../../../../utils/NumberUtils";
 import {
   ENumberInputFormat,
   ERoundingMode,
@@ -10,7 +10,7 @@ import {
 } from "../../../shared/formatters/utils";
 
 export const toFixedBankingPrecision = (
-  value: number | BigNumber | string,
+  value: BigNumber | string,
   inputFormat: ENumberInputFormat = ENumberInputFormat.ULPS,
 ) =>
   toFixedPrecision({
@@ -20,12 +20,12 @@ export const toFixedBankingPrecision = (
     inputFormat,
   });
 
-export const getPossibleMaxUlps = (maxUlpsValue: string, providedDecimal: number | string) => {
+export const getPossibleMaxUlps = (maxUlpsValue: string, providedDecimal: string) => {
   const nEURBalance = toFixedBankingPrecision(maxUlpsValue);
 
   // Whole precision number should be passed when there is whole balance redeemed
   // also when user provided value has been used, then it have to be converted to Q18 via convertToBigInt
   return compareBigNumbers(providedDecimal, nEURBalance) === 0
     ? maxUlpsValue
-    : convertToBigInt(providedDecimal);
+    : convertToUlps(providedDecimal);
 };

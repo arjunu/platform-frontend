@@ -8,10 +8,10 @@ import {
 } from "../components/shared/formatters/utils";
 import { ISO2022_AMOUNT_SCALE } from "../config/constants";
 import { multiplyBigNumbers, subtractBigNumbers } from "./BigNumberUtils";
-import { convertToBigInt } from "./Number.utils";
+import { convertToUlps } from "./NumberUtils";
 
 export const iso2002Quantize = (
-  value: number | BigNumber | string,
+  value: BigNumber | string,
   inputFormat: ENumberInputFormat,
 ): string => {
   const valueBn = value instanceof BigNumber ? value : new BigNumber(value);
@@ -29,7 +29,7 @@ export const iso2002Quantize = (
 };
 
 export const bankQuantize = (
-  value: number | BigNumber | string,
+  value: BigNumber | string,
   inputFormat: ENumberInputFormat,
 ): string => {
   const valueBn = value instanceof BigNumber ? value : new BigNumber(value);
@@ -42,10 +42,10 @@ export const bankQuantize = (
 };
 
 export const subtractBankFee = (
-  amount: number | BigNumber | string,
-  feeFraction: number | BigNumber | string,
+  amount: BigNumber | string,
+  feeFraction: BigNumber | string,
 ): string => {
-  if (new BigNumber(feeFraction).comparedTo(convertToBigInt(1)) === 1) {
+  if (new BigNumber(feeFraction).comparedTo(convertToUlps("1")) === 1) {
     throw new Error("FeeFraction must be fraction number");
   }
 
@@ -64,8 +64,8 @@ export const subtractBankFee = (
 };
 
 export const calculateBankFee = (
-  amount: number | BigNumber | string,
-  feeFraction: number | BigNumber | string,
+  amount: BigNumber | string,
+  feeFraction: BigNumber | string,
 ): string => {
   const amountDec = toFixedBankingPrecision(amount, ENumberInputFormat.ULPS);
 
