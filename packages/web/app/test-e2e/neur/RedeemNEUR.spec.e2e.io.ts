@@ -5,11 +5,31 @@ import {
   formatNumber,
   selectDecimalPlaces,
 } from "../../components/shared/formatters/utils";
+import { addBigNumbers } from "../../utils/BigNumberUtils";
 import { fillForm } from "../utils/forms";
 import { assertWallet, getWalletNEurAmount } from "../utils/index";
 import { formField, tid } from "../utils/selectors";
 import { loginFixtureAccount } from "../utils/userHelpers";
 import { assertBankAccountDetails } from "./assertions";
+
+const fillAndValidate = (amount: string) => {
+  fillForm(
+    {
+      amount,
+    },
+    { submit: false },
+  );
+
+  cy.get(`${tid("bank-transfer.redeem.total")} ${tid(`value`)}`)
+    .then(v => v.text())
+    .then(total => {
+      cy.get(`${tid("bank-transfer.redeem.fee")} ${tid(`value`)}`)
+        .then(v => v.text())
+        .then(fee => {
+          expect(addBigNumbers([total, fee])).to.be.bignumber.eq(amount);
+        });
+    });
+};
 
 describe("Redeem NEUR", function(): void {
   this.retries(2);
@@ -112,6 +132,15 @@ describe("Redeem NEUR", function(): void {
     cy.get(tid("bank-transfer.redeem.fee")).within(() => {
       cy.get(tid("value")).should("not.contain", "0");
     });
+  });
+
+  it("should correctly calculate fee and total", () => {
+    fillAndValidate("100");
+    fillAndValidate("132.22");
+    fillAndValidate("242.17");
+    fillAndValidate("387.14");
+    fillAndValidate("584.88");
+    fillAndValidate("859.57");
   });
 
   it("should show the same fee and total after continue", () => {

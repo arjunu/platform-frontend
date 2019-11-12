@@ -3,21 +3,15 @@ import { takeEvery } from "redux-saga";
 import { all, fork, put, select, take } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
-import {
-  getPossibleMaxUlps,
-  toFixedBankingPrecision,
-} from "../../components/modals/tx-sender/redeem/utils";
-import {
-  ENumberInputFormat,
-  isEmptyValue,
-  isValidNumber,
-} from "../../components/shared/formatters/utils";
+import { getRedeemValueUlps } from "../../components/modals/tx-sender/redeem/utils";
+import { isEmptyValue, isValidNumber } from "../../components/shared/formatters/utils";
 import { BankTransferFlowMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { TKycBankTransferPurpose } from "../../lib/api/kyc/KycApi.interfaces";
 import { calculateBankFee, subtractBankFee } from "../../utils/BankArithmetics";
 import { invariant } from "../../utils/invariant";
+import { convertFromUlps } from "../../utils/NumberUtils";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserFullyVerified } from "../auth/selectors";
 import { neuCall, neuTakeEvery } from "../sagasUtils";
@@ -121,17 +115,22 @@ export function* completeBankTransfer({ apiKycService, logger }: TGlobalDependen
   }
 }
 
+/**
+ * This saga calculates values to be displayed to user
+ *
+ * @param {string} amount - value provided by user
+ */
 export function* calculateRedeemData(amount: string): Iterator<any> {
   const walletBalanceUlps: string = yield select(selectLiquidEuroTokenBalance);
   const bankFeeFractionUlps: string = yield select(selectRedeemFeeUlps);
 
   // by default use BANKING_AMOUNT_SCALE as decimal precision
-  const providedAmountUlps = getPossibleMaxUlps(walletBalanceUlps, amount);
+  const providedAmountUlps = getRedeemValueUlps(walletBalanceUlps, amount);
   // use all decimal places without rounding
-  const providedAmountDec = toFixedBankingPrecision(providedAmountUlps, ENumberInputFormat.ULPS);
+  const providedAmountDec = convertFromUlps(providedAmountUlps);
 
-  const bankFee = calculateBankFee(providedAmountUlps, bankFeeFractionUlps);
   const totalRedeemed = subtractBankFee(providedAmountUlps, bankFeeFractionUlps);
+  const bankFee = calculateBankFee(providedAmountUlps, totalRedeemed);
 
   return {
     amount: providedAmountDec,
