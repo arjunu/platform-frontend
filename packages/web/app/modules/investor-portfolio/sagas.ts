@@ -17,7 +17,7 @@ import { addBigNumbers } from "../../utils/BigNumberUtils";
 import { nonNullable } from "../../utils/nonNullable";
 import { convertFromUlps, convertToUlps } from "../../utils/NumberUtils";
 import { EthereumAddress } from "../../utils/opaque-types/types";
-import { actions, TAction, TActionFromCreator } from "../actions";
+import { actions, TActionFromCreator } from "../actions";
 import { selectUser, selectUserId } from "../auth/selectors";
 import { calculateSnapshotDate } from "../contracts/utils";
 import { InvalidETOStateError } from "../eto/errors";
@@ -32,9 +32,10 @@ import {
   convertToWhitelistTicket,
 } from "./utils";
 
-export function* loadInvestorTickets({ logger }: TGlobalDependencies, action: TAction): any {
-  if (action.type !== "INVESTOR_TICKET_ETOS_LOAD") return;
-
+export function* loadInvestorTickets(
+  { logger }: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.investorEtoTicket.loadInvestorTickets>,
+): Iterator<any> {
   try {
     yield all(
       map(
@@ -51,10 +52,8 @@ export function* loadInvestorTickets({ logger }: TGlobalDependencies, action: TA
 
 export function* loadInvestorTicket(
   { contractsService }: TGlobalDependencies,
-  action: TAction,
-): any {
-  if (action.type !== "INVESTOR_TICKET_LOAD") return;
-
+  action: TActionFromCreator<typeof actions.investorEtoTicket.loadEtoInvestorTicket>,
+): Iterator<any> {
   if (action.payload.eto.state !== EEtoState.ON_CHAIN) {
     throw new Error("Should be called only when eto is on chain");
   }
@@ -224,8 +223,8 @@ export function* loadPersonalTokenDiscount(
 }
 
 export function* investorTicketsSagas(): any {
-  yield fork(neuTakeEvery, "INVESTOR_TICKET_ETOS_LOAD", loadInvestorTickets);
-  yield fork(neuTakeEvery, "INVESTOR_TICKET_LOAD", loadInvestorTicket);
+  yield fork(neuTakeEvery, actions.investorEtoTicket.loadInvestorTickets, loadInvestorTickets);
+  yield fork(neuTakeEvery, actions.investorEtoTicket.loadEtoInvestorTicket, loadInvestorTicket);
   yield fork(
     neuTakeLatest,
     actions.investorEtoTicket.loadTokenPersonalDiscount,

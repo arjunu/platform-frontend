@@ -40,7 +40,7 @@ export const investorTicketsReducer: AppReducer<IInvestorTicketsState> = (
   action,
 ): DeepReadonly<IInvestorTicketsState> => {
   switch (action.type) {
-    case "INVESTOR_TICKET_SET":
+    case actions.investorEtoTicket.setEtoInvestorTicket.getType():
       return {
         ...state,
         investorEtoTickets: {
@@ -48,7 +48,7 @@ export const investorTicketsReducer: AppReducer<IInvestorTicketsState> = (
           [action.payload.etoId]: action.payload.ticket,
         },
       };
-    case "INVESTOR_TICKET_SET_CALCULATED_CONTRIBUTION":
+    case actions.investorEtoTicket.setCalculatedContribution.getType():
       return {
         ...state,
         calculatedContributions: {
@@ -56,7 +56,7 @@ export const investorTicketsReducer: AppReducer<IInvestorTicketsState> = (
           [action.payload.etoId]: action.payload.contribution,
         },
       };
-    case "INVESTOR_TICKET_SET_INITIAL_CALCULATED_CONTRIBUTION":
+    case actions.investorEtoTicket.setInitialCalculatedContribution.getType():
       return {
         ...state,
         initialCalculatedContributions: {

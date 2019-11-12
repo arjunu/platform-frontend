@@ -21,7 +21,7 @@ import {
 import { EUserType, IUser } from "../../lib/api/users/interfaces";
 import { IdentityRegistry } from "../../lib/contracts/IdentityRegistry";
 import { IAppState } from "../../store";
-import { actions, TAction } from "../actions";
+import { actions, TActionFromCreator } from "../actions";
 import { ensurePermissionsArePresentAndRunEffect } from "../auth/jwt/sagas";
 import { selectIsUserVerified, selectUser, selectUserType } from "../auth/selectors";
 import { userHasKycAndEmailVerified } from "../eto-flow/selectors";
@@ -101,7 +101,7 @@ let watchTask: any;
 
 function* kycRefreshWidgetSagaWatcher({ logger }: TGlobalDependencies): any {
   while (true) {
-    yield take("KYC_WATCHER_START");
+    yield take(actions.kyc.kycStartWatching);
     logger.info("started KYC watcher");
     watchTask = yield fork(neuCall, kycRefreshWidgetSaga);
   }
@@ -109,7 +109,7 @@ function* kycRefreshWidgetSagaWatcher({ logger }: TGlobalDependencies): any {
 
 function* kycRefreshWidgetSagaWatcherStop({ logger }: TGlobalDependencies): any {
   while (true) {
-    yield take("KYC_WATCHER_STOP");
+    yield take(actions.kyc.kycStopWatching);
     if (watchTask) {
       logger.info("stopped KYC watcher");
       yield cancel(watchTask);
@@ -133,11 +133,7 @@ function* loadIdentityClaim({ contractsService }: TGlobalDependencies): Iterator
 /**
  * Individual Request
  */
-function* loadIndividualData(
-  { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_LOAD_INDIVIDUAL_DATA") return;
+function* loadIndividualData({ apiKycService, logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateIndividualData(true));
     const result: IHttpResponse<IKycIndividualData> = yield apiKycService.getIndividualData();
@@ -153,9 +149,8 @@ function* loadIndividualData(
 
 function* submitIndividualData(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitIndividualData>,
 ): Iterator<any> {
-  if (action.type !== "KYC_SUBMIT_INDIVIDUAL_FORM") return;
   try {
     const { data, skipContinue } = action.payload;
     const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putIndividualData(data);
@@ -179,9 +174,8 @@ function* submitIndividualData(
 
 function* uploadIndividualFile(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycUploadIndividualDocument>,
 ): Iterator<any> {
-  if (action.type !== "KYC_UPLOAD_INDIVIDUAL_FILE") return;
   const { file } = action.payload;
   try {
     yield put(actions.kyc.kycUpdateIndividualDocument(true));
@@ -197,11 +191,7 @@ function* uploadIndividualFile(
   }
 }
 
-function* loadIndividualFiles(
-  { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_LOAD_INDIVIDUAL_FILE_LIST") return;
+function* loadIndividualFiles({ apiKycService, logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateIndividualDocuments(true));
     const result: IHttpResponse<IKycFileInfo[]> = yield apiKycService.getIndividualDocuments();
@@ -217,10 +207,8 @@ function* loadIndividualFiles(
 
 function* loadIndividualRequest(
   { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycLoadIndividualRequest>,
 ): Iterator<any> {
-  if (action.type !== "KYC_LOAD_INDIVIDUAL_REQUEST_STATE") return;
-
   yield put(actions.kyc.kycLoadClaims());
 
   try {
@@ -250,11 +238,10 @@ function* submitIndividualRequestEffect({ apiKycService }: TGlobalDependencies):
   );
 }
 
-function* submitIndividualRequest(
-  { notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_SUBMIT_INDIVIDUAL_REQUEST") return;
+function* submitIndividualRequest({
+  notificationCenter,
+  logger,
+}: TGlobalDependencies): Iterator<any> {
   try {
     yield neuCall(
       ensurePermissionsArePresentAndRunEffect,
@@ -314,11 +301,7 @@ function* cancelIndividualInstantId({
  */
 
 // legal representative
-function* loadLegalRepresentative(
-  { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_LOAD_LEGAL_REPRESENTATIVE") return;
+function* loadLegalRepresentative({ apiKycService, logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentative(true));
     const result: IHttpResponse<
@@ -336,9 +319,8 @@ function* loadLegalRepresentative(
 
 function* submitLegalRepresentative(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitLegalRepresentative>,
 ): Iterator<any> {
-  if (action.type !== "KYC_SUBMIT_LEGAL_REPRESENTATIVE") return;
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentative(true));
     const result: IHttpResponse<
@@ -355,9 +337,8 @@ function* submitLegalRepresentative(
 
 function* uploadLegalRepresentativeFile(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycUploadLegalRepresentativeDocument>,
 ): Iterator<any> {
-  if (action.type !== "KYC_UPLOAD_LEGAL_REPRESENTATIVE_FILE") return;
   const { file } = action.payload;
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocument(true));
@@ -374,11 +355,10 @@ function* uploadLegalRepresentativeFile(
   }
 }
 
-function* loadLegalRepresentativeFiles(
-  { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_LOAD_LEGAL_REPRESENTATIVE_FILE_LIST") return;
+function* loadLegalRepresentativeFiles({
+  apiKycService,
+  logger,
+}: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocuments(true));
     const result: IHttpResponse<
@@ -395,9 +375,8 @@ function* loadLegalRepresentativeFiles(
 // business data
 function* setBusinessType(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycSetBusinessType>,
 ): Iterator<any> {
-  if (action.type !== "KYC_SET_BUSINESS_TYPE") return;
   try {
     yield put(actions.kyc.kycUpdateBusinessData(true));
     let institutionData: IKycBusinessData = {};
@@ -420,11 +399,7 @@ function* setBusinessType(
 }
 
 // legal representative
-function* loadBusinessData(
-  { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_LOAD_BUSINESS_DATA") return;
+function* loadBusinessData({ apiKycService, logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateBusinessData(true));
     const result: IHttpResponse<IKycBusinessData> = yield apiKycService.getBusinessData();
@@ -441,9 +416,8 @@ function* loadBusinessData(
 
 function* submitBusinessData(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitBusinessData>,
 ): Iterator<any> {
-  if (action.type !== "KYC_SUBMIT_BUSINESS_DATA") return;
   try {
     yield put(actions.kyc.kycUpdateBusinessData(true));
     const result: IHttpResponse<IKycBusinessData> = yield apiKycService.putBusinessData(
@@ -461,9 +435,8 @@ function* submitBusinessData(
 
 function* uploadBusinessFile(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycUploadBusinessDocument>,
 ): Iterator<any> {
-  if (action.type !== "KYC_UPLOAD_BUSINESS_FILE") return;
   const { file } = action.payload;
   try {
     yield put(actions.kyc.kycUpdateBusinessDocument(true));
@@ -479,11 +452,7 @@ function* uploadBusinessFile(
   }
 }
 
-function* loadBusinessFiles(
-  { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_LOAD_BUSINESS_FILE_LIST") return;
+function* loadBusinessFiles({ apiKycService, logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateBusinessDocuments(true));
     const result: IHttpResponse<IKycFileInfo[]> = yield apiKycService.getBusinessDocuments();
@@ -498,11 +467,7 @@ function* loadBusinessFiles(
 }
 
 // beneficial owners
-function* loadBeneficialOwners(
-  { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_LOAD_BENEFICIAL_OWNERS") return;
+function* loadBeneficialOwners({ apiKycService, logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateBeneficialOwners(true));
     const result: IHttpResponse<IKycBeneficialOwner[]> = yield apiKycService.getBeneficialOwners();
@@ -514,11 +479,11 @@ function* loadBeneficialOwners(
   }
 }
 
-function* createBeneficialOwner(
-  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_ADD_BENEFICIAL_OWNER") return;
+function* createBeneficialOwner({
+  apiKycService,
+  notificationCenter,
+  logger,
+}: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateBeneficialOwner(true));
     const result: IHttpResponse<IKycBeneficialOwner> = yield apiKycService.postBeneficialOwner({});
@@ -534,9 +499,8 @@ function* createBeneficialOwner(
 
 function* submitBeneficialOwner(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitBeneficialOwner>,
 ): Iterator<any> {
-  if (action.type !== "KYC_SUBMIT_BENEFICIAL_OWNER") return;
   try {
     yield put(actions.kyc.kycUpdateBeneficialOwner(true));
     const result: IHttpResponse<IKycBeneficialOwner> = yield apiKycService.putBeneficialOwner(
@@ -554,9 +518,8 @@ function* submitBeneficialOwner(
 
 function* deleteBeneficialOwner(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycDeleteBeneficialOwner>,
 ): Iterator<any> {
-  if (action.type !== "KYC_DELETE_BENEFICIAL_OWNER") return;
   try {
     yield put(actions.kyc.kycUpdateBeneficialOwner(true));
     yield apiKycService.deleteBeneficialOwner(action.payload.id);
@@ -572,9 +535,8 @@ function* deleteBeneficialOwner(
 
 function* uploadBeneficialOwnerFile(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycUploadBeneficialOwnerDocument>,
 ): Iterator<any> {
-  if (action.type !== "KYC_UPLOAD_BENEFICIAL_OWNER_FILE") return;
   const { boid, file } = action.payload;
   try {
     yield put(actions.kyc.kycUpdateBeneficialOwnerDocument(boid, true));
@@ -595,9 +557,8 @@ function* uploadBeneficialOwnerFile(
 
 function* loadBeneficialOwnerFiles(
   { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycLoadBeneficialOwnerDocumentList>,
 ): Iterator<any> {
-  if (action.type !== "KYC_LOAD_BENEFICIAL_OWNER_FILE_LIST") return;
   const { boid } = action.payload;
   try {
     yield put(actions.kyc.kycUpdateBeneficialOwnerDocuments(boid, true));
@@ -615,10 +576,8 @@ function* loadBeneficialOwnerFiles(
 // request
 function* loadBusinessRequest(
   { apiKycService, logger }: TGlobalDependencies,
-  action: TAction,
+  action: TActionFromCreator<typeof actions.kyc.kycLoadBusinessRequest>,
 ): Iterator<any> {
-  if (action.type !== "KYC_LOAD_BUSINESS_REQUEST_STATE") return;
-
   yield put(actions.kyc.kycLoadClaims());
 
   try {
@@ -658,11 +617,10 @@ function* submitBusinessRequestEffect({ apiKycService }: TGlobalDependencies): I
   );
 }
 
-function* submitBusinessRequest(
-  { notificationCenter, logger }: TGlobalDependencies,
-  action: TAction,
-): Iterator<any> {
-  if (action.type !== "KYC_SUBMIT_BUSINESS_REQUEST") return;
+function* submitBusinessRequest({
+  notificationCenter,
+  logger,
+}: TGlobalDependencies): Iterator<any> {
   try {
     // check whether combined value of beneficial owners percentages is less or equal 100%
     const ownerShip = yield select((s: IAppState) => selectCombinedBeneficialOwnerOwnership(s.kyc));
@@ -746,12 +704,12 @@ export function* loadBankAccountDetails({
 export function* waitForKycStatus(): Iterator<any> {
   const kycLoading = yield select((s: IAppState) => selectKycLoading(s));
   if (kycLoading) {
-    yield take("KYC_FINISHED_LOADING_DATA");
+    yield take(actions.kyc.kycFinishedLoadingData);
   }
 }
 
 function* waitForKycStatusLoad(): Iterator<any> {
-  yield take(["KYC_LOAD_BUSINESS_DATA", "KYC_LOAD_INDIVIDUAL_DATA"]);
+  yield take([actions.kyc.kycLoadBusinessData, actions.kyc.kycLoadIndividualData]);
   yield put(actions.kyc.kycFinishedLoadingData());
 }
 
@@ -767,54 +725,67 @@ export function* loadKycRequestData(): Iterator<any> {
   yield put(actions.kyc.kycLoadClientData());
 
   yield all([
-    neuTakeOnly("KYC_UPDATE_INDIVIDUAL_REQUEST_STATE", { individualRequestStateLoading: false }),
-    neuTakeOnly("KYC_UPDATE_BUSINESS_REQUEST_STATE", { businessRequestStateLoading: false }),
-    take("KYC_SET_CLAIMS"),
-    neuTakeOnly("KYC_UPDATE_BUSINESS_DATA", {
+    neuTakeOnly(actions.kyc.kycUpdateIndividualRequestState, {
+      individualRequestStateLoading: false,
+    }),
+    neuTakeOnly(actions.kyc.kycUpdateBusinessRequestState, { businessRequestStateLoading: false }),
+    take(actions.kyc.kycSetClaims),
+    neuTakeOnly(actions.kyc.kycUpdateBusinessData, {
       businessDataLoading: false,
     }),
-    neuTakeOnly("KYC_UPDATE_INDIVIDUAL_DATA", { individualDataLoading: false }),
+    neuTakeOnly(actions.kyc.kycUpdateIndividualData, { individualDataLoading: false }),
   ]);
 }
 
-export function* kycSagas(): any {
-  yield fork(neuTakeEvery, "KYC_LOAD_CLIENT_DATA", loadClientData);
+export function* kycSagas(): Iterator<any> {
+  yield fork(neuTakeEvery, actions.kyc.kycLoadClientData, loadClientData);
 
-  yield fork(neuTakeEvery, "KYC_LOAD_INDIVIDUAL_DATA", loadIndividualData);
-  yield fork(neuTakeEvery, "KYC_SUBMIT_INDIVIDUAL_FORM", submitIndividualData);
-  yield fork(neuTakeEvery, "KYC_UPLOAD_INDIVIDUAL_FILE", uploadIndividualFile);
-  yield fork(neuTakeEvery, "KYC_LOAD_INDIVIDUAL_FILE_LIST", loadIndividualFiles);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualData, loadIndividualData);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitIndividualData, submitIndividualData);
+  yield fork(neuTakeEvery, actions.kyc.kycUploadIndividualDocument, uploadIndividualFile);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualDocumentList, loadIndividualFiles);
   // Outsourced
-  yield fork(neuTakeEvery, "KYC_START_INSTANT_ID", startIndividualInstantId);
-  yield fork(neuTakeEvery, "KYC_CANCEL_INSTANT_ID", cancelIndividualInstantId);
-  yield fork(neuTakeEvery, "KYC_LOAD_INDIVIDUAL_REQUEST_STATE", loadIndividualRequest);
-  yield fork(neuTakeEvery, "KYC_SUBMIT_INDIVIDUAL_REQUEST", submitIndividualRequest);
+  yield fork(neuTakeEvery, actions.kyc.kycStartInstantId, startIndividualInstantId);
+  yield fork(neuTakeEvery, actions.kyc.kycCancelInstantId, cancelIndividualInstantId);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualRequest, loadIndividualRequest);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitIndividualRequest, submitIndividualRequest);
 
-  yield fork(neuTakeEvery, "KYC_LOAD_LEGAL_REPRESENTATIVE", loadLegalRepresentative);
-  yield fork(neuTakeEvery, "KYC_SUBMIT_LEGAL_REPRESENTATIVE", submitLegalRepresentative);
-  yield fork(neuTakeEvery, "KYC_UPLOAD_LEGAL_REPRESENTATIVE_FILE", uploadLegalRepresentativeFile);
-  yield fork(neuTakeEvery, "KYC_LOAD_LEGAL_REPRESENTATIVE_FILE_LIST", loadLegalRepresentativeFiles);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadLegalRepresentative, loadLegalRepresentative);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitLegalRepresentative, submitLegalRepresentative);
+  yield fork(
+    neuTakeEvery,
+    actions.kyc.kycUploadLegalRepresentativeDocument,
+    uploadLegalRepresentativeFile,
+  );
+  yield fork(
+    neuTakeEvery,
+    actions.kyc.kycLoadLegalRepresentativeDocumentList,
+    loadLegalRepresentativeFiles,
+  );
 
-  yield fork(neuTakeEvery, "KYC_SET_BUSINESS_TYPE", setBusinessType);
-  yield fork(neuTakeEvery, "KYC_LOAD_BUSINESS_DATA", loadBusinessData);
-  yield fork(neuTakeEvery, "KYC_SUBMIT_BUSINESS_DATA", submitBusinessData);
-  yield fork(neuTakeEvery, "KYC_LOAD_LEGAL_REPRESENTATIVE_FILE_LIST", loadLegalRepresentativeFiles);
-  yield fork(neuTakeEvery, "KYC_UPLOAD_BUSINESS_FILE", uploadBusinessFile);
-  yield fork(neuTakeEvery, "KYC_LOAD_BUSINESS_FILE_LIST", loadBusinessFiles);
+  yield fork(neuTakeEvery, actions.kyc.kycSetBusinessType, setBusinessType);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadBusinessData, loadBusinessData);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitBusinessData, submitBusinessData);
+  yield fork(neuTakeEvery, actions.kyc.kycUploadBusinessDocument, uploadBusinessFile);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadBusinessDocumentList, loadBusinessFiles);
 
-  yield fork(neuTakeEvery, "KYC_LOAD_BENEFICIAL_OWNERS", loadBeneficialOwners);
-  yield fork(neuTakeEvery, "KYC_ADD_BENEFICIAL_OWNER", createBeneficialOwner);
-  yield fork(neuTakeEvery, "KYC_SUBMIT_BENEFICIAL_OWNER", submitBeneficialOwner);
-  yield fork(neuTakeEvery, "KYC_DELETE_BENEFICIAL_OWNER", deleteBeneficialOwner);
-  yield fork(neuTakeEvery, "KYC_UPLOAD_BENEFICIAL_OWNER_FILE", uploadBeneficialOwnerFile);
-  yield fork(neuTakeEvery, "KYC_LOAD_BENEFICIAL_OWNER_FILE_LIST", loadBeneficialOwnerFiles);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadBeneficialOwners, loadBeneficialOwners);
+  yield fork(neuTakeEvery, actions.kyc.kycAddBeneficialOwner, createBeneficialOwner);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitBeneficialOwner, submitBeneficialOwner);
+  yield fork(neuTakeEvery, actions.kyc.kycDeleteBeneficialOwner, deleteBeneficialOwner);
+  yield fork(neuTakeEvery, actions.kyc.kycUploadBeneficialOwnerDocument, uploadBeneficialOwnerFile);
+  yield fork(
+    neuTakeEvery,
+    actions.kyc.kycLoadBeneficialOwnerDocumentList,
+    loadBeneficialOwnerFiles,
+  );
 
-  yield fork(neuTakeEvery, "KYC_LOAD_BUSINESS_REQUEST_STATE", loadBusinessRequest);
-  yield fork(neuTakeEvery, "KYC_SUBMIT_BUSINESS_REQUEST", submitBusinessRequest);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadBusinessRequest, loadBusinessRequest);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitBusinessRequest, submitBusinessRequest);
 
   yield fork(neuTakeEvery, actions.kyc.loadBankAccountDetails, loadBankAccountDetails);
 
-  yield fork(neuTakeEvery, "KYC_LOAD_CLAIMS", loadIdentityClaim);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadClaims, loadIdentityClaim);
 
   yield fork(waitForKycStatusLoad);
   yield neuFork(kycRefreshWidgetSagaWatcher);
