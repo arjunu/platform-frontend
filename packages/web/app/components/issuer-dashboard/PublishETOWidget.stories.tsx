@@ -5,5 +5,5 @@ import * as React from "react";
 import { PublishETOWidgetComponent } from "./PublishETOWidget";
 
 storiesOf("PublishETOWidget", module).add("default", () => (
-  <PublishETOWidgetComponent publish={() => action("PUBLISH")} />
+  <PublishETOWidgetComponent publish={action("publish")} />
 ));

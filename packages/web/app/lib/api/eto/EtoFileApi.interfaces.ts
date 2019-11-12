@@ -1,3 +1,4 @@
+import { Dictionary } from "../../../types";
 import { EtoStateToCamelcase } from "./EtoApi.interfaces.unsafe";
 
 type fileStates = "canReplace" | "locked" | "readOnly";
@@ -55,8 +56,8 @@ type TComplextFileInfo = "canDeleteInStates" | "canUploadInStates";
 
 type TSimpleFileInfo = "generatedTypes" | "uploadableTypes";
 
-export type TStateInfo = { [key in TSimpleFileInfo]: EEtoDocumentType[] } &
-  { [key in TComplextFileInfo]: { [key in EtoStateToCamelcase]: EEtoDocumentType[] } };
+export type TStateInfo = Dictionary<EEtoDocumentType[], TSimpleFileInfo> &
+  Dictionary<Dictionary<EEtoDocumentType[], EtoStateToCamelcase>, TComplextFileInfo>;
 
 export interface IEtoFilesInfo {
   productTemplates: TEtoDocumentTemplates;
@@ -79,5 +80,5 @@ export const immutableDocumentName: { [key in EEtoDocumentType]: string } = {
   approved_investor_offering_document: "Approved Offering Document",
   signed_termsheet: "Signed Termsheet",
   signed_investment_and_shareholder_agreement: "Signed Investment and Shareholder Agreement",
-  investment_and_shareholder_agreement_preview: "Preview of Investment and Shareholder Agreement",
+  investment_and_shareholder_agreement_preview: "Investment and Shareholder Agreement",
 };

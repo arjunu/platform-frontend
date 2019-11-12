@@ -12,7 +12,6 @@ import {
   TEtoSpecsData,
 } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { TEtoProducts } from "../../lib/api/eto/EtoProductsApi.interfaces";
-import { ETOCommitment } from "../../lib/contracts/ETOCommitment";
 import { IAppState } from "../../store";
 import { actions, TActionFromCreator } from "../actions";
 import { ensurePermissionsArePresentAndRunEffect } from "../auth/jwt/sagas";
@@ -206,18 +205,6 @@ export function* cleanupSetDateTX(): any {
   yield put(actions.etoFlow.clearNewStartDate());
 }
 
-export function* loadInvestmentAgreement(
-  { contractsService }: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.etoFlow.loadSignedInvestmentAgreement>,
-): any {
-  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(
-    action.payload.etoId,
-  );
-  const url: string | null = yield contract.signedInvestmentAgreementUrl;
-
-  yield put(actions.etoFlow.setInvestmentAgreementHash(url !== "" ? url : null));
-}
-
 export function* loadProducts({
   apiEtoProductService,
   logger,
@@ -313,7 +300,6 @@ export function* etoFlowSagas(): any {
   yield fork(neuTakeLatest, etoFlowActions.downloadBookBuildingStats, downloadBookBuildingStats);
   yield fork(neuTakeLatest, etoFlowActions.uploadStartDate, startSetDateTX);
   yield fork(neuTakeLatest, etoFlowActions.cleanupStartDate, cleanupSetDateTX);
-  yield fork(neuTakeLatest, etoFlowActions.loadSignedInvestmentAgreement, loadInvestmentAgreement);
   yield fork(neuTakeLatest, etoFlowActions.loadProducts, loadProducts);
   yield fork(neuTakeLatest, etoFlowActions.loadIssuerStep, loadIssuerStep);
   yield fork(neuTakeLatest, etoFlowActions.changeProductType, changeProductType);

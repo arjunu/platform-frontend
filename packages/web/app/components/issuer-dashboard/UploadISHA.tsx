@@ -5,14 +5,14 @@ import { appRoutes } from "../appRoutes";
 import { EColumnSpan } from "../layouts/Container";
 import { ButtonGroup, ButtonLink } from "../shared/buttons";
 import { ButtonArrowRight } from "../shared/buttons/Button";
-import { DashboardLinkWidget } from "../shared/dashboard-link-widget/DashboardLinkWidget";
+import { DashboardCenteredWidget } from "../shared/dashboard-widget/DashboardWidget";
 
 interface IExternalProps {
   columnSpan: EColumnSpan;
 }
 
 export const UploadISHA: React.FunctionComponent<IExternalProps> = ({ columnSpan }) => (
-  <DashboardLinkWidget
+  <DashboardCenteredWidget
     data-test-id="dashboard-upload-isha-widget"
     title={<FormattedMessage id="settings.upload-isha.title" />}
     text={<FormattedMessage id="settings.upload-isha.text" />}
@@ -30,5 +30,5 @@ export const UploadISHA: React.FunctionComponent<IExternalProps> = ({ columnSpan
         <FormattedMessage id="settings.upload-isha.button" />
       </ButtonLink>
     </ButtonGroup>
-  </DashboardLinkWidget>
+  </DashboardCenteredWidget>
 );

@@ -3,31 +3,51 @@ import { expect } from "chai";
 import { calcInvestmentAmount, calcShareAndTokenPrice } from "./EtoUtils";
 
 describe("EtoUtils", () => {
-  describe("getShareAndTokenPrice", () => {
+  describe("calcShareAndTokenPrice", () => {
     it("should return correct sharePrice and TokenPrice", () => {
       expect(
         calcShareAndTokenPrice({
           preMoneyValuationEur: 1000,
           existingShareCapital: 100,
-          equityTokensPerShare: 100,
         }),
-      ).to.deep.equal({ sharePrice: 10, tokenPrice: 0.1 });
+      ).to.deep.equal({ sharePrice: 10, tokenPrice: 1, tokensPerShare: 10 });
     });
 
     it("should return sharePrice as 0 when one of argument is undefined or 0", () => {
       expect(
         calcShareAndTokenPrice({ preMoneyValuationEur: 100, existingShareCapital: undefined }),
-      ).to.deep.equal({ sharePrice: 0, tokenPrice: 0 });
+      ).to.deep.equal({ sharePrice: 0, tokenPrice: 0, tokensPerShare: 0 });
       expect(
         calcShareAndTokenPrice({ preMoneyValuationEur: undefined, existingShareCapital: 100 }),
-      ).to.deep.equal({ sharePrice: 0, tokenPrice: 0 });
+      ).to.deep.equal({ sharePrice: 0, tokenPrice: 0, tokensPerShare: 0 });
       expect(
         calcShareAndTokenPrice({
           preMoneyValuationEur: undefined,
           existingShareCapital: 100,
-          equityTokensPerShare: 100,
         }),
-      ).to.deep.equal({ sharePrice: 0, tokenPrice: 0 });
+      ).to.deep.equal({ sharePrice: 0, tokenPrice: 0, tokensPerShare: 0 });
+    });
+
+    it("should return 1 EUR token price as special case", () => {
+      expect(
+        calcShareAndTokenPrice({
+          preMoneyValuationEur: 250000000,
+          existingShareCapital: 25000,
+          newShareNominalValue: 10,
+        }),
+      ).to.deep.equal({ sharePrice: 100000, tokenPrice: 1, tokensPerShare: 100000 });
+      // that is not the case with logs of share price that are not integer
+      expect(
+        calcShareAndTokenPrice({
+          preMoneyValuationEur: 250001000,
+          existingShareCapital: 25000,
+          newShareNominalValue: 10,
+        }),
+      ).to.deep.equal({
+        sharePrice: (250001000 * 10) / 25000,
+        tokenPrice: (250001000 * 10) / 25000 / 1000000,
+        tokensPerShare: 1000000,
+      });
     });
   });
 

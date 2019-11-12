@@ -1,8 +1,8 @@
-import BigNumber from "bignumber.js";
 import { ceil, findLast, floor, round } from "lodash";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import { TTranslatedString } from "../../../types";
 import {
   EAbbreviatedNumberOutputFormat,
@@ -23,7 +23,7 @@ type TRangeDescriptor = {
 };
 
 interface IProps {
-  value: string | BigNumber | number | undefined | null;
+  value: TBigNumberVariants | undefined | null;
   outputFormat: EAbbreviatedNumberOutputFormat;
   inputFormat: ENumberInputFormat;
   decimalPlaces?: number;
@@ -34,8 +34,8 @@ interface IProps {
 }
 
 interface IRangeProps {
-  valueFrom: string | BigNumber | number | undefined | null;
-  valueUpto: string | BigNumber | number | undefined | null;
+  valueFrom: TBigNumberVariants | undefined | null;
+  valueUpto: TBigNumberVariants | undefined | null;
   outputFormat: EAbbreviatedNumberOutputFormat;
   inputFormat: ENumberInputFormat;
   decimalPlaces?: number;

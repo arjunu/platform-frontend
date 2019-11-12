@@ -7,7 +7,7 @@ import { PLATFORM_UNLOCK_FEE, PLATFORM_ZERO_FEE } from "../../../../config/const
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { getUnlockedWalletEtherAmountAfterFee } from "../../../../modules/wallet/utils";
 import { multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
-import { getCurrentUTCTimestamp } from "../../../../utils/Date.utils";
+import { getCurrentUTCTimestamp } from "../../../../utils/DateUtils";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,

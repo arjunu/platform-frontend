@@ -3,7 +3,8 @@ import { injectable } from "inversify";
 /** Simple adapter on local storage */
 @injectable()
 export class Storage {
-  constructor(private localStorage: any) {}
+  constructor(private localStorage: WindowLocalStorage["localStorage"]) {}
+
   private inMemoryStorage: { [key: string]: string } = {};
   private isSupported: boolean | undefined = undefined;
 
@@ -29,7 +30,7 @@ export class Storage {
     }
   }
 
-  public getKey(key: string): string | undefined {
+  public getKey(key: string): string | null {
     if (this.checkIsSupported()) {
       return this.localStorage.getItem(key);
     }
@@ -38,7 +39,7 @@ export class Storage {
       return this.inMemoryStorage[name];
     }
 
-    return undefined;
+    return null;
   }
 
   public removeKey(key: string): void {

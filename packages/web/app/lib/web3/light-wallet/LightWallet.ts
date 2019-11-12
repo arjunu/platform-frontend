@@ -12,9 +12,10 @@ import * as RpcSubprovider from "web3-provider-engine/subproviders/rpc";
 
 import { symbols } from "../../../di/symbols";
 import { EWalletSubType, EWalletType, ILightWalletMetadata } from "../../../modules/web3/types";
-import { EthereumAddress } from "../../../types";
+import { EthereumAddress } from "../../../utils/opaque-types/types";
 import { ILogger } from "../../dependencies/logger";
 import { IPersonalWallet, SignerType } from "../PersonalWeb3";
+import { STIPEND_ELIGIBLE_WALLETS } from "./../constants";
 import { IEthereumNetworkConfig, IRawTxData } from "./../types";
 import { Web3Adapter } from "./../Web3Adapter";
 import {
@@ -117,11 +118,15 @@ export class LightWallet implements IPersonalWallet {
     const encodedTxData: IRawTxData = {
       from: txData.from,
       to: addHexPrefix(txData.to!),
-      gas: addHexPrefix(new BigNumber(txData.gas || 0).toString(16)),
-      gasPrice: addHexPrefix(new BigNumber(txData.gasPrice || 0).toString(16)),
-      nonce: addHexPrefix(new BigNumber(nonce || 0).toString(16)),
-      value: addHexPrefix(new BigNumber(txData.value! || 0).toString(16)),
-      data: addHexPrefix(txData.data || ""),
+      gas: addHexPrefix(new BigNumber((txData.gas && txData.gas.toString()) || "0").toString(16)),
+      gasPrice: addHexPrefix(
+        new BigNumber((txData.gasPrice && txData.gasPrice.toString()) || "0").toString(16),
+      ),
+      nonce: addHexPrefix(new BigNumber((nonce && nonce.toString()) || "0").toString(16)),
+      value: addHexPrefix(
+        new BigNumber((txData.value && txData.value.toString()) || "0").toString(16),
+      ),
+      data: addHexPrefix((txData.data && txData.data.toString()) || ""),
     };
 
     const rawData = LightWalletProvider.signing.signTx(
@@ -133,7 +138,10 @@ export class LightWallet implements IPersonalWallet {
     return await this.web3Adapter.sendRawTransaction(addHexPrefix(rawData));
   };
 
-  public getWalletPrivateData = async (): Promise<{ seed: string; privateKey: string }> => {
+  public getWalletPrivateData = async (): Promise<{
+    seed: string;
+    privateKey: string;
+  }> => {
     if (!this.password) {
       throw new LightWalletMissingPasswordError();
     }
@@ -146,20 +154,27 @@ export class LightWallet implements IPersonalWallet {
     return await testWalletPassword(this.vault.walletInstance, newPassword);
   }
 
-  public getMetadata = (): ILightWalletMetadata => ({
-    address: this.ethereumAddress,
-    email: this.email,
-    salt: this.vault.salt,
-    walletType: this.walletType,
-    walletSubType: this.walletSubType,
-  });
+  public getMetadata(): ILightWalletMetadata {
+    return {
+      address: this.ethereumAddress,
+      email: this.email,
+      salt: this.vault.salt,
+      walletType: this.walletType,
+      walletSubType: this.walletSubType,
+    };
+  }
+
+  public isUnlocked(): boolean {
+    return !!this.password;
+  }
 }
 
 @injectable()
 export class LightWalletConnector {
   private web3Adapter?: Web3Adapter;
   public constructor(
-    @inject(symbols.ethereumNetworkConfig) public readonly web3Config: IEthereumNetworkConfig,
+    @inject(symbols.ethereumNetworkConfig)
+    public readonly web3Config: IEthereumNetworkConfig,
     @inject(symbols.logger) public readonly logger: ILogger,
   ) {}
 
@@ -216,13 +231,15 @@ export class LightWalletConnector {
       engine.addProvider(web3Provider);
       engine.addProvider(
         new RpcSubprovider({
-          rpcUrl: this.web3Config.rpcUrl,
+          rpcUrl: STIPEND_ELIGIBLE_WALLETS.includes(EWalletType.LIGHT)
+            ? this.web3Config.backendRpcUrl
+            : this.web3Config.rpcUrl,
         }),
       );
       engine.start();
-      engine.on("block", (block: any) => {
-        this.logger.info(block);
-      });
+      // stop immediately to not poll for new block which does not have any use
+      // todo: implement null block provider and pass it in opts.blockTracker
+      engine.stop();
       return new Web3(engine);
     } catch (e) {
       if (engine) {

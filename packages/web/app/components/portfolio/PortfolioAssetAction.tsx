@@ -3,9 +3,9 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { actions } from "../../modules/actions";
 import { selectEtoWithCompanyAndContractById } from "../../modules/eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
-import { InvestmentProgress } from "../eto/overview/EtoOverviewStatus/InvestmentWidget/InvestmentProgress";
+import { InvestmentProgress } from "../eto/overview/InvestmentProgress";
 import { Button, ButtonSize, EButtonLayout, EIconPosition } from "../shared/buttons";
 
 import * as arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
@@ -21,7 +21,7 @@ interface IDispatchProps {
 }
 
 interface IStateProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 const PortfolioAssetActionComponent: React.FunctionComponent<

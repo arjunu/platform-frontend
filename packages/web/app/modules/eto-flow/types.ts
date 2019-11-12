@@ -13,8 +13,6 @@ export interface IEtoFlowState {
   saving: boolean;
   bookbuildingStats: TBookbuildingStatsType[];
   newStartDate?: Date;
-  signedInvestmentAgreementUrlLoading: boolean;
-  signedInvestmentAgreementUrl: string | null;
   etoDateSaving: boolean;
 }
 

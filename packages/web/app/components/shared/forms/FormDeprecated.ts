@@ -36,7 +36,10 @@ const FormDeprecated = compose<TProps, TProps>(
         if (invalidInput) {
           invalidInput.focus();
         } else {
-          this.props.logger!.warn(`It's not possible to focus invalid field`);
+          const errors = JSON.stringify(this.props.formik.errors);
+          this.props.logger!.warn(
+            `It's not possible to focus invalid field: ${selector}. Errors: ${errors}`,
+          );
         }
       }
     },

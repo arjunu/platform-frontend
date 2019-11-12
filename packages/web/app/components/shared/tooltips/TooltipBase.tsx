@@ -59,6 +59,13 @@ export class TooltipBase extends React.Component<
 
   render(): React.ReactChild {
     const { target, className, textPosition, isOpen, toggle, children, ...props } = this.props;
+
+    // Enzyme is not working with bootstrap tooltip
+    // see https://github.com/reactstrap/reactstrap/issues/818
+    if (process.env.NF_MOCHA_RUN === "1") {
+      return <>{children}</>;
+    }
+
     return (
       <Tooltip
         innerClassName={styles.tooltipInner}

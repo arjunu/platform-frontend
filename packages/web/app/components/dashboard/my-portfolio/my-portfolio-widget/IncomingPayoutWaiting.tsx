@@ -9,7 +9,7 @@ import {
 } from "../../../../modules/investor-portfolio/selectors";
 import { appConnect } from "../../../../store";
 import { withActionWatcher } from "../../../../utils/withActionWatcher.unsafe";
-import { CounterLayout } from "../../../shared/Counter.unsafe";
+import { CounterLayout } from "../../../shared/Counter";
 import { IIncomingPayoutData, IncomingPayoutPendingBase } from "./IncomingPayoutPending";
 
 import * as styles from "./PayoutWidget.module.scss";
@@ -26,10 +26,7 @@ export const IncomingPayoutWaitingLayout: React.FunctionComponent<IIncomingPayou
     <CounterLayout
       data-test-id="incoming-payout-counter"
       className={styles.counterWidget}
-      computedDays={0}
-      computedHours={0}
-      computedMinutes={0}
-      computedSeconds={0}
+      timeLeft={0}
       blink={true}
     />
   </IncomingPayoutPendingBase>

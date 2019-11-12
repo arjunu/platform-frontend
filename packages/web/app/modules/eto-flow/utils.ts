@@ -1,11 +1,9 @@
-import BigNumber from "bignumber.js";
 import { sortBy } from "lodash/fp";
 import * as Yup from "yup";
 
 import {
   EtoCompanyInformationType,
   EtoEquityTokenInfoType,
-  ETOInvestmentAndEtoTermsDataType,
   EtoInvestmentTermsType,
   EtoKeyIndividualsType,
   EtoLegalInformationType,
@@ -134,17 +132,23 @@ export const calculateMarketingEtoData = getFormFractionDoneCalculator(
   },
 );
 
-export const calculateInvestmentAndEtoTermsEtoData = getFormFractionDoneCalculator(
-  ETOInvestmentAndEtoTermsDataType.toYup(),
-  { ignore: true },
-);
-
 export const calculateVotingRightsEtoData = getFormFractionDoneCalculator(
   EtoVotingRightsType.toYup(),
   {
     ignore: true,
   },
 );
+
+export const calculateEtoInvestmentTermsData = getFormFractionDoneCalculator(
+  EtoInvestmentTermsType.toYup(),
+  {
+    ignore: true,
+  },
+);
+
+export const calculateEtoTermsData = getFormFractionDoneCalculator(getEtoTermsSchema().toYup(), {
+  ignore: true,
+});
 
 export function getFormFractionDoneCalculator(
   validator: Yup.Schema<any>,
@@ -191,10 +195,10 @@ export const downloadFile = (uri: string, filename: string) => {
   link.click();
 };
 
-export const isValidEtoStartDate = (startDate: Date, dateToWhitelistMinDurationSec: BigNumber) => {
+export const isValidEtoStartDate = (startDate: Date, dateToWhitelistMinDurationSec: number) => {
   const startTimeSec = startDate.getTime() / 1000;
   const nowSec = Date.now() / 1000;
-  return dateToWhitelistMinDurationSec.add(nowSec).lessThan(startTimeSec);
+  return dateToWhitelistMinDurationSec + nowSec < startTimeSec;
 };
 
 const PRODUCTS_SORT_ORDER: EProductName[] = [

@@ -6,7 +6,7 @@ import { compose, withProps } from "recompose";
 import { EEtoDocumentType, IEtoDocument } from "../../../../lib/api/eto/EtoFileApi.interfaces";
 import { EOfferingDocumentType } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
 import { actions } from "../../../../modules/actions";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { appConnect } from "../../../../store";
 import { assertNever } from "../../../../utils/assertNever";
 import { etherscanAddressLink, etoPublicViewLink } from "../../../appRouteUtils";
@@ -15,7 +15,7 @@ import { TagWithFallback } from "../../../shared/Tag";
 import * as styles from "./EtoOverviewStatus.module.scss";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   isEmbedded: boolean;
   innerClass?: string;
 }
@@ -120,9 +120,9 @@ const TagsWidgetLayout: React.FunctionComponent<IWithProps & IExternalProps & ID
 
 const TagsWidget = compose<IDispatchProps & IWithProps & IExternalProps, IExternalProps>(
   appConnect<{}, IDispatchProps, IExternalProps>({
-    dispatchToProps: dispatch => ({
+    dispatchToProps: (dispatch, { eto }) => ({
       downloadDocument: (document: IEtoDocument) =>
-        dispatch(actions.eto.downloadEtoDocument(document)),
+        dispatch(actions.eto.downloadEtoDocument(document, eto)),
     }),
   }),
   withProps<IWithProps, IExternalProps & IDispatchProps>(props => {

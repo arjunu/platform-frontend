@@ -3,12 +3,12 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { testCompany, testContract, testEto } from "../../../../../../test/fixtures";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { ETxSenderType } from "../../../../../modules/tx/types";
 import { withModalBody } from "../../../../../utils/storybookHelpers.unsafe";
 import { SignNomineeAgreementSummaryLayout } from "./SignAgreementSummary";
 
-const eto: TEtoWithCompanyAndContract = {
+const eto: TEtoWithCompanyAndContractReadonly = {
   ...testEto,
   contract: testContract,
   company: testCompany,

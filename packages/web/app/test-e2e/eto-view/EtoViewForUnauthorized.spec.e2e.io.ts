@@ -36,4 +36,13 @@ describe("Eto Unauthorized View", () => {
       assertLanding();
     });
   });
+
+  it("should show register button", () => {
+    const ETO_ID = etoFixtureAddressByName("ETOInPublicState");
+
+    cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
+    assertEtoView(ETO_ID);
+
+    cy.get(tid("eto-widget-register-to-invest-button")).should("exist");
+  });
 });

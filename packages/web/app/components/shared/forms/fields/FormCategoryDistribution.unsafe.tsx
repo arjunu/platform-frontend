@@ -1,10 +1,7 @@
-import { connect, FieldArray, getIn } from "formik";
+import { ArrayHelpers, connect, FieldArray, getIn } from "formik";
 import * as React from "react";
-import { FormattedMessage } from "react-intl-phraseapp";
-import * as Yup from "yup";
 
 import { CommonHtmlProps, TFormikConnect, TTranslatedString } from "../../../../types";
-import { getValidationSchema } from "../../../../utils/yupUtils";
 import { ButtonIcon, ButtonIconPlaceholder } from "../../buttons";
 import { FormInput } from "./FormInput";
 import { NumberTransformingField } from "./NumberTransformingField";
@@ -18,6 +15,7 @@ interface IProps {
   name: string;
   label?: TTranslatedString;
   prefix?: string;
+  suffix?: string;
   selectedCategory?: { name: string; percentage: number };
   transformRatio?: number;
 }
@@ -30,7 +28,6 @@ interface IInternalProps {
   valuePlaceholder?: string;
   isFirstElement: boolean;
   formFieldKeys: string[];
-  validationSchema: { fields: { [key: string]: Yup.Schema<any> } };
 }
 
 interface IExternalProps {
@@ -43,33 +40,10 @@ interface IExternalProps {
 class KeyValueCompoundFieldBase extends React.Component<IProps & IInternalProps & TFormikConnect> {
   name = this.props.name;
 
-  setAllFieldsTouched = () => {
-    if (this.props.validationSchema) {
-      return Object.keys(this.props.validationSchema.fields).map(key => {
-        this.props.formik.setFieldTouched(`${this.name}.${key}`, true);
-      });
-    }
-
-    return undefined;
-  };
-
-  compoundFieldValidation = (fieldName: string, neighborName: string) => {
-    const schema = this.props.validationSchema && this.props.validationSchema.fields[fieldName];
-    return (value: any) => {
-      const neighborValue = getIn(this.props.formik.values, neighborName);
-      if (neighborValue !== undefined && value === undefined) {
-        return <FormattedMessage id="form.field.error.both-fields-required" />;
-      } else {
-        try {
-          if (schema) {
-            schema.validateSync(value);
-          }
-        } catch (e) {
-          return e.errors;
-        }
-      }
-    };
-  };
+  setAllFieldsTouched = () =>
+    this.props.formFieldKeys.map(key => {
+      this.props.formik.setFieldTouched(`${this.name}.${key}`, true);
+    });
 
   render = () => {
     const {
@@ -81,6 +55,7 @@ class KeyValueCompoundFieldBase extends React.Component<IProps & IInternalProps 
       valuePlaceholder,
       addField,
       formFieldKeys,
+      suffix,
       prefix,
       transformRatio,
       name,
@@ -98,10 +73,6 @@ class KeyValueCompoundFieldBase extends React.Component<IProps & IInternalProps 
             name={`${name}.${formFieldKeys[0]}`}
             placeholder={keyPlaceholder}
             onBlur={this.setAllFieldsTouched}
-            customValidation={this.compoundFieldValidation(
-              formFieldKeys[0],
-              `${name}.${formFieldKeys[1]}`,
-            )}
           />
           {transformRatio ? (
             <NumberTransformingField
@@ -112,23 +83,16 @@ class KeyValueCompoundFieldBase extends React.Component<IProps & IInternalProps 
               ratio={transformRatio}
               customOnBlur={this.setAllFieldsTouched}
               placeholder={valuePlaceholder}
-              customValidation={this.compoundFieldValidation(
-                formFieldKeys[1],
-                `${name}.${formFieldKeys[0]}`,
-              )}
             />
           ) : (
             <FormInput
               disabled={disabled}
               min="0"
               prefix={prefix}
+              suffix={suffix}
               name={`${name}.${formFieldKeys[1]}`}
               onBlur={this.setAllFieldsTouched}
               placeholder={valuePlaceholder}
-              customValidation={this.compoundFieldValidation(
-                formFieldKeys[1],
-                `${name}.${formFieldKeys[0]}`,
-              )}
             />
           )}
         </div>
@@ -152,10 +116,6 @@ class ArrayOfKeyValueFieldsBase extends React.Component<
   }, {});
   private suggestions = [...this.props.suggestions];
   private setFieldValue = this.props.formik.setFieldValue;
-  private validationSchema =
-    this.props.formik.validationSchema &&
-    (getValidationSchema(this.props.formik.validationSchema) as any).fields[this.props.name]
-      ._subType;
 
   constructor(props: IProps & IExternalProps & CommonHtmlProps & TFormikConnect) {
     super(props);
@@ -167,12 +127,28 @@ class ArrayOfKeyValueFieldsBase extends React.Component<
     }
   }
 
+  addField = (arrayHelpers: ArrayHelpers) => arrayHelpers.push(this.blankField);
+
+  removeField = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    arrayHelpers: ArrayHelpers,
+    index: number,
+  ) => {
+    e.preventDefault();
+    if (!Array.isArray(this.props.formik.errors[this.props.name])) {
+      // formik expects errors[this.props.name] to be an array of errors
+      // and crashes if it's an single error, which might be the case
+      // if we validate the length of key-value-array
+      this.props.formik.errors[this.props.name] = undefined;
+    }
+    arrayHelpers.remove(index);
+  };
+
   render(): React.ReactNode {
-    const { prefix, transformRatio, disabled, formik, name, valuePlaceholder } = this.props;
+    const { prefix, transformRatio, disabled, formik, name, valuePlaceholder, suffix } = this.props;
 
     const categoryDistribution = getIn(formik.values, name) || [];
     const formFieldKeys = this.props.fieldNames;
-
     return (
       <FieldArray
         name={name}
@@ -189,21 +165,17 @@ class ArrayOfKeyValueFieldsBase extends React.Component<
                     key={index} //TODO fix this
                     formFieldKeys={formFieldKeys}
                     prefix={prefix}
+                    suffix={suffix}
                     name={`${name}.${index}`}
-                    removeField={(e: React.MouseEvent<HTMLButtonElement>) => {
-                      e.preventDefault();
-                      arrayHelpers.remove(index);
-                      this.suggestions.splice(index, 1);
-                    }}
+                    removeField={(e: React.MouseEvent<HTMLButtonElement>) =>
+                      this.removeField(e, arrayHelpers, index)
+                    }
                     valuePlaceholder={valuePlaceholder}
                     keyPlaceholder={this.suggestions[index] || "Other"}
-                    addField={() => {
-                      this.setFieldValue(`${name}.${index + 1}`, this.blankField);
-                    }}
+                    addField={() => this.addField(arrayHelpers)}
                     isFirstElement={isFirstElement}
                     isLastElement={isLastElement}
                     transformRatio={transformRatio}
-                    validationSchema={this.validationSchema}
                   />
                 );
               },

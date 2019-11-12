@@ -1,223 +1,104 @@
-import * as cn from "classnames";
 import * as React from "react";
-import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
-import { setDisplayName, withProps } from "recompose";
-import { compose } from "redux";
 
-import { TEtoInvestmentCalculatedValues } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { IPledge } from "../../../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
-import { actions } from "../../../../../modules/actions";
-import { selectIsInvestor, selectIsVerifiedInvestor } from "../../../../../modules/auth/selectors";
+import { EWhitelistingState } from "../../../../../modules/bookbuilding-flow/utils";
+import { assertNever } from "../../../../../utils/assertNever";
+import { LoadingIndicator } from "../../../../shared/loading-indicator/LoadingIndicator";
+import { CounterWidget } from "../CounterWidget";
 import {
-  selectBookbuildingStats,
-  selectMyPledge,
-} from "../../../../../modules/bookbuilding-flow/selectors";
-import { EETOStateOnChain } from "../../../../../modules/eto/types";
-import { appConnect } from "../../../../../store";
-import { onEnterAction } from "../../../../../utils/OnEnterAction";
-import { appRoutes } from "../../../../appRoutes";
-import { ButtonLink } from "../../../../shared/buttons";
-import { Money } from "../../../../shared/formatters/Money";
-import {
-  ECurrency,
-  ENumberInputFormat,
-  ENumberOutputFormat,
-} from "../../../../shared/formatters/utils";
-import { Tooltip } from "../../../../shared/tooltips";
-import { CounterWidget } from "../index";
-import { Message } from "../Message";
-import { CampaigningActivatedInvestorApprovedWidget } from "./CampaigningActivatedInvestorApprovedWidget";
+  connectCampaigningActivatedWidget,
+  TComponentProps,
+} from "./connectCampaigningActivatedWidget";
+import { RegisterNowWidget } from "./RegisterNowWidget";
+import { StartDateNotSet } from "./StartDateNotSet";
+import { WhitelistingActive } from "./WhitelistingActive";
+import { WhitelistingLimitReached } from "./WhitelistingLimitReached";
+import { WhitelistingNotActive } from "./WhitelistingNotActive";
+import { WhitelistingSuspended } from "./WhitelistingSuspended";
 
-import * as styles from "../EtoOverviewStatus.module.scss";
-
-export interface IExternalProps {
-  etoId: string;
-  investorsLimit: number;
-  minPledge: number;
-  investmentCalculatedValues?: TEtoInvestmentCalculatedValues;
-  nextState: EETOStateOnChain;
-  nextStateStartDate?: Date;
-  isActive: boolean;
-  keyQuoteFounder: string;
-}
-
-interface IStateProps {
-  pledgedAmount: number | null;
-  investorsCount: number;
-  isInvestor: boolean;
-  pledge?: IPledge;
-  isVerifiedInvestor: boolean;
-}
-
-interface IWithProps {
-  isInvestorsLimitReached: boolean;
-  isWaitingForNextStateToStart: boolean;
-}
-
-type IProps = IWithProps & IExternalProps & IStateProps;
-
-const CampaigningActivatedWidgetComponent: React.FunctionComponent<IProps> = ({
+const CampaigningActivatedWidgetLayout: React.FunctionComponent<TComponentProps> = ({
   investorsLimit,
   pledgedAmount,
   investorsCount,
   isInvestor,
   etoId,
   minPledge,
-  investmentCalculatedValues,
-  isInvestorsLimitReached,
+  maxPledge,
   nextState,
-  nextStateStartDate,
-  isWaitingForNextStateToStart,
-  isActive,
+  countdownDate,
   keyQuoteFounder,
   pledge,
   isVerifiedInvestor,
+  whitelistingState,
+  isAuthorized,
+  isEmbedded,
 }) => {
-  if (isActive && !isInvestorsLimitReached && investmentCalculatedValues) {
+  if (!isAuthorized) {
     return (
-      <>
-        <div className={styles.groupWrapper}>
-          <div className={cn(styles.group, styles.groupNoPadding)}>
-            <span className={styles.label}>
-              <FormattedMessage id="eto-overview.campaigning.whitelist-status" />
-            </span>
-            <span className={styles.value}>
-              {pledge ? (
-                <FormattedMessage id="eto-overview.campaigning.whitelist-status.label-subscribed" />
-              ) : (
-                <>
-                  <FormattedMessage id="eto-overview.campaigning.whitelist-status.label-not-subscribed" />
-                  <Tooltip
-                    content={
-                      <FormattedHTMLMessage
-                        tagName="div"
-                        id="eto-overview.campaigning.whitelist-status.label-not-subscribed-description-text"
-                      />
-                    }
-                  />
-                </>
-              )}
-            </span>
-          </div>
-          <div className={cn(styles.group, styles.groupNoPadding)}>
-            <span className={styles.label}>
-              <FormattedMessage id="shared-component.eto-overview.amount-backed" />
-            </span>
-            <span className={styles.value} data-test-id="eto-bookbuilding-amount-backed">
-              <Money
-                value={pledgedAmount}
-                valueType={ECurrency.EUR}
-                inputFormat={ENumberInputFormat.FLOAT}
-                outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-              />
-            </span>
-          </div>
-          <div className={cn(styles.group, styles.groupNoPadding)}>
-            <span className={styles.label}>
-              <FormattedMessage id="shared-component.eto-overview.investors-backed" />
-            </span>
-            <span className={styles.value}>
-              <span data-test-id="eto-bookbuilding-remaining-slots">
-                {investorsLimit - investorsCount}
-              </span>{" "}
-              out of {investorsLimit} slots remaining
-              {/* TODO: Move to translations once the format is stable */}
-            </span>
-          </div>
-          {isInvestor && isVerifiedInvestor && (
-            <CampaigningActivatedInvestorApprovedWidget
-              etoId={etoId}
-              minPledge={minPledge}
-              maxPledge={investmentCalculatedValues.effectiveMaxTicket}
-              pledge={pledge}
-            />
-          )}
-        </div>
-        {isInvestor && !isVerifiedInvestor && (
-          <ButtonLink
-            innerClassName={styles.etoOverviewStatusButton}
-            to={appRoutes.profile}
-            data-test-id="eto-overview-settings-update-required-to-invest"
-          >
-            <FormattedMessage id="shared-component.eto-overview.verify-to-whitelist" />
-          </ButtonLink>
-        )}
-      </>
+      <RegisterNowWidget
+        isEmbedded={isEmbedded}
+        investorsCount={investorsCount}
+        pledgedAmount={pledgedAmount}
+      />
     );
   }
 
-  if (isWaitingForNextStateToStart) {
-    return (
-      <>
-        {isInvestorsLimitReached && (
-          <Message
-            showTick={false}
-            title={<FormattedMessage id="shared-component.eto-overview.whitelist.success" />}
-            summary={
-              <FormattedMessage
-                id="shared-component.eto-overview.whitelist.success.summary"
-                values={{
-                  totalAmount: (
-                    <Money
-                      value={pledgedAmount}
-                      inputFormat={ENumberInputFormat.FLOAT}
-                      valueType={ECurrency.EUR}
-                      outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-                    />
-                  ),
-                  totalInvestors: investorsCount,
-                }}
-              />
-            }
+  switch (whitelistingState) {
+    case EWhitelistingState.ACTIVE:
+      return (
+        <WhitelistingActive
+          investorsLimit={investorsLimit}
+          isInvestor={isInvestor}
+          etoId={etoId}
+          minPledge={minPledge}
+          maxPledge={maxPledge}
+          pledge={pledge}
+          isVerifiedInvestor={isVerifiedInvestor}
+          investorsCount={investorsCount}
+          pledgedAmount={pledgedAmount}
+        />
+      );
+    case EWhitelistingState.LIMIT_REACHED:
+      return (
+        <>
+          <WhitelistingLimitReached
+            isPledgedByUser={!!pledge}
+            pledgedAmount={pledgedAmount}
+            investorsCount={investorsCount}
           />
-        )}
-        <CounterWidget endDate={nextStateStartDate!} state={nextState} />
-      </>
-    );
+          {countdownDate ? (
+            <CounterWidget endDate={countdownDate} awaitedState={nextState} etoId={etoId} />
+          ) : (
+            <StartDateNotSet nextState={nextState} />
+          )}
+        </>
+      );
+    case EWhitelistingState.SUSPENDED:
+    case EWhitelistingState.STOPPED:
+      return (
+        <>
+          <WhitelistingSuspended
+            isPledgedByUser={!!pledge}
+            pledgedAmount={pledgedAmount}
+            investorsCount={investorsCount}
+          />
+          {countdownDate ? (
+            <CounterWidget endDate={countdownDate} awaitedState={nextState} etoId={etoId} />
+          ) : (
+            <StartDateNotSet nextState={nextState} />
+          )}
+        </>
+      );
+    case EWhitelistingState.NOT_ACTIVE:
+      return <WhitelistingNotActive keyQuoteFounder={keyQuoteFounder} />;
+    case EWhitelistingState.LOADING:
+      return <LoadingIndicator />;
+    default:
+      return assertNever(whitelistingState);
   }
-
-  return (
-    <div data-test-id="eto-overview-status-founders-quote" className={styles.quote}>
-      {keyQuoteFounder}
-    </div>
-  );
 };
 
-const CampaigningActivatedWidget = compose<React.FunctionComponent<IExternalProps>>(
-  appConnect<IStateProps, {}, IExternalProps>({
-    stateToProps: (state, props) => {
-      const stats = selectBookbuildingStats(state, props.etoId);
+const CampaigningActivatedWidget = connectCampaigningActivatedWidget(
+  CampaigningActivatedWidgetLayout,
+);
 
-      return {
-        isInvestor: selectIsInvestor(state),
-        isVerifiedInvestor: selectIsVerifiedInvestor(state),
-        pledgedAmount: stats ? stats.pledgedAmount : null,
-        investorsCount: stats ? stats.investorsCount : 0,
-        pledge: selectMyPledge(state, props.etoId),
-      };
-    },
-  }),
-  onEnterAction<IExternalProps & IStateProps>({
-    actionCreator: (dispatch, props) => {
-      dispatch(actions.bookBuilding.loadBookBuildingStats(props.etoId));
-
-      if (props.isInvestor && props.isVerifiedInvestor) {
-        dispatch(actions.bookBuilding.loadPledge(props.etoId));
-      }
-    },
-  }),
-  withProps<IWithProps, IStateProps & IExternalProps>(
-    ({ pledge, isInvestor, investorsLimit, investorsCount, nextStateStartDate }) => {
-      const count =
-        isInvestor && pledge && investorsCount !== 0 ? investorsCount - 1 : investorsCount;
-
-      return {
-        isInvestorsLimitReached: count >= investorsLimit,
-        isWaitingForNextStateToStart: !!nextStateStartDate && nextStateStartDate > new Date(),
-      };
-    },
-  ),
-  setDisplayName("CampaigningActivatedWidget"),
-)(CampaigningActivatedWidgetComponent);
-
-export { CampaigningActivatedWidget, CampaigningActivatedWidgetComponent };
+export { CampaigningActivatedWidget, CampaigningActivatedWidgetLayout };

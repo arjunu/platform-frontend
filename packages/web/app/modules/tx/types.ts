@@ -35,6 +35,7 @@ export enum ETxSenderType {
   INVESTOR_REFUND = "INVESTOR_REFUND",
   NOMINEE_THA_SIGN = "NOMINEE_THA_SIGN",
   NOMINEE_RAAA_SIGN = "NOMINEE_RAAA_SIGN",
+  NOMINEE_ISHA_SIGN = "NOMINEE_ISHA_SIGN",
 }
 
 export interface ITxTypeWithData<T extends ETxSenderType | undefined, P> {
@@ -83,6 +84,8 @@ type TTxSenderNomineeSignTHAState = ITxTypeWithData<ETxSenderType.NOMINEE_THA_SI
 
 type TTxSenderNomineeSignRAAAState = ITxTypeWithData<ETxSenderType.NOMINEE_RAAA_SIGN, undefined>;
 
+type TTxSenderNomineeSignISHAState = ITxTypeWithData<ETxSenderType.NOMINEE_ISHA_SIGN, undefined>;
+
 export type TSpecificTransactionState =
   | TTxSenderSignInvestmentAgreementState
   | TTxSenderUpgradeState
@@ -96,7 +99,8 @@ export type TSpecificTransactionState =
   | TTxSenderClaimState
   | TTxSenderRefundState
   | TTxSenderNomineeSignTHAState
-  | TTxSenderNomineeSignRAAAState;
+  | TTxSenderNomineeSignRAAAState
+  | TTxSenderNomineeSignISHAState;
 
 export type TAdditionalDataByType<T extends ETxSenderType> = Extract<
   TSpecificTransactionState,

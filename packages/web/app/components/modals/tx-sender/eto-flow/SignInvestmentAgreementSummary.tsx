@@ -17,7 +17,7 @@ interface IDispatchProps {
 const SignInvestmentAgreementComponent: React.FunctionComponent<IDispatchProps> = ({
   onAccept,
 }) => (
-  <div className={styles.content}>
+  <section className={styles.content} data-test-id="eto-flow.sign-isha-summary">
     <ResponsiveImage
       width={2}
       height={1}
@@ -33,16 +33,16 @@ const SignInvestmentAgreementComponent: React.FunctionComponent<IDispatchProps> 
       layout={EButtonLayout.PRIMARY}
       type="button"
       onClick={onAccept}
-      data-test-id="set-eto-date-summary-confirm-button"
+      data-test-id="eto-flow.sign-isha-summary.continue"
       className={styles.button}
     >
       <FormattedMessage id="download-agreement-widget.sign-on-ethereum" />
     </Button>
-  </div>
+  </section>
 );
 
 const SignInvestmentAgreementSummary = compose<IDispatchProps, {}>(
-  setDisplayName("SetEtoDateSummary"),
+  setDisplayName("SignInvestmentAgreementSummary"),
   appConnect<{}, IDispatchProps>({
     dispatchToProps: d => ({
       onAccept: () => d(actions.txSender.txSenderAccept()),

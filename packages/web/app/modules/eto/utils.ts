@@ -5,9 +5,9 @@ import {
   EEtoState,
   TEtoSpecsData,
 } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { IBookBuildingStats } from "../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
 import { DeepPartial, Overwrite } from "../../types";
+import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
 import { isPastInvestment } from "../investor-portfolio/utils";
 import {
   EETOStateOnChain,
@@ -15,7 +15,7 @@ import {
   IEtoContractData,
   IEtoTotalInvestment,
   TEtoStartOfStates,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "./types";
 
 export const amendEtoToCompatibleFormat = (
@@ -49,7 +49,7 @@ const convertToDate = (startOf: BigNumber): Date | undefined => {
     return undefined;
   }
 
-  return new Date(startOf.mul(1000).toNumber());
+  return new Date(startOf.mul("1000").toNumber());
 };
 
 export const convertToStateStartDate = (
@@ -77,21 +77,29 @@ export const convertToStateStartDate = (
 };
 
 export function isOnChain(
-  eto: TEtoWithCompanyAndContract,
+  eto: TEtoWithCompanyAndContractReadonly,
 ): eto is Overwrite<
-  TEtoWithCompanyAndContract,
-  { contract: Exclude<TEtoWithCompanyAndContract["contract"], undefined> }
+  TEtoWithCompanyAndContractReadonly,
+  { contract: Exclude<TEtoWithCompanyAndContractReadonly["contract"], undefined> }
 > {
   return eto.state === EEtoState.ON_CHAIN && eto.contract !== undefined;
 }
 
-export const isRestrictedEto = (eto: TEtoWithCompanyAndContract): boolean =>
+export const isRestrictedEto = (eto: TEtoWithCompanyAndContractReadonly): boolean =>
   eto.product.jurisdiction === EJurisdiction.GERMANY && !isPastInvestment(eto.contract!.timedState);
+
+/**
+ * Check if user is associated with given eto
+ * @returns true if user is either the issuer or nominee of the eto
+ */
+export const isUserAssociatedWithEto = (
+  eto: TEtoWithCompanyAndContractReadonly,
+  userId: EthereumAddressWithChecksum,
+) => eto.companyId === userId || eto.nominee === userId;
 
 type TCalculateSubStateOptions = {
   eto: TEtoSpecsData;
   contract: IEtoContractData | undefined;
-  stats: IBookBuildingStats | undefined;
   isEligibleToPreEto: boolean;
 };
 
@@ -103,6 +111,20 @@ export const isComingSoon = (state: EEtoState): boolean =>
   EEtoState.PREVIEW === state || EEtoState.PENDING === state;
 
 /**
+ * Check if eto is active (either presale or public sale)
+ */
+export const isFundraisingActive = (eto: TEtoWithCompanyAndContractReadonly): boolean => {
+  if (isOnChain(eto)) {
+    return (
+      eto.contract.timedState === EETOStateOnChain.Whitelist ||
+      eto.contract.timedState === EETOStateOnChain.Public
+    );
+  }
+
+  return false;
+};
+
+/**
  * Calculates sub state of the ETO
  * Should not be connected with issuer or investor states
  * @todo Remove `isEligibleToPreEto` as it's related to investor
@@ -110,7 +132,6 @@ export const isComingSoon = (state: EEtoState): boolean =>
 export const getEtoSubState = ({
   eto,
   contract,
-  stats,
   isEligibleToPreEto,
 }: TCalculateSubStateOptions): EEtoSubState | undefined => {
   switch (eto.state) {
@@ -134,16 +155,8 @@ export const getEtoSubState = ({
 
     case EEtoState.LISTED:
     case EEtoState.PROSPECTUS_APPROVED: {
-      const investorCount = stats ? stats.investorsCount : 0;
-
-      const isInvestorsLimitReached = investorCount >= eto.maxPledges;
-
       if (eto.isBookbuilding) {
         return EEtoSubState.WHITELISTING;
-      }
-
-      if (isInvestorsLimitReached) {
-        return EEtoSubState.WHITELISTING_LIMIT_REACHED;
       }
 
       return EEtoSubState.CAMPAIGNING;
@@ -155,14 +168,6 @@ export const getEtoSubState = ({
 
       switch (contract.timedState) {
         case EETOStateOnChain.Setup:
-          const investorCount = stats ? stats.investorsCount : 0;
-
-          const isInvestorsLimitReached = investorCount >= eto.maxPledges;
-
-          if (isInvestorsLimitReached) {
-            return EEtoSubState.WHITELISTING_LIMIT_REACHED;
-          }
-
           if (eto.isBookbuilding) {
             return EEtoSubState.WHITELISTING;
           }
@@ -186,4 +191,25 @@ export const getEtoSubState = ({
       return undefined;
     }
   }
+};
+
+export const getInvestmentCalculatedPercentage = (eto: TEtoSpecsData) =>
+  (eto.newSharesToIssue / eto.minimumNewSharesToIssue) * 100;
+
+export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndContractReadonly) => {
+  const totalTokensInt = eto.contract!.totalInvestment.totalTokensInt;
+
+  return (
+    (parseInt(totalTokensInt, 10) / (eto.minimumNewSharesToIssue * eto.equityTokensPerShare)) * 100
+  );
+};
+
+export const isEtoSoftCapReached = (eto: TEtoWithCompanyAndContractReadonly) => {
+  if (isOnChain(eto)) {
+    const currentProgress = getCurrentInvestmentProgressPercentage(eto);
+
+    return currentProgress >= 100;
+  }
+
+  return false;
 };

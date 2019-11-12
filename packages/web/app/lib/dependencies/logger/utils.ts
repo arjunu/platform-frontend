@@ -19,4 +19,4 @@ const hashQueryParam = (name: string, url: string) =>
   url.replace(new RegExp(`(${name})(=|%3D).+?(&|#|%26)`), "$1$2******$3");
 
 export const hashBlacklistedQueryParams = (blackListedParams: string[], url: string) =>
-  blackListedParams.reduce((url, param) => hashQueryParam(param, url), url);
+  blackListedParams.reduce((prevUrl, param) => hashQueryParam(param, prevUrl), url);

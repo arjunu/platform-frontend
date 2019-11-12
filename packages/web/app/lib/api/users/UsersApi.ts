@@ -1,11 +1,17 @@
+import BigNumber from "bignumber.js";
+import { addHexPrefix } from "ethereumjs-util";
 import { inject, injectable } from "inversify";
 
 import { symbols } from "../../../di/symbols";
 import { EWalletSubType, EWalletType } from "../../../modules/web3/types";
+import { makeEthereumAddressChecksummed } from "../../../modules/web3/utils";
+import { toEthereumAddress } from "../../../utils/opaque-types/utils";
 import { ILogger } from "../../dependencies/logger";
 import { IHttpClient } from "../client/IHttpClient";
+import { ITxData } from "./../../web3/types";
 import {
   emailStatus,
+  GasStipendValidator,
   IEmailStatus,
   IUser,
   IUserInput,
@@ -183,5 +189,30 @@ export class UsersApi {
       baseUrl: USER_API_ROOT,
       url: `/pending_transactions/me/${txHash}`,
     });
+  }
+
+  public async getGasStipend(txDetails: ITxData): Promise<string> {
+    const convertedTxDetails = {
+      ...txDetails,
+      to: makeEthereumAddressChecksummed(toEthereumAddress(txDetails.to)),
+      from: makeEthereumAddressChecksummed(toEthereumAddress(txDetails.from)),
+      gas: addHexPrefix(new BigNumber(txDetails.gas ? txDetails.gas.toString() : "0").toString(16)),
+      gasPrice: addHexPrefix(
+        new BigNumber(txDetails.gasPrice ? txDetails.gasPrice.toString() : "0").toString(16),
+      ),
+      value: addHexPrefix(
+        new BigNumber(txDetails.value ? txDetails.value.toString() : "0").toString(16),
+      ),
+    };
+
+    const response = await this.httpClient.post<string>({
+      baseUrl: USER_API_ROOT,
+      url: `/transaction/gas_stipend`,
+      body: convertedTxDetails,
+      responseSchema: GasStipendValidator,
+      disableManglingRequestBody: true,
+    });
+
+    return response.body;
   }
 }

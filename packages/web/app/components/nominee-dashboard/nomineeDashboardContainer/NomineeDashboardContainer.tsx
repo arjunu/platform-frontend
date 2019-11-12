@@ -2,7 +2,7 @@ import * as React from "react";
 import { compose } from "recompose";
 
 import { selectIsBankAccountVerified } from "../../../modules/bank-transfer-flow/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { selectNomineeEtoWithCompanyAndContract } from "../../../modules/nominee-flow/selectors";
 import { selectIsVerificationFullyDone } from "../../../modules/selectors";
 import { appConnect } from "../../../store";
@@ -13,7 +13,7 @@ import { NotLinkedNomineeDashboardContainer } from "./NotLinkedNomineeDashboardC
 interface IStateProps {
   verificationIsComplete: boolean;
   isBankAccountVerified: boolean;
-  nomineeEto: TEtoWithCompanyAndContract | undefined;
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
 }
 
 const NomineeDashboardContainerBase: React.FunctionComponent<IStateProps> = ({

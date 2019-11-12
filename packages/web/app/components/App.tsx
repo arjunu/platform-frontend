@@ -13,7 +13,7 @@ import { selectInitError, selectIsInitInProgress } from "../modules/init/selecto
 import { appConnect } from "../store";
 import { ContainerContext } from "../utils/InversifyProvider";
 import { onEnterAction } from "../utils/OnEnterAction";
-import { ScrollToTop } from "../utils/ScrollToTop.unsafe";
+import { ScrollToTop } from "../utils/ScrollToTop";
 import { withRootMetaTag } from "../utils/withMetaTags.unsafe";
 import { AppRouter } from "./AppRouter";
 import { CriticalError } from "./layouts/CriticalError";

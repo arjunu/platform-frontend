@@ -97,10 +97,12 @@ class PersonalAccountDetailsLayout extends React.Component<
                       }, ${personalData.country}`}
                     />
                   )}
-                <Record
-                  label={<FormattedMessage id="settings.account-details.income" />}
-                  value={personalData.isHighIncome ? "yes" : "no"}
-                />
+                {process.env.NF_DISABLE_HIGH_INCOME !== "1" && (
+                  <Record
+                    label={<FormattedMessage id="settings.account-details.income" />}
+                    value={personalData.isHighIncome ? "yes" : "no"}
+                  />
+                )}
               </>
             )}
             <div className={styles.explanation}>

@@ -1,5 +1,5 @@
 import { delay } from "redux-saga";
-import { fork, put } from "redux-saga/effects";
+import { fork, put, select } from "redux-saga/effects";
 
 import { BookbuildingFlowMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
@@ -8,9 +8,11 @@ import { TGlobalDependencies } from "../../di/setupBindings";
 import { IHttpResponse } from "../../lib/api/client/IHttpClient";
 import { EtoPledgeNotFound } from "../../lib/api/eto/EtoPledgeApi";
 import { IPledge } from "../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
+import { EUserType } from "../../lib/api/users/interfaces";
 import { actions, TActionFromCreator } from "../actions";
 import { ensurePermissionsArePresentAndRunEffect } from "../auth/jwt/sagas";
-import { neuCall, neuTakeEvery, neuTakeUntil } from "../sagasUtils";
+import { selectIsUserFullyVerified, selectUserType } from "../auth/selectors";
+import { neuCall, neuTakeEvery, neuTakeLatestUntil } from "../sagasUtils";
 
 export function* saveMyPledgeEffect(
   { apiEtoPledgeService }: TGlobalDependencies,
@@ -120,9 +122,18 @@ export function* loadMyPledge(
   action: TActionFromCreator<typeof actions.bookBuilding.loadPledge>,
 ): Iterator<any> {
   try {
-    const etoId = action.payload.etoId;
-    const pledgeResponse: IHttpResponse<IPledge> = yield apiEtoPledgeService.getMyPledge(etoId);
+    const { etoId } = action.payload;
 
+    const userType: ReturnType<typeof selectUserType> = yield select(selectUserType);
+    const isVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
+      selectIsUserFullyVerified,
+    );
+
+    if (userType !== EUserType.INVESTOR || !isVerified) return;
+
+    yield put(actions.bookBuilding.loadBookBuildingStats(etoId));
+
+    const pledgeResponse: IHttpResponse<IPledge> = yield apiEtoPledgeService.getMyPledge(etoId);
     yield put(actions.bookBuilding.setPledge(etoId, pledgeResponse.body));
   } catch (e) {
     if (!(e instanceof EtoPledgeNotFound)) {
@@ -137,7 +148,7 @@ export function* loadMyPledge(
 export function* bookBuildingFlowSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.bookBuilding.loadBookBuildingStats, loadBookBuildingStats);
   yield fork(
-    neuTakeUntil,
+    neuTakeLatestUntil,
     actions.bookBuilding.bookBuildingStartWatch,
     actions.bookBuilding.bookBuildingStopWatch,
     watchBookBuildingStats,

@@ -1,8 +1,15 @@
 import * as cn from "classnames";
 import * as React from "react";
 import { Doughnut } from "react-chartjs-2";
+import { compose } from "redux";
 
+import {
+  IIntlHelpers,
+  IIntlProps,
+  injectIntlHelpers,
+} from "../../../utils/injectIntlHelpers.unsafe";
 import { DEFAULT_CHART_COLOR } from "../../eto/shared/EtoView";
+import { OTHERS_NAME } from "../../eto/utils";
 import { ChartLegend } from "./ChartLegend";
 
 import * as styles from "./ChartDoughnut.module.scss";
@@ -87,20 +94,16 @@ function createCustomTooltip(style: string): (this: IChart, tooltipModel: IToolt
       });
     };
 
-    const updateTooltip = (
-      tooltipEl: HTMLElement,
-      canvas: HTMLElement,
-      tooltipModel: ITooltipModel,
-    ) => {
+    const updateTooltip = (tooltipEl: HTMLElement, canvas: HTMLElement, model: ITooltipModel) => {
       const position = canvas.getBoundingClientRect();
       clearTooltip(tooltipEl);
 
-      appendTexts(tooltipEl, tooltipModel.title);
-      appendTexts(tooltipEl, getBodyLines(tooltipModel.body));
+      appendTexts(tooltipEl, model.title);
+      appendTexts(tooltipEl, getBodyLines(model.body));
 
-      tooltipEl.style.left = `${position.left + window.pageXOffset + tooltipModel.caretX}px`;
-      tooltipEl.style.top = `${position.top + window.pageYOffset + tooltipModel.caretY}px`;
-      tooltipEl.style.opacity = tooltipModel.opacity.toString();
+      tooltipEl.style.left = `${position.left + window.pageXOffset + model.caretX}px`;
+      tooltipEl.style.top = `${position.top + window.pageYOffset + model.caretY}px`;
+      tooltipEl.style.opacity = model.opacity.toString();
     };
 
     const tooltipEl =
@@ -112,9 +115,19 @@ function createCustomTooltip(style: string): (this: IChart, tooltipModel: IToolt
 
 const hasData = (data: IData) => data.datasets[0].data.length > 0;
 
-const labelCallback = (tooltipItem: ITooltipItem, data: IData) => data.labels[tooltipItem.index];
+const labelCallback = ({ formatIntlMessage }: IIntlHelpers) => (
+  tooltipItem: ITooltipItem,
+  data: IData,
+) => {
+  const label = data.labels[tooltipItem.index];
+  if (label === OTHERS_NAME) {
+    return formatIntlMessage("shared.chart-doughnut.others");
+  }
+  return label;
+};
 
-export const ChartDoughnut: React.FunctionComponent<IProps> = ({
+const ChartDoughnutLayout: React.FunctionComponent<IProps & IIntlProps> = ({
+  intl,
   data,
   layout,
   className,
@@ -137,7 +150,7 @@ export const ChartDoughnut: React.FunctionComponent<IProps> = ({
       enabled: false,
       custom: createCustomTooltip(styles.tooltip),
       callbacks: {
-        label: labelCallback,
+        label: labelCallback(intl),
       },
     },
   };
@@ -158,3 +171,5 @@ export const ChartDoughnut: React.FunctionComponent<IProps> = ({
     </div>
   );
 };
+
+export const ChartDoughnut = compose(injectIntlHelpers)(ChartDoughnutLayout);

@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { expect } from "chai";
 
-import { formatMoney } from "../../../utils/Money.utils";
+import { formatMoney } from "../../../utils/MoneyUtils";
 import {
   EAbbreviatedNumberOutputFormat,
   ECurrency,
@@ -69,7 +69,7 @@ describe("formatNumber", () => {
     ).to.throw();
     expect(() =>
       formatNumber({
-        value: NaN,
+        value: NaN as any,
         decimalPlaces: selectDecimalPlaces(ECurrency.ETH),
         inputFormat: ENumberInputFormat.FLOAT,
         outputFormat: ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
@@ -107,7 +107,7 @@ describe("formatNumber", () => {
     expect(
       formatNumber({
         inputFormat: ENumberInputFormat.FLOAT,
-        value: 12524.002,
+        value: "12524.002",
       }),
     ).to.eq("12 524.002");
   });
@@ -195,7 +195,7 @@ describe("formatNumber", () => {
       formatNumber({
         outputFormat: ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
         inputFormat: ENumberInputFormat.FLOAT,
-        value: 1000000,
+        value: "1000000",
       }),
     ).to.eq("1 000 000");
     expect(
@@ -237,14 +237,14 @@ describe("toFixedPrecision", () => {
     ).to.eq("1242.2163");
     expect(
       toFixedPrecision({
-        value: 346342.235e18,
+        value: "346342.235e18",
         decimalPlaces: selectDecimalPlaces(ECurrency.EUR),
         inputFormat: ENumberInputFormat.ULPS,
       }),
     ).to.eq("346342.24");
     expect(
       toFixedPrecision({
-        value: new BigNumber(346342.235e18),
+        value: new BigNumber("346342.235e18"),
         decimalPlaces: selectDecimalPlaces(ECurrency.EUR_TOKEN),
         inputFormat: ENumberInputFormat.ULPS,
       }),
@@ -262,14 +262,14 @@ describe("toFixedPrecision", () => {
     ).to.eq("1242.2163");
     expect(
       toFixedPrecision({
-        value: 346342.235,
+        value: "346342.235",
         decimalPlaces: selectDecimalPlaces(ECurrency.EUR),
         inputFormat: ENumberInputFormat.FLOAT,
       }),
     ).to.eq("346342.24");
     expect(
       toFixedPrecision({
-        value: new BigNumber(346342.235),
+        value: new BigNumber("346342.235"),
         decimalPlaces: selectDecimalPlaces(ECurrency.EUR_TOKEN),
         inputFormat: ENumberInputFormat.FLOAT,
       }),
@@ -298,7 +298,7 @@ describe("toFixedPrecision", () => {
     ).to.eq("1242.2162");
     expect(
       toFixedPrecision({
-        value: 346342.235412415,
+        value: "346342.235412415",
         decimalPlaces: selectDecimalPlaces(ECurrency.EUR),
         inputFormat: ENumberInputFormat.FLOAT,
         isPrice: false,
@@ -307,7 +307,7 @@ describe("toFixedPrecision", () => {
     ).to.eq("346342.23");
     expect(
       toFixedPrecision({
-        value: new BigNumber(3.2351251122e18),
+        value: new BigNumber("3.2351251122e18"),
         decimalPlaces: selectDecimalPlaces(ECurrency.EUR_TOKEN),
         inputFormat: ENumberInputFormat.ULPS,
         isPrice: false,

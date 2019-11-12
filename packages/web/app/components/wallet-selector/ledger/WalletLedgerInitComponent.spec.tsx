@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { shallow } from "enzyme";
+import noop from "lodash/noop";
 import * as React from "react";
 
 import { tid } from "../../../../test/testUtils";
@@ -12,7 +13,11 @@ describe("<WalletLedgerInitComponent />", () => {
     const errorMsg = createMessage(LedgerErrorMessage.GENERIC_ERROR);
     const expectedResult = getMessageTranslation(errorMsg);
     const component = shallow(
-      <WalletLedgerInitComponent errorMessage={errorMsg} isInitialConnectionInProgress={false} />,
+      <WalletLedgerInitComponent
+        errorMessage={errorMsg}
+        isInitialConnectionInProgress={false}
+        tryToEstablishConnectionWithLedger={noop}
+      />,
     );
 
     expect(

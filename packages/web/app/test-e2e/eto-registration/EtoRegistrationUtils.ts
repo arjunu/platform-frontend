@@ -4,11 +4,10 @@ import { etoRegisterRoutes } from "../../components/eto/registration/routes";
 import { TPartialCompanyEtoData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { toCamelCase, toSnakeCase } from "../../utils/transformObjectKeys";
 import { withParams } from "../../utils/withParams";
-import { acceptWallet } from "../utils";
+import { confirmAccessModal } from "../utils";
 import { assertIssuerDashboard } from "../utils/assertions";
 import { cyPromise } from "../utils/cyPromise";
 import { checkForm, fillForm, TFormFixture, TFormFixtureExpectedValues } from "../utils/forms";
-import { confirmAccessModal } from "../utils/index";
 import { goToIssuerDashboard } from "../utils/navigation";
 import { tid } from "../utils/selectors";
 import { createUser, makeAuthenticatedCall } from "../utils/userHelpers";
@@ -25,7 +24,7 @@ export const submitProposal = () => {
   goToIssuerDashboard();
 
   cy.get(tid("eto-dashboard-submit-proposal")).click();
-  acceptWallet();
+  confirmAccessModal();
 
   cy.get(tid("eto-state-pending")).should("exist");
 };
@@ -33,11 +32,11 @@ export const submitProposal = () => {
 export const submitPreview = () => {
   goToIssuerDashboard();
 
-  cy.get(tid("eto-dashboard-publish-eto")).click();
+  cy.get(tid("eto-dashboard-publish-eto-widget.publish")).click();
 
-  acceptWallet();
+  confirmAccessModal();
 
-  cy.get(tid("eto-dashboard-publish-eto")).should("not.exist");
+  cy.get(tid("eto-dashboard-publish-eto-widget")).should("not.exist");
 };
 
 export const goToSection = (section: string) => {
@@ -122,6 +121,8 @@ export const fillRequiredCompanyInformation = () => {
 
   fillAndAssert("eto-progress-widget-media", mediaRequiredForm);
 
+  fillAndAssert("eto-progress-widget-product-vision", productVisionRequiredForm);
+
   fillAndAssert("eto-progress-widget-equity-token-info", equityTokenInfoForm);
 
   fillAndAssert("eto-progress-widget-product-vision", productVisionRequiredForm);
@@ -164,6 +165,13 @@ export const assertUploadSignedTermsheetStep = () => {
   cy.get(tid("eto-dashboard-upload-signed-termsheet")).should("exist");
 
   cy.get(tid("dashboard-upload-termsheet-widget")).should("exist");
+};
+
+export const assertPublishListingPage = () => {
+  cy.get(tid("eto-state-preview")).should("exist");
+  cy.get(tid("eto-dashboard-publish-listing")).should("exist");
+
+  cy.get(tid("eto-dashboard-publish-eto-widget")).should("exist");
 };
 
 export const assertLinkNomineeStep = () => {
@@ -224,12 +232,52 @@ export const assertUploadISHAStep = () => {
   cy.get(tid("dashboard-upload-isha-widget")).should("exist");
 };
 
+export const assertUploadSignedISHAStep = () => {
+  cy.get(tid("eto-state-3")).should("exist");
+  cy.get(tid("eto-dashboard-sign-you-isha")).should("exist");
+
+  cy.get(tid("dashboard-upload-signed-isha-widget")).should("exist");
+
+  // Sign ISHA should not exist yet
+  cy.get(tid("dashboard-sign-isha-on-chain-widget")).should("not.exist");
+};
+
+export const assertSignISHAStep = () => {
+  cy.get(tid("eto-state-3")).should("exist");
+  cy.get(tid("eto-dashboard-sign-you-isha")).should("exist");
+
+  cy.get(tid("dashboard-sign-isha-on-chain-widget")).should("exist");
+
+  // Upload signed ISHA widget should not exist anymore
+  cy.get(tid("dashboard-upload-signed-isha-widget")).should("not.exist");
+};
+
+export const assertWaitForNomineeToSignISHAStep = () => {
+  cy.get(tid("eto-state-3")).should("exist");
+  cy.get(tid("eto-dashboard-sign-you-isha")).should("exist");
+
+  cy.get(tid("dashboard-wait-for-nominee-to-sign-isha-widget")).should("exist");
+
+  // Sign ISHA widget should not exist anymore
+  cy.get(tid("dashboard-sign-isha-on-chain-widget")).should("not.exist");
+};
+
 export const assertWaitingForSmartContractsStep = () => {
   cy.get(tid("eto-state-campaigning")).should("exist");
   cy.get(tid("eto-dashboard-waiting-for-smart-contracts")).should("exist");
 
   // isha upload should not be longer available
   cy.get(tid("dashboard-upload-isha-widget")).should("not.exist");
+};
+
+export const assertPresaleStep = () => {
+  cy.get(tid("eto-state-countdown_to_public_sale")).should("exist");
+  cy.get(tid("eto-dashboard-fundraising-live")).should("exist");
+};
+
+export const assertPublicStep = () => {
+  cy.get(tid("eto-state-2")).should("exist");
+  cy.get(tid("eto-dashboard-fundraising-live")).should("exist");
 };
 
 export const openAndCheckValues = (

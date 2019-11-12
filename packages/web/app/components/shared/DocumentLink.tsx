@@ -1,12 +1,28 @@
-import * as cn from "classnames";
 import * as React from "react";
 
-import { TTranslatedString } from "../../types";
+import { TDataTestId, TTranslatedString } from "../../types";
 import { Button, ButtonTextPosition, EButtonLayout } from "./buttons";
 import { Document } from "./Document";
 import { ExternalLink } from "./links";
 
 import * as styles from "./DocumentLink.module.scss";
+
+interface IDocumentLabelExternalProps {
+  title: string | React.ReactNode;
+  altIcon?: React.ReactNode;
+  extension?: string;
+}
+
+const DocumentLabel: React.FunctionComponent<IDocumentLabelExternalProps> = ({
+  title,
+  altIcon,
+  extension,
+}) => (
+  <div className={styles.documentLabel}>
+    {altIcon || <Document extension={extension || "pdf"} />}
+    {title}
+  </div>
+);
 
 export interface IDocumentLinkProps {
   url: string;
@@ -14,68 +30,34 @@ export interface IDocumentLinkProps {
   altIcon?: React.ReactNode;
 }
 
-const DocumentLink: React.FunctionComponent<IDocumentLinkProps> = ({ url, name, altIcon }) => {
-  const contents = (
-    <>
-      {altIcon || <Document extension={url} />}
-      {name}
-    </>
-  );
+const DocumentLink: React.FunctionComponent<IDocumentLinkProps> = ({ url, name, altIcon }) => (
+  <ExternalLink href={url}>
+    <DocumentLabel title={name} altIcon={altIcon} extension={url} />
+  </ExternalLink>
+);
 
-  if (url === "") {
-    return <span className={styles.documentLink}>{contents}</span>;
-  } else {
-    return (
-      <ExternalLink href={url} className={styles.documentLink}>
-        {contents}
-      </ExternalLink>
-    );
-  }
-};
-
-export interface IDocumentTemplateButtonProps {
+interface IDocumentButtonExternalProps {
   title: string | React.ReactNode;
   altIcon?: React.ReactNode;
-  className?: string;
   onClick?: () => void;
   layout?: EButtonLayout;
 }
 
-const DocumentTemplateButton: React.FunctionComponent<IDocumentTemplateButtonProps> = ({
+const DocumentButton: React.FunctionComponent<IDocumentButtonExternalProps & TDataTestId> = ({
   onClick,
   title,
   altIcon,
-  layout,
+  layout = EButtonLayout.INLINE,
+  ["data-test-id"]: dataTestId,
 }) => (
   <Button
     layout={layout}
     onClick={onClick}
-    innerClassName={styles.documentButton}
     textPosition={ButtonTextPosition.LEFT}
+    data-test-id={dataTestId}
   >
-    {altIcon || <Document extension="pdf" />}
-    {title}
+    <DocumentLabel title={title} altIcon={altIcon} />
   </Button>
 );
-export interface IDocumentTemplateButtonProps {
-  title: string | React.ReactNode;
-  altIcon?: React.ReactNode;
-  className?: string;
-}
 
-const DocumentTemplateLabel: React.FunctionComponent<IDocumentTemplateButtonProps> = ({
-  title,
-  altIcon,
-  className,
-}) => (
-  <div className={cn(styles.documentButton, className)}>
-    {altIcon || <Document extension="pdf" />}
-    {title}
-  </div>
-);
-
-DocumentTemplateButton.defaultProps = {
-  layout: EButtonLayout.INLINE,
-};
-
-export { DocumentLink, DocumentTemplateButton, DocumentTemplateLabel };
+export { DocumentLink, DocumentButton, DocumentLabel };

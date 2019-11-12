@@ -12,7 +12,7 @@ import { LoadingIndicator } from "../../shared/loading-indicator";
 import { QuintessenceModal } from "../bank-transfer-flow/QuintessenceModal";
 import { Modal } from "../Modal";
 import { AccessWalletContainer } from "../wallet-access/AccessWalletModal";
-import { SetEtoDateSummary } from "./eto-flow/SetDateSummary.unsafe";
+import { SetEtoDateSummary } from "./eto-flow/SetDateSummary";
 import { SignInvestmentAgreementSummary } from "./eto-flow/SignInvestmentAgreementSummary";
 import { InvestmentSelection } from "./investment-flow/Investment";
 import { InvestmentSuccess } from "./investment-flow/Success";
@@ -25,6 +25,7 @@ import { InvestorRedistributePayoutSummary } from "./investor-payout/Redistribut
 import { RefundSummary } from "./investor-refund/RefundSummary";
 import { SignNomineeAgreementSuccess } from "./nominee/sign-agreement/SignAgreementSuccess";
 import { SignNomineeAgreementSummary } from "./nominee/sign-agreement/SignAgreementSummary";
+import { SignNomineeISHASummary } from "./nominee/sign-isha/SignISHASummary";
 import { BankTransferRedeemInit } from "./redeem/BankTransferRedeemInit";
 import { BankTransferRedeemSuccess } from "./redeem/BankTransferRedeemSuccess";
 import { BankTransferRedeemSummary } from "./redeem/BankTransferRedeemSummary";
@@ -133,6 +134,8 @@ const SummaryComponent: React.FunctionComponent<{ type?: ETxSenderType }> = ({ t
     case ETxSenderType.NOMINEE_THA_SIGN:
     case ETxSenderType.NOMINEE_RAAA_SIGN:
       return <SignNomineeAgreementSummary />;
+    case ETxSenderType.NOMINEE_ISHA_SIGN:
+      return <SignNomineeISHASummary />;
     default:
       return <WithdrawSummary />;
   }

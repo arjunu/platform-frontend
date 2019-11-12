@@ -1,19 +1,50 @@
-import { etoPublicViewByIdLinkLegacy } from "../../components/appRouteUtils";
+import { etoPublicViewByIdLinkLegacy, etoPublicViewLink } from "../../components/appRouteUtils";
 import { formatThousands } from "../../components/shared/formatters/utils";
+import { fillForm } from "../utils/forms";
 import {
   assertRegister,
   confirmAccessModal,
   etoFixtureAddressByName,
   goToIssuerDashboard,
-} from "../utils";
-import { fillForm } from "../utils/forms";
+} from "../utils/index";
 import { tid } from "../utils/selectors";
 import {
   createAndLoginNewUser,
+  getEto,
   loginFixtureAccount,
   logout,
   makeAuthenticatedCall,
 } from "../utils/userHelpers";
+
+const submitBookBuilding = (
+  amount: string,
+  consentToRevealEmail: boolean,
+  shouldConfirmModal: boolean = true,
+) => {
+  fillForm({
+    amount,
+    consentToRevealEmail: {
+      type: "toggle",
+      checked: consentToRevealEmail,
+    },
+    "eto-bookbuilding-commit": {
+      type: "submit",
+    },
+  });
+
+  if (shouldConfirmModal) {
+    confirmAccessModal();
+  }
+
+  cy.get(tid("campaigning-your-commitment")).contains(`${formatThousands(amount)} EUR`);
+};
+
+const changeBookBuilding = () => cy.get(tid("campaigning-your-commitment-change")).click();
+
+const deleteBookBuilding = () => {
+  cy.get(tid("campaigning-your-commitment-delete")).click();
+  cy.get(tid("campaigning-your-commitment")).should("not.exist");
+};
 
 const PLEDGE_AMOUNT = "1000";
 const CHANGED_AMOUNT = "1500";
@@ -58,91 +89,100 @@ describe("Eto campaigning state", () => {
         createAndLoginNewUser({
           type: "investor",
           kyc: "business",
-        }).then(() => {
-          cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
+        });
 
-          cy.get(tid("eto-bookbuilding-remaining-slots"))
-            .then($element => Number($element.text()))
-            .as("remainingSlots");
+        cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
 
-          fillForm({
-            amount: PLEDGE_AMOUNT,
-            consentToRevealEmail: {
-              type: "radio",
-              value: "true",
-            },
-            "eto-bookbuilding-commit": { type: "submit" },
-          });
+        cy.wait(5000); //let the store get the ETO data, otherwise this place is flaky
 
-          confirmAccessModal();
+        cy.get(tid("eto-bookbuilding-remaining-slots"))
+          .then($element => Number($element.text()))
+          .as("remainingSlots");
 
-          cy.get(tid("campaigning-your-commitment")).contains(
-            `${formatThousands(PLEDGE_AMOUNT)} EUR`,
-          );
-          cy.get<number>("@remainingSlots").then(remainingSlots => {
-            // Remove one from remaining slots as it's first pledge
-            cy.get(tid("eto-bookbuilding-remaining-slots")).should("contain", remainingSlots - 1);
-          });
+        submitBookBuilding(PLEDGE_AMOUNT, true);
 
-          logout();
+        cy.get<number>("@remainingSlots").then(remainingSlots => {
+          // Remove one from remaining slots as it's first pledge
+          cy.get(tid("eto-bookbuilding-remaining-slots")).should("contain", remainingSlots - 1);
+        });
 
-          createAndLoginNewUser({
-            type: "investor",
-            kyc: "individual",
-          }).then(() => {
-            cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
+        logout();
 
-            fillForm({
-              amount: CHANGED_AMOUNT,
-              "eto-bookbuilding-commit": { type: "submit" },
-            });
+        createAndLoginNewUser({
+          type: "investor",
+          kyc: "individual",
+        });
 
-            confirmAccessModal();
+        cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
 
-            cy.get(tid("campaigning-your-commitment")).contains(
-              `${formatThousands(CHANGED_AMOUNT)} EUR`,
-            );
-            cy.get<number>("@remainingSlots").then(remainingSlots => {
-              // Remove two from remaining slots as it's second pledge
-              cy.get(tid("eto-bookbuilding-remaining-slots")).should("contain", remainingSlots - 2);
-            });
-          });
+        submitBookBuilding(CHANGED_AMOUNT, false);
+
+        cy.get<number>("@remainingSlots").then(remainingSlots => {
+          // Remove two from remaining slots as it's second pledge
+          cy.get(tid("eto-bookbuilding-remaining-slots")).should("contain", remainingSlots - 2);
         });
       }),
     );
   });
 
   it("should allow to change pledge by investor", () => {
-    const ETO_ID = etoFixtureAddressByName("ETOInSetupState");
-
     loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
       kyc: "business",
-    }).then(() => {
-      cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
-
-      const amount = "200";
-      fillForm({
-        amount,
-        "eto-bookbuilding-commit": {
-          type: "submit",
-        },
-      });
-      confirmAccessModal();
-      cy.get(`${tid("campaigning-your-commitment")} ${tid("value")}`).should("contain", amount);
-      cy.get(tid("campaigning-your-commitment-change")).click();
-
-      const newAmount = "160";
-      fillForm({
-        amount: newAmount,
-        "eto-bookbuilding-commit": {
-          type: "submit",
-        },
-      });
-      cy.get(`${tid("campaigning-your-commitment")} ${tid("value")}`).should("contain", newAmount);
-
-      cy.get(tid("campaigning-your-commitment-delete")).click();
-
-      cy.get(tid("campaigning-your-commitment")).should("not.exist");
+      onlyLogin: true,
     });
+
+    const ETO_ID = etoFixtureAddressByName("ETOInSetupState");
+
+    cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
+
+    submitBookBuilding("200", true);
+    changeBookBuilding();
+    submitBookBuilding("160", true, false);
+    deleteBookBuilding();
+  });
+
+  it("load pledge data correclty", () => {
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
+      kyc: "business",
+      onlyLogin: true,
+    });
+
+    const amount = "200";
+    const ETO_ID = etoFixtureAddressByName("ETOInSetupState");
+    cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
+
+    submitBookBuilding(amount, false);
+
+    getEto(ETO_ID).then(etoData => {
+      // Preview code
+      cy.visit(etoPublicViewLink(etoData.previewCode, etoData.product.jurisdiction));
+      cy.get(`${tid("campaigning-your-commitment")} ${tid("value")}`).should("contain", amount);
+
+      // from dashboard
+      cy.visit("/");
+      cy.get(tid(`eto-overview-${ETO_ID}`)).click();
+      cy.get(`${tid("campaigning-your-commitment")} ${tid("value")}`).should("contain", amount);
+
+      // from dashboard
+      cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
+      cy.get(`${tid("campaigning-your-commitment")} ${tid("value")}`).should("contain", amount);
+    });
+  });
+  it("loads bookbuilding data correctly", () => {
+    createAndLoginNewUser({
+      type: "investor",
+      signTosAgreement: true,
+    });
+
+    const ETO_ID = etoFixtureAddressByName("ETOInSetupState");
+
+    cy.server();
+    cy.fixture("etoData.json").as("etoData");
+    cy.fixture("bookbuildingData.json").as("bookbuildingData");
+    cy.route("GET", `**/api/eto-listing/etos/${ETO_ID}`, "@etoData");
+    cy.route("GET", `**/api/eto-listing/etos/${ETO_ID}/bookbuilding-stats`, "@bookbuildingData");
+    cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
+
+    cy.get(`${tid("eto-whitelist-countdown")}`).should("exist");
   });
 });

@@ -1,7 +1,7 @@
 import { compose } from "recompose";
 
 import { userHasKycAndEmailVerified } from "../../../modules/eto-flow/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { selectNomineeEtoWithCompanyAndContract } from "../../../modules/nominee-flow/selectors";
 import { appConnect } from "../../../store";
 import { accountMenuData, menuSeparatorData } from "./MenuData";
@@ -13,7 +13,7 @@ interface IIssuerMenuProps {
 }
 
 interface INomineeMenuProps {
-  nomineeEto: TEtoWithCompanyAndContract | undefined;
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
 }
 
 const initMobileMenuData = ({

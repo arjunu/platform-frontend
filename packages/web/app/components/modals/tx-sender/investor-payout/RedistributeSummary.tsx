@@ -8,7 +8,7 @@ import { TRedistributePayoutAdditionalData } from "../../../../modules/tx/transa
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { selectEthereumAddressWithChecksum } from "../../../../modules/web3/selectors";
 import { appConnect } from "../../../../store";
-import { EthereumAddressWithChecksum } from "../../../../types";
+import { EthereumAddressWithChecksum } from "../../../../utils/opaque-types/types";
 import { commitmentStatusLink } from "../../../appRouteUtils";
 import { Button } from "../../../shared/buttons";
 import { EHeadingSize, Heading } from "../../../shared/Heading";

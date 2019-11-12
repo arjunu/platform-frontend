@@ -1,7 +1,7 @@
-import BigNumber from "bignumber.js";
 import * as cn from "classnames";
 import * as React from "react";
 
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import {
   ENumberInputFormat,
   ENumberOutputFormat,
@@ -13,7 +13,7 @@ import {
 import * as styles from "./FormatNumber.module.scss";
 
 interface IComponentProps {
-  value: string | BigNumber | number | undefined | null;
+  value: TBigNumberVariants | undefined | null;
   defaultValue?: React.ReactChild;
   roundingMode?: ERoundingMode;
   decimalPlaces?: number;

@@ -72,6 +72,7 @@ const EtoRegistrationCompanyInformationComponent = ({
         label={<FormattedMessage id="eto.form.company-information.company-description" />}
         placeholder="Please describe your company, this description will be displayed on the listing page."
         name="companyDescription"
+        isWysiwyg={true}
       />
 
       <FormTextArea

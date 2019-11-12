@@ -4,7 +4,7 @@ import * as queryString from "query-string";
 import { createSelector } from "reselect";
 
 import { IAppState } from "../../store";
-import { EthereumAddress } from "../../types";
+import { EthereumAddress } from "../../utils/opaque-types/types";
 import { selectRouter } from "../routing/selectors";
 import { IConnectedWeb3State, IWalletPrivateData, IWeb3State } from "./reducer";
 import { EWalletSubType, EWalletType, TWalletMetadata } from "./types";

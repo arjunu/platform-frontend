@@ -1,8 +1,10 @@
 import BigNumber from "bignumber.js";
 
-import { DEFAULT_DECIMAL_PLACES, MONEY_DECIMALS } from "../../../config/constants";
-import { Opaque } from "../../../types";
+import { DEFAULT_DECIMAL_PLACES } from "../../../config/constants";
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import { invariant } from "../../../utils/invariant";
+import { convertFromUlps } from "../../../utils/NumberUtils";
+import { EquityToken } from "../../../utils/opaque-types/types";
 
 export enum ERoundingMode {
   UP = "up",
@@ -53,12 +55,10 @@ export enum ESpecialNumber {
   UNLIMITED = "unlimited",
 }
 
-export type EquityToken = Opaque<"EquityToken", string>;
-
 export type TValueFormat = ECurrency | EPriceFormat | ENumberFormat | EquityToken;
 
 interface IToFixedPrecision {
-  value: string | BigNumber | number;
+  value: TBigNumberVariants;
   roundingMode?: ERoundingMode;
   inputFormat?: ENumberInputFormat;
   decimalPlaces: number | undefined;
@@ -67,7 +67,7 @@ interface IToFixedPrecision {
 }
 
 interface IFormatNumber {
-  value: string | BigNumber | number;
+  value: TBigNumberVariants;
   roundingMode?: ERoundingMode;
   inputFormat?: ENumberInputFormat;
   decimalPlaces?: number;
@@ -103,9 +103,6 @@ export const selectDecimalPlaces = (
     }
   }
 };
-
-export const convertFromUlps = (value: BigNumber, baseFactor: number) =>
-  value.div(new BigNumber(10).pow(baseFactor));
 
 export function formatThousands(value?: string): string {
   // todo remove optionality. This function should accept string only. Leave for now for backward compat.
@@ -178,9 +175,7 @@ export const toFixedPrecision = ({
   const asBigNumber = value instanceof BigNumber ? value : new BigNumber(value.toString());
 
   const moneyInPrimaryBase =
-    inputFormat === ENumberInputFormat.ULPS
-      ? convertFromUlps(asBigNumber, MONEY_DECIMALS)
-      : asBigNumber;
+    inputFormat === ENumberInputFormat.ULPS ? convertFromUlps(asBigNumber) : asBigNumber;
   return moneyInPrimaryBase.toFixed(dp, getBigNumberRoundingMode(roundingMode, outputFormat));
 };
 

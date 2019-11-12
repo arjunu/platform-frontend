@@ -9,6 +9,7 @@ import {
   THumanReadableFormat,
   TValueFormat,
 } from "../formatters/utils";
+import { TokenIcon } from "../icons/TokenIcon";
 import { ESize as ETransactionDataSize, TransactionData } from "../TransactionData";
 
 import * as styles from "./MoneySuiteWidget.module.scss";
@@ -75,12 +76,16 @@ const getSize = (size: ESize | undefined) => {
   }
 };
 
-const Icon: React.FunctionComponent<{ icon: string; walletName?: TTranslatedString }> = ({
+const Icon: React.FunctionComponent<{ icon: string }> = ({ icon }) => (
+  <TokenIcon srcSet={{ "1x": icon }} className={styles.icon} alt="" />
+);
+
+const IconWithWallet: React.FunctionComponent<{ icon: string; walletName: TTranslatedString }> = ({
   icon,
   walletName,
 }) => (
   <div>
-    <img className={styles.icon} src={icon} alt="" />
+    <Icon icon={icon} />
     {walletName}
   </div>
 );
@@ -155,35 +160,43 @@ const MoneySuiteWidget: React.FunctionComponent<IMoneySuiteWidgetProps & TDataTe
   outputFormat = ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
   inputFormat = ENumberInputFormat.ULPS,
   useTildeSign = false,
-}) => (
-  <div className={cn(styles.moneySuiteWidget, theme, size, textPosition)}>
-    {textPosition === ETextPosition.LEFT && <Icon icon={icon} walletName={walletName} />}
-    <TransactionData
-      size={getSize(size)}
-      data-test-id={dataTestId}
-      top={
-        <Money
-          value={largeNumber}
-          inputFormat={inputFormat}
-          outputFormat={outputFormat}
-          valueType={currency}
-        />
-      }
-      bottom={
-        <>
-          {useTildeSign ? <>~</> : <>=</>}{" "}
+}) => {
+  const walletIcon = walletName ? (
+    <IconWithWallet icon={icon} walletName={walletName} />
+  ) : (
+    <Icon icon={icon} />
+  );
+
+  return (
+    <div className={cn(styles.moneySuiteWidget, theme, size, textPosition)}>
+      {textPosition === ETextPosition.LEFT && walletIcon}
+      <TransactionData
+        size={getSize(size)}
+        data-test-id={dataTestId}
+        top={
           <Money
-            value={value}
+            value={largeNumber}
             inputFormat={inputFormat}
             outputFormat={outputFormat}
-            valueType={currencyTotal}
+            valueType={currency}
           />
-        </>
-      }
-    />
-    {textPosition === ETextPosition.RIGHT && <Icon icon={icon} walletName={walletName} />}
-  </div>
-);
+        }
+        bottom={
+          <>
+            {useTildeSign ? <>~</> : <>=</>}{" "}
+            <Money
+              value={value}
+              inputFormat={inputFormat}
+              outputFormat={outputFormat}
+              valueType={currencyTotal}
+            />
+          </>
+        }
+      />
+      {textPosition === ETextPosition.RIGHT && walletIcon}
+    </div>
+  );
+};
 
 export {
   ETheme,

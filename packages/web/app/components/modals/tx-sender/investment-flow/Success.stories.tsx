@@ -3,8 +3,11 @@ import { storiesOf } from "@storybook/react";
 import * as moment from "moment";
 import * as React from "react";
 
+import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withMockedDate, withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { InvestmentSuccessComponent } from "./Success";
+
+import * as tokenIcon from "../../../../assets/img/token_icon.svg";
 
 const dummyNow = new Date("10/3/2019");
 const date = moment.utc(dummyNow).subtract(1, "day");
@@ -17,9 +20,12 @@ const props = {
       etoId: "0x123434562134asdf2412341234adf12341234",
       preMoneyValuationEur: 0,
       existingShareCapital: 0,
-      equityTokensPerShare: 0,
-      investmentCalculatedValues: {
-        sharePrice: 0,
+      equityTokensPerShare: 10,
+      sharePrice: 1000 / (10 * 10),
+      equityTokenInfo: {
+        equityTokenSymbol: toEquityTokenSymbol("QTT"),
+        equityTokenImage: tokenIcon,
+        equityTokenName: "Quintessence",
       },
     },
     investmentEth: "12345678900000000000",

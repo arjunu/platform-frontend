@@ -3,6 +3,7 @@ export interface IWindowData {
   disableNotAcceptingEtherCheck?: boolean;
   forceLowGas?: boolean;
   forceStandardGas?: boolean;
+  nfISHAConfidentialityAgreementsRequirements?: string;
 }
 
 export type IWindowWithData = IWindowData & Window;

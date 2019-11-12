@@ -88,11 +88,12 @@ const BankTransferVerifySummaryLayout: React.FunctionComponent<IProps> = ({
         caption={<FormattedMessage id="bank-transfer.summary.reference-number" />}
         data-test-id="bank-transfer.summary.reference-number"
         allowClipboardCopy={true}
-        value={referenceCode}
+        value={<strong>{referenceCode}</strong>}
+        clipboardCopyValue={referenceCode}
       />
     </InfoList>
 
-    <p className="text-warning mx-4">
+    <p className="text-warning mx-4 text-center">
       <FormattedMessage id="bank-transfer.verify.summary.note" />
     </p>
 

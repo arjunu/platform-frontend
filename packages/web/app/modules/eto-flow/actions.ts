@@ -7,6 +7,7 @@ import {
   TPartialEtoSpecData,
 } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { TEtoProducts } from "../../lib/api/eto/EtoProductsApi.interfaces";
+import { TEtoWithCompanyAndContractReadonly } from "../eto/types";
 
 export const etoFlowActions = {
   loadIssuerEto: createActionFactory("ETO_FLOW_LOAD_ISSUER_ETO"),
@@ -49,17 +50,9 @@ export const etoFlowActions = {
   clearNewStartDate: createActionFactory("ETO_FLOW_CLEAR_START_DATE", () => ({
     newStartDate: undefined,
   })),
-  loadSignedInvestmentAgreement: createActionFactory(
-    "ETO_FLOW_LOAD_INVESTMENT_AGREEMENT",
-    (etoId: string) => ({ etoId }),
-  ),
-  setInvestmentAgreementHash: createActionFactory(
-    "ETO_FLOW_SET_INVESTMENT_AGREEMENT_URL",
-    (signedInvestmentAgreementUrl: string | null) => ({ signedInvestmentAgreementUrl }),
-  ),
   signInvestmentAgreement: createActionFactory(
     "ETO_FLOW_SIGN_INVESTMENT_AGREEMENT",
-    (etoId: string, agreementHash: string) => ({ etoId, agreementHash }),
+    (eto: TEtoWithCompanyAndContractReadonly, agreementHash: string) => ({ eto, agreementHash }),
   ),
   setEtoDateStart: createActionFactory("ETO_FLOW_SET_ETO_DATE_START"),
   setEtoDateStop: createActionFactory("ETO_FLOW_SET_ETO_DATE_STOP"),

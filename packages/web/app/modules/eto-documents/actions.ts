@@ -29,6 +29,10 @@ export const etoDocumentsActions = {
     "ETO_DOCUMENTS_UPLOAD_DOCUMENT_START",
     (file: File, documentType: EEtoDocumentType) => ({ file, documentType }),
   ),
+  etoRemoveDocumentStart: createActionFactory(
+    "ETO_DOCUMENTS_REMOVE_DOCUMENT_START",
+    (documentType: EEtoDocumentType) => ({ documentType }),
+  ),
   etoUploadDocumentFinish: createActionFactory(
     "ETO_DOCUMENTS_UPLOAD_DOCUMENT_FINISH",
     (documentType: EEtoDocumentType) => ({ documentType }),

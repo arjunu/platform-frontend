@@ -1,10 +1,10 @@
-import BigNumber from "bignumber.js";
 import * as React from "react";
 
+import { TBigNumberVariants } from "../../lib/web3/types";
 import { formatThousands } from "./formatters/utils";
 
 interface IProps {
-  value: string | number | BigNumber;
+  value: TBigNumberVariants;
 }
 
 /*

@@ -20,6 +20,10 @@ function stringifyAndSort(obj) {
   return JSON.stringify(obj, Object.keys(obj).sort(), 2);
 }
 
+function isThereEmptyString(localeFile) {
+  return Object.keys(localeFile).some(local => localeFile[local] === "");
+}
+
 function main() {
   // only check if there are no changes to the baseline
   const checkMode = process.argv[2] === "--check";
@@ -50,7 +54,7 @@ function main() {
 
   if (checkMode) {
     // both strings are trimmed — meaning we dont care about line endings b/c phrasepp integration breaks it anyway
-    if (oldLocaleFileContents !== stringifyAndSort(newLocale)) {
+    if (oldLocaleFileContents !== stringifyAndSort(newLocale) || isThereEmptyString(newLocale)) {
       console.error(
         `Some strings were not extracted or not formatted correctly! Diff: ${diffFormatted}`,
       );

@@ -1,12 +1,19 @@
 import * as React from "react";
-import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
+import { FormattedMessage } from "react-intl-phraseapp";
 
+import { NEUR_ALLOWED_US_STATES } from "../../../config/constants";
 import { externalRoutes } from "../../../config/externalRoutes";
+import { selectIndividualAddress } from "../../../modules/kyc/selectors";
+import { ENEURWalletStatus } from "../../../modules/wallet/types";
 import { CommonHtmlProps } from "../../../types";
-import { isZero } from "../../../utils/Number.utils";
+import { US_STATES } from "../../../utils/enums/usStatesEnum";
+import { InvariantError } from "../../../utils/invariant";
+import { isZero } from "../../../utils/NumberUtils";
 import { EColumnSpan } from "../../layouts/Container";
 import { AccountBalance } from "../../shared/AccountBalance";
+import { EDelimiter, FormattedList } from "../../shared/FormattedList";
 import { ECurrency } from "../../shared/formatters/utils";
+import { ExternalLink } from "../../shared/links/ExternalLink";
 import { VerifiedBankAccount } from "../VerifiedBankAccount";
 import { WalletBalanceContainer } from "./WalletBalance";
 
@@ -19,12 +26,23 @@ interface IUnlockedNEURWallet {
   onVerify: () => void;
   neuroAmount: string;
   neuroEuroAmount: string;
-  isUserFullyVerified: boolean;
+  neurStatus: ENEURWalletStatus;
+  individualAddress: ReturnType<typeof selectIndividualAddress>;
 }
 
 interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
+
+const ALLOWED_US_STATES_NAMES = NEUR_ALLOWED_US_STATES.map(state => US_STATES[state]);
+
+const getIndividualStateName = (address: ReturnType<typeof selectIndividualAddress>) => {
+  if (address && address.usState) {
+    return US_STATES[address.usState];
+  }
+
+  throw new InvariantError("Individual US state should be defined at this point");
+};
 
 export const UnlockedNEURWallet: React.FunctionComponent<
   IUnlockedNEURWallet & CommonHtmlProps & IExternalProps
@@ -34,26 +52,49 @@ export const UnlockedNEURWallet: React.FunctionComponent<
   neuroAmount,
   neuroEuroAmount,
   className,
-  isUserFullyVerified,
+  neurStatus,
   onVerify,
   columnSpan,
+  individualAddress,
 }) => (
   <WalletBalanceContainer
     columnSpan={columnSpan}
     className={className}
     headerText={<FormattedMessage id="components.wallet.start.neur-wallet" />}
   >
-    <p className={styles.message}>
-      <FormattedHTMLMessage
-        tagName="span"
-        id="shared-component.neur-wallet-balance.explanation"
-        values={{
-          quintessenceHref: externalRoutes.quintessenceLanding,
-        }}
-      />
-    </p>
+    {neurStatus === ENEURWalletStatus.DISABLED_RESTRICTED_US_STATE ? (
+      <p className={styles.message} data-test-id="wallet-balance.neur.restricted-us-state">
+        <FormattedMessage
+          id="shared-component.neur-wallet-balance.restricted-us-state"
+          values={{
+            allowedStates:
+              ALLOWED_US_STATES_NAMES.length > 0 ? (
+                <FormattedList items={ALLOWED_US_STATES_NAMES} lastDelimiter={EDelimiter.OR} />
+              ) : (
+                "none"
+              ),
+            userState: getIndividualStateName(individualAddress),
+          }}
+        />
+      </p>
+    ) : (
+      <>
+        <p className={styles.message}>
+          <FormattedMessage
+            id="shared-component.neur-wallet-balance.explanation"
+            values={{
+              quintessenceHref: (
+                <ExternalLink href={externalRoutes.quintessenceLanding}>
+                  <FormattedMessage id="wallet.tx-list.modal.neur-purchase.handled-by.value" />
+                </ExternalLink>
+              ),
+            }}
+          />
+        </p>
 
-    <VerifiedBankAccount onVerify={onVerify} />
+        <VerifiedBankAccount onVerify={onVerify} />
+      </>
+    )}
 
     <section>
       <h4 className={styles.title}>
@@ -73,13 +114,13 @@ export const UnlockedNEURWallet: React.FunctionComponent<
                 {
                   name: <FormattedMessage id="components.wallet.start.neur-wallet.purchase" />,
                   onClick: onPurchase,
-                  disabled: !isUserFullyVerified,
+                  disabled: neurStatus !== ENEURWalletStatus.ENABLED,
                   "data-test-id": "wallet-balance.neur.purchase-button",
                 },
                 {
                   name: <FormattedMessage id="components.wallet.start.neur-wallet.redeem" />,
                   onClick: onRedeem,
-                  disabled: !isUserFullyVerified || isZero(neuroAmount),
+                  disabled: neurStatus !== ENEURWalletStatus.ENABLED || isZero(neuroAmount),
                   "data-test-id": "wallet-balance.neur.redeem-button",
                 },
               ]

@@ -20,7 +20,7 @@ describe("Yup-ts", () => {
   });
 
   type TValidatorType = YupTS.TypeOf<typeof personValidatorTemplate>;
-  const validator = personValidatorTemplate.toYup();
+  const personalValidator = personValidatorTemplate.toYup();
 
   it("should work as Yup", () => {
     const validValue1: TValidatorType = {
@@ -41,13 +41,13 @@ describe("Yup-ts", () => {
       url: "http://www.foo.de",
     };
 
-    expect(validator.isValidSync(validValue1)).to.be.true;
-    expect(validator.isValidSync(validValue2)).to.be.true;
-    expect(validator.isValidSync(validValue3)).to.be.true;
+    expect(personalValidator.isValidSync(validValue1)).to.be.true;
+    expect(personalValidator.isValidSync(validValue2)).to.be.true;
+    expect(personalValidator.isValidSync(validValue3)).to.be.true;
 
-    expect(validator.isValidSync(5)).to.be.false;
-    expect(validator.isValidSync({ fullName: "test" })).to.be.false; // missing values
-    expect(validator.isValidSync({ ...validValue2, url: "fufu" })).to.be.false; // url
+    expect(personalValidator.isValidSync(5)).to.be.false;
+    expect(personalValidator.isValidSync({ fullName: "test" })).to.be.false; // missing values
+    expect(personalValidator.isValidSync({ ...validValue2, url: "fufu" })).to.be.false; // url
   });
 
   // assertions on types done according to: https://abstract.properties/typescript-compile-assertions.html

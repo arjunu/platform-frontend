@@ -81,6 +81,7 @@ export const SettingsComponent: React.FunctionComponent<IStateProps> = ({
       {isUserInvestor && isIndividual && isPersonalDataProcessed && (
         <PersonalAccountDetails columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
       )}
+
       <LinkedBankAccountWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
     </WidgetGrid>
   );

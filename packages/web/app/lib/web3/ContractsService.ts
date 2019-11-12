@@ -5,6 +5,7 @@ import { IConfig } from "../../config/getConfig";
 import { symbols } from "../../di/symbols";
 import { EtherToken } from "../contracts/EtherToken";
 import { ETOCommitment } from "../contracts/ETOCommitment";
+import { ETOTerms } from "../contracts/ETOTerms";
 import { EuroToken } from "../contracts/EuroToken";
 import { EuroTokenController } from "../contracts/EuroTokenController";
 import { FeeDisbursal } from "../contracts/FeeDisbursal";
@@ -25,6 +26,7 @@ import { Web3Manager } from "./Web3Manager/Web3Manager";
 export class ContractsService {
   private etoCommitmentCache: { [etoId: string]: ETOCommitment } = {};
   private equityTokensCache: { [equityTokenAddress: string]: IEquityToken } = {};
+  private etoTermsCache: { [etoTermsId: string]: ETOTerms } = {};
   private controllerGovernanceCache: { [tokenController: string]: IControllerGovernance } = {};
   private web3: Web3 | undefined;
 
@@ -132,17 +134,27 @@ export class ContractsService {
   }
 
   async getEquityToken(equityTokenAddress: string): Promise<IEquityToken> {
-    if (this.equityTokensCache[equityTokenAddress])
+    if (this.equityTokensCache[equityTokenAddress]) {
       return this.equityTokensCache[equityTokenAddress];
+    }
 
     const contract = await create(IEquityToken, this.web3, equityTokenAddress);
     this.equityTokensCache[equityTokenAddress] = contract;
     return contract;
   }
 
+  async getEtoTerms(etoTermsAddress: string): Promise<ETOTerms> {
+    if (this.etoTermsCache[etoTermsAddress]) return this.etoTermsCache[etoTermsAddress];
+
+    const contract = await create(ETOTerms, this.web3, etoTermsAddress);
+    this.etoTermsCache[etoTermsAddress] = contract;
+    return contract;
+  }
+
   async getControllerGovernance(controllerAddress: string): Promise<IControllerGovernance> {
-    if (this.controllerGovernanceCache[controllerAddress])
+    if (this.controllerGovernanceCache[controllerAddress]) {
       return this.controllerGovernanceCache[controllerAddress];
+    }
 
     const contract = await create(IControllerGovernance, this.web3, controllerAddress);
     this.controllerGovernanceCache[controllerAddress] = contract;

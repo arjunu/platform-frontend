@@ -1,5 +1,4 @@
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
-import { TEtoSpecsData, TPartialEtoSpecData } from "./EtoApi.interfaces.unsafe";
+import { TPartialEtoSpecData } from "./EtoApi.interfaces.unsafe";
 
 export const calcInvestmentAmount = (eto: TPartialEtoSpecData, sharePrice: number | undefined) => ({
   minInvestmentAmount: calcMaxInvestmentAmount(sharePrice, eto.minimumNewSharesToIssue),
@@ -7,13 +6,26 @@ export const calcInvestmentAmount = (eto: TPartialEtoSpecData, sharePrice: numbe
 });
 
 export const calcNumberOfTokens = ({
+  preMoneyValuationEur = 0,
+  existingShareCapital = 0,
+  newShareNominalValue = 1,
   newSharesToIssue = 1,
   minimumNewSharesToIssue = 0,
-  equityTokensPerShare = 1,
-}: TPartialEtoSpecData) => ({
-  computedMaxNumberOfTokens: newSharesToIssue * equityTokensPerShare,
-  computedMinNumberOfTokens: minimumNewSharesToIssue * equityTokensPerShare,
-});
+}: TPartialEtoSpecData) => {
+  let computedMaxNumberOfTokens = 0;
+  let computedMinNumberOfTokens = 0;
+  const sharePrice = calcSharePrice({
+    preMoneyValuationEur,
+    existingShareCapital,
+    newShareNominalValue,
+  });
+  if (sharePrice > 0) {
+    const equityTokensPerShare = calcTokensPerShareFromSharePrice(sharePrice);
+    computedMaxNumberOfTokens = newSharesToIssue * equityTokensPerShare;
+    computedMinNumberOfTokens = minimumNewSharesToIssue * equityTokensPerShare;
+  }
+  return { computedMaxNumberOfTokens, computedMinNumberOfTokens };
+};
 
 export const calcCapFraction = ({
   newSharesToIssue = 1,
@@ -30,18 +42,51 @@ export const calcShareAndTokenPrice = ({
   preMoneyValuationEur = 0,
   existingShareCapital = 0,
   newShareNominalValue = 1,
-  equityTokensPerShare = 1,
 }: TPartialEtoSpecData) => {
-  let sharePrice = 0;
   let tokenPrice = 0;
-  if (existingShareCapital !== 0 && equityTokensPerShare !== 0 && preMoneyValuationEur !== 0) {
-    sharePrice = (preMoneyValuationEur * newShareNominalValue) / existingShareCapital;
-    tokenPrice = sharePrice / equityTokensPerShare;
+  let tokensPerShare = 0;
+  const sharePrice = calcSharePrice({
+    preMoneyValuationEur,
+    existingShareCapital,
+    newShareNominalValue,
+  });
+  if (sharePrice > 0) {
+    tokensPerShare = calcTokensPerShareFromSharePrice(sharePrice);
+    tokenPrice = sharePrice / tokensPerShare;
   }
   return {
     sharePrice,
     tokenPrice,
+    tokensPerShare,
   };
+};
+
+export const calcSharePrice = ({
+  preMoneyValuationEur = 0,
+  existingShareCapital = 0,
+  newShareNominalValue = 1,
+}: TPartialEtoSpecData) => {
+  let sharePrice = 0;
+  if (existingShareCapital !== 0) {
+    sharePrice = (preMoneyValuationEur * newShareNominalValue) / existingShareCapital;
+  }
+  return sharePrice;
+};
+
+const calcTokensPerShareFromSharePrice = (sharePrice: number) => {
+  let tokensPerShare;
+  const sharePriceLog = Math.log10(sharePrice);
+  if (sharePriceLog < 0) {
+    tokensPerShare = 0;
+  } else {
+    let powers = Math.floor(sharePriceLog);
+    // for powers of 10 keep be inclusive to previous divisor so we can have 1 EUR token price
+    if (powers === sharePriceLog) {
+      powers -= 1;
+    }
+    tokensPerShare = Math.pow(10, powers + 1);
+  }
+  return tokensPerShare;
 };
 
 const calcMaxInvestmentAmountWithDiscount = (
@@ -95,15 +140,4 @@ const calcMaxInvestmentAmount = (sharePrice = 0, shares = 0) => {
     return 0;
   }
   return shares * sharePrice;
-};
-
-export const getInvestmentCalculatedPercentage = (eto: TEtoSpecsData) =>
-  (eto.newSharesToIssue / eto.minimumNewSharesToIssue) * 100;
-
-export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndContract) => {
-  const totalTokensInt = eto.contract!.totalInvestment.totalTokensInt;
-
-  return (
-    (parseInt(totalTokensInt, 10) / (eto.minimumNewSharesToIssue * eto.equityTokensPerShare)) * 100
-  );
 };

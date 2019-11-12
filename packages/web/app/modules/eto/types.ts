@@ -1,5 +1,5 @@
 import { TCompanyEtoData, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { DeepReadonly, Dictionary } from "../../types";
+import { DeepReadonly, Dictionary, Overwrite } from "../../types";
 import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
 
 export interface IEtoTotalInvestment {
@@ -31,13 +31,18 @@ export interface IEtoContractData {
   etoTermsAddress: string;
 }
 
-export type TEtoWithCompanyAndContract = DeepReadonly<
+export type TEtoWithCompanyAndContractReadonly = DeepReadonly<
   TEtoSpecsData & {
     // contract is undefined when ETO is not on blockchain
     contract?: IEtoContractData;
     company: TCompanyEtoData;
     subState: EEtoSubState | undefined;
   }
+>;
+
+export type TEtoWithCompanyAndContractTypeChecked = Overwrite<
+  TEtoWithCompanyAndContractReadonly,
+  { contract: Exclude<TEtoWithCompanyAndContractReadonly["contract"], undefined> }
 >;
 
 export interface IEtoTokenData {
@@ -48,10 +53,16 @@ export interface IEtoTokenData {
   tokenPrice: string;
 }
 
+export interface IEtoTokenGeneralDiscounts {
+  whitelistDiscountFrac: number;
+  whitelistDiscountUlps: string;
+  publicDiscountFrac: number;
+  publicDiscountUlps: string;
+}
+
 export enum EEtoSubState {
   MARKETING_LISTING_IN_REVIEW = "marketing_listing_in_review",
   WHITELISTING = "whitelisting",
-  WHITELISTING_LIMIT_REACHED = "whitelisting_limit_reached",
   CAMPAIGNING = "campaigning",
   COUNTDOWN_TO_PRESALE = "countdown_to_presale",
   COUNTDOWN_TO_PUBLIC_SALE = "countdown_to_public_sale",
@@ -64,3 +75,8 @@ export enum EEtoAgreementStatus {
 }
 
 export type TOfferingAgreementsStatus = Dictionary<EEtoAgreementStatus, EAgreementType>;
+
+export type SignedISHAStatus = {
+  isLoading: boolean;
+  url: string | undefined;
+};

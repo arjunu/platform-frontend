@@ -13,3 +13,8 @@ export function isEmail(s: string): boolean {
     s,
   );
 }
+
+export function getHostname(url: string): string {
+  const urlObj = new URL(url);
+  return urlObj.hostname;
+}

@@ -64,6 +64,7 @@ export interface IButtonProps extends TGeneralButton, CommonHtmlProps {
   isActive?: boolean;
   innerClassName?: string;
   textPosition?: ButtonTextPosition;
+  iconStyle?: string;
 }
 
 const Button: React.ForwardRefExoticComponent<
@@ -87,6 +88,7 @@ const Button: React.ForwardRefExoticComponent<
       isActive,
       onClick,
       "data-test-id": dataTestId,
+      iconStyle,
       ...props
     },
     ref,
@@ -113,12 +115,24 @@ const Button: React.ForwardRefExoticComponent<
     >
       <div className={cn(styles.content, innerClassName, textPosition)} tabIndex={-1}>
         {isLoading ? (
-          <LoadingIndicator light />
+          <>
+            {/*
+              &nbsp; makes button the same in height as normal button
+              (avoids height dumping after switching to loading state)
+            */}
+            &nbsp;
+            <LoadingIndicator light />
+            &nbsp;
+          </>
         ) : (
           <>
-            {iconPosition === EIconPosition.ICON_BEFORE && <InlineIcon svgIcon={svgIcon || ""} />}
+            {iconPosition === EIconPosition.ICON_BEFORE && (
+              <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
+            )}
             {children}
-            {iconPosition === EIconPosition.ICON_AFTER && <InlineIcon svgIcon={svgIcon || ""} />}
+            {iconPosition === EIconPosition.ICON_AFTER && (
+              <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
+            )}
           </>
         )}
       </div>

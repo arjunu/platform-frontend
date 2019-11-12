@@ -7,6 +7,7 @@ import { Container, EColumnSpan, EContainerType } from "../../layouts/Container"
 import { InlineIcon } from "../icons/InlineIcon";
 import { LoadingIndicatorHexagon } from "./LoadingIndicatorHexagon";
 
+import * as loadingSpinner from "./../../../assets/img/inline_icons/loading_spinner.svg";
 import * as spinning from "./../../../assets/img/inline_icons/spinner.svg";
 import * as styles from "./LoadingIndicator.module.scss";
 
@@ -15,6 +16,7 @@ export enum ELoadingIndicator {
   BLOCKS = "blocks",
   HEXAGON = "hexagon",
   SPINNER = "spinner",
+  SPINNER_SMALL = "spinner-small",
 }
 
 interface ILoadingIndicatorProps {
@@ -51,6 +53,12 @@ const LoadingIndicator: React.FunctionComponent<ILoadingIndicatorProps & CommonH
       return (
         <div className={cn(className, styles.spinner)}>
           <InlineIcon svgIcon={spinning} />
+        </div>
+      );
+    case ELoadingIndicator.SPINNER_SMALL:
+      return (
+        <div className={cn(className, styles.spinnerSmall)}>
+          <InlineIcon svgIcon={loadingSpinner} />
         </div>
       );
     case ELoadingIndicator.HEXAGON:

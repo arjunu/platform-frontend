@@ -42,7 +42,9 @@ const FormFieldLabelLayout: React.FunctionComponent<
     return (
       <FormLabel for={name} inheritFont={inheritFont} {...rawProps}>
         {children}
-        {isFieldRequired(formik.validationSchema, name) && <span aria-hidden="true"> *</span>}
+        {isFieldRequired(formik.validationSchema, name, formik) && (
+          <span aria-hidden="true"> *</span>
+        )}
       </FormLabel>
     );
   }

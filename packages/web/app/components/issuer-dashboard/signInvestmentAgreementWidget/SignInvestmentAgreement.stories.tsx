@@ -2,6 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
+import { testEto } from "../../../../test/fixtures";
 import { EEtoDocumentType, TEtoFormType } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { ipfsLinkFromHash } from "../../documents/utils";
 import { SignInvestmentAgreementLayout } from "./SignInvestmentAgreement";
@@ -17,7 +18,7 @@ const doc = {
 };
 
 const commonData = {
-  etoId: "23423423423423",
+  eto: testEto,
   ipfsHash,
   uploadedAgreement: doc,
   signInvestmentAgreement: action("sign me"),
@@ -26,7 +27,7 @@ const commonData = {
 
 const noDocSignedData = {
   ...commonData,
-  signedInvestmentAgreementUrl: null,
+  signedInvestmentAgreementUrl: undefined,
 };
 
 const needToSignAgainData = {

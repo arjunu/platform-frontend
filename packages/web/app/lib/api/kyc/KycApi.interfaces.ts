@@ -1,18 +1,15 @@
 import * as Yup from "yup";
 
-import { makeAllRequired } from "../../../utils/yupUtils";
+import { ECountries } from "../../../utils/enums/countriesEnum";
+import { EUSState } from "../../../utils/enums/usStatesEnum";
+import { makeAllRequired, makeAllRequiredExcept } from "../../../utils/yupUtils";
 import * as YupTS from "../../yup-ts.unsafe";
-import {
-  countryCode,
-  isUsCitizen,
-  percentage,
-  personBirthDate,
-  restrictedCountry,
-} from "../util/customSchemas.unsafe";
+import { countryCode, percentage, personBirthDate, restrictedCountry } from "../util/customSchemas";
 
 export enum EKycRequestType {
   BUSINESS = "business",
   INDIVIDUAL = "individual",
+  US_ACCREDITATION = "us_accreditation",
 }
 
 export interface IKycPerson {
@@ -22,11 +19,16 @@ export interface IKycPerson {
   city?: string;
   zipCode?: string;
   country?: string;
+  usState?: EUSState;
   birthDate?: string;
   placeOfBirth?: string;
   nationality?: string;
   isPoliticallyExposed?: boolean;
 }
+
+const stateSchema = Yup.string().when("country", (country: string, schema: Yup.Schema<string>) =>
+  country === ECountries.UNITED_STATES ? schema.required() : schema,
+);
 
 export const KycPersonSchema = Yup.object().shape({
   firstName: Yup.string(),
@@ -39,22 +41,43 @@ export const KycPersonSchema = Yup.object().shape({
   placeOfBirth: countryCode,
   nationality: countryCode,
   isPoliticallyExposed: Yup.bool(),
+  usState: stateSchema,
+});
+
+export const KycAdditionalDataSchema = Yup.object().shape({
+  // Allow only true value to be saved, do not display any additional message
+  // it is all handled by external notification component
+  isAccreditedUsCitizen: Yup.bool().when(
+    ["country", "nationality"],
+    (v1: ECountries, v2: ECountries, schema: Yup.Schema<boolean>) =>
+      [v1, v2].includes(ECountries.UNITED_STATES) ? schema.required().oneOf([true], " ") : schema,
+  ),
 });
 
 // individual data
 export interface IKycIndividualData extends IKycPerson {
-  isUsCitizen?: boolean;
   isHighIncome?: boolean;
+  isAccreditedUsCitizen?: string;
 }
 
+const KycIndividualDataShape =
+  process.env.NF_DISABLE_HIGH_INCOME === "1"
+    ? {}
+    : {
+        isHighIncome: Yup.bool(),
+      };
+
 export const KycIndividualDataSchema = KycPersonSchema.concat(
-  Yup.object().shape({
-    isUsCitizen,
-    isHighIncome: Yup.bool(),
-  }),
+  Yup.object().shape(KycIndividualDataShape),
 );
 
-export const KycIndividualDataSchemaRequired = makeAllRequired(KycIndividualDataSchema);
+export const KycIndividualDataSchemaRequired = makeAllRequiredExcept(KycIndividualDataSchema, [
+  "usState",
+]);
+
+export const KycIndividualDataSchemaRequiredWithAdditionalData = KycIndividualDataSchemaRequired.concat(
+  KycAdditionalDataSchema,
+);
 
 // business data
 export interface IKycBusinessData {
@@ -79,12 +102,15 @@ export const KycBusinessDataSchema = Yup.object<any>().shape({
   zipCode: Yup.string().required(),
   country: restrictedCountry.required(),
   jurisdiction: Yup.string().default("de"),
+  usState: stateSchema,
 });
 
 // legal representative (same as base person)
 export interface IKycLegalRepresentative extends IKycPerson {}
 export const KycLegalRepresentativeSchema = KycPersonSchema;
-export const KycLegalRepresentativeSchemaRequired = makeAllRequired(KycPersonSchema);
+export const KycLegalRepresentativeSchemaRequired = makeAllRequiredExcept(KycPersonSchema, [
+  "usState",
+]);
 
 // beneficial owner
 export interface IKycBeneficialOwner extends IKycPerson {
@@ -114,12 +140,12 @@ export const KycFileInfoShape = Yup.object().shape({
 
 // request state
 export enum EKycRequestStatus {
-  DRAFT = "Draft",
-  PENDING = "Pending",
-  OUTSOURCED = "Outsourced",
-  REJECTED = "Rejected",
-  ACCEPTED = "Accepted",
-  IGNORED = "Ignored",
+  DRAFT = "draft",
+  PENDING = "pending",
+  OUTSOURCED = "outsourced",
+  REJECTED = "rejected",
+  ACCEPTED = "accepted",
+  IGNORED = "ignored",
 }
 
 export enum ERequestOutsourcedStatus {

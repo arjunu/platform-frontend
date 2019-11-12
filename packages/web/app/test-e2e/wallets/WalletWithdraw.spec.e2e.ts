@@ -1,7 +1,14 @@
 import Web3Accounts from "web3-eth-accounts";
 
 import { Q18 } from "../../config/constants";
-import { accountFixtureByName, confirmAccessModal, goToDashboard, parseAmount } from "../utils";
+import {
+  accountFixtureByName,
+  assertTxErrorDialogueWithCost,
+  confirmAccessModal,
+  goToDashboard,
+  parseAmount,
+} from "../utils";
+import { assertTxErrorDialogueNoCost } from "../utils/assertions";
 import { sendEth } from "../utils/ethRpcUtils";
 import { fillForm } from "../utils/forms";
 import { accountFixtureAddress } from "../utils/index";
@@ -25,7 +32,7 @@ describe("Wallet Withdraw", () => {
         signTosAgreement: true,
         onlyLogin: true,
       }).then(() => {
-        const testValue = 5;
+        const testValue = "5";
         const account = new Web3Accounts().create();
         const testAddress = account.address;
 
@@ -75,7 +82,7 @@ describe("Wallet Withdraw", () => {
         signTosAgreement: true,
         onlyLogin: true,
       }).then(() => {
-        const testValue = 5;
+        const testValue = "5";
         const account = new Web3Accounts().create();
         const testAddress = account.address;
 
@@ -113,7 +120,7 @@ describe("Wallet Withdraw", () => {
         onlyLogin: true,
       }).then(() => {
         const testAddress = EuroTokenContract.networks["17"].address;
-        const testValue = 5;
+        const testValue = "5";
 
         goToWallet();
         fillWithdrawForm(testAddress, testValue);
@@ -131,7 +138,7 @@ describe("Wallet Withdraw", () => {
         onlyLogin: true,
       }).then(() => {
         const testAddress = EuroTokenContract.networks["17"].address;
-        const testValue = 5;
+        const testValue = "5";
 
         goToWallet();
 
@@ -157,7 +164,7 @@ describe("Wallet Withdraw", () => {
         signTosAgreement: true,
         onlyLogin: true,
       }).then(() => {
-        const testValue = 5;
+        const testValue = "5";
         const testAddress = accountFixtureAddress("ISSUER_BLANK_QA_HAS_KYC");
 
         goToWallet();
@@ -196,7 +203,7 @@ describe("Wallet Withdraw", () => {
         signTosAgreement: true,
         onlyLogin: true,
       }).then(() => {
-        const testValue = 5;
+        const testValue = "5";
         const account = new Web3Accounts().create();
         const testAddress = account.address;
 
@@ -237,7 +244,7 @@ describe("Wallet Withdraw", () => {
         signTosAgreement: true,
         onlyLogin: true,
       }).then(() => {
-        const testValue = 5;
+        const testValue = "5";
         const account = new Web3Accounts().create();
         const testAddress = account.address;
 
@@ -283,7 +290,7 @@ describe("Wallet Withdraw", () => {
         signTosAgreement: true,
         onlyLogin: true,
       }).then(() => {
-        const testValue = 5;
+        const testValue = "5";
         const testAddress = accountFixtureAddress("INV_EUR_ICBM_HAS_KYC_SEED");
 
         const expectedInput = `0x64663ea6000000000000000000000000${testAddress
@@ -315,7 +322,7 @@ describe("Wallet Withdraw", () => {
       }).then(() => {
         const testAddress = SimpleExchangeContract.networks["17"].address;
 
-        const testValue = 5;
+        const testValue = "5";
 
         const expectedInput = `0x64663ea6000000000000000000000000${testAddress
           .slice(2)
@@ -353,7 +360,7 @@ describe("Wallet Withdraw", () => {
         onlyLogin: true,
       }).then(() => {
         const testAddress = accountFixtureByName("INV_ICBM_ETH_M_HAS_KYC_DUP").definition.address;
-        const testValue = 5;
+        const testValue = "5";
         const expectedInput = `0x64663ea6000000000000000000000000${testAddress
           .slice(2)
           .toLowerCase()}0000000000000000000000000000000000000000000000004563918244f40000`;
@@ -378,12 +385,12 @@ describe("Wallet Withdraw", () => {
     it("should withdraw all", () => {
       const account = new Web3Accounts().create();
       const testAddress: string = account.address;
-      const correctValue = 2;
+      const correctValue = "2";
       createAndLoginNewUser({ type: "investor" }).then(({ address }) => {
         sendEth("DEPLOYER", address, Q18.mul(correctValue));
 
         goToWallet();
-        fillWithdrawForm(testAddress, 5);
+        fillWithdrawForm(testAddress, "5");
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance")).click();
 
@@ -416,7 +423,7 @@ describe("Wallet Withdraw", () => {
           const txHash = txHashObject.attr("data-test-hash")!;
 
           checkTransactionWithRPCNode(
-            { expectedTo: testAddress, writtenValue: correctValue.toString() },
+            { expectedTo: testAddress, writtenValue: correctValue },
             txHash,
             true,
           );
@@ -435,7 +442,7 @@ describe("Wallet Withdraw", () => {
 
         const testAddress = EuroTokenContract.networks["17"].address;
 
-        const testValue = 5;
+        const testValue = "5";
 
         goToWalletWithParams({
           disableNotAcceptingEtherCheck: true,
@@ -451,9 +458,7 @@ describe("Wallet Withdraw", () => {
         confirmAccessModal(DEFAULT_PASSWORD);
 
         cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
-
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).contains(/0\.\d{4}/);
+        assertTxErrorDialogueWithCost();
       });
     });
 
@@ -464,7 +469,7 @@ describe("Wallet Withdraw", () => {
       }).then(() => {
         goToDashboard();
 
-        const testValue = 5;
+        const testValue = "5";
 
         const account = new Web3Accounts().create();
         const testAddress = account.address;
@@ -492,9 +497,7 @@ describe("Wallet Withdraw", () => {
         confirmAccessModal(DEFAULT_PASSWORD);
 
         cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
-
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).should("not.exist");
+        assertTxErrorDialogueNoCost();
       });
     });
 
@@ -506,7 +509,7 @@ describe("Wallet Withdraw", () => {
       }).then(() => {
         goToDashboard();
 
-        const testValue = 5;
+        const testValue = "5";
 
         const testAddress = SimpleExchangeContract.networks["17"].address;
 
@@ -533,9 +536,8 @@ describe("Wallet Withdraw", () => {
         confirmAccessModal(DEFAULT_PASSWORD);
 
         cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
 
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).contains(/0\.\d{4}/);
+        assertTxErrorDialogueWithCost();
       });
     });
   });

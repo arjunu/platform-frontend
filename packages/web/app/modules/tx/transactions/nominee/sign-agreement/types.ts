@@ -4,6 +4,7 @@ import { IETOCommitment } from "../../../../../lib/contracts/IETOCommitment";
 export enum EAgreementType {
   RAAA = "raaa",
   THA = "tha",
+  ISHA = "isha",
 }
 
 export interface IAgreementContractAndHash {

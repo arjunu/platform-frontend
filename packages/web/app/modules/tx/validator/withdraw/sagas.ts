@@ -8,14 +8,13 @@ import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { IdentityRegistry } from "../../../../lib/contracts/IdentityRegistry";
 import { ITxData } from "../../../../lib/web3/types";
 import { NotEnoughEtherForGasError, UserHasNoFundsError } from "../../../../lib/web3/Web3Adapter";
-import { EthereumAddressWithChecksum } from "../../../../types";
 import {
   addBigNumbers,
   compareBigNumbers,
   multiplyBigNumbers,
   subtractBigNumbers,
 } from "../../../../utils/BigNumberUtils";
-import { convertToBigInt } from "../../../../utils/Number.utils";
+import { convertToUlps } from "../../../../utils/NumberUtils";
 import { actions } from "../../../actions";
 import { deserializeClaims } from "../../../kyc/utils";
 import { neuCall } from "../../../sagasUtils";
@@ -57,7 +56,7 @@ export function* txValidateWithdraw(userInput: IWithdrawDraftType): Iterator<any
 
   try {
     if (!shouldPassSmartContractAcceptEtherTest) {
-      yield neuCall(isAddressValidAcceptsEther, modifiedUserInput);
+      yield neuCall(isAddressValidAcceptsEther, modifiedUserInput.to, modifiedUserInput.value);
     }
 
     const generatedTxDetails = yield neuCall(generateEthWithdrawTransaction, {
@@ -65,7 +64,7 @@ export function* txValidateWithdraw(userInput: IWithdrawDraftType): Iterator<any
       valueUlps: new BigNumber(modifiedUserInput.value).mul(Q18).toString(),
     });
 
-    yield validateGas(generatedTxDetails);
+    yield neuCall(validateGas, generatedTxDetails);
 
     const addressNotifications: EAdditionalValidationDataNotifications[] =
       isAddressValid && !shouldPassSmartContractAcceptEtherTest
@@ -83,7 +82,7 @@ export function* txValidateWithdraw(userInput: IWithdrawDraftType): Iterator<any
       ]),
     );
 
-    const valueUlps = convertToBigInt(modifiedUserInput.value);
+    const valueUlps = convertToUlps(modifiedUserInput.value);
     const valueFromUserEuro = multiplyBigNumbers([euroPrice, valueUlps]);
     const transactionCost = multiplyBigNumbers([
       generatedTxDetails.gasPrice,
@@ -133,7 +132,8 @@ export function* txValidateWithdraw(userInput: IWithdrawDraftType): Iterator<any
 
 export function* isAddressValidAcceptsEther(
   { web3Manager }: TGlobalDependencies,
-  { to, value }: IWithdrawDraftType,
+  to: string,
+  value: string,
 ): Iterator<any> {
   try {
     const etherBalance: BigNumber = yield select(selectEtherBalanceAsBigNumber);
@@ -142,7 +142,7 @@ export function* isAddressValidAcceptsEther(
     }
 
     // If user inputs no value assume 1 wei as fallback value
-    const calculatedValueFromUserInput = value === "0" ? "1" : convertToBigInt(value);
+    const calculatedValueFromUserInput = value === "0" ? "1" : convertToUlps(value);
     yield web3Manager.estimateGas({ to, value: calculatedValueFromUserInput });
   } catch (e) {
     if (e instanceof UserHasNoFundsError) {
@@ -155,8 +155,12 @@ export function* isAddressValidAcceptsEther(
 
 export function* txProcessAddressValidations(
   { web3Manager, contractsService }: TGlobalDependencies,
-  address: EthereumAddressWithChecksum,
+  address: string,
 ): Iterator<any> {
+  if (!isAddressValid(address)) {
+    throw new Error(`Invalid ethereum address passed: ${address}`);
+  }
+
   const identityRegistry: IdentityRegistry = contractsService.identityRegistry;
 
   const { claims, transactionsCount, addressBalance, isSmartContract } = yield all({
@@ -193,8 +197,9 @@ export function* validateWalletAlmostEmpty({ gasPrice, gas, value }: ITxData): I
   const maximumCost = multiplyBigNumbers([gasPrice, gas]);
   const maximumAvailableEther = subtractBigNumbers([allEther, maximumCost]);
 
-  if (compareBigNumbers(addBigNumbers([value, requiredGasReserve]), maximumAvailableEther) >= 0)
+  if (compareBigNumbers(addBigNumbers([value, requiredGasReserve]), maximumAvailableEther) >= 0) {
     warnings.push(EAdditionalValidationDataNotifications.WILL_EMPTY_WALLET);
+  }
 
   return warnings;
 }

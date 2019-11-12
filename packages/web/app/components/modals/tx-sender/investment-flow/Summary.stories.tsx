@@ -1,19 +1,23 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
+import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { InvestmentSummaryComponent } from "./Summary";
+
+import * as tokenIcon from "../../../../assets/img/token_icon.svg";
 
 const data = {
   additionalData: {
     eto: {
       companyName: "X company",
       etoId: "0x123434562134asdf2412341234adf12341234",
-      preMoneyValuationEur: 0,
-      existingShareCapital: 0,
       equityTokensPerShare: 0,
-      investmentCalculatedValues: {
-        sharePrice: 0,
+      sharePrice: 0,
+      equityTokenInfo: {
+        equityTokenSymbol: toEquityTokenSymbol("QTT"),
+        equityTokenImage: tokenIcon,
+        equityTokenName: "Quintessence",
       },
     },
     investmentEth: "12345678900000000000",
@@ -35,12 +39,8 @@ const dataWithPriceDiscount = {
     ...data.additionalData,
     eto: {
       ...data.additionalData.eto,
-      preMoneyValuationEur: 10000,
-      existingShareCapital: 10,
       equityTokensPerShare: 10,
-      investmentCalculatedValues: {
-        sharePrice: 1000 / (10 * 10),
-      },
+      sharePrice: 1000 / (10 * 10),
     },
   },
 };

@@ -1,13 +1,22 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { compose } from "recompose";
+import { branch, compose, renderComponent } from "recompose";
 
+import { EEtoState } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { actions } from "../../../../../modules/actions";
-import { selectIsAuthorized, selectIsInvestor } from "../../../../../modules/auth/selectors";
+import {
+  selectIsAuthorized,
+  selectIsInvestor,
+  selectIsUSInvestor,
+} from "../../../../../modules/auth/selectors";
+import { InvalidETOStateError } from "../../../../../modules/eto/errors";
 import { selectEtoOnChainNextStateStartDate } from "../../../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
+import { isOnChain } from "../../../../../modules/eto/utils";
 import { selectIsUserVerifiedOnBlockchain } from "../../../../../modules/kyc/selectors";
 import { appConnect } from "../../../../../store";
+import { OmitKeys } from "../../../../../types";
+import { invariant } from "../../../../../utils/invariant";
 import { appRoutes } from "../../../../appRoutes";
 import { etoPublicViewLink } from "../../../../appRouteUtils";
 import { Button, ButtonLink } from "../../../../shared/buttons";
@@ -18,46 +27,37 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { EndTimeWidget } from "../EndTimeWidget";
-import { InvestmentProgress } from "./InvestmentProgress";
+import { InvestmentProgress } from "../../InvestmentProgress";
+import { EndTimeWidget } from "../../shared/EndTimeWidget";
+import { FundraisingBreakdownTooltip } from "./FundraisingBreakdownTooltip";
+import { USInvestorMessage } from "./USInvestorMessage";
 
 import * as styles from "./InvestmentWidget.module.scss";
 
-export interface IInvestmentWidgetProps {
-  eto: TEtoWithCompanyAndContract;
+interface IExternalProps {
+  eto: TEtoWithCompanyAndContractReadonly;
   isEmbedded: boolean;
 }
 
-export interface IInvestmentStatsProps {
-  eto: TEtoWithCompanyAndContract;
+interface IInvestmentStatsProps {
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
-export interface IInvestmentWidgetStateProps {
+interface IStateProps {
   isAuthorized: boolean;
   isAllowedToInvest: boolean;
   isInvestor: boolean;
+  isUsInvestor: boolean;
   nextStateDate: Date | undefined;
 }
 
-export interface IInvestmentWidgetDispatchProps {
+interface IDispatchProps {
   startInvestmentFlow: () => void;
 }
 
-export type TInvestWidgetProps = IInvestmentWidgetProps &
-  IInvestmentWidgetStateProps &
-  IInvestmentWidgetDispatchProps;
+type TInvestWidgetProps = IExternalProps & OmitKeys<IStateProps, "isUsInvestor"> & IDispatchProps;
 
-interface IInvestNowButtonProps {
-  eto: TEtoWithCompanyAndContract;
-  isAuthorized: boolean;
-  isAllowedToInvest: boolean;
-  isInvestor: boolean;
-  startInvestmentFlow: () => void;
-  nextStateDate: Date | undefined;
-  isEmbedded: boolean;
-}
-
-const InvestNowButtonLayout: React.FunctionComponent<IInvestNowButtonProps> = ({
+const InvestNowButton: React.FunctionComponent<TInvestWidgetProps> = ({
   eto,
   isAuthorized,
   isAllowedToInvest,
@@ -67,24 +67,35 @@ const InvestNowButtonLayout: React.FunctionComponent<IInvestNowButtonProps> = ({
   isEmbedded,
 }) => {
   const investNowButtonSelector = () => {
-    if (!isAuthorized) {
+    // in case it's an in embedded iframe show invest now button with redirect to eto page
+    if (isEmbedded) {
       return (
         <ButtonLink
           to={etoPublicViewLink(eto.previewCode, eto.product.jurisdiction)}
-          target={isEmbedded ? "_blank" : ""}
+          target="_blank"
           data-test-id="eto-widget-invest-now-button"
         >
           <FormattedMessage id="shared-component.eto-overview.invest-now" />
         </ButtonLink>
       );
-    } else if (isAuthorized && isInvestor && isAllowedToInvest) {
+    }
+
+    // for not authorized users forward to registration page
+    if (!isAuthorized) {
       return (
+        <ButtonLink to={appRoutes.register} data-test-id="eto-widget-register-to-invest-button">
+          <FormattedMessage id="shared-component.eto-overview.register-to-invest" />
+        </ButtonLink>
+      );
+    }
+
+    // investor can either be allowed or not allowed to invest
+    if (isInvestor) {
+      return isAllowedToInvest ? (
         <Button onClick={startInvestmentFlow} data-test-id={`eto-invest-now-button-${eto.etoId}`}>
           <FormattedMessage id="shared-component.eto-overview.invest-now" />
         </Button>
-      );
-    } else if (isAuthorized && isInvestor && !isAllowedToInvest) {
-      return (
+      ) : (
         <ButtonLink
           to={appRoutes.profile}
           data-test-id="eto-overview-settings-update-required-to-invest"
@@ -92,86 +103,88 @@ const InvestNowButtonLayout: React.FunctionComponent<IInvestNowButtonProps> = ({
           <FormattedMessage id="shared-component.eto-overview.settings-update-required" />
         </ButtonLink>
       );
-    } else {
-      return null;
     }
+
+    return invariant(false, "Investment button should not be shown at this stage");
   };
 
-  return !isAuthorized || isInvestor ? (
+  return (
     <div className={styles.investNowButton}>
       {investNowButtonSelector()}
-      <EndTimeWidget endTime={nextStateDate} />
+      {nextStateDate && <EndTimeWidget endTime={nextStateDate} className={styles.endTime} />}
     </div>
-  ) : null;
+  );
 };
 
-const InvestNowButton = compose<TInvestWidgetProps, IInvestmentWidgetProps>(
-  appConnect<IInvestmentWidgetStateProps, IInvestmentWidgetDispatchProps, IInvestmentWidgetProps>({
+const InvestmentStats: React.FunctionComponent<IInvestmentStatsProps> = ({ eto }) => {
+  if (!isOnChain(eto)) {
+    throw new InvalidETOStateError(eto.state, EEtoState.ON_CHAIN);
+  }
+
+  const totalInvestors = eto.contract.totalInvestment.totalInvestors;
+  return (
+    <div>
+      <div className={styles.header}>
+        <div>
+          {"≈"}
+          <Money
+            data-test-id="investment-widget-total-nEur-invested"
+            value={eto.contract.totalInvestment.totalEquivEurUlps}
+            inputFormat={ENumberInputFormat.ULPS}
+            valueType={ECurrency.EUR}
+            outputFormat={ENumberOutputFormat.FULL}
+          />
+          <FundraisingBreakdownTooltip
+            etherTokenBalance={eto.contract.totalInvestment.etherTokenBalance}
+            euroTokenBalance={eto.contract.totalInvestment.euroTokenBalance}
+          />
+        </div>
+        {process.env.NF_MAY_SHOW_INVESTOR_STATS === "1" && (
+          <div>
+            <FormattedMessage
+              id="shared-component.eto-overview.investors"
+              values={{
+                totalInvestors,
+                totalInvestorsAsString: (
+                  <FormatNumber
+                    data-test-id="investment-widget-investors-invested"
+                    value={totalInvestors}
+                    outputFormat={ENumberOutputFormat.INTEGER}
+                    inputFormat={ENumberInputFormat.FLOAT}
+                  />
+                ),
+              }}
+            />
+          </div>
+        )}
+      </div>
+      <InvestmentProgress eto={eto} />
+    </div>
+  );
+};
+
+const InvestmentWidgetLayout: React.FunctionComponent<TInvestWidgetProps> = props => (
+  <section className={styles.investmentWidget} data-test-id="investment-widget">
+    <InvestmentStats eto={props.eto} />
+    {/* in case it's not an investor (issuer/nominee) don't show any button */}
+    {(!props.isAuthorized || props.isInvestor) && <InvestNowButton {...props} />}
+  </section>
+);
+
+const InvestmentWidget = compose<TInvestWidgetProps, IExternalProps>(
+  appConnect<IStateProps, IDispatchProps, IExternalProps>({
     stateToProps: (state, props) => ({
       isAuthorized: selectIsAuthorized(state.auth),
       isAllowedToInvest: selectIsUserVerifiedOnBlockchain(state),
       isInvestor: selectIsInvestor(state),
+      isUsInvestor: selectIsUSInvestor(state),
       nextStateDate: selectEtoOnChainNextStateStartDate(state, props.eto.previewCode),
     }),
     dispatchToProps: (dispatch, props) => ({
       startInvestmentFlow: () => dispatch(actions.investmentFlow.startInvestment(props.eto.etoId)),
     }),
   }),
-)(InvestNowButtonLayout);
+  branch<IStateProps>(props => props.isUsInvestor, renderComponent(USInvestorMessage)),
+)(InvestmentWidgetLayout);
 
-const InvestmentStats: React.FunctionComponent<IInvestmentStatsProps> = ({ eto }) => {
-  if (!eto.contract) {
-    throw new Error("eto.contract cannot be missing at this point");
-  } else {
-    const totalInvestors = eto.contract.totalInvestment.totalInvestors;
-    return (
-      <div>
-        <div className={styles.header}>
-          <div>
-            <Money
-              value={eto.contract.totalInvestment.etherTokenBalance}
-              inputFormat={ENumberInputFormat.ULPS}
-              outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-              valueType={ECurrency.ETH}
-            />
-            <br />
-            <Money
-              value={eto.contract.totalInvestment.euroTokenBalance}
-              inputFormat={ENumberInputFormat.ULPS}
-              outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-              valueType={ECurrency.EUR_TOKEN}
-            />
-          </div>
-          {process.env.NF_MAY_SHOW_INVESTOR_STATS === "1" && (
-            <div>
-              <FormattedMessage
-                id="shared-component.eto-overview.investors"
-                values={{
-                  totalInvestors,
-                  totalInvestorsAsString: (
-                    <FormatNumber
-                      value={totalInvestors}
-                      outputFormat={ENumberOutputFormat.INTEGER}
-                      inputFormat={ENumberInputFormat.FLOAT}
-                    />
-                  ),
-                }}
-              />
-            </div>
-          )}
-        </div>
-        <InvestmentProgress eto={eto} />
-      </div>
-    );
-  }
-};
-
-export const InvestmentWidget: React.FunctionComponent<IInvestmentWidgetProps> = ({
-  eto,
-  isEmbedded,
-}) => (
-  <div className={styles.investmentWidget}>
-    <InvestmentStats eto={eto} />
-    <InvestNowButton eto={eto} isEmbedded={isEmbedded} />
-  </div>
-);
+export { InvestmentWidgetLayout, InvestmentWidget };

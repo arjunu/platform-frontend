@@ -19,7 +19,7 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: px-to-rem(24px);
-  max-width: px-to-rem(330px);
+  max-width: px-to-rem(360px);
   text-align: center;
   text-transform: none;
 }
@@ -33,7 +33,7 @@
 
 .address {
   @include media-breakpoint-up(sm) {
-    max-width: px-to-rem(330px);
+    max-width: px-to-rem(400px);
   }
   margin: 0 auto;
 }

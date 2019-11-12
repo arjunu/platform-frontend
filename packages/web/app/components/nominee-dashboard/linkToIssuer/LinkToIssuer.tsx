@@ -3,7 +3,7 @@ import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { branch, compose, renderComponent, renderNothing, withProps } from "recompose";
 
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import {
   selectNomineeEtoWithCompanyAndContract,
   selectNomineeRequests,
@@ -28,7 +28,7 @@ import * as styles from "./LinkToIssuer.module.scss";
 interface IStateProps {
   nomineeRequest: INomineeRequest | undefined;
   nomineeRequestError: ENomineeRequestError;
-  nomineeEto: TEtoWithCompanyAndContract | undefined;
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
 }
 
 interface IRepeatRequestProps {

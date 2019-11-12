@@ -9,7 +9,7 @@ import { MyNeuWidgetError } from "./MyNeuWidgetError";
 storiesOf("MyNeuWidget", module)
   .add("with funds", () => (
     <MyNeuWidgetLayoutWrapper>
-      <MyNeuWidgetLayout balanceNeu={Q18.mul(123).toString()} balanceEur="5947506" />
+      <MyNeuWidgetLayout balanceNeu={Q18.mul("123").toString()} balanceEur="5947506" />
     </MyNeuWidgetLayoutWrapper>
   ))
   .add("loading", () => (

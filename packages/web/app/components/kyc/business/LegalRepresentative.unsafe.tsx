@@ -14,6 +14,7 @@ import {
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
+import { ECountries } from "../../../utils/enums/countriesEnum";
 import { IIntlProps, injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
@@ -30,6 +31,7 @@ import {
   NONE_KEY,
   unboolify,
 } from "../../shared/forms";
+import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
 import { Tooltip } from "../../shared/tooltips";
@@ -120,6 +122,13 @@ const KYCForm = injectIntlHelpers<FormikProps<IKycLegalRepresentative> & IProps>
         label={formatIntlMessage("form.label.country")}
         name="country"
       />
+      {props.values.country === ECountries.UNITED_STATES && (
+        <FormSelectStateField
+          label={formatIntlMessage("form.label.us-state")}
+          name="usState"
+          data-test-id="kyc-company-legal-representative-us-state"
+        />
+      )}
       <FormSelectCountryField
         label={formatIntlMessage("form.label.place-of-birth")}
         name="placeOfBirth"

@@ -1,0 +1,8 @@
+.widget-button {
+  display: flex;
+  flex-flow: row;
+  width: 100%;
+  margin: 0;
+  align-self: end;
+  justify-content: space-between; //more than one button
+}

@@ -65,7 +65,12 @@ class Tabs extends React.Component<ITabsProps & CommonHtmlProps> {
         key={tabContent.props.routerPath}
         className={className}
         activeClassName="is-active"
-        to={{ pathname: tabContent.props.routerPath, search: window.location.search }}
+        to={{
+          pathname: tabContent.props.routerPath,
+          search: window.location.search,
+          state: { scrollToTop: "prevent" },
+        }}
+        exact={true}
       >
         {tabContent.props.tab}
       </NavLinkConnected>

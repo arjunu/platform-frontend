@@ -13,7 +13,6 @@ import { actions } from "../../modules/actions";
 import { selectBackupCodesVerified, selectVerifiedUserEmail } from "../../modules/auth/selectors";
 import {
   selectAreAgreementsSignedByNominee,
-  selectCanEnableBookBuilding,
   selectCombinedEtoCompanyData,
   selectIsISHAPreviewSubmitted,
   selectIsMarketingDataVisibleInPreview,
@@ -25,11 +24,12 @@ import {
   userHasKycAndEmailVerified,
 } from "../../modules/eto-flow/selectors";
 import {
-  calculateInvestmentAndEtoTermsEtoData,
+  calculateEtoInvestmentTermsData,
+  calculateEtoTermsData,
   calculateMarketingEtoData,
   calculateVotingRightsEtoData,
 } from "../../modules/eto-flow/utils";
-import { TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { isOnChain } from "../../modules/eto/utils";
 import { selectKycRequestStatus } from "../../modules/kyc/selectors";
 import { selectIsLightWallet } from "../../modules/web3/selectors";
@@ -52,6 +52,8 @@ import { BookBuildingWidget } from "./bookBuildingWidget/BookBuildingWidget";
 import { ChooseEtoStartDateWidget } from "./chooseEtoStartDateWidget/ChooseEtoStartDateWidget";
 import { DashboardStep } from "./dashboardStep/DashboardStep";
 import { ETOFormsProgressSection } from "./ETOFormsProgressSection";
+import { ETOFundraisingCounterWidget } from "./ETOFundraisingCounterWidget";
+import { ETOFundraisingStatistics } from "./ETOFundraisingStatistics";
 import { PublishETOWidget } from "./PublishETOWidget";
 import { UploadInvestmentAgreement } from "./signInvestmentAgreementWidget/UploadInvestmentAgreementWidget";
 import { SubmitProposalWidget } from "./submitProposalWidget/SubmitProposalWidget";
@@ -71,8 +73,7 @@ interface IStateProps {
   isLightWallet: boolean;
   userHasKycAndEmailVerified: boolean;
   requestStatus?: EKycRequestStatus;
-  eto?: TEtoWithCompanyAndContract;
-  canEnableBookbuilding: boolean;
+  eto?: TEtoWithCompanyAndContractReadonly;
   combinedEtoCompanyData: ReturnType<typeof selectCombinedEtoCompanyData>;
   isTermSheetSubmitted?: boolean;
   isOfferingDocumentSubmitted: boolean | undefined;
@@ -115,12 +116,11 @@ const SubmitDashBoardSection: React.FunctionComponent<{
   );
 
 interface IEtoStateRender {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   shouldViewSubmissionSection?: boolean;
   isTermSheetSubmitted?: boolean;
   isOfferingDocumentSubmitted?: boolean;
   isISHASubmitted: boolean | undefined;
-  canEnableBookbuilding: boolean;
   offeringDocumentType: EOfferingDocumentType | undefined;
   shouldViewEtoSettings: boolean;
   shouldViewMarketingSubmissionSection: boolean;
@@ -132,7 +132,6 @@ const EtoDashboardStateViewComponent: React.FunctionComponent<IEtoStateRender> =
   isTermSheetSubmitted,
   isOfferingDocumentSubmitted,
   isISHASubmitted,
-  canEnableBookbuilding,
   offeringDocumentType,
   shouldViewEtoSettings,
   shouldViewMarketingSubmissionSection,
@@ -140,6 +139,10 @@ const EtoDashboardStateViewComponent: React.FunctionComponent<IEtoStateRender> =
   const dashboardTitle = (
     <ETOIssuerState eto={eto} size={EProjectStatusSize.LARGE} layout={EProjectStatusLayout.BLACK} />
   );
+
+  const shouldDisplayStatistics =
+    isOnChain(eto) &&
+    [EETOStateOnChain.Whitelist, EETOStateOnChain.Public].includes(eto.contract.timedState);
 
   switch (eto.state) {
     case EEtoState.PREVIEW:
@@ -176,9 +179,7 @@ const EtoDashboardStateViewComponent: React.FunctionComponent<IEtoStateRender> =
     case EEtoState.LISTED:
       return (
         <>
-          {canEnableBookbuilding && (
-            <BookBuildingWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
-          )}
+          <BookBuildingWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
 
           {!isOfferingDocumentSubmitted &&
             (offeringDocumentType === EOfferingDocumentType.PROSPECTUS ? (
@@ -197,19 +198,22 @@ const EtoDashboardStateViewComponent: React.FunctionComponent<IEtoStateRender> =
     case EEtoState.PROSPECTUS_APPROVED:
       return (
         <>
-          {canEnableBookbuilding && (
-            <BookBuildingWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
-          )}
+          <BookBuildingWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <ETOFormsProgressSection shouldViewEtoSettings={shouldViewSubmissionSection} />
         </>
       );
     case EEtoState.ON_CHAIN:
       return (
         <>
-          <UploadInvestmentAgreement columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
-          {canEnableBookbuilding && (
-            <BookBuildingWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
+          {shouldDisplayStatistics && (
+            <>
+              <ETOFundraisingStatistics eto={eto} columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
+              <ETOFundraisingCounterWidget eto={eto} columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
+            </>
           )}
+
+          <UploadInvestmentAgreement columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
+          <BookBuildingWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <ChooseEtoStartDateWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <ETOFormsProgressSection shouldViewEtoSettings={shouldViewSubmissionSection} />
         </>
@@ -313,7 +317,6 @@ const EtoDashboard = compose<React.FunctionComponent>(
       userHasKycAndEmailVerified: userHasKycAndEmailVerified(s),
       requestStatus: selectKycRequestStatus(s),
       eto: selectIssuerEtoWithCompanyAndContract(s),
-      canEnableBookbuilding: selectCanEnableBookBuilding(s),
       isTermSheetSubmitted: selectIsTermSheetSubmitted(s),
       isOfferingDocumentSubmitted: selectIsOfferingDocumentSubmitted(s),
       isISHASubmitted: selectIsISHAPreviewSubmitted(s),
@@ -346,18 +349,24 @@ const EtoDashboard = compose<React.FunctionComponent>(
   withContainer(Layout),
   withProps<IComputedProps, IStateProps>(props => {
     const marketingFormsProgress = calculateMarketingEtoData(props.combinedEtoCompanyData);
-    const etoInvestmentAndEtoTermsFormsProgress = calculateInvestmentAndEtoTermsEtoData(
+    const etoTermsFormProgress = calculateEtoTermsData(props.combinedEtoCompanyData);
+    const investmentTermsFormProgress = calculateEtoInvestmentTermsData(
       props.combinedEtoCompanyData,
     );
     const etoVotingRightsFormProgress = calculateVotingRightsEtoData(props.combinedEtoCompanyData);
 
     const shouldViewEtoSettings = marketingFormsProgress >= SUBMIT_PROPOSAL_THRESHOLD;
 
-    const isInvestmentAndEtoTermsFilledWithAllRequired =
-      etoInvestmentAndEtoTermsFormsProgress >= SUBMIT_PROPOSAL_THRESHOLD;
+    const isInvestmentFilledWithAllRequired =
+      investmentTermsFormProgress >= SUBMIT_PROPOSAL_THRESHOLD;
+
+    const isEtoTermsFilledWithAllRequired = etoTermsFormProgress >= SUBMIT_PROPOSAL_THRESHOLD;
 
     const isVotingRightsFilledWithAllRequired =
       etoVotingRightsFormProgress >= SUBMIT_PROPOSAL_THRESHOLD;
+
+    const isInvestmentAndEtoTermsFilledWithAllRequired =
+      isInvestmentFilledWithAllRequired && isEtoTermsFilledWithAllRequired;
 
     const shouldViewSubmissionSection =
       isInvestmentAndEtoTermsFilledWithAllRequired && isVotingRightsFilledWithAllRequired;
@@ -375,21 +384,22 @@ const EtoDashboard = compose<React.FunctionComponent>(
       shouldViewSubmissionSection,
       shouldViewMarketingSubmissionSection,
       etoStep: props.eto
-        ? selectEtoStep(
+        ? selectEtoStep({
             isVerificationSectionDone,
-            props.eto.state,
-            isOnChain(props.eto) ? props.eto.contract.timedState : undefined,
             shouldViewEtoSettings,
-            props.isMarketingDataVisibleInPreview,
-            props.isTermSheetSubmitted,
             isVotingRightsFilledWithAllRequired,
-            isInvestmentAndEtoTermsFilledWithAllRequired,
-            props.isOfferingDocumentSubmitted,
-            props.isISHASubmitted,
-            !!props.eto.nominee,
-            props.areAgreementsSignedByNominee,
-            props.preEtoStartDate,
-          )
+            isEtoTermsFilledWithAllRequired,
+            isInvestmentFilledWithAllRequired,
+            etoState: props.eto.state,
+            etoOnChainState: isOnChain(props.eto) ? props.eto.contract.timedState : undefined,
+            isMarketingDataVisibleInPreview: props.isMarketingDataVisibleInPreview,
+            isTermSheetSubmitted: props.isTermSheetSubmitted,
+            isOfferingDocumentSubmitted: props.isOfferingDocumentSubmitted,
+            isISHASubmitted: props.isISHASubmitted,
+            isNomineeLinked: !!props.eto.nominee,
+            areAgreementsSignedByNominee: props.areAgreementsSignedByNominee,
+            preEtoStartDate: props.preEtoStartDate,
+          })
         : EEtoStep.VERIFICATION,
     };
   }),

@@ -2,21 +2,13 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { TCompanyEtoData } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { testEto } from "../../../../test/fixtures";
 import {
   EEtoDocumentType,
   TEtoDocumentTemplates,
 } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { EOfferingDocumentType } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { DocumentsWidgetLayout } from "./DocumentsWidget";
-
-const marketingLinks: TCompanyEtoData["marketingLinks"] = [
-  {
-    title: "Pitch Deck",
-    url:
-      "https://docs.google.com/presentation/d/14mRlEDSNAMWybfgYFJUJyE8oEps0VJPIoaYfmmpZTmw/edit#slide=id.g3e534cab92_0_70",
-  },
-];
 
 const documents: TEtoDocumentTemplates = {
   QmRnodXSfXVpMV2PTtJFU5wyNGi1Q8gCt8JKZAU1L2bZ6u: {
@@ -83,19 +75,46 @@ const templates: TEtoDocumentTemplates = {
 storiesOf("Document/DocumentsWidget", module)
   .add("default", () => (
     <DocumentsWidgetLayout
-      etoTemplates={templates}
-      etoDocuments={documents}
-      companyMarketingLinks={marketingLinks}
+      eto={{
+        ...testEto,
+        templates,
+        documents,
+        product: {
+          ...testEto.product,
+          offeringDocumentType: EOfferingDocumentType.MEMORANDUM,
+        },
+      }}
       downloadDocument={action("download document")}
-      offeringDocumentType={EOfferingDocumentType.MEMORANDUM}
+      isUserFullyVerified={true}
+    />
+  ))
+  .add("seen by non verified user", () => (
+    <DocumentsWidgetLayout
+      eto={{
+        ...testEto,
+        templates,
+        documents,
+        product: {
+          ...testEto.product,
+          offeringDocumentType: EOfferingDocumentType.MEMORANDUM,
+        },
+      }}
+      downloadDocument={action("download document")}
+      isUserFullyVerified={false}
     />
   ))
   .add("retail ETO", () => (
     <DocumentsWidgetLayout
-      etoTemplates={templates}
-      etoDocuments={documents}
-      companyMarketingLinks={marketingLinks}
+      eto={{
+        ...testEto,
+        templates,
+        documents,
+        product: {
+          ...testEto.product,
+          offeringDocumentType: EOfferingDocumentType.PROSPECTUS,
+        },
+      }}
       downloadDocument={action("download document")}
-      offeringDocumentType={EOfferingDocumentType.PROSPECTUS}
+      isUserFullyVerified={true}
     />
   ));

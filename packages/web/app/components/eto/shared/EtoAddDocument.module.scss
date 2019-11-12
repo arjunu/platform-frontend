@@ -1,12 +1,20 @@
 .dropzone {
   cursor: pointer;
-}
+  display: flex;
+  border-radius: px-to-rem(4px);
+  border: dashed 2px $neu-gull-gray;
+  background-color: $neu-white-two;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
-.dropzone-disabled {
-  cursor: default;
+  &:hover,
+  &:focus {
+    border: solid 2px $neu-bitter-lemon;
+  }
 }
 
 .invisible {
-  width: inherit;
-  height: inherit;
+  width: px-to-rem(162px);
+  height: px-to-rem(162px);
 }

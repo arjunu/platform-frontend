@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { CommonHtmlProps } from "../../../types";
-import { isZero } from "../../../utils/Number.utils";
+import { isZero } from "../../../utils/NumberUtils";
 import { EColumnSpan } from "../../layouts/Container";
 import { AccountAddressWithHistoryLink } from "../../shared/AccountAddress";
 import { AccountBalance } from "../../shared/AccountBalance";
@@ -58,13 +58,13 @@ export const UnlockedETHWallet: React.FunctionComponent<
         data-test-id="wallet-balance.ether"
         actions={[
           {
-            name: <FormattedMessage id="shared-component.account-balance.withdraw" />,
+            name: <FormattedMessage id="shared-component.account-balance.send" />,
             onClick: withdrawEth,
             disabled: process.env.NF_WITHDRAW_ENABLED !== "1" || isZero(ethAmount),
             "data-test-id": "wallet.eth.withdraw.button",
           },
           {
-            name: <FormattedMessage id="shared-component.account-balance.deposit" />,
+            name: <FormattedMessage id="shared-component.account-balance.receive" />,
             onClick: depositEth,
             disabled: process.env.NF_WITHDRAW_ENABLED !== "1",
             "data-test-id": "wallet.eth.transfer.button",

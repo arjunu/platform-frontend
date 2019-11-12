@@ -8,10 +8,15 @@ import { IAppState } from "../../store";
 import { nonNullable } from "../../utils/nonNullable";
 import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
 import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
-import { selectAgreementsStatus, selectEtoContract, selectEtoSubState } from "../eto/selectors";
+import {
+  selectAgreementsStatus,
+  selectEtoContract,
+  selectEtoSubState,
+  selectInvestmentAgreement,
+} from "../eto/selectors";
 import {
   EEtoAgreementStatus,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
   TOfferingAgreementsStatus,
 } from "../eto/types";
 import { selectRouter } from "../routing/selectors";
@@ -79,7 +84,7 @@ const selectNomineeEtoWithCompanyAndContractInternal = createSelector(
 
 export const selectNomineeEtoWithCompanyAndContract = (
   state: IAppState,
-): TEtoWithCompanyAndContract | undefined => {
+): TEtoWithCompanyAndContractReadonly | undefined => {
   const eto = selectActiveNomineeEto(state);
 
   if (eto) {
@@ -113,6 +118,7 @@ export const selectNomineeEtoDocumentsStatus = (
       return {
         [EAgreementType.RAAA]: EEtoAgreementStatus.NOT_DONE,
         [EAgreementType.THA]: EEtoAgreementStatus.NOT_DONE,
+        [EAgreementType.ISHA]: EEtoAgreementStatus.NOT_DONE,
       };
     }
 
@@ -125,13 +131,40 @@ export const selectNomineeEtoDocumentsStatus = (
   return undefined;
 };
 
+export const selectIsISHASignedByIssuer = (state: IAppState) => {
+  const eto = selectNomineeEtoWithCompanyAndContract(state);
+
+  if (eto) {
+    const investmentAgreement = selectInvestmentAgreement(state, eto.previewCode);
+
+    if (investmentAgreement) {
+      return investmentAgreement.isLoading ? undefined : !!investmentAgreement.url;
+    }
+  }
+
+  return undefined;
+};
+
 export const selectNomineeTaskStep = createSelector(
   selectIsVerificationFullyDone,
   selectNomineeEtoWithCompanyAndContract,
   selectIsBankAccountVerified,
   selectNomineeEtoDocumentsStatus,
-  (verificationIsComplete, nomineeEto, isBankAccountVerified, documentsStatus) =>
-    getNomineeTaskStep(verificationIsComplete, nomineeEto, isBankAccountVerified, documentsStatus),
+  selectIsISHASignedByIssuer,
+  (
+    verificationIsComplete,
+    nomineeEto,
+    isBankAccountVerified,
+    documentsStatus,
+    isISHASignedByNominee,
+  ) =>
+    getNomineeTaskStep(
+      verificationIsComplete,
+      nomineeEto,
+      isBankAccountVerified,
+      documentsStatus,
+      isISHASignedByNominee,
+    ),
 );
 
 export const selectActiveEtoPreviewCodeFromQueryString = createSelector(

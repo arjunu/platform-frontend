@@ -10,6 +10,7 @@ import {
   assertLinkNomineeStep,
   assertLinkNomineeStepAwaitingApprovalState,
   assertLinkNomineeStepAwaitingRequestState,
+  assertPublishListingPage,
   assertUploadSignedTermsheetStep,
   cancelNominee,
   fillAndAssert,
@@ -21,6 +22,8 @@ import { etoTermsRequiredForm, investmentTermsRequiredForm, votingRights } from 
 
 const fillEtoToLinkNomineeStep = (issuerAddress: string) => {
   fillRequiredCompanyInformation();
+
+  assertPublishListingPage();
 
   // fill Eto Terms and Investment Terms
   fillAndAssert("eto-progress-widget-investment-terms", investmentTermsRequiredForm);

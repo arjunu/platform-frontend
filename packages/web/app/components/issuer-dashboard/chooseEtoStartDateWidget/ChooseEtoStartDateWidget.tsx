@@ -1,5 +1,3 @@
-import BigNumber from "bignumber.js";
-import * as cn from "classnames";
 import * as moment from "moment";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
@@ -22,28 +20,24 @@ import { ETxSenderState } from "../../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../../modules/tx/types";
 import { appConnect } from "../../../store";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight } from "../../shared/buttons/index";
+import { ButtonArrowRight, ButtonWidth } from "../../shared/buttons/index";
+import {
+  DashboardLoadingWidget,
+  DashboardWidget,
+} from "../../shared/dashboard-widget/DashboardWidget";
 import { DatePicker } from "../../shared/DatePicker";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryPanel } from "../../shared/errorBoundary/ErrorBoundaryPanel";
 import { FormError } from "../../shared/forms/index";
-import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
-import { Panel } from "../../shared/Panel";
-import { FancyTimeLeft, TimeLeft } from "../../shared/TimeLeft.unsafe";
-import {
-  calculateTimeLeft,
-  localTime,
-  timeZone,
-  utcTime,
-  weekdayLocal,
-  weekdayUTC,
-} from "../../shared/utils";
+import { TimeLeft } from "../../shared/TimeLeft.unsafe";
+import { TimeLeftWithUTC } from "../../shared/TimeLeftWithUTC";
+import { calculateTimeLeft } from "../../shared/utils";
 
-import * as styles from "../../eto/EtoContentWidget.module.scss";
+import * as styles from "./ChooseEtoStartDateWidget.module.scss";
 
 interface IStateProps {
   etoDate?: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   newDateSaving: boolean;
   transactionMining: boolean;
   issuerEtoLoading: boolean;
@@ -53,7 +47,7 @@ interface IStateProps {
 
 interface IChangeDateStateProps {
   etoDate: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   canChangeEtoStartDate: boolean;
 }
 
@@ -68,7 +62,7 @@ interface IDispatchProps {
 
 interface IDateChooserProps {
   etoDate?: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   uploadDate: (time: moment.Moment) => void;
   canChangeEtoStartDate: boolean;
 }
@@ -106,14 +100,14 @@ const ChangeDateCountdown: React.ComponentType<IChangeDateCountdown> = ({
 }) => {
   if (etoDate) {
     return (
-      <div className={cn(styles.text)}>
+      <p className="mb-0">
         <FormattedMessage id="eto.status.onchain.change-eto-date-countdown-text" />{" "}
         <TimeLeft
           finalTime={moment(etoDate).subtract(minOffsetPeriodInMinutes, "minutes")}
           asUtc={true}
           refresh={true}
         />
-      </div>
+      </p>
     );
   } else {
     return null;
@@ -157,17 +151,17 @@ const DateChooserOpen = ({
       </FormGroup>
       <div className={styles.widgetButton}>
         <ButtonArrowRight
+          width={ButtonWidth.NO_PADDING}
           onClick={closeDatePicker}
           data-test-id="eto-settings-start-date-cancel"
-          innerClassName={styles.buttonOverride}
         >
           <FormattedMessage id="eto.settings.cancel-change-eto-start-date" />
         </ButtonArrowRight>
         <ButtonArrowRight
+          width={ButtonWidth.NO_PADDING}
           onClick={uploadDate}
           disabled={!(newDateIsSet && newDateIsValid(newEtoDate))}
           data-test-id="eto-settings-start-date-confirm"
-          innerClassName={styles.buttonOverride}
         >
           <FormattedMessage id="eto.settings.confirm-change-eto-start-date" />
         </ButtonArrowRight>
@@ -183,24 +177,22 @@ const DateChooserClosed = ({
 }: IDateChooserClosedProps) => (
   <>
     <ChangeDateCountdown etoDate={etoDate} minOffsetPeriodInMinutes={minOffsetPeriodInMinutes} />
-    <div className={styles.widgetButton}>
-      <ButtonArrowRight
-        onClick={openDatePicker}
-        data-test-id="eto-settings-start-date-open-date-picker"
-        innerClassName={styles.buttonOverride}
-      >
-        {etoDate ? (
-          <FormattedMessage id="eto.settings.change-eto-start-date" />
-        ) : (
-          <FormattedMessage id="eto.settings.set-eto-start-date" />
-        )}
-      </ButtonArrowRight>
-    </div>
+    <ButtonArrowRight
+      className="m-auto"
+      onClick={openDatePicker}
+      data-test-id="eto-settings-start-date-open-date-picker"
+    >
+      {etoDate ? (
+        <FormattedMessage id="eto.settings.change-eto-start-date" />
+      ) : (
+        <FormattedMessage id="eto.settings.set-eto-start-date" />
+      )}
+    </ButtonArrowRight>
   </>
 );
 
 class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserState> {
-  minOffsetPeriodInMinutes = Math.floor(this.props.minOffsetPeriod.div(60).toNumber());
+  minOffsetPeriodInMinutes = Math.floor(this.props.minOffsetPeriod / 60);
   // dates get rounded down. Add 3 minutes so that it shows "in 14 days" instead of "in 13 days 23 hours"
   defaultOffsetInMinutes = this.minOffsetPeriodInMinutes * 2 + 3;
 
@@ -211,7 +203,8 @@ class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserSta
       ? moment.utc(this.props.etoDate)
       : moment()
           .utc()
-          .add(this.defaultOffsetInMinutes, "minutes"),
+          .add(this.defaultOffsetInMinutes, "minutes")
+          .startOf("minute"),
   };
 
   closeDatePicker = () => {
@@ -263,7 +256,7 @@ class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserSta
     {
       if (!canChangeEtoStartDate) {
         return (
-          <p className={cn(styles.text)}>
+          <p className="mb-0">
             <FormattedMessage id="eto.settings.changing-eto-start-date-not-possible" />
           </p>
         );
@@ -293,70 +286,44 @@ class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserSta
   }
 }
 
-const ChangeDate: React.ComponentType<IChangeDateStateProps & IDispatchProps> = props => {
-  const timeLeft = calculateTimeLeft(props.etoDate, true) > 0;
-  return (
-    <>
-      <div className={styles.etoDateWrapper}>
-        {timeLeft && (
-          <>
-            <span className={styles.etoTimeLeftStart}>
-              <FormattedMessage id="eto.settings.set-eto-start-date-time-left" />:
-            </span>
-            <FancyTimeLeft finalTime={props.etoDate} asUtc={true} refresh={true} />
-          </>
-        )}
-        <table className={cn(styles.etoDate, { [styles.etoDateBold]: !timeLeft })}>
-          <tbody>
-            <tr>
-              <td>UTC:</td>
-              <td data-test-id="eto-settings-display-start-date-utc">
-                {`${weekdayUTC(props.etoDate)}, ${utcTime(props.etoDate)}`}
-              </td>
-            </tr>
-            <tr>
-              <td>{`${timeZone()}: `}</td>
-              <td>{`${weekdayLocal(props.etoDate)}, ${localTime(props.etoDate)}`}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <DateChooser {...props} />
-    </>
-  );
-};
+const ChangeDate: React.ComponentType<IChangeDateStateProps & IDispatchProps> = props => (
+  <>
+    <TimeLeftWithUTC
+      countdownDate={props.etoDate}
+      label={<FormattedMessage id="eto.settings.set-eto-start-date-time-left" />}
+    />
+    <DateChooser {...props} />
+  </>
+);
 
 const EtoStartDateWidgetComponent: React.ComponentType<
   IStateProps & IDispatchProps & IExternalProps
-> = ({ etoDate, ...props }) => (
-  <WidgetPanel columnSpan={props.columnSpan}>
-    <div className={styles.content} data-test-id="eto-settings-set-start-date">
-      <p className={styles.text}>
-        <FormattedHTMLMessage
-          tagName="span"
-          id="settings.choose-pre-eto-date.book-building-will-stop"
-          values={{ minOffsetPeriod: props.minOffsetPeriod.div(DAY).toNumber() }}
-        />
-      </p>
-      {etoDate ? (
-        <ChangeDate etoDate={etoDate} {...props} />
-      ) : (
-        <DateChooser etoDate={etoDate} {...props} />
-      )}
-    </div>
-  </WidgetPanel>
+> = ({ etoDate, columnSpan, ...props }) => (
+  <DashboardWidget
+    title={<FormattedMessage id="eto.settings.eto-start-date" />}
+    text={
+      <FormattedHTMLMessage
+        tagName="span"
+        id="settings.choose-pre-eto-date.book-building-will-stop"
+        values={{ minOffsetPeriod: props.minOffsetPeriod / DAY }}
+      />
+    }
+    columnSpan={columnSpan}
+    data-test-id="eto-settings-set-start-date"
+  >
+    {etoDate ? (
+      <ChangeDate etoDate={etoDate} {...props} />
+    ) : (
+      <DateChooser etoDate={etoDate} {...props} />
+    )}
+  </DashboardWidget>
 );
 
 const WidgetLoading: React.ComponentType<IExternalProps> = ({ columnSpan }) => (
-  <WidgetPanel columnSpan={columnSpan}>
-    <LoadingIndicator />
-  </WidgetPanel>
-);
-
-const WidgetPanel: React.ComponentType<IExternalProps> = ({ columnSpan, children }) => (
-  <Panel headerText={<FormattedMessage id="eto.settings.eto-start-date" />} columnSpan={columnSpan}>
-    {children}
-  </Panel>
+  <DashboardLoadingWidget
+    columnSpan={columnSpan}
+    title={<FormattedMessage id="eto.settings.eto-start-date" />}
+  />
 );
 
 const ChooseEtoStartDateWidget = compose<
@@ -406,6 +373,10 @@ const ChooseEtoStartDateWidget = compose<
     props =>
       !props.areAgreementsSignedByNominee &&
       !(props.etoDate && calculateTimeLeft(props.etoDate, true) > 0),
+    renderNothing,
+  ),
+  branch<IStateProps>(
+    props => !!props.etoDate && calculateTimeLeft(props.etoDate, true) < 0,
     renderNothing,
   ),
   branch<IStateProps>(

@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import * as React from "react";
 import { spy } from "sinon";
 
-import { EKeys } from "../../../utils/enums/keys.enum";
+import { EKeys } from "../../../utils/enums/keysEnum";
 import { useButtonRole } from "./useButtonRole";
 
 type TExternalProps = {

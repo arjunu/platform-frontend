@@ -8,7 +8,7 @@ import { PayoutWidget } from "./my-portfolio-widget/PayoutWidget";
 import * as styles from "./MyPortfolioWidget.module.scss";
 
 export const MyPortfolioWidget: React.FunctionComponent = () => (
-  <Panel className={styles.panelFix} columnSpan={EColumnSpan.TWO_COL}>
+  <Panel className={styles.myPortfolioWidget} columnSpan={EColumnSpan.TWO_COL}>
     <PayoutWidget />
     <MyNeuWidget />
   </Panel>

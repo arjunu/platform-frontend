@@ -1,0 +1,9 @@
+.group-wrapper {
+  display: grid;
+  grid-template: auto / 50% 50%;
+  grid-gap: .1rem;
+}
+
+.label {
+  @include font-label;
+}

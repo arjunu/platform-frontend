@@ -4,11 +4,11 @@ import { differenceWith } from "lodash/fp";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Creatable as ReactSelectCreatable, Option } from "react-select";
-import Select from "react-virtualized-select";
 
 import { CommonHtmlProps } from "../../../types";
 import { FormFieldError } from "../../shared/forms";
 import { FormFieldLabel } from "../../shared/forms/fields/FormFieldLabel";
+import { VirtualizedSelect } from "../../shared/forms/fields/VirtualizedSelect";
 import { ETagSize, Tag } from "../../shared/Tag";
 
 import * as checkIcon from "../../../assets/img/inline_icons/close_no_border.svg";
@@ -54,7 +54,7 @@ const TagsFormEditor: React.FunctionComponent<ICombinedProps & IInternalProps> =
   onChange,
 }) => (
   <div className={cn(styles.tagWidget, className)} data-test-id={`form.name.${name}`}>
-    <Select
+    <VirtualizedSelect
       disabled={disabled}
       options={differenceWith<Option, string>((o, v) => o.value === v, options, values)}
       clearable={false}

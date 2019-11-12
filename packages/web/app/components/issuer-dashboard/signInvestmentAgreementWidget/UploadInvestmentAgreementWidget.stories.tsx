@@ -22,9 +22,8 @@ const data = {
   agreementTemplate: doc,
   uploadedAgreement: doc,
   downloadAgreementTemplate: action("download agreement template"),
-  goToWallet: action("go to wallet"),
 };
 
 storiesOf("ETO/UploadInvestmentAgreement", module)
   .add("upload agreement template", () => <UploadInvestmentAgreementLayout {...data} />)
-  .add("eto completed", () => <EtoCompletedWidgetLayout goToWallet={data.goToWallet} />);
+  .add("eto completed", () => <EtoCompletedWidgetLayout />);

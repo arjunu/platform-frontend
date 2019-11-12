@@ -22,6 +22,8 @@ import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserFullyVerified } from "../auth/selectors";
 import { loadEtoContract } from "../eto/sagas";
+import { EETOStateOnChain } from "../eto/types";
+import { isOnChain } from "../eto/utils";
 import { loadBankAccountDetails } from "../kyc/sagas";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../sagasUtils";
 import {
@@ -56,6 +58,14 @@ export function* loadNomineeTaskData({
       // wait for active eto to be set
       // even when eto is not yet linked `setActiveNomineeEto` get's dispatched
       yield take(actions.nomineeFlow.setActiveNomineeEto);
+
+      const eto: ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
+        selectNomineeEtoWithCompanyAndContract,
+      );
+
+      if (eto && isOnChain(eto) && eto.contract.timedState === EETOStateOnChain.Signing) {
+        yield neuCall(loadNomineeSignedInvestmentAgreements);
+      }
 
       const taskData = yield all({
         nomineeRequests: apiEtoNomineeService.getNomineeRequests(),
@@ -168,6 +178,16 @@ export function* loadNomineeAgreements(): Iterator<any> {
 
   if (nomineeEto) {
     yield put(actions.eto.loadEtoAgreementsStatus(nomineeEto));
+  }
+}
+
+export function* loadNomineeSignedInvestmentAgreements(): Iterator<any> {
+  const nomineeEto: ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
+    selectNomineeEtoWithCompanyAndContract,
+  );
+
+  if (nomineeEto) {
+    yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto));
   }
 }
 

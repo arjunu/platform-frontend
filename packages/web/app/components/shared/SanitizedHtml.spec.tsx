@@ -40,7 +40,7 @@ describe("<SanitizedHtml />", () => {
       </ol>
     `;
 
-    const expectedHtml = `<div>
+    const expectedHtml = `<span>
       <h2>Heading 2</h2>
       <h3>Heading 3</h3>
       <h4>Heading 4</h4>
@@ -62,7 +62,7 @@ describe("<SanitizedHtml />", () => {
         <li>ordered list 1</li>
         <li>ordered list 2</li>
       </ol>
-    </div>`;
+    </span>`;
 
     const component = shallow(<SanitizedHtml unsafeHtml={html} />);
 
@@ -84,7 +84,7 @@ describe("<SanitizedHtml />", () => {
       <img src="https://neufund.io/image-id" />
     `;
 
-    const expectedHtml = `<div>
+    const expectedHtml = `<span>
       <img src="https://documents.neufund.io/image-id" alt="Scutums assimilant" />
       
       <img src="https://web3.com/images/image-id" />
@@ -94,7 +94,7 @@ describe("<SanitizedHtml />", () => {
       
       
       
-    </div>`;
+    </span>`;
 
     const component = shallow(<SanitizedHtml unsafeHtml={html} />);
 
@@ -112,13 +112,13 @@ describe("<SanitizedHtml />", () => {
       <img src="http://documents.neufund.io/images/image-id" />
     `;
 
-    const expectedHtml = `<div>
+    const expectedHtml = `<span>
       <img src="https://fb.io/image-id" alt="Scutums assimilant" />
       
       <img src="/images/image-id" />
       
       
-    </div>`;
+    </span>`;
 
     const component = shallow(<SanitizedHtml unsafeHtml={html} />);
 
@@ -146,7 +146,7 @@ describe("<SanitizedHtml />", () => {
       <textarea>Nifty</textarea>
     `;
 
-    const expectedHtml = `<div>
+    const expectedHtml = `<span>
       Heading 1
 
       span element
@@ -164,7 +164,7 @@ describe("<SanitizedHtml />", () => {
       
       
       
-    </div>`;
+    </span>`;
 
     const component = shallow(<SanitizedHtml unsafeHtml={html} />);
 

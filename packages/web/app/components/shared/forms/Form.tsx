@@ -1,5 +1,5 @@
 // tslint:disable-next-line:import-blacklist
-import { Form as FormikForm, Formik, FormikConfig, FormikProps } from "formik";
+import { Form as FormikForm, Formik, FormikConfig, FormikErrors, FormikProps } from "formik";
 import { difference, isEmpty } from "lodash/fp";
 import * as React from "react";
 
@@ -15,7 +15,11 @@ type TLayoutProps<Values = {}> = { children: React.ReactNode } & CommonHtmlProps
   TDataTestId &
   FormikProps<Values>;
 
-const useFocusFirstInvalid = (isSubmitting: boolean, isValid: boolean) => {
+const useFocusFirstInvalid = <Values extends {}>(
+  isSubmitting: boolean,
+  isValid: boolean,
+  formikErrors: FormikErrors<Values>,
+) => {
   const logger = useLogger();
   const previousIsSubmitting = usePrevious(isSubmitting);
 
@@ -28,7 +32,8 @@ const useFocusFirstInvalid = (isSubmitting: boolean, isValid: boolean) => {
       if (invalidInput) {
         invalidInput.focus();
       } else {
-        logger.warn(`It's not possible to focus invalid field`);
+        const errors = JSON.stringify(formikErrors);
+        logger.warn(`It's not possible to focus invalid field! Errors: ${errors}`);
       }
     }
   }, [isSubmitting, isValid]);
@@ -40,8 +45,9 @@ const FormLayout = <Values extends {}>({
   "data-test-id": dataTestId,
   isSubmitting,
   isValid,
+  errors,
 }: TLayoutProps<Values>) => {
-  useFocusFirstInvalid(isSubmitting, isValid);
+  useFocusFirstInvalid<Values>(isSubmitting, isValid, errors);
 
   return (
     <FormikForm className={className} data-test-id={dataTestId}>
@@ -85,18 +91,24 @@ const Form = <Values extends {}>({
   className,
   initialValues,
   validationSchema,
+  validate,
   "data-test-id": dataTestId,
   ...props
 }: TFormProps<Values>) => (
   <>
-    {process.env.NODE_ENV === "development" && (
+    {process.env.NODE_ENV === "development" && validationSchema && (
       <SchemaFieldsGuard<Values>
         {...props}
         validationSchema={validationSchema}
         initialValues={initialValues}
       />
     )}
-    <Formik<Values> {...props} validationSchema={validationSchema} initialValues={initialValues}>
+    <Formik<Values>
+      {...props}
+      validate={validate}
+      validationSchema={validationSchema}
+      initialValues={initialValues}
+    >
       {formikProps => (
         <FormLayout {...formikProps} className={className} data-test-id={dataTestId}>
           {children}

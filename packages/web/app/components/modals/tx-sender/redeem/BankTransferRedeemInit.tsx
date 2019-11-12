@@ -182,6 +182,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
               returnInvalidValues={true}
               showUnits={true}
             />
+
             <section className={cn(styles.section, "mt-4")}>
               <Tooltip
                 content={
@@ -193,7 +194,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                       // ex value, convertToBigNumber(0.005) * 100 = 0.5%
                       fee: (
                         <FormatNumber
-                          value={new BigNumber(bankFee).mul(100)}
+                          value={new BigNumber(bankFee).mul("100")}
                           inputFormat={ENumberInputFormat.ULPS}
                           outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
                           roundingMode={ERoundingMode.DOWN}
@@ -221,6 +222,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                 )}
               </span>
             </section>
+
             <section className={styles.section}>
               <Heading level={3} decorator={false} size={EHeadingSize.SMALL}>
                 <FormattedMessage id="bank-transfer.redeem.init.total-redeemed" />
@@ -239,10 +241,13 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                 )}
               </span>
             </section>
+
             <VerifiedBankAccount withBorder={true} onVerify={verifyBankAccount} />
+
             <p className="text-warning mx-4 text-center">
               <FormattedMessage id="bank-transfer.redeem.init.note" />
             </p>
+
             <section className="text-center">
               <ButtonArrowRight
                 data-test-id="bank-transfer.reedem-init.continue"

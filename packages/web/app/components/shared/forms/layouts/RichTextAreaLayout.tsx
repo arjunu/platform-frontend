@@ -94,13 +94,13 @@ const RichTextAreaLayoutComponent: React.FunctionComponent<
         editor={InlineEditor}
         disabled={disabled}
         data={value}
-        onInit={(editor: TCkEditor) => {
-          setEditor(editor);
+        onInit={(ckEditor: TCkEditor) => {
+          setEditor(ckEditor);
 
-          editor.plugins.get("FileRepository").createUploadAdapter = uploadAdapterFactory;
+          ckEditor.plugins.get("FileRepository").createUploadAdapter = uploadAdapterFactory;
         }}
-        onChange={(_: unknown, editor: TCkEditor) => {
-          onChange(editor.getData());
+        onChange={(_: unknown, ckEditor: TCkEditor) => {
+          onChange(ckEditor.getData());
         }}
       />
     </div>

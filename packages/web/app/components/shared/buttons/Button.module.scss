@@ -37,12 +37,6 @@ $_active-color: lighten($_hover-color, 20%);
     position: relative;
     text-decoration: inherit;
     transition: 200ms ease-out background-color, color;
-
-    // makes button same in height with different content (for e.g. loading indicator)
-    &::before {
-      content: "\A0"; // space character
-      width: 0;
-    }
   }
 
   &:disabled,
@@ -76,6 +70,7 @@ $_active-color: lighten($_hover-color, 20%);
       }
 
       border: px-to-rem(2px) solid currentColor;
+      border-radius: inherit;
     }
 
     &:hover,
@@ -132,6 +127,18 @@ $_active-color: lighten($_hover-color, 20%);
 
     &:active {
       color: $_active-color;
+    }
+
+    &#{$button}-neon {
+      &:disabled {
+        &,
+        &:hover,
+        & > .content {
+          color: $neu-gull-gray;
+          background-color: $neu-pale-grey;
+          border-radius: inherit;
+        }
+      }
     }
   }
 
@@ -237,6 +244,11 @@ $_active-color: lighten($_hover-color, 20%);
 
     :local(.content) {
       border-color: $neu-neon-yellow;
+    }
+
+    &:hover {
+      color: $neu-greyish-brown;
+      background-color: $neu-bitter-lemon;
     }
 
     &:disabled {

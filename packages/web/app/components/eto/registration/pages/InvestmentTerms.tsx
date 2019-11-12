@@ -1,4 +1,3 @@
-import BigNumber from "bignumber.js";
 import { FormikConsumer } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
@@ -17,6 +16,7 @@ import {
   calcNumberOfTokens,
   calcShareAndTokenPrice,
 } from "../../../../lib/api/eto/EtoUtils";
+import { TBigNumberVariants } from "../../../../lib/web3/types";
 import { actions } from "../../../../modules/actions";
 import {
   selectIssuerEto,
@@ -77,7 +77,7 @@ interface IDispatchProps {
 type IProps = IExternalProps & IStateProps & IDispatchProps;
 
 interface ICalculatorField {
-  value: string | number | BigNumber;
+  value: TBigNumberVariants;
   name: string;
   label: TTranslatedString;
   valueType: TValueFormat;
@@ -119,7 +119,6 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
       const calculatorValues = {
         newSharesToIssue: parseStringToFloat()(values.newSharesToIssue),
         minimumNewSharesToIssue: parseStringToFloat()(values.minimumNewSharesToIssue),
-        equityTokensPerShare: parseStringToFloat()(values.equityTokensPerShare),
         existingShareCapital: parseStringToFloat()(values.existingShareCapital),
         newShareNominalValue: parseStringToFloat()(values.newShareNominalValue),
         preMoneyValuationEur: parseStringToFloat()(values.preMoneyValuationEur),
@@ -135,12 +134,11 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
           ? convertPercentageToFraction()(publicDiscountFraction)
           : 0,
       };
-
+      const { sharePrice, tokenPrice, tokensPerShare } = calcShareAndTokenPrice(calculatorValues);
       const { computedMaxNumberOfTokens, computedMinNumberOfTokens } = calcNumberOfTokens(
         calculatorValues,
       );
       const { computedMaxCapPercent, computedMinCapPercent } = calcCapFraction(calculatorValues);
-      const { sharePrice, tokenPrice } = calcShareAndTokenPrice(calculatorValues);
       const { minInvestmentAmount, maxInvestmentAmount } = calcInvestmentAmount(
         calculatorValues,
         sharePrice,
@@ -149,14 +147,21 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
       return (
         <FormHighlightGroup>
           <CalculatorField
-            value={sharePrice}
+            value={sharePrice.toString()}
             name="newSharePrice"
             label={<FormattedMessage id="eto.form.section.investment-terms.new-share-price" />}
             valueType={EPriceFormat.SHARE_PRICE}
             outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
           />
           <CalculatorField
-            value={tokenPrice}
+            value={tokensPerShare.toString()}
+            name="equityTokensPerShare"
+            label={<FormattedMessage id="eto.form.section.investment-terms.tokens-per-share" />}
+            valueType={EPriceFormat.SHARE_PRICE}
+            outputFormat={ENumberOutputFormat.INTEGER}
+          />
+          <CalculatorField
+            value={tokenPrice.toString()}
             name="equityTokenPrice"
             label={<FormattedMessage id="eto.form.section.investment-terms.equity-token-price" />}
             valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
@@ -165,7 +170,7 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
           <Row>
             <Col sm={12} md={6}>
               <CalculatorField
-                value={minInvestmentAmount}
+                value={minInvestmentAmount.toString()}
                 name="minInvestmentAmount"
                 label={<FormattedMessage id="eto.form.section.investment-terms.minimum-amount" />}
                 valueType={ECurrency.EUR}
@@ -174,7 +179,7 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
             </Col>
             <Col sm={12} md={6}>
               <CalculatorField
-                value={maxInvestmentAmount}
+                value={maxInvestmentAmount.toString()}
                 name="totalInvestment"
                 label={<FormattedMessage id="eto.form.section.investment-terms.total-investment" />}
                 valueType={ECurrency.EUR}
@@ -199,7 +204,7 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
               )}
             <Col sm={12} md={6}>
               <CalculatorField
-                value={computedMinNumberOfTokens}
+                value={computedMinNumberOfTokens.toString()}
                 name="minCapEur"
                 label={
                   <FormattedMessage id="eto.form.section.investment-terms.minimum-token-cap" />
@@ -210,7 +215,7 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
             </Col>
             <Col sm={12} md={6}>
               <CalculatorField
-                value={computedMaxNumberOfTokens}
+                value={computedMaxNumberOfTokens.toString()}
                 name="maxCapEur"
                 label={
                   <FormattedMessage id="eto.form.section.investment-terms.maximum-token-cap" />
@@ -221,7 +226,7 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
             </Col>
             <Col sm={12} md={6}>
               <CalculatorField
-                value={computedMinCapPercent}
+                value={computedMinCapPercent.toString()}
                 name="minSharesGenerated"
                 label={
                   <FormattedMessage id="eto.form.section.investment-terms.minimum-shares-generated" />
@@ -232,7 +237,7 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
             </Col>
             <Col sm={12} md={6}>
               <CalculatorField
-                value={computedMaxCapPercent}
+                value={computedMaxCapPercent.toString()}
                 name="maxSharesGenerated"
                 label={
                   <FormattedMessage id="eto.form.section.investment-terms.maximum-shares-generated" />
@@ -276,7 +281,7 @@ const EtoInvestmentTermsComponent: React.FunctionComponent<IProps> = ({
     title={<FormattedMessage id="eto.form.investment-terms.title" />}
     progressOptions={etoInvestmentTermsProgressOptions}
     validationSchema={EtoInvestmentTermsType.toYup()}
-    initialValues={convert(eto, toFormState)}
+    initialValues={convert(toFormState)(eto)}
     onSubmit={saveData}
     validate={validate}
   >
@@ -334,14 +339,6 @@ const EtoInvestmentTermsComponent: React.FunctionComponent<IProps> = ({
         disabled={readonly}
         placeholder="Amount of share capital"
         label={<FormattedMessage id="eto.form.section.investment-terms.authorized-capital" />}
-      />
-      <FormMaskedNumberInput
-        name="equityTokensPerShare"
-        storageFormat={ENumberInputFormat.FLOAT}
-        outputFormat={ENumberOutputFormat.INTEGER}
-        placeholder="1000000"
-        disabled={true}
-        label={<FormattedMessage id="eto.form.section.equity-token-information.tokens-per-share" />}
       />
       <FormMaskedNumberInput
         name="minimumNewSharesToIssue"
@@ -447,7 +444,7 @@ const EtoInvestmentTerms = compose<React.FunctionComponent<IExternalProps>>(
     }),
     dispatchToProps: dispatch => ({
       saveData: (eto: TEtoSpecsData) => {
-        const convertedEto = convert(eto, fromFormState);
+        const convertedEto = convert(fromFormState)(eto);
         dispatch(actions.etoFlow.saveEtoStart(convertedEto));
       },
     }),
@@ -457,7 +454,6 @@ const EtoInvestmentTerms = compose<React.FunctionComponent<IExternalProps>>(
 
 const toFormState = {
   preMoneyValuationEur: convertNumberToString(),
-  equityTokensPerShare: convertNumberToString(),
   existingShareCapital: convertNumberToString(),
   minimumNewSharesToIssue: convertNumberToString(),
   newSharesToIssue: convertNumberToString(),
@@ -476,7 +472,6 @@ const fromFormState = {
   publicDiscountFraction: [parseStringToFloat(), convertPercentageToFraction()],
   fixedSlotsMaximumDiscountFraction: [parseStringToFloat(), convertPercentageToFraction()],
   preMoneyValuationEur: parseStringToInteger(),
-  equityTokensPerShare: parseStringToInteger(),
   existingShareCapital: parseStringToInteger(),
   newSharesToIssueInFixedSlots: parseStringToInteger(),
   newSharesToIssueInWhitelist: parseStringToInteger(),
@@ -488,3 +483,5 @@ const fromFormState = {
 };
 
 export { EtoInvestmentTerms, EtoInvestmentTermsComponent, InvestmentCalculator };
+
+//TODO fix translations, typings

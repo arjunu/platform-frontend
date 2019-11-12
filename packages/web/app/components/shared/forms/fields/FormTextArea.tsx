@@ -26,6 +26,7 @@ interface IFieldGroup {
    * @deprecated Use `Yup` max validation to keep schema related validation in one place
    */
   charactersLimit?: number;
+  isWysiwyg?: boolean;
 }
 
 type TFieldGroupProps = IFieldGroup & CommonHtmlProps;
@@ -124,7 +125,7 @@ export const FormTextArea = compose<
   withFormField,
   formikConnect,
   branch<IFieldGroup & TFormikConnect>(
-    props => isWysiwyg(props.formik.validationSchema, props.name),
+    props => !!props.isWysiwyg || isWysiwyg(props.formik.validationSchema, props.name),
     renderComponent(RichTextArea),
   ),
 )(TextArea);

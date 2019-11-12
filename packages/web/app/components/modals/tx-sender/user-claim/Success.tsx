@@ -31,7 +31,7 @@ export const UserClaimSuccessComponent: React.FunctionComponent<IProps> = ({
   additionalData,
 }) => (
   <Message
-    data-test-id="modals.tx-sender.withdraw-flow.success"
+    data-test-id="modals.tx-sender.user-claim-flow.success"
     image={<ConfettiEthereum className="mb-3" />}
     title={<FormattedMessage id="withdraw-flow.success" />}
     titleClassName="text-success"
@@ -48,8 +48,12 @@ export const UserClaimSuccessComponent: React.FunctionComponent<IProps> = ({
       txTimestamp={txTimestamp}
     />
 
-    <Button onClick={goToPortfolio} layout={EButtonLayout.SECONDARY}>
-      <FormattedMessage id="menu.portfolio.view" />
+    <Button
+      onClick={goToPortfolio}
+      layout={EButtonLayout.SECONDARY}
+      data-test-id="modals.tx-sender.user-claim-flow.success.go-to-portfolio"
+    >
+      <FormattedMessage id="menu.portfolio.view" />s
     </Button>
   </Message>
 );

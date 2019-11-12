@@ -10,9 +10,11 @@
   text-transform: uppercase;
 }
 
-.zone {
+.ends-at {
   @include font-label;
 
   color: $neu-bright-orange;
-  margin-bottom: px-to-rem(8px);
+  display: inline-block;
+  margin-top: px-to-rem(8px);
+  text-transform: none;
 }

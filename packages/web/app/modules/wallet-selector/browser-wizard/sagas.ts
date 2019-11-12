@@ -1,8 +1,6 @@
-import { delay } from "redux-saga";
-import { fork, put, race, select, take } from "redux-saga/effects";
+import { fork, put, select } from "redux-saga/effects";
 
 import { BrowserWalletErrorMessage } from "../../../components/translatedMessages/messages";
-import { BROWSER_WALLET_RECONNECT_INTERVAL } from "../../../config/constants";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import {
   BrowserWallet,
@@ -10,25 +8,8 @@ import {
 } from "../../../lib/web3/browser-wallet/BrowserWallet";
 import { IAppState } from "../../../store";
 import { actions } from "../../actions";
-import { neuCall, neuTakeEvery } from "../../sagasUtils";
+import { neuTakeUntil } from "../../sagasUtils";
 import { mapBrowserWalletErrorToErrorMessage } from "./errors";
-
-export function* browserWalletConnectionWatcher(): any {
-  while (true) {
-    yield neuCall(tryConnectingWithBrowserWallet);
-
-    const { success } = yield race({
-      fail: take("BROWSER_WALLET_CONNECTION_ERROR"),
-      success: take(["@@router/LOCATION_CHANGE", actions.walletSelector.connected]),
-    });
-
-    if (success) {
-      return;
-    }
-
-    yield delay(BROWSER_WALLET_RECONNECT_INTERVAL);
-  }
-}
 
 export function* tryConnectingWithBrowserWallet({
   browserWalletConnector,
@@ -59,5 +40,10 @@ export function* tryConnectingWithBrowserWallet({
 }
 
 export function* browserWalletSagas(): Iterator<any> {
-  yield fork(neuTakeEvery, "BROWSER_WALLET_TRY_CONNECTING", browserWalletConnectionWatcher);
+  yield fork(
+    neuTakeUntil,
+    "BROWSER_WALLET_TRY_CONNECTING",
+    actions.walletSelector.reset,
+    tryConnectingWithBrowserWallet,
+  );
 }

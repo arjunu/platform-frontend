@@ -10,7 +10,7 @@ import { TInvestmentAdditionalData } from "../../../../modules/tx/transactions/i
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { Button, EButtonLayout } from "../../../shared/buttons";
-import { DocumentTemplateButton } from "../../../shared/DocumentLink";
+import { DocumentButton } from "../../../shared/DocumentLink";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { InvestmentTransactionDetails } from "./InvestmentTransactionDetails";
 
@@ -42,7 +42,7 @@ const InvestmentSummaryComponent: React.FunctionComponent<IProps> = ({
     <InvestmentTransactionDetails additionalData={additionalData} className="mb-4" />
 
     <div className="text-center mb-4">
-      <DocumentTemplateButton
+      <DocumentButton
         onClick={() => downloadAgreement(additionalData.eto.etoId)}
         title={<FormattedMessage id="investment-flow.summary.download-agreement" />}
       />

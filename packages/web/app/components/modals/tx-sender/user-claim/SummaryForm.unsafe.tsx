@@ -42,7 +42,7 @@ const SummaryForm: React.FunctionComponent<IExternalProps> = ({ onSubmit }) => (
                 disabled={!isValid}
                 className="mt-2"
                 onClick={onSubmit}
-                data-test-id="modals.tx-sender.withdraw-flow.summery.withdrawSummery.accept"
+                data-test-id="modals.tx-sender.user-claim-flow.summary.accept"
               >
                 <FormattedMessage id="general-flow.confirm" />
               </Button>

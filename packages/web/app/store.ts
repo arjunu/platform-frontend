@@ -6,7 +6,8 @@ import { combineReducers, Reducer } from "redux";
 import { actions, TAction } from "./modules/actions";
 import { initInitialState } from "./modules/init/reducer";
 import { appReducers } from "./modules/reducer";
-import { DeepReadonly, FunctionWithDeps } from "./types";
+import { DeepReadonly } from "./types";
+import { FunctionWithDeps } from "./utils/opaque-types/types";
 
 export interface IAppAction {
   type: string;

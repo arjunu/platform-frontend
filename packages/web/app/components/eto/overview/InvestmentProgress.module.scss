@@ -1,0 +1,17 @@
+.investment-progress {
+  margin-top: px-to-rem(6px);
+  margin-bottom: px-to-rem(6px);
+  min-width: px-to-rem(120px);
+}
+
+.success-point {
+  width: px-to-rem(3px);
+  height: px-to-rem(20px);
+  fill: $neu-shuttle-gray;
+}
+
+.label {
+  @include font-label-small;
+
+  fill: $neu-slate-grey;
+}

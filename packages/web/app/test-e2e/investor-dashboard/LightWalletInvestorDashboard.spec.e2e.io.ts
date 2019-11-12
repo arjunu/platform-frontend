@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { convertToBigInt } from "../../utils/Number.utils";
+import { convertToUlps } from "../../utils/NumberUtils";
 import { assertMoneyNotEmpty, etoFixtureByName } from "../utils";
 import { goToDashboard, goToDashboardWithRequiredPayoutAmountSet } from "../utils/navigation";
 import { tid } from "../utils/selectors";
@@ -61,7 +61,7 @@ describe("Incoming payout", function(): void {
 
   it("Should show counter without ETH", () => {
     createAndLoginNewUser({ type: "investor" }).then(() => {
-      goToDashboardWithRequiredPayoutAmountSet(false, convertToBigInt("1000"));
+      goToDashboardWithRequiredPayoutAmountSet(false, convertToUlps("1000"));
 
       cy.get(tid("incoming-payout-counter"));
 

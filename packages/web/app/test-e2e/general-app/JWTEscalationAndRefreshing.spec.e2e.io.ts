@@ -4,10 +4,10 @@ import {
 } from "../../modules/auth/constants";
 import { getJwtExpiryDate } from "../../utils/JWTUtils";
 import {
-  acceptWallet,
   assertEmailChangeFlow,
   assertLanding,
   assertUserInLightWalletLoginPage,
+  confirmAccessModal,
   goToDashboard,
   goToProfile,
   tid,
@@ -109,7 +109,7 @@ describe("JWT Refreshing and Escalation", () => {
         "verify-email-widget-form-submit": { type: "submit" },
       });
 
-      acceptWallet();
+      confirmAccessModal();
 
       // Should send current jwt during escalation to preserve existing permissions
       cy.wait("@jwtEscalate").should((xhr: Cypress.WaitXHR) => {

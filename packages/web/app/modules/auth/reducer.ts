@@ -3,13 +3,24 @@ import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
 
-export interface IAuthState {
-  user?: IUser;
-  jwt?: string;
-  currentAgreementHash?: string;
+export enum EAuthStatus {
+  AUTHORIZED = "authorized",
+  NON_AUTHORIZED = "non-authorized",
 }
 
-const authInitialState: IAuthState = {};
+export interface IAuthState {
+  user: IUser | undefined;
+  jwt: string | undefined;
+  status: EAuthStatus;
+  currentAgreementHash: string | undefined;
+}
+
+const authInitialState: IAuthState = {
+  user: undefined,
+  jwt: undefined,
+  status: EAuthStatus.NON_AUTHORIZED,
+  currentAgreementHash: undefined,
+};
 
 export const authReducer: AppReducer<IAuthState> = (
   state = authInitialState,
@@ -21,10 +32,15 @@ export const authReducer: AppReducer<IAuthState> = (
         ...state,
         user: action.payload.user,
       };
-    case actions.auth.loadJWT.getType():
+    case actions.auth.setJWT.getType():
       return {
         ...state,
         jwt: action.payload.jwt,
+      };
+    case actions.auth.finishSigning.getType():
+      return {
+        ...state,
+        status: EAuthStatus.AUTHORIZED,
       };
     case actions.tosModal.setCurrentTosHash.getType():
       return {
@@ -32,9 +48,7 @@ export const authReducer: AppReducer<IAuthState> = (
         currentAgreementHash: action.payload.currentAgreementHash,
       };
     case actions.auth.reset.getType():
-      return {
-        ...authInitialState,
-      };
+      return authInitialState;
     //Log out is done on whole state instead of just AUTH reducer
   }
 

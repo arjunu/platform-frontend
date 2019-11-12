@@ -5,7 +5,7 @@ import { IWindowWithData } from "../../../test/helperTypes";
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { Q18 } from "../../config/constants";
 import { EUserType } from "../../lib/api/users/interfaces";
-import { convertToBigInt } from "../../utils/Number.utils";
+import { convertToUlps } from "../../utils/NumberUtils";
 import { EETOStateOnChain } from "../eto/types";
 import {
   EUserRefundStatus,
@@ -13,6 +13,10 @@ import {
   IInvestorTicket,
   ITokenDisbursal,
 } from "./types";
+
+// when calculating minimum ticket, this is defult value for subsequent investments
+// in the same ETO
+export const MIMIMUM_RETAIL_TICKET_EUR_ULPS = Q18.mul("10");
 
 export const convertToCalculatedContribution = ([
   isWhitelisted,
@@ -88,7 +92,17 @@ export const convertToTokenDisbursal = (
   amountToBeClaimed: amountToBeClaimed.toString(),
   totalDisbursedAmount: totalDisbursedAmount.toString(),
   // convert seconds timestamp to milliseconds
-  timeToFirstDisbursalRecycle: timeToFirstDisbursalRecycle.mul(1000).toNumber(),
+  timeToFirstDisbursalRecycle: timeToFirstDisbursalRecycle.mul("1000").toNumber(),
+});
+
+export const convertToWhitelistTicket = ([
+  isWhitelisted,
+  whitelistDiscountAmountEurUlps,
+  fullTokenPriceFrac,
+]: [boolean, BigNumber, BigNumber]) => ({
+  isWhitelisted,
+  whitelistDiscountAmountEurUlps,
+  fullTokenPriceFrac,
 });
 
 export const getTokenPrice = (equityTokenInt: string, equivEurUlps: string): string => {
@@ -111,10 +125,10 @@ export const getRequiredIncomingAmount = (token: ECurrency) => {
 
   switch (token) {
     case ECurrency.ETH: {
-      return convertToBigInt(1);
+      return convertToUlps("1");
     }
     case ECurrency.EUR_TOKEN: {
-      return convertToBigInt(100);
+      return convertToUlps("100");
     }
     default:
       return "0";

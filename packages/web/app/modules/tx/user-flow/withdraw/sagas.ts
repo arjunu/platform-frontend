@@ -48,11 +48,12 @@ export function* detectMaxWithdraw(
 
   if (fixedEther === value) {
     try {
-      yield neuCall(isAddressValidAcceptsEther, modifiedTo);
+      yield neuCall(isAddressValidAcceptsEther, modifiedTo, modifiedValue);
       modifiedValue = yield getMaxWithdrawAmount(modifiedTo);
     } catch (error) {
-      if (error instanceof SmartContractDoesNotAcceptEtherError)
+      if (error instanceof SmartContractDoesNotAcceptEtherError) {
         modifiedValue = yield getMaxWithdrawAmount(generateRandomEthereumAddress());
+      }
     }
   }
   yield put(

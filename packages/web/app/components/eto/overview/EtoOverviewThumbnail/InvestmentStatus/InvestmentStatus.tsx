@@ -3,7 +3,10 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
 import { selectEtoOnChainNextStateStartDate } from "../../../../../modules/eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import {
+  EETOStateOnChain,
+  TEtoWithCompanyAndContractReadonly,
+} from "../../../../../modules/eto/types";
 import { appConnect } from "../../../../../store";
 import { FormatNumber } from "../../../../shared/formatters/FormatNumber";
 import { Money } from "../../../../shared/formatters/Money";
@@ -12,12 +15,12 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { InvestmentProgress } from "./InvestmentProgress";
+import { InvestmentProgress } from "../../InvestmentProgress";
 
 import * as styles from "./InvestmentStatus.module.scss";
 
 export interface IInvestmentWidgetProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 export interface IInvestmentWidgetStateProps {
@@ -34,17 +37,11 @@ const InvestmentLayout: React.FunctionComponent<TInvestWidgetProps> = ({ eto }) 
       <div className={styles.header}>
         {eto.contract!.timedState !== EETOStateOnChain.Payout && (
           <div>
+            {"≈"}
             <Money
-              value={eto.contract!.totalInvestment.etherTokenBalance}
+              value={eto.contract!.totalInvestment.totalEquivEurUlps}
               inputFormat={ENumberInputFormat.ULPS}
-              valueType={ECurrency.ETH}
-              outputFormat={ENumberOutputFormat.FULL}
-            />
-            <br />
-            <Money
-              value={eto.contract!.totalInvestment.euroTokenBalance}
-              inputFormat={ENumberInputFormat.ULPS}
-              valueType={ECurrency.EUR_TOKEN}
+              valueType={ECurrency.EUR}
               outputFormat={ENumberOutputFormat.FULL}
             />
           </div>

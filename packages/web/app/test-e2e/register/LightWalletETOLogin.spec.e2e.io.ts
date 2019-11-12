@@ -6,7 +6,7 @@ import {
   registerWithLightWalletETO,
 } from "../utils/index";
 
-const password = "strongpassword";
+const PASSWORD = "strongpassword";
 
 const loginWithLightWalletETO = (testEmail: string, password: string) => {
   registerWithLightWalletETO(testEmail, password);
@@ -23,10 +23,10 @@ describe("Light Wallet ETO Login", () => {
   });
   it("should register logout then login as an investor", () => {
     const testEmail = generateRandomEmailAddress();
-    loginWithLightWalletETO(testEmail, password);
+    loginWithLightWalletETO(testEmail, PASSWORD);
   });
   it("should login/logout as investor navigate to ETO then login/logout as issuer", () => {
     const testEmail = generateRandomEmailAddress();
-    loginWithLightWalletETO(testEmail, password);
+    loginWithLightWalletETO(testEmail, PASSWORD);
   });
 });

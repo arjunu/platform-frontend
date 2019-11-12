@@ -7,6 +7,6 @@ export const getUnlockedWalletEtherAmountAfterFee = (
   unlockDateEther: number | string,
   currentUTCStamp: number | string,
 ): BigNumber =>
-  new BigNumber(currentUTCStamp).comparedTo(unlockDateEther) < 0
-    ? etherLockedBalanceBN.minus(etherLockedBalanceBN.mul(PLATFORM_UNLOCK_FEE))
+  new BigNumber(currentUTCStamp.toString()).comparedTo(unlockDateEther.toString()) < 0
+    ? etherLockedBalanceBN.minus(etherLockedBalanceBN.mul(PLATFORM_UNLOCK_FEE.toString()))
     : etherLockedBalanceBN;

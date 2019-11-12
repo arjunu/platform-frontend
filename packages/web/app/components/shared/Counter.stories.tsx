@@ -1,18 +1,8 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { CounterLayout } from "./Counter.unsafe";
+import { CounterLayout } from "./Counter";
 
 storiesOf("Counter", module)
-  .add("default", () => (
-    <CounterLayout computedSeconds={25} computedMinutes={35} computedHours={10} computedDays={88} />
-  ))
-  .add("blink", () => (
-    <CounterLayout
-      blink={true}
-      computedSeconds={25}
-      computedMinutes={35}
-      computedHours={10}
-      computedDays={88}
-    />
-  ));
+  .add("default", () => <CounterLayout timeLeft={4567341345687} />)
+  .add("blink", () => <CounterLayout blink={true} timeLeft={0} />);

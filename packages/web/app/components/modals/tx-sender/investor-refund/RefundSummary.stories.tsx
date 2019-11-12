@@ -18,33 +18,46 @@ const txData: ITxData = {
 
 const additionalData: TAdditionalDataByType<typeof ETxSenderType.INVESTOR_REFUND> = {
   etoId: "0xfaDa8f267C054f469b52Ccbeb08250ACAAeE65dc",
-  costUlps: Q18.mul(0.04).toString(),
-  costEurUlps: Q18.mul(0.34).toString(),
+  costUlps: Q18.mul("0.04").toString(),
+  costEurUlps: Q18.mul("0.34").toString(),
   tokenName: "Fifth Force",
   tokenSymbol: "FT",
-  amountEth: Q18.mul(150).toString(),
+  amountEth: Q18.mul("150").toString(),
   amountEurUlps: "0",
+  companyName: "Storybook Ltd.",
 };
 
 const additionalDataNEur: TAdditionalDataByType<typeof ETxSenderType.INVESTOR_REFUND> = {
   ...additionalData,
   amountEth: "0",
-  amountEurUlps: Q18.mul(150).toString(),
+  amountEurUlps: Q18.mul("150").toString(),
+};
+
+const additionalDataNEurAndETH: TAdditionalDataByType<typeof ETxSenderType.INVESTOR_REFUND> = {
+  ...additionalData,
+  amountEurUlps: Q18.mul("150").toString(),
 };
 
 storiesOf("Refund/Summary", module)
   .addDecorator(withModalBody())
-  .add("default", () => (
+  .add("only ETH", () => (
     <RefundSummaryLayout
       txData={txData}
       onAccept={() => action("CONFIRM")}
       additionalData={additionalData}
     />
   ))
-  .add("with nEur", () => (
+  .add("only nEur", () => (
     <RefundSummaryLayout
       txData={txData}
       onAccept={() => action("CONFIRM")}
       additionalData={additionalDataNEur}
+    />
+  ))
+  .add("both nEUR and ETH", () => (
+    <RefundSummaryLayout
+      txData={txData}
+      onAccept={() => action("CONFIRM")}
+      additionalData={additionalDataNEurAndETH}
     />
   ));

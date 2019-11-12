@@ -14,6 +14,7 @@ import { EthereumIcon } from "../../../shared/ethereum";
 import { Message } from "../../Message";
 import { TxDetails } from "../TxDetails.unsafe";
 import { TxName } from "../TxName";
+import { TxGoToAction } from "./TxGoToAction";
 import { TxHashAndBlock } from "./TxHashAndBlock";
 
 export interface IStateProps {
@@ -56,6 +57,8 @@ const TxSuccessLayout: React.FunctionComponent<TTxPendingLayoutProps> = props =>
     <TxDetails className="mb-3" {...props} />
 
     {props.txHash && <TxHashAndBlock txHash={props.txHash} blockId={props.blockId} />}
+
+    <TxGoToAction type={props.type} />
   </Message>
 );
 

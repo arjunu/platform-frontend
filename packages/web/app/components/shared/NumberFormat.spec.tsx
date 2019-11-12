@@ -7,10 +7,10 @@ import { NumberFormat } from "./NumberFormat";
 
 describe("NumberFormat", () => {
   it("Should format number", () => {
-    expect(shallow(<NumberFormat value={10000} />).text()).to.eq("10 000");
-    expect(shallow(<NumberFormat value={1000} />).text()).to.eq("1 000");
-    expect(shallow(<NumberFormat value={100} />).text()).to.eq("100");
-    expect(shallow(<NumberFormat value={10000.123} />).text()).to.eq("10 000.123");
+    expect(shallow(<NumberFormat value={"10000"} />).text()).to.eq("10 000");
+    expect(shallow(<NumberFormat value={"1000"} />).text()).to.eq("1 000");
+    expect(shallow(<NumberFormat value={"100"} />).text()).to.eq("100");
+    expect(shallow(<NumberFormat value={"10000.123"} />).text()).to.eq("10 000.123");
   });
 
   it("Should format string", () => {

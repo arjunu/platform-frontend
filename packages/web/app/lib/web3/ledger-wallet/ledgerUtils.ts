@@ -7,7 +7,7 @@ import * as Web3ProviderEngine from "web3-provider-engine";
 // tslint:disable-next-line
 import * as RpcSubprovider from "web3-provider-engine/subproviders/rpc";
 
-import { promisify } from "../../../utils/promisify";
+import { promisify } from "../../../utils/PromiseUtils";
 import {
   LedgerContractsDisabledError,
   LedgerNotAvailableError,
@@ -52,18 +52,6 @@ export const testConnection = async (getTransport: () => any): Promise<boolean> 
   }
 };
 
-export const testIfUnlocked = async (getTransport: () => any): Promise<void> => {
-  const Transport = await getTransport();
-  try {
-    const ethInstance = new Eth(Transport);
-    await ethInstance.getAddress("44'/60'/0'/0/0");
-  } catch (e) {
-    throw new LedgerNotAvailableError();
-  } finally {
-    Transport.close();
-  }
-};
-
 const getLedgerConfig = async (getTransport: () => any): Promise<ILedgerConfig> => {
   const Transport = await getTransport();
   try {
@@ -75,7 +63,7 @@ const getLedgerConfig = async (getTransport: () => any): Promise<ILedgerConfig> 
   } catch (e) {
     throw new LedgerNotAvailableError();
   } finally {
-    Transport.close();
+    await Transport.close();
   }
 };
 
@@ -98,6 +86,9 @@ export const createWeb3WithLedgerProvider = async (
     }),
   );
   engine.start();
+  // stop immediately to not poll for new block which does not have any use
+  // todo: implement null block provider and pass it in opts.blockTracker
+  engine.stop();
   const promisifiedLedgerProvider: IPromisifiedHookedWalletSubProvider = {
     approveMessage: promisify<string>(ledgerProvider.approveMessage),
     approvePersonalMessage: promisify<boolean>(ledgerProvider.approvePersonalMessage),
@@ -116,14 +107,17 @@ export const createWeb3WithLedgerProvider = async (
 
 export const connectToLedger = async (): Promise<() => any> => {
   const getTransport = () => TransportU2F.create();
+
   const ledgerConfig = await getLedgerConfig(getTransport);
+
   if (semver.lt(ledgerConfig.version, minimumLedgerVersion)) {
     // We support versions newer than 1.2.4
     throw new LedgerNotSupportedVersionError(ledgerConfig.version);
   }
+
   if (ledgerConfig.arbitraryDataEnabled === 0) {
     throw new LedgerContractsDisabledError();
   }
-  await testIfUnlocked(getTransport);
+
   return getTransport;
 };

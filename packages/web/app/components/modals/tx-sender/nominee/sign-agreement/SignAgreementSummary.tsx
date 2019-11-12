@@ -7,14 +7,14 @@ import { IEtoDocument } from "../../../../../lib/api/eto/EtoFileApi.interfaces";
 import { IImmutableFileId } from "../../../../../lib/api/immutable-storage/ImmutableStorage.interfaces";
 import * as YupTS from "../../../../../lib/yup-ts.unsafe";
 import { actions } from "../../../../../modules/actions";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { selectNomineeEtoWithCompanyAndContract } from "../../../../../modules/nominee-flow/selectors";
 import { selectTxType } from "../../../../../modules/tx/sender/selectors";
 import { ETxSenderType } from "../../../../../modules/tx/types";
 import { appConnect } from "../../../../../store";
 import { RequiredByKeys } from "../../../../../types";
 import { Button, EButtonLayout, EButtonTheme } from "../../../../shared/buttons/Button";
-import { DocumentTemplateButton } from "../../../../shared/DocumentLink";
+import { DocumentButton } from "../../../../shared/DocumentLink";
 import { FormFieldBoolean } from "../../../../shared/forms/fields/FormFieldBoolean";
 import { FormDeprecated } from "../../../../shared/forms/FormDeprecated";
 import { EHeadingSize, Heading } from "../../../../shared/Heading";
@@ -24,7 +24,7 @@ import { isRAASign, selectDocument } from "./utils";
 import * as link from "../../../../../assets/img/inline_icons/download.svg";
 
 interface IStateProps {
-  nomineeEto?: TEtoWithCompanyAndContract;
+  nomineeEto?: TEtoWithCompanyAndContractReadonly;
   txType?: ETxSenderType;
 }
 
@@ -73,7 +73,7 @@ const SignNomineeAgreementSummaryLayout: React.FunctionComponent<TComponentProps
         <FormattedMessage id="nominee.sign-tha.text" />
       )}
     </p>
-    <DocumentTemplateButton
+    <DocumentButton
       layout={EButtonLayout.PRIMARY}
       onClick={() =>
         downloadImmutableFile(

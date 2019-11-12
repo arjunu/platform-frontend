@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { externalRoutes } from "../../../config/externalRoutes";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appRoutes } from "../../appRoutes";
 import { EMenuEntryType, TMenuEntry } from "./MenuEntry";
 
@@ -98,7 +98,7 @@ export const issuerMenuData = (userHasKycAndVerifiedEmail: boolean): TMenuEntry[
 ];
 
 export const nomineeMenuData = (
-  nomineeEto: TEtoWithCompanyAndContract | undefined,
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined,
 ): TMenuEntry[] => [
   {
     type: EMenuEntryType.LINK,

@@ -1,19 +1,19 @@
 import BigNumber from "bignumber.js";
 
-type BigNumberRepresentation = string | number | BigNumber;
+import { TBigNumberVariants } from "./../lib/web3/types";
 
 /**
  * Add string as BigNumbers
  */
-export const addBigNumbers = (numbers: BigNumberRepresentation[]): string =>
+export const addBigNumbers = (numbers: TBigNumberVariants[]): string =>
   numbers
-    .reduce((acc: BigNumber, number) => acc.plus(new BigNumber(number)), new BigNumber(0))
+    .reduce((acc: BigNumber, number) => acc.plus(new BigNumber(number)), new BigNumber("0"))
     .toString();
 
 /**
  * Subtract string as BigNumbers
  */
-export const subtractBigNumbers = ([head, ...tail]: BigNumberRepresentation[]): string =>
+export const subtractBigNumbers = ([head, ...tail]: TBigNumberVariants[]): string =>
   tail
     .reduce((acc: BigNumber, number) => acc.minus(new BigNumber(number)), new BigNumber(head))
     .toString();
@@ -21,18 +21,18 @@ export const subtractBigNumbers = ([head, ...tail]: BigNumberRepresentation[]): 
 /**
  * Multiply string as BigNumbers
  */
-export const multiplyBigNumbers = (numbers: BigNumberRepresentation[]): string =>
+export const multiplyBigNumbers = (numbers: TBigNumberVariants[]): string =>
   numbers
-    .reduce((acc: BigNumber, number) => acc.mul(new BigNumber(number)), new BigNumber(1))
+    .reduce((acc: BigNumber, number) => acc.mul(new BigNumber(number)), new BigNumber("1"))
     .toString();
 
 /**
  * Divide any number representation as BigNumbers
  */
 export const divideBigNumbers = (
-  dividend: BigNumberRepresentation,
-  divisor: BigNumberRepresentation,
+  dividend: TBigNumberVariants,
+  divisor: TBigNumberVariants,
 ): string => new BigNumber(dividend).div(divisor).toString();
 
-export const compareBigNumbers = (a: BigNumberRepresentation, b: BigNumberRepresentation): number =>
+export const compareBigNumbers = (a: TBigNumberVariants, b: TBigNumberVariants): number =>
   new BigNumber(a).comparedTo(b);

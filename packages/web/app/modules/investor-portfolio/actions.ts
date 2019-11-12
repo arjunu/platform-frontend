@@ -2,20 +2,29 @@ import { createActionFactory } from "@neufund/shared";
 
 import { TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { Dictionary } from "../../types";
-import { createAction } from "../actionsUtils";
+import { TEtoWithCompanyAndContractReadonly } from "../eto/types";
 import {
   ICalculatedContribution,
   IIncomingPayoutsData,
   IInvestorTicket,
   ITokenDisbursal,
+  TTokensPersonalDiscount,
 } from "./types";
 
 export const investorEtoTicketActions = {
   // public actions
-  loadEtoInvestorTicket: (eto: TEtoSpecsData) => createAction("INVESTOR_TICKET_LOAD", { eto }),
-  loadInvestorTickets: (etos: Dictionary<TEtoSpecsData>) =>
-    createAction("INVESTOR_TICKET_ETOS_LOAD", { etos }),
-  claim: (etoId: string) => createAction("INVESTOR_TICKET_CLAIM", { etoId }),
+  loadEtoInvestorTicket: createActionFactory("INVESTOR_TICKET_LOAD", (eto: TEtoSpecsData) => ({
+    eto,
+  })),
+  loadInvestorTickets: createActionFactory(
+    "INVESTOR_TICKET_ETOS_LOAD",
+    (etos: Dictionary<TEtoSpecsData>) => ({ etos }),
+  ),
+  loadTokenPersonalDiscount: createActionFactory(
+    "INVESTOR_TICKET_LOAD_TOKEN_PERSONAL_DISCOUNT",
+    (eto: TEtoWithCompanyAndContractReadonly) => ({ eto }),
+  ),
+
   loadClaimables: createActionFactory("INVESTOR_CLAIMABLES_LOAD"),
   getIncomingPayouts: createActionFactory("INVESTOR_TICKET_GET_INCOMING_PAYOUTS"),
   loadClaimablesInBackground: createActionFactory("INVESTOR_CLAIMABLES_LOAD_IN_BACKGROUND"),
@@ -24,12 +33,18 @@ export const investorEtoTicketActions = {
   ),
 
   // state mutations
-  setEtoInvestorTicket: (etoId: string, ticket: IInvestorTicket) =>
-    createAction("INVESTOR_TICKET_SET", { etoId, ticket }),
-  setCalculatedContribution: (etoId: string, contribution: ICalculatedContribution) =>
-    createAction("INVESTOR_TICKET_SET_CALCULATED_CONTRIBUTION", { etoId, contribution }),
-  setInitialCalculatedContribution: (etoId: string, contribution: ICalculatedContribution) =>
-    createAction("INVESTOR_TICKET_SET_INITIAL_CALCULATED_CONTRIBUTION", { etoId, contribution }),
+  setEtoInvestorTicket: createActionFactory(
+    "INVESTOR_TICKET_SET",
+    (etoId: string, ticket: IInvestorTicket) => ({ etoId, ticket }),
+  ),
+  setCalculatedContribution: createActionFactory(
+    "INVESTOR_TICKET_SET_CALCULATED_CONTRIBUTION",
+    (etoId: string, contribution: ICalculatedContribution) => ({ etoId, contribution }),
+  ),
+  setInitialCalculatedContribution: createActionFactory(
+    "INVESTOR_TICKET_SET_INITIAL_CALCULATED_CONTRIBUTION",
+    (etoId: string, contribution: ICalculatedContribution) => ({ etoId, contribution }),
+  ),
   setTokensDisbursal: createActionFactory(
     "SET_TOKENS_DISBURSAL",
     (tokensDisbursal: ITokenDisbursal[]) => ({ tokensDisbursal }),
@@ -43,4 +58,11 @@ export const investorEtoTicketActions = {
   ),
   setIncomingPayoutsError: createActionFactory("INVESTOR_TICKET_SET_INCOMING_PAYOUTS_ERROR"),
   resetIncomingPayouts: createActionFactory("INVESTOR_TICKET_RESET_INCOMING_PAYOUTS"),
+  setTokenPersonalDiscount: createActionFactory(
+    "INVESTOR_TICKET_SET_TOKEN_PERSONAL_DISCOUNTS",
+    (etoId: string, tokenPersonalDiscount: TTokensPersonalDiscount) => ({
+      etoId,
+      tokenPersonalDiscount,
+    }),
+  ),
 };

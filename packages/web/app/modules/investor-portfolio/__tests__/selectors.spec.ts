@@ -5,7 +5,7 @@ import * as sinon from "sinon";
 import { Q18 } from "../../../config/constants";
 import * as etoUtils from "../../../lib/api/eto/EtoUtils";
 import { IAppState } from "../../../store";
-import { convertToBigInt } from "../../../utils/Number.utils";
+import { convertToUlps } from "../../../utils/NumberUtils";
 import * as etoSelectors from "../../eto/selectors";
 import { IInvestorTicketsState } from "../reducer";
 import * as investorTicketSelectors from "../selectors";
@@ -70,31 +70,35 @@ describe("investor-portfolio > selectors", () => {
 
     it("returns reduces amount by investor ticket", () => {
       (investorTicketSelectors.selectInvestorTicket as sinon.SinonStub).returns({
-        equivEurUlps: new BigNumber(18).mul(Q18),
+        equivEurUlps: new BigNumber("25").mul(Q18),
+      });
+      (investorTicketSelectors.selectCalculatedContribution as sinon.SinonStub).returns({
+        minTicketEurUlps: new BigNumber("50").mul(Q18),
+        maxTicketEurUlps: new BigNumber("2000").mul(Q18),
       });
       const result = selectCalculatedEtoTicketSizesUlpsById(state, etoId);
       expect(result).to.deep.equal({
-        minTicketEurUlps: new BigNumber("2").mul(Q18),
-        maxTicketEurUlps: new BigNumber("1982").mul(Q18),
+        minTicketEurUlps: new BigNumber("25").mul(Q18),
+        maxTicketEurUlps: new BigNumber("1975").mul(Q18),
       });
     });
 
     it("returns at least ticket size", () => {
       (investorTicketSelectors.selectInvestorTicket as sinon.SinonStub).returns({
-        equivEurUlps: new BigNumber(30).mul(Q18),
+        equivEurUlps: new BigNumber("30").mul(Q18),
       });
       let result = selectCalculatedEtoTicketSizesUlpsById(state, etoId);
       expect(result).to.deep.equal({
-        minTicketEurUlps: new BigNumber("1.5").mul(Q18),
+        minTicketEurUlps: new BigNumber("10").mul(Q18),
         maxTicketEurUlps: new BigNumber("1970").mul(Q18),
       });
 
       (investorTicketSelectors.selectInvestorTicket as sinon.SinonStub).returns({
-        equivEurUlps: new BigNumber(3000).mul(Q18),
+        equivEurUlps: new BigNumber("3000").mul(Q18),
       });
       result = selectCalculatedEtoTicketSizesUlpsById(state, etoId);
       expect(result).to.deep.equal({
-        minTicketEurUlps: new BigNumber("1.5").mul(Q18),
+        minTicketEurUlps: new BigNumber("0").mul(Q18),
         maxTicketEurUlps: new BigNumber("0"),
       });
     });
@@ -107,7 +111,7 @@ describe("investor-portfolio > selectors", () => {
           incomingPayouts: {
             data: {
               euroTokenIncomingPayoutValue: "0",
-              etherTokenIncomingPayoutValue: convertToBigInt("1"),
+              etherTokenIncomingPayoutValue: convertToUlps("1"),
             },
           },
         },
@@ -122,7 +126,7 @@ describe("investor-portfolio > selectors", () => {
           incomingPayouts: {
             data: {
               euroTokenIncomingPayoutValue: "0",
-              etherTokenIncomingPayoutValue: convertToBigInt("123"),
+              etherTokenIncomingPayoutValue: convertToUlps("123"),
             },
           },
         },
@@ -136,7 +140,7 @@ describe("investor-portfolio > selectors", () => {
         investorTickets: {
           incomingPayouts: {
             data: {
-              euroTokenIncomingPayoutValue: convertToBigInt("100"),
+              euroTokenIncomingPayoutValue: convertToUlps("100"),
               etherTokenIncomingPayoutValue: "0",
             },
           },
@@ -151,7 +155,7 @@ describe("investor-portfolio > selectors", () => {
         investorTickets: {
           incomingPayouts: {
             data: {
-              euroTokenIncomingPayoutValue: convertToBigInt("12452"),
+              euroTokenIncomingPayoutValue: convertToUlps("12452"),
               etherTokenIncomingPayoutValue: "0",
             },
           },
@@ -166,8 +170,8 @@ describe("investor-portfolio > selectors", () => {
         investorTickets: {
           incomingPayouts: {
             data: {
-              euroTokenIncomingPayoutValue: convertToBigInt("50"),
-              etherTokenIncomingPayoutValue: convertToBigInt("0.4"),
+              euroTokenIncomingPayoutValue: convertToUlps("50"),
+              etherTokenIncomingPayoutValue: convertToUlps("0.4"),
             },
           },
         },
@@ -181,7 +185,7 @@ describe("investor-portfolio > selectors", () => {
     const euroTokendDisbursal = {
       token: "eur_t",
       amountToBeClaimed: "499807466992079716049",
-      totalDisbursedAmount: convertToBigInt("97154.607"),
+      totalDisbursedAmount: convertToUlps("97154.607"),
       timeToFirstDisbursalRecycle: 1680747704000,
     };
 
@@ -212,7 +216,7 @@ describe("investor-portfolio > selectors", () => {
         investorTickets: {
           tokensDisbursal: {
             data: [
-              { ...euroTokendDisbursal, amountToBeClaimed: convertToBigInt("0.90") },
+              { ...euroTokendDisbursal, amountToBeClaimed: convertToUlps("0.90") },
               ethDisbursal,
             ] as ITokenDisbursal[],
           },
@@ -232,7 +236,7 @@ describe("investor-portfolio > selectors", () => {
           tokensDisbursal: {
             data: [
               euroTokendDisbursal,
-              { ...ethDisbursal, amountToBeClaimed: convertToBigInt("0.00023") },
+              { ...ethDisbursal, amountToBeClaimed: convertToUlps("0.00023") },
             ] as ITokenDisbursal[],
           },
         } as IInvestorTicketsState,

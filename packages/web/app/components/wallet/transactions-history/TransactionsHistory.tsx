@@ -73,14 +73,17 @@ const TransactionListLayout: React.FunctionComponent<TStateProps & TDispatchProp
                     />
                   }
                 />
-                <Money
-                  className={cn(styles.amount, { [styles.amountIn]: isIncomeTransaction })}
-                  inputFormat={transaction.amountFormat}
-                  outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-                  theme={isIncomeTransaction ? ETheme.GREEN : undefined}
-                  value={transaction.amount}
-                  valueType={transaction.currency}
-                />
+                <>
+                  {!isIncomeTransaction && "-"}
+                  <Money
+                    className={cn(styles.amount, { [styles.amountIn]: isIncomeTransaction })}
+                    inputFormat={transaction.amountFormat}
+                    outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
+                    theme={isIncomeTransaction ? ETheme.GREEN : undefined}
+                    value={transaction.amount}
+                    valueType={transaction.currency}
+                  />
+                </>
               </NewTableRow>
             );
           })}

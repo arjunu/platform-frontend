@@ -233,7 +233,7 @@ const EtoRegistrationKeyIndividualsComponent = (props: IProps) => (
   <EtoFormBase
     title={<FormattedMessage id="eto.form.key-individuals.title" />}
     validationSchema={EtoKeyIndividualsType.toYup()}
-    initialValues={convert(props.stateValues, toFormState)}
+    initialValues={convert(toFormState)(props.stateValues)}
     onSubmit={props.saveData}
   >
     <Section className={localStyles.sectionWrapper}>
@@ -289,7 +289,7 @@ const EtoRegistrationKeyIndividuals = compose<React.FunctionComponent>(
     }),
     dispatchToProps: dispatch => ({
       saveData: (company: TPartialCompanyEtoData) => {
-        const convertedCompany = convert(company, fromFormState);
+        const convertedCompany = convert(fromFormState)(company);
         dispatch(actions.etoFlow.saveCompanyStart(convertedCompany));
       },
     }),

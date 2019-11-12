@@ -61,7 +61,7 @@ const EtoVotingRightsComponent: React.FunctionComponent<
   TExternalProps & TStateProps & TDispatchProps
 > = ({ readonly, savingData, currentNomineeName, stateValues, currentNomineeId, saveData }) => {
   const values = React.useMemo(() => {
-    const converted = convert(stateValues, toFormState);
+    const converted = convert(toFormState)(stateValues);
 
     converted.advisoryBoardSelector = converted.advisoryBoard && !!converted.advisoryBoard;
 
@@ -282,7 +282,7 @@ const EtoVotingRightsComponent: React.FunctionComponent<
             </div>
 
             <div className="form-group">
-              <FormFieldLabel name="hasGeneralInformationRights">
+              <FormFieldLabel name="hasDividendRights">
                 <FormattedMessage id="eto.form.section.token-holders-rights.has-dividend-rights" />
               </FormFieldLabel>
               <FormStaticRadioButton

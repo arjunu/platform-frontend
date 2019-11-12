@@ -1,6 +1,5 @@
 import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
-import BigNumber from "bignumber.js";
 import * as React from "react";
 
 import { withMockedDate } from "../../../utils/storybookHelpers.unsafe";
@@ -12,7 +11,7 @@ const data = {
   setEtoDate: action("setEtoDate"),
   uploadDate: action("uploadDate"),
   cleanup: action("cleanup"),
-  minOffsetPeriod: new BigNumber(TEST_OFFSET_PERIOD),
+  minOffsetPeriod: TEST_OFFSET_PERIOD,
   newDateSaving: false,
   transactionMining: false,
   issuerEtoLoading: false,

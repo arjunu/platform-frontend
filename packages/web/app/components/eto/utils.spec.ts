@@ -1,5 +1,6 @@
 import { expect } from "chai";
 
+import { TShareholder } from "./public-view/LegalInformationWidget";
 import {
   applyDefaults,
   convert,
@@ -8,6 +9,7 @@ import {
   convertNumberToString,
   convertPercentageToFraction,
   convertToPrecision,
+  generateShareholders,
   parseStringToFloat,
   removeEmptyField,
   removeEmptyKeyValueField,
@@ -17,9 +19,11 @@ import {
 describe("removeEmptyKeyValueField", () => {
   it("removes empty key-value fields", () => {
     const badInput = { a: undefined };
-    const goodInput = { a: 1, b: 2 };
+    const goodInput = { a: 1, b: undefined };
+    const veryBadInput = undefined;
     expect(removeEmptyKeyValueField()(badInput)).to.be.undefined;
     expect(removeEmptyKeyValueField()(goodInput)).to.deep.equal(goodInput);
+    expect(removeEmptyKeyValueField()(veryBadInput)).to.be.undefined;
   });
 });
 
@@ -80,7 +84,7 @@ describe("convert", () => {
         key2_2: "foobar",
       },
     };
-    expect(convert(data, spec)).to.deep.equal(expectedOutput);
+    expect(convert(spec)(data)).to.deep.equal(expectedOutput);
   });
   it("takes an array of functions and creates a pipeline", () => {
     const spec = {
@@ -95,7 +99,7 @@ describe("convert", () => {
         key2_2: "foobar",
       },
     };
-    expect(convert(data, spec)).to.deep.equal(expectedOutput);
+    expect(convert(spec)(data)).to.deep.equal(expectedOutput);
   });
 });
 
@@ -112,6 +116,30 @@ describe("convertPercentageToFraction", () => {
     const expectedOutput = undefined;
 
     expect(convertPercentageToFraction()(percentage)).to.be.equal(expectedOutput);
+  });
+});
+
+describe("convertPercentageToFraction with options", () => {
+  it("converts float representing percentage to a fractional representation with max precision of 4 (for our backend)", () => {
+    const percentage = 12.345978;
+    const expectedOutput = 0.1235;
+
+    expect(convertPercentageToFraction({ passThroughInvalidData: true })(percentage)).to.be.equal(
+      expectedOutput,
+    );
+  });
+
+  it("passes through any unparseable value", () => {
+    expect(convertPercentageToFraction({ passThroughInvalidData: true })(undefined)).to.be.equal(
+      undefined,
+    );
+    expect(
+      convertPercentageToFraction({ passThroughInvalidData: true })(("bla" as unknown) as number),
+    ).to.be.equal("bla");
+    expect(convertPercentageToFraction({ passThroughInvalidData: true })(NaN)).to.be.NaN;
+    expect(
+      convertPercentageToFraction({ passThroughInvalidData: true })((null as unknown) as number),
+    ).to.be.null;
   });
 });
 
@@ -154,6 +182,36 @@ describe("parseStringToFloat", () => {
     expect(parseStringToFloat()(NaN)).to.be.undefined;
     expect(parseStringToFloat()(Infinity)).to.be.undefined;
     expect(parseStringToFloat()((null as unknown) as number)).to.be.undefined; //just to be sure
+  });
+});
+
+describe("parseStringToFloat with options", () => {
+  /* this fn is the same as parseStringToFloat but returns original data
+   * instead of undefined if it's not parseable to number.
+   * this is necessary e.g. for data processing during form validation */
+  it("tries to parse string to float and returns a float", () => {
+    const goodString = "2.56";
+
+    expect(
+      (parseStringToFloat({ passThroughInvalidData: true })(goodString) as number).toString(),
+    ).to.be.equal(goodString);
+  });
+
+  it("passes through a number", () => {
+    const val1 = 2222;
+    const val2 = 22.34;
+
+    expect(parseStringToFloat({ passThroughInvalidData: true })(val1)).to.be.equal(val1);
+    expect(parseStringToFloat({ passThroughInvalidData: true })(val2)).to.be.equal(val2);
+  });
+
+  it("returns input data if it's not parseable.", () => {
+    expect(parseStringToFloat({ passThroughInvalidData: true })("")).to.eq("");
+    expect(parseStringToFloat({ passThroughInvalidData: true })("blabla")).to.eq("blabla");
+    expect(parseStringToFloat({ passThroughInvalidData: true })(NaN)).to.be.NaN;
+    expect(parseStringToFloat({ passThroughInvalidData: true })(Infinity)).to.eq(Infinity);
+    expect(parseStringToFloat({ passThroughInvalidData: true })((null as unknown) as number)).to.be
+      .null;
   });
 });
 
@@ -202,7 +260,7 @@ describe("removeEmptyField", () => {
       "6": 123,
     };
 
-    expect(convert(data, conversionSpec)).to.deep.equal(expectedOutput);
+    expect(convert(conversionSpec)(data)).to.deep.equal(expectedOutput);
   });
 });
 
@@ -246,6 +304,166 @@ describe("convertInArray", () => {
       key2: [{ elementKey1: "bla", elementKey2: 2500 }, { elementKey1: "wow", elementKey2: 27 }],
     };
 
-    expect(convert(data, conversionSpec)).to.be.deep.equal(expectedOutput);
+    expect(convert(conversionSpec)(data)).to.be.deep.equal(expectedOutput);
+  });
+});
+
+describe("generate shareholders", () => {
+  it("returns an empty array if input is undefined", () => {
+    const companyShares = 500;
+    const expectedOutput: TShareholder[] = [];
+    expect(generateShareholders(undefined as any, companyShares)).to.deep.eq(expectedOutput);
+  });
+  it("converts shareholder shares to percentage from company shares and sorts array", () => {
+    const companyShares = 500;
+    const data = [
+      {
+        fullName: "shareholder1",
+        shareCapital: 50,
+      },
+      {
+        fullName: "shareholder2",
+        shareCapital: 250,
+      },
+      {
+        fullName: "shareholder3",
+        shareCapital: 200,
+      },
+    ];
+    const expectedOutput: TShareholder[] = [
+      {
+        fullName: "shareholder2",
+        percentageOfShares: 50,
+      },
+      {
+        fullName: "shareholder3",
+        percentageOfShares: 40,
+      },
+      {
+        fullName: "shareholder1",
+        percentageOfShares: 10,
+      },
+    ];
+    expect(generateShareholders(data, companyShares)).to.deep.eq(expectedOutput);
+  });
+  it("converts shareholder shares to percentage from company shares and adds an 'other' entry if shares don't sum up to 100%", () => {
+    const companyShares = 500;
+    const data = [
+      {
+        fullName: "shareholder2",
+        shareCapital: 200,
+      },
+      {
+        fullName: "shareholder1",
+        shareCapital: 163,
+      },
+    ];
+    const expectedOutput: TShareholder[] = [
+      {
+        fullName: "shareholder2",
+        percentageOfShares: 40,
+      },
+      {
+        fullName: "shareholder1",
+        percentageOfShares: 32.6,
+      },
+      {
+        fullName: "Others",
+        percentageOfShares: 27.4,
+      },
+    ];
+    expect(generateShareholders(data, companyShares)).to.deep.eq(expectedOutput);
+  });
+  it("rounds the percentages and assigns the rest of the 100% shares to an 'other' entry ", () => {
+    const companyShares = 100;
+    const data = [
+      {
+        fullName: "shareholder2",
+        shareCapital: 80.45,
+      },
+      {
+        fullName: "shareholder1",
+        shareCapital: 19.45,
+      },
+    ];
+    const expectedOutput: TShareholder[] = [
+      {
+        fullName: "shareholder2",
+        percentageOfShares: 80.45,
+      },
+      {
+        fullName: "shareholder1",
+        percentageOfShares: 19.45,
+      },
+      {
+        fullName: "Others",
+        percentageOfShares: 0.1,
+      },
+    ];
+    expect(generateShareholders(data, companyShares)).to.deep.eq(expectedOutput);
+  });
+  it("removes the last entry if the percentage is less than 0 due to rounding errors", () => {
+    const companyShares = 100;
+    const data = [
+      {
+        fullName: "shareholder1",
+        shareCapital: 19.554,
+      },
+      {
+        fullName: "shareholder2",
+        shareCapital: 79.5544,
+      },
+      {
+        fullName: "shareholder3",
+        shareCapital: 0.92,
+      },
+      {
+        fullName: "others",
+        shareCapital: 0.021,
+      },
+    ];
+    const expectedOutput: TShareholder[] = [
+      {
+        fullName: "shareholder2",
+        percentageOfShares: 79.55,
+      },
+      {
+        fullName: "shareholder1",
+        percentageOfShares: 19.55,
+      },
+      {
+        fullName: "shareholder3",
+        percentageOfShares: 0.9,
+      },
+    ];
+    expect(generateShareholders(data, companyShares)).to.deep.eq(expectedOutput);
+  });
+  it.skip("others should be at the end no matter how much shares it have", () => {
+    const companyShares = 100;
+    const data = [
+      {
+        fullName: "shareholder1",
+        shareCapital: 15,
+      },
+      {
+        fullName: "shareholder2",
+        shareCapital: 21,
+      },
+    ];
+    const expectedOutput: TShareholder[] = [
+      {
+        fullName: "shareholder2",
+        percentageOfShares: 21,
+      },
+      {
+        fullName: "shareholder1",
+        percentageOfShares: 15,
+      },
+      {
+        fullName: "Others",
+        percentageOfShares: 64,
+      },
+    ];
+    expect(generateShareholders(data, companyShares)).to.deep.eq(expectedOutput);
   });
 });

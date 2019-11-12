@@ -1,10 +1,10 @@
 import { fillForm } from "../utils/forms";
 import {
-  acceptWallet,
   assertDashboard,
   assertEmailChangeAbort,
   assertEmailChangeFlow,
   assertEmailPendingChange,
+  confirmAccessModal,
   createAndLoginNewUser,
   DEFAULT_PASSWORD,
   generateRandomEmailAddress,
@@ -43,7 +43,7 @@ describe("Change Email", function(): void {
         "verify-email-widget-form-submit": { type: "submit" },
       });
 
-      acceptWallet();
+      confirmAccessModal();
 
       // assert if error message has popped in
       cy.get(tid("profile-email-exists")).should("exist");
@@ -73,7 +73,7 @@ describe("Change Email", function(): void {
         "verify-email-widget-form-submit": { type: "submit" },
       });
 
-      acceptWallet();
+      confirmAccessModal();
 
       // assert if new email is pending for verification
 
@@ -92,7 +92,7 @@ describe("Change Email", function(): void {
         "verify-email-widget-form-submit": { type: "submit" },
       });
 
-      acceptWallet();
+      confirmAccessModal();
 
       // assert if new email is pending for verification
       assertEmailPendingChange(email, newEmail);
@@ -112,7 +112,7 @@ describe("Change Email", function(): void {
         "verify-email-widget-form-submit": { type: "submit" },
       });
 
-      acceptWallet();
+      confirmAccessModal();
 
       // assert if new email is pending for verification
 
@@ -177,7 +177,7 @@ describe("Change Email", function(): void {
             "verify-email-widget-form-submit": { type: "submit" },
           });
 
-          acceptWallet();
+          confirmAccessModal();
 
           // assert if error message has popped in
           cy.get(tid("profile-email-exists")).should("exist");

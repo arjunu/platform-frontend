@@ -3,11 +3,18 @@ import { createSelector } from "reselect";
 import { EKycRequestStatus } from "../../lib/api/kyc/KycApi.interfaces";
 import { EUserType, IUser } from "../../lib/api/users/interfaces";
 import { IAppState } from "../../store";
-import { selectIsUserVerifiedOnBlockchain, selectKycRequestStatus } from "../kyc/selectors";
+import { ECountries } from "../../utils/enums/countriesEnum";
+import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
+import {
+  selectClientCountry,
+  selectIsUserVerifiedOnBlockchain,
+  selectKycRequestStatus,
+} from "../kyc/selectors";
 import { selectIsLightWallet } from "../web3/selectors";
-import { IAuthState } from "./reducer";
+import { EAuthStatus, IAuthState } from "./reducer";
 
-export const selectIsAuthorized = (state: IAuthState): boolean => !!(state.jwt && state.user);
+export const selectIsAuthorized = (state: IAuthState): boolean =>
+  !!(state.jwt && state.user && state.status === EAuthStatus.AUTHORIZED);
 
 export const selectJwt = (state: IAppState): string | undefined => state.auth.jwt;
 
@@ -25,7 +32,7 @@ export const selectUnverifiedUserEmail = (state: IAuthState): string | undefined
 
 export const selectUser = (state: IAuthState): IUser | undefined => state.user;
 
-export const selectUserId = (state: IAppState): string | undefined =>
+export const selectUserId = (state: IAppState): EthereumAddressWithChecksum | undefined =>
   state.auth.user && state.auth.user.userId;
 
 export const selectBackupCodesVerified = (state: IAppState): boolean =>
@@ -55,6 +62,13 @@ export const selectIsUserFullyVerified = (state: IAppState): boolean =>
 
 export const selectIsInvestor = (state: IAppState): boolean =>
   selectUserType(state) === EUserType.INVESTOR;
+
+export const selectIsUSInvestor = (state: IAppState): boolean => {
+  const isInvestor = selectIsInvestor(state);
+  const country = selectClientCountry(state);
+
+  return isInvestor && country === ECountries.UNITED_STATES;
+};
 
 export const selectIsIssuer = (state: IAppState): boolean =>
   selectUserType(state) === EUserType.ISSUER;

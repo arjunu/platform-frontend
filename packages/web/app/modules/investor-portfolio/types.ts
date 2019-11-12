@@ -1,5 +1,5 @@
 import { ECurrency } from "../../components/shared/formatters/utils";
-import { IEtoTokenData, TEtoWithCompanyAndContract } from "../eto/types";
+import { IEtoTokenData, TEtoWithCompanyAndContractReadonly } from "../eto/types";
 
 export interface ITokenDisbursal {
   token: ECurrency;
@@ -37,11 +37,26 @@ export interface ICalculatedContribution {
   maxCapExceeded: boolean;
 }
 
-export type TETOWithInvestorTicket = TEtoWithCompanyAndContract & {
+export interface IWhitelistTicket {
+  whitelistDiscountAmountEurUlps: string;
+  whitelistDiscountFrac: number;
+}
+
+export type TTokensPersonalDiscount = IWhitelistTicket & {
+  whitelistDiscountUlps: string;
+};
+
+export interface IPersonalDiscount {
+  whitelistDiscountAmountLeft: string;
+  whitelistDiscountUlps: string;
+  whitelistDiscountFrac: number;
+}
+
+export type TETOWithInvestorTicket = TEtoWithCompanyAndContractReadonly & {
   investorTicket: IInvestorTicket;
 };
 
-export type TETOWithTokenData = TEtoWithCompanyAndContract & {
+export type TETOWithTokenData = TEtoWithCompanyAndContractReadonly & {
   tokenData: IEtoTokenData;
 };
 

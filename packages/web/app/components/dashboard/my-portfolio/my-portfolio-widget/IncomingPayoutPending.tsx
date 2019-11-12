@@ -10,8 +10,8 @@ import {
   selectEuroTokenIncomingPayout,
 } from "../../../../modules/investor-portfolio/selectors";
 import { appConnect } from "../../../../store";
-import { isZero } from "../../../../utils/Number.utils";
-import { Counter } from "../../../shared/Counter.unsafe";
+import { isZero } from "../../../../utils/NumberUtils";
+import { Counter } from "../../../shared/Counter";
 import { ETheme, Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,

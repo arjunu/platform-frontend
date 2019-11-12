@@ -6,7 +6,9 @@ import { Dictionary } from "../../types";
 import {
   IEtoContractData,
   IEtoTokenData,
-  TEtoWithCompanyAndContract,
+  IEtoTokenGeneralDiscounts,
+  SignedISHAStatus,
+  TEtoWithCompanyAndContractReadonly,
   TOfferingAgreementsStatus,
 } from "./types";
 
@@ -24,9 +26,17 @@ export const etoActions = {
     widgetView,
   })),
   loadEtos: createActionFactory("ETO_LOAD_ETOS"),
-  downloadEtoDocument: createActionFactory("ETO_DOWNLOAD_DOCUMENT", (document: IEtoDocument) => ({
-    document,
-  })),
+  loadTokenTerms: createActionFactory(
+    "INVESTOR_TOKEN_PRICE_LOAD",
+    (eto: TEtoWithCompanyAndContractReadonly) => ({ eto }),
+  ),
+  downloadEtoDocument: createActionFactory(
+    "ETO_DOWNLOAD_DOCUMENT",
+    (document: IEtoDocument, eto: TEtoWithCompanyAndContractReadonly) => ({
+      document,
+      eto,
+    }),
+  ),
   downloadEtoTemplateByType: createActionFactory(
     "ETO_DOWNLOAD_TEMPLATE_BY_TYPE",
     (etoId: string, documentType: EEtoDocumentType) => ({ etoId, documentType }),
@@ -34,7 +44,7 @@ export const etoActions = {
   loadTokensData: createActionFactory("ETO_LOAD_TOKENS_DATA"),
   loadEtoAgreementsStatus: createActionFactory(
     "ETO_LOAD_AGREEMENTS_STATUS",
-    (eto: TEtoWithCompanyAndContract) => ({
+    (eto: TEtoWithCompanyAndContractReadonly) => ({
       eto,
     }),
   ),
@@ -46,6 +56,7 @@ export const etoActions = {
     }),
   ),
   confirmJurisdictionDisclaimer: createActionFactory("ETO_CONFIRM_JURISDICTION_DISCLAIMER"),
+  confirmConfidentialityAgreement: createActionFactory("ETO_CONFIRM_CONFIDENTIALITY_AGREEMENT"),
   verifyEtoAccess: createActionFactory("ETO_VERIFY_ETO_ACCESS", (previewCode: string) => ({
     previewCode,
   })),
@@ -74,10 +85,17 @@ export const etoActions = {
   ),
   setEtoWidgetError: createActionFactory("ETO_SET_ETO_WIDGET_ERROR"),
   setTokenData: createActionFactory(
-    "PORTFOLIO_SET_TOKEN_DATA",
+    "ETO_SET_ETO_TOKEN_DATA",
     (previewCode: string, tokenData: IEtoTokenData) => ({
       previewCode,
       tokenData,
+    }),
+  ),
+  setTokenGeneralDiscounts: createActionFactory(
+    "ETO_SET_ETO_TOKEN_GENERAL_DISCOUNTS",
+    (etoId: string, tokenGeneralDiscounts: IEtoTokenGeneralDiscounts) => ({
+      etoId,
+      tokenGeneralDiscounts,
     }),
   ),
   setAgreementsStatus: createActionFactory(
@@ -86,5 +104,13 @@ export const etoActions = {
       previewCode,
       statuses,
     }),
+  ),
+  loadSignedInvestmentAgreement: createActionFactory(
+    "ETO_LOAD_INVESTMENT_AGREEMENT",
+    (eto: TEtoWithCompanyAndContractReadonly) => ({ eto }),
+  ),
+  setInvestmentAgreementHash: createActionFactory(
+    "ETO_SET_INVESTMENT_AGREEMENT_URL",
+    (previewCode: string, url: SignedISHAStatus["url"]) => ({ url, previewCode }),
   ),
 };

@@ -23,8 +23,13 @@ import {
   EOfferingDocumentType,
   EProductName,
 } from "../app/lib/api/eto/EtoProductsApi.interfaces";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../app/modules/eto/types";
-import { EthereumAddress, EthereumAddressWithChecksum, EthereumNetworkId } from "../app/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../app/modules/eto/types";
+import {
+  EthereumAddress,
+  EthereumAddressWithChecksum,
+  EthereumNetworkId,
+} from "../app/utils/opaque-types/types";
+import { toEquityTokenSymbol } from "../app/utils/opaque-types/utils";
 
 import * as companyBanner from "./assets/company-banner.png";
 import * as companyPreviewCardBanner from "./assets/company-preview-banner.png";
@@ -32,6 +37,7 @@ import * as companyPreviewCardBanner from "./assets/company-preview-banner.png";
 export const dummyConfig: IConfig = {
   ethereumNetwork: {
     rpcUrl: "https://localhost:8080",
+    backendRpcUrl: "https://localhost:8080",
   },
   contractsAddresses: {
     universeContractAddress: "UNIVERSE_ADDRESS",
@@ -74,7 +80,7 @@ export const testCompany: TCompanyEtoData = {
   riskThirdPartySharesFinancing: undefined,
   roadmap: undefined,
   targetMarketAndIndustry: undefined,
-  useOfCapital: undefined,
+  useOfCapital: "all for nothing",
   advisors: {
     members: [
       {
@@ -714,7 +720,7 @@ export const testCompany: TCompanyEtoData = {
 export const etoDocuments: TEtoDocumentTemplates = {
   qmWKa6ZVZjZu3X2CtJnSnthUwWMeAcyfv9IZDnoawmULeT: {
     documentType: EEtoDocumentType.APPROVED_INVESTOR_OFFERING_DOCUMENT,
-    form: "document" as TEtoFormType,
+    form: "document",
     ipfsHash: "QmWKa6zVZjZu3x2CtJnSNTHUwWMeAcyfv9iZDnoawmULeT",
     mimeType: "application/pdf",
     language: EEtoDocumentLanguage.EN,
@@ -722,11 +728,19 @@ export const etoDocuments: TEtoDocumentTemplates = {
   },
   qmc4RZuxqKkvRahSuhs6QaeRq2VoqDiMXbiHwhZTfwXUdK: {
     documentType: EEtoDocumentType.SIGNED_TERMSHEET,
-    form: "document" as TEtoFormType,
+    form: "document",
     ipfsHash: "Qmc4rZUXQKkvRahSUHS6qaeRq2voqDiMXbiHwhZTfwXUdK",
     mimeType: "application/pdf",
     language: EEtoDocumentLanguage.EN,
     name: "./dev_fixtures/eto_fixtures/ETOInPublicState/signed_termsheet.pdf",
+  },
+  aF33RZuxqKkvRahSuhs6QaeRq2VoqDiMXbiHwhZTfwXUdK: {
+    documentType: EEtoDocumentType.INVESTMENT_AND_SHAREHOLDER_AGREEMENT_PREVIEW,
+    form: "document",
+    ipfsHash: "QmVZvnno5v4zc96QeuGghYtp8N6JDEiACQbpM1MHyG6Uib",
+    mimeType: "application/pdf",
+    name:
+      "./dev_fixtures/eto_fixtures/ISSUER_WHITELIST/investment_and_shareholder_agreement_preview.pdf",
   },
 };
 
@@ -780,7 +794,7 @@ export const testProduct = {
   dateToWhitelistMinDuration: 7 * 24 * 60 * 60,
 };
 
-export const testEto: TEtoWithCompanyAndContract = {
+export const testEto: TEtoWithCompanyAndContractReadonly = {
   authorizedCapital: undefined,
   newSharesToIssueInFixedSlots: undefined,
   canEnableBookbuilding: false,
@@ -793,7 +807,7 @@ export const testEto: TEtoWithCompanyAndContract = {
   equityTokenImage:
     "https://documents.neufund.io/0x64Ee2B334454A920cE99f39Cc7557b428db8D5B8/a03810cf-7e99-4264-8a94-24303dce4e3b.png",
   equityTokenName: "Quintessence",
-  equityTokenSymbol: "QTT",
+  equityTokenSymbol: toEquityTokenSymbol("QTT"),
   equityTokensPerShare: 10000,
   etoId: "0xfaDa8f267C054f469b52Ccbeb08250ACAAeE65dc" as EthereumAddressWithChecksum,
   existingShareCapital: 40976,

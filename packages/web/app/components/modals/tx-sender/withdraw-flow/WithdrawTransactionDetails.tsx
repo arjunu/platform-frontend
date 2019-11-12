@@ -160,7 +160,7 @@ const WithdrawTransactionDetails: React.FunctionComponent<TComponentProps> = ({
               caption={<FormattedMessage id="modal.sent-eth.timestamp" />}
               value={
                 <TransactionData
-                  top={<FormattedRelative value={txTimestamp} />}
+                  top={<FormattedRelative value={txTimestamp} initialNow={new Date()} />}
                   bottom={
                     <FormattedDate
                       value={txTimestamp}

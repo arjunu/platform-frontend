@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { TTranslatedString } from "../../types";
-import { ClickableDocumentTile } from "../shared/Document";
+import { DocumentTile } from "../shared/Document";
 
 import * as styles from "./Documents.module.scss";
 
@@ -24,13 +24,15 @@ export const DocumentList: React.FunctionComponent<TDocumentListProps> = ({
   <>
     {etoTemplates.length !== 0 ? (
       etoTemplates.map(template => (
-        <ClickableDocumentTile
+        <DocumentTile
           key={template.ipfsHash}
-          document={template}
-          generateTemplate={generateTemplate}
           title={documentTitles[template.documentType]}
           extension={".doc"}
           busy={documentsGenerated[template.ipfsHash]}
+          blank={false}
+          onlyDownload={true}
+          fileName={template.documentType}
+          downloadAction={() => generateTemplate(template)}
         />
       ))
     ) : (

@@ -10,8 +10,6 @@ export const etoFlowInitialState: IEtoFlowState = {
   loading: false,
   saving: false,
   bookbuildingStats: [],
-  signedInvestmentAgreementUrlLoading: false,
-  signedInvestmentAgreementUrl: null,
   etoDateSaving: false,
 };
 
@@ -51,17 +49,6 @@ export const etoFlowReducer: AppReducer<IEtoFlowState> = (
       return {
         ...state,
         ...action.payload,
-      };
-    case actions.etoFlow.loadSignedInvestmentAgreement.getType():
-      return {
-        ...state,
-        signedInvestmentAgreementUrlLoading: true,
-      };
-    case actions.etoFlow.setInvestmentAgreementHash.getType():
-      return {
-        ...state,
-        signedInvestmentAgreementUrlLoading: false,
-        signedInvestmentAgreementUrl: action.payload.signedInvestmentAgreementUrl,
       };
     case actions.etoFlow.setProducts.getType():
       return {

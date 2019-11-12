@@ -61,12 +61,12 @@ const acceptAgreement = compose<IComponentProps, {}>(
 );
 
 const AcceptTHA = compose<IComponentProps, {}>(
-  withProps(() => ({ task: ENomineeTask.ACCEPT_THA })),
+  withProps({ task: ENomineeTask.ACCEPT_THA }),
   acceptAgreement,
 )(AcceptAgreementLayout);
 
 const AcceptRAAA = compose<IComponentProps, {}>(
-  withProps(() => ({ task: ENomineeTask.ACCEPT_RAAA })),
+  withProps({ task: ENomineeTask.ACCEPT_RAAA }),
   acceptAgreement,
 )(AcceptAgreementLayout);
 

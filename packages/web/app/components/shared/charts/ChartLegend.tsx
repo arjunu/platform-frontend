@@ -1,4 +1,9 @@
 import * as React from "react";
+import { FormattedMessage } from "react-intl-phraseapp";
+
+import { OTHERS_NAME } from "../../eto/utils";
+import { Money } from "../formatters/Money";
+import { ENumberFormat, ENumberInputFormat, ENumberOutputFormat } from "../formatters/utils";
 
 import * as styles from "./ChartLegend.module.scss";
 
@@ -16,12 +21,8 @@ interface IProps {
   data: IData;
 }
 
-function formatPercent(value: number, numbers: number[]): string {
-  return `${Math.round((value / numbers.reduce((a, b) => a + b)) * 100)}%`;
-}
-
 export const ChartLegend: React.FunctionComponent<IProps> = ({ data }) => (
-  <div>
+  <>
     {data.datasets.map(dataset =>
       dataset.data.map((value, index) => (
         <div className={styles.chartLegend} key={data.labels[index]}>
@@ -29,9 +30,21 @@ export const ChartLegend: React.FunctionComponent<IProps> = ({ data }) => (
             className={styles.indicator}
             style={{ backgroundColor: dataset.backgroundColor[index] }}
           />
-          <div>{`${data.labels[index]} ${formatPercent(value, dataset.data)}`}</div>
+          <div>
+            {data.labels[index] === OTHERS_NAME ? (
+              <FormattedMessage id="shared.chart-doughnut.others" />
+            ) : (
+              data.labels[index]
+            )}{" "}
+            <Money
+              value={value.toString()}
+              inputFormat={ENumberInputFormat.FLOAT}
+              outputFormat={ENumberOutputFormat.FULL}
+              valueType={ENumberFormat.PERCENTAGE}
+            />
+          </div>
         </div>
       )),
     )}
-  </div>
+  </>
 );

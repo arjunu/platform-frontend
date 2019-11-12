@@ -4,7 +4,7 @@ import { compose } from "redux";
 
 import { appRoutes } from "../appRoutes";
 import { EColumnSpan } from "../layouts/Container";
-import { DashboardLinkWidget } from "../shared/dashboard-link-widget/DashboardLinkWidget";
+import { DashboardLinkWidget } from "../shared/dashboard-widget/DashboardWidget";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryPanel } from "../shared/errorBoundary/ErrorBoundaryPanel";
 

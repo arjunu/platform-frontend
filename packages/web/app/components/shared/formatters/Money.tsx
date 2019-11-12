@@ -1,7 +1,7 @@
-import BigNumber from "bignumber.js";
 import * as cn from "classnames";
 import * as React from "react";
 
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import { CommonHtmlProps } from "../../../types";
 import { FormatNumber } from "./FormatNumber";
 import { FormatShortNumber } from "./FormatShortNumber";
@@ -35,7 +35,7 @@ enum ETheme {
 }
 
 interface IMoneyProps {
-  value: string | BigNumber | number | null | undefined;
+  value: TBigNumberVariants | null | undefined;
 }
 
 interface IMoneyCommonProps {

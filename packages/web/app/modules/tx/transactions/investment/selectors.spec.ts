@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 import { addBigNumbers, subtractBigNumbers } from "../../../../utils/BigNumberUtils";
-import { convertToBigInt } from "../../../../utils/Number.utils";
+import { convertToUlps } from "../../../../utils/NumberUtils";
 import { EInvestmentType } from "../../../investment-flow/reducer";
 import { selectTxGasCostEthUlps } from "../../sender/selectors";
 import { selectMaximumInvestment } from "./selectors";
@@ -44,7 +44,7 @@ describe("selectMaximumInvestment", () => {
   it("should use entire wallet for LockedEthWallet", () => {
     const state = {
       investmentFlow: {
-        ethValueUlps: convertToBigInt("1188.5479"),
+        ethValueUlps: convertToUlps("1188.5479"),
         investmentType: EInvestmentType.ICBMEth,
       },
       ...walletState,
@@ -56,7 +56,7 @@ describe("selectMaximumInvestment", () => {
   });
 
   it("should use user value for LockedEthWallet", () => {
-    const ethValueUlps = convertToBigInt("1000.5000");
+    const ethValueUlps = convertToUlps("1000.5000");
     const state = {
       investmentFlow: {
         ethValueUlps,
@@ -71,7 +71,7 @@ describe("selectMaximumInvestment", () => {
   });
 
   it("should use entire wallet for EthWallet", () => {
-    const ethValueUlps = convertToBigInt("2940.3398");
+    const ethValueUlps = convertToUlps("2940.3398");
     const balance = addBigNumbers([etherBalance, etherTokenBalance]);
     const state = {
       investmentFlow: {
@@ -92,7 +92,7 @@ describe("selectMaximumInvestment", () => {
   });
 
   it("should use user value for for EthWallet", () => {
-    const ethValueUlps = convertToBigInt("2000.3398");
+    const ethValueUlps = convertToUlps("2000.3398");
     const state = {
       investmentFlow: {
         ethValueUlps,
@@ -108,7 +108,7 @@ describe("selectMaximumInvestment", () => {
   });
 
   it("should use entire wallet for for nEURWallet", () => {
-    const euroValueUlps = convertToBigInt("1212200.93");
+    const euroValueUlps = convertToUlps("1212200.93");
     const state = {
       investmentFlow: {
         euroValueUlps,
@@ -123,7 +123,7 @@ describe("selectMaximumInvestment", () => {
   });
 
   it("should use user value for for nEURWallet", () => {
-    const euroValueUlps = convertToBigInt("1200.93");
+    const euroValueUlps = convertToUlps("1200.93");
     const state = {
       investmentFlow: {
         euroValueUlps,
@@ -138,7 +138,7 @@ describe("selectMaximumInvestment", () => {
   });
 
   it("should use entire wallet for for LockednEURWallet", () => {
-    const euroValueUlps = convertToBigInt("707880.19");
+    const euroValueUlps = convertToUlps("707880.19");
     const state = {
       investmentFlow: {
         euroValueUlps,
@@ -153,7 +153,7 @@ describe("selectMaximumInvestment", () => {
   });
 
   it("should use user value for for LockednEURWallet", () => {
-    const euroValueUlps = convertToBigInt("880.19");
+    const euroValueUlps = convertToUlps("880.19");
     const state = {
       investmentFlow: {
         euroValueUlps,

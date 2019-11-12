@@ -1,9 +1,11 @@
-import BigNumber from "bignumber.js";
 import { find, some } from "lodash";
 import { createSelector } from "reselect";
 
-import { DEFAULT_DATE_TO_WHITELIST_MIN_DURATION } from "../../config/constants";
-import { EEtoState, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
+import {
+  EEtoState,
+  TCompanyEtoData,
+  TEtoSpecsData,
+} from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import {
   EEtoDocumentType,
   IEtoDocument,
@@ -26,7 +28,7 @@ import { selectAgreementsStatus, selectEtoContract, selectEtoSubState } from "..
 import {
   EEtoAgreementStatus,
   EETOStateOnChain,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
   TOfferingAgreementsStatus,
 } from "../eto/types";
 import { isOnChain } from "../eto/utils";
@@ -78,7 +80,7 @@ const selectIssuerEtoWithCompanyAndContractInternal = createSelector(
 
 export const selectIssuerEtoWithCompanyAndContract = (
   state: IAppState,
-): TEtoWithCompanyAndContract | undefined => {
+): TEtoWithCompanyAndContractReadonly | undefined => {
   const eto = selectIssuerEto(state);
 
   if (eto) {
@@ -154,12 +156,9 @@ export const selectIssuerEtoOfferingDocumentType = (
   return undefined;
 };
 
-export const selectIssuerEtoDateToWhitelistMinDuration = (state: IAppState): BigNumber => {
+export const selectIssuerEtoDateToWhitelistMinDuration = (state: IAppState): number => {
   const eto = selectIssuerEto(state);
-  // in case of undefined return platform default (7 days)
-  return new BigNumber(
-    eto ? eto.product.dateToWhitelistMinDuration : DEFAULT_DATE_TO_WHITELIST_MIN_DURATION,
-  );
+  return eto!.product.dateToWhitelistMinDuration;
 };
 
 export const selectIssuerEtoLoading = (state: IAppState): boolean => state.etoIssuer.loading;
@@ -169,7 +168,10 @@ export const selectNewEtoDateSaving = (state: IAppState): boolean => state.etoIs
 export const selectCombinedEtoCompanyData = createSelector(
   selectIssuerCompany,
   selectIssuerEto,
-  (company, eto) => ({ ...company, ...eto }),
+  (company: TCompanyEtoData | undefined, eto: TEtoSpecsData | undefined) => ({
+    ...company,
+    ...eto,
+  }),
 );
 
 export const selectIssuerEtoTemplates = (state: IAppState): TEtoDocumentTemplates | undefined => {
@@ -245,12 +247,6 @@ export const selectUploadedInvestmentAgreement = (
   );
 };
 
-export const selectInvestmentAgreementLoading = (state: DeepReadonly<IAppState>): boolean =>
-  state.etoIssuer.signedInvestmentAgreementUrlLoading;
-
-export const selectSignedInvestmentAgreementUrl = (state: DeepReadonly<IAppState>): string | null =>
-  state.etoIssuer.signedInvestmentAgreementUrl;
-
 export const userHasKycAndEmailVerified = (state: IAppState) =>
   selectKycRequestStatus(state) === EKycRequestStatus.ACCEPTED &&
   selectIsUserEmailVerified(state.auth);
@@ -265,6 +261,16 @@ export const selectPreEtoStartDateFromContract = (state: IAppState) => {
 
   if (eto && isOnChain(eto)) {
     return eto.contract.startOfStates[EETOStateOnChain.Whitelist];
+  }
+
+  return undefined;
+};
+
+export const selectIssuerEtoOnChainState = (state: IAppState) => {
+  const eto = selectIssuerEtoWithCompanyAndContract(state);
+
+  if (eto && isOnChain(eto)) {
+    return eto.contract.timedState;
   }
 
   return undefined;

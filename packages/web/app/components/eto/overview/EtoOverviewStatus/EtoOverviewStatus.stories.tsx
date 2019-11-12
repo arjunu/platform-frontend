@@ -3,16 +3,20 @@ import * as moment from "moment";
 import * as React from "react";
 
 import { testEto } from "../../../../../test/fixtures";
+import { EKycRequestStatus } from "../../../../lib/api/kyc/KycApi.interfaces";
+import { EUserType } from "../../../../lib/api/users/interfaces";
 import {
   EETOStateOnChain,
   IEtoContractData,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "../../../../modules/eto/types";
+import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withStore } from "../../../../utils/storeDecorator.unsafe";
 import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
+import { ECurrency } from "../../../shared/formatters/utils";
 import { EtoOverviewStatus } from "./EtoOverviewStatus";
 
-const eto: TEtoWithCompanyAndContract = {
+const eto: TEtoWithCompanyAndContractReadonly = {
   ...testEto,
   preMoneyValuationEur: 10000,
   existingShareCapital: 10,
@@ -23,7 +27,7 @@ const eto: TEtoWithCompanyAndContract = {
   maxTicketEur: 1000,
   minTicketEur: 1,
   equityTokenName: "TokenName",
-  equityTokenSymbol: "TKN",
+  equityTokenSymbol: toEquityTokenSymbol("TKN"),
   company: { ...testEto.company, brandName: "BrandName" },
   contract: {
     ...testEto.contract!,
@@ -37,16 +41,48 @@ const dummyNow = new Date("2018-10-16T05:03:56+00:00");
 storiesOf("ETO/EtoOverviewStatus", module)
   .addDecorator(
     withStore({
+      auth: {
+        jwt: "bla",
+        user: {
+          type: EUserType.INVESTOR,
+          verifiedEmail: "asfasdf@asfa.dd",
+        },
+      },
+      kyc: {
+        individualRequestState: {
+          status: EKycRequestStatus.ACCEPTED,
+        },
+        claims: {
+          isVerified: true,
+        },
+      },
       eto: {
         etos: { [eto.previewCode]: eto },
         companies: { [eto.companyId]: eto.company },
         contracts: { [eto.previewCode]: eto.contract },
       },
+      bookBuildingFlow: {
+        bookbuildingStats: {
+          [eto.etoId]: {
+            investorsCount: 3,
+            pledgedAmount: 500,
+          },
+        },
+        pledges: {
+          [eto.etoId]: {
+            amountEur: 100,
+            currency: ECurrency.EUR_TOKEN,
+            consentToRevealEmail: true,
+          },
+        },
+      },
     }),
   )
   .addDecorator(withMockedDate(dummyNow))
   .add("default", () => <EtoOverviewStatus eto={eto} publicView={false} isEmbedded={true} />)
-  .add("not public", () => <EtoOverviewStatus eto={eto} isEmbedded={false} publicView={false} />)
+  .add("not public", () => (
+    <EtoOverviewStatus eto={eto} isEmbedded={false} publicView={false} url="eto" />
+  ))
   .add("with whitelist discount", () => (
     <EtoOverviewStatus eto={eto} isEmbedded={true} publicView={false} />
   ))
@@ -71,7 +107,70 @@ storiesOf("ETO/EtoOverviewStatus", module)
       publicView={false}
     />
   ))
-  .add("max cap exceeded whitelisted", () => (
+  .add("whitelisting", () => (
+    <EtoOverviewStatus
+      eto={{
+        ...eto,
+        isBookbuilding: true,
+        minTicketEur: 50,
+        maxTicketEur: 100,
+        maxPledges: 5,
+        contract: {
+          ...eto.contract,
+          timedState: EETOStateOnChain.Setup,
+          startOfStates: {
+            ...eto.contract!.startOfStates,
+            [EETOStateOnChain.Public]: moment()
+              .add(7, "days")
+              .toDate(),
+          },
+        } as IEtoContractData,
+      }}
+      isEmbedded={true}
+      publicView={false}
+    />
+  ))
+  .addDecorator(
+    withStore({
+      auth: {
+        jwt: "bla",
+        user: {
+          type: EUserType.INVESTOR,
+          verifiedEmail: "asfasdf@asfa.dd",
+        },
+      },
+      kyc: {
+        individualRequestState: {
+          status: EKycRequestStatus.ACCEPTED,
+        },
+        claims: {
+          isVerified: true,
+        },
+      },
+      eto: {
+        etos: { [eto.previewCode]: eto },
+        companies: { [eto.companyId]: eto.company },
+        contracts: { [eto.previewCode]: eto.contract },
+      },
+      bookBuildingFlow: {
+        bookbuildingStats: {
+          [eto.etoId]: {
+            investorsCount: 3,
+            pledgedAmount: 500,
+          },
+        },
+        pledges: {
+          [eto.etoId]: {
+            amountEur: 100,
+            currency: ECurrency.EUR_TOKEN,
+            consentToRevealEmail: true,
+          },
+        },
+      },
+    }),
+  )
+
+  .add("max cap exceeded, user whitelisted", () => (
     <EtoOverviewStatus
       eto={{
         ...eto,
@@ -89,13 +188,78 @@ storiesOf("ETO/EtoOverviewStatus", module)
       publicView={false}
     />
   ))
-  .add("max cap exceeded public", () => (
+  .add("max cap exceeded, user not whitelisted", () => (
     <EtoOverviewStatus
       eto={{
         ...eto,
         contract: {
           ...eto.contract,
           timedState: EETOStateOnChain.Public,
+        } as IEtoContractData,
+      }}
+      isEmbedded={true}
+      publicView={false}
+    />
+  ));
+
+storiesOf("ETO/EtoOverviewStatus/whitelisting, investor limit reached", module)
+  .addDecorator(
+    withStore({
+      auth: {
+        jwt: "bla",
+        user: {
+          type: EUserType.INVESTOR,
+          verifiedEmail: "asfasdf@asfa.dd",
+        },
+      },
+      kyc: {
+        individualRequestState: {
+          status: EKycRequestStatus.ACCEPTED,
+        },
+        claims: {
+          isVerified: true,
+        },
+      },
+      eto: {
+        etos: { [eto.previewCode]: eto },
+        companies: { [eto.companyId]: eto.company },
+        contracts: { [eto.previewCode]: eto.contract },
+      },
+      bookBuildingFlow: {
+        bookbuildingStats: {
+          [eto.etoId]: {
+            investorsCount: 5,
+            pledgedAmount: 500,
+          },
+        },
+        pledges: {
+          [eto.etoId]: {
+            amountEur: 100,
+            currency: ECurrency.EUR_TOKEN,
+            consentToRevealEmail: true,
+          },
+        },
+      },
+    }),
+  )
+  .addDecorator(withMockedDate(dummyNow))
+  .add("whitelisting, investor limit reached", () => (
+    <EtoOverviewStatus
+      eto={{
+        ...eto,
+        isBookbuilding: true,
+        minTicketEur: 50,
+        maxTicketEur: 100,
+        maxPledges: 5,
+        contract: {
+          ...eto.contract,
+          timedState: EETOStateOnChain.Setup,
+          startOfStates: {
+            ...eto.contract!.startOfStates,
+            [EETOStateOnChain.Public]: moment()
+              .add(7, "days")
+              .toDate(),
+          },
         } as IEtoContractData,
       }}
       isEmbedded={true}

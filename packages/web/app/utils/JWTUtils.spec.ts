@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import { setupFakeClock } from "../../test/integrationTestUtils.unsafe";
 import { AUTH_TOKEN_REFRESH_THRESHOLD } from "../modules/auth/constants";
-import { minutesToMs, secondsToMs } from "./Date.utils";
+import { minutesToMs, secondsToMs } from "./DateUtils";
 import {
   getJwtExpiryDate,
   hasValidPermissions,

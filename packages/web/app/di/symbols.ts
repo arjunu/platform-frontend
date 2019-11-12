@@ -1,4 +1,4 @@
-import { mapValues } from "lodash";
+import { makeDebugSymbols } from "./symbolsUtils";
 
 export const symbols = makeDebugSymbols({
   // configs
@@ -40,6 +40,7 @@ export const symbols = makeDebugSymbols({
 
   // storages
   walletStorage: Symbol(),
+  documentsConfidentialityAgreementsStorage: Symbol(),
   userStorage: Symbol(),
   jwtStorage: Symbol(),
 
@@ -59,10 +60,3 @@ export const symbols = makeDebugSymbols({
   // others
   richTextEditorUploadAdapter: Symbol(),
 });
-
-/**
- * Adds automatically symbols name values which makes debugging easier
- */
-export function makeDebugSymbols<T>(symbols: T): T {
-  return mapValues(symbols as any, (_val, key) => Symbol.for(key)) as any;
-}

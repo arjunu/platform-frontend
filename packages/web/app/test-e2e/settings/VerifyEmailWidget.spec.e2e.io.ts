@@ -11,6 +11,12 @@ import {
   tid,
   verifyLatestUserEmail,
 } from "../utils";
+import {
+  assertEmailChangeFlow,
+  assertEmailPendingChange,
+  fillForm,
+  verifyLatestUserEmailWithAPI,
+} from "../utils/index";
 
 describe("Verify Email Widget", () => {
   beforeEach(() => {
@@ -61,4 +67,51 @@ describe("Verify Email Widget", () => {
 
     closeModal();
   });
+
+  it("should automatically update email on verification", () => {
+    const email = generateRandomEmailAddress();
+    const password = "strongpassword";
+
+    registerWithLightWallet(email, password);
+    assertDashboard();
+
+    goToUserAccountSettings();
+    assertVerifyEmailWidgetIsInUnverifiedEmailState();
+
+    verifyLatestUserEmailWithAPI(email);
+
+    assertVerifyEmailWidgetIsInVerfiedEmailState();
+  });
+});
+
+it("should automatically update email after change", () => {
+  const email = generateRandomEmailAddress();
+  const password = "strongpassword";
+
+  registerWithLightWallet(email, password);
+  assertDashboard();
+
+  goToUserAccountSettings();
+  assertVerifyEmailWidgetIsInUnverifiedEmailState();
+
+  verifyLatestUserEmailWithAPI(email);
+
+  assertVerifyEmailWidgetIsInVerfiedEmailState();
+
+  assertEmailChangeFlow();
+
+  const newEmail = generateRandomEmailAddress();
+
+  fillForm({
+    email: newEmail,
+    "verify-email-widget-form-submit": { type: "submit" },
+  });
+
+  confirmAccessModal();
+
+  assertEmailPendingChange(email, newEmail);
+
+  verifyLatestUserEmailWithAPI(newEmail);
+
+  assertVerifyEmailWidgetIsInVerfiedEmailState();
 });

@@ -28,18 +28,34 @@ const kycPersonBaseForm: TFormFixture = {
   },
 };
 
+const highIncome: TFormFixture =
+  process.env.NF_DISABLE_HIGH_INCOME === "1"
+    ? {}
+    : {
+        isHighIncome: {
+          value: "true",
+          type: "select",
+        },
+      };
+
 export const kycInvidualForm: TFormFixture = {
   ...kycPersonBaseForm,
-  isUsCitizen: {
-    value: "false",
-    type: "select",
-  },
-  isHighIncome: {
-    value: "true",
-    type: "select",
-  },
+  ...highIncome,
   "kyc-personal-start-submit-form": {
     type: "submit",
+  },
+};
+
+export const kycInvidualFormUS: TFormFixture = {
+  ...kycPersonBaseForm,
+  ...highIncome,
+  nationality: {
+    value: "US",
+    type: "select",
+  },
+  isAccreditedUsCitizen: {
+    value: "true",
+    type: "select",
   },
 };
 

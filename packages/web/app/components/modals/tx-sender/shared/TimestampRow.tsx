@@ -10,7 +10,7 @@ const TimestampRow: React.FunctionComponent<{ timestamp: number }> = ({ timestam
     data-test-id="timestamp-row.timestamp"
     value={
       <>
-        <FormattedRelative value={timestamp} /> (
+        <FormattedRelative value={timestamp} initialNow={new Date()} /> (
         <FormattedDate
           value={timestamp}
           timeZone="UTC"

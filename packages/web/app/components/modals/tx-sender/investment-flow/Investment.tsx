@@ -5,9 +5,19 @@ import { Link } from "react-router-dom";
 import { Col, Container, FormGroup, Label, Row } from "reactstrap";
 import { compose, withProps } from "recompose";
 
+import { EEtoState } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { actions } from "../../../../modules/actions";
-import { selectEtoWithCompanyAndContractById } from "../../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { InvalidETOStateError } from "../../../../modules/eto/errors";
+import {
+  selectEtoTokenGeneralDiscounts,
+  selectEtoTokenStandardPrice,
+  selectEtoWithCompanyAndContractById,
+} from "../../../../modules/eto/selectors";
+import {
+  IEtoTokenGeneralDiscounts,
+  TEtoWithCompanyAndContractTypeChecked,
+} from "../../../../modules/eto/types";
+import { isOnChain } from "../../../../modules/eto/utils";
 import {
   EInvestmentErrorState,
   EInvestmentType,
@@ -26,7 +36,9 @@ import {
   selectEquityTokenCountByEtoId,
   selectHasInvestorTicket,
   selectNeuRewardUlpsByEtoId,
+  selectPersonalDiscount,
 } from "../../../../modules/investor-portfolio/selectors";
+import { IPersonalDiscount } from "../../../../modules/investor-portfolio/types";
 import {
   selectEtherPriceEur,
   selectEurPriceEther,
@@ -35,9 +47,11 @@ import { selectTxGasCostEthUlps } from "../../../../modules/tx/sender/selectors"
 import { ETokenType } from "../../../../modules/tx/types";
 import { EValidationState } from "../../../../modules/tx/validator/reducer";
 import { selectTxValidationState } from "../../../../modules/tx/validator/selectors";
+import { isValidFormNumber } from "../../../../modules/tx/validator/withdraw/utils";
 import { appConnect } from "../../../../store";
 import { addBigNumbers, multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
 import { IIntlProps, injectIntlHelpers } from "../../../../utils/injectIntlHelpers.unsafe";
+import { nonNullable } from "../../../../utils/nonNullable";
 import { appRoutes } from "../../../appRoutes";
 import { InfoAlert } from "../../../shared/Alerts";
 import { Button, EButtonLayout } from "../../../shared/buttons";
@@ -54,19 +68,26 @@ import {
 } from "../../../shared/formatters/utils";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { MaskedNumberInput } from "../../../shared/MaskedNumberInput";
+import { InvestmentPriceInfo } from "./InvestmentPriceInfo";
 import { InvestmentTypeSelector, WalletSelectionData } from "./InvestmentTypeSelector";
-import { createWallets, formatMinMaxTickets, getInputErrorMessage } from "./utils";
+import {
+  createWallets,
+  EInvestmentCurrency,
+  formatMinMaxTickets,
+  getInputErrorMessage,
+  getInvestmentCurrency,
+} from "./utils";
 
 import * as styles from "./Investment.module.scss";
 
 interface IStateProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractTypeChecked;
   wallets: WalletSelectionData[];
   euroValue: string;
   ethValue: string;
   etherPriceEur: string;
   eurPriceEther: string;
-  investmentType?: EInvestmentType;
+  investmentType: EInvestmentType;
   gasCostEth: string;
   errorState?: EInvestmentErrorState;
   txValidationState?: EValidationState;
@@ -79,6 +100,9 @@ interface IStateProps {
     minTicketEurUlps: BigNumber;
     maxTicketEurUlps: BigNumber;
   };
+  etoTokenGeneralDiscounts: IEtoTokenGeneralDiscounts;
+  etoTokenPersonalDiscount: IPersonalDiscount;
+  etoTokenStandardPrice: number;
 }
 
 interface IDispatchProps {
@@ -95,6 +119,7 @@ interface IWithProps {
   minTicketEth: string;
   minTicketEur: string;
   maxTicketEur: string;
+  investmentCurrency: EInvestmentCurrency;
 }
 
 type IProps = IStateProps & IDispatchProps & IIntlProps & IWithProps;
@@ -103,6 +128,7 @@ interface IState {
   validationError: boolean;
 }
 
+// TODO: Refactor smaller components
 export class InvestmentSelectionComponent extends React.Component<IProps, IState> {
   state = { validationError: false };
 
@@ -120,11 +146,14 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
       this.props.eto.equityTokenName,
       this.props.maxTicketEur,
       this.props.minTicketEur,
+      this.props.minTicketEth,
+      this.props.investmentCurrency,
     );
-    const validationError = !this.state.validationError ? (
-      undefined
-    ) : (
+
+    const validationError = this.state.validationError ? (
       <FormattedMessage id="investment-flow.validation-error" />
+    ) : (
+      undefined
     );
 
     return validationError || externalError;
@@ -155,10 +184,14 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
       wallets,
       hasPreviouslyInvested,
       startUpgradeFlow,
+      investmentCurrency,
+      etoTokenGeneralDiscounts,
+      etoTokenPersonalDiscount,
+      etoTokenStandardPrice,
     } = this.props;
     const error = this.getError();
     return (
-      <>
+      <section data-test-id="modals.investment.modal">
         <Container className={styles.container} fluid>
           <Row className="mt-0">
             <Col>
@@ -184,54 +217,75 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
           </Row>
           <Row>
             <Col>
-              <p className={styles.amountToInvest}>
-                <FormattedMessage id="investment-flow.amount-to-invest" />
+              <p className={styles.investmentPriceInfo}>
+                <InvestmentPriceInfo
+                  onChainState={eto.contract.timedState}
+                  etoTokenPersonalDiscount={etoTokenPersonalDiscount}
+                  etoTokenGeneralDiscounts={etoTokenGeneralDiscounts}
+                  etoTokenStandardPrice={etoTokenStandardPrice}
+                />
               </p>
             </Col>
           </Row>
           <Row>
-            <Col>
-              <MaskedNumberInput
-                name="euroValue"
-                value={this.props.euroValue}
-                storageFormat={ENumberInputFormat.ULPS}
-                valueType={ECurrency.EUR_TOKEN}
-                outputFormat={ENumberOutputFormat.FULL}
-                onChangeFn={this.props.changeEuroValue}
-                showUnits={true}
-                data-test-id="invest-modal-eur-field"
-                placeholder={`${intl.formatIntlMessage(
-                  "investment-flow.min-ticket-size",
-                )} ${minTicketEur} EUR`}
-                errorMsg={error}
-                invalid={!!error}
-                setError={this.setError}
-              />
-            </Col>
-            <Col sm="1">
-              <div className={styles.equals}>≈</div>
-            </Col>
-            <Col className={"text-right"}>
-              <MaskedNumberInput
-                name={"ethValue"}
-                valueType={ECurrency.ETH}
-                storageFormat={ENumberInputFormat.ULPS}
-                outputFormat={ENumberOutputFormat.FULL}
-                value={this.props.ethValue}
-                onChangeFn={this.props.changeEthValue}
-                placeholder={`${intl.formatIntlMessage(
-                  "investment-flow.min-ticket-size",
-                )} ${formatNumber({
-                  value: minTicketEth,
-                  inputFormat: ENumberInputFormat.FLOAT,
-                  outputFormat: ENumberOutputFormat.FULL,
-                  decimalPlaces: selectDecimalPlaces(ECurrency.ETH, ENumberOutputFormat.FULL),
-                })} ETH`}
-                data-test-id="invest-modal-eth-field"
-                showUnits={true}
-                setError={this.setError}
-              />
-              {/*21211.4707*/}
+            <Col className="text-right">
+              {investmentCurrency === EInvestmentCurrency.EUR_TOKEN && (
+                <MaskedNumberInput
+                  name="euroValue"
+                  value={this.props.euroValue}
+                  storageFormat={ENumberInputFormat.ULPS}
+                  valueType={ECurrency.EUR_TOKEN}
+                  outputFormat={ENumberOutputFormat.FULL}
+                  onChangeFn={this.props.changeEuroValue}
+                  showUnits={true}
+                  data-test-id="invest-modal-eur-field"
+                  placeholder={`${intl.formatIntlMessage(
+                    "investment-flow.min-ticket-size",
+                  )} ${minTicketEur} EUR`}
+                  errorMsg={error}
+                  invalid={!!error}
+                  setError={this.setError}
+                />
+              )}
+              {investmentCurrency === EInvestmentCurrency.ETH && (
+                <>
+                  <MaskedNumberInput
+                    name="ethValue"
+                    valueType={ECurrency.ETH}
+                    storageFormat={ENumberInputFormat.ULPS}
+                    outputFormat={ENumberOutputFormat.FULL}
+                    value={this.props.ethValue}
+                    onChangeFn={this.props.changeEthValue}
+                    placeholder={`${intl.formatIntlMessage(
+                      "investment-flow.min-ticket-size",
+                    )} ${formatNumber({
+                      value: minTicketEth,
+                      inputFormat: ENumberInputFormat.FLOAT,
+                      outputFormat: ENumberOutputFormat.FULL,
+                      decimalPlaces: selectDecimalPlaces(ECurrency.ETH, ENumberOutputFormat.FULL),
+                      roundingMode: ERoundingMode.UP,
+                    })} ETH`}
+                    data-test-id="invest-modal-eth-field"
+                    showUnits={true}
+                    errorMsg={error}
+                    invalid={!!error}
+                    setError={this.setError}
+                  />
+                  <div className={styles.helpText}>
+                    {"≈ "}
+                    <Money
+                      value={
+                        isValidFormNumber(this.props.euroValue)
+                          ? this.props.euroValue
+                          : "0" /* Show 0 if form is invalid */
+                      }
+                      inputFormat={ENumberInputFormat.ULPS}
+                      valueType={ECurrency.EUR}
+                      outputFormat={ENumberOutputFormat.FULL}
+                    />
+                  </div>
+                </>
+              )}
               <Button
                 className={styles.investAll}
                 data-test-id="invest-modal-full-balance-btn"
@@ -260,7 +314,7 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
                   <Label>
                     <FormattedMessage id="investment-flow.equity-tokens" />
                   </Label>
-                  <InfoAlert>
+                  <InfoAlert data-test-id="invest-modal.est-equity-tokens">
                     {(showTokens &&
                       !error &&
                       equityTokenCount &&
@@ -312,39 +366,55 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
                   + <FormattedMessage id="investment-flow.estimated-gas-cost" />:{" "}
                   <span className="text-warning" data-test-id="invest-modal-gas-cost">
                     <Money
-                      value={gasCostEuro}
-                      inputFormat={ENumberInputFormat.ULPS}
-                      outputFormat={ENumberOutputFormat.FULL}
-                      valueType={ECurrency.EUR}
-                      roundingMode={ERoundingMode.UP}
-                    />
-                    {" ≈ "}
-                    <Money
                       value={gasCostEth}
                       inputFormat={ENumberInputFormat.ULPS}
                       outputFormat={ENumberOutputFormat.FULL}
                       valueType={ECurrency.ETH}
                       roundingMode={ERoundingMode.UP}
                     />
+                    <span className={styles.helpText}>
+                      {" ≈ "}
+                      <Money
+                        value={gasCostEuro}
+                        inputFormat={ENumberInputFormat.ULPS}
+                        outputFormat={ENumberOutputFormat.FULL}
+                        valueType={ECurrency.EUR}
+                        roundingMode={ERoundingMode.UP}
+                      />
+                    </span>
                   </span>
                 </div>
               )}
               <div>
                 <FormattedMessage id="investment-flow.total" />:{" "}
                 <span className="text-warning" data-test-id="invest-modal-total-cost">
-                  <Money
-                    value={this.calculateTotalCostIfValid(gasCostEuro, euroValue)}
-                    inputFormat={ENumberInputFormat.ULPS}
-                    valueType={ECurrency.EUR}
-                    outputFormat={ENumberOutputFormat.FULL}
-                  />
-                  {" ≈ "}
-                  <Money
-                    value={this.calculateTotalCostIfValid(gasCostEth, ethValue)}
-                    inputFormat={ENumberInputFormat.ULPS}
-                    outputFormat={ENumberOutputFormat.FULL}
-                    valueType={ECurrency.ETH}
-                  />
+                  {investmentCurrency === EInvestmentCurrency.EUR_TOKEN && (
+                    <Money
+                      value={this.calculateTotalCostIfValid(gasCostEuro, euroValue)}
+                      inputFormat={ENumberInputFormat.ULPS}
+                      valueType={ECurrency.EUR}
+                      outputFormat={ENumberOutputFormat.FULL}
+                    />
+                  )}
+                  {investmentCurrency === EInvestmentCurrency.ETH && (
+                    <>
+                      <Money
+                        value={this.calculateTotalCostIfValid(gasCostEth, ethValue)}
+                        inputFormat={ENumberInputFormat.ULPS}
+                        outputFormat={ENumberOutputFormat.FULL}
+                        valueType={ECurrency.ETH}
+                      />
+                      <span className={styles.helpText}>
+                        {" ≈ "}
+                        <Money
+                          value={this.calculateTotalCostIfValid(gasCostEuro, euroValue)}
+                          inputFormat={ENumberInputFormat.ULPS}
+                          valueType={ECurrency.EUR}
+                          outputFormat={ENumberOutputFormat.FULL}
+                        />
+                      </span>
+                    </>
+                  )}
                 </span>
               </div>
             </Col>
@@ -363,7 +433,7 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
             </Button>
           </Row>
         </Container>
-      </>
+      </section>
     );
   }
 }
@@ -373,8 +443,14 @@ export const InvestmentSelection = compose<IProps, {}>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => {
       const etoId = selectInvestmentEtoId(state);
-      const eto = selectEtoWithCompanyAndContractById(state, etoId)!;
+      const eto = nonNullable(selectEtoWithCompanyAndContractById(state, etoId));
+
+      if (!isOnChain(eto)) {
+        throw new InvalidETOStateError(eto.state, EEtoState.ON_CHAIN);
+      }
+
       const eur = selectInvestmentEurValueUlps(state);
+
       return {
         eto,
         etherPriceEur: selectEtherPriceEur(state),
@@ -384,7 +460,7 @@ export const InvestmentSelection = compose<IProps, {}>(
         errorState: selectInvestmentErrorState(state),
         txValidationState: selectTxValidationState(state),
         gasCostEth: selectTxGasCostEthUlps(state),
-        investmentType: selectInvestmentType(state),
+        investmentType: nonNullable(selectInvestmentType(state)),
         wallets: createWallets(state),
         neuReward: selectNeuRewardUlpsByEtoId(state, etoId),
         equityTokenCount: selectEquityTokenCountByEtoId(state, etoId),
@@ -392,6 +468,9 @@ export const InvestmentSelection = compose<IProps, {}>(
         readyToInvest: selectIsReadyToInvest(state),
         etoTicketSizes: selectCalculatedEtoTicketSizesUlpsById(state, etoId),
         hasPreviouslyInvested: selectHasInvestorTicket(state, etoId),
+        etoTokenGeneralDiscounts: nonNullable(selectEtoTokenGeneralDiscounts(state, etoId)),
+        etoTokenPersonalDiscount: nonNullable(selectPersonalDiscount(state, etoId)),
+        etoTokenStandardPrice: nonNullable(selectEtoTokenStandardPrice(state, eto.previewCode)),
       };
     },
     dispatchToProps: dispatch => ({
@@ -407,9 +486,11 @@ export const InvestmentSelection = compose<IProps, {}>(
     }),
   }),
   withProps<IWithProps, IStateProps>(
-    ({ ethValue, etoTicketSizes, gasCostEth, etherPriceEur, eurPriceEther }) => {
-      const gasCostEther = !ethValue ? "0" : gasCostEth;
-      const gasCostEuro = multiplyBigNumbers([gasCostEther, etherPriceEur]);
+    ({ ethValue, etoTicketSizes, gasCostEth, etherPriceEur, eurPriceEther, investmentType }) => {
+      const gasCostEthWithFallback = !ethValue ? "0" : gasCostEth;
+      const gasCostEuro = multiplyBigNumbers([gasCostEthWithFallback, etherPriceEur]);
+
+      // TODO: do not cast minTicketEur/maxTicketEur to FLOAT as then we loose precision
       const minTicketEur =
         (etoTicketSizes &&
           etoTicketSizes.minTicketEurUlps &&
@@ -420,13 +501,15 @@ export const InvestmentSelection = compose<IProps, {}>(
           etoTicketSizes.maxTicketEurUlps &&
           formatMinMaxTickets(etoTicketSizes.maxTicketEurUlps, ERoundingMode.DOWN)) ||
         "0";
+      const investmentCurrency = getInvestmentCurrency(investmentType);
 
       return {
         minTicketEur,
         maxTicketEur,
         minTicketEth: multiplyBigNumbers([minTicketEur, eurPriceEther]),
         gasCostEuro,
-        gasCostEth: gasCostEther,
+        gasCostEth: gasCostEthWithFallback,
+        investmentCurrency,
       };
     },
   ),

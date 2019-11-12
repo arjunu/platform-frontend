@@ -4,7 +4,7 @@ import * as React from "react";
 import { spy } from "sinon";
 
 import { tid } from "../../../../test/testUtils";
-import { ENotificationText, ENotificationType } from "../../../modules/notifications/reducer";
+import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { Notification } from "./Notification";
 
 describe("<Notification />", () => {

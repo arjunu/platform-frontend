@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { ETxSenderType } from "../../../../modules/tx/types";
-import { isZero } from "../../../../utils/Number.utils";
+import { isZero } from "../../../../utils/NumberUtils";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,
@@ -25,10 +25,10 @@ const RefundTransactionDetails: TransactionDetailsComponent<ETxSenderType.INVEST
       value={`${additionalData.tokenName} (${additionalData.tokenSymbol})`}
     />
 
-    <InfoRow
-      caption={<FormattedMessage id="user-refund-flow.amount" />}
-      value={
-        isZero(additionalData.amountEth) ? (
+    {!isZero(additionalData.amountEurUlps) && (
+      <InfoRow
+        caption={<FormattedMessage id="user-refund-flow.amount.neur" />}
+        value={
           <Money
             data-test-id="modals.tx-sender.user-refund-flow.amount.neur"
             value={additionalData.amountEurUlps}
@@ -36,7 +36,14 @@ const RefundTransactionDetails: TransactionDetailsComponent<ETxSenderType.INVEST
             inputFormat={ENumberInputFormat.ULPS}
             outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
           />
-        ) : (
+        }
+      />
+    )}
+
+    {!isZero(additionalData.amountEth) && (
+      <InfoRow
+        caption={<FormattedMessage id="user-refund-flow.amount.eth" />}
+        value={
           <Money
             data-test-id="modals.tx-sender.user-refund-flow.amount.eth"
             value={additionalData.amountEth}
@@ -44,9 +51,9 @@ const RefundTransactionDetails: TransactionDetailsComponent<ETxSenderType.INVEST
             inputFormat={ENumberInputFormat.ULPS}
             outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
           />
-        )
-      }
-    />
+        }
+      />
+    )}
 
     {/* Show only when transaction is not signed yet */}
     {!txTimestamp && (

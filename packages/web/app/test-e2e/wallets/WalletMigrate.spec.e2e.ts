@@ -48,11 +48,11 @@ describe("Wallet Migration Flow", () => {
         .type("{enter}");
 
       // Assert that the values of NEU and ETHER are correct
-      cy.get(tid("profile.modal.icbm-wallet-balance.neu-balance")).then(data => {
+      cy.get(tid("profile.modal.icbm-wallet-balance.neu-balance")).then(balanceField => {
         const neuBalance = new BigNumber(
           FIXTURE_ACCOUNTS[INV_ETH_ICBM_NO_KYC_ADDRESS].icbmEtherLockBalance[1],
         )
-          .div(FIXTURE_DIV_CONSTANT)
+          .div(FIXTURE_DIV_CONSTANT.toString())
           .round(undefined, BigNumber.ROUND_DOWN);
 
         const ethBalance = new BigNumber(
@@ -65,7 +65,9 @@ describe("Wallet Migration Flow", () => {
           const walletEthBalance = new BigNumber(
             ethData.text().replace(letterKeepDotRegExPattern, ""),
           );
-          const walletNeuBalance = new BigNumber(data.text().replace(letterRegExPattern, ""));
+          const walletNeuBalance = new BigNumber(
+            balanceField.text().replace(letterRegExPattern, ""),
+          );
 
           expect(walletNeuBalance.equals(neuBalance)).to.be.true;
           expect(walletEthBalance.equals(ethBalance)).to.be.true;
@@ -104,32 +106,32 @@ describe("Wallet Migration Flow", () => {
                       // Modal Should Detect The transaction and Transition to Step 2
                       cy.get(tid("modals.icbm-balance-modal.migrate-body.step-2"));
 
-                      cy.get(tid("modals.icbm-balance-modal.migrate-body.to")).then(toField => {
-                        const to = toField.text();
+                      cy.get(tid("modals.icbm-balance-modal.migrate-body.to")).then(toField2 => {
+                        const to2 = toField2.text();
 
                         cy.get(tid("modals.icbm-balance-modal.migrate-body.gas-limit")).then(
-                          gasLimitField => {
-                            const gas = gasLimitField
+                          gasLimitField2 => {
+                            const gas2 = gasLimitField2
                               .text()
                               .replace(charRegExPattern, "")
                               .split("Gaslimit")
                               .pop();
 
                             cy.get(tid("modals.icbm-balance-modal.migrate-body.input-data")).then(
-                              inputDataField => {
-                                const data = inputDataField.text();
+                              inputDataField2 => {
+                                const data2 = inputDataField2.text();
 
                                 cyPromise(() =>
                                   account.signTransaction({
-                                    to,
+                                    to: to2,
                                     value: "0",
-                                    gas,
-                                    data,
+                                    gas: gas2,
+                                    data: data2,
                                     gasPrice: "1",
                                   }),
-                                ).then((signed: any) => {
-                                  sendRawTransactionRpc(signed.rawTransaction).then(hash => {
-                                    assertWaitForTransactionSuccess(hash.body.result);
+                                ).then((signed2: any) => {
+                                  sendRawTransactionRpc(signed2.rawTransaction).then(hash2 => {
+                                    assertWaitForTransactionSuccess(hash2.body.result);
 
                                     // Modal Should Detect The transaction and Transition to success flow
                                     cy.get(

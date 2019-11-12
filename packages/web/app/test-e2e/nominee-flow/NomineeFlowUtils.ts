@@ -1,6 +1,6 @@
 import { tid } from "../utils";
 import { fillForm } from "../utils/forms";
-import { acceptWallet, loginFixtureAccount, logout } from "../utils/index";
+import { confirmAccessModal, loginFixtureAccount, logout } from "../utils/index";
 import { goToNomineeDashboard } from "../utils/navigation";
 
 export const linkEtoToNominee = (address: string) => {
@@ -33,7 +33,7 @@ export const signAgreement = (
     },
   });
 
-  acceptWallet();
+  confirmAccessModal();
 
   cy.get(successModalSelector).should("exist");
   cy.get(tid("nominee-sign-agreement-success-close")).click();

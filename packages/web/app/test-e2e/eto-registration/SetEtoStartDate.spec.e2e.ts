@@ -28,7 +28,7 @@ const setStartDay = (startDate: moment.Moment, textToCheck: RegExp) => {
 
   closeModal();
 
-  cy.get(tid("eto-settings-display-start-date-utc"))
+  cy.get(tid("time-left.start-date-utc"))
     .should($e =>
       expect($e.text()).to.be.equal(
         `${weekdayUTC(startDate.toDate())}, ${utcTime(startDate.toDate())}`,
@@ -50,7 +50,10 @@ describe("Eto start date setup", () => {
         .add(5, "hours")
         .add(5, "minute");
 
-      const newStartDateText = new RegExp(/^(19|20) days, \d\d? hour(s?)/);
+      // match non breaking spaces
+      const newStartDateText = new RegExp(
+        /^(19|20) days[\s|\u00A0]\d\d? hour(s?)[\s|\u00A0]\d\d? minute(s?)/,
+      );
 
       setStartDay(newStartDate, newStartDateText);
 

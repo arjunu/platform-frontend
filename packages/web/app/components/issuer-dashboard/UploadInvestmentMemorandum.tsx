@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { appRoutes } from "../appRoutes";
 import { EColumnSpan } from "../layouts/Container";
-import { DashboardLinkWidget } from "../shared/dashboard-link-widget/DashboardLinkWidget";
+import { DashboardLinkWidget } from "../shared/dashboard-widget/DashboardWidget";
 
 interface IExternalProps {
   columnSpan: EColumnSpan;

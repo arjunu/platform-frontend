@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { ENomineeTask } from "../../modules/nominee-flow/types";
 import { AcceptRAAA, AcceptTHA } from "./AcceptAgreement";
-import { AcceptIsha } from "./AcceptIsha";
+import { AcceptISHA } from "./AcceptIsha";
 import { AccountSetup } from "./accountSetup/AccountSetup";
 import { LinkBankAccount } from "./linkBankAccount/LinkBankAccount";
 import { LinkToIssuer } from "./linkToIssuer/LinkToIssuer";
@@ -48,7 +48,7 @@ export const nomineeTasksData: TNomineeTasksData = {
   },
   [ENomineeTask.ACCEPT_ISHA]: {
     key: ENomineeTask.ACCEPT_ISHA,
-    taskRootComponent: AcceptIsha,
+    taskRootComponent: AcceptISHA,
   },
   [ENomineeTask.NONE]: {
     key: ENomineeTask.NONE,

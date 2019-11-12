@@ -121,3 +121,27 @@ $_dropzone-size-sm: 120px;
   margin-bottom: 4px;
 }
 
+.upload-container {
+  display: flex;
+  margin-bottom: px-to-rem(22px);
+}
+
+.uploader-info {
+  flex-shrink: 3;
+  margin-left: px-to-rem(12px);
+}
+
+.file-types {
+  @include font-small-roboto;
+
+  line-height: 1.33;
+  color: $neu-shuttle-gray;
+}
+
+.upload-title {
+  @include font-medium-roboto;
+
+  line-height: 1.43;
+  color: $neu-charcoal-grey;
+  text-transform: uppercase;
+}

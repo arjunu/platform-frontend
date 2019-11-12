@@ -29,7 +29,6 @@ import { checkEmailPromise } from "../../auth/email/sagas";
 import { createJwt } from "../../auth/jwt/sagas";
 import { selectUserType } from "../../auth/selectors";
 import { createUser, loadUser, logoutUser, updateUser } from "../../auth/user/external/sagas";
-import { signInUser } from "../../auth/user/sagas";
 import { userHasKycAndEmailVerified } from "../../eto-flow/selectors";
 import { displayInfoModalSaga } from "../../generic-modal/sagas";
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
@@ -46,7 +45,7 @@ export async function setupLightWalletPromise(
   { vaultApi, lightWalletConnector, web3Manager, logger }: TGlobalDependencies,
   email: string,
   password: string,
-  seed: string,
+  seed?: string,
 ): Promise<ILightWalletMetadata> {
   try {
     const lightWalletVault = await createLightWalletVault({
@@ -139,10 +138,8 @@ export function* lightWalletRecoverWatch(
       email,
       password,
       seed,
-      userType,
     );
 
-    yield put(actions.walletSelector.messageSigning());
     yield neuCall(createJwt, [EJwtPermissions.CHANGE_EMAIL_PERMISSION]);
     const userUpdate: IUserInput = {
       salt: walletMetadata.salt,
@@ -199,7 +196,7 @@ export function* lightWalletRegisterWatch(
       throw new EmailAlreadyExists();
     }
     yield neuCall(setupLightWalletPromise, email, password);
-    yield neuCall(signInUser);
+    yield put(actions.walletSelector.connected());
   } catch (e) {
     yield neuCall(handleLightWalletError, e);
   }
@@ -245,7 +242,8 @@ export function* lightWalletLoginWatch(
     );
 
     yield web3Manager.plugPersonalWallet(wallet);
-    yield neuCall(signInUser);
+
+    yield put(actions.walletSelector.connected());
   } catch (e) {
     logger.error("Light Wallet login error", e);
     yield put(actions.walletSelector.reset());

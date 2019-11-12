@@ -2,16 +2,13 @@ import * as cn from "classnames";
 import { range } from "lodash";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import Select from "react-virtualized-select";
 
 import { TElementRef } from "../../../types";
 import { englishMnemonics } from "../../../utils/englishMnemonics";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons";
+import { VirtualizedSelect } from "../../shared/forms/fields/VirtualizedSelect";
 import { WarningAlert } from "../../shared/WarningAlert";
 
-import "react-select/dist/react-select.css";
-import "react-virtualized-select/styles.css";
-import "react-virtualized/styles.css";
 import * as arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
 import * as styles from "./BackupSeedVerify.module.scss";
 
@@ -36,10 +33,10 @@ export interface IBackupSeedVerifyState {
 }
 
 // here it's good enough
-const getRandomNumbers = (numbers: number, range: number): number[] => {
+const getRandomNumbers = (numbers: number, upTo: number): number[] => {
   const arr = [];
   while (arr.length < numbers) {
-    const randomNumber = Math.floor(Math.random() * range);
+    const randomNumber = Math.floor(Math.random() * upTo);
     if (arr.indexOf(randomNumber) > -1) continue;
     arr[arr.length] = randomNumber;
   }
@@ -47,7 +44,7 @@ const getRandomNumbers = (numbers: number, range: number): number[] => {
 };
 
 class BackupSeedVerify extends React.Component<IBackupSeedVerifyProps, IBackupSeedVerifyState> {
-  verificationSelectRefs: TElementRef<Select>[] = [];
+  verificationSelectRefs: TElementRef<VirtualizedSelect>[] = [];
 
   constructor(props: IBackupSeedVerifyProps) {
     super(props);
@@ -109,13 +106,15 @@ class BackupSeedVerify extends React.Component<IBackupSeedVerifyProps, IBackupSe
 
   generateSelect = (wordOnPageNumber: number): React.ReactNode => (
     <div data-test-id={`backup-seed-verify-word-${wordOnPageNumber}`}>
-      <Select
+      <VirtualizedSelect
         options={wordsOptions}
         simpleValue
         clearable={true}
         matchPos="start"
         matchProp="value"
-        ref={(ref: TElementRef<Select>) => (this.verificationSelectRefs[wordOnPageNumber] = ref)}
+        ref={(ref: TElementRef<VirtualizedSelect>) =>
+          (this.verificationSelectRefs[wordOnPageNumber] = ref)
+        }
         value={this.state.verificationWords[wordOnPageNumber].word}
         onChange={this.updateValueFactory(wordOnPageNumber)}
         placeholder={<FormattedMessage id="settings.backup-seed-verify.enter-word" />}

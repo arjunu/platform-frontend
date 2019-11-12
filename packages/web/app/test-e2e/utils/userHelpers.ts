@@ -5,9 +5,9 @@ import { toChecksumAddress } from "web3-utils";
 
 import { accountFixtureByName, removePendingExternalTransaction } from ".";
 import { TEtoDataWithCompany } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { OOO_TRANSACTION_TYPE, TxPendingWithMetadata } from "../../lib/api/users/interfaces";
+import { IUser, OOO_TRANSACTION_TYPE, TxPendingWithMetadata } from "../../lib/api/users/interfaces";
 import { getVaultKey } from "../../modules/wallet-selector/light-wizard/utils";
-import { promisify } from "../../utils/promisify";
+import { promisify } from "../../utils/PromiseUtils";
 import { toCamelCase } from "../../utils/transformObjectKeys";
 import { assertLanding } from "./assertions";
 import { getAgreementHash } from "./getAgreementHash";
@@ -103,7 +103,7 @@ export const createAndLoginNewUser = (
     const kycData = await getKycData(jwt);
     cy.log(userData.verified_email as string);
     cy.log(params.kyc ? (kycData[params.kyc] as string) : "No KYC");
-    if ((params.kyc && kycData[params.kyc] !== "Accepted") || !userData.verified_email) {
+    if ((params.kyc && kycData[params.kyc] !== "accepted") || !userData.verified_email) {
       if (attempts > NUMBER_OF_ATTEMPTS) {
         throw new Error("Cannot create user something wrong happened in the backend");
       }
@@ -357,6 +357,24 @@ export const addPendingTransactions = (
     })
     .then(response => response.body);
 
+const MOCKED_PENDING_TX_PATH = "/api/external-services-mock/e2e-tests/pending_transactions/";
+
+export const addFailedPendingTransactions = (
+  uid: string,
+  txHash: string,
+  error: string,
+): Cypress.Chainable<ReadonlyArray<{ transaction_type: string }>> =>
+  cy
+    .request({
+      url: `${MOCKED_PENDING_TX_PATH}${uid}/failed/${txHash}?error=${error}`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${getJwtToken()}`,
+      },
+    })
+    .then(response => response.body);
+
 export const clearPendingTransactions = () =>
   cy
     .request({
@@ -412,9 +430,9 @@ export const logout = () => {
   cy.log("logging out");
 
   cy.get(tid("account-menu-open-button"))
-    .awaitedClick()
+    .click()
     .get(tid("menu-logout-button"))
-    .awaitedClick();
+    .click();
 
   assertLanding();
 
@@ -470,4 +488,24 @@ export const getEto = (etoID: string): Cypress.Chainable<TEtoDataWithCompany> =>
       // If there is more than one eto just return the first one
       return result[0];
     });
+};
+
+const EMAIL_VERIFICATION_PATH = USER_PATH + "/email-verification";
+
+export const verifyUserEmailCall = (activationLink: string): Cypress.Chainable<IUser> => {
+  const activationLinkURL = new URL(activationLink);
+  const activationLinkParams = new URLSearchParams(activationLinkURL.search);
+  const verificationCode = activationLinkParams.get("code")!;
+
+  return cy
+    .request({
+      url: EMAIL_VERIFICATION_PATH,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${getJwtToken()}`,
+      },
+      body: JSON.stringify({ verification_code: verificationCode }),
+    })
+    .then(response => response.body);
 };

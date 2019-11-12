@@ -89,5 +89,6 @@ export const mockedStore: DeepPartial<IAppState> = {
         pledgedAmount: 500,
       },
     },
+    pledges: {},
   },
 };

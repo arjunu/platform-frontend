@@ -1,7 +1,10 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import {
+  EETOStateOnChain,
+  TEtoWithCompanyAndContractReadonly,
+} from "../../../../modules/eto/types";
 import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
 import { EtoMaxCapExceededComponent } from "./EtoMaxCapExceeded";
 
@@ -26,7 +29,7 @@ const eto = {
       totalEquivEurUlps: "12345",
     },
   },
-} as TEtoWithCompanyAndContract;
+} as TEtoWithCompanyAndContractReadonly;
 
 storiesOf("ETO/MaxCapExceededWidget", module)
   .addDecorator(withMockedDate(new Date("1/1/2000")))

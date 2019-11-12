@@ -42,6 +42,11 @@ declare module "yup" {
     max(limit: number | Ref, message?: Message): NumberSchema;
   }
 
+  export interface ArraySchema<T> extends Schema<T[]> {
+    min(limit: number | Ref, message?: Message): ArraySchema<T>;
+    max(limit: number | Ref, message?: Message): ArraySchema<T>;
+  }
+
   export interface Schema<T> {
     test(
       name: string,

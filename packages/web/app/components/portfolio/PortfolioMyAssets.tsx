@@ -22,6 +22,7 @@ import {
   ENumberOutputFormat,
   EPriceFormat,
 } from "../shared/formatters/utils";
+import { TokenIcon } from "../shared/icons/TokenIcon";
 import { ENewTableCellLayout, NewTable, NewTableRow } from "../shared/table";
 
 import * as arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
@@ -78,7 +79,7 @@ const PortfolioMyAssetsComponent: React.FunctionComponent<TComponentProps> = ({
       {myNeuBalance !== "0" ? (
         <NewTableRow cellLayout={ENewTableCellLayout.MIDDLE}>
           <>
-            <img src={neuIcon} alt="" className={cn("mr-2", styles.token)} />
+            <TokenIcon srcSet={{ "1x": neuIcon }} alt="" className={cn("mr-2", styles.token)} />
             <span>{"NEU"}</span>
           </>
           <Money
@@ -123,7 +124,11 @@ const PortfolioMyAssetsComponent: React.FunctionComponent<TComponentProps> = ({
               data-test-id={`portfolio-my-assets-token-${etoId}`}
             >
               <>
-                <img src={equityTokenImage} alt="" className={cn("mr-2", styles.token)} />
+                <TokenIcon
+                  srcSet={{ "1x": equityTokenImage }}
+                  alt=""
+                  className={cn("mr-2", styles.token)}
+                />
                 <span className={styles.tokenName}>
                   {equityTokenName} ({equityTokenSymbol})
                 </span>

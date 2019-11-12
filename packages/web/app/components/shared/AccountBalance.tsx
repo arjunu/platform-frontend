@@ -40,7 +40,7 @@ export const AccountBalance: React.FunctionComponent<
     />
     <div className={styles.buttons}>
       {actions &&
-        actions.map(({ onClick, disabled, name, "data-test-id": dataTestId }, i) => (
+        actions.map(({ onClick, disabled, name, "data-test-id": actionDataTestId }, i) => (
           <Button
             key={i}
             layout={EButtonLayout.SECONDARY}
@@ -49,7 +49,7 @@ export const AccountBalance: React.FunctionComponent<
             theme={EButtonTheme.GRAPHITE}
             svgIcon={arrowRightIcon}
             onClick={onClick}
-            data-test-id={dataTestId}
+            data-test-id={actionDataTestId}
             disabled={disabled}
           >
             {name}

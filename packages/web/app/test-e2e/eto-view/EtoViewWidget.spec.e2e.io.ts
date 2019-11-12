@@ -46,4 +46,28 @@ describe("Eto view widget", () => {
 
     assertIsNonClickableTag("eto-overview-smart-contract-on-chain-button");
   });
+
+  it("should render eto stats for eto in pre-sale", () => {
+    const etoId = etoFixtureAddressByName("ETOInWhitelistState");
+
+    goToEtoViewById(etoId);
+
+    cy.get(tid("eto-overview.stats.pre-money-valuation")).contains("177 878 291 EUR");
+    cy.get(tid("eto-overview.stats.target-investment-amount")).contains("11 473 145 EUR");
+    cy.get(tid("eto-overview.stats.new-shares-generated")).contains("2.38–8.22 %");
+    cy.get(tid("eto-overview.stats.equity-token-price")).contains("0.3390 EUR");
+    cy.get(tid("eto-overview.stats.equity-token-price-whitelist-discount")).contains("20%");
+  });
+
+  it("should render eto stats for eto in public-sale", () => {
+    const etoId = etoFixtureAddressByName("ETOInPublicState");
+
+    goToEtoViewById(etoId);
+
+    cy.get(tid("eto-overview.stats.pre-money-valuation")).contains("30 000 000 EUR");
+    cy.get(tid("eto-overview.stats.target-investment-amount")).contains("3 529 412 EUR");
+    cy.get(tid("eto-overview.stats.new-shares-generated")).contains("10.00–12.00 %");
+    cy.get(tid("eto-overview.stats.equity-token-price")).contains("0.6000 EUR");
+    cy.get(tid("eto-overview.stats.equity-token-price-public-discount")).should("not.exist");
+  });
 });

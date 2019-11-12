@@ -9,16 +9,17 @@ import { IBookBuildingStats } from "../../../../lib/api/eto/EtoPledgeApi.interfa
 import {
   EETOStateOnChain,
   EEtoSubState,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "../../../../modules/eto/types";
 import { ICalculatedContribution } from "../../../../modules/investor-portfolio/types";
+import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withStore } from "../../../../utils/storeDecorator.unsafe";
 import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
 import { EtoOverviewThumbnail } from "./EtoOverviewThumbnail";
 
 import * as icbmThumbnail from "../../../../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";
 
-const rootEto: TEtoWithCompanyAndContract = {
+const rootEto: TEtoWithCompanyAndContractReadonly = {
   ...testEto,
   preMoneyValuationEur: 10000,
   existingShareCapital: 10,
@@ -29,7 +30,7 @@ const rootEto: TEtoWithCompanyAndContract = {
   maxTicketEur: 1000,
   minTicketEur: 1,
   equityTokenName: "TokenName",
-  equityTokenSymbol: "TKN",
+  equityTokenSymbol: toEquityTokenSymbol("TKN"),
 };
 
 // 2018-11-16T05:03:56.000Z
@@ -41,7 +42,7 @@ const withEto = ({
   bookbuildingStats,
   calculatedContributions,
 }: {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   bookbuildingStats?: IBookBuildingStats;
   calculatedContributions?: ICalculatedContribution;
 }) =>
@@ -83,7 +84,7 @@ storiesOf("ETO/EtoOverviewThumbnail", module)
       brandName: "ICBM Capital Raise",
       url: "https://commit.neufund.org",
       companyPreviewCardBanner: icbmThumbnail,
-      totalAmount: Q18.mul(12500000).toString(),
+      totalAmount: Q18.mul("12500000").toString(),
       id: "icbm",
       categories: ["Technology", "Blockchain"],
       keyQuoteFounder:
@@ -100,7 +101,21 @@ storiesOf("ETO/EtoOverviewThumbnail", module)
 
     return withEto({ eto });
   })
-  .add("whitelisting", () => {
+  .add("whitelisting (not active)", () => {
+    const eto = {
+      ...rootEto,
+      subState: EEtoSubState.CAMPAIGNING,
+      isBookbuilding: false,
+      canEnableBookbuilding: true,
+      contract: {
+        ...testEto.contract!,
+        timedState: EETOStateOnChain.Setup,
+      },
+    };
+
+    return withEto({ eto });
+  })
+  .add("whitelisting (active)", () => {
     const eto = {
       ...rootEto,
       subState: EEtoSubState.WHITELISTING,
@@ -114,6 +129,43 @@ storiesOf("ETO/EtoOverviewThumbnail", module)
     const bookbuildingStats = {
       pledgedAmount: 100000,
       investorsCount: 40,
+    };
+
+    return withEto({ eto, bookbuildingStats });
+  })
+  .add("whitelisting (limit reached)", () => {
+    const eto = {
+      ...rootEto,
+      subState: EEtoSubState.WHITELISTING,
+      isBookbuilding: true,
+      contract: {
+        ...testEto.contract!,
+        timedState: EETOStateOnChain.Setup,
+      },
+    };
+
+    const bookbuildingStats = {
+      pledgedAmount: 100000,
+      investorsCount: rootEto.maxPledges,
+    };
+
+    return withEto({ eto, bookbuildingStats });
+  })
+  .add("whitelisting (closed)", () => {
+    const eto = {
+      ...rootEto,
+      subState: EEtoSubState.CAMPAIGNING,
+      isBookbuilding: false,
+      canEnableBookbuilding: false,
+      contract: {
+        ...testEto.contract!,
+        timedState: EETOStateOnChain.Setup,
+      },
+    };
+
+    const bookbuildingStats = {
+      pledgedAmount: 1000000,
+      investorsCount: 50,
     };
 
     return withEto({ eto, bookbuildingStats });

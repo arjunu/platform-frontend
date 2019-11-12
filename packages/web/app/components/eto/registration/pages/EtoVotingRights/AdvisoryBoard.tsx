@@ -72,7 +72,7 @@ class AdvisoryBoardBase extends React.Component<
             <RadioButtonLayout
               name="advisoryBoardSelector"
               checked={
-                this.state.textFieldIsEnabled === undefined ? false : !this.state.textFieldIsEnabled
+                this.state.textFieldIsEnabled === undefined ? true : !this.state.textFieldIsEnabled
               }
               value="false"
               onChange={this.disableTextField}

@@ -13,6 +13,15 @@ import { TBankAccount } from "./types";
 
 export const selectKyc = (state: IAppState) => state.kyc;
 
+export const selectIndividualFiles = (state: IAppState) => state.kyc.individualFiles;
+export const selectIndividualFilesLoading = (state: IAppState) => state.kyc.individualFilesLoading;
+
+export const selectBusinessFiles = (state: IAppState) => state.kyc.businessFiles;
+export const selectLegalRepFiles = (state: IAppState) => state.kyc.legalRepresentativeFiles;
+
+export const selectKycUploadedFiles = (state: IAppState) =>
+  selectIndividualFiles(state) || selectBusinessFiles(state) || selectLegalRepFiles(state);
+
 export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus | undefined => {
   const userKycType = selectKycRequestType(state);
   switch (userKycType) {
@@ -35,7 +44,7 @@ export const selectKycRequestOutsourcedStatus = (
   state: DeepReadonly<IKycState>,
 ): ERequestOutsourcedStatus | undefined => {
   const requestState =
-    state.individualRequestState && state.individualRequestState.status === "Draft"
+    state.individualRequestState && state.individualRequestState.status === EKycRequestStatus.DRAFT
       ? state.businessRequestState
       : state.individualRequestState;
   if (requestState) return requestState.outsourcedStatus;
@@ -44,7 +53,7 @@ export const selectKycRequestOutsourcedStatus = (
 
 export const selectExternalKycUrl = (state: DeepReadonly<IKycState>): string | undefined => {
   const requestState =
-    state.individualRequestState && state.individualRequestState.status === "Draft"
+    state.individualRequestState && state.individualRequestState.status === EKycRequestStatus.DRAFT
       ? state.businessRequestState
       : state.individualRequestState;
   if (requestState) return requestState.redirectUrl;
@@ -54,24 +63,41 @@ export const selectExternalKycUrl = (state: DeepReadonly<IKycState>): string | u
 export const selectPendingKycRequestType = (
   state: DeepReadonly<IKycState>,
 ): EKycRequestType | undefined => {
-  if (state.individualRequestState && state.individualRequestState.status === "Pending")
+  if (
+    state.individualRequestState &&
+    state.individualRequestState.status === EKycRequestStatus.PENDING
+  ) {
     return EKycRequestType.INDIVIDUAL;
-  if (state.businessRequestState && state.businessRequestState.status === "Pending")
+  }
+  if (
+    state.businessRequestState &&
+    state.businessRequestState.status === EKycRequestStatus.PENDING
+  ) {
     return EKycRequestType.BUSINESS;
+  }
   return undefined;
 };
 
 export const selectKycRequestType = (state: IAppState): EKycRequestType | undefined => {
-  if (state.kyc.individualRequestState && state.kyc.individualRequestState.status !== "Draft")
+  if (
+    state.kyc.individualRequestState &&
+    state.kyc.individualRequestState.status !== EKycRequestStatus.DRAFT
+  ) {
     return EKycRequestType.INDIVIDUAL;
-  if (state.kyc.businessRequestState && state.kyc.businessRequestState.status !== "Draft")
+  }
+  if (
+    state.kyc.businessRequestState &&
+    state.kyc.businessRequestState.status !== EKycRequestStatus.DRAFT
+  ) {
     return EKycRequestType.BUSINESS;
+  }
   return undefined;
 };
 
 export const selectKycOutSourcedURL = (state: DeepReadonly<IKycState>): string => {
-  if (state.individualRequestState && state.individualRequestState.redirectUrl)
+  if (state.individualRequestState && state.individualRequestState.redirectUrl) {
     return state.individualRequestState.redirectUrl;
+  }
   return "";
 };
 
@@ -99,7 +125,16 @@ export const selectBusinessClientName = (state: IAppState) =>
   state.kyc.businessData && state.kyc.businessData.name;
 
 export const selectClientName = (state: IAppState) =>
-  (state.kyc.businessData && state.kyc.businessData.name) || selectIndividualClientName(state);
+  selectBusinessClientName(state) || selectIndividualClientName(state);
+
+export const selectIndividualClientCountry = ({ kyc }: IAppState) =>
+  kyc.individualData && kyc.individualData.country;
+
+export const selectBusinessClientCountry = ({ kyc }: IAppState) =>
+  kyc.businessData && kyc.businessData.country;
+
+export const selectClientCountry = (state: IAppState) =>
+  selectIndividualClientCountry(state) || selectBusinessClientCountry(state);
 
 export const selectClientJurisdiction = createSelector(
   selectKyc,
@@ -107,6 +142,23 @@ export const selectClientJurisdiction = createSelector(
     // @SEE https://github.com/Neufund/platform-frontend/issues/2789#issuecomment-489081031
     (state.businessData && state.businessData.jurisdiction) ||
     (state.individualData && state.individualData.country),
+);
+
+export const selectIndividualAddress = createSelector(
+  selectKyc,
+  (state: DeepReadonly<IKycState>) => {
+    if (state.individualData) {
+      return {
+        street: state.individualData.street,
+        city: state.individualData.city,
+        zipCode: state.individualData.zipCode,
+        country: state.individualData.country,
+        usState: state.individualData.usState,
+      };
+    }
+
+    return undefined;
+  },
 );
 
 export const selectClaims = (state: IAppState) => state.kyc.claims;

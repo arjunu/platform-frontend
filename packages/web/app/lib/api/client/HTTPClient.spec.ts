@@ -5,7 +5,7 @@ import { HttpClient } from "./HttpClient";
 import { HttpMethod, IHttpRequestCommon, IHttpResponse } from "./IHttpClient";
 
 describe("HTTPClient", () => {
-  function createCustomHttpClient(spy: SinonSpy): HttpClient {
+  function createCustomHttpClient(sinonSpy: SinonSpy): HttpClient {
     const backendRootMock = { url: "" };
 
     return new (class extends HttpClient {
@@ -13,7 +13,7 @@ describe("HTTPClient", () => {
         fullUrl: string,
         method: HttpMethod,
         config: IHttpRequestCommon,
-      ) => Promise<IHttpResponse<T>> = spy;
+      ) => Promise<IHttpResponse<T>> = sinonSpy;
     })(backendRootMock);
   }
 

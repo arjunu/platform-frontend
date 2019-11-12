@@ -19,7 +19,7 @@ import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { getInvestorDocumentTitles } from "../../../documents/utils";
 import { ButtonIcon } from "../../../shared/buttons";
-import { DocumentTemplateLabel } from "../../../shared/DocumentLink";
+import { DocumentLabel } from "../../../shared/DocumentLink";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { InfoRow } from "../shared/InfoRow";
 import { ClaimTransactionDetails } from "./ClaimTransactionDetails";
@@ -69,8 +69,7 @@ export const UserClaimSummaryComponent: React.FunctionComponent<TComponentProps>
             <InfoRow
               key={document.ipfsHash}
               caption={
-                <DocumentTemplateLabel
-                  onClick={() => {}}
+                <DocumentLabel
                   title={
                     getInvestorDocumentTitles(etoData.product.offeringDocumentType)[
                       document.documentType
@@ -109,8 +108,7 @@ export const UserClaimSummaryComponent: React.FunctionComponent<TComponentProps>
             <InfoRow
               key={template.ipfsHash}
               caption={
-                <DocumentTemplateLabel
-                  onClick={() => {}}
+                <DocumentLabel
                   title={
                     getInvestorDocumentTitles(etoData.product.offeringDocumentType)[
                       template.documentType

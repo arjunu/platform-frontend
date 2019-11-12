@@ -20,6 +20,7 @@ import {
   EPriceFormat,
 } from "../shared/formatters/utils";
 import { CurrencyIcon } from "../shared/icons/CurrencyIcon";
+import { TokenIcon } from "../shared/icons/TokenIcon";
 import { ENewTableCellLayout, NewTable, NewTableRow } from "../shared/table";
 import { PortfolioAssetAction } from "./PortfolioAssetAction";
 
@@ -68,14 +69,13 @@ const PortfolioReservedAssets: React.FunctionComponent<IExternalProps> = ({ pend
             cellLayout={ENewTableCellLayout.MIDDLE}
           >
             <>
-              <img src={eto.equityTokenImage} alt="" className={cn("mr-2", styles.token)} />
-              <span className={"d-inline-block"}>
-                <span
-                  className={styles.tokenName}
-                  data-test-id="portfolio-reserved-asset-token-name"
-                >
-                  {eto.equityTokenName} ({eto.equityTokenSymbol})
-                </span>
+              <TokenIcon
+                srcSet={{ "1x": eto.equityTokenImage }}
+                alt=""
+                className={cn("mr-2", styles.token)}
+              />
+              <span className={styles.tokenName} data-test-id="portfolio-reserved-asset-token-name">
+                {eto.equityTokenName} ({eto.equityTokenSymbol})
               </span>
             </>
 
@@ -125,6 +125,7 @@ const PortfolioReservedAssets: React.FunctionComponent<IExternalProps> = ({ pend
                         <FormattedRelative
                           value={eto.contract!.startOfStates[EETOStateOnChain.Signing]!}
                           style="numeric"
+                          initialNow={new Date()}
                         />
                       ),
                     }}
