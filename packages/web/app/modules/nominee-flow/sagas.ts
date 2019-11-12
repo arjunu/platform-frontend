@@ -243,6 +243,7 @@ export function* getTaskSpecificData(
   _: TGlobalDependencies,
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask,
 ): Iterator<any> {
+  const nomineeEto: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
   const taskSpecificData: TTaskSpecificData = { byPreviewCode: {} };
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
@@ -250,47 +251,54 @@ export function* getTaskSpecificData(
   }
 
   if (activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL) {
-    const nomineeEto: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
-    const capitalIncrease: string = yield neuCall(
-      loadCapitalIncrease,
-      actions.eto.loadCapitalIncrease(nomineeEto.etoId, nomineeEto.previewCode),
-    );
-    const walletBalance: string = yield select(selectLiquidEuroTokenBalance);
-    const taskSubstate: ERedeemShareCapitalTaskSubstate = yield neuCall(
-      getRedeemShareCapitalTaskState,
-      { capitalIncrease, walletBalance },
-    );
-
-    taskSpecificData.byPreviewCode[nomineeEto.previewCode] = {
-      [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: {
-        capitalIncrease,
-        walletBalance,
-        taskSubstate,
-      },
-    };
+    taskSpecificData.byPreviewCode[nomineeEto.previewCode] = yield neuCall(getNomineeTaskRedeemShareCapitalData, nomineeEto.etoId, nomineeEto.previewCode)
   }
 
   return taskSpecificData;
 }
 
+export function* getNomineeTaskRedeemShareCapitalData(
+  _: TGlobalDependencies,
+  etoId: string,
+  previewCode: string
+): Iterator<any> {
+
+  const capitalIncrease: string = yield neuCall(
+    loadCapitalIncrease,
+    actions.eto.loadCapitalIncrease(etoId, previewCode),
+  );
+  const walletBalance: string = yield select(selectLiquidEuroTokenBalance);
+  const taskSubstate: ERedeemShareCapitalTaskSubstate = yield neuCall(
+    getRedeemShareCapitalTaskState,
+    { capitalIncrease, walletBalance },
+  );
+
+  return {
+    [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: {
+      capitalIncrease,
+      walletBalance,
+      taskSubstate,
+    },
+  };
+}
+
 export function* getNomineeTaskLinkToIssuerData(_: TGlobalDependencies): Iterator<any> {
   yield neuCall(loadNomineeRequests); //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
 
-    const data = yield all({
-      nomineeEto: select(selectActiveNomineeEto),
-      nomineeRequest: select(selectNomineeRequests),
-      nomineeRequestError: select(selectNomineeStateError),
-    });
-    const dataConverted = {
-      ...data,
-      nomineeRequest: takeLatestNomineeRequest(data.nomineeRequest),
-    };
+  const data = yield all({
+    nomineeEto: select(selectActiveNomineeEto),
+    nomineeRequest: select(selectNomineeRequests),
+    nomineeRequestError: select(selectNomineeRequestError),
+  });
+  const dataConverted = {
+    ...data,
+    nomineeRequest: takeLatestNomineeRequest(data.nomineeRequest),
+  };
 
-    taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = {
-      nextState: yield getNomineeRequestComponentState(dataConverted),
-    };
-  }
-  return taskSpecificData;
+  return {
+    nextState: yield getNomineeRequestComponentState(dataConverted),
+    error: data.nomineeRequstError,
+  };
 }
 
 export function* nomineeEtoView({
@@ -470,9 +478,7 @@ export function* setActiveNomineeEto({
     if (etos === undefined || isEmpty(etos)) {
       yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(undefined));
     } else {
-      const forcedActiveEtoPreviewCode: ReturnType<
-        typeof selectActiveEtoPreviewCodeFromQueryString
-      > = yield select(selectActiveEtoPreviewCodeFromQueryString);
+      const forcedActiveEtoPreviewCode: ReturnType<typeof selectActiveEtoPreviewCodeFromQueryString> = yield select(selectActiveEtoPreviewCodeFromQueryString);
 
       // For testing purpose we can force another ETO to be active (by default it's the first one)
       const shouldForceSpecificEtoToBeActive =
