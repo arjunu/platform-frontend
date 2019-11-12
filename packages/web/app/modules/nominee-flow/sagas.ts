@@ -83,7 +83,10 @@ export function* initNomineeEtoSpecificTasks(
     }
 
     if (isOnChain(eto) && eto.contract.timedState >= EETOStateOnChain.Signing) {
-      yield neuCall(loadInvestmentAgreement, eto.etoId, eto.previewCode);
+      yield neuCall(
+        loadInvestmentAgreement,
+        actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode),
+      );
 
       const data = yield all({
         isISHASignedByIssuer: select(selectIsISHASignedByIssuer, eto.previewCode),
@@ -129,15 +132,15 @@ export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
 
     yield all([neuCall(loadBankAccountDetails), neuCall(loadNomineeEtos)]);
 
-    const result = yield all({
+    const data = yield all({
       bankAccountIsVerified: select(selectIsBankAccountVerified),
       nomineeEtos: select(selectNomineeEtos),
     });
 
-    if (result.bankAccountIsVerified) {
+    if (data.bankAccountIsVerified) {
       nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] = ENomineeTaskStatus.DONE;
     }
-    if (!result.nomineeEtos || isEmpty(result.nomineeEtos)) {
+    if (!data.nomineeEtos || isEmpty(data.nomineeEtos)) {
       yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
       return;
     } else {
@@ -145,10 +148,9 @@ export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
     }
 
     nomineeTasksStatus.byPreviewCode = yield all(
-      //todo we need this all the time, write a utils fn for this
-      Object.keys(result.nomineeEtos).reduce(
+      Object.keys(data.nomineeEtos).reduce(
         (acc: { [key: string]: Iterator<Effect> }, previewCode: string) => {
-          acc[previewCode] = neuCall(initNomineeEtoSpecificTasks, result.nomineeEtos[previewCode]);
+          acc[previewCode] = neuCall(initNomineeEtoSpecificTasks, data.nomineeEtos[previewCode]);
           return acc;
         },
         {} as { [key: string]: Iterator<Effect> },
@@ -162,9 +164,7 @@ export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
 export function* getNomineeDashboardData(): Iterator<any> {
   yield neuCall(initNomineeTasks);
 
-  const selectStepReq: { [key: string]: Effect } = {
-    nomineeTasksStatus: select(selectNomineeTasksStatus),
-  };
+  const nomineeTasksStatus = yield select(selectNomineeTasksStatus);
 
   //check the conditions and start watchers  here
   const verificationIsComplete = yield select(selectIsUserFullyVerified);
@@ -174,15 +174,16 @@ export function* getNomineeDashboardData(): Iterator<any> {
       startRequestWatcher: put(actions.nomineeFlow.startNomineeRequestsWatcher()),
       setActiveEto: neuCall(setActiveNomineeEto),
     });
-
-    selectStepReq.activeEtoPreviewCode = select(selectNomineeActiveEtoPreviewCode);
-    selectStepReq.nomineeEtos = select(selectNomineeEtos);
   }
-  const selectStepData = yield all(selectStepReq);
+  const selectStepData = yield all({
+    activeEtoPreviewCode: select(selectNomineeActiveEtoPreviewCode),
+    nomineeEtos: select(selectNomineeEtos),
+  });
 
-  const activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask = yield getNomineeTaskStep(
-    selectStepData,
-  );
+  const activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask = yield getNomineeTaskStep({
+    ...selectStepData,
+    nomineeTasksStatus,
+  });
 
   const taskSpecificData = yield neuCall(getTaskSpecificData, activeNomineeTask);
 
@@ -366,16 +367,6 @@ export function* loadNomineeAgreements(): Iterator<any> {
 
   if (nomineeEto) {
     yield put(actions.eto.loadEtoAgreementsStatus(nomineeEto));
-  }
-}
-
-export function* loadNomineeSignedInvestmentAgreements(): Iterator<any> {
-  const nomineeEto: ReturnType<typeof selectActiveNomineeEto> = yield select(
-    selectActiveNomineeEto,
-  );
-
-  if (nomineeEto) {
-    yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto.etoId, nomineeEto.previewCode));
   }
 }
 
