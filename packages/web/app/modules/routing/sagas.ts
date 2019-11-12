@@ -7,7 +7,7 @@ import { EUserType } from "../../lib/api/users/interfaces";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsAuthorized, selectUserType } from "../auth/selectors";
 import { waitForAppInit } from "../init/sagas";
-import { neuTakeEvery } from "../sagasUtils";
+import { neuCall, neuTakeEvery } from "../sagasUtils";
 
 function* openInNewWindowSaga(
   _: TGlobalDependencies,
@@ -26,7 +26,7 @@ function* openInNewWindowSaga(
 
 export function* startRouteBasedSagas(
   { logger }: TGlobalDependencies,
-  { payload }: LocationChangeAction,
+  action: LocationChangeAction,
 ): IterableIterator<any> {
   const appIsReady = yield waitForAppInit();
   const userIsAuthorized: boolean = yield select(selectIsAuthorized);
@@ -34,20 +34,27 @@ export function* startRouteBasedSagas(
 
   logger.info(
     `userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
-      payload.location.pathname
+      action.payload.location.pathname
     }`,
   );
 
   if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
-    if (payload.location.pathname === appRoutes.dashboard) {
-      yield put(actions.nomineeFlow.nomineeDashboardView());
-    }
-    if (payload.location.pathname === appRoutes.etoIssuerView) {
-      yield put(actions.nomineeFlow.nomineeEtoView());
-    }
-    if (payload.location.pathname === appRoutes.documents) {
-      yield put(actions.nomineeFlow.nomineeDocumentsView());
-    }
+    yield neuCall(nomineeRouting, action);
+  }
+}
+
+export function* nomineeRouting(
+  _: TGlobalDependencies,
+  { payload }: LocationChangeAction,
+): Iterator<any> {
+  if (payload.location.pathname === appRoutes.dashboard) {
+    yield put(actions.nomineeFlow.nomineeDashboardView());
+  }
+  if (payload.location.pathname === appRoutes.etoIssuerView) {
+    yield put(actions.nomineeFlow.nomineeEtoView());
+  }
+  if (payload.location.pathname === appRoutes.documents) {
+    yield put(actions.nomineeFlow.nomineeDocumentsView());
   }
 }
 

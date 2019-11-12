@@ -4,7 +4,8 @@ import { selectBackupCodesVerified, selectIsUserEmailVerified } from "./auth/sel
 import { selectKycRequestStatus } from "./kyc/selectors";
 
 /*
- * @deprecated
+ * @deprecated, please use selectIsUserFullyVerified
+ * (packages/web/app/modules/auth/selectors.ts)
  * */
 export const selectIsVerificationFullyDone = (state: IAppState) =>
   !!(

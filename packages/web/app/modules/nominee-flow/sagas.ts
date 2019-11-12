@@ -87,7 +87,10 @@ export function* initNomineeEtoSpecificTasks(
     }
 
     if (isOnChain(eto) && eto.contract.timedState >= EETOStateOnChain.Signing) {
-      yield neuCall(loadInvestmentAgreement, eto.etoId, eto.previewCode);
+      yield neuCall(
+        loadInvestmentAgreement,
+        actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode),
+      );
 
       const data = yield all({
         ishaIsSignedByIssuer: select(selectIsISHASignedByIssuer, eto.previewCode),
@@ -265,7 +268,10 @@ export function* getTaskSpecificData(
   }
   if (activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL) {
     const nomineeEto: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
-    const capitalIncrease: string = yield neuCall(loadCapitalIncrease, nomineeEto.etoId);
+    const capitalIncrease: string = yield neuCall(
+      loadCapitalIncrease,
+      actions.eto.loadCapitalIncrease(nomineeEto.etoId, nomineeEto.previewCode),
+    );
     const walletBalance: string = yield select(selectLiquidEuroTokenBalance);
     const taskSubstate: ERedeemShareCapitalTaskSubstate = yield neuCall(
       getRedeemShareCapitalTaskState,
@@ -410,16 +416,6 @@ export function* loadNomineeAgreements(): Iterator<any> {
 
   if (nomineeEto) {
     yield put(actions.eto.loadEtoAgreementsStatus(nomineeEto));
-  }
-}
-
-export function* loadNomineeSignedInvestmentAgreements(): Iterator<any> {
-  const nomineeEto: ReturnType<typeof selectActiveNomineeEto> = yield select(
-    selectActiveNomineeEto,
-  );
-
-  if (nomineeEto) {
-    yield put(actions.eto.loadSignedInvestmentAgreement(nomineeEto.etoId, nomineeEto.previewCode));
   }
 }
 

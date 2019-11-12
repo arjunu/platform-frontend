@@ -95,7 +95,6 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
         error: action.payload.error,
       };
     case actions.nomineeFlow.createNomineeRequest.getType():
-    case actions.nomineeFlow.loadNomineeTaskData.getType(): //todo remove this
       return {
         ...state,
         loading: true,
@@ -165,17 +164,6 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
           [action.payload.previewCode]: {
             ...state.nomineeEtosAdditionalData[action.payload.previewCode],
             offeringAgreementsStatus: action.payload.statuses,
-          },
-        },
-      };
-    case actions.eto.setCapitalIncrease.getType():
-      return {
-        ...state,
-        nomineeEtosAdditionalData: {
-          ...state.nomineeEtosAdditionalData,
-          [action.payload.previewCode]: {
-            ...state.nomineeEtosAdditionalData[action.payload.previewCode],
-            capitalIncrease: action.payload.capitalIncrease,
           },
         },
       };
