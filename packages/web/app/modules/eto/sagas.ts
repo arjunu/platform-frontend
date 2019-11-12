@@ -739,12 +739,14 @@ export function* loadInvestmentAgreement(
   etoId: string,
   previewCode: string,
 ): Iterator<any> {
+  console.log("loadInvestmentAgreement started")
   const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
   const url: string = yield contract.signedInvestmentAgreementUrl;
 
   const parsedUrl = url === "" ? undefined : url;
 
   yield put(actions.eto.setInvestmentAgreementHash(previewCode, parsedUrl));
+  console.log("loadInvestmentAgreement finished")
 }
 
 export function* loadCapitalIncrease(

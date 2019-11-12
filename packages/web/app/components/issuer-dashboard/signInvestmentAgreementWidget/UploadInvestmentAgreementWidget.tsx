@@ -47,6 +47,7 @@ export const UploadInvestmentAgreementLayout: React.FunctionComponent<
     text={<FormattedMessage id="download-agreement-widget.signing-text" />}
     columnSpan={columnSpan}
   >
+    {console.log("---------UploadInvestmentAgreementLayout")}
     <ButtonGroup>
       <ButtonArrowRight
         onClick={() => downloadAgreementTemplate(agreementTemplate)}
@@ -99,7 +100,7 @@ export const UploadInvestmentAgreement = compose<
         dispatch(actions.etoDocuments.generateTemplate(agreementTemplate)),
     }),
   }),
-  branch<IStateProps | null>(props => props === null, renderNothing),
+  branch<IStateProps | null>(props => {console.log("---UploadInvestmentAgreement", props);return props === null}, renderNothing),
   branch<IStateProps>(props => props.stateOnChain < EETOStateOnChain.Signing, renderNothing),
   branch<IStateProps>(props => props.stateOnChain === EETOStateOnChain.Refund, renderNothing),
   branch<IStateProps & IExternalProps>(

@@ -112,6 +112,32 @@ export const etoReducer: AppReducer<IEtoState> = (
           [action.payload.previewCode]: action.payload.statuses,
         },
       };
+    //todo actions.eto.setInvestmentAgreementHash writes to both nominee-flow reducer and here.
+    // This is for the backwards compat. until the issuer flow is refactored to use sagas
+    // in the same way as nominee flow.
+    case actions.eto.setInvestmentAgreementHash.getType():
+      console.log("setInvestmentAgreementHash")
+      return {
+        ...state,
+        signedInvestmentAgreements: {
+          ...state.signedInvestmentAgreements,
+          [action.payload.previewCode]: {
+            isLoading: false,
+            url: action.payload.url,
+          },
+        },
+      };
+    //todo actions.eto.loadInvestmentAgreementHash writes to both nominee-flow reducer and here.
+    // This is for the backwards compat. until the issuer flow is refactored to use sagas
+    // in the same way as nominee flow.
+    case actions.eto.loadSignedInvestmentAgreement.getType():
+      return {
+        ...state,
+        signedInvestmentAgreements: {
+          ...state.signedInvestmentAgreements,
+          [action.payload.previewCode]: { isLoading: true, url: undefined },
+        },
+      };
   }
 
   return state;
