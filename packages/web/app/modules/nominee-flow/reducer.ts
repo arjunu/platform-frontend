@@ -27,7 +27,14 @@ export type TNomineeEtosAdditionalData = {
   capitalIncrease: string | undefined;
 };
 
-export type TNomineeTaskLinkToIssuerData = { nextState: ENomineeRequestComponentState };
+export type TNomineeTaskLinkToIssuerData = {
+  nextState: ENomineeRequestComponentState;
+  error: ENomineeRequestError;
+};
+
+export type TNoTasksData = {};
+export type TLinkBankAccountData = {};
+export type TAccountSetupData = {};
 
 export type TNomineeTaskRedeemShareCapitalData = {
   capitalIncrease: string;
@@ -35,15 +42,25 @@ export type TNomineeTaskRedeemShareCapitalData = {
   taskSubstate: ERedeemShareCapitalTaskSubstate;
 };
 
-export type TTaskSpecificData = Partial<{ [key in ENomineeTask]: unknown }> &
-  Partial<{ [ENomineeTask.LINK_TO_ISSUER]: TNomineeTaskLinkToIssuerData }> & {
-    byPreviewCode: {
-      [previewCode: string]: Partial<{ [key in ENomineeEtoSpecificTask]: unknown }> &
-        Partial<{
-          [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: TNomineeTaskRedeemShareCapitalData;
-        }>;
-    };
+export type TNomineeTaskAcceptThaData = {};
+export type TNomineeTaskAcceptRaaaData = {};
+export type TNomineeTaskAcceptIshaData = {};
+
+export type TNomineeEtoSpecificTaskData = {
+  [ENomineeEtoSpecificTask.ACCEPT_THA]: TNomineeTaskAcceptThaData;
+} & { [ENomineeEtoSpecificTask.ACCEPT_RAAA]: TNomineeTaskAcceptRaaaData } & {
+  [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: TNomineeTaskRedeemShareCapitalData;
+} & { [ENomineeEtoSpecificTask.ACCEPT_ISHA]: TNomineeTaskAcceptIshaData };
+
+export type TTaskSpecificData = { [ENomineeTask.NONE]: TNoTasksData } & {
+  [ENomineeTask.ACCOUNT_SETUP]: TAccountSetupData;
+} & { [ENomineeTask.LINK_TO_ISSUER]: TNomineeTaskLinkToIssuerData } & {
+  [ENomineeTask.LINK_BANK_ACCOUNT]: TLinkBankAccountData;
+} & {
+  byPreviewCode: {
+    [previewCode: string]: TNomineeEtoSpecificTaskData | undefined;
   };
+};
 
 export type TNomineeFlowState = {
   ready: boolean;
@@ -58,18 +75,23 @@ export type TNomineeFlowState = {
   nomineeTasksStatus: TNomineeTasksStatus;
 };
 
+export const initalTaskSpecificData = {
+  [ENomineeTask.NONE]: {},
+  [ENomineeTask.ACCOUNT_SETUP]: {},
+  [ENomineeTask.LINK_TO_ISSUER]: {
+    nextState: ENomineeRequestComponentState.CREATE_REQUEST,
+    error: ENomineeRequestError.NONE,
+  },
+  [ENomineeTask.LINK_BANK_ACCOUNT]: {},
+  byPreviewCode: {},
+};
+
 const nomineeFlowInitialState: TNomineeFlowState = {
   ready: false,
   loading: false,
   error: ENomineeFlowError.NONE,
   activeNomineeTask: ENomineeTask.NONE,
-  activeTaskData: {
-    [ENomineeTask.LINK_TO_ISSUER]: {
-      nextStep: ENomineeRequestComponentState.CREATE_REQUEST,
-      error: ENomineeRequestError.NONE,
-    },
-    byPreviewCode: {},
-  },
+  activeTaskData: initalTaskSpecificData,
   activeNomineeEtoPreviewCode: undefined,
   nomineeRequests: {},
   nomineeEtos: {},

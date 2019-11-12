@@ -32,18 +32,23 @@ export const selectNomineeFlowHasError = (state: IAppState) => {
 };
 
 export const selectNomineeRequestError = (state: IAppState): ENomineeRequestError => {
-  if (state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER] === undefined) {
+  const linkToIssuerData = state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER];
+  if (linkToIssuerData === undefined) {
     throw new DataUnavailableError("activeTaskData for the 'LINK_TO_ISSUER' step is missing");
+  } else {
+    return linkToIssuerData.error;
   }
-  return state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER].error;
 };
 
 export const selectActiveTaskData = (state: IAppState) => state.nomineeFlow.activeTaskData;
 
 export const selectLinkToIssuerNextState = (state: IAppState) => {
-  const activeTaskData = selectActiveTaskData(state);
-  const linkToIssuerData = activeTaskData[ENomineeTask.LINK_TO_ISSUER];
-  return linkToIssuerData && linkToIssuerData.nextState;
+  const linkToIssuerData = state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER];
+  if (linkToIssuerData === undefined) {
+    throw new DataUnavailableError("activeTaskData for the 'LINK_TO_ISSUER' step is missing");
+  } else {
+    return linkToIssuerData && linkToIssuerData.nextState;
+  }
 };
 
 export const selectNomineeRequests = (state: IAppState): TNomineeRequestStorage =>
@@ -114,35 +119,31 @@ export const selectIsISHASignedByIssuer = (state: IAppState, previewCode: string
 
 export const selectCapitalIncrease = (state: IAppState) => {
   const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
-  if (
-    !activeNomineeEtoPreviewCode ||
-    !state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode]
-  ) {
-    return undefined;
-  } else {
-    const taskData =
-      state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode][
-        ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
-      ];
-    return taskData && taskData.capitalIncrease;
-  }
+  const taskData =
+    activeNomineeEtoPreviewCode &&
+    state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode];
+
+  return (
+    taskData &&
+    taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL] &&
+    taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL].capitalIncrease
+  );
 };
 
 export const selectRedeemShareCapitalTaskSubstate = (
   state: IAppState,
-): ERedeemShareCapitalTaskSubstate | undefined => {
+): ERedeemShareCapitalTaskSubstate => {
   const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
-  if (
+  const taskData =
     activeNomineeEtoPreviewCode &&
-    state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode]
-  ) {
-    const taskData =
-      state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode][
-        ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
-      ];
-    return taskData && taskData.taskSubstate;
+    state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode];
+
+  if (taskData && taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]) {
+    return taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL].taskSubstate;
   } else {
-    throw new DataUnavailableError("active nominee eto preview code is missing!");
+    throw new DataUnavailableError(
+      `task substate is missing! activeNomineeEtoPreviewCode:${activeNomineeEtoPreviewCode}`,
+    );
   }
 };
 

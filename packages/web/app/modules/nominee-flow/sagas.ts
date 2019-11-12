@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { isEmpty } from "lodash/fp";
+import { cloneDeep, isEmpty } from "lodash/fp";
 import { delay, Effect } from "redux-saga";
 import { all, fork, put, select, take } from "redux-saga/effects";
 
@@ -30,7 +30,7 @@ import { loadBankAccountDetails } from "../kyc/sagas";
 import { neuCall, neuTakeLatest, neuTakeLatestUntil } from "../sagasUtils";
 import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
 import { selectLiquidEuroTokenBalance } from "../wallet/selectors";
-import { TTaskSpecificData } from "./reducer";
+import { initalTaskSpecificData, TTaskSpecificData } from "./reducer";
 import {
   selectActiveEtoPreviewCodeFromQueryString,
   selectActiveNomineeEto,
@@ -244,14 +244,18 @@ export function* getTaskSpecificData(
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask,
 ): Iterator<any> {
   const nomineeEto: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
-  const taskSpecificData: TTaskSpecificData = { byPreviewCode: {} };
+  const taskSpecificData: TTaskSpecificData = cloneDeep(initalTaskSpecificData);
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
     taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = yield neuCall(getNomineeTaskLinkToIssuerData);
   }
 
   if (activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL) {
-    taskSpecificData.byPreviewCode[nomineeEto.previewCode] = yield neuCall(getNomineeTaskRedeemShareCapitalData, nomineeEto.etoId, nomineeEto.previewCode)
+    taskSpecificData.byPreviewCode[nomineeEto.previewCode] = yield neuCall(
+      getNomineeTaskRedeemShareCapitalData,
+      nomineeEto.etoId,
+      nomineeEto.previewCode,
+    );
   }
 
   return taskSpecificData;
@@ -260,9 +264,8 @@ export function* getTaskSpecificData(
 export function* getNomineeTaskRedeemShareCapitalData(
   _: TGlobalDependencies,
   etoId: string,
-  previewCode: string
+  previewCode: string,
 ): Iterator<any> {
-
   const capitalIncrease: string = yield neuCall(
     loadCapitalIncrease,
     actions.eto.loadCapitalIncrease(etoId, previewCode),
@@ -478,7 +481,9 @@ export function* setActiveNomineeEto({
     if (etos === undefined || isEmpty(etos)) {
       yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(undefined));
     } else {
-      const forcedActiveEtoPreviewCode: ReturnType<typeof selectActiveEtoPreviewCodeFromQueryString> = yield select(selectActiveEtoPreviewCodeFromQueryString);
+      const forcedActiveEtoPreviewCode: ReturnType<
+        typeof selectActiveEtoPreviewCodeFromQueryString
+      > = yield select(selectActiveEtoPreviewCodeFromQueryString);
 
       // For testing purpose we can force another ETO to be active (by default it's the first one)
       const shouldForceSpecificEtoToBeActive =

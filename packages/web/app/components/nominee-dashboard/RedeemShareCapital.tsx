@@ -100,16 +100,9 @@ export const getStartOfClaimState = (startOfStates: TEtoStartOfStates) => {
 
 const RedeemShareCapital = compose<TProps, {}>(
   appConnect<{ taskSubstate: ERedeemShareCapitalTaskSubstate }>({
-    stateToProps: state => {
-      const taskSubstate = selectRedeemShareCapitalTaskSubstate(state);
-      if (!taskSubstate) {
-        throw new DataUnavailableError("task substate is missing");
-      } else {
-        return {
-          taskSubstate,
-        };
-      }
-    },
+    stateToProps: state => ({
+      taskSubstate: selectRedeemShareCapitalTaskSubstate(state),
+    }),
   }),
   branch<{ taskSubstate: ERedeemShareCapitalTaskSubstate }>(
     ({ taskSubstate }) =>
