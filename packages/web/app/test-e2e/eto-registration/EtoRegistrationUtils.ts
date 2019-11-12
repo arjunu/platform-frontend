@@ -234,7 +234,7 @@ export const assertUploadISHAStep = () => {
 
 export const assertUploadSignedISHAStep = () => {
   cy.get(tid("eto-state-3")).should("exist");
-  cy.get(tid("eto-dashboard-sign-you-isha")).should("exist");
+  cy.get(tid("eto-dashboard-sign-your-isha")).should("exist");
 
   cy.get(tid("dashboard-upload-signed-isha-widget")).should("exist");
 
@@ -244,7 +244,7 @@ export const assertUploadSignedISHAStep = () => {
 
 export const assertSignISHAStep = () => {
   cy.get(tid("eto-state-3")).should("exist");
-  cy.get(tid("eto-dashboard-sign-you-isha")).should("exist");
+  cy.get(tid("eto-dashboard-sign-your-isha")).should("exist");
 
   cy.get(tid("dashboard-sign-isha-on-chain-widget")).should("exist");
 
@@ -254,7 +254,7 @@ export const assertSignISHAStep = () => {
 
 export const assertWaitForNomineeToSignISHAStep = () => {
   cy.get(tid("eto-state-3")).should("exist");
-  cy.get(tid("eto-dashboard-sign-you-isha")).should("exist");
+  cy.get(tid("eto-dashboard-sign-your-isha")).should("exist");
 
   cy.get(tid("dashboard-wait-for-nominee-to-sign-isha-widget")).should("exist");
 

@@ -112,11 +112,22 @@ export type TGetNomineeTaskStepData = {
   nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContract | undefined } | undefined;
 };
 
-export const getNomineeTaskStep = ({
-  activeEtoPreviewCode,
-  nomineeTasksStatus,
-  nomineeEtos,
-}: TGetNomineeTaskStepData): ENomineeTask | ENomineeEtoSpecificTask => {
+export const EtoStateOnChainIsSigning = (
+  { activeEtoPreviewCode, nomineeEtos }: TGetNomineeTaskStepData,
+  etoStateToCheck: EETOStateOnChain,
+) => {
+  const eto = nomineeEtos && activeEtoPreviewCode && nomineeEtos[activeEtoPreviewCode];
+  if (eto) {
+    return !!eto.contract && eto.contract.timedState === etoStateToCheck;
+  } else {
+    return false;
+  }
+};
+
+export const getNomineeTaskStep = (
+  params: TGetNomineeTaskStepData,
+): ENomineeTask | ENomineeEtoSpecificTask => {
+  const { activeEtoPreviewCode, nomineeTasksStatus, nomineeEtos } = params;
   if (nomineeTasksStatus[ENomineeTask.ACCOUNT_SETUP] !== ENomineeTaskStatus.DONE) {
     return ENomineeTask.ACCOUNT_SETUP;
   } else if (nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] !== ENomineeTaskStatus.DONE) {
@@ -140,6 +151,7 @@ export const getNomineeTaskStep = ({
   } else if (nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] !== ENomineeTaskStatus.DONE) {
     return ENomineeTask.LINK_BANK_ACCOUNT;
   } else if (
+    EtoStateOnChainIsSigning(params, EETOStateOnChain.Signing) &&
     activeEtoPreviewCode &&
     nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][
       ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL
@@ -147,6 +159,7 @@ export const getNomineeTaskStep = ({
   ) {
     return ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL;
   } else if (
+    EtoStateOnChainIsSigning(params, EETOStateOnChain.Signing) &&
     activeEtoPreviewCode &&
     nomineeTasksStatus.byPreviewCode[activeEtoPreviewCode][ENomineeEtoSpecificTask.ACCEPT_ISHA] !==
       ENomineeTaskStatus.DONE
