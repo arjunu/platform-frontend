@@ -131,11 +131,18 @@ export const loginFixtureAccount = (
   },
 ) => {
   const fixture = accountFixtureByName(accountFixtureName);
-  let hdPath = params.customDerivationPath ? params.customDerivationPath : fixture.definition.derivationPath;
-  if(params.customDerivationPath){
-    hdPath = params.customDerivationPath
-  } else if (fixture.definition.derivationPath) {
-    hdPath = fixture.definition.derivationPath.substr(0, fixture.definition.derivationPath.lastIndexOf("/"));
+  let hdPath: string;
+
+  if (params.customDerivationPath) {
+    hdPath = params.customDerivationPath;
+  } else {
+    hdPath = fixture.definition.derivationPath;
+    if (hdPath) {
+      hdPath = fixture.definition.derivationPath.substr(
+        0,
+        fixture.definition.derivationPath.lastIndexOf("/"),
+      );
+    }
   }
 
   return createAndLoginNewUser({
