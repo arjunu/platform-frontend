@@ -35,8 +35,8 @@ import {
   selectNomineeActiveEtoPreviewCode,
   selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
+  selectNomineeRequestError,
   selectNomineeRequests,
-  selectNomineeStateError,
   selectNomineeTasksStatus,
 } from "./selectors";
 import {
@@ -221,23 +221,28 @@ export function* getTaskSpecificData(
   const taskSpecificData: Partial<{ [key in ENomineeTask]: unknown }> = {};
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
-    yield neuCall(loadNomineeRequests); //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
-
-    const data = yield all({
-      nomineeEto: select(selectActiveNomineeEto),
-      nomineeRequest: select(selectNomineeRequests),
-      nomineeRequestError: select(selectNomineeStateError),
-    });
-    const dataConverted = {
-      ...data,
-      nomineeRequest: takeLatestNomineeRequest(data.nomineeRequest),
-    };
-
-    taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = {
-      nextState: yield getNomineeRequestComponentState(dataConverted),
-    };
+    taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = yield neuCall(getNomineeTaskLinkToIssuerData);
   }
   return taskSpecificData;
+}
+
+export function* getNomineeTaskLinkToIssuerData(_: TGlobalDependencies): Iterator<any> {
+  yield neuCall(loadNomineeRequests); //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
+
+  const data = yield all({
+    nomineeEto: select(selectActiveNomineeEto),
+    nomineeRequest: select(selectNomineeRequests),
+    nomineeRequestError: select(selectNomineeRequestError),
+  });
+  const dataConverted = {
+    ...data,
+    nomineeRequest: takeLatestNomineeRequest(data.nomineeRequest),
+  };
+
+  return {
+    nextState: yield getNomineeRequestComponentState(dataConverted),
+    error: data.nomineeRequstError,
+  };
 }
 
 export function* nomineeEtoView({

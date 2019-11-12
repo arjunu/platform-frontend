@@ -45,7 +45,7 @@ export const validateEthAddress = (value: string | undefined) => {
 
 export type TGetNomineeRequestComponentState = {
   nomineeRequest: INomineeRequest | undefined;
-  nomineeRequestError: ENomineeRequestError | string; //todo refactor when nominee request errors storage fixed
+  nomineeRequestError: ENomineeRequestError;
   nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
 };
 

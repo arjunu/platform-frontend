@@ -7,8 +7,8 @@ import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import {
   selectActiveNomineeEto,
   selectLinkToIssuerNextState,
+  selectNomineeRequestError,
   selectNomineeRequests,
-  selectNomineeStateError,
 } from "../../../modules/nominee-flow/selectors";
 import {
   ENomineeRequestError,
@@ -27,9 +27,9 @@ import * as styles from "./LinkToIssuer.module.scss";
 
 interface IStateProps {
   nomineeRequest: INomineeRequest | undefined;
-  nomineeRequestError: ENomineeRequestError | string; //todo nominee request errors should be stored elsewhere
+  nomineeRequestError: ENomineeRequestError;
   nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
-  nextState: ENomineeRequestComponentState | undefined;
+  nextState: ENomineeRequestComponentState;
 }
 
 interface IRepeatRequestProps {
@@ -132,7 +132,7 @@ export const LinkToIssuer = compose<IStateProps, {}>(
     stateToProps: state => ({
       nomineeEto: selectActiveNomineeEto(state),
       nomineeRequest: takeLatestNomineeRequest(selectNomineeRequests(state)), //only take the latest one for now
-      nomineeRequestError: selectNomineeStateError(state),
+      nomineeRequestError: selectNomineeRequestError(state),
       nextState: selectLinkToIssuerNextState(state),
     }),
   }),
