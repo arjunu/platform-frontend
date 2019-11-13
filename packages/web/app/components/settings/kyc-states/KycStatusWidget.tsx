@@ -99,16 +99,17 @@ const getStatus = (
   requestStatus: EKycRequestStatus | undefined,
   requestOutsourcedStatus?: ERequestOutsourcedStatus | undefined,
 ): React.ReactNode => {
-  if (!selectIsUserEmailVerified) {
-    return <FormattedMessage id="settings.kyc-status-widget.status.error-verification-email" />;
-  }
-
+  // In case KYC flow is blocked show message immediately
   if (isKycFlowBlockedByRegion) {
     return (
       <span data-test-id="settings.kyc-status-widget.kyc-prohibited-region">
         <FormattedMessage id="settings.kyc-status-widget.status.error-prohibited-region" />
       </span>
     );
+  }
+
+  if (!selectIsUserEmailVerified) {
+    return <FormattedMessage id="settings.kyc-status-widget.status.error-verification-email" />;
   }
 
   if (!requestStatus) {
