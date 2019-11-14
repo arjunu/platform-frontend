@@ -17,7 +17,9 @@ const defaultProps = {
   userType: EUserType.INVESTOR,
   isUserEmailVerified: true,
   backupCodesVerified: true,
+  isKycFlowBlockedByRegion: false,
 };
+
 describe("<KycStatusWidgetBase />", () => {
   it("should render verified section", () => {
     const component = shallow(

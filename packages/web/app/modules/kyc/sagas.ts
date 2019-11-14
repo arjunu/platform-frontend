@@ -17,6 +17,7 @@ import {
   IKycLegalRepresentative,
   IKycRequestState,
   TKycBankAccount,
+  TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
 import { EUserType, IUser } from "../../lib/api/users/interfaces";
 import { IdentityRegistry } from "../../lib/contracts/IdentityRegistry";
@@ -37,7 +38,12 @@ import {
 } from "./selectors";
 import { deserializeClaims } from "./utils";
 
-export function* loadClientData(): Iterable<any> {
+export function* loadClientData({ apiKycService }: TGlobalDependencies): Iterable<any> {
+  const kycStatus: TKycStatus = yield apiKycService.getKycStatus();
+
+  yield put(actions.kyc.setStatus(kycStatus));
+
+  // TODO: Check `kycStatus.type` and load only appropriate type
   yield put(actions.kyc.kycLoadIndividualData());
   yield put(actions.kyc.kycLoadBusinessData());
 }
@@ -720,6 +726,7 @@ export function* loadKycRequestData(): Iterator<any> {
   yield put(actions.kyc.kycLoadIndividualRequest());
   yield put(actions.kyc.kycLoadBusinessRequest());
 
+  // TODO: KYC_LOAD_CLAIMS is called 3 times on init (kycLoadIndividualRequest, kycLoadBusinessRequest and here)
   yield put(actions.kyc.kycLoadClaims());
 
   yield put(actions.kyc.kycLoadClientData());

@@ -13,10 +13,14 @@ import {
   KycIndividualDataSchema,
   KycLegalRepresentativeSchema,
   KycRequestStateSchema,
+  KycStatusSchema,
   TKycBankTransferPurpose,
+  TKycStatus,
 } from "./KycApi.interfaces";
 
 const BASE_PATH = "/api/kyc/";
+
+const STATUS_PATH = "/status";
 
 const INDIVIDUAL_DATA_PATH = "/individual/data";
 const INDIVIDUAL_REQUEST_PATH = "/individual/request";
@@ -43,6 +47,21 @@ export class BankAccountNotFound extends KycApiError {}
 @injectable()
 export class KycApi {
   constructor(@inject(symbols.authorizedJsonHttpClient) private httpClient: IHttpClient) {}
+
+  /**
+   * Returns a status of a kyc for a currently logged user
+   * In general helpful to decide what kind of data we need to load (individual or business)
+   * Or if we should block the KYC process if it's restricted region
+   */
+  public async getKycStatus(): Promise<TKycStatus> {
+    return this.httpClient
+      .get<TKycStatus>({
+        baseUrl: BASE_PATH,
+        url: STATUS_PATH,
+        responseSchema: KycStatusSchema,
+      })
+      .then(response => response.body);
+  }
 
   /**
    * Individual Requests

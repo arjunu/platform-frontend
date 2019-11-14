@@ -14,6 +14,7 @@ import {
 } from "../../../modules/auth/selectors";
 import {
   selectExternalKycUrl,
+  selectIsKycFlowBlockedByRegion,
   selectKycLoading,
   selectKycRequestOutsourcedStatus,
   selectKycRequestStatus,
@@ -28,6 +29,7 @@ interface IStateProps {
   requestOutsourcedStatus?: ERequestOutsourcedStatus;
   isUserEmailVerified: boolean;
   isLoading: boolean;
+  isKycFlowBlockedByRegion: boolean;
   backupCodesVerified: boolean;
   error?: string;
   externalKycUrl?: string;
@@ -40,11 +42,11 @@ interface IDispatchProps {
   onGoToKycHome: () => void;
 }
 
-const connectKycStatusWidget = <T extends {}>(
-  WrappedComponent: React.ComponentType<IStateProps & IDispatchProps & T>,
+const connectKycStatusWidget = () => (
+  WrappedComponent: React.ComponentType<IStateProps & IDispatchProps>,
 ) =>
-  compose<(IStateProps | null) & IDispatchProps & T, T>(
-    appConnect<IStateProps | null, IDispatchProps, T>({
+  compose<IStateProps & IDispatchProps, {}>(
+    appConnect<IStateProps | null, IDispatchProps>({
       stateToProps: state => {
         const userType = selectUserType(state);
         if (userType !== undefined) {
@@ -56,6 +58,7 @@ const connectKycStatusWidget = <T extends {}>(
             requestOutsourcedStatus: selectKycRequestOutsourcedStatus(state.kyc),
             externalKycUrl: selectExternalKycUrl(state.kyc),
             isLoading: selectKycLoading(state.kyc),
+            isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
             error: selectWidgetError(state.kyc),
           };
         } else {
