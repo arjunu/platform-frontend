@@ -1,36 +1,18 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
+import { compose } from "recompose";
 
-import {
-  EKycRequestStatus,
-  ERequestOutsourcedStatus,
-} from "../../../lib/api/kyc/KycApi.interfaces";
-import { EUserType } from "../../../lib/api/users/interfaces";
+import { THocProps } from "../../../types";
 import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/Button";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { WarningAlert } from "../../shared/WarningAlert";
-import { connectKycStatusWidget } from "./ConnectKycStatus";
+import { connectKycStatusWidget } from "./connectKycStatus";
 
 import * as styles from "./AccountSetupKycComponent.module.scss";
 
-interface IStateProps {
-  requestStatus?: EKycRequestStatus;
-  requestOutsourcedStatus?: ERequestOutsourcedStatus;
-  isUserEmailVerified: boolean;
-  isLoading: boolean;
-  backupCodesVerified: boolean;
-  error?: string;
-  externalKycUrl?: string;
-  userType: EUserType;
-}
+export type ConnectKycStatusWidgetProps = THocProps<typeof connectKycStatusWidget>;
 
-interface IDispatchProps {
-  onGoToDashboard: () => void;
-  cancelInstantId: () => void;
-  onGoToKycHome: () => void;
-}
-
-export const AccountSetupKycStartLayout: React.FunctionComponent<IStateProps & IDispatchProps> = ({
+export const AccountSetupKycStartLayout: React.FunctionComponent<ConnectKycStatusWidgetProps> = ({
   isLoading,
   error,
   onGoToKycHome,
@@ -66,9 +48,9 @@ export const AccountSetupKycStartLayout: React.FunctionComponent<IStateProps & I
   }
 };
 
-export const AccountSetupKycPendingLayout: React.FunctionComponent<
-  IStateProps & IDispatchProps
-> = ({ onGoToKycHome }) => (
+export const AccountSetupKycPendingLayout: React.FunctionComponent<ConnectKycStatusWidgetProps> = ({
+  onGoToKycHome,
+}) => (
   <>
     <Button
       layout={EButtonLayout.PRIMARY}
@@ -82,7 +64,10 @@ export const AccountSetupKycPendingLayout: React.FunctionComponent<
   </>
 );
 
-export const AccountSetupKycComponent = connectKycStatusWidget<{}>(AccountSetupKycStartLayout);
-export const AccountSetupKycPendingComponent = connectKycStatusWidget<{}>(
-  AccountSetupKycPendingLayout,
-);
+export const AccountSetupKycComponent = compose<ConnectKycStatusWidgetProps, {}>(
+  connectKycStatusWidget(),
+)(AccountSetupKycStartLayout);
+
+export const AccountSetupKycPendingComponent = compose<ConnectKycStatusWidgetProps, {}>(
+  connectKycStatusWidget(),
+)(AccountSetupKycPendingLayout);

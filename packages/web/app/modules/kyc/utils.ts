@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { filter, findIndex, isNil, omitBy } from "lodash";
 
 import { EKycRequestStatusTranslation } from "../../components/translatedMessages/messages";
 import { createMessage, TMessage } from "../../components/translatedMessages/utils";
@@ -48,3 +49,29 @@ export const kycStatusToTranslationMessage = (status: EKycRequestStatus): TMessa
       return createMessage(EKycRequestStatusTranslation.PENDING);
   }
 };
+
+export function appendIfExists<T>(array: ReadonlyArray<T>, item: T | undefined): ReadonlyArray<T> {
+  if (!array) array = [];
+  if (item) return [...array, item];
+  return array;
+}
+
+export function updateArrayItem<T extends { id?: string }>(
+  array: ReadonlyArray<T>,
+  id?: string,
+  item?: T,
+): ReadonlyArray<T> {
+  if (!id) return array; // no changes
+  if (id && !item) return filter(array, i => i.id !== id); // delete item
+  if (id && item) {
+    const index = findIndex(array, i => i.id === id);
+    if (index === -1) return [...array, item]; // append
+
+    return [...array.slice(0, index), item, ...array.slice(index + 1)];
+  }
+  return array;
+}
+
+export function omitUndefined<T>(obj: T): { [P in keyof T]?: T[P] } {
+  return omitBy(obj, isNil) as any;
+}

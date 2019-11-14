@@ -118,7 +118,7 @@ describe("Change Email", function(): void {
 
       assertEmailPendingChange(email, newEmail);
 
-      getLatestVerifyUserEmailLink(newEmail).then(activationLink => {
+      getLatestVerifyUserEmailLink(newEmail, 5).then(activationLink => {
         cy.visit(activationLink);
       });
 

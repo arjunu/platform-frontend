@@ -13,6 +13,11 @@ import { TBankAccount } from "./types";
 
 export const selectKyc = (state: IAppState) => state.kyc;
 
+export const selectIsKycProhibitedRegion = createSelector(
+  selectKyc,
+  kyc => !!kyc.status && kyc.status.inProhibitedRegion,
+);
+
 export const selectIndividualFiles = (state: IAppState) => state.kyc.individualFiles;
 export const selectIndividualFilesLoading = (state: IAppState) => state.kyc.individualFilesLoading;
 
@@ -39,6 +44,15 @@ export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus | un
       return EKycRequestStatus.DRAFT;
   }
 };
+
+/**
+ * In case it's a prohibited region by ip and kyc process was not yet started (DRAFT) returns true.
+ */
+export const selectIsKycFlowBlockedByRegion = createSelector(
+  selectIsKycProhibitedRegion,
+  selectKycRequestStatus,
+  (isProhibited, status) => isProhibited && status === EKycRequestStatus.DRAFT,
+);
 
 export const selectKycRequestOutsourcedStatus = (
   state: DeepReadonly<IKycState>,
