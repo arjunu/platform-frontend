@@ -18,6 +18,11 @@ const defaultProps = {
   isUserEmailVerified: true,
   backupCodesVerified: true,
   isKycFlowBlockedByRegion: false,
+  isRestrictedCountryInvestor: false,
+  externalKycUrl: undefined,
+  requestOutsourcedStatus: undefined,
+  requestStatus: undefined,
+  error: undefined,
 };
 
 describe("<KycStatusWidgetBase />", () => {

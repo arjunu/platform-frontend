@@ -9,6 +9,7 @@ import { EUserType } from "../../../lib/api/users/interfaces";
 import { actions } from "../../../modules/actions";
 import {
   selectBackupCodesVerified,
+  selectIsRestrictedInvestor,
   selectIsUserEmailVerified,
   selectUserType,
 } from "../../../modules/auth/selectors";
@@ -25,14 +26,15 @@ import { onEnterAction } from "../../../utils/OnEnterAction";
 import { onLeaveAction } from "../../../utils/OnLeaveAction";
 
 interface IStateProps {
-  requestStatus?: EKycRequestStatus;
-  requestOutsourcedStatus?: ERequestOutsourcedStatus;
+  requestStatus: EKycRequestStatus | undefined;
+  requestOutsourcedStatus: ERequestOutsourcedStatus | undefined;
   isUserEmailVerified: boolean;
   isLoading: boolean;
   isKycFlowBlockedByRegion: boolean;
+  isRestrictedCountryInvestor: boolean;
   backupCodesVerified: boolean;
-  error?: string;
-  externalKycUrl?: string;
+  error: string | undefined;
+  externalKycUrl: string | undefined;
   userType: EUserType;
 }
 
@@ -49,6 +51,7 @@ const connectKycStatusWidget = () => (
     appConnect<IStateProps | null, IDispatchProps>({
       stateToProps: state => {
         const userType = selectUserType(state);
+
         if (userType !== undefined) {
           return {
             userType,
@@ -59,6 +62,7 @@ const connectKycStatusWidget = () => (
             externalKycUrl: selectExternalKycUrl(state.kyc),
             isLoading: selectKycLoading(state),
             isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
+            isRestrictedCountryInvestor: selectIsRestrictedInvestor(state),
             error: selectWidgetError(state.kyc),
           };
         } else {

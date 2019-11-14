@@ -70,6 +70,26 @@ export const selectIsUSInvestor = (state: IAppState): boolean => {
   return isInvestor && country === ECountries.UNITED_STATES;
 };
 
+/**
+ * Investor is restricted when country of residence is blocked for some (often legal) reason
+ * TODO: Connect both selectIsRestrictedInvestor and selectIsUsInvestor to single selector returning enum
+ */
+export const selectIsRestrictedInvestor = createSelector(
+  selectIsInvestor,
+  selectClientCountry,
+  (isInvestor, country) => {
+    if (isInvestor && country && process.env.NF_RESTRICTED_INVESTOR_COUNTRIES) {
+      const restrictedCountries: string[] = process.env.NF_RESTRICTED_INVESTOR_COUNTRIES.split(
+        ",",
+      ).map(c => c.trim());
+
+      return restrictedCountries.includes(country);
+    }
+
+    return false;
+  },
+);
+
 export const selectIsIssuer = (state: IAppState): boolean =>
   selectUserType(state) === EUserType.ISSUER;
 

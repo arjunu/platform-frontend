@@ -12,8 +12,11 @@ const commonProps = {
   isUserEmailVerified: true,
   backupCodesVerified: true,
   isKycFlowBlockedByRegion: false,
+  isRestrictedCountryInvestor: false,
   isLoading: false,
   error: undefined,
+  externalKycUrl: undefined,
+  requestOutsourcedStatus: undefined,
   step: 1,
   userType: EUserType.INVESTOR,
   onGoToKycHome: () => {},
@@ -55,6 +58,13 @@ storiesOf("KYC/StatusWidget", module)
   ))
   .add("accepted", () => (
     <KycStatusWidgetBase {...commonProps} requestStatus={EKycRequestStatus.ACCEPTED} />
+  ))
+  .add("accepted, but investor is from restricted country", () => (
+    <KycStatusWidgetBase
+      {...commonProps}
+      requestStatus={EKycRequestStatus.ACCEPTED}
+      isRestrictedCountryInvestor={true}
+    />
   ))
   .add("outsourced-started", () => (
     <KycStatusWidgetBase
