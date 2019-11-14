@@ -64,7 +64,7 @@ describe("Eto Forms", () => {
       goToIssuerDashboard();
       assertUploadSignedTermsheetStep();
 
-      cy.get(tid("dashboard-upload-termsheet-widget.call-to-action")).click();
+      cy.get(tid("dashboard-upload-termsheet-widget.call-to-action")).awaitedClick();
 
       assertEtoDocuments();
 

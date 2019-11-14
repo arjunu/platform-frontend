@@ -75,7 +75,7 @@ describe("Wallet Migration Flow", () => {
           // TODO: Refactor callback hell below
           cy.get(tid("modals.icbm-balance-modal.balance-footer.generate-transaction"))
             .wait(2000)
-            .click();
+            .awaitedClick();
 
           cy.get(tid("modals.icbm-balance-modal.migrate-body.to")).then(toField => {
             const to = toField.text();

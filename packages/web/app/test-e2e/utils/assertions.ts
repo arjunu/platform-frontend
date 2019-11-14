@@ -147,7 +147,7 @@ export const assertMoneyNotEmpty = (testId: string) => {
 };
 
 export const assertEmailChangeFlow = (): void => {
-  cy.get(tid("verify-email-widget.change-email.button")).click();
+  cy.get(tid("verify-email-widget.change-email.button")).awaitedClick();
 
   cy.get(tid("verify-email-widget-form-email-input")).should("exist");
 };

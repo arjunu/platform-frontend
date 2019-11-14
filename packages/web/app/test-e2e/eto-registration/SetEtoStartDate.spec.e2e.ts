@@ -9,18 +9,18 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 const setStartDay = (startDate: moment.Moment, textToCheck: RegExp) => {
   cy.visit(appRoutes.dashboard)
     .get(tid("eto-settings-start-date-open-date-picker"))
-    .click()
+    .awaitedClick()
     .get(tid("eto-settings-start-date-input"))
     .clear({ force: true })
     .type(startDate.format("MM/DD/YYYY HH:mm"), { force: true })
     .get(tid("eto-settings-start-date-confirm"))
-    .click()
+    .awaitedClick()
     .get(tid("set-eto-date-summary-time-to-eto"))
     .should($e => {
       expect($e.text()).to.match(textToCheck);
     })
     .get(tid("set-eto-date-summary-confirm-button"))
-    .click();
+    .awaitedClick();
 
   confirmAccessModal();
 
@@ -74,7 +74,7 @@ describe("Eto start date setup", () => {
         .subtract(8, "hours");
 
       cy.get(tid("eto-settings-start-date-open-date-picker"))
-        .click()
+        .awaitedClick()
         .get(tid("eto-settings-start-date-input"))
         .clear({ force: true })
         .type(falseDate.format("MM/DD/YYYY HH:mm"), { force: true })

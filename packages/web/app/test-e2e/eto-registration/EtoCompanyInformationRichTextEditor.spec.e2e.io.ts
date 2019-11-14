@@ -27,7 +27,7 @@ describe("Eto Company Information Rich Text Editor", () => {
     );
 
     cy.get(formField("companyDescription")).clear();
-    cy.get(".ck.ck-toolbar > :nth-child(3)").click();
+    cy.get(".ck.ck-toolbar > :nth-child(3)").awaitedClick();
     cy.get(formField("companyDescription")).type("This is a bold text{enter}");
 
     fillForm(aboutFormSubmit);

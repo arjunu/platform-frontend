@@ -26,7 +26,7 @@ describe("Pending Transactions During TX flow", () => {
 
       goToWallet();
 
-      cy.get(tid("wallet.eth.withdraw.button")).click();
+      cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
 
       cy.get(tid("modals.shared.tx-external-pending.modal")).should("exist");
 
@@ -49,7 +49,7 @@ describe("Pending Transactions During TX flow", () => {
 
       goToWallet();
 
-      cy.get(tid("wallet.eth.withdraw.button")).click();
+      cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
 
       assertPendingWithdrawModal("0x16cd5aC5A1b77FB72032E3A09E91A98bB21D8988", "1");
 
@@ -71,7 +71,7 @@ describe("Pending Transactions During TX flow", () => {
 
       goToWallet();
 
-      cy.get(tid("wallet.eth.withdraw.button")).click();
+      cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
 
       assertPendingWithdrawModal("0x16cd5aC5A1b77FB72032E3A09E91A98bB21D8988", "1");
 
@@ -96,7 +96,7 @@ describe("Pending Transactions During TX flow", () => {
 
       goToWallet();
 
-      cy.get(tid("wallet.eth.withdraw.button")).click();
+      cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
 
       assertDraftWithdrawModal();
     });

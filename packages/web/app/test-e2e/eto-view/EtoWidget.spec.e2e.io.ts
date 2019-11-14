@@ -27,7 +27,7 @@ describe("Eto widget page", () => {
       cy.iframe("iframe").within($iframe => {
         cy.wrap($iframe)
           .find(tid("logged-out-campaigning-register"))
-          .click();
+          .awaitedClick();
 
         cy.get("@windowOpen").should("be.calledWithMatch", appRoutes.register, "_blank");
 
@@ -70,7 +70,7 @@ describe("Eto widget page", () => {
 
       cy.iframe("iframe")
         .find(tid("logged-out-campaigning-register"))
-        .click();
+        .awaitedClick();
 
       cy.get("@windowOpen").should("be.calledWithMatch", appRoutes.register, "_blank");
     });
@@ -92,7 +92,7 @@ describe("Eto widget page", () => {
 
       cy.iframe("iframe")
         .find(tid("eto-widget-invest-now-button"))
-        .click();
+        .awaitedClick();
 
       cy.get("@windowOpen").should(
         "be.calledWithMatch",

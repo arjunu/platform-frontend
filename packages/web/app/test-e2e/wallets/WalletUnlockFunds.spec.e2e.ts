@@ -10,7 +10,9 @@ describe("Unlock Ether Funds", () => {
       clearPendingTransactions: true,
     }).then(() => {
       cy.visit("/wallet-unlock-etherlock");
-      cy.get(tid("modals.tx-sender.withdraw-flow.summery.unlock-funds-summary.accept")).click();
+      cy.get(
+        tid("modals.tx-sender.withdraw-flow.summery.unlock-funds-summary.accept"),
+      ).awaitedClick();
       confirmAccessModal();
       cy.get(tid("modals.shared.signing-message.modal"));
       cy.get(tid("modals.shared.tx-success.modal"));

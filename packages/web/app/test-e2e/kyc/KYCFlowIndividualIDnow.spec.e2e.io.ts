@@ -9,7 +9,7 @@ const initiateIDNowKyc = (isUSInvestor: boolean) => {
   // go to kyc select and then individual page
   cy.visit(kycRoutes.start);
 
-  cy.get(tid("kyc-start-go-to-personal")).click();
+  cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
 
   cy.url().should("contain", kycRoutes.individualStart);
 
@@ -22,13 +22,13 @@ const initiateIDNowKyc = (isUSInvestor: boolean) => {
       "example.jpg",
     ]);
 
-    cy.get(tid("kyc-personal-start-submit-form")).click();
+    cy.get(tid("kyc-personal-start-submit-form")).awaitedClick();
   } else {
     // fill and submit the form
     fillForm(kycInvidualForm);
   }
 
-  cy.get(tid("kyc-go-to-outsourced-verification")).click();
+  cy.get(tid("kyc-go-to-outsourced-verification")).awaitedClick();
 
   cy.get(tid("kyc-panel-outsourced")).should("exist");
 };
@@ -40,7 +40,7 @@ describe("KYC Personal flow with ID Now", () => {
 
       cy.visit(appRoutes.profile);
 
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).click();
+      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).awaitedClick();
       cy.get(tid("settings.kyc-status-widget.start-kyc-process")).should("exist");
 
       //Second Time
@@ -57,7 +57,7 @@ describe("KYC Personal flow with ID Now", () => {
 
       cy.visit(appRoutes.profile);
 
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).click();
+      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).awaitedClick();
       cy.get(tid("settings.kyc-status-widget.start-kyc-process")).should("exist");
 
       //Second Time

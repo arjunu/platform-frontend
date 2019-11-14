@@ -97,7 +97,7 @@ describe("Change Email", function(): void {
       // assert if new email is pending for verification
       assertEmailPendingChange(email, newEmail);
 
-      cy.get(tid("verify-email-widget.abort-change-email.button")).click();
+      cy.get(tid("verify-email-widget.abort-change-email.button")).awaitedClick();
 
       assertEmailChangeAbort(email);
     });

@@ -9,7 +9,7 @@ function assertBankTransferFlow({
   agreementApprovalRequired: boolean;
 }): void {
   if (agreementApprovalRequired) {
-    cy.get(tid("bank-verification.link-now")).click();
+    cy.get(tid("bank-verification.link-now")).awaitedClick();
 
     fillForm({
       quintessenceTosApproved: {
@@ -36,12 +36,12 @@ function assertBankTransferFlow({
     .as("referenceNumber")
     .should("match", /NR[\w\d]{10}NR/);
 
-  cy.get(tid("bank-transfer.summary.transfer-completed")).click();
+  cy.get(tid("bank-transfer.summary.transfer-completed")).awaitedClick();
 
   // TODO: Email are not send immediately after moving backend to use queues
   // cy.get<string>("@referenceNumber").then(assertWaitForBankTransferSummary);
 
-  cy.get(tid("bank-transfer.verify.success.go-to-wallet")).click();
+  cy.get(tid("bank-transfer.verify.success.go-to-wallet")).awaitedClick();
 
   assertWallet();
 }
@@ -59,7 +59,7 @@ describe("Bank Verification", () => {
 
       cy.get(tid("locked-wallet.neur.bank-account.not-verified")).should("exist");
 
-      cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
+      cy.get(tid("locked-wallet.neur.bank-account.link-account")).awaitedClick();
 
       assertBankTransferFlow({
         agreementApprovalRequired: true,
@@ -74,7 +74,7 @@ describe("Bank Verification", () => {
     }).then(() => {
       goToProfile();
 
-      cy.get(tid("linked-bank-account-widget.link-account")).click();
+      cy.get(tid("linked-bank-account-widget.link-account")).awaitedClick();
 
       assertBankTransferFlow({
         agreementApprovalRequired: true,
@@ -89,7 +89,7 @@ describe("Bank Verification", () => {
     }).then(() => {
       goToWallet();
 
-      cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
+      cy.get(tid("locked-wallet.neur.bank-account.link-account")).awaitedClick();
 
       assertBankTransferFlow({
         agreementApprovalRequired: false,
@@ -104,7 +104,7 @@ describe("Bank Verification", () => {
     }).then(() => {
       goToProfile();
 
-      cy.get(tid("linked-bank-account-widget.link-different-account")).click();
+      cy.get(tid("linked-bank-account-widget.link-different-account")).awaitedClick();
 
       assertBankTransferFlow({
         agreementApprovalRequired: false,

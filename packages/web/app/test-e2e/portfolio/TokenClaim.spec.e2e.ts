@@ -19,7 +19,7 @@ describe("Token claim", () => {
 
     goToPortfolio();
 
-    cy.get(tid(`modals.portfolio.portfolio-asset-action.claim-${ETO_ID}`)).click();
+    cy.get(tid(`modals.portfolio.portfolio-asset-action.claim-${ETO_ID}`)).awaitedClick();
 
     fillForm(
       {
@@ -31,12 +31,12 @@ describe("Token claim", () => {
       { submit: false },
     );
 
-    cy.get(tid("modals.tx-sender.user-claim-flow.summary.accept")).click();
+    cy.get(tid("modals.tx-sender.user-claim-flow.summary.accept")).awaitedClick();
 
     confirmAccessModal();
 
     cy.get(tid("modals.tx-sender.user-claim-flow.success")).should("exist");
-    cy.get(tid("modals.tx-sender.user-claim-flow.success.go-to-portfolio")).click();
+    cy.get(tid("modals.tx-sender.user-claim-flow.success.go-to-portfolio")).awaitedClick();
 
     assertPortfolio();
 

@@ -9,7 +9,7 @@ export const doWithdraw = (
 ) => {
   goToWallet();
 
-  cy.get(tid("wallet.eth.withdraw.button")).click();
+  cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
 
   cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.to-address")).type(address);
   cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.value")).type(amount);
@@ -26,9 +26,9 @@ export const doWithdraw = (
 
   cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
     .should("be.enabled")
-    .click();
+    .awaitedClick();
 
-  cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).click();
+  cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
 
   confirmAccessModal();
 

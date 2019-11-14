@@ -12,9 +12,11 @@ describe("Invest with euro token", () => {
     }).then(() => {
       goToDashboard();
 
-      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
+      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).awaitedClick();
       // click invest now button
-      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID), { timeout: LONG_WAIT_TIME }).click();
+      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID), {
+        timeout: LONG_WAIT_TIME,
+      }).awaitedClick();
       // select euro from icbm wallet
       cy.wait(1000);
       cy.get(tid("investment-type.selector.ICBM_NEUR")).check({ force: true });
@@ -22,8 +24,8 @@ describe("Invest with euro token", () => {
         .clear()
         .type("500");
       cy.wait(1000);
-      cy.get(tid("invest-modal-invest-now-button")).click();
-      cy.get(tid("invest-modal-summary-confirm-button")).click();
+      cy.get(tid("invest-modal-invest-now-button")).awaitedClick();
+      cy.get(tid("invest-modal-summary-confirm-button")).awaitedClick();
       confirmAccessModal();
       cy.get(tid("investment-flow.success.title")).should("exist");
       // TODO check smart contracts balances

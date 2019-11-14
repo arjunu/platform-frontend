@@ -8,7 +8,7 @@ export const assertInvestmentModal = () => {
 export const startInvestmentFlow = (etoId: string) => {
   goToEtoViewById(etoId);
 
-  cy.get(tid("eto-invest-now-button-" + etoId)).click();
+  cy.get(tid("eto-invest-now-button-" + etoId)).awaitedClick();
 
   assertInvestmentModal();
 };

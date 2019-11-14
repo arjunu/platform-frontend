@@ -38,7 +38,7 @@ describe("KYC Personal flow with manual verification", () => {
         "example.jpg",
       ]);
 
-      cy.get(tid("kyc-personal-start-submit-form")).click();
+      cy.get(tid("kyc-personal-start-submit-form")).awaitedClick();
 
       // go to the outsource option
       cy.get(tid("kyc-go-to-outsourced-verification")).awaitedClick();

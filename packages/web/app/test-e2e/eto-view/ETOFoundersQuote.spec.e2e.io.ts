@@ -3,7 +3,7 @@ import { goToEtoPreview, loginFixtureAccount, tid } from "../utils";
 const assertFoundersQuote = () => {
   goToEtoPreview();
   cy.get(tid("eto-overview-status-founders-quote")).should("exist");
-  cy.get(tid("eto.public-view.investor-preview-banner.view-as-investor")).click();
+  cy.get(tid("eto.public-view.investor-preview-banner.view-as-investor")).awaitedClick();
   cy.get(tid("eto-overview-status-founders-quote")).should("exist");
 };
 

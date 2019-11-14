@@ -22,7 +22,7 @@ it("should correctly accept all payouts", () => {
     goToPortfolio();
 
     // accept all payouts
-    cy.get(tid("asset-portfolio.payout.accept-all-payouts")).click();
+    cy.get(tid("asset-portfolio.payout.accept-all-payouts")).awaitedClick();
 
     // save amounts to be claimed
     cy.get(tid("investor-payout.accept-summary.eth-total-payout"))
@@ -34,7 +34,7 @@ it("should correctly accept all payouts", () => {
       .as("nEurAmountToBeClaimed");
 
     // accept summary
-    cy.get(tid("investor-payout.accept-summary.accept")).click();
+    cy.get(tid("investor-payout.accept-summary.accept")).awaitedClick();
     confirmAccessModal();
 
     // wait for success

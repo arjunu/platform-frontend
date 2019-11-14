@@ -31,13 +31,13 @@ describe("Invest with nEur", () => {
     goToDashboard();
 
     // click invest now button
-    cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
+    cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).awaitedClick();
 
     cy.get(`${tid("investment-widget-total-nEur-invested")} ${tid("value")}`)
       .then($e => parseAmount($e.text()))
       .as("nEurInvested");
 
-    cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).click();
+    cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).awaitedClick();
 
     cy.get(tid("investment-type.selector.NEUR")).check({ force: true });
 
@@ -52,9 +52,9 @@ describe("Invest with nEur", () => {
       .then($element => parseAmount($element.text()))
       .as("estimatedReward");
 
-    cy.get(tid("invest-modal-invest-now-button")).click();
+    cy.get(tid("invest-modal-invest-now-button")).awaitedClick();
 
-    cy.get(tid("invest-modal-summary-confirm-button")).click();
+    cy.get(tid("invest-modal-summary-confirm-button")).awaitedClick();
 
     confirmAccessModal();
 

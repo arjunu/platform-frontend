@@ -24,7 +24,9 @@ const asserISHADocumentsHidden = () => {
 };
 
 const assertISHAConfidentialityAgreement = () => {
-  cy.get(tid("eto-public-view.documents.investment_and_shareholder_agreement_preview")).click();
+  cy.get(
+    tid("eto-public-view.documents.investment_and_shareholder_agreement_preview"),
+  ).awaitedClick();
 
   cy.get(tid("eto.document-confidentiality-agreement-modal")).should("exist");
 
@@ -67,7 +69,7 @@ describe("Eto ISHA documents", () => {
         tid(
           "eto-public-view.investment-terms.document.investment_and_shareholder_agreement_preview",
         ),
-      ).click();
+      ).awaitedClick();
 
       cy.get(tid("eto.document-confidentiality-agreement-modal")).should("exist");
 

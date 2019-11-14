@@ -41,7 +41,7 @@ describe("Pending Transactions In Header", () => {
       // TODO: this test will be super flaky - with 500 ms block time it will be mined faster
       // than you can close the dialog. you could just mock mining by POSTing transaction to user_api
       // assert correct behavior of transaction monitor
-      cy.get(tid("pending-transactions-status.mining")).click();
+      cy.get(tid("pending-transactions-status.mining")).awaitedClick();
 
       assertPendingWithdrawModal(address, amount);
 
@@ -64,7 +64,7 @@ describe("Pending Transactions In Header", () => {
 
       doWithdraw(address, amount, { closeWhen: "pending" });
 
-      cy.get(tid("pending-transactions-status.mining")).click();
+      cy.get(tid("pending-transactions-status.mining")).awaitedClick();
 
       assertPendingWithdrawModal(address, amount);
 
@@ -87,7 +87,7 @@ describe("Pending Transactions In Header", () => {
 
       cy.reload();
 
-      cy.get(tid("pending-transactions-status.success")).click();
+      cy.get(tid("pending-transactions-status.success")).awaitedClick();
 
       assertSuccessWithdrawModal(address, amount);
     });
@@ -107,7 +107,7 @@ describe("Pending Transactions In Header", () => {
       cy.get(tid("pending-transactions-status.mining")).should("not.exist");
 
       // when mined should show success modal
-      cy.get(tid("pending-transactions-status.success")).click();
+      cy.get(tid("pending-transactions-status.success")).awaitedClick();
 
       assertSuccessWithdrawModal(address, amount);
 
@@ -142,7 +142,7 @@ describe("Pending Transactions In Header", () => {
 
       cy.get(tid("pending-transactions-status.error"))
         .should("exist")
-        .click();
+        .awaitedClick();
 
       assertTxErrorDialogueNoCost();
     });

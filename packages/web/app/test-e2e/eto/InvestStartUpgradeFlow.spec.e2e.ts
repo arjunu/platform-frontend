@@ -13,11 +13,11 @@ describe("Start upgrade flow from investment", () => {
     }).then(() => {
       goToDashboard();
 
-      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
+      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).awaitedClick();
       // click invest now button
-      cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).click();
+      cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).awaitedClick();
 
-      cy.get(tid("investment-type.selector.ICBM_NEUR.enable-wallet")).click();
+      cy.get(tid("investment-type.selector.ICBM_NEUR.enable-wallet")).awaitedClick();
 
       // check if upgrade accept has shown
       cy.get(tid("modals.tx-sender.upgrade-flow.summery.upgradeSummary.accept")).should("exist");

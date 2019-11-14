@@ -7,7 +7,7 @@ import { goToEtoViewById } from "./EtoViewUtils";
 const assertFundraisingStatisticsTab = (etoId: string) => {
   goToEtoViewById(etoId);
 
-  cy.get(tid("eto.public-view.fundraising-statistics")).click();
+  cy.get(tid("eto.public-view.fundraising-statistics")).awaitedClick();
   cy.get(tid("eto.public-view.fundraising-statistics.iframe"))
     .and("have.attr", "src")
     .and("include", withParams(externalRoutes.icoMonitorStats, { etoId }));

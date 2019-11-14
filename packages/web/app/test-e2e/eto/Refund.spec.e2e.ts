@@ -14,7 +14,7 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 const startRefundFlow = (etoID: string, hasEth: boolean, hasNEur: boolean) => {
   cy.visit(etoPublicViewByIdLinkLegacy(etoID));
 
-  cy.get(tid("eto-overview-claim-your-refund")).click();
+  cy.get(tid("eto-overview-claim-your-refund")).awaitedClick();
 
   // assert flow modal
   cy.get(tid("modals.tx-sender.user-refund-flow")).should("exist");
@@ -31,12 +31,12 @@ const startRefundFlow = (etoID: string, hasEth: boolean, hasNEur: boolean) => {
       .as("refundAmountNEur");
   }
 
-  cy.get(tid("modals.tx-sender.user-refund-flow.summary.accept")).click();
+  cy.get(tid("modals.tx-sender.user-refund-flow.summary.accept")).awaitedClick();
 
   confirmAccessModal();
 
   cy.get(tid("modals.shared.tx-success.modal"));
-  cy.get(tid("modals.shared.tx-action.go-to-wallet")).click();
+  cy.get(tid("modals.shared.tx-action.go-to-wallet")).awaitedClick();
 };
 
 const assertRefundAmount = (

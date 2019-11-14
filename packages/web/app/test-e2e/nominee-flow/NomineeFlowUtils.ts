@@ -8,7 +8,7 @@ export const linkEtoToNominee = (address: string) => {
 
   cy.get(tid("nominee-flow.link-with-issuer-input")).type(address);
 
-  cy.get(tid("nominee-flow.link-with-issuer-submit")).click();
+  cy.get(tid("nominee-flow.link-with-issuer-submit")).awaitedClick();
 
   cy.get(tid("nominee-request-pending")).should("exist");
 };
@@ -19,7 +19,7 @@ export const signAgreement = (
   successModalSelector: string,
 ) => () => {
   cy.get(containerSelector).should("exist");
-  cy.get(tid("eto-nominee-sign-agreement-action")).click();
+  cy.get(tid("eto-nominee-sign-agreement-action")).awaitedClick();
 
   cy.get(modalSelector).should("exist");
 
@@ -36,7 +36,7 @@ export const signAgreement = (
   confirmAccessModal();
 
   cy.get(successModalSelector).should("exist");
-  cy.get(tid("nominee-sign-agreement-success-close")).click();
+  cy.get(tid("nominee-sign-agreement-success-close")).awaitedClick();
 };
 
 export const signTHA = signAgreement(

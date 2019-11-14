@@ -19,8 +19,8 @@ describe("Upgrade icbm wallet", () => {
         icbmBalance = parseFloat(extractNumber($e.text()));
         expect(icbmBalance).to.be.greaterThan(0);
       });
-      cy.get(tid("wallet.icbm-euro.upgrade-button")).click();
-      cy.get(tid("modals.tx-sender.upgrade-flow.summery.upgradeSummary.accept")).click();
+      cy.get(tid("wallet.icbm-euro.upgrade-button")).awaitedClick();
+      cy.get(tid("modals.tx-sender.upgrade-flow.summery.upgradeSummary.accept")).awaitedClick();
       confirmAccessModal();
       cy.get(tid("modals.shared.signing-message.modal"));
       cy.get(tid("modals.shared.tx-success.modal"));
@@ -48,8 +48,8 @@ describe("Upgrade icbm wallet", () => {
         icbmBalance = parseFloat(extractNumber($e.text()));
         expect(icbmBalance).to.be.greaterThan(0);
       });
-      cy.get(tid("wallet.icbm-eth.upgrade-button")).click();
-      cy.get(tid("modals.tx-sender.upgrade-flow.summery.upgradeSummary.accept")).click();
+      cy.get(tid("wallet.icbm-eth.upgrade-button")).awaitedClick();
+      cy.get(tid("modals.tx-sender.upgrade-flow.summery.upgradeSummary.accept")).awaitedClick();
       confirmAccessModal();
       cy.get(tid("modals.shared.signing-message.modal"));
       cy.get(tid("modals.shared.tx-success.modal"));

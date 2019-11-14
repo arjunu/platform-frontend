@@ -14,7 +14,7 @@ const assertUploadISHAtFlow = () => {
 
   assertUploadISHAStep();
 
-  cy.get(tid("dashboard-upload-isha-widget.call-to-action")).click();
+  cy.get(tid("dashboard-upload-isha-widget.call-to-action")).awaitedClick();
 
   assertEtoDocuments();
 
@@ -40,7 +40,7 @@ const assertUploadOfferingDocumentFlow = () => {
 
   assertUploadMemorandumDocumentStep();
 
-  cy.get(tid("dashboard-upload-investment-memorandum-widget.call-to-action")).click();
+  cy.get(tid("dashboard-upload-investment-memorandum-widget.call-to-action")).awaitedClick();
 
   assertEtoDocuments();
 

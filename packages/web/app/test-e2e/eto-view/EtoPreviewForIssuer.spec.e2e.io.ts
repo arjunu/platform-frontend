@@ -18,7 +18,7 @@ describe("Eto Preview For Issuer", () => {
     cy.get(tid("eto.public-view.investor-preview-banner")).should("exist");
 
     // should go to eto by preview code
-    cy.get(tid("eto.public-view.investor-preview-banner.view-as-investor")).click();
+    cy.get(tid("eto.public-view.investor-preview-banner.view-as-investor")).awaitedClick();
 
     assertEtoView(etoId);
 

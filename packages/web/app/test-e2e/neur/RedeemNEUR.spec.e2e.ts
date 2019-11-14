@@ -28,13 +28,13 @@ describe("Redeem NEUR", function(): void {
       assertBankAccountDetails();
 
       // start redeem flow
-      cy.get(tid("wallet-balance.neur.redeem-button")).click();
+      cy.get(tid("wallet-balance.neur.redeem-button")).awaitedClick();
     });
   });
 
   it("should withdraw whole balance", () => {
     // click redeem whole balance button
-    cy.get(tid("bank-transfer.reedem-init.redeem-whole-balance")).click();
+    cy.get(tid("bank-transfer.reedem-init.redeem-whole-balance")).awaitedClick();
 
     fillForm({
       "bank-transfer.reedem-init.continue": { type: "submit" },
@@ -50,11 +50,11 @@ describe("Redeem NEUR", function(): void {
     });
 
     // continue transaction
-    cy.get(tid("bank-transfer.redeem-summary.continue")).click();
+    cy.get(tid("bank-transfer.redeem-summary.continue")).awaitedClick();
     confirmAccessModal();
 
     // go to wallet
-    cy.get(tid("bank-transfer.redeem.success.go-to-wallet")).click();
+    cy.get(tid("bank-transfer.redeem.success.go-to-wallet")).awaitedClick();
 
     // refresh page instead of waiting to have data updated
     goToWallet();

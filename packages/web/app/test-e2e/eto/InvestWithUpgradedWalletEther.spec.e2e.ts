@@ -15,8 +15,8 @@ describe("Invest with eth token", () => {
       goToDashboard();
 
       // click invest now button
-      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
-      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).click();
+      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).awaitedClick();
+      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).awaitedClick();
 
       assertInvestmentModal();
 
@@ -29,9 +29,9 @@ describe("Invest with eth token", () => {
       // wait for calculation to complete
       assertButtonIsActive("invest-modal-invest-now-button");
 
-      cy.get(tid("invest-modal-invest-now-button")).click();
+      cy.get(tid("invest-modal-invest-now-button")).awaitedClick();
 
-      cy.get(tid("invest-modal-summary-confirm-button")).click();
+      cy.get(tid("invest-modal-summary-confirm-button")).awaitedClick();
 
       confirmAccessModal();
 
@@ -52,9 +52,9 @@ describe("Invest with eth token", () => {
       goToDashboard();
 
       // verify ETO with disabled ETH wallet
-      cy.get(tid(`eto-overview-${WHITELIST_ETO_ID}`)).click();
+      cy.get(tid(`eto-overview-${WHITELIST_ETO_ID}`)).awaitedClick();
       // click invest now button
-      cy.get(tid(`eto-invest-now-button-${WHITELIST_ETO_ID}`)).click();
+      cy.get(tid(`eto-invest-now-button-${WHITELIST_ETO_ID}`)).awaitedClick();
 
       assertInvestmentModal();
 
@@ -62,13 +62,13 @@ describe("Invest with eth token", () => {
       cy.get(tid("investment-type.selector.ETH")).should("not.exist");
 
       // close investment modal
-      cy.get(tid("modal-close-button")).click();
+      cy.get(tid("modal-close-button")).awaitedClick();
 
       goToDashboard();
       // verify ETO with enabled ETH wallet
-      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
+      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).awaitedClick();
       // click invest now button
-      cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).click();
+      cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).awaitedClick();
 
       assertInvestmentModal();
 
@@ -90,9 +90,9 @@ describe("Invest with eth token", () => {
       goToDashboard();
 
       // verify ETO with disabled ETH wallet
-      cy.get(tid(`eto-overview-${WHITELIST_ETO_ID}`)).click();
+      cy.get(tid(`eto-overview-${WHITELIST_ETO_ID}`)).awaitedClick();
       // click invest now button
-      cy.get(tid(`eto-invest-now-button-${WHITELIST_ETO_ID}`)).click();
+      cy.get(tid(`eto-invest-now-button-${WHITELIST_ETO_ID}`)).awaitedClick();
 
       assertInvestmentModal();
 
@@ -107,10 +107,10 @@ describe("Invest with eth token", () => {
       assertButtonIsActive("invest-modal-invest-now-button");
 
       // close investment modal
-      cy.get(tid("modal-close-button")).click();
+      cy.get(tid("modal-close-button")).awaitedClick();
 
       // click invest now again
-      cy.get(tid(`eto-invest-now-button-${WHITELIST_ETO_ID}`)).click();
+      cy.get(tid(`eto-invest-now-button-${WHITELIST_ETO_ID}`)).awaitedClick();
 
       assertInvestmentModal();
 

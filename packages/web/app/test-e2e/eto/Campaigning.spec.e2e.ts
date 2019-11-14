@@ -39,10 +39,10 @@ const submitBookBuilding = (
   cy.get(tid("campaigning-your-commitment")).contains(`${formatThousands(amount)} EUR`);
 };
 
-const changeBookBuilding = () => cy.get(tid("campaigning-your-commitment-change")).click();
+const changeBookBuilding = () => cy.get(tid("campaigning-your-commitment-change")).awaitedClick();
 
 const deleteBookBuilding = () => {
-  cy.get(tid("campaigning-your-commitment-delete")).click();
+  cy.get(tid("campaigning-your-commitment-delete")).awaitedClick();
   cy.get(tid("campaigning-your-commitment")).should("not.exist");
 };
 
@@ -160,7 +160,7 @@ describe("Eto campaigning state", () => {
 
       // from dashboard
       cy.visit("/");
-      cy.get(tid(`eto-overview-${ETO_ID}`)).click();
+      cy.get(tid(`eto-overview-${ETO_ID}`)).awaitedClick();
       cy.get(`${tid("campaigning-your-commitment")} ${tid("value")}`).should("contain", amount);
 
       // from dashboard

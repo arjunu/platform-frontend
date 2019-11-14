@@ -267,7 +267,7 @@ export const uploadDocumentToFieldWithTid = (
 ) => {
   cy.get(`${tid(targetTid)} ${tid("eto-add-document-drop-zone")}`).dropFile(fixture);
 
-  cy.get(tid("documents-ipfs-modal-continue")).click();
+  cy.get(tid("documents-ipfs-modal-continue")).awaitedClick();
 
   if (options.acceptWallet) {
     confirmAccessModal();

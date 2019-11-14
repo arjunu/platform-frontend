@@ -25,8 +25,8 @@ describe("Try and invest without money", () => {
       // all required helper functions are available.
 
       // click invest now button
-      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
-      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).click();
+      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).awaitedClick();
+      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).awaitedClick();
 
       cy.get(tid("invest-modal-eth-field"))
         .clear()
@@ -51,7 +51,7 @@ describe("Try and invest without money", () => {
 
     goToEtoViewById(PUBLIC_ETO_ID);
 
-    cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).click();
+    cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).awaitedClick();
 
     cy.get(tid("investment-type.selector.ICBM_NEUR")).check({ force: true });
 
@@ -61,9 +61,9 @@ describe("Try and invest without money", () => {
 
     cy.get(tid("invest-modal-invest-now-button"))
       .should("be.enabled")
-      .click();
+      .awaitedClick();
 
-    cy.get(tid("invest-modal-summary-confirm-button")).click();
+    cy.get(tid("invest-modal-summary-confirm-button")).awaitedClick();
     confirmAccessModal();
 
     cy.get(tid("investment-flow.success.title")).should("exist");
@@ -94,7 +94,7 @@ describe("Try and invest without money", () => {
       );
       goToEtoViewById(PUBLIC_ETO_ID);
 
-      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).click();
+      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).awaitedClick();
 
       cy.get(tid("investment-type.selector.ICBM_NEUR")).check({ force: true });
 

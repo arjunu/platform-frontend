@@ -23,7 +23,7 @@ import {
 export const submitProposal = () => {
   goToIssuerDashboard();
 
-  cy.get(tid("eto-dashboard-submit-proposal")).click();
+  cy.get(tid("eto-dashboard-submit-proposal")).awaitedClick();
   confirmAccessModal();
 
   cy.get(tid("eto-state-pending")).should("exist");
@@ -32,7 +32,7 @@ export const submitProposal = () => {
 export const submitPreview = () => {
   goToIssuerDashboard();
 
-  cy.get(tid("eto-dashboard-publish-eto-widget.publish")).click();
+  cy.get(tid("eto-dashboard-publish-eto-widget.publish")).awaitedClick();
 
   confirmAccessModal();
 
@@ -40,7 +40,7 @@ export const submitPreview = () => {
 };
 
 export const goToSection = (section: string) => {
-  cy.get(`${tid(section)} button`).click();
+  cy.get(`${tid(section)} button`).awaitedClick();
 };
 
 export const fillAndAssertFull = (section: string, sideEffect: TFormFixture | (() => void)) => {
@@ -131,7 +131,7 @@ export const fillRequiredCompanyInformation = () => {
 export const acceptNominee = (address: string) => {
   goToSection("eto-progress-widget-voting-right");
 
-  cy.get(tid("eto-nominee-accept")).click();
+  cy.get(tid("eto-nominee-accept")).awaitedClick();
 
   confirmAccessModal();
 
@@ -141,7 +141,7 @@ export const acceptNominee = (address: string) => {
 export const cancelNominee = (address: string) => {
   cy.get(tid(`chosen-nominee-${address}`))
     .find(tid("delete-nominee-request"))
-    .click();
+    .awaitedClick();
 
   confirmAccessModal();
 
@@ -151,7 +151,7 @@ export const cancelNominee = (address: string) => {
 export const rejectNominee = () => {
   goToSection("eto-progress-widget-voting-right");
 
-  cy.get(tid("eto-nominee-reject")).click();
+  cy.get(tid("eto-nominee-reject")).awaitedClick();
 
   confirmAccessModal();
 

@@ -35,12 +35,12 @@ function assertBankTransferFlow({
     .as("referenceNumber")
     .should("match", /NR[\w\d]{10}NR/);
 
-  cy.get(tid("bank-transfer.purchase.summary.transfer-completed")).click();
+  cy.get(tid("bank-transfer.purchase.summary.transfer-completed")).awaitedClick();
 
   // TODO: Email are not send immediately after moving backend to use queues
   // cy.get<string>("@referenceNumber").then(assertWaitForBankTransferSummary);
 
-  cy.get(tid("bank-transfer.purchase.success.go-to-wallet")).click();
+  cy.get(tid("bank-transfer.purchase.success.go-to-wallet")).awaitedClick();
 
   assertWallet();
 }
@@ -56,7 +56,7 @@ describe("Purchase", () => {
     }).then(() => {
       goToWallet();
 
-      cy.get(tid("wallet-balance.neur.purchase-button")).click();
+      cy.get(tid("wallet-balance.neur.purchase-button")).awaitedClick();
 
       assertBankTransferFlow({
         agreementApprovalRequired: true,
@@ -71,7 +71,7 @@ describe("Purchase", () => {
     }).then(() => {
       goToWallet();
 
-      cy.get(tid("wallet-balance.neur.purchase-button")).click();
+      cy.get(tid("wallet-balance.neur.purchase-button")).awaitedClick();
 
       assertBankTransferFlow({
         agreementApprovalRequired: false,

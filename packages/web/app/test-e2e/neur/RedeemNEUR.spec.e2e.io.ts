@@ -26,7 +26,7 @@ describe("Redeem NEUR", function(): void {
       assertBankAccountDetails();
 
       // start redeem flow
-      cy.get(tid("wallet-balance.neur.redeem-button")).click();
+      cy.get(tid("wallet-balance.neur.redeem-button")).awaitedClick();
     });
   });
 
@@ -93,14 +93,14 @@ describe("Redeem NEUR", function(): void {
 
     // search only for button inside modal
     cy.get(".modal-content").within(() => {
-      cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
+      cy.get(tid("locked-wallet.neur.bank-account.link-account")).awaitedClick();
     });
 
     // close bank account link modal
     cy.get(tid("bank-transfer.summary.transfer-completed"));
     cy.get(tid("modal-close-button"))
       .last()
-      .click();
+      .awaitedClick();
 
     fillForm(
       {

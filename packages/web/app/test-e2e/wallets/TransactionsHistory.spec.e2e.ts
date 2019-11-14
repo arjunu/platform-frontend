@@ -14,7 +14,7 @@ describe("TransactionHistory", () => {
       .its("length")
       .as("previousLength");
 
-    cy.get(tid("transactions-history-load-more")).click();
+    cy.get(tid("transactions-history-load-more")).awaitedClick();
 
     cy.get<number>("@previousLength").then(previousLength => {
       cy.get(tid("transactions-history-row")).should("to.have.length.gt", previousLength);
@@ -30,7 +30,7 @@ describe("TransactionHistory", () => {
 
     cy.get(tid("transactions-history-row"))
       .first()
-      .click();
+      .awaitedClick();
 
     cy.get(tid("transaction-history-details-modal")).should("exist");
   });

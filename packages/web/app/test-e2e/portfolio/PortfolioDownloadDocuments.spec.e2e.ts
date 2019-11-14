@@ -13,7 +13,7 @@ describe("Download documents from portfolio", () => {
       goToPortfolio();
 
       cy.get(tid(`modals.portfolio.portfolio-assets.download-agreements-${PUBLIC_ETO_ID}`))
-        .click()
+        .awaitedClick()
         .then(() => {
           const downloadSelector = tid(
             `modals.portfolio.portfolio-assets.download-agreements-${PUBLIC_ETO_ID}.download`,
@@ -22,7 +22,7 @@ describe("Download documents from portfolio", () => {
             cy.get(downloadSelector)
               .first()
               .parent()
-              .click()
+              .awaitedClick()
               .then(() => {
                 cy.get(downloadSelector)
                   .first()

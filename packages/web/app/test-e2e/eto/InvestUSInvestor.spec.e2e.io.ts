@@ -20,7 +20,7 @@ describe("US investors investment flow", () => {
 
     cy.get(tid("investment-widget.us-investor-message")).should("exist");
 
-    cy.get(tid("investment-widget.us-investor-message.go-to-dashboard")).click();
+    cy.get(tid("investment-widget.us-investor-message.go-to-dashboard")).awaitedClick();
 
     assertDashboard();
   });

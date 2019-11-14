@@ -25,8 +25,8 @@ describe("Invest with ethereum", () => {
     goToDashboard();
 
     // click invest now button
-    cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
-    cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).click();
+    cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).awaitedClick();
+    cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).awaitedClick();
 
     cy.get(tid("invest-modal-eth-field"))
       .clear()
@@ -39,15 +39,15 @@ describe("Invest with ethereum", () => {
       .then($element => parseAmount($element.text()))
       .as("estimatedReward");
 
-    cy.get(tid("invest-modal-invest-now-button")).click();
+    cy.get(tid("invest-modal-invest-now-button")).awaitedClick();
 
-    cy.get(tid("invest-modal-summary-confirm-button")).click();
+    cy.get(tid("invest-modal-summary-confirm-button")).awaitedClick();
 
     confirmAccessModal();
 
     cy.get(tid("investment-flow.success.title")).should("exist");
 
-    cy.get(tid("investment-flow.success.view-your-portfolio")).click();
+    cy.get(tid("investment-flow.success.view-your-portfolio")).awaitedClick();
 
     cy.get(tid("portfolio-reserved-asset-neu-reward")).then($element => {
       const neuReward = parseAmount($element.text());
@@ -75,9 +75,9 @@ describe("Invest with ethereum", () => {
       goToDashboard();
 
       // click invest now button
-      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
-      cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).click();
-      cy.get(tid("invest-modal-full-balance-btn")).click();
+      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).awaitedClick();
+      cy.get(tid(`eto-invest-now-button-${PUBLIC_ETO_ID}`)).awaitedClick();
+      cy.get(tid("invest-modal-full-balance-btn")).awaitedClick();
 
       // wait for calculation to complete
       assertButtonIsActive("invest-modal-invest-now-button");
@@ -86,15 +86,15 @@ describe("Invest with ethereum", () => {
         .then($element => parseAmount($element.text()))
         .as("estimatedReward");
 
-      cy.get(tid("invest-modal-invest-now-button")).click();
+      cy.get(tid("invest-modal-invest-now-button")).awaitedClick();
 
-      cy.get(tid("invest-modal-summary-confirm-button")).click();
+      cy.get(tid("invest-modal-summary-confirm-button")).awaitedClick();
 
       confirmAccessModal();
 
       cy.get(tid("investment-flow.success.title")).should("exist");
 
-      cy.get(tid("investment-flow.success.view-your-portfolio")).click();
+      cy.get(tid("investment-flow.success.view-your-portfolio")).awaitedClick();
 
       cy.get(tid("portfolio-reserved-asset-neu-reward")).then($element => {
         const neuReward = parseAmount($element.text());

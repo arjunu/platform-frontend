@@ -29,7 +29,7 @@ describe("Eto Unapproved Investor View", function(): void {
 
       cy.get(tid("jurisdiction-disclaimer-modal")).should("exist");
 
-      cy.get(tid("jurisdiction-disclaimer-modal.confirm")).click();
+      cy.get(tid("jurisdiction-disclaimer-modal.confirm")).awaitedClick();
 
       assertEtoView(ETO_ID);
     });
@@ -39,7 +39,7 @@ describe("Eto Unapproved Investor View", function(): void {
 
       cy.get(tid("jurisdiction-disclaimer-modal")).should("exist");
 
-      cy.get(tid("jurisdiction-disclaimer-modal.deny")).click();
+      cy.get(tid("jurisdiction-disclaimer-modal.deny")).awaitedClick();
 
       assertDashboard();
     });

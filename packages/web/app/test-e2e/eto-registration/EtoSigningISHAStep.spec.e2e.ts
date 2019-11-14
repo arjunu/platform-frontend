@@ -20,7 +20,7 @@ const assertUploadSignedISHAFlow = () => {
 
   assertUploadSignedISHAStep();
 
-  cy.get(tid("dashboard-upload-signed-isha-widget.upload-signed-isha")).click();
+  cy.get(tid("dashboard-upload-signed-isha-widget.upload-signed-isha")).awaitedClick();
 
   assertEtoDocuments();
 
@@ -49,10 +49,10 @@ const assertSignISHAOnChainFlow = () => {
 
   assertSignISHAStep();
 
-  cy.get(tid("dashboard-sign-isha-on-chain-widget.sign")).click();
+  cy.get(tid("dashboard-sign-isha-on-chain-widget.sign")).awaitedClick();
 
   cy.get(tid("eto-flow.sign-isha-summary")).should("exist");
-  cy.get(tid("eto-flow.sign-isha-summary.continue")).click();
+  cy.get(tid("eto-flow.sign-isha-summary.continue")).awaitedClick();
 
   confirmAccessModal();
 

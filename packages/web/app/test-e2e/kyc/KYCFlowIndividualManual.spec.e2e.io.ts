@@ -60,7 +60,7 @@ describe("KYC Personal flow with manual verification", () => {
         "example.jpg",
       ]);
 
-      cy.get(tid("kyc-personal-start-submit-form")).click();
+      cy.get(tid("kyc-personal-start-submit-form")).awaitedClick();
 
       // go to the manual verification with file upload
       cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();

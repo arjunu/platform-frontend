@@ -98,11 +98,11 @@ export const confirmAccessModal = (password: string = DEFAULT_PASSWORD) => {
 };
 
 export const confirmAccessModalNoPW = () => {
-  cy.get(tid("access-light-wallet-prompt-accept-button")).click();
+  cy.get(tid("access-light-wallet-prompt-accept-button")).awaitedClick();
 };
 
 export const closeModal = () => {
-  cy.get(tid("modal-close-button")).click();
+  cy.get(tid("modal-close-button")).awaitedClick();
 };
 
 export const getLatestVerifyUserEmailLink = (
@@ -305,7 +305,7 @@ export const stubAlert = (hookName: string) => cy.on("window:alert", cy.stub().a
 export const shouldDownloadDocument = (id: string, documentName: string) => {
   stubAlert("alert");
 
-  cy.get(tid(id)).click();
+  cy.get(tid(id)).awaitedClick();
 
   cy.get("@alert").should("be.calledWithMatch", new RegExp(`Filename: ${documentName}`));
 };

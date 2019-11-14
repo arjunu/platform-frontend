@@ -25,7 +25,7 @@ describe("Investor accept payout", () => {
 
     cy.get(tid(`asset-portfolio.payout-eur_t`)).within(() => {
       // accept neur payout
-      cy.get(tid("asset-portfolio.payout.accept-payout")).click();
+      cy.get(tid("asset-portfolio.payout.accept-payout")).awaitedClick();
     });
 
     // save neur amount to be claimed
@@ -34,7 +34,7 @@ describe("Investor accept payout", () => {
       .as("amountToBeClaimed");
 
     // accept summary
-    cy.get(tid("investor-payout.accept-summary.accept")).click();
+    cy.get(tid("investor-payout.accept-summary.accept")).awaitedClick();
     confirmAccessModal();
 
     // wait for success

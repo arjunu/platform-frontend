@@ -49,7 +49,7 @@ describe("Incoming payout", function(): void {
       cy.get(tid("incoming-payout-done"));
 
       cy.get(tid("incoming-payout-go-to-portfolio"))
-        .click()
+        .awaitedClick()
         .then(() => {
           // restore clock to have portfolio loaded
           clock.restore();

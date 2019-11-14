@@ -430,9 +430,9 @@ export const logout = () => {
   cy.log("logging out");
 
   cy.get(tid("account-menu-open-button"))
-    .click()
+    .awaitedClick()
     .get(tid("menu-logout-button"))
-    .click();
+    .awaitedClick();
 
   assertLanding();
 

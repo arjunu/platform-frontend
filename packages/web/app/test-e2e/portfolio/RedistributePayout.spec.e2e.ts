@@ -15,14 +15,14 @@ describe("Investor redistribute payout", () => {
 
     cy.get(tid(`asset-portfolio.payout-eth`)).within(() => {
       // redistribute eth payout
-      cy.get(tid("asset-portfolio.payout.redistribute-payout")).click();
+      cy.get(tid("asset-portfolio.payout.redistribute-payout")).awaitedClick();
     });
 
     // confirm redistribute
-    cy.get(tid("investor-payout.redistribute-confirm.confirm")).click();
+    cy.get(tid("investor-payout.redistribute-confirm.confirm")).awaitedClick();
 
     // accept summary
-    cy.get(tid("investor-payout.redistribute-summary.accept")).click();
+    cy.get(tid("investor-payout.redistribute-summary.accept")).awaitedClick();
     confirmAccessModal();
 
     // wait for success
@@ -38,14 +38,14 @@ describe("Investor redistribute payout", () => {
 
     cy.get(tid(`asset-portfolio.payout-eur_t`)).within(() => {
       // accept neur payout
-      cy.get(tid("asset-portfolio.payout.redistribute-payout")).click();
+      cy.get(tid("asset-portfolio.payout.redistribute-payout")).awaitedClick();
     });
 
     // confirm redistribute
-    cy.get(tid("investor-payout.redistribute-confirm.confirm")).click();
+    cy.get(tid("investor-payout.redistribute-confirm.confirm")).awaitedClick();
 
     // accept summary
-    cy.get(tid("investor-payout.redistribute-summary.accept")).click();
+    cy.get(tid("investor-payout.redistribute-summary.accept")).awaitedClick();
     confirmAccessModal();
 
     // wait for success

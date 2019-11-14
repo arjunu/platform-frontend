@@ -45,7 +45,9 @@ describe("Wallet Withdraw", () => {
         );
 
         // Should show warning for whole possible balance used
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance")).click();
+        cy.get(
+          tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance"),
+        ).awaitedClick();
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.value"))
           .invoke("val")
@@ -178,7 +180,9 @@ describe("Wallet Withdraw", () => {
           "exist",
         );
 
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance")).click();
+        cy.get(
+          tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance"),
+        ).awaitedClick();
 
         fillForm(
           {
@@ -233,7 +237,7 @@ describe("Wallet Withdraw", () => {
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         assertWithdrawFlow(testAddress, testValue, expectedInput);
       });
@@ -273,7 +277,7 @@ describe("Wallet Withdraw", () => {
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         assertWithdrawFlow(testAddress, testValue, expectedInput);
 
@@ -309,7 +313,7 @@ describe("Wallet Withdraw", () => {
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         assertWithdrawFlow(testAddress, testValue, expectedInput);
       });
@@ -346,7 +350,7 @@ describe("Wallet Withdraw", () => {
         );
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         /*Test flow*/
 
@@ -376,7 +380,7 @@ describe("Wallet Withdraw", () => {
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         assertWithdrawFlow(testAddress, testValue, expectedInput);
       });
@@ -392,7 +396,9 @@ describe("Wallet Withdraw", () => {
         goToWallet();
         fillWithdrawForm(testAddress, "5");
 
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance")).click();
+        cy.get(
+          tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance"),
+        ).awaitedClick();
 
         fillForm(
           {
@@ -410,7 +416,7 @@ describe("Wallet Withdraw", () => {
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
 
@@ -451,7 +457,7 @@ describe("Wallet Withdraw", () => {
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
 
@@ -490,7 +496,7 @@ describe("Wallet Withdraw", () => {
         );
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
 
@@ -529,7 +535,7 @@ describe("Wallet Withdraw", () => {
         );
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
-          .click();
+          .awaitedClick();
 
         cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
 
