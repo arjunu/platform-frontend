@@ -147,15 +147,15 @@ export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
       nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] = ENomineeTaskStatus.DONE;
     }
 
-    nomineeTasksStatus.byPreviewCode = yield all(
-      Object.keys(data.nomineeEtos).reduce(
-        (acc: { [key: string]: Iterator<Effect> }, previewCode: string) => {
-          acc[previewCode] = neuCall(initNomineeEtoSpecificTasks, data.nomineeEtos[previewCode]);
-          return acc;
-        },
-        {} as { [key: string]: Iterator<Effect> },
-      ),
-    );
+    let etoSpecificNomineeTaskStatusEffects: { [key: string]: Iterator<Effect> } = {};
+    Object.keys(data.nomineeEtos).forEach((key: string) => {
+      etoSpecificNomineeTaskStatusEffects[key] = neuCall(
+        initNomineeEtoSpecificTasks,
+        data.nomineeEtos[key],
+      );
+    });
+
+    nomineeTasksStatus.byPreviewCode = yield all(etoSpecificNomineeTaskStatusEffects);
 
     yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
   }
