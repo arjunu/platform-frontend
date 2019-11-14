@@ -123,7 +123,10 @@ const RedeemShareCapital = compose<TProps, {}>(
       }
     },
     dispatchToProps: dispatch => ({
-      redeemFunds: amount => dispatch(actions.txTransactions.startWithdrawNEuro(amount)),
+      redeemFunds: amount => {
+        dispatch(actions.txUserFlowRedeem.setInitialValue(amount));
+        dispatch(actions.txTransactions.startWithdrawNEuro());
+      },
     }),
   }),
 )(RedeemShareCapitalLayout);

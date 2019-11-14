@@ -146,7 +146,7 @@ function* ethWithdrawFlow(_: TGlobalDependencies): Iterator<any> {
 function* withdrawSaga({ logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield txSendSaga({
-      transactionType: ETxSenderType.WITHDRAW,
+      type: ETxSenderType.WITHDRAW,
       transactionFlowGenerator: ethWithdrawFlow,
     });
     logger.info("Withdrawing successful");

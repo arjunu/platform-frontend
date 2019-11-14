@@ -7,7 +7,7 @@ import { ITxData } from "../../../../lib/web3/types";
 import { DeepReadonly } from "../../../../types";
 import { compareBigNumbers } from "../../../../utils/BigNumberUtils";
 import { convertToUlps } from "../../../../utils/NumberUtils";
-import { actions, TActionFromCreator } from "../../../actions";
+import { actions } from "../../../actions";
 import { EBankTransferType } from "../../../bank-transfer-flow/reducer";
 import {
   selectBankFeeUlps,
@@ -89,10 +89,7 @@ function* startNEuroRedeemGenerator(_: TGlobalDependencies): any {
   );
 }
 
-function* neurRedeemSaga(
-  { logger }: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.txTransactions.startWithdrawNEuro>,
-): Iterator<any> {
+function* neurRedeemSaga({ logger }: TGlobalDependencies): Iterator<any> {
   const isVerified: boolean = yield select(selectIsBankAccountVerified);
 
   if (!isVerified) {
@@ -102,9 +99,8 @@ function* neurRedeemSaga(
 
   try {
     yield txSendSaga({
-      transactionType: ETxSenderType.NEUR_REDEEM,
+      type: ETxSenderType.NEUR_REDEEM,
       transactionFlowGenerator: startNEuroRedeemGenerator,
-      initialValues: { initialAmount: payload.initialAmount },
     });
 
     logger.info("Investor nEUR withdrawal successful");

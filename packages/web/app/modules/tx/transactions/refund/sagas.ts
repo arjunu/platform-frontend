@@ -83,7 +83,7 @@ function* etoRefundSaga(
   const etoId = action.payload.etoId;
   try {
     yield txSendSaga({
-      transactionType: ETxSenderType.INVESTOR_REFUND,
+      type: ETxSenderType.INVESTOR_REFUND,
       transactionFlowGenerator: startRefundGenerator,
       extraParam: etoId,
     });

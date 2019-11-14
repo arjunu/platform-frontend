@@ -37,27 +37,19 @@ import {
   selectAreTherePlatformPendingTxs,
   selectExternalPendingTransaction,
 } from "../monitor/selectors";
-import { ETxSenderType, TAdditionalDataByType, TTxSenderNEurRedeemInitialValues } from "../types";
+import { ETxSenderType, TAdditionalDataByType } from "../types";
 import { validateGas } from "../validator/sagas";
 import { ETransactionErrorType, ETxSenderState } from "./reducer";
 import { selectTxAdditionalData, selectTxDetails, selectTxType } from "./selectors";
 import { getTxSenderErrorType } from "./utils";
 
 export interface ITxSendParams {
-  transactionType: ETxSenderType;
+  type: ETxSenderType;
   transactionFlowGenerator: any;
   extraParam?: any;
-  initialValues?: TTxSenderNEurRedeemInitialValues;
   // Design extraParam to be a tuple that handles any number of params
   // @see neuCall
 }
-
-export type TTxSendProcessParams = {
-  transactionType: ETxSenderType;
-  transactionFlowGenerator: any;
-  extraParam?: any;
-  initialValues?: TTxSenderNEurRedeemInitialValues;
-};
 
 export function* txMonitorSaga(): any {
   const txMonitorEffect = neuCall(txMonitor);
@@ -117,30 +109,22 @@ function* txControllerSaga(controlledEffect: Iterator<Effect>): any {
   yield put(actions.wallet.loadWalletData());
 }
 
-export function* txSendSaga({
-  transactionType,
-  transactionFlowGenerator,
-  extraParam,
-  initialValues,
-}: ITxSendParams): any {
+export function* txSendSaga({ type, transactionFlowGenerator, extraParam }: ITxSendParams): any {
   yield neuCall(ensureNoPendingTx);
 
-  const sendProcessEffect = neuCall(txSendProcess, {
-    transactionType,
-    transactionFlowGenerator,
-    extraParam,
-    initialValues,
-  });
+  const sendProcessEffect = neuCall(txSendProcess, type, transactionFlowGenerator, extraParam);
 
   yield call(txControllerSaga, sendProcessEffect);
 }
 
 function* txSendProcess(
   { logger }: TGlobalDependencies,
-  { transactionType, transactionFlowGenerator, extraParam, initialValues }: TTxSendProcessParams,
+  transactionType: ETxSenderType,
+  transactionFlowGenerator: any,
+  extraParam?: any,
 ): any {
   try {
-    yield put(actions.txSender.txSenderShowModal({ type: transactionType, initialValues }));
+    yield put(actions.txSender.txSenderShowModal({ type: transactionType }));
 
     yield neuRepeatIf("TX_SENDER_CHANGE", "TX_SENDER_ACCEPT", transactionFlowGenerator, extraParam);
 

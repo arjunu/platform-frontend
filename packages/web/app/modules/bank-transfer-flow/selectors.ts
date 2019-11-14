@@ -38,8 +38,7 @@ export const selectBankRedeemMinAmount = createSelector(
   bankTransferFlow => (bankTransferFlow.redeem ? bankTransferFlow.redeem.minEuroUlps : "0"),
 );
 
-export const selectInitialAmount = (state: IAppState) =>
-  state.txSender.initialValues && state.txSender.initialValues.initialAmount;
+export const selectInitialAmount = (state: IAppState) => state.txUserFlowRedeem.initialValue;
 
 export const selectBankFeeUlps = createSelector(
   selectBankTransferFlow,
