@@ -27,7 +27,7 @@ export const selectLegalRepFiles = (state: IAppState) => state.kyc.legalRepresen
 export const selectKycUploadedFiles = (state: IAppState) =>
   selectIndividualFiles(state) || selectBusinessFiles(state) || selectLegalRepFiles(state);
 
-export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus | undefined => {
+export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus => {
   const userKycType = selectKycRequestType(state);
   switch (userKycType) {
     case EKycRequestType.BUSINESS:
