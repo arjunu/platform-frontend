@@ -109,7 +109,7 @@ export const getLatestVerifyUserEmailLink = (
   email: string,
   attempts = 3,
 ): Cypress.Chainable<string> =>
-  cy.request({ url: mockApiUrl + "sendgrid/session/mails", method: "GET" }).then(r => {
+  cy.request({ url: mockApiUrl + `sendgrid/session/mails?to=${email}`, method: "GET" }).then(r => {
     const latestEmailByUser = getLatestEmailByUser(r, email);
 
     const activationLink = get(latestEmailByUser, "template_vars.activation_link");

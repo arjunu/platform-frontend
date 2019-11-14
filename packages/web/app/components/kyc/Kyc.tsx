@@ -6,6 +6,7 @@ import { EKycRequestStatus, EKycRequestType } from "../../lib/api/kyc/KycApi.int
 import { actions } from "../../modules/actions";
 import { selectIsUserEmailVerified } from "../../modules/auth/selectors";
 import {
+  selectIsKycFlowBlockedByRegion,
   selectKycOutSourcedURL,
   selectKycRequestStatus,
   selectPendingKycRequestType,
@@ -26,6 +27,7 @@ interface IStateProps {
   redirectUrl: string;
   pendingRequestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
+  isKycFlowBlockedByRegion: boolean;
 }
 
 interface IDispatchProps {
@@ -44,6 +46,7 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
       redirectUrl: selectKycOutSourcedURL(state.kyc),
       pendingRequestType: selectPendingKycRequestType(state.kyc),
       hasVerifiedEmail: selectIsUserEmailVerified(state.auth),
+      isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
     }),
     dispatchToProps: dispatch => ({
       reopenRequest: () => {},
@@ -53,7 +56,7 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
     options: { pure: false },
   }),
   branch(
-    (props: IStateProps) => !props.hasVerifiedEmail,
+    (props: IStateProps) => !props.hasVerifiedEmail || props.isKycFlowBlockedByRegion,
     renderComponent(() => <Redirect to={appRoutes.profile} />),
   ),
   onEnterAction({

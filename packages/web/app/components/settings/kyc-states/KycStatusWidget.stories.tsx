@@ -11,6 +11,7 @@ import { KycStatusWidgetBase } from "./KycStatusWidget";
 const commonProps = {
   isUserEmailVerified: true,
   backupCodesVerified: true,
+  isKycFlowBlockedByRegion: false,
   isLoading: false,
   error: undefined,
   step: 1,
@@ -21,6 +22,13 @@ const commonProps = {
 };
 
 storiesOf("KYC/StatusWidget", module)
+  .add("blocked by region", () => (
+    <KycStatusWidgetBase
+      {...commonProps}
+      requestStatus={EKycRequestStatus.DRAFT}
+      isKycFlowBlockedByRegion={true}
+    />
+  ))
   .add("email-not-verified", () => (
     <KycStatusWidgetBase
       {...commonProps}
