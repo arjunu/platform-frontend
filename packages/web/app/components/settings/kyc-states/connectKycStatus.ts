@@ -9,11 +9,13 @@ import { EUserType } from "../../../lib/api/users/interfaces";
 import { actions } from "../../../modules/actions";
 import {
   selectBackupCodesVerified,
+  selectIsRestrictedInvestor,
   selectIsUserEmailVerified,
   selectUserType,
 } from "../../../modules/auth/selectors";
 import {
   selectExternalKycUrl,
+  selectIsKycFlowBlockedByRegion,
   selectKycLoading,
   selectKycRequestOutsourcedStatus,
   selectKycRequestStatus,
@@ -24,13 +26,15 @@ import { onEnterAction } from "../../../utils/OnEnterAction";
 import { onLeaveAction } from "../../../utils/OnLeaveAction";
 
 interface IStateProps {
-  requestStatus?: EKycRequestStatus;
-  requestOutsourcedStatus?: ERequestOutsourcedStatus;
+  requestStatus: EKycRequestStatus | undefined;
+  requestOutsourcedStatus: ERequestOutsourcedStatus | undefined;
   isUserEmailVerified: boolean;
   isLoading: boolean;
+  isKycFlowBlockedByRegion: boolean;
+  isRestrictedCountryInvestor: boolean;
   backupCodesVerified: boolean;
-  error?: string;
-  externalKycUrl?: string;
+  error: string | undefined;
+  externalKycUrl: string | undefined;
   userType: EUserType;
 }
 
@@ -40,13 +44,14 @@ interface IDispatchProps {
   onGoToKycHome: () => void;
 }
 
-const connectKycStatusWidget = <T extends {}>(
-  WrappedComponent: React.ComponentType<IStateProps & IDispatchProps & T>,
+const connectKycStatusWidget = () => (
+  WrappedComponent: React.ComponentType<IStateProps & IDispatchProps>,
 ) =>
-  compose<(IStateProps | null) & IDispatchProps & T, T>(
-    appConnect<IStateProps | null, IDispatchProps, T>({
+  compose<IStateProps & IDispatchProps, {}>(
+    appConnect<IStateProps | null, IDispatchProps>({
       stateToProps: state => {
         const userType = selectUserType(state);
+
         if (userType !== undefined) {
           return {
             userType,
@@ -56,6 +61,8 @@ const connectKycStatusWidget = <T extends {}>(
             requestOutsourcedStatus: selectKycRequestOutsourcedStatus(state.kyc),
             externalKycUrl: selectExternalKycUrl(state.kyc),
             isLoading: selectKycLoading(state.kyc),
+            isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
+            isRestrictedCountryInvestor: selectIsRestrictedInvestor(state),
             error: selectWidgetError(state.kyc),
           };
         } else {

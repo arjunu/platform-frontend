@@ -7,8 +7,13 @@ import * as YupTS from "../../yup-ts.unsafe";
 import { countryCode, percentage, personBirthDate, restrictedCountry } from "../util/customSchemas";
 
 export enum EKycRequestType {
+  /**
+   * "none" means not yet verified
+   */
+  NONE = "none",
   BUSINESS = "business",
   INDIVIDUAL = "individual",
+  // TODO: Check when request type is returned as `us_accreditation`
   US_ACCREDITATION = "us_accreditation",
 }
 
@@ -66,6 +71,18 @@ const KycIndividualDataShape =
     : {
         isHighIncome: Yup.bool(),
       };
+
+export const KycStatusSchema = YupTS.object({
+  inProhibitedRegion: YupTS.boolean(),
+  instantIdProvider: YupTS.string(),
+  originCountry: YupTS.string<ECountries>(),
+  recommendedInstantIdProvider: YupTS.string(),
+  status: YupTS.string(),
+  supportedInstantIdProviders: YupTS.array(YupTS.string()),
+  type: YupTS.string<EKycRequestType>(),
+});
+
+export type TKycStatus = YupTS.TypeOf<typeof KycStatusSchema>;
 
 export const KycIndividualDataSchema = KycPersonSchema.concat(
   Yup.object().shape(KycIndividualDataShape),

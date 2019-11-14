@@ -5,6 +5,7 @@ import { createSelector } from "reselect";
 import {
   EEtoState,
   TEtoDataWithCompany,
+  TEtoInvestmentCalculatedValues,
   TEtoSpecsData,
 } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { calcShareAndTokenPrice } from "../../lib/api/eto/EtoUtils";
@@ -14,7 +15,7 @@ import { DeepReadonly } from "../../types";
 import { DataUnavailableError } from "../../utils/errors";
 import { nonNullable } from "../../utils/nonNullable";
 import { selectUserType } from "../auth/selectors";
-import { selectIssuerEtoWithCompanyAndContract } from "../eto-flow/selectors";
+import { selectIssuerEto, selectIssuerEtoWithCompanyAndContract } from "../eto-flow/selectors";
 import { selectIsEligibleToPreEto } from "../investor-portfolio/selectors";
 import { selectNomineeEtoWithCompanyAndContract } from "../nominee-flow/selectors";
 import { hiddenJurisdictions } from "./constants";
@@ -293,3 +294,10 @@ export const selectSignedInvestmentAgreementHash = createSelector(
     return undefined;
   },
 );
+
+export const selectIssuerEtoInvestmentCalculatedValues = (
+  state: IAppState,
+): TEtoInvestmentCalculatedValues | undefined => {
+  const eto = selectIssuerEto(state);
+  return eto && eto.investmentCalculatedValues;
+};

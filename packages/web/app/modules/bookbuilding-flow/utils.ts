@@ -29,7 +29,7 @@ type TcalculateWhitelistingState = {
   whitelistingIsActive: boolean;
   bookbuildingLimitReached: boolean;
   investorsCount: number | undefined;
-  investmentCalculatedValues?: TEtoInvestmentCalculatedValues;
+  investmentCalculatedValues: TEtoInvestmentCalculatedValues | undefined;
   isAuthorized: boolean;
 };
 

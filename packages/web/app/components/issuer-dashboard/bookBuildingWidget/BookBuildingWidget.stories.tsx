@@ -2,6 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
+import { testEto } from "../../../../test/fixtures";
 import { EWhitelistingState } from "../../../modules/bookbuilding-flow/utils";
 import { BookBuildingWidgetComponent } from "./BookBuildingWidget";
 
@@ -14,6 +15,7 @@ const data = {
   maxPledges: 500,
   minOffsetPeriod: 17345,
   isAuthorized: true,
+  investmentCalculatedValues: testEto.investmentCalculatedValues,
 };
 
 storiesOf("BookBuildingWidget", module)

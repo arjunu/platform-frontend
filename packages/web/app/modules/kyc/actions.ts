@@ -9,6 +9,7 @@ import {
   IKycLegalRepresentative,
   IKycRequestState,
   KycBankQuintessenceBankAccount,
+  TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
 import { TBankAccount, TClaims } from "./types";
 
@@ -16,6 +17,7 @@ export const kycActions = {
   /**
    * General
    */
+  setStatus: createActionFactory("KYC_SET_STATUS", (status: TKycStatus) => ({ status })),
   kycLoadClientData: createActionFactory("KYC_LOAD_CLIENT_DATA"),
   kycFinishedLoadingData: createActionFactory("KYC_FINISHED_LOADING_DATA"),
 

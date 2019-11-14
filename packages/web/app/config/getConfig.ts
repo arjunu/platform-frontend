@@ -1,4 +1,4 @@
-import { isGaslessTxEnabled } from "./../utils/isGaslessTxEnabled";
+import { isGaslessTxEnabled } from "../utils/isGaslessTxEnabled";
 import { getOptionalEnv, getRequiredEnv, verifyOptionalFlagEnv } from "./configUtils";
 
 export interface IBackendRoot {
