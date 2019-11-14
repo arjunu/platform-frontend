@@ -18,7 +18,7 @@ import {
   verifyLatestUserEmail,
 } from "../utils/index";
 
-describe("Change Email", function(): void {
+describe.skip("Change Email", function(): void {
   describe("Has verified email", () => {
     let email: string;
     beforeEach(() => {
