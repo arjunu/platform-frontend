@@ -92,11 +92,9 @@ export function* initNomineeEtoSpecificTasks(
         actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode),
       );
 
-      const data = yield all({
-        ishaIsSignedByIssuer: select(selectIsISHASignedByIssuer, eto.previewCode),
-      });
+      const ishaIsSignedByIssuer = yield select(selectIsISHASignedByIssuer, eto.previewCode);
 
-      if (data.ishaIsSignedByIssuer) {
+      if (ishaIsSignedByIssuer) {
         nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL] =
           ENomineeTaskStatus.DONE;
       }
@@ -243,7 +241,7 @@ export function* getTaskSpecificData(
   _: TGlobalDependencies,
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask,
 ): Iterator<any> {
-  const nomineeEto: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
+  const { previewCode, etoId }: TEtoWithCompanyAndContract = yield select(selectActiveNomineeEto);
   const taskSpecificData: TTaskSpecificData = cloneDeep(initalTaskSpecificData);
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
@@ -251,10 +249,10 @@ export function* getTaskSpecificData(
   }
 
   if (activeNomineeTask === ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL) {
-    taskSpecificData.byPreviewCode[nomineeEto.previewCode] = yield neuCall(
+    taskSpecificData.byPreviewCode[previewCode] = yield neuCall(
       getNomineeTaskRedeemShareCapitalData,
-      nomineeEto.etoId,
-      nomineeEto.previewCode,
+      etoId,
+      previewCode,
     );
   }
 

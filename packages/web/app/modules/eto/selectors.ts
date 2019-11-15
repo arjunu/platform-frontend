@@ -310,3 +310,15 @@ export const selectIssuerEtoInvestmentCalculatedValues = (
   const eto = selectIssuerEto(state);
   return eto && eto.investmentCalculatedValues;
 };
+
+export const selectStartOfOnchainState = (
+  state: IAppState,
+  previewCode: string,
+  onChainState: EETOStateOnChain,
+) => {
+  const eto = selectEtoWithCompanyAndContract(state, previewCode);
+
+  const startOfStates = eto && eto.contract && eto.contract.startOfStates;
+
+  return startOfStates && startOfStates[onChainState];
+};

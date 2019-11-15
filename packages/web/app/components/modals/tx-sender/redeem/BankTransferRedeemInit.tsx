@@ -28,7 +28,6 @@ import {
   ERoundingMode,
   formatNumber,
   selectDecimalPlaces,
-  toFixedPrecision,
 } from "../../../shared/formatters/utils";
 import { FormLabel } from "../../../shared/forms/fields/FormFieldLabel";
 import { FormDeprecated } from "../../../shared/forms/FormDeprecated";
@@ -36,6 +35,7 @@ import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { MaskedNumberInput } from "../../../shared/MaskedNumberInput";
 import { ETheme, MoneySuiteWidget } from "../../../shared/MoneySuiteWidget/MoneySuiteWidget";
 import { Tooltip } from "../../../shared/tooltips/Tooltip";
+import { formatEuroValueToString } from "../../../shared/utils";
 import { VerifiedBankAccount } from "../../../wallet/VerifiedBankAccount";
 import { CalculatedFee } from "./CalculatedFee";
 import { TotalRedeemed } from "./TotalRedeemed";
@@ -107,17 +107,6 @@ const getValidators = (minAmount: string, neuroAmount: string) =>
     ),
   }).toYup();
 
-const formatForFormik = (value: string) =>
-  toFixedPrecision({
-    value: value,
-    roundingMode: ERoundingMode.DOWN,
-    inputFormat: ENumberInputFormat.ULPS,
-    decimalPlaces: selectDecimalPlaces(
-      ECurrency.EUR_TOKEN,
-      ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
-    ),
-  });
-
 const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
   neuroAmount,
   neuroEuroAmount,
@@ -162,7 +151,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
               data-test-id="bank-transfer.reedem-init.redeem-whole-balance"
               className={styles.linkButton}
               onClick={() => {
-                setFieldValue("amount", formatForFormik(neuroAmount), true);
+                setFieldValue("amount", formatEuroValueToString(neuroAmount), true);
                 setFieldTouched("amount", true, true);
               }}
               layout={EButtonLayout.INLINE}
@@ -280,7 +269,7 @@ const BankTransferRedeemInit = compose<TComponentProps, {}>(
   withFormik<IStateProps & IDispatchProps, IReedemData>({
     mapPropsToValues: props => ({
       ...props,
-      amount: props.initialAmount && formatForFormik(props.initialAmount),
+      amount: props.initialAmount && formatEuroValueToString(props.initialAmount),
     }),
     validationSchema: (props: IStateProps) => getValidators(props.minAmount, props.neuroAmount),
     isInitialValid: props =>
@@ -296,7 +285,3 @@ const BankTransferRedeemInit = compose<TComponentProps, {}>(
 )(BankTransferRedeemLayout);
 
 export { BankTransferRedeemLayout, BankTransferRedeemInit };
-
-///TODO
-///TODO tests
-///TODO

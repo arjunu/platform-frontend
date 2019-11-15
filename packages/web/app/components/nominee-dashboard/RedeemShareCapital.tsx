@@ -1,9 +1,10 @@
 import * as React from "react";
 import { FormattedRelative } from "react-intl";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { branch, compose, renderComponent } from "recompose";
+import { branch, compose, renderComponent, withProps } from "recompose";
 
 import { actions } from "../../modules/actions";
+import { selectStartOfOnchainState } from "../../modules/eto/selectors";
 import { EETOStateOnChain, TEtoStartOfStates } from "../../modules/eto/types";
 import {
   selectActiveNomineeEto,
@@ -22,15 +23,21 @@ import * as styles from "./NomineeDashboard.module.scss";
 type TRedeemShareCapitalStateProps = {
   companyName: string;
   amount: string | undefined;
-  deadline: number;
+  startOfClaimState: Date | undefined;
 };
+
 type RedeemShareCapitalDispatchProps = {
   redeemFunds: (amount: string | undefined) => void;
 };
 
-type TProps = TRedeemShareCapitalStateProps & RedeemShareCapitalDispatchProps;
+type TComponentProps = {
+  deadline: number;
+  companyName: string;
+  amount: string | undefined;
+  redeemFunds: (amount: string | undefined) => void;
+};
 
-const RedeemShareCapitalLayout: React.FunctionComponent<TProps> = ({
+const RedeemShareCapitalLayout: React.FunctionComponent<TComponentProps> = ({
   companyName,
   amount,
   deadline,
@@ -98,7 +105,7 @@ export const getStartOfClaimState = (startOfStates: TEtoStartOfStates) => {
   return timeLeft > 0 ? startOfClaimState.getTime() : Date.now();
 };
 
-const RedeemShareCapital = compose<TProps, {}>(
+const RedeemShareCapital = compose<TComponentProps, {}>(
   appConnect<{ taskSubstate: ERedeemShareCapitalTaskSubstate }>({
     stateToProps: state => ({
       taskSubstate: selectRedeemShareCapitalTaskSubstate(state),
@@ -116,7 +123,11 @@ const RedeemShareCapital = compose<TProps, {}>(
         return {
           companyName: nomineeEto.company.name,
           amount: selectCapitalIncrease(state),
-          deadline: getStartOfClaimState(nomineeEto.contract.startOfStates),
+          startOfClaimState: selectStartOfOnchainState(
+            state,
+            nomineeEto.previewCode,
+            EETOStateOnChain.Claim,
+          ),
         };
       } else {
         throw new DataUnavailableError("nominee eto is undefined");
@@ -128,6 +139,18 @@ const RedeemShareCapital = compose<TProps, {}>(
         dispatch(actions.txTransactions.startWithdrawNEuro());
       },
     }),
+  }),
+  branch<TRedeemShareCapitalStateProps>(
+    ({ startOfClaimState }) => startOfClaimState === undefined,
+    () => {
+      throw new DataUnavailableError("start of claim state is missing!");
+    },
+  ),
+  withProps<{ deadline: number }, { startOfClaimState: Date }>(({ startOfClaimState }) => {
+    const timeLeft = startOfClaimState.getTime() - Date.now();
+    return {
+      deadline: timeLeft > 0 ? startOfClaimState.getTime() : Date.now(),
+    };
   }),
 )(RedeemShareCapitalLayout);
 
