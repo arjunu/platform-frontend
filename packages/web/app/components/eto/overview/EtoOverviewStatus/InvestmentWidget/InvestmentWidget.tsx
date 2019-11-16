@@ -7,7 +7,6 @@ import { actions } from "../../../../../modules/actions";
 import {
   selectIsAuthorized,
   selectIsInvestor,
-  selectIsRestrictedInvestor,
   selectIsUSInvestor,
 } from "../../../../../modules/auth/selectors";
 import { InvalidETOStateError } from "../../../../../modules/eto/errors";
@@ -31,7 +30,6 @@ import {
 import { InvestmentProgress } from "../../InvestmentProgress";
 import { EndTimeWidget } from "../../shared/EndTimeWidget";
 import { FundraisingBreakdownTooltip } from "./FundraisingBreakdownTooltip";
-import { RestrictedCountryInvestorMessage } from "./RestrictedCountryInvestorMessage";
 import { USInvestorMessage } from "./USInvestorMessage";
 
 import * as styles from "./InvestmentWidget.module.scss";
@@ -50,7 +48,6 @@ interface IStateProps {
   isAllowedToInvest: boolean;
   isInvestor: boolean;
   isUsInvestor: boolean;
-  isRestrictedCountryInvestor: boolean;
   nextStateDate: Date | undefined;
 }
 
@@ -58,9 +55,7 @@ interface IDispatchProps {
   startInvestmentFlow: () => void;
 }
 
-type TInvestWidgetProps = IExternalProps &
-  OmitKeys<IStateProps, "isUsInvestor" | "isRestrictedCountryInvestor"> &
-  IDispatchProps;
+type TInvestWidgetProps = IExternalProps & OmitKeys<IStateProps, "isUsInvestor"> & IDispatchProps;
 
 const InvestNowButton: React.FunctionComponent<TInvestWidgetProps> = ({
   eto,
@@ -183,7 +178,6 @@ const InvestmentWidget = compose<TInvestWidgetProps, IExternalProps>(
       isAllowedToInvest: selectIsUserVerifiedOnBlockchain(state),
       isInvestor: selectIsInvestor(state),
       isUsInvestor: selectIsUSInvestor(state),
-      isRestrictedCountryInvestor: selectIsRestrictedInvestor(state),
       nextStateDate: selectEtoOnChainNextStateStartDate(state, props.eto.previewCode),
     }),
     dispatchToProps: (dispatch, props) => ({
@@ -191,10 +185,6 @@ const InvestmentWidget = compose<TInvestWidgetProps, IExternalProps>(
     }),
   }),
   branch<IStateProps>(props => props.isUsInvestor, renderComponent(USInvestorMessage)),
-  branch<IStateProps>(
-    props => props.isRestrictedCountryInvestor,
-    renderComponent(RestrictedCountryInvestorMessage),
-  ),
 )(InvestmentWidgetLayout);
 
 export { InvestmentWidgetLayout, InvestmentWidget };

@@ -5,10 +5,13 @@ import { compose, setDisplayName } from "recompose";
 
 import { EEtoDocumentType } from "../../../../lib/api/eto/EtoFileApi.interfaces";
 import { actions } from "../../../../modules/actions";
+import { selectIsRestrictedInvestor } from "../../../../modules/auth/selectors";
 import { selectTxAdditionalData } from "../../../../modules/tx/sender/selectors";
 import { TInvestmentAdditionalData } from "../../../../modules/tx/transactions/investment/types";
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
+import { nonNullable } from "../../../../utils/nonNullable";
+import { ErrorAlert } from "../../../shared/Alerts";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import { DocumentButton } from "../../../shared/DocumentLink";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
@@ -18,6 +21,7 @@ import * as styles from "./Summary.module.scss";
 
 interface IStateProps {
   additionalData: TInvestmentAdditionalData;
+  isRestrictedCountryInvestor: boolean;
 }
 
 type IDispatchProps = {
@@ -33,6 +37,7 @@ const InvestmentSummaryComponent: React.FunctionComponent<IProps> = ({
   onChange,
   downloadAgreement,
   additionalData,
+  isRestrictedCountryInvestor,
 }) => (
   <Container className={styles.container}>
     <Heading size={EHeadingSize.SMALL} level={4} className="mb-4">
@@ -48,24 +53,35 @@ const InvestmentSummaryComponent: React.FunctionComponent<IProps> = ({
       />
     </div>
 
-    <div className="text-center">
-      <Button
-        layout={EButtonLayout.PRIMARY}
-        type="button"
-        onClick={onAccept}
-        data-test-id="invest-modal-summary-confirm-button"
-      >
-        <FormattedMessage id="investment-flow.confirm" />
-      </Button>
-      <Button
-        layout={EButtonLayout.SECONDARY}
-        type="button"
-        onClick={onChange}
-        data-test-id="invest-modal-summary-change-button"
-      >
-        <FormattedMessage id="investment-flow.change" />
-      </Button>
-    </div>
+    {isRestrictedCountryInvestor ? (
+      <ErrorAlert>
+        <FormattedMessage
+          id="investment-flow.restricted-country-investor"
+          values={{
+            breakingLine: <br />,
+          }}
+        />
+      </ErrorAlert>
+    ) : (
+      <div className="text-center">
+        <Button
+          layout={EButtonLayout.PRIMARY}
+          type="button"
+          onClick={onAccept}
+          data-test-id="invest-modal-summary-confirm-button"
+        >
+          <FormattedMessage id="investment-flow.confirm" />
+        </Button>
+        <Button
+          layout={EButtonLayout.SECONDARY}
+          type="button"
+          onClick={onChange}
+          data-test-id="invest-modal-summary-change-button"
+        >
+          <FormattedMessage id="investment-flow.change" />
+        </Button>
+      </div>
+    )}
   </Container>
 );
 
@@ -73,7 +89,8 @@ const InvestmentSummary = compose<IProps, {}>(
   setDisplayName("InvestmentSummary"),
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
-      additionalData: selectTxAdditionalData<ETxSenderType.INVEST>(state)!,
+      additionalData: nonNullable(selectTxAdditionalData<ETxSenderType.INVEST>(state)),
+      isRestrictedCountryInvestor: selectIsRestrictedInvestor(state),
     }),
     dispatchToProps: d => ({
       onAccept: () => d(actions.txSender.txSenderAccept()),

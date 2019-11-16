@@ -127,7 +127,7 @@ const WithdrawTransactionDetails: React.FunctionComponent<TComponentProps> = ({
           )}
 
           {error && (
-            <ErrorAlert>
+            <ErrorAlert className="mb-4">
               {isMined ? (
                 <FormattedMessage
                   id="withdraw-flow.error.mined"

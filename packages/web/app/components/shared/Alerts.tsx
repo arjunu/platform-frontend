@@ -1,19 +1,34 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { TDataTestId } from "../../types";
+import { CommonHtmlProps, TDataTestId } from "../../types";
 
 import * as styles from "./Alerts.module.scss";
 
-export const InfoAlert: React.FunctionComponent<TDataTestId> = ({
+export const InfoAlert: React.FunctionComponent<TDataTestId & CommonHtmlProps> = ({
   children,
+  className,
   "data-test-id": dataTestId,
 }) => (
-  <div data-test-id={dataTestId} className={cn("alert", styles.alert)}>
+  <div
+    data-test-id={dataTestId}
+    className={cn(className, styles.alert, styles.alertInfo)}
+    role="alert"
+  >
     {children}
   </div>
 );
 
-export const ErrorAlert: React.FunctionComponent = ({ children }) => (
-  <div className={styles.errorMessage}>{children}</div>
+export const ErrorAlert: React.FunctionComponent<TDataTestId & CommonHtmlProps> = ({
+  children,
+  className,
+  "data-test-id": dataTestId,
+}) => (
+  <div
+    data-test-id={dataTestId}
+    className={cn(className, styles.alert, styles.alertError)}
+    role="alert"
+  >
+    {children}
+  </div>
 );
