@@ -23,7 +23,7 @@ const TxGoToActionLayout: React.FunctionComponent<TComponentProps> = ({ type, go
       return (
         <ButtonArrowRight
           onClick={goToWallet}
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           data-test-id="modals.shared.tx-action.go-to-wallet"
         >
           <FormattedMessage id="modals.shared.tx-action.go-to-wallet" />

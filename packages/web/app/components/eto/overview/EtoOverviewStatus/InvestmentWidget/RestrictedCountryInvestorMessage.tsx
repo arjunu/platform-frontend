@@ -18,7 +18,7 @@ const RestrictedCountryInvestorMessage: React.FunctionComponent = () => (
     }
   >
     <ButtonLink
-      innerClassName="mt-3"
+      className="mt-3"
       to={appRoutes.dashboard}
       data-test-id="investment-widget.restricted-country-investor-message.go-to-dashboard"
     >

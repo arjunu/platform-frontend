@@ -47,7 +47,7 @@ export const KYCBeneficialOwnersComponent: React.FunctionComponent<IProps> = pro
     <div className="p-4 text-center">
       <Button
         data-test-id="kyc-beneficial-owner-add-new"
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_BEFORE}
         svgIcon={plusIcon}
         onClick={props.createBeneficialOwner}

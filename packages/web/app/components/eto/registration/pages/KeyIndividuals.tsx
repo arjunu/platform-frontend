@@ -210,10 +210,10 @@ class KeyIndividualsGroupLayout extends React.Component<IKeyIndividualsGroup & T
               <Button
                 data-test-id={`key-individuals-group-button-${name}`}
                 iconPosition={EIconPosition.ICON_BEFORE}
-                layout={EButtonLayout.SECONDARY}
+                layout={EButtonLayout.GHOST}
                 svgIcon={plusIcon}
                 onClick={() => arrayHelpers.push(getBlankMember())}
-                innerClassName={localStyles.addButton}
+                className={localStyles.addButton}
               >
                 <FormattedMessage id="eto.form.key-individuals.add" />
               </Button>
@@ -268,7 +268,7 @@ const EtoRegistrationKeyIndividualsComponent = (props: IProps) => (
     </Section>
     <Section className={styles.buttonSection}>
       <Button
-        layout={EButtonLayout.PRIMARY}
+        layout={EButtonLayout.OUTLINE}
         type="submit"
         isLoading={props.savingData}
         data-test-id="eto-registration-key-individuals-submit"

@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { EEtoDocumentType } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { TTranslatedString } from "../../types";
 import { ETOAddDocuments } from "../eto/shared/EtoAddDocument";
-import { Button, ButtonSize, EButtonLayout } from "./buttons/Button";
+import { Button, EButtonLayout, EButtonSize } from "./buttons/Button";
 import { DocumentTile } from "./Document";
 import { InlineIcon } from "./icons/InlineIcon";
 
@@ -72,7 +72,7 @@ const DocumentUploadTermsChanged: React.FunctionComponent<{
       data-test-id="documents-download-document"
       onClick={() => downloadDocumentStart(documentKey)}
       layout={EButtonLayout.INLINE}
-      size={ButtonSize.SMALL}
+      size={EButtonSize.SMALL}
     >
       {uploadedFileName}
     </Button>

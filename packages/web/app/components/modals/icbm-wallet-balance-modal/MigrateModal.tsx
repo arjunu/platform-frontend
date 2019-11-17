@@ -57,14 +57,14 @@ const MigrateFooter: React.FunctionComponent<{
               <ButtonArrowRight
                 onClick={gotoNextStep}
                 data-test-id="modals.icbm-balance-modal.balance-footer.successful-transaction"
-                innerClassName="px-0"
+                className="px-0"
               >
                 <FormattedMessage id="settings.modal.icbm-wallet-balance.button.go-to-next-step" />
               </ButtonArrowRight>
             ) : (
               <ButtonArrowRight
                 onClick={onGotoWallet}
-                innerClassName="px-0"
+                className="px-0"
                 data-test-id="modals.icbm-balance-modal.balance-footer.successful-transaction"
               >
                 <FormattedMessage id="settings.modal.icbm-wallet-balance.button.wallet" />

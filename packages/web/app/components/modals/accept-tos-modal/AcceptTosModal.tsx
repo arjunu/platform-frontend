@@ -5,7 +5,7 @@ import { externalRoutes } from "../../../config/externalRoutes";
 import { actions } from "../../../modules/actions";
 import { selectIsAgreementAccepted } from "../../../modules/auth/selectors";
 import { appConnect } from "../../../store";
-import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/index";
+import { Button, EButtonLayout } from "../../shared/buttons/index";
 import { ExternalLink } from "../../shared/links/ExternalLink";
 import { Message } from "../Message";
 import { Modal } from "../Modal";
@@ -38,13 +38,12 @@ export const AcceptTosModalComponent: React.FunctionComponent<IStateProps & IDis
         <FormattedMessage id="common.links.terms-of-use" values={{ href: externalRoutes.tos }} />
       </ExternalLink>
       <div className={styles.buttonBlock}>
-        <Button onClick={onLogout} layout={EButtonLayout.PRIMARY}>
+        <Button onClick={onLogout} layout={EButtonLayout.OUTLINE}>
           <FormattedMessage id="settings.modal.accept-tos.logout-button" />
         </Button>
         <Button
           onClick={onAccept}
           layout={EButtonLayout.PRIMARY}
-          theme={EButtonTheme.BRAND}
           data-test-id="modals.accept-tos.accept-button"
         >
           <FormattedMessage id="settings.modal.accept-tos.accept-button" />

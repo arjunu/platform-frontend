@@ -5,7 +5,7 @@ import { compose, withProps } from "recompose";
 import { actions } from "../../modules/actions";
 import { ENomineeTask } from "../../modules/nominee-flow/types";
 import { appConnect } from "../../store";
-import { Button, EButtonLayout, EButtonTheme } from "../shared/buttons/Button";
+import { Button, EButtonLayout } from "../shared/buttons/Button";
 
 interface IExternalProps {
   task: ENomineeTask;
@@ -37,7 +37,6 @@ export const AcceptAgreementLayout: React.FunctionComponent<IComponentProps> = (
     </p>
     <Button
       layout={EButtonLayout.PRIMARY}
-      theme={EButtonTheme.BRAND}
       data-test-id="eto-nominee-sign-agreement-action"
       onClick={sign}
     >

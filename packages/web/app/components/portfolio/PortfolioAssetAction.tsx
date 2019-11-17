@@ -6,7 +6,7 @@ import { selectEtoWithCompanyAndContractById } from "../../modules/eto/selectors
 import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
 import { InvestmentProgress } from "../eto/overview/InvestmentProgress";
-import { Button, ButtonSize, EButtonLayout, EIconPosition } from "../shared/buttons";
+import { Button, EButtonLayout, EButtonSize, EIconPosition } from "../shared/buttons";
 
 import * as arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
 
@@ -33,11 +33,11 @@ const PortfolioAssetActionComponent: React.FunctionComponent<
       return (
         <Button
           onClick={() => onClaim(etoId)}
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           iconPosition={EIconPosition.ICON_AFTER}
           svgIcon={arrowRight}
           data-test-id={"modals.portfolio.portfolio-asset-action.claim-" + etoId}
-          size={ButtonSize.SMALL}
+          size={EButtonSize.SMALL}
         >
           <FormattedMessage id="portfolio.section.reserved-assets.claim-tokens" />
         </Button>
@@ -46,17 +46,17 @@ const PortfolioAssetActionComponent: React.FunctionComponent<
       return (
         <Button
           onClick={() => onRefund(etoId)}
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           iconPosition={EIconPosition.ICON_AFTER}
           svgIcon={arrowRight}
-          size={ButtonSize.SMALL}
+          size={EButtonSize.SMALL}
         >
           <FormattedMessage id="portfolio.section.reserved-assets.refund" />
         </Button>
       );
     case EETOStateOnChain.Signing:
       return (
-        <Button layout={EButtonLayout.SECONDARY} size={ButtonSize.SMALL} disabled>
+        <Button layout={EButtonLayout.GHOST} size={EButtonSize.SMALL} disabled>
           <FormattedMessage id="portfolio.section.reserved-assets.wait-for-update" />
         </Button>
       );

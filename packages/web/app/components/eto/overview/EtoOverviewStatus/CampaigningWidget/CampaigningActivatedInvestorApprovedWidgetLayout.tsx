@@ -4,7 +4,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { generateCampaigningValidation } from "../../../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
-import { Button, ButtonSize, ButtonWidth } from "../../../../shared/buttons";
+import { Button, EButtonSize, EButtonWidth } from "../../../../shared/buttons";
 import { Money } from "../../../../shared/formatters/Money";
 import {
   ECurrency,
@@ -132,8 +132,8 @@ const CampaigningActivatedInvestorApprovedWidgetLayout: React.FunctionComponent<
                 <Button
                   data-test-id="eto-bookbuilding-commit"
                   type="submit"
-                  size={ButtonSize.SMALL}
-                  width={ButtonWidth.BLOCK}
+                  size={EButtonSize.SMALL}
+                  width={EButtonWidth.BLOCK}
                   disabled={!isValid}
                 >
                   <FormattedMessage id="shared-component.eto-overview.back-now" />

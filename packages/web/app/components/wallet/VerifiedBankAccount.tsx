@@ -9,7 +9,7 @@ import { selectBankAccount, selectIsBankAccountLoading } from "../../modules/kyc
 import { TBankAccount } from "../../modules/kyc/types";
 import { appConnect } from "../../store";
 import { CommonHtmlProps, DeepReadonly, OmitKeys } from "../../types";
-import { Button, ButtonSize, EButtonLayout } from "../shared/buttons";
+import { Button, EButtonLayout, EButtonSize } from "../shared/buttons";
 import { LoadingIndicator } from "../shared/loading-indicator/LoadingIndicator";
 import { BankAccount } from "./BankAccount";
 
@@ -49,7 +49,7 @@ const VerifiedBankAccountComponent: React.FunctionComponent<IComponentProps> = (
         onClick={onVerify}
         data-test-id="locked-wallet.neur.bank-account.link-account"
         layout={EButtonLayout.INLINE}
-        size={ButtonSize.SMALL}
+        size={EButtonSize.SMALL}
         disabled={!isUserFullyVerified}
       >
         <FormattedMessage id="shared-component.wallet-verified-bank-account.link-account" />

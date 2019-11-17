@@ -1,276 +1,147 @@
-// sass-lint:disable force-pseudo-nesting
-// sass-lint:disable nesting-depth
-
-$_hover-color: $neu-piss-yellow;
-$_focus-color: $neu-piss-yellow;
-$_active-color: lighten($_hover-color, 20%);
-
 .button {
-  $button: &;
+  @include font-medium-roboto;
 
-  background: transparent;
-  border: 0;
-  margin: 0;
-  padding: 0;
-
-  color: inherit;
-  font: inherit;
-  line-height: inherit;
-
-  &:focus,
-  .content:focus {
-    outline: none;
+  @include media-breakpoint-up(sm) {
+    // TODO: Remove simple and inline button here
+    min-width: px-to-rem(140px);
   }
 
-  &:focus {
-    .content {
-      box-shadow: 0 0 px-to-rem(3px) px-to-rem(6px) $_focus-color;
-    }
+  color: $neu-charcoal-grey;
+
+  // TODO: Move to variable
+  font-weight: 500;
+
+  // TODO: Make it a generic
+  border-radius: 4px;
+
+  flex-shrink: 0;
+  padding: px-to-rem(8px) px-to-rem(20px);
+  text-transform: capitalize;
+
+  transition: background-color 200ms ease-out, box-shadow 200ms ease-out, color 200ms ease-out;
+
+  &:disabled {
+    color: $neu-gull-gray;
   }
 
-  > .content {
-    align-items: center;
-    display: flex;
-    flex-shrink: 0;
-    justify-content: center;
-    padding: px-to-rem(8px) px-to-rem(20px);
-    position: relative;
-    text-decoration: inherit;
-    transition: 200ms ease-out background-color, color;
-  }
+  // Layout types (eg. primary, secondary)
+  // @note If we need to add new button design please add it as a separate layout type
+  //       even if it's small change to the existing one that can be done through prop (e.g theme prop)
 
-  &:disabled,
-  &-primary:disabled, // sass-lint:disable-line force-pseudo-nesting
-  &-secondary:disabled, // sass-lint:disable-line force-pseudo-nesting
-  &-inline:disabled, // sass-lint:disable-line force-pseudo-nesting
-  &-simple:disabled { // sass-lint:disable-line force-pseudo-nesting
-    color: $neu-pale-grey;
-    cursor: not-allowed;
-
-    &:hover,
-    &.is-active {
-      .content {
-        color: $neu-pale-grey;
-        background-color: transparent;
-        border-color: currentColor;
-      }
-    }
-  }
-
-  // types
   &-primary {
-    @include font-button-default;
+    $hover-box-shadow: rgba(20, 36, 49, .2);
 
-    font-weight: $font-weight-bold;
-    text-transform: uppercase;
-
-    .content {
-      @include media-breakpoint-up(sm) {
-        min-width: px-to-rem(138px);
-      }
-
-      border: px-to-rem(2px) solid currentColor;
-      border-radius: inherit;
-    }
+    background: $neu-neon-yellow;
 
     &:hover,
+    &:focus {
+      box-shadow: 0 5px 10px 0 $hover-box-shadow;
+    }
+
+    &:active,
     &.is-active {
-      .content {
-        background-color: $_hover-color;
-        border-color: $_hover-color;
-        color: $neu-white-two;
-      }
+      background: $neu-bitter-lemon;
     }
 
-    &:active {
-      .content {
-        background-color: $_active-color;
-        border-color: $_active-color;
-        color: $neu-white-two;
-      }
+    &:disabled {
+      background: $neu-light-blue-grey-two;
+    }
+  }
+
+  &-outline {
+    border: px-to-rem(1px) solid $neu-light-blue-grey-two;
+
+    &:hover,
+    &:focus {
+      border-color: $neu-bitter-lemon;
     }
 
-    &#{$button}-small {
-      @include font-button-small;
-
-      .content {
-        border: px-to-rem(1px) solid currentColor;
-      }
+    &:active,
+    &.is-active {
+      background: $neu-bitter-lemon;
+      border-color: $neu-bitter-lemon;
     }
 
-    &#{$button}-huge {
-      border: px-to-rem(1px) solid currentColor;
-    }
-
-    &:global(.block) {
-      .content {
-        min-width: auto;
-      }
+    &:disabled {
+      background-color: $neu-light-blue-grey-two;
+      border-color: $neu-light-blue-grey-two;
     }
   }
 
   &-secondary {
-    @include font-tab;
-
-    font-weight: $font-weight-bold;
-    text-transform: uppercase;
-
-    &#{$button}-small {
-      @include font-label;
-      font-weight: $font-weight-bold;
-    }
+    border: px-to-rem(1px) solid $neu-very-light-blue;
+    background: $neu-very-light-blue;
 
     &:hover,
+    &:focus {
+      background: transparent;
+      border-color: $neu-bitter-lemon;
+    }
+
+    &:active,
     &.is-active {
-      color: $_hover-color;
+      border-color: $neu-bitter-lemon;
+      background: $neu-bitter-lemon;
     }
 
-    &:active {
-      color: $_active-color;
-    }
-
-    &#{$button}-neon {
-      &:disabled {
-        &,
-        &:hover,
-        & > .content {
-          color: $neu-gull-gray;
-          background-color: $neu-pale-grey;
-          border-radius: inherit;
-        }
-      }
+    &:disabled {
+      background: $neu-light-blue-grey-two;
     }
   }
 
-  &-simple {
-    @include font-label;
+  &-ghost {
+    &:hover,
+    &:focus {
+      background: $neu-very-light-blue;
+    }
 
-    font-weight: normal;
-    text-align: inherit;
-    text-transform: inherit;
-
-    .content {
-      padding: 0;
+    &:active,
+    &.is-active {
+      background: transparent;
+      color: $neu-bitter-lemon;
     }
   }
 
   &-inline {
+    padding: 0;
+    margin-top: 0;
+    justify-content: initial;
+    text-decoration: underline;
+
     &:hover,
     &.is-active,
     &:focus {
-      .content {
-        text-decoration: none;
-      }
-    }
-
-    > .content {
-      padding: 0;
-      margin-top: 0;
-      justify-content: initial;
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 
   // widths
   &:global(.block) {
-    display: block;
     width: 100%;
   }
 
-  &:global(.wide) {
-    min-width: px-to-rem(220px);
-  }
-
   &:global(.no-padding) {
-    .content {
-      padding: 0;
-    }
+    padding: 0;
   }
 
   // sizes
   &-small {
-    font-size: 80%;
-    font-weight: $font-weight-medium;
+    @include font-small-roboto;
 
-    &:not(#{$button}-inline) > .content {
-      padding: px-to-rem(3px) px-to-rem(8px);
-    }
+    text-transform: uppercase;
+    padding: px-to-rem(3px) px-to-rem(8px);
   }
 
   &-huge {
-    @include font-headline-medium;
+    @include font-large-roboto;
 
     min-width: px-to-rem(216px);
-
-    .content {
-      padding: px-to-rem(12px) px-to-rem(60px);
-      border: 0;
-    }
+    padding: px-to-rem(12px) px-to-rem(60px);
   }
 
   // themes
-  &-white {
-    color: $neu-white-two;
-  }
-
-  &-dark {
-    color: $neu-greyish-brown;
-  }
-
-  &-graphite {
-    color: $neu-slate-grey;
-  }
-
-  &-brand {
-    background-color: $neu-piss-yellow;
-    color: $neu-greyish-brown;
-
-    :local(.content) {
-      border-color: $neu-piss-yellow;
-    }
-  }
-
-  &-dark-no-border {
-    color: $neu-greyish-brown;
-
-    :local(.content) {
-      border-color: transparent;
-    }
-  }
-
-  &-neon {
-    background-color: $neu-neon-yellow;
-    color: $neu-greyish-brown;
-
-    :local(.content) {
-      border-color: $neu-neon-yellow;
-    }
-
-    &:hover {
-      color: $neu-greyish-brown;
-      background-color: $neu-bitter-lemon;
-    }
-
-    &:disabled {
-      color: $neu-pale-grey;
-      background-color: transparent;
-
-      :local(.content) {
-        border-color: currentColor;
-      }
-    }
-  }
-
-  &-silver {
-    color: $neu-slate-grey;
-  }
-
   &-green {
     color: $neu-seaweed;
-  }
-
-  &-blue {
-    color: $neu-blue;
   }
 
   // elements

@@ -49,7 +49,7 @@ export const RefundSummaryLayout: React.FunctionComponent<TComponentProps> = ({
       <Col className="text-center">
         <ButtonArrowRight
           onClick={onAccept}
-          innerClassName="mt-4"
+          className="mt-4"
           data-test-id="modals.tx-sender.user-refund-flow.summary.accept"
         >
           <FormattedMessage id="user-refund-flow.confirm" />

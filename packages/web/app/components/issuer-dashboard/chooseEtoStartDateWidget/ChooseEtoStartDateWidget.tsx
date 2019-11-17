@@ -20,7 +20,7 @@ import { ETxSenderState } from "../../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../../modules/tx/types";
 import { appConnect } from "../../../store";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight, ButtonWidth } from "../../shared/buttons/index";
+import { ButtonArrowRight, EButtonWidth } from "../../shared/buttons/index";
 import {
   DashboardLoadingWidget,
   DashboardWidget,
@@ -151,14 +151,14 @@ const DateChooserOpen = ({
       </FormGroup>
       <div className={styles.widgetButton}>
         <ButtonArrowRight
-          width={ButtonWidth.NO_PADDING}
+          width={EButtonWidth.NO_PADDING}
           onClick={closeDatePicker}
           data-test-id="eto-settings-start-date-cancel"
         >
           <FormattedMessage id="eto.settings.cancel-change-eto-start-date" />
         </ButtonArrowRight>
         <ButtonArrowRight
-          width={ButtonWidth.NO_PADDING}
+          width={EButtonWidth.NO_PADDING}
           onClick={uploadDate}
           disabled={!(newDateIsSet && newDateIsValid(newEtoDate))}
           data-test-id="eto-settings-start-date-confirm"

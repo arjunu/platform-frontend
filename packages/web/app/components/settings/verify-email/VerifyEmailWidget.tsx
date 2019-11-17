@@ -87,7 +87,7 @@ const SetEmailForm = injectIntlHelpers<IEnhancedFormProps & FormikProps<IFormVal
         {(props.verifiedEmail || props.isThereUnverifiedEmail) && (
           <Button
             data-test-id="verify-email-widget-form-cancel"
-            layout={EButtonLayout.SECONDARY}
+            layout={EButtonLayout.GHOST}
             onClick={props.revertCancelEmail}
           >
             <FormattedMessage id="form.button.cancel" />
@@ -95,7 +95,7 @@ const SetEmailForm = injectIntlHelpers<IEnhancedFormProps & FormikProps<IFormVal
         )}
         <Button
           type="submit"
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           disabled={!isValid(props) || props.isLocked}
           data-test-id="verify-email-widget-form-submit"
         >
@@ -198,7 +198,7 @@ const UnVerifiedUser: React.FunctionComponent<{
     <section className={styles.buttonsContainer}>
       {showUpdateButton(verifiedEmail, unverifiedEmail) && (
         <ButtonArrowRight
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           onClick={cancelEmail}
           data-test-id="verify-email-widget.change-email.button"
         >
@@ -207,7 +207,7 @@ const UnVerifiedUser: React.FunctionComponent<{
       )}
       {showUpdateCancelButton(verifiedEmail, unverifiedEmail) && (
         <ButtonArrowRight
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           onClick={abortEmailUpdate}
           data-test-id="verify-email-widget.abort-change-email.button"
         >
@@ -215,7 +215,7 @@ const UnVerifiedUser: React.FunctionComponent<{
         </ButtonArrowRight>
       )}
       <ButtonArrowRight
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         onClick={resendEmail}
         data-test-id="resend-link"
       >

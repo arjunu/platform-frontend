@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
 import { THocProps } from "../../../types";
-import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { WarningAlert } from "../../shared/WarningAlert";
 import { connectKycStatusWidget } from "./connectKycStatus";
@@ -36,7 +36,6 @@ export const AccountSetupKycStartLayout: React.FunctionComponent<ConnectKycStatu
         </p>
         <Button
           layout={EButtonLayout.PRIMARY}
-          theme={EButtonTheme.BRAND}
           type="button"
           onClick={onGoToKycHome}
           data-test-id="start-kyc-button"
@@ -54,7 +53,6 @@ export const AccountSetupKycPendingLayout: React.FunctionComponent<ConnectKycSta
   <>
     <Button
       layout={EButtonLayout.PRIMARY}
-      theme={EButtonTheme.BRAND}
       type="button"
       onClick={onGoToKycHome}
       data-test-id="kyc-additional-documents-button"

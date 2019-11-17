@@ -2,7 +2,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { Button, EButtonTheme } from "../buttons";
+import { Button } from "../buttons";
 import { ECustomTooltipTextPosition, TooltipBase } from "./TooltipBase";
 
 import * as icon from "../../../assets/img/logo_yellow.svg";
@@ -15,11 +15,9 @@ storiesOf("Basic UI/TooltipBase", module)
         <p>
           <FormattedMessage id="investment-flow.amount-exceeds-investment" />
         </p>
-        <div>
-          <Button theme={EButtonTheme.WHITE} type="submit">
-            <FormattedMessage id="investment-flow.max-invest" />
-          </Button>
-        </div>
+        <Button type="submit">
+          <FormattedMessage id="investment-flow.max-invest" />
+        </Button>
       </TooltipBase>
     </div>
   ))

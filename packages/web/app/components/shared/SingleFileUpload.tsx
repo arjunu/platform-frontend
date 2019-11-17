@@ -68,7 +68,7 @@ export class SingleFileUpload extends React.Component<IProps & CommonHtmlProps> 
           {!disabled && (
             <>
               <Button
-                layout={EButtonLayout.SECONDARY}
+                layout={EButtonLayout.GHOST}
                 iconPosition={EIconPosition.ICON_BEFORE}
                 svgIcon={uploadIcon}
               >

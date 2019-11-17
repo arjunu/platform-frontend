@@ -15,9 +15,8 @@ import { WidgetGrid } from "../layouts/WidgetGrid";
 import {
   ButtonGroup,
   ButtonLink,
-  ButtonSize,
   EButtonLayout,
-  EButtonTheme,
+  EButtonSize,
   EIconPosition,
 } from "../shared/buttons";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
@@ -71,20 +70,18 @@ const LandingLayout: React.FunctionComponent = () => (
 
         <ButtonGroup className={styles.investmentOpportunitiesCallToAction}>
           <ButtonLink
-            theme={EButtonTheme.NEON}
-            layout={EButtonLayout.SECONDARY}
-            size={ButtonSize.HUGE}
+            layout={EButtonLayout.PRIMARY}
+            size={EButtonSize.HUGE}
             to={appRoutes.register}
           >
             <FormattedMessage id="wallet-selector.register" />
           </ButtonLink>
           <ButtonLink
             iconPosition={EIconPosition.ICON_AFTER}
-            layout={EButtonLayout.SECONDARY}
-            size={ButtonSize.HUGE}
+            layout={EButtonLayout.GHOST}
+            size={EButtonSize.HUGE}
             svgIcon={arrowRight}
             target={"_blank"}
-            theme={EButtonTheme.SILVER}
             to={externalRoutes.neufundInvest}
           >
             <FormattedMessage id="common.text.read-more" />

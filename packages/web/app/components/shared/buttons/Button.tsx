@@ -4,22 +4,11 @@ import * as React from "react";
 import { CommonHtmlProps, TDataTestId } from "../../../types";
 import { InlineIcon } from "../icons";
 import { LoadingIndicator } from "../loading-indicator";
+import { ButtonBase } from "./ButtonBase";
 
 import * as arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
 import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./Button.module.scss";
-
-export enum EButtonTheme {
-  DARK_NO_BORDER = styles.buttonDarkNoBorder,
-  DARK = styles.buttonDark,
-  WHITE = styles.buttonWhite,
-  BRAND = styles.buttonBrand,
-  SILVER = styles.buttonSilver,
-  GRAPHITE = styles.buttonGraphite,
-  NEON = styles.buttonNeon,
-  GREEN = styles.buttonGreen,
-  BLUE = styles.buttonBlue,
-}
 
 export enum EIconPosition {
   ICON_BEFORE = "icon-before",
@@ -28,42 +17,34 @@ export enum EIconPosition {
 
 export enum EButtonLayout {
   PRIMARY = styles.buttonPrimary,
+  OUTLINE = styles.buttonOutline,
   SECONDARY = styles.buttonSecondary,
+  GHOST = styles.buttonGhost,
   INLINE = styles.buttonInline,
-  SIMPLE = styles.buttonSimple,
 }
 
-export enum ButtonSize {
+export enum EButtonSize {
   NORMAL,
   SMALL = styles.buttonSmall,
   HUGE = styles.buttonHuge,
 }
 
-export enum ButtonWidth {
+export enum EButtonWidth {
   NORMAL = "",
-  WIDE = "wide",
   BLOCK = "block",
   NO_PADDING = "no-padding",
-}
-
-export enum ButtonTextPosition {
-  LEFT = "text-left",
-  RIGHT = "text-right",
 }
 
 export type TGeneralButton = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export interface IButtonProps extends TGeneralButton, CommonHtmlProps {
   layout?: EButtonLayout;
-  theme?: EButtonTheme;
   svgIcon?: string;
   iconPosition?: EIconPosition;
-  size?: ButtonSize;
-  width?: ButtonWidth;
+  size?: EButtonSize;
+  width?: EButtonWidth;
   isLoading?: boolean;
   isActive?: boolean;
-  innerClassName?: string;
-  textPosition?: ButtonTextPosition;
   iconStyle?: string;
 }
 
@@ -75,16 +56,13 @@ const Button: React.ForwardRefExoticComponent<
       children,
       className,
       layout,
-      theme,
       disabled,
       svgIcon,
-      innerClassName,
       iconPosition,
       size,
       width,
       isLoading,
       type,
-      textPosition,
       isActive,
       onClick,
       "data-test-id": dataTestId,
@@ -93,7 +71,7 @@ const Button: React.ForwardRefExoticComponent<
     },
     ref,
   ) => (
-    <button
+    <ButtonBase
       ref={ref}
       data-test-id={dataTestId}
       className={cn(
@@ -102,7 +80,6 @@ const Button: React.ForwardRefExoticComponent<
         layout,
         iconPosition,
         {
-          [theme!]: layout !== EButtonLayout.INLINE,
           [styles.isActive]: isActive,
         },
         size,
@@ -113,46 +90,43 @@ const Button: React.ForwardRefExoticComponent<
       onClick={onClick}
       {...props}
     >
-      <div className={cn(styles.content, innerClassName, textPosition)} tabIndex={-1}>
-        {isLoading ? (
-          <>
-            {/*
+      {isLoading ? (
+        <>
+          {/*
               &nbsp; makes button the same in height as normal button
               (avoids height dumping after switching to loading state)
             */}
-            &nbsp;
-            <LoadingIndicator light />
-            &nbsp;
-          </>
-        ) : (
-          <>
-            {iconPosition === EIconPosition.ICON_BEFORE && (
-              <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
-            )}
-            {children}
-            {iconPosition === EIconPosition.ICON_AFTER && (
-              <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
-            )}
-          </>
-        )}
-      </div>
-    </button>
+          &nbsp;
+          <LoadingIndicator light />
+          &nbsp;
+        </>
+      ) : (
+        <>
+          {iconPosition === EIconPosition.ICON_BEFORE && (
+            <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
+          )}
+          {children}
+          {iconPosition === EIconPosition.ICON_AFTER && (
+            <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
+          )}
+        </>
+      )}
+    </ButtonBase>
   ),
 );
 
 Button.defaultProps = {
-  layout: EButtonLayout.PRIMARY,
-  theme: EButtonTheme.DARK,
+  layout: EButtonLayout.OUTLINE,
   type: "button",
   disabled: false,
-  size: ButtonSize.NORMAL,
-  width: ButtonWidth.NORMAL,
+  size: EButtonSize.NORMAL,
+  width: EButtonWidth.NORMAL,
 };
 
 const ButtonArrowRight: React.FunctionComponent<IButtonProps> = props => (
   <Button
     {...props}
-    layout={EButtonLayout.SECONDARY}
+    layout={EButtonLayout.GHOST}
     iconPosition={EIconPosition.ICON_AFTER}
     svgIcon={arrowRight}
   />
@@ -161,7 +135,7 @@ const ButtonArrowRight: React.FunctionComponent<IButtonProps> = props => (
 const ButtonArrowLeft: React.FunctionComponent<IButtonProps> = props => (
   <Button
     {...props}
-    layout={EButtonLayout.SECONDARY}
+    layout={EButtonLayout.GHOST}
     iconPosition={EIconPosition.ICON_BEFORE}
     svgIcon={arrowLeft}
   />

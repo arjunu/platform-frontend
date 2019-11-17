@@ -1,4 +1,5 @@
 import { BigNumber } from "bignumber.js";
+import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Link } from "react-router-dom";
@@ -55,7 +56,7 @@ import { nonNullable } from "../../../../utils/nonNullable";
 import { appRoutes } from "../../../appRoutes";
 import { InfoAlert } from "../../../shared/Alerts";
 import { Button, EButtonLayout } from "../../../shared/buttons";
-import { ButtonSize, ButtonTextPosition } from "../../../shared/buttons/Button";
+import { EButtonSize } from "../../../shared/buttons/Button";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,
@@ -287,12 +288,11 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
                 </>
               )}
               <Button
-                className={styles.investAll}
+                className={cn(styles.investAll, "text-right")}
                 data-test-id="invest-modal-full-balance-btn"
                 onClick={this.investEntireBalance}
                 layout={EButtonLayout.INLINE}
-                textPosition={ButtonTextPosition.RIGHT}
-                size={ButtonSize.SMALL}
+                size={EButtonSize.SMALL}
               >
                 <FormattedMessage id="investment-flow.invest-entire-balance" />
               </Button>
@@ -424,7 +424,7 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
           <Row className="justify-content-center mb-0">
             <Button
               onClick={sendTransaction}
-              layout={EButtonLayout.PRIMARY}
+              layout={EButtonLayout.OUTLINE}
               type="submit"
               disabled={!readyToInvest}
               data-test-id="invest-modal-invest-now-button"

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { TDataTestId, TTranslatedString } from "../../types";
 import { makeTid } from "../../utils/tidUtils";
-import { Button, EButtonLayout, EButtonTheme, EIconPosition } from "./buttons";
+import { Button, EButtonLayout, EIconPosition } from "./buttons";
 import { IMoneySuiteWidgetProps, MoneySuiteWidget } from "./MoneySuiteWidget/MoneySuiteWidget";
 
 import * as arrowRightIcon from "../../assets/img/inline_icons/arrow_right.svg";
@@ -43,10 +43,9 @@ export const AccountBalance: React.FunctionComponent<
         actions.map(({ onClick, disabled, name, "data-test-id": actionDataTestId }, i) => (
           <Button
             key={i}
-            layout={EButtonLayout.SECONDARY}
-            innerClassName={styles.button}
+            layout={EButtonLayout.GHOST}
+            className={styles.button}
             iconPosition={EIconPosition.ICON_AFTER}
-            theme={EButtonTheme.GRAPHITE}
             svgIcon={arrowRightIcon}
             onClick={onClick}
             data-test-id={actionDataTestId}

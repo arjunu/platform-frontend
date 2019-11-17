@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { TDataTestId, TTranslatedString } from "../../types";
-import { Button, ButtonTextPosition, EButtonLayout } from "./buttons";
+import { Button, EButtonLayout } from "./buttons";
 import { Document } from "./Document";
 import { ExternalLink } from "./links";
 
@@ -50,12 +50,7 @@ const DocumentButton: React.FunctionComponent<IDocumentButtonExternalProps & TDa
   layout = EButtonLayout.INLINE,
   ["data-test-id"]: dataTestId,
 }) => (
-  <Button
-    layout={layout}
-    onClick={onClick}
-    textPosition={ButtonTextPosition.LEFT}
-    data-test-id={dataTestId}
-  >
+  <Button layout={layout} onClick={onClick} data-test-id={dataTestId}>
     <DocumentLabel title={title} altIcon={altIcon} />
   </Button>
 );

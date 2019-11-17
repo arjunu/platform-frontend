@@ -4,7 +4,7 @@ import { compose } from "recompose";
 
 import { actions } from "../../modules/actions";
 import { appConnect } from "../../store";
-import { Button, EButtonLayout, EButtonTheme } from "../shared/buttons/Button";
+import { Button, EButtonLayout } from "../shared/buttons/Button";
 
 interface IDispatchProps {
   sign: () => void;
@@ -20,7 +20,6 @@ export const AcceptISHALayout: React.FunctionComponent<IDispatchProps> = ({ sign
     </p>
     <Button
       layout={EButtonLayout.PRIMARY}
-      theme={EButtonTheme.BRAND}
       data-test-id="eto-nominee-sign-isha-action"
       onClick={sign}
     >

@@ -4,7 +4,7 @@ import { compose } from "recompose";
 
 import { actions } from "../../../../../modules/actions";
 import { appConnect } from "../../../../../store";
-import { Button, EButtonLayout, EButtonTheme } from "../../../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../../../shared/buttons/Button";
 import { EHeadingSize, Heading } from "../../../../shared/Heading";
 
 interface IDispatchProps {
@@ -21,7 +21,6 @@ const SignNomineeISHASummaryLayout: React.FunctionComponent<IDispatchProps> = ({
       onClick={onAccept}
       layout={EButtonLayout.PRIMARY}
       data-test-id="nominee-sign-agreement-sign"
-      theme={EButtonTheme.NEON}
     >
       <FormattedMessage id="nominee.sign-agreement.sign" />
     </Button>

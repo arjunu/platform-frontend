@@ -13,7 +13,7 @@ import { multiplyBigNumbers } from "../../utils/BigNumberUtils";
 import { commitmentStatusLink } from "../appRouteUtils";
 import { DashboardHeading } from "../eto/shared/DashboardHeading";
 import { Container } from "../layouts/Container";
-import { Button, ButtonLink, ButtonSize, EButtonLayout, EIconPosition } from "../shared/buttons";
+import { Button, ButtonLink, EButtonLayout, EButtonSize, EIconPosition } from "../shared/buttons";
 import { FormatNumber } from "../shared/formatters/FormatNumber";
 import { Money } from "../shared/formatters/Money";
 import {
@@ -102,10 +102,10 @@ const PortfolioMyAssetsComponent: React.FunctionComponent<TComponentProps> = ({
           />
           <ButtonLink
             to={commitmentStatusLink(walletAddress)}
-            layout={EButtonLayout.SECONDARY}
+            layout={EButtonLayout.GHOST}
             iconPosition={EIconPosition.ICON_AFTER}
             svgIcon={arrowRight}
-            size={ButtonSize.SMALL}
+            size={EButtonSize.SMALL}
             data-test-id="portfolio-my-assets-neu-agreements"
           >
             <FormattedMessage id="portfolio.section.my-assets.download-agreements" />
@@ -154,10 +154,10 @@ const PortfolioMyAssetsComponent: React.FunctionComponent<TComponentProps> = ({
               />
               <Button
                 onClick={() => showDownloadAgreementModal(etoId, isRetailEto)}
-                layout={EButtonLayout.SECONDARY}
+                layout={EButtonLayout.GHOST}
                 iconPosition={EIconPosition.ICON_AFTER}
                 svgIcon={arrowRight}
-                size={ButtonSize.SMALL}
+                size={EButtonSize.SMALL}
                 data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${etoId}`}
               >
                 <FormattedMessage id="portfolio.section.my-assets.download-agreements" />

@@ -5,7 +5,7 @@ import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
 import { Message } from "../../modals/Message";
-import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons";
+import { Button, EButtonLayout } from "../../shared/buttons";
 
 import * as tosImg from "../../../assets/img/tos.jpg";
 import * as styles from "./DocumentConfidentialityAgreementModal.module.scss";
@@ -40,7 +40,7 @@ const DocumentConfidentialityAgreementModalLayout: React.FunctionComponent<
     <div className={styles.buttonBlock}>
       <Button
         onClick={closeModal}
-        layout={EButtonLayout.PRIMARY}
+        layout={EButtonLayout.OUTLINE}
         data-test-id="eto.document-confidentiality-agreement-modal.deny"
       >
         <FormattedMessage id="eto.document-confidentiality-agreement-modal.deny" />
@@ -48,7 +48,6 @@ const DocumentConfidentialityAgreementModalLayout: React.FunctionComponent<
       <Button
         onClick={confirm}
         layout={EButtonLayout.PRIMARY}
-        theme={EButtonTheme.BRAND}
         data-test-id="eto.document-confidentiality-agreement-modal.confirm"
       >
         <FormattedMessage id="eto.document-confidentiality-agreement-modal.confirm" />

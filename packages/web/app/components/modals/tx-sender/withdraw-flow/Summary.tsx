@@ -13,7 +13,7 @@ import { selectEthereumAddressWithChecksum } from "../../../../modules/web3/sele
 import { appConnect } from "../../../../store";
 import { RequiredByKeys } from "../../../../types";
 import { Button } from "../../../shared/buttons";
-import { ButtonArrowLeft, ButtonWidth } from "../../../shared/buttons/Button";
+import { ButtonArrowLeft, EButtonWidth } from "../../../shared/buttons/Button";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { WithdrawTransactionDetails } from "./WithdrawTransactionDetails";
 
@@ -55,7 +55,7 @@ export const WithdrawSummaryComponent: React.FunctionComponent<TComponentProps> 
     <ButtonArrowLeft
       className={styles.withSpacing}
       onClick={onChange}
-      width={ButtonWidth.NO_PADDING}
+      width={EButtonWidth.NO_PADDING}
     >
       <FormattedMessage id="modal.sent-eth.change" />
     </ButtonArrowLeft>

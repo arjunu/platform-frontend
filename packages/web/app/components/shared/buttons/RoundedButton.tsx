@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 
 import { TDataTestId } from "../../../types";
-import { Button, EButtonLayout, EButtonTheme, EIconPosition, IButtonProps } from "./Button";
+import { Button, EButtonLayout, EIconPosition, IButtonProps } from "./Button";
 import { ButtonIcon } from "./ButtonIcon";
 
 import * as upload from "../../../assets/img/inline_icons/cloud.svg";
@@ -28,7 +28,7 @@ const CircleButton: React.FunctionComponent<React.ComponentProps<typeof RoundedB
   <RoundedButton
     className={cn(className, styles.circleButton)}
     {...props}
-    layout={EButtonLayout.SECONDARY}
+    layout={EButtonLayout.GHOST}
   >
     {children}
   </RoundedButton>
@@ -54,8 +54,7 @@ const UploadButton: React.FunctionComponent<IUploadButton> = ({
 }) => (
   <RoundedButton
     disabled={isDisabled}
-    layout={EButtonLayout.SECONDARY}
-    theme={EButtonTheme.NEON}
+    layout={EButtonLayout.PRIMARY}
     data-test-id={dataTestId}
     iconPosition={EIconPosition.ICON_BEFORE}
     svgIcon={upload}

@@ -17,7 +17,7 @@ import { selectLiquidEuroTokenBalance } from "../../../../modules/wallet/selecto
 import { doesUserHaveEnoughNEuro, doesUserWithdrawMinimal } from "../../../../modules/web3/utils";
 import { appConnect } from "../../../../store";
 import { onEnterAction } from "../../../../utils/OnEnterAction";
-import { Button, ButtonSize, EButtonLayout } from "../../../shared/buttons/Button";
+import { Button, EButtonLayout, EButtonSize } from "../../../shared/buttons/Button";
 import { ButtonArrowRight } from "../../../shared/buttons/index";
 import { FormatNumber } from "../../../shared/formatters/FormatNumber";
 import {
@@ -158,7 +158,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
                 setFieldTouched("amount", true, true);
               }}
               layout={EButtonLayout.INLINE}
-              size={ButtonSize.SMALL}
+              size={EButtonSize.SMALL}
             >
               <FormattedMessage id="bank-transfer.redeem.init.entire-wallet" />
             </Button>

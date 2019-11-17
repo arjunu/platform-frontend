@@ -24,7 +24,7 @@ const InvestorRedistributePayoutConfirmLayout: React.FunctionComponent<IProps> =
     title={<FormattedMessage id="investor-payout.redistribute.confirm.title" />}
     text={<FormattedMessage id="investor-payout.redistribute.confirm.text" />}
   >
-    <Button onClick={deny} layout={EButtonLayout.SECONDARY}>
+    <Button onClick={deny} layout={EButtonLayout.GHOST}>
       <FormattedMessage id="investor-payout.redistribute.confirm.deny" />
     </Button>
     <ButtonArrowRight onClick={confirm} data-test-id="investor-payout.redistribute-confirm.confirm">

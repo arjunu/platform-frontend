@@ -13,7 +13,7 @@ import { selectTxType } from "../../../../../modules/tx/sender/selectors";
 import { ETxSenderType } from "../../../../../modules/tx/types";
 import { appConnect } from "../../../../../store";
 import { RequiredByKeys } from "../../../../../types";
-import { Button, EButtonLayout, EButtonTheme } from "../../../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../../../shared/buttons/Button";
 import { DocumentButton } from "../../../../shared/DocumentLink";
 import { FormFieldBoolean } from "../../../../shared/forms/fields/FormFieldBoolean";
 import { FormDeprecated } from "../../../../shared/forms/FormDeprecated";
@@ -74,7 +74,7 @@ const SignNomineeAgreementSummaryLayout: React.FunctionComponent<TComponentProps
       )}
     </p>
     <DocumentButton
-      layout={EButtonLayout.PRIMARY}
+      layout={EButtonLayout.OUTLINE}
       onClick={() =>
         downloadImmutableFile(
           {
@@ -122,7 +122,6 @@ const SignNomineeAgreementSummaryLayout: React.FunctionComponent<TComponentProps
             type="submit"
             layout={EButtonLayout.PRIMARY}
             data-test-id="nominee-sign-agreement-sign"
-            theme={EButtonTheme.NEON}
           >
             <FormattedMessage id="nominee.sign-agreement.sign" />
           </Button>
