@@ -55,8 +55,7 @@ import { IIntlProps, injectIntlHelpers } from "../../../../utils/injectIntlHelpe
 import { nonNullable } from "../../../../utils/nonNullable";
 import { appRoutes } from "../../../appRoutes";
 import { InfoAlert } from "../../../shared/Alerts";
-import { Button, EButtonLayout } from "../../../shared/buttons";
-import { EButtonSize } from "../../../shared/buttons/Button";
+import { Button, ButtonInline, EButtonLayout } from "../../../shared/buttons";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,
@@ -287,15 +286,15 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
                   </div>
                 </>
               )}
-              <Button
-                className={cn(styles.investAll, "text-right")}
-                data-test-id="invest-modal-full-balance-btn"
-                onClick={this.investEntireBalance}
-                layout={EButtonLayout.INLINE}
-                size={EButtonSize.SMALL}
-              >
-                <FormattedMessage id="investment-flow.invest-entire-balance" />
-              </Button>
+              <small>
+                <ButtonInline
+                  className={cn(styles.investAll, "text-right")}
+                  data-test-id="invest-modal-full-balance-btn"
+                  onClick={this.investEntireBalance}
+                >
+                  <FormattedMessage id="investment-flow.invest-entire-balance" />
+                </ButtonInline>
+              </small>
             </Col>
           </Row>
         </Container>

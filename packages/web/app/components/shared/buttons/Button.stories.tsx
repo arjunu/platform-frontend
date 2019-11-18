@@ -100,11 +100,6 @@ storiesOf("NDS|Atoms/Button", module)
       <Button layout={EButtonLayout.GHOST} isLoading />
     </>
   ))
-  .add("inline", () => (
-    <>
-      <Button layout={EButtonLayout.INLINE}>Call to Action</Button>
-    </>
-  ))
   .add("with icons", () => (
     <>
       <Button layout={EButtonLayout.GHOST} svgIcon={icon} iconPosition={EIconPosition.ICON_BEFORE}>

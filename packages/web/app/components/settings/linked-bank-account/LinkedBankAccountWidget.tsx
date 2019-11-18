@@ -5,7 +5,13 @@ import { branch, compose, renderNothing } from "recompose";
 import { ENEURWalletStatus } from "../../../modules/wallet/types";
 import { THocProps } from "../../../types";
 import { EColumnSpan } from "../../layouts/Container";
-import { Button, EButtonLayout, EButtonSize, EIconPosition } from "../../shared/buttons";
+import {
+  Button,
+  ButtonInline,
+  EButtonLayout,
+  EButtonSize,
+  EIconPosition,
+} from "../../shared/buttons";
 import { Panel } from "../../shared/Panel";
 import { BankAccount } from "../../wallet/BankAccount";
 import { connectLinkBankAccountComponent } from "./ConnectLinkBankAccount";
@@ -58,16 +64,16 @@ const LinkedBankAccountLayout: React.FunctionComponent<
       </section>
     </div>
     {props.isBankAccountVerified && (
-      <Button
-        className={styles.linkButton}
-        onClick={props.verifyBankAccount}
-        disabled={props.neurStatus !== ENEURWalletStatus.ENABLED}
-        data-test-id="linked-bank-account-widget.link-different-account"
-        layout={EButtonLayout.INLINE}
-        size={EButtonSize.SMALL}
-      >
-        <FormattedMessage id="linked-bank-account-widget.link-different" />
-      </Button>
+      <small>
+        <ButtonInline
+          className={styles.linkButton}
+          onClick={props.verifyBankAccount}
+          disabled={props.neurStatus !== ENEURWalletStatus.ENABLED}
+          data-test-id="linked-bank-account-widget.link-different-account"
+        >
+          <FormattedMessage id="linked-bank-account-widget.link-different" />
+        </ButtonInline>
+      </small>
     )}
   </Panel>
 );

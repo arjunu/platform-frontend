@@ -4,9 +4,11 @@ import ReactDropzone, { DropFileEventHandler, DropzoneProps } from "react-dropzo
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TDataTestId } from "../../types";
-import { UploadButton } from "./buttons/RoundedButton";
+import { Button, EButtonLayout, EIconPosition } from "./buttons";
+import { EInlineIconFill } from "./icons/InlineIcon";
 import { ELoadingIndicator, LoadingIndicator } from "./loading-indicator/LoadingIndicator";
 
+import * as upload from "../../assets/img/inline_icons/cloud.svg";
 import * as styles from "./Dropzone.module.scss";
 
 interface IProps {
@@ -23,13 +25,20 @@ const DropzoneSpinner: React.FunctionComponent = () => (
 );
 
 const DocumentDropzoneContent: React.FunctionComponent<{
-  isDisabled?: boolean;
+  disabled?: boolean;
   name: string;
-}> = ({ isDisabled, name }) => (
+}> = ({ disabled, name }) => (
   <>
-    <UploadButton isDisabled={isDisabled} data-test-id={`form.name.${name}.upload`}>
+    <Button
+      disabled={disabled}
+      layout={EButtonLayout.PRIMARY}
+      svgIcon={upload}
+      iconPosition={EIconPosition.ICON_BEFORE}
+      iconProps={{ fill: EInlineIconFill.FILL_OUTLINE }}
+      data-test-id={`form.name.${name}.upload`}
+    >
       <FormattedMessage id="shared.dropzone.upload.upload" />
-    </UploadButton>
+    </Button>
     <p className={cn(styles.dragDescription)}>
       <FormattedMessage id="shared.dropzone.upload.drag-n-drop" />
     </p>
@@ -51,7 +60,7 @@ const Dropzone: React.FunctionComponent<DropzoneProps & TDataTestId & IProps> = 
     disabledClassName={styles.dropzoneDisabled}
     {...props}
   >
-    <DocumentDropzoneContent name={name} isDisabled={disabled} />
+    <DocumentDropzoneContent name={name} disabled={disabled} />
     {isUploading && <DropzoneSpinner />}
   </ReactDropzone>
 );

@@ -1,37 +1,19 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { TDataTestId } from "../../../types";
-import { Button, EButtonLayout, EIconPosition, IButtonProps } from "./Button";
+import { ButtonBase } from "./ButtonBase";
 import { ButtonIcon } from "./ButtonIcon";
 
-import * as upload from "../../../assets/img/inline_icons/cloud.svg";
 import * as styles from "./RoundedButton.module.scss";
 
-interface IUploadButton extends TDataTestId {
-  isDisabled?: boolean;
-}
-
-const RoundedButton: React.ForwardRefExoticComponent<
-  { children?: React.ReactNode } & IButtonProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef<HTMLButtonElement, IButtonProps & TDataTestId>((props, ref) => (
-  <Button {...props} ref={ref} className={cn(props.className, styles.rounded)}>
-    {props.children}
-  </Button>
-));
-
-const CircleButton: React.FunctionComponent<React.ComponentProps<typeof RoundedButton>> = ({
+const CircleButton: React.FunctionComponent<React.ComponentProps<typeof ButtonBase>> = ({
   children,
   className,
   ...props
 }) => (
-  <RoundedButton
-    className={cn(className, styles.circleButton)}
-    {...props}
-    layout={EButtonLayout.GHOST}
-  >
+  <ButtonBase className={cn(className, styles.circleButton)} {...props}>
     {children}
-  </RoundedButton>
+  </ButtonBase>
 );
 
 const CircleButtonWarning: React.FunctionComponent<React.ComponentProps<typeof CircleButton>> = ({
@@ -47,21 +29,4 @@ const CircleButtonIcon: React.FunctionComponent<
   React.ComponentProps<typeof ButtonIcon>
 > = props => <ButtonIcon className={cn(props.className, styles.buttonIcon)} {...props} />;
 
-const UploadButton: React.FunctionComponent<IUploadButton> = ({
-  isDisabled,
-  children,
-  "data-test-id": dataTestId,
-}) => (
-  <RoundedButton
-    disabled={isDisabled}
-    layout={EButtonLayout.PRIMARY}
-    data-test-id={dataTestId}
-    iconPosition={EIconPosition.ICON_BEFORE}
-    svgIcon={upload}
-    iconStyle={cn("inline-icon", styles.uploadIcon)}
-  >
-    {children}
-  </RoundedButton>
-);
-
-export { RoundedButton, CircleButton, CircleButtonIcon, CircleButtonWarning, UploadButton };
+export { CircleButton, CircleButtonIcon, CircleButtonWarning };

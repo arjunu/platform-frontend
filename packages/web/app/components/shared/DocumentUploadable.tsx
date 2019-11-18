@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { EEtoDocumentType } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { TTranslatedString } from "../../types";
 import { ETOAddDocuments } from "../eto/shared/EtoAddDocument";
-import { Button, EButtonLayout, EButtonSize } from "./buttons/Button";
+import { ButtonInline } from "./buttons";
 import { DocumentTile } from "./Document";
 import { InlineIcon } from "./icons/InlineIcon";
 
@@ -68,14 +68,14 @@ const DocumentUploadTermsChanged: React.FunctionComponent<{
   uploadedFileName?: string;
 }> = ({ downloadDocumentStart, documentKey, uploadedFileName }) => (
   <>
-    <Button
-      data-test-id="documents-download-document"
-      onClick={() => downloadDocumentStart(documentKey)}
-      layout={EButtonLayout.INLINE}
-      size={EButtonSize.SMALL}
-    >
-      {uploadedFileName}
-    </Button>
+    <small>
+      <ButtonInline
+        data-test-id="documents-download-document"
+        onClick={() => downloadDocumentStart(documentKey)}
+      >
+        {uploadedFileName}
+      </ButtonInline>
+    </small>
     <div className={styles.warning}>
       <InlineIcon svgIcon={warning} className={styles.warningIcon} />
       <p>

@@ -2,7 +2,6 @@
   @include font-medium-roboto;
 
   @include media-breakpoint-up(sm) {
-    // TODO: Remove simple and inline button here
     min-width: px-to-rem(140px);
   }
 
@@ -99,19 +98,6 @@
     &.is-active {
       background: transparent;
       color: $neu-bitter-lemon;
-    }
-  }
-
-  &-inline {
-    padding: 0;
-    margin-top: 0;
-    justify-content: initial;
-    text-decoration: underline;
-
-    &:hover,
-    &.is-active,
-    &:focus {
-      text-decoration: none;
     }
   }
 

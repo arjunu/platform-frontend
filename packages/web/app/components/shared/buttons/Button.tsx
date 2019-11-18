@@ -1,7 +1,7 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { CommonHtmlProps, TDataTestId } from "../../../types";
+import { CommonHtmlProps, OmitKeys, TDataTestId } from "../../../types";
 import { InlineIcon } from "../icons";
 import { LoadingIndicator } from "../loading-indicator";
 import { ButtonBase } from "./ButtonBase";
@@ -20,7 +20,6 @@ export enum EButtonLayout {
   OUTLINE = styles.buttonOutline,
   SECONDARY = styles.buttonSecondary,
   GHOST = styles.buttonGhost,
-  INLINE = styles.buttonInline,
 }
 
 export enum EButtonSize {
@@ -41,16 +40,14 @@ export interface IButtonProps extends TGeneralButton, CommonHtmlProps {
   layout?: EButtonLayout;
   svgIcon?: string;
   iconPosition?: EIconPosition;
+  iconProps?: OmitKeys<React.ComponentProps<typeof InlineIcon>, "svgIcon">;
   size?: EButtonSize;
   width?: EButtonWidth;
   isLoading?: boolean;
   isActive?: boolean;
-  iconStyle?: string;
 }
 
-const Button: React.ForwardRefExoticComponent<
-  { children?: React.ReactNode } & IButtonProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef<HTMLButtonElement, IButtonProps & TDataTestId>(
+const Button = React.forwardRef<HTMLButtonElement, IButtonProps & TDataTestId>(
   (
     {
       children,
@@ -59,6 +56,7 @@ const Button: React.ForwardRefExoticComponent<
       disabled,
       svgIcon,
       iconPosition,
+      iconProps = {},
       size,
       width,
       isLoading,
@@ -66,7 +64,6 @@ const Button: React.ForwardRefExoticComponent<
       isActive,
       onClick,
       "data-test-id": dataTestId,
-      iconStyle,
       ...props
     },
     ref,
@@ -102,12 +99,12 @@ const Button: React.ForwardRefExoticComponent<
         </>
       ) : (
         <>
-          {iconPosition === EIconPosition.ICON_BEFORE && (
-            <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
+          {svgIcon && iconPosition === EIconPosition.ICON_BEFORE && (
+            <InlineIcon {...iconProps} svgIcon={svgIcon} />
           )}
           {children}
-          {iconPosition === EIconPosition.ICON_AFTER && (
-            <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
+          {svgIcon && iconPosition === EIconPosition.ICON_AFTER && (
+            <InlineIcon {...iconProps} svgIcon={svgIcon} />
           )}
         </>
       )}

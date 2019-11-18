@@ -17,8 +17,7 @@ import { selectLiquidEuroTokenBalance } from "../../../../modules/wallet/selecto
 import { doesUserHaveEnoughNEuro, doesUserWithdrawMinimal } from "../../../../modules/web3/utils";
 import { appConnect } from "../../../../store";
 import { onEnterAction } from "../../../../utils/OnEnterAction";
-import { Button, EButtonLayout, EButtonSize } from "../../../shared/buttons/Button";
-import { ButtonArrowRight } from "../../../shared/buttons/index";
+import { ButtonArrowRight, ButtonInline } from "../../../shared/buttons";
 import { FormatNumber } from "../../../shared/formatters/FormatNumber";
 import {
   ECurrency,
@@ -138,30 +137,30 @@ const BankTransferRedeemLayout: React.FunctionComponent<IProps> = ({
             <FormLabel for="amount" className={styles.label}>
               <FormattedMessage id="bank-transfer.redeem.init.redeem-amount" />
             </FormLabel>
-            <Button
-              data-test-id="bank-transfer.reedem-init.redeem-whole-balance"
-              className={styles.linkButton}
-              onClick={() => {
-                setFieldValue(
-                  "amount",
-                  toFixedPrecision({
-                    value: neuroAmount,
-                    roundingMode: ERoundingMode.DOWN,
-                    inputFormat: ENumberInputFormat.ULPS,
-                    decimalPlaces: selectDecimalPlaces(
-                      ECurrency.EUR_TOKEN,
-                      ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
-                    ),
-                  }),
-                  true,
-                );
-                setFieldTouched("amount", true, true);
-              }}
-              layout={EButtonLayout.INLINE}
-              size={EButtonSize.SMALL}
-            >
-              <FormattedMessage id="bank-transfer.redeem.init.entire-wallet" />
-            </Button>
+            <small>
+              <ButtonInline
+                data-test-id="bank-transfer.reedem-init.redeem-whole-balance"
+                className={styles.linkButton}
+                onClick={() => {
+                  setFieldValue(
+                    "amount",
+                    toFixedPrecision({
+                      value: neuroAmount,
+                      roundingMode: ERoundingMode.DOWN,
+                      inputFormat: ENumberInputFormat.ULPS,
+                      decimalPlaces: selectDecimalPlaces(
+                        ECurrency.EUR_TOKEN,
+                        ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
+                      ),
+                    }),
+                    true,
+                  );
+                  setFieldTouched("amount", true, true);
+                }}
+              >
+                <FormattedMessage id="bank-transfer.redeem.init.entire-wallet" />
+              </ButtonInline>
+            </small>
           </section>
 
           <FormDeprecated>
