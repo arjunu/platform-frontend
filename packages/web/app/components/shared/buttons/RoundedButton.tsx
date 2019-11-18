@@ -1,19 +1,19 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { ButtonBase } from "./ButtonBase";
 import { ButtonIcon } from "./ButtonIcon";
+import { ButtonReset } from "./ButtonReset";
 
 import * as styles from "./RoundedButton.module.scss";
 
-const CircleButton: React.FunctionComponent<React.ComponentProps<typeof ButtonBase>> = ({
+const CircleButton: React.FunctionComponent<React.ComponentProps<typeof ButtonReset>> = ({
   children,
   className,
   ...props
 }) => (
-  <ButtonBase className={cn(className, styles.circleButton)} {...props}>
+  <ButtonReset className={cn(className, styles.circleButton)} {...props}>
     {children}
-  </ButtonBase>
+  </ButtonReset>
 );
 
 const CircleButtonWarning: React.FunctionComponent<React.ComponentProps<typeof CircleButton>> = ({

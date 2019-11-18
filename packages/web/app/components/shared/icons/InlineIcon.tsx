@@ -22,7 +22,7 @@ interface IProps {
 
 export const InlineIcon: React.FunctionComponent<IProps> = ({
   fill = EInlineIconFill.FILL_SHAPE,
-  className = cn("inline-icon", styles.inlineIcon, fill),
+  className,
   svgIcon,
   width,
   height,
@@ -31,7 +31,7 @@ export const InlineIcon: React.FunctionComponent<IProps> = ({
 }) => (
   <>
     <span
-      className={className}
+      className={cn("inline-icon", styles.inlineIcon, fill, className)}
       style={{ width, height }}
       dangerouslySetInnerHTML={{ __html: svgIcon }}
       {...props}

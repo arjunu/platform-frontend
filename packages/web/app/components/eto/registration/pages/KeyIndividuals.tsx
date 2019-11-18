@@ -97,7 +97,6 @@ const Individual: React.FunctionComponent<IIndividual> = ({
             svgIcon={closeIcon}
             onClick={onRemoveClick}
             className={localStyles.removeButton}
-            type="button"
           />
         )}
         <FormField
@@ -137,14 +136,12 @@ const Individual: React.FunctionComponent<IIndividual> = ({
       <div>
         <ButtonIcon
           onClick={() => swap(index, index - 1)}
-          type="button"
           disabled={index === 0}
           svgIcon={upIcon}
           alt={<FormattedMessage id="button-icon.up" />}
         />
         <ButtonIcon
           onClick={() => swap(index, index + 1)}
-          type="button"
           disabled={index === length - 1}
           svgIcon={downIcon}
           alt={<FormattedMessage id="button-icon.down" />}

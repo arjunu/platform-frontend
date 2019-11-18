@@ -115,6 +115,13 @@ export type RequiredNonNullable<T> = { [P in keyof T]-?: NonNullable<T[P]> };
 export type RequiredByKeys<T, K extends keyof T> = RequiredNonNullable<Pick<T, K>> & OmitKeys<T, K>;
 
 /**
+ * In T, mark as partial properties from K
+ * @example
+ * PartialByKeys<{ foo: boolean, bar: string }, "foo"> // { foo?: boolean, bar: string }
+ */
+export type PartialByKeys<T, K extends keyof T> = Partial<Pick<T, K>> & OmitKeys<T, K>;
+
+/**
  * Overwrites properties from T1 with one from T2
  * @example
  * Overwrite<{ foo: boolean, bar: string }, { foo: number }> // { foo: number, bar: string }

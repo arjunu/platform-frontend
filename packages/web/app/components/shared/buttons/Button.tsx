@@ -1,10 +1,9 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { CommonHtmlProps, OmitKeys, TDataTestId } from "../../../types";
+import { OmitKeys, PartialByKeys } from "../../../types";
 import { InlineIcon } from "../icons";
-import { LoadingIndicator } from "../loading-indicator";
-import { ButtonBase } from "./ButtonBase";
+import { ButtonBase, EButtonLayout, EButtonSize, EButtonWidth } from "./ButtonBase";
 
 import * as arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
 import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
@@ -15,112 +14,53 @@ export enum EIconPosition {
   ICON_AFTER = "icon-after",
 }
 
-export enum EButtonLayout {
-  PRIMARY = styles.buttonPrimary,
-  OUTLINE = styles.buttonOutline,
-  SECONDARY = styles.buttonSecondary,
-  GHOST = styles.buttonGhost,
-}
+type ButtonBaseProps = React.ComponentProps<typeof ButtonBase>;
 
-export enum EButtonSize {
-  NORMAL,
-  SMALL = styles.buttonSmall,
-  HUGE = styles.buttonHuge,
-}
-
-export enum EButtonWidth {
-  NORMAL = "",
-  BLOCK = "block",
-  NO_PADDING = "no-padding",
-}
-
-export type TGeneralButton = React.ButtonHTMLAttributes<HTMLButtonElement>;
-
-export interface IButtonProps extends TGeneralButton, CommonHtmlProps {
-  layout?: EButtonLayout;
+type TButtonProps = {
   svgIcon?: string;
   iconPosition?: EIconPosition;
   iconProps?: OmitKeys<React.ComponentProps<typeof InlineIcon>, "svgIcon">;
-  size?: EButtonSize;
-  width?: EButtonWidth;
-  isLoading?: boolean;
-  isActive?: boolean;
-}
+} & PartialByKeys<ButtonBaseProps, "layout" | "size" | "width">;
 
-const Button = React.forwardRef<HTMLButtonElement, IButtonProps & TDataTestId>(
+const Button = React.forwardRef<HTMLButtonElement, TButtonProps>(
   (
     {
+      layout = EButtonLayout.OUTLINE,
+      size = EButtonSize.NORMAL,
+      width = EButtonWidth.NORMAL,
       children,
-      className,
-      layout,
-      disabled,
       svgIcon,
       iconPosition,
       iconProps = {},
-      size,
-      width,
-      isLoading,
-      type,
-      isActive,
-      onClick,
-      "data-test-id": dataTestId,
       ...props
     },
     ref,
   ) => (
-    <ButtonBase
-      ref={ref}
-      data-test-id={dataTestId}
-      className={cn(
-        styles.button,
-        className,
-        layout,
-        iconPosition,
-        {
-          [styles.isActive]: isActive,
-        },
-        size,
-        width,
+    <ButtonBase ref={ref} layout={layout} size={size} width={width} {...props}>
+      {svgIcon && iconPosition === EIconPosition.ICON_BEFORE && (
+        <InlineIcon
+          {...iconProps}
+          className={cn(styles.icon, styles.iconBefore, iconProps.className)}
+          svgIcon={svgIcon}
+        />
       )}
-      disabled={disabled || isLoading}
-      type={type}
-      onClick={onClick}
-      {...props}
-    >
-      {isLoading ? (
-        <>
-          {/*
-              &nbsp; makes button the same in height as normal button
-              (avoids height dumping after switching to loading state)
-            */}
-          &nbsp;
-          <LoadingIndicator light />
-          &nbsp;
-        </>
-      ) : (
-        <>
-          {svgIcon && iconPosition === EIconPosition.ICON_BEFORE && (
-            <InlineIcon {...iconProps} svgIcon={svgIcon} />
-          )}
-          {children}
-          {svgIcon && iconPosition === EIconPosition.ICON_AFTER && (
-            <InlineIcon {...iconProps} svgIcon={svgIcon} />
-          )}
-        </>
+
+      {children}
+
+      {svgIcon && iconPosition === EIconPosition.ICON_AFTER && (
+        <InlineIcon
+          {...iconProps}
+          className={cn(styles.icon, styles.iconAfter, iconProps.className)}
+          svgIcon={svgIcon}
+        />
       )}
     </ButtonBase>
   ),
 );
 
-Button.defaultProps = {
-  layout: EButtonLayout.OUTLINE,
-  type: "button",
-  disabled: false,
-  size: EButtonSize.NORMAL,
-  width: EButtonWidth.NORMAL,
-};
+// TODO: Narrow props to remove svgIcon and iconPosition
 
-const ButtonArrowRight: React.FunctionComponent<IButtonProps> = props => (
+const ButtonArrowRight: React.FunctionComponent<React.ComponentProps<typeof Button>> = props => (
   <Button
     {...props}
     layout={EButtonLayout.GHOST}
@@ -129,7 +69,7 @@ const ButtonArrowRight: React.FunctionComponent<IButtonProps> = props => (
   />
 );
 
-const ButtonArrowLeft: React.FunctionComponent<IButtonProps> = props => (
+const ButtonArrowLeft: React.FunctionComponent<React.ComponentProps<typeof Button>> = props => (
   <Button
     {...props}
     layout={EButtonLayout.GHOST}
@@ -138,4 +78,4 @@ const ButtonArrowLeft: React.FunctionComponent<IButtonProps> = props => (
   />
 );
 
-export { ButtonArrowRight, ButtonArrowLeft, Button };
+export { ButtonArrowRight, ButtonArrowLeft, Button, EButtonLayout, EButtonSize, EButtonWidth };
