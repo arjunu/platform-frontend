@@ -6,11 +6,9 @@ import { SwitchConnected } from "../utils/connectedRouting";
 import { appRoutes } from "./appRoutes";
 import { Dashboard } from "./dashboard/Dashboard";
 import { Documents } from "./documents/issuerDocuments/Documents";
-import { NomineeDocuments } from "./documents/nomineeDocuments/NomineeDocuments";
 import { MigrationFromLink } from "./edge-cases/MigrationFromLink";
 import { UnlockWalletFundsFromLink } from "./edge-cases/UnlockWalletFundsFromLink";
 import { EtoIssuerView } from "./eto/EtoIssuerView";
-import { EtoNomineeView } from "./eto/EtoNomineeView";
 import { EtoPublicView } from "./eto/EtoPublicView";
 import { EtoPublicViewByContractId } from "./eto/EtoPublicViewByContractId";
 import { EtoWidgetView } from "./eto/EtoWidgetView";
@@ -20,7 +18,6 @@ import { RedirectEtoPublicView } from "./eto/shared/routing/RedirectToEtoLink";
 import { EtoDashboard } from "./issuer-dashboard/EtoDashboard";
 import { Kyc } from "./kyc/Kyc";
 import { Landing } from "./landing/Landing";
-import { NomineeDashboard } from "./nominee-dashboard/NomineeDashboard";
 import { Portfolio } from "./portfolio/Portfolio";
 import { BackupSeed } from "./settings/backup-seed/BackupSeed";
 import { EmailVerify } from "./settings/EmailVerify";
@@ -37,6 +34,9 @@ import { EmbeddedWidget } from "./testing/embeded-widget/TestEmbededWidget";
 import { WalletRecoverMain } from "./wallet-selector/wallet-recover/WalletRecoverMain";
 import { WalletSelector } from "./wallet-selector/WalletSelector";
 import { Wallet } from "./wallet/Wallet";
+import { NomineeDashboardLazy } from "./nominee-dashboard/NomineeDashboardLazy";
+import { NomineeDocumentsLazy } from "./documents/nomineeDocuments/NomineeDocumentsLazy";
+import { EtoNomineeViewLazy } from "./eto/EtoNomineeViewLazy";
 
 // TEMPORARY CONSTANTS -------->
 const GREYP_URL = "/greyp";
@@ -169,13 +169,13 @@ export const AppRouter: React.FunctionComponent = () => (
     <OnlyAuthorizedRoute
       path={appRoutes.documents}
       issuerComponent={Documents}
-      nomineeComponent={NomineeDocuments}
+      nomineeComponent={NomineeDocumentsLazy}
       exact
     />
     <OnlyAuthorizedRoute
       path={appRoutes.etoIssuerView}
       issuerComponent={EtoIssuerView}
-      nomineeComponent={EtoNomineeView}
+      nomineeComponent={EtoNomineeViewLazy}
     />
 
     {/* common routes for both investors and issuers */}
@@ -189,7 +189,7 @@ export const AppRouter: React.FunctionComponent = () => (
       path={appRoutes.dashboard}
       investorComponent={Dashboard}
       issuerComponent={EtoDashboard}
-      nomineeComponent={NomineeDashboard}
+      nomineeComponent={NomineeDashboardLazy}
       exact
     />
     <OnlyAuthorizedRoute

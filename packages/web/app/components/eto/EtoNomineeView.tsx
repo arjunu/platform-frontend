@@ -24,13 +24,13 @@ type TStateProps = {
   hasError: boolean;
 };
 
-type TViewProps = {
+export type TViewProps = {
   eto: TEtoWithCompanyAndContractReadonly;
   publicView: boolean;
   isUserFullyVerified: boolean;
 };
 
-type TLinkedNomineeComponentProps = {
+export type TLinkedNomineeComponentProps = {
   eto: TEtoWithCompanyAndContractReadonly;
 };
 
