@@ -4,7 +4,7 @@ import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { DAY } from "../../../config/constants";
 import { IBookBuildingStats } from "../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight } from "../../shared/buttons/Button";
+import { ButtonArrowRight } from "../../shared/buttons";
 import { DashboardWidget } from "../../shared/dashboard-widget/DashboardWidget";
 import { BookBuildingStats } from "./BookBuildingStats";
 

@@ -6,7 +6,7 @@ import { selectTxAdditionalData } from "../../../../modules/tx/sender/selectors"
 import { TNEurRedeemAdditionalDetails } from "../../../../modules/tx/transactions/redeem/types";
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
-import { ButtonArrowRight, EButtonLayout } from "../../../shared/buttons/Button";
+import { ButtonArrowRight, EButtonLayout } from "../../../shared/buttons";
 import { Message } from "../../message/Message";
 import { TxHashAndBlock } from "../shared/TxHashAndBlock";
 import { BankTransferRedeemDetails } from "./BankTransferRedeemDetails";

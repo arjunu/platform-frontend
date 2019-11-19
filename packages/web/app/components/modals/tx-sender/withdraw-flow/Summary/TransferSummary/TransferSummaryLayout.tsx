@@ -11,8 +11,7 @@ import {
 import { RequiredByKeys } from "../../../../../../types";
 import { addBigNumbers } from "../../../../../../utils/BigNumberUtils";
 import { toEquityTokenSymbol } from "../../../../../../utils/opaque-types/utils";
-import { Button } from "../../../../../shared/buttons";
-import { ButtonArrowLeft, EButtonWidth } from "../../../../../shared/buttons/Button";
+import { Button, ButtonArrowLeft, EButtonWidth } from "../../../../../shared/buttons";
 import { ECurrency } from "../../../../../shared/formatters/utils";
 import { EtherscanTxLink } from "../../../../../shared/links";
 import { DataRow, DataRowSeparator } from "../../../shared/DataRow";

@@ -7,7 +7,7 @@ import { ENotificationText, ENotificationType } from "../../../modules/notificat
 import { TDataTestId } from "../../../types";
 import { getHostname } from "../../../utils/StringUtils";
 import { ButtonReset } from "../buttons";
-import { ButtonClose } from "../buttons/ButtonIcon";
+import { ButtonClose } from "../buttons/CommonButtons";
 import { ExternalLink } from "../links/ExternalLink";
 
 import * as infoIcon from "../../../assets/img/notifications/info.svg";

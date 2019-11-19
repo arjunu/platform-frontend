@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight } from "../../shared/buttons/Button";
+import { ButtonArrowRight } from "../../shared/buttons";
 import { DashboardWidget } from "../../shared/dashboard-widget/DashboardWidget";
 
 type TExternalProps = {

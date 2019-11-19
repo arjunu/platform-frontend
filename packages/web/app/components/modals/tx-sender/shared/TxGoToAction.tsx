@@ -5,7 +5,7 @@ import { compose } from "recompose";
 import { actions } from "../../../../modules/actions";
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
-import { ButtonArrowRight, EButtonLayout } from "../../../shared/buttons/Button";
+import { ButtonArrowRight, EButtonLayout } from "../../../shared/buttons";
 
 interface IExternalProps {
   type: ETxSenderType;

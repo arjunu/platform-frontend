@@ -10,7 +10,7 @@ import { TRefundAdditionalData } from "../../../../modules/tx/transactions/refun
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { RequiredByKeys } from "../../../../types";
-import { ButtonArrowRight } from "../../../shared/buttons/Button";
+import { ButtonArrowRight } from "../../../shared/buttons";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { RefundTransactionDetails } from "./RefundDetails";
 

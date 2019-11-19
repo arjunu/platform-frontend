@@ -6,9 +6,8 @@ import * as Yup from "yup";
 
 import { injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { EColumnSpan } from "../../layouts/Container";
-import { Button, EButtonLayout } from "../../shared/buttons";
-import { ButtonArrowRight } from "../../shared/buttons/Button";
-import { FormDeprecated, FormField } from "../../shared/forms/index";
+import { Button, ButtonArrowRight, EButtonLayout } from "../../shared/buttons";
+import { FormDeprecated, FormField } from "../../shared/forms";
 import { Panel } from "../../shared/Panel";
 import { connectVerifyEmailComponent } from "./ConnectVerifyEmail";
 

@@ -1,15 +1,7 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import {
-  Button,
-  ButtonArrowLeft,
-  ButtonArrowRight,
-  EButtonLayout,
-  EButtonSize,
-  EButtonWidth,
-  EIconPosition,
-} from "./Button";
+import { Button, EButtonLayout, EButtonSize, EButtonWidth, EIconPosition } from "./Button";
 
 import * as icon from "../../../assets/img/inline_icons/download.svg";
 
@@ -124,11 +116,3 @@ storiesOf("NDS|Atoms/Button", module)
       width={EButtonWidth.NO_PADDING}
     />
   ));
-
-storiesOf("buttons/ArrowRight", module).add("primary", () => (
-  <ButtonArrowRight>primary</ButtonArrowRight>
-));
-
-storiesOf("buttons/ArrowLeft", module).add("primary", () => (
-  <ButtonArrowLeft>primary</ButtonArrowLeft>
-));
