@@ -1,54 +1,24 @@
-import * as cn from "classnames";
 import * as React from "react";
+import { FormattedMessage } from "react-intl-phraseapp";
 
-import { OmitKeys, PartialByKeys, TTranslatedString } from "../../../types";
-import { InlineIcon } from "../icons";
-import { ButtonBase, EButtonLayout, EButtonSize, EButtonWidth } from "./ButtonBase";
+import { OmitKeys } from "../../../types";
+import { Button, EButtonLayout, EButtonWidth } from "./Button";
 
 import * as closeIcon from "../../../assets/img/inline_icons/close.svg";
-import * as styles from "./ButtonIcon.module.scss";
 
-type ButtonBaseProps = React.ComponentProps<typeof ButtonBase>;
+type TButtonProps = React.ComponentProps<typeof Button>;
 
-type TButtonIconProps = {
-  svgIcon: string;
-  alt?: TTranslatedString;
-} & PartialByKeys<ButtonBaseProps, "layout" | "size" | "width">;
-
-const ButtonIcon = React.forwardRef<HTMLButtonElement, TButtonIconProps>(
-  (
-    {
-      layout = EButtonLayout.OUTLINE,
-      size = EButtonSize.NORMAL,
-      width = EButtonWidth.NORMAL,
-      className,
-      svgIcon,
-      alt,
-      ...props
-    },
-    ref,
-  ) => (
-    <ButtonBase
-      ref={ref}
-      layout={layout}
-      size={size}
-      width={width}
-      className={cn(styles.buttonIcon, className)}
-      {...props}
-    >
-      <InlineIcon svgIcon={svgIcon} alt={alt} />
-    </ButtonBase>
-  ),
+const ButtonClose: React.FunctionComponent<OmitKeys<TButtonProps, "svgIcon">> = ({
+  iconProps = {},
+  ...props
+}) => (
+  <Button
+    layout={EButtonLayout.GHOST}
+    width={EButtonWidth.NO_PADDING}
+    svgIcon={closeIcon}
+    iconProps={{ alt: <FormattedMessage id="common.close" />, ...iconProps }}
+    {...props}
+  />
 );
 
-// TODO: Add story
-const ButtonIconPlaceholder: React.FunctionComponent = () => (
-  <div className={styles.buttonIconPlaceholder} />
-);
-
-// TODO: Add story
-const ButtonClose: React.FunctionComponent<OmitKeys<TButtonIconProps, "svgIcon">> = props => (
-  <ButtonIcon {...props} svgIcon={closeIcon} />
-);
-
-export { ButtonIcon, ButtonIconPlaceholder, ButtonClose };
+export { ButtonClose };

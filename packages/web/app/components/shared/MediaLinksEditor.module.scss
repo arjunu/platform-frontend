@@ -1,10 +1,14 @@
-.single-media-link-field-wrapper {
-  display: grid;
-  grid-template: 1fr / auto 1fr auto;
-  grid-gap: 1rem;
-  align-items: center;
+.field-table {
+  display: table;
+  width: 100%;
 }
 
-.single-media-link-field-long {
-  grid-column: 2 / span 2;
+.field-row {
+  display: table-row;
+}
+
+.field-cell {
+  display: table-cell;
+  padding-bottom: 1rem;
+  vertical-align: middle;
 }

@@ -6,7 +6,8 @@ import { externalRoutes } from "../../../config/externalRoutes";
 import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { TDataTestId } from "../../../types";
 import { getHostname } from "../../../utils/StringUtils";
-import { ButtonClose, ButtonReset } from "../buttons";
+import { ButtonReset } from "../buttons";
+import { ButtonClose } from "../buttons/ButtonIcon";
 import { ExternalLink } from "../links/ExternalLink";
 
 import * as infoIcon from "../../../assets/img/notifications/info.svg";

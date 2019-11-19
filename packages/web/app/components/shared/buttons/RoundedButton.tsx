@@ -1,7 +1,6 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { ButtonIcon } from "./ButtonIcon";
 import { ButtonReset } from "./ButtonReset";
 
 import * as styles from "./RoundedButton.module.scss";
@@ -25,8 +24,9 @@ const CircleButtonWarning: React.FunctionComponent<React.ComponentProps<typeof C
   </CircleButton>
 );
 
-const CircleButtonIcon: React.FunctionComponent<
-  React.ComponentProps<typeof ButtonIcon>
-> = props => <ButtonIcon className={cn(props.className, styles.buttonIcon)} {...props} />;
+// tslint:disable-next-line:no-any-on-steroid
+const CircleButtonIcon: React.FunctionComponent<any> = props => (
+  <CircleButton className={cn(props.className, styles.buttonIcon)} {...props} />
+);
 
 export { CircleButton, CircleButtonIcon, CircleButtonWarning };

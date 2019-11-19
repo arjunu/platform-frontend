@@ -19,7 +19,7 @@ import { appConnect } from "../../../../store";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import { FormField, FormFieldBoolean } from "../../../shared/forms";
 import { FormFieldLabel } from "../../../shared/forms/fields/FormFieldLabel";
-import { MediaLinksEditor } from "../../../shared/MediaLinksEditor.unsafe";
+import { MediaLinksEditor } from "../../../shared/MediaLinksEditor";
 import { SOCIAL_PROFILES_ICONS, SocialProfilesEditor } from "../../../shared/SocialProfilesEditor";
 import { Tooltip } from "../../../shared/tooltips";
 import { convert, removeEmptyKeyValueField, removeEmptyKeyValueFields } from "../../utils";

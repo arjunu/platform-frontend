@@ -1,12 +1,176 @@
-.icon {
-  height: 1em;
-  width: 1em;
+.button {
+  @include font-medium-roboto;
 
-  &--before {
-    margin-right: .8em;
+  @include media-breakpoint-up(sm) {
+    min-width: px-to-rem(140px);
   }
 
-  &--after {
-    margin-left: .8em;
+  color: $neu-charcoal-grey;
+
+  // TODO: Move to variable
+  font-weight: 500;
+
+  // TODO: Make it a generic
+  border-radius: 4px;
+
+  flex-shrink: 0;
+  padding: px-to-rem(9px) px-to-rem(20px) px-to-rem(8px);
+  text-transform: capitalize;
+
+  transition: background-color 200ms ease-out, box-shadow 200ms ease-out, color 200ms ease-out;
+
+  &:disabled {
+    color: $neu-gull-gray;
+  }
+
+  // Layout types (eg. primary, secondary)
+  // @note If we need to add new button design please add it as a separate layout type
+  //       even if it's small change to the existing one that can be done through prop (e.g theme prop)
+
+  &-primary {
+    $hover-box-shadow: rgba(20, 36, 49, .2);
+
+    background: $neu-neon-yellow;
+    border: px-to-rem(1px) solid $neu-neon-yellow;
+
+    &:hover {
+      &:not(:disabled) {
+        box-shadow: 0 5px 10px 0 $hover-box-shadow;
+      }
+    }
+
+    &:active,
+    &.is-active {
+      background: $neu-bitter-lemon;
+      border-color: $neu-bitter-lemon;
+    }
+
+    &:disabled {
+      background: $neu-light-blue-grey-two;
+      border-color: $neu-light-blue-grey-two;
+    }
+  }
+
+  &-outline {
+    border: px-to-rem(1px) solid $neu-light-blue-grey-two;
+
+    &:hover {
+      &:not(:disabled) {
+        border-color: $neu-bitter-lemon;
+      }
+    }
+
+    &:active,
+    &.is-active {
+      background: $neu-bitter-lemon;
+      border-color: $neu-bitter-lemon;
+    }
+
+    &:disabled {
+      background-color: $neu-light-blue-grey-two;
+      border-color: $neu-light-blue-grey-two;
+    }
+  }
+
+  &-secondary {
+    border: px-to-rem(1px) solid $neu-very-light-blue;
+    background: $neu-very-light-blue;
+
+    &:hover {
+      &:not(:disabled) {
+        background: transparent;
+        border-color: $neu-bitter-lemon;
+      }
+    }
+
+    &:active,
+    &.is-active {
+      border-color: $neu-bitter-lemon;
+      background: $neu-bitter-lemon;
+    }
+
+    &:disabled {
+      background: $neu-light-blue-grey-two;
+    }
+  }
+
+  &-ghost {
+    border: px-to-rem(1px) solid transparent;
+
+    &:hover {
+      &:not(:disabled) {
+        background: $neu-very-light-blue;
+      }
+    }
+
+    &:active,
+    &.is-active {
+      background: transparent;
+      color: $neu-bitter-lemon;
+    }
+  }
+
+  // widths
+  &:global(.block) {
+    width: 100%;
+  }
+
+  &:global(.no-padding) {
+    padding: 0;
+  }
+
+  // sizes
+  &-small {
+    @include font-small-roboto;
+
+    text-transform: uppercase;
+    min-width: px-to-rem(110px);
+    padding: px-to-rem(7px) px-to-rem(12px) px-to-rem(5px);
+  }
+
+  &-huge {
+    @include font-large-roboto;
+
+    min-width: px-to-rem(216px);
+    padding: px-to-rem(10px) px-to-rem(30px) px-to-rem(9px);
+  }
+
+  &--only-icon {
+    padding-left: px-to-rem(14px);
+    padding-right: px-to-rem(14px);
+    min-width: auto;
+
+    &.button-ghost {
+      &:hover {
+        &:not(:disabled) {
+          background: transparent;
+          border-color: transparent;
+          color: $neu-bitter-lemon;
+        }
+      }
+    }
+
+    &.button-small {
+      padding-left: px-to-rem(6px);
+      padding-right: px-to-rem(6px);
+    }
+
+    &.button-huge {
+      padding-left: px-to-rem(14px);
+      padding-right: px-to-rem(14px);
+    }
+  }
+
+  &-icon {
+    height: .2em;
+    width: .2em;
+
+    &--before {
+      margin-right: .8em;
+    }
+
+    &--after {
+      margin-left: .8em;
+    }
   }
 }

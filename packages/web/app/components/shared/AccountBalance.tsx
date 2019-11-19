@@ -3,6 +3,7 @@ import * as React from "react";
 import { TDataTestId, TTranslatedString } from "../../types";
 import { makeTid } from "../../utils/tidUtils";
 import { Button, EButtonLayout, EIconPosition } from "./buttons";
+import { EButtonSize } from "./buttons/Button";
 import { IMoneySuiteWidgetProps, MoneySuiteWidget } from "./MoneySuiteWidget/MoneySuiteWidget";
 
 import * as arrowRightIcon from "../../assets/img/inline_icons/arrow_right.svg";
@@ -44,6 +45,7 @@ export const AccountBalance: React.FunctionComponent<
           <Button
             key={i}
             layout={EButtonLayout.GHOST}
+            size={EButtonSize.SMALL}
             className={styles.button}
             iconPosition={EIconPosition.ICON_AFTER}
             svgIcon={arrowRightIcon}

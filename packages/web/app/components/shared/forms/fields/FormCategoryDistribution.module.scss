@@ -1,13 +1,16 @@
-.field-array {
-  display: grid;
-  grid-gap: 1.5rem;
+.field-table {
+  display: table;
+  margin-bottom: 1.5rem;
+  width: 100%;
 }
 
-.field-wrapper {
-  display: grid;
-  grid-template: 1fr / auto 1fr auto;
-  grid-gap: 1rem;
-  align-items: center;
+.field-row {
+  display: table-row;
+}
+
+.field-cell {
+  display: table-cell;
+  padding-bottom: 1rem;
 }
 
 .field {
@@ -20,7 +23,7 @@
 
 @media (min-width: 730px) {
   .field-array {
-    grid-gap: 1rem;
+    margin-bottom: 1rem;
   }
 
   .field {

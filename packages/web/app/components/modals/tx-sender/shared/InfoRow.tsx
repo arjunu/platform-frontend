@@ -1,4 +1,3 @@
-import * as cn from "classnames";
 import { isString } from "lodash";
 import * as React from "react";
 import { ListGroupItem } from "reactstrap";
@@ -47,7 +46,7 @@ export const InfoRow: React.FunctionComponent<
       <span data-test-id={dataTestId}>{value}</span>
       {allowClipboardCopy && (
         <CopyToClipboardButton
-          className={cn(styles.copyToClipboard, "ml-2")}
+          className="ml-2"
           value={selectCopyValue(value, clipboardCopyValue)}
         />
       )}
