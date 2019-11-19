@@ -16,7 +16,7 @@ export const PLATFORM_ZERO_FEE = 0;
 /**
  * We assume common digits for all currencies on our platform.
  */
-export const MONEY_DECIMALS = 18;
+export const ETH_DECIMALS = 18;
 
 export const DEFAULT_DECIMAL_PLACES = 4;
 
@@ -38,7 +38,7 @@ export enum EJwtPermissions {
 /**
  * Useful for money related calculations
  */
-export const Q18 = new BigNumber("10").pow(MONEY_DECIMALS);
+export const Q18 = new BigNumber("10").pow(ETH_DECIMALS);
 
 /**
  * Represent zero address on Ethereum - non existing address used by ERC20 to mark minting and burning
@@ -92,6 +92,7 @@ export const BROWSER_WALLET_RECONNECT_INTERVAL = 1000;
 export const IPFS_PROTOCOL = "ipfs";
 
 export const NOMINEE_REQUESTS_WATCHER_DELAY = 10000;
+export const NOMINEE_RECALCULATE_TASKS_DELAY = 10000;
 export const NOMINEE_BANK_ACCOUNT_WATCHER_DELAY = 1000 * 60 * 5;
 export const PAYOUT_POLLING_DELAY = 1000;
 export const NEXT_ETO_STATE_POLLING_DELAY = 5000;

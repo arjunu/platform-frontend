@@ -57,7 +57,7 @@ export const WalletSelector = compose<
   createErrorBoundary(ErrorBoundaryLayout),
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: s => ({
-      isAuthorized: selectIsAuthorized(s.auth),
+      isAuthorized: selectIsAuthorized(s),
       isMessageSigning: selectIsMessageSigning(s),
       rootPath: selectRootPath(s.router),
       isLoginRoute: selectIsLoginRoute(s.router),

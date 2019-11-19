@@ -4,22 +4,24 @@ import { branch, compose, renderComponent, setDisplayName } from "recompose";
 
 import { IEtoDocument } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { actions } from "../../../modules/actions";
+import { selectIsUserFullyVerified } from "../../../modules/auth/selectors";
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { selectPendingDownloads } from "../../../modules/immutable-file/selectors";
 import {
+  selectActiveNomineeEto,
   selectNomineeEtoTemplatesArray,
-  selectNomineeEtoWithCompanyAndContract,
-  selectNomineeStateIsLoading,
+  selectNomineeFlowHasError,
 } from "../../../modules/nominee-flow/selectors";
-import { selectIsVerificationFullyDone } from "../../../modules/selectors";
 import { appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
 import { withContainer } from "../../../utils/withContainer.unsafe";
 import { withMetaTags } from "../../../utils/withMetaTags.unsafe";
 import { appRoutes } from "../../appRoutes";
 import { Layout } from "../../layouts/Layout";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
-import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
+import {
+  ErrorBoundaryComponent,
+  ErrorBoundaryLayout,
+} from "../../shared/errorBoundary/ErrorBoundaryLayout";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { NomineeDocumentsLayout } from "./NomineeDocumentsLayout";
 
@@ -29,9 +31,9 @@ type TStateProps = {
 };
 
 type TGuardProps = {
-  isLoading: boolean;
-  verificationIsComplete: boolean;
+  isUserFullyVerified: boolean;
   nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
+  hasError: boolean;
 };
 
 interface IDispatchProps {
@@ -50,23 +52,18 @@ const NomineeDocuments = compose<TComponentProps, {}>(
   setDisplayName("Documents"),
   appConnect<TGuardProps>({
     stateToProps: state => ({
-      isLoading: selectNomineeStateIsLoading(state),
-      nomineeEto: selectNomineeEtoWithCompanyAndContract(state),
-      verificationIsComplete: selectIsVerificationFullyDone(state),
+      nomineeEto: selectActiveNomineeEto(state),
+      isUserFullyVerified: selectIsUserFullyVerified(state),
+      hasError: selectNomineeFlowHasError(state),
     }),
   }),
+  branch<TGuardProps>(props => props.hasError, renderComponent(ErrorBoundaryComponent)),
   branch<TGuardProps>(
-    props => !props.verificationIsComplete,
+    props => !props.isUserFullyVerified,
     renderComponent(() => <Redirect to={appRoutes.dashboard} />),
   ),
-  onEnterAction({
-    actionCreator: dispatch => dispatch(actions.nomineeFlow.loadNomineeTaskData()),
-  }),
   withContainer(Layout),
-  branch<TGuardProps>(
-    props => props.isLoading || !props.nomineeEto,
-    renderComponent(LoadingIndicator),
-  ),
+  branch<TGuardProps>(props => !props.nomineeEto, renderComponent(LoadingIndicator)),
   appConnect<TStateProps, IDispatchProps>({
     stateToProps: state => ({
       etoTemplates: selectNomineeEtoTemplatesArray(state),

@@ -51,7 +51,7 @@ describe("KYC Personal flow with ID Now", () => {
     });
   });
 
-  it("should go through ID Now for US investor", () => {
+  it.skip("should go through ID Now for US investor", () => {
     createAndLoginNewUser({ type: "investor" }).then(() => {
       initiateIDNowKyc(true);
 

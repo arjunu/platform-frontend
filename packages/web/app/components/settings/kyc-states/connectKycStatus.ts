@@ -60,7 +60,7 @@ const connectKycStatusWidget = () => (
             requestStatus: selectKycRequestStatus(state),
             requestOutsourcedStatus: selectKycRequestOutsourcedStatus(state.kyc),
             externalKycUrl: selectExternalKycUrl(state.kyc),
-            isLoading: selectKycLoading(state.kyc),
+            isLoading: selectKycLoading(state),
             isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
             isRestrictedCountryInvestor: selectIsRestrictedInvestor(state),
             error: selectWidgetError(state.kyc),

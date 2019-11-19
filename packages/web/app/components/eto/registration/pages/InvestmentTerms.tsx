@@ -96,7 +96,7 @@ const CalculatorField: React.FunctionComponent<ICalculatorField> = ({
     suffix={selectUnits(valueType)}
     name={name}
     value={formatNumber({
-      value: value,
+      value,
       inputFormat: ENumberInputFormat.FLOAT,
       outputFormat: outputFormat,
       decimalPlaces: selectDecimalPlaces(valueType, outputFormat),

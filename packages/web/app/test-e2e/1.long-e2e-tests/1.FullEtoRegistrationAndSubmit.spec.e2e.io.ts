@@ -56,7 +56,7 @@ describe("Eto Forms", () => {
       fillAndAssertFull("eto-progress-widget-key-individuals", etoKeyIndividualsFormSubmit);
     });
 
-    it("will fill and submit key individuals", () => {
+    it.skip("will fill and submit key individuals", () => {
       fillAndAssertFull("eto-progress-widget-key-individuals", () => {
         cy.get(tid("key-individuals-group-button-team")).click();
         cy.get(tid("key-individuals-group-button-advisors")).awaitedClick();

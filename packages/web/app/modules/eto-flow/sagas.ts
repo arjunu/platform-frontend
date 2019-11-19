@@ -17,7 +17,7 @@ import { actions, TActionFromCreator } from "../actions";
 import { ensurePermissionsArePresentAndRunEffect } from "../auth/jwt/sagas";
 import { InvalidETOStateError } from "../eto/errors";
 import { loadEtoContract } from "../eto/sagas";
-import { selectNomineeEtoWithCompanyAndContract } from "../nominee-flow/selectors";
+import { selectActiveNomineeEto } from "../nominee-flow/selectors";
 import { neuCall, neuTakeEvery, neuTakeLatest } from "../sagasUtils";
 import { etoFlowActions } from "./actions";
 import {
@@ -278,7 +278,7 @@ export function* publishEtoData({
 export function* loadIssuerStep(): Iterator<any> {
   yield neuCall(loadIssuerEto);
 
-  const issuerEto: ReturnType<typeof selectNomineeEtoWithCompanyAndContract> = yield select(
+  const issuerEto: ReturnType<typeof selectActiveNomineeEto> = yield select(
     selectIssuerEtoWithCompanyAndContract,
   );
 

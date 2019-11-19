@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
-import { Message } from "../../modals/Message";
+import { Message } from "../../modals/message/Message";
 import { Button, EButtonLayout } from "../../shared/buttons";
 
 import * as tosImg from "../../../assets/img/tos.jpg";

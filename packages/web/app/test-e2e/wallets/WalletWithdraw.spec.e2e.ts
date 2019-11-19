@@ -19,7 +19,7 @@ import {
   assertWithdrawButtonIsDisabled,
   assertWithdrawFlow,
   checkTransactionWithRPCNode,
-  fillWithdrawForm,
+  continueWithdrawFlow,
 } from "./utils";
 
 export const SimpleExchangeContract: any = require("../../../../../git_modules/platform-contracts-artifacts/localhost/contracts/SimpleExchange.json");
@@ -38,14 +38,14 @@ describe("Wallet Withdraw", () => {
 
         goToWallet();
 
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.will-empty-wallet")).should(
           "not.exist",
         );
 
         // Should show warning for whole possible balance used
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance")).click();
+        cy.get(tid("modals.tx-sender.transfer-flow.transfer-component.whole-balance")).click();
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.value"))
           .invoke("val")
@@ -123,7 +123,7 @@ describe("Wallet Withdraw", () => {
         const testValue = "5";
 
         goToWallet();
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.not-accepting-ether")).should(
           "exist",
@@ -169,7 +169,7 @@ describe("Wallet Withdraw", () => {
 
         goToWallet();
 
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.new-address")).should(
           "not.exist",
@@ -178,7 +178,7 @@ describe("Wallet Withdraw", () => {
           "exist",
         );
 
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance")).click();
+        cy.get(tid("modals.tx-sender.transfer-flow.transfer-component.whole-balance")).click();
 
         fillForm(
           {
@@ -213,7 +213,7 @@ describe("Wallet Withdraw", () => {
 
         goToWallet();
 
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         /* Newly created wallet should not have any transactions so we have to accept warnings */
         assertWithdrawButtonIsDisabled();
@@ -253,7 +253,7 @@ describe("Wallet Withdraw", () => {
           .toLowerCase()}0000000000000000000000000000000000000000000000004563918244f40000`;
 
         goToWallet();
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         /* Newly created wallet should not have any transactions so we have to accept warnings */
         assertWithdrawButtonIsDisabled();
@@ -278,7 +278,7 @@ describe("Wallet Withdraw", () => {
         assertWithdrawFlow(testAddress, testValue, expectedInput);
 
         goToWallet();
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
         cy.get(
           tid("modals.tx-sender.withdraw-flow.withdraw-component.new-address-with-balance"),
         ).should("exist");
@@ -298,7 +298,7 @@ describe("Wallet Withdraw", () => {
           .toLowerCase()}0000000000000000000000000000000000000000000000004563918244f40000`;
 
         goToWallet();
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.new-address")).should(
           "not.exist",
@@ -329,7 +329,7 @@ describe("Wallet Withdraw", () => {
           .toLowerCase()}0000000000000000000000000000000000000000000000004563918244f40000`;
 
         goToWallet();
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         /* Address is smart contract so we need to accept warnings */
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.smart-contract")).should(
@@ -367,7 +367,7 @@ describe("Wallet Withdraw", () => {
 
         goToWallet();
 
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         /* Address has transaction so accept should not exist */
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.accept-warnings")).should(
@@ -390,9 +390,9 @@ describe("Wallet Withdraw", () => {
         sendEth("DEPLOYER", address, Q18.mul(correctValue));
 
         goToWallet();
-        fillWithdrawForm(testAddress, "5");
+        continueWithdrawFlow(testAddress, "5");
 
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.whole-balance")).click();
+        cy.get(tid("modals.tx-sender.transfer-flow.transfer-component.whole-balance")).click();
 
         fillForm(
           {
@@ -417,7 +417,7 @@ describe("Wallet Withdraw", () => {
         confirmAccessModal(DEFAULT_PASSWORD);
 
         cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        cy.get(tid("modals.tx-sender.withdraw-flow.success")).should("exist");
+        cy.get(tid("modals.shared.tx-success.modal")).should("exist");
 
         cy.get(tid("modals.tx-sender.withdraw-flow.tx-hash")).then(txHashObject => {
           const txHash = txHashObject.attr("data-test-hash")!;
@@ -447,7 +447,7 @@ describe("Wallet Withdraw", () => {
         goToWalletWithParams({
           disableNotAcceptingEtherCheck: true,
         });
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
           .should("be.enabled")
@@ -477,7 +477,7 @@ describe("Wallet Withdraw", () => {
         goToWalletWithParams({
           forceLowGas: true,
         });
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         fillForm(
           {
@@ -516,7 +516,7 @@ describe("Wallet Withdraw", () => {
         goToWalletWithParams({
           forceStandardGas: true,
         });
-        fillWithdrawForm(testAddress, testValue);
+        continueWithdrawFlow(testAddress, testValue);
 
         fillForm(
           {

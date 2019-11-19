@@ -31,6 +31,7 @@ interface IProps {
   defaultValue?: React.ReactChild;
   roundingMode?: ERoundingMode;
   className?: string;
+  decimals?: number;
 }
 
 interface IRangeProps {
@@ -101,6 +102,7 @@ const FormatShortNumber: React.FunctionComponent<IProps> = ({
   outputFormat = EAbbreviatedNumberOutputFormat.LONG,
   className,
   divider,
+  decimals,
 }) => {
   if (!value) {
     return (
@@ -109,9 +111,8 @@ const FormatShortNumber: React.FunctionComponent<IProps> = ({
       </span>
     );
   }
-
   const number = parseFloat(
-    toFixedPrecision({ value, roundingMode, inputFormat, decimalPlaces, outputFormat }),
+    toFixedPrecision({ value, roundingMode, inputFormat, decimalPlaces, outputFormat, decimals }),
   );
   const range = getRange(number, divider);
   if (range) {

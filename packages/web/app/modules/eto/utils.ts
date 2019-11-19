@@ -12,8 +12,8 @@ import { isPastInvestment } from "../investor-portfolio/utils";
 import {
   EETOStateOnChain,
   EEtoSubState,
-  IEtoContractData,
   IEtoTotalInvestment,
+  TEtoContractData,
   TEtoStartOfStates,
   TEtoWithCompanyAndContractReadonly,
 } from "./types";
@@ -99,7 +99,7 @@ export const isUserAssociatedWithEto = (
 
 type TCalculateSubStateOptions = {
   eto: TEtoSpecsData;
-  contract: IEtoContractData | undefined;
+  contract: TEtoContractData | undefined;
   isEligibleToPreEto: boolean;
 };
 

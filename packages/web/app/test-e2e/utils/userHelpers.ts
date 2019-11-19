@@ -127,18 +127,28 @@ export const loginFixtureAccount = (
     onlyLogin?: boolean;
     signTosAgreement?: boolean;
     permissions?: string[];
+    customDerivationPath?: string;
   },
 ) => {
   const fixture = accountFixtureByName(accountFixtureName);
-  let hdPath = fixture.definition.derivationPath;
-  if (hdPath) {
-    // cut last element which corresponds to account, will be added by light wallet
-    hdPath = hdPath.substr(0, hdPath.lastIndexOf("/"));
+  let hdPath: string;
+
+  if (params.customDerivationPath) {
+    hdPath = params.customDerivationPath;
+  } else {
+    hdPath = fixture.definition.derivationPath;
+    if (hdPath) {
+      hdPath = fixture.definition.derivationPath.substr(
+        0,
+        fixture.definition.derivationPath.lastIndexOf("/"),
+      );
+    }
   }
+
   return createAndLoginNewUser({
     type: fixture.type,
     seed: fixture.definition.seed,
-    hdPath: hdPath,
+    hdPath,
     ...params,
   });
 };

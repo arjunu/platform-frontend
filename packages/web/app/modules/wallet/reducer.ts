@@ -26,6 +26,8 @@ export interface IWalletStateData {
   etherTokenICBMLockedWallet: ILockedWallet;
   etherTokenUpgradeTarget?: string;
   euroTokenUpgradeTarget?: string;
+  // TODO: Remove once
+  neumarkAddress: string;
 }
 
 const walletInitialState: IWalletState = {

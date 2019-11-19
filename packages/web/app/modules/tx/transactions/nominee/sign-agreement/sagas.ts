@@ -15,7 +15,7 @@ import { selectSignedInvestmentAgreementHash } from "../../../../eto/selectors";
 import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../../../eto/types";
 import { isOnChain } from "../../../../eto/utils";
 import { selectStandardGasPriceWithOverHead } from "../../../../gas/selectors";
-import { selectNomineeEtoWithCompanyAndContract } from "../../../../nominee-flow/selectors";
+import { selectActiveNomineeEto } from "../../../../nominee-flow/selectors";
 import { neuCall, neuTakeLatest } from "../../../../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../../../../web3/selectors";
 import { txSendSaga } from "../../../sender/sagas";
@@ -66,9 +66,7 @@ function* generateNomineeSignAgreementTx(
 ): Iterator<any> {
   const agreementType =
     transactionType === ETxSenderType.NOMINEE_RAAA_SIGN ? EAgreementType.RAAA : EAgreementType.THA;
-  const nomineeEto: TEtoWithCompanyAndContractReadonly = yield select(
-    selectNomineeEtoWithCompanyAndContract,
-  );
+  const nomineeEto: TEtoWithCompanyAndContractReadonly = yield select(selectActiveNomineeEto);
 
   const { contract, currentAgreementHash }: IAgreementContractAndHash = yield neuCall(
     getAgreementContractAndHash,
@@ -128,7 +126,7 @@ function* generateSignNomineeInvestmentAgreementTx({
   web3Manager,
 }: TGlobalDependencies): Iterator<any> {
   const nomineeEto: TEtoWithCompanyAndContractReadonly = yield nonNullable(
-    select(selectNomineeEtoWithCompanyAndContract),
+    select(selectActiveNomineeEto),
   );
 
   // Only allowed in `Signing` on chain state
@@ -189,7 +187,7 @@ function* startNomineeTHASignSaga({ logger }: TGlobalDependencies): Iterator<any
   } catch (e) {
     logger.info("THA sign cancelled", e);
   } finally {
-    yield put(actions.nomineeFlow.loadNomineeTaskData());
+    yield put(actions.nomineeFlow.getNomineeDashboardData());
   }
 }
 
@@ -203,7 +201,7 @@ function* startNomineeRAAASignSaga({ logger }: TGlobalDependencies): Iterator<an
   } catch (e) {
     logger.info("RAAA sign cancelled", e);
   } finally {
-    yield put(actions.nomineeFlow.loadNomineeTaskData());
+    yield put(actions.nomineeFlow.getNomineeDashboardData());
   }
 }
 
@@ -217,7 +215,7 @@ function* startNomineeISHASignSaga({ logger }: TGlobalDependencies): Iterator<an
   } catch (e) {
     logger.info("ISHA sign cancelled", e);
   } finally {
-    yield put(actions.nomineeFlow.loadNomineeTaskData());
+    yield put(actions.nomineeFlow.getNomineeDashboardData());
   }
 }
 

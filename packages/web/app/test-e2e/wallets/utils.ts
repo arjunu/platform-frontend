@@ -71,14 +71,7 @@ export const checkTransactionWithRPCNode = (
     });
   });
 };
-
-export const fillWithdrawForm = (testAddress: string, testValue: string) => {
-  cy.get(tid("account-address.your.ether-address.from-div"))
-    .then(address => address.text())
-    .as("accountAddress");
-
-  cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
-  /*Test Address field validation*/
+export const typeWithdrawForm = (testAddress: string, testValue: string) => {
   typeWrongAddress();
   cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.to-address"))
     .type(testAddress)
@@ -89,6 +82,16 @@ export const fillWithdrawForm = (testAddress: string, testValue: string) => {
   cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.value"))
     .type(testValue.toString())
     .blur();
+};
+
+export const continueWithdrawFlow = (testAddress: string, testValue: string) => {
+  cy.get(tid("account-address.your.ether-address.from-div"))
+    .then(address => address.text())
+    .as("accountAddress");
+
+  cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
+
+  typeWithdrawForm(testAddress, testValue);
 };
 
 export const assertWithdrawFlow = (
@@ -112,7 +115,7 @@ export const assertWithdrawFlow = (
   confirmAccessModal(DEFAULT_PASSWORD);
 
   cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-  cy.get(tid("modals.tx-sender.withdraw-flow.success")).should("exist");
+  cy.get(tid("modals.shared.tx-success.modal")).should("exist");
 
   cy.get(tid("modals.tx-sender.withdraw-flow.tx-hash")).then(txHashObject => {
     const txHash = txHashObject.attr("data-test-hash")!;

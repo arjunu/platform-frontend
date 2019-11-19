@@ -19,7 +19,7 @@ export const selectNotifications = (state: IAppState): ReadonlyArray<INotificati
   state.notifications.notifications;
 
 export const selectIsActionRequiredSettings = (state: IAppState): boolean => {
-  if (selectKycLoading(state.kyc)) {
+  if (selectKycLoading(state)) {
     return false;
   }
   return (

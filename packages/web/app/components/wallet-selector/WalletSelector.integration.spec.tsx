@@ -282,6 +282,9 @@ describe.skip("Wallet selector integration", () => {
       initialRoute: appRoutes.register,
       initialState: {
         init: {
+          appInit: {
+            done: true,
+          },
           smartcontractsInit: {
             done: true,
           },

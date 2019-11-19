@@ -5,7 +5,7 @@ import { actions } from "../../../../modules/actions";
 import { appConnect } from "../../../../store";
 import { ButtonArrowRight } from "../../../shared/buttons";
 import { Confetti, EConfettiTheme } from "../../../shared/Confetti";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 
 import * as bankIcon from "../../../../assets/img/bank-transfer/bank.svg";
 

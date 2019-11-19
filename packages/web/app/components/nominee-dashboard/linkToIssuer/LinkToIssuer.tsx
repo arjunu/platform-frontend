@@ -1,13 +1,14 @@
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
-import { branch, compose, renderComponent, renderNothing, withProps } from "recompose";
+import { branch, compose, renderComponent, renderNothing } from "recompose";
 
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import {
-  selectNomineeEtoWithCompanyAndContract,
+  selectActiveNomineeEto,
+  selectLinkToIssuerNextState,
+  selectNomineeRequestError,
   selectNomineeRequests,
-  selectNomineeStateError,
 } from "../../../modules/nominee-flow/selectors";
 import {
   ENomineeRequestError,
@@ -21,7 +22,6 @@ import { withContainer } from "../../../utils/withContainer.unsafe";
 import { NomineeLinkRequestForm } from "./LinkToIssuerForm";
 import { NomineeRequestPending } from "./NomineeRequestPending";
 import { ENomineeRequestComponentState } from "./types";
-import { getNomineeRequestComponentState } from "./utils";
 
 import * as styles from "./LinkToIssuer.module.scss";
 
@@ -29,6 +29,7 @@ interface IStateProps {
   nomineeRequest: INomineeRequest | undefined;
   nomineeRequestError: ENomineeRequestError;
   nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
+  nextState: ENomineeRequestComponentState;
 }
 
 interface IRepeatRequestProps {
@@ -129,16 +130,12 @@ export const NomineeRequestContainer: React.FunctionComponent = ({ children }) =
 export const LinkToIssuer = compose<IStateProps, {}>(
   appConnect<IStateProps>({
     stateToProps: state => ({
-      nomineeEto: selectNomineeEtoWithCompanyAndContract(state),
+      nomineeEto: selectActiveNomineeEto(state),
       nomineeRequest: takeLatestNomineeRequest(selectNomineeRequests(state)), //only take the latest one for now
-      nomineeRequestError: selectNomineeStateError(state),
+      nomineeRequestError: selectNomineeRequestError(state),
+      nextState: selectLinkToIssuerNextState(state),
     }),
   }),
-  withProps<{ nextState: ENomineeRequestComponentState }, IStateProps>(
-    ({ nomineeRequest, nomineeRequestError, nomineeEto }) => ({
-      nextState: getNomineeRequestComponentState(nomineeRequest, nomineeRequestError, nomineeEto),
-    }),
-  ),
   branch<IBranchProps>(
     ({ nextState }) => nextState === ENomineeRequestComponentState.SUCCESS,
     renderNothing,

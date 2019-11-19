@@ -1,7 +1,9 @@
 import { createSelector } from "reselect";
 
 import { IAppState } from "../../store";
+import { DeepReadonly } from "../../types";
 import { selectBankAccount, selectClaims } from "../kyc/selectors";
+import { TBankAccount, TClaims } from "../kyc/types";
 import { EBankTransferFlowState } from "./reducer";
 
 export const selectBankTransferFlow = (state: IAppState) => state.bankTransferFLow;
@@ -36,6 +38,8 @@ export const selectBankRedeemMinAmount = createSelector(
   bankTransferFlow => (bankTransferFlow.redeem ? bankTransferFlow.redeem.minEuroUlps : "0"),
 );
 
+export const selectInitialAmount = (state: IAppState) => state.txUserFlowRedeem.initialValue;
+
 export const selectBankFeeUlps = createSelector(
   selectBankTransferFlow,
   bankTransferFlow => bankTransferFlow.bankFeeUlps || "0",
@@ -53,7 +57,12 @@ export const selectRedeemFeeUlps = createSelector(
  * 2. User has bank account in API
  * 3. User has bank account in contract (IdentityRegistry)
  */
-export const selectIsBankAccountVerified = createSelector(
+export const selectIsBankAccountVerified = createSelector<
+  IAppState,
+  DeepReadonly<TBankAccount> | undefined,
+  TClaims | undefined,
+  boolean
+>(
   selectBankAccount,
   selectClaims,
   (bankAccount, claims) => {

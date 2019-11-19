@@ -2,7 +2,7 @@ import * as React from "react";
 import { compose } from "recompose";
 
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
-import { selectNomineeEtoWithCompanyAndContract } from "../../../modules/nominee-flow/selectors";
+import { selectActiveNomineeEto } from "../../../modules/nominee-flow/selectors";
 import { appConnect } from "../../../store";
 import { NomineeEtoOverviewThumbnail } from "../../eto/overview/EtoOverviewThumbnail/EtoOverviewThumbnail";
 
@@ -28,7 +28,7 @@ const LinkedNomineeDashboardContainerLayout: React.FunctionComponent<
 export const LinkedNomineeDashboardContainer = compose<ILinkedNomineeComponentProps, {}>(
   appConnect<ILinkedNomineeStateProps, {}, {}>({
     stateToProps: state => ({
-      eto: selectNomineeEtoWithCompanyAndContract(state),
+      eto: selectActiveNomineeEto(state),
     }),
   }),
 )(LinkedNomineeDashboardContainerLayout);

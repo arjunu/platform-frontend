@@ -23,7 +23,7 @@ import { SwitchConnected } from "../../../utils/connectedRouting";
 import { withMetaTags } from "../../../utils/withMetaTags.unsafe";
 import { Container, EColumnSpan, EContainerType } from "../../layouts/Container";
 import { WidgetGrid } from "../../layouts/WidgetGrid";
-import { PersonProfileModal } from "../../modals/PersonProfileModal";
+import { PersonProfileModal } from "../../modals/person-profile-modal/PersonProfileModal";
 import { FieldSchemaProvider } from "../../shared/Field";
 import { ILink, MediaLinksWidget } from "../../shared/MediaLinksWidget";
 import { Panel } from "../../shared/Panel";

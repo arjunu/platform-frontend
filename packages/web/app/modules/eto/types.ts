@@ -23,22 +23,22 @@ export enum EETOStateOnChain {
 
 export type TEtoStartOfStates = Record<EETOStateOnChain, Date | undefined>;
 
-export interface IEtoContractData {
+export type TEtoContractData = {
   timedState: EETOStateOnChain;
   totalInvestment: IEtoTotalInvestment;
   startOfStates: TEtoStartOfStates;
   equityTokenAddress: string;
   etoTermsAddress: string;
-}
+};
 
-export type TEtoWithCompanyAndContractReadonly = DeepReadonly<
-  TEtoSpecsData & {
-    // contract is undefined when ETO is not on blockchain
-    contract?: IEtoContractData;
-    company: TCompanyEtoData;
-    subState: EEtoSubState | undefined;
-  }
->;
+export type TEtoWithCompanyAndContract = TEtoSpecsData & {
+  // contract is undefined when ETO is not on blockchain
+  contract: TEtoContractData | undefined;
+  company: TCompanyEtoData;
+  subState: EEtoSubState | undefined;
+};
+
+export type TEtoWithCompanyAndContractReadonly = DeepReadonly<TEtoWithCompanyAndContract>;
 
 export type TEtoWithCompanyAndContractTypeChecked = Overwrite<
   TEtoWithCompanyAndContractReadonly,
@@ -51,6 +51,7 @@ export interface IEtoTokenData {
   totalCompanyShares: string;
   companyValuationEurUlps: string;
   tokenPrice: string;
+  canTransferToken: boolean;
 }
 
 export interface IEtoTokenGeneralDiscounts {

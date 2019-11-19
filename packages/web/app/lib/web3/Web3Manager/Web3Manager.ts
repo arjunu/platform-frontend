@@ -105,6 +105,7 @@ export class Web3Manager extends EventEmitter {
 
   public async estimateGasWithOverhead(txData: Partial<Web3.TxData>): Promise<string> {
     const gas = await this.estimateGas(txData);
+    // There is Smart Contract Attack Vector that extreme high gas amounts
     if (gas < DEFAULT_LOWER_GAS_LIMIT || gas > DEFAULT_UPPER_GAS_LIMIT) {
       this.logger.error(
         new Error(

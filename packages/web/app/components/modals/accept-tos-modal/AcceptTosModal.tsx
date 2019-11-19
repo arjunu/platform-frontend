@@ -7,7 +7,7 @@ import { selectIsAgreementAccepted } from "../../../modules/auth/selectors";
 import { appConnect } from "../../../store";
 import { Button, EButtonLayout } from "../../shared/buttons/index";
 import { ExternalLink } from "../../shared/links/ExternalLink";
-import { Message } from "../Message";
+import { Message } from "../message/Message";
 import { Modal } from "../Modal";
 
 import * as tosImg from "../../../assets/img/tos.jpg";

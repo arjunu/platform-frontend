@@ -1,4 +1,4 @@
-import { MONEY_DECIMALS } from "../../config/constants";
+import { ETH_DECIMALS } from "../../config/constants";
 import { TBigNumberVariants } from "../../lib/web3/types";
 import { formatMoney } from "../../utils/MoneyUtils";
 import { ECurrency, ENumberInputFormat, ERoundingMode } from "./formatters/utils";
@@ -24,7 +24,7 @@ const selectDecimalPlaces = (currency: ECurrency, isPrice?: boolean): number => 
 function getFormatDecimals(format: ENumberInputFormat): number {
   switch (format) {
     case ENumberInputFormat.ULPS:
-      return MONEY_DECIMALS;
+      return ETH_DECIMALS;
     case ENumberInputFormat.FLOAT:
       return 0;
     default:

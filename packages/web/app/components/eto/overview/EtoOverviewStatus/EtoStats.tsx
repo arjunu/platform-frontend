@@ -42,102 +42,106 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
   showPublicDiscount,
   computedMaxCapPercent,
   computedMinCapPercent,
-}) => (
-  <div className={cn(styles.etoStatsWrapper, styles.groupWrapper)}>
-    <div className={styles.group}>
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview-status.key-investment-terms" />
-        {":"}
-      </span>
+}) => {
+  const shouldShowComputedCap = eto.newSharesToIssue && eto.minimumNewSharesToIssue;
+
+  return (
+    <div className={cn(styles.etoStatsWrapper, styles.groupWrapper)}>
+      <div className={styles.group}>
+        <span className={styles.label}>
+          <FormattedMessage id="shared-component.eto-overview-status.key-investment-terms" />
+          {":"}
+        </span>
+      </div>
+      <div className={styles.group}>
+        <span className={styles.label}>
+          <FormattedMessage id="shared-component.eto-overview-status.pre-money-valuation" />
+        </span>
+        <span className={styles.value}>
+          <Money
+            className={styles.value}
+            value={eto.preMoneyValuationEur ? eto.preMoneyValuationEur.toString() : undefined}
+            inputFormat={ENumberInputFormat.FLOAT}
+            valueType={ECurrency.EUR}
+            outputFormat={ENumberOutputFormat.INTEGER}
+            defaultValue={<ToBeAnnouncedTooltip />}
+            data-test-id="eto-overview.stats.pre-money-valuation"
+          />
+        </span>
+      </div>
+      <div className={styles.group}>
+        <span className={styles.label}>
+          <FormattedMessage id="shared-component.eto-overview-status.target-investment-amount" />
+        </span>
+        <span className={styles.value}>
+          <Money
+            value={
+              eto.investmentCalculatedValues && eto.investmentCalculatedValues.maxInvestmentAmount
+                ? eto.investmentCalculatedValues.maxInvestmentAmount.toString()
+                : undefined
+            }
+            inputFormat={ENumberInputFormat.FLOAT}
+            valueType={ECurrency.EUR}
+            outputFormat={ENumberOutputFormat.INTEGER}
+            defaultValue={<ToBeAnnounced />}
+            data-test-id="eto-overview.stats.target-investment-amount"
+          />
+        </span>
+      </div>
+      <div className={styles.group}>
+        <span className={styles.label}>
+          <FormattedMessage id="shared-component.eto-overview-status.new-shares-generated" />
+        </span>
+        <span className={styles.value}>
+          <MoneyRange
+            valueFrom={shouldShowComputedCap ? computedMinCapPercent.toString() : ""}
+            valueUpto={shouldShowComputedCap ? computedMaxCapPercent.toString() : ""}
+            inputFormat={ENumberInputFormat.FLOAT}
+            outputFormat={ENumberOutputFormat.FULL}
+            valueType={ENumberFormat.PERCENTAGE}
+            defaultValue={<ToBeAnnounced />}
+            data-test-id="eto-overview.stats.new-shares-generated"
+          />
+        </span>
+      </div>
+      <div className={styles.group}>
+        <span className={styles.label}>
+          <FormattedMessage id="shared-component.eto-overview-status.equity-token-price" />
+        </span>
+        <span className={styles.value}>
+          <Money
+            value={tokenPrice ? tokenPrice.toString() : undefined}
+            inputFormat={ENumberInputFormat.FLOAT}
+            valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
+            outputFormat={ENumberOutputFormat.FULL}
+            defaultValue={<ToBeAnnounced />}
+            data-test-id="eto-overview.stats.equity-token-price"
+          />
+          {showWhitelistDiscount && (
+            <span data-test-id="eto-overview.stats.equity-token-price.public-discount">
+              {" ("}
+              <FormattedMessage
+                id="shared-component.eto-overview-status.included-discount-percentage"
+                values={{ percentage: eto.whitelistDiscountFraction! * 100 }}
+              />
+              {")"}
+            </span>
+          )}
+          {showPublicDiscount && (
+            <span data-test-id="eto-overview.stats.equity-token-price-whitelist-discount">
+              {" ("}
+              <FormattedMessage
+                id="shared-component.eto-overview-status.included-discount-percentage"
+                values={{ percentage: eto.publicDiscountFraction! * 100 }}
+              />
+              {")"}
+            </span>
+          )}
+        </span>
+      </div>
     </div>
-    <div className={styles.group}>
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview-status.pre-money-valuation" />
-      </span>
-      <span className={styles.value}>
-        <Money
-          className={styles.value}
-          value={eto.preMoneyValuationEur ? eto.preMoneyValuationEur.toString() : undefined}
-          inputFormat={ENumberInputFormat.FLOAT}
-          valueType={ECurrency.EUR}
-          outputFormat={ENumberOutputFormat.INTEGER}
-          defaultValue={<ToBeAnnouncedTooltip />}
-          data-test-id="eto-overview.stats.pre-money-valuation"
-        />
-      </span>
-    </div>
-    <div className={styles.group}>
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview-status.target-investment-amount" />
-      </span>
-      <span className={styles.value}>
-        <Money
-          value={
-            eto.investmentCalculatedValues && eto.investmentCalculatedValues.maxInvestmentAmount
-              ? eto.investmentCalculatedValues.maxInvestmentAmount.toString()
-              : undefined
-          }
-          inputFormat={ENumberInputFormat.FLOAT}
-          valueType={ECurrency.EUR}
-          outputFormat={ENumberOutputFormat.INTEGER}
-          defaultValue={<ToBeAnnounced />}
-          data-test-id="eto-overview.stats.target-investment-amount"
-        />
-      </span>
-    </div>
-    <div className={styles.group}>
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview-status.new-shares-generated" />
-      </span>
-      <span className={styles.value}>
-        <MoneyRange
-          valueFrom={computedMinCapPercent.toString()}
-          valueUpto={computedMaxCapPercent.toString()}
-          inputFormat={ENumberInputFormat.FLOAT}
-          outputFormat={ENumberOutputFormat.FULL}
-          valueType={ENumberFormat.PERCENTAGE}
-          defaultValue={<ToBeAnnounced />}
-          data-test-id="eto-overview.stats.new-shares-generated"
-        />
-      </span>
-    </div>
-    <div className={styles.group}>
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview-status.equity-token-price" />
-      </span>
-      <span className={styles.value}>
-        <Money
-          value={tokenPrice ? tokenPrice.toString() : undefined}
-          inputFormat={ENumberInputFormat.FLOAT}
-          valueType={EPriceFormat.EQUITY_TOKEN_PRICE_EURO}
-          outputFormat={ENumberOutputFormat.FULL}
-          defaultValue={<ToBeAnnounced />}
-          data-test-id="eto-overview.stats.equity-token-price"
-        />
-        {showWhitelistDiscount && (
-          <span data-test-id="eto-overview.stats.equity-token-price.public-discount">
-            {" ("}
-            <FormattedMessage
-              id="shared-component.eto-overview-status.included-discount-percentage"
-              values={{ percentage: eto.whitelistDiscountFraction! * 100 }}
-            />
-            {")"}
-          </span>
-        )}
-        {showPublicDiscount && (
-          <span data-test-id="eto-overview.stats.equity-token-price-whitelist-discount">
-            {" ("}
-            <FormattedMessage
-              id="shared-component.eto-overview-status.included-discount-percentage"
-              values={{ percentage: eto.publicDiscountFraction! * 100 }}
-            />
-            {")"}
-          </span>
-        )}
-      </span>
-    </div>
-  </div>
-);
+  );
+};
 
 export const EtoStats = compose<IStateProps & IExternalProps, IExternalProps>(
   appConnect<IStateProps, {}, IExternalProps>({
@@ -158,6 +162,7 @@ export const EtoStats = compose<IStateProps & IExternalProps, IExternalProps>(
         }
         tokenPrice = tokenPrice / etoData.equityTokensPerShare;
       }
+
       return {
         tokenPrice,
         showWhitelistDiscount,

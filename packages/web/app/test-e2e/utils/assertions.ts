@@ -201,13 +201,13 @@ export const assertIsExternalLink = (
 };
 
 export const assertTxErrorDialogueNoCost = () => {
-  cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
+  cy.get(tid("modals.shared.tx-error.modal")).should("exist");
 
   cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).should("not.exist");
 };
 
 export const assertTxErrorDialogueWithCost = () => {
-  cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
+  cy.get(tid("modals.shared.tx-error.modal")).should("exist");
 
   cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).contains(/0\.\d{4}/);
 };

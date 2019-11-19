@@ -26,6 +26,9 @@ export const selectNeuBalanceEuroAmount = (state: IAppState): string =>
 export const selectNeuBalance = (state: IAppState): string =>
   (state.wallet.data && state.wallet.data.neuBalance) || "0";
 
+export const selectNeumarkAddress = (state: IAppState): string =>
+  (state.wallet.data && state.wallet.data.neumarkAddress) || "0x";
+
 export const selectEtherTokenBalance = (state: IAppState): string =>
   (state.wallet.data && state.wallet.data.etherTokenBalance) || "0";
 

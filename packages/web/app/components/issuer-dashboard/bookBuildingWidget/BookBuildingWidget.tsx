@@ -154,7 +154,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
         canEnableBookbuilding: selectCanEnableBookBuilding(state),
         onChainState: selectIssuerEtoOnChainState(state),
         minOffsetPeriod: selectIssuerEtoDateToWhitelistMinDuration(state),
-        isAuthorized: selectIsAuthorized(state.auth),
+        isAuthorized: selectIsAuthorized(state),
       };
     },
     dispatchToProps: dispatch => ({

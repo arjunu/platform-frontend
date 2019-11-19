@@ -144,7 +144,7 @@ const AssetPortfolioLayout: React.FunctionComponent<ILayoutProps & IDispatchToPr
               data-test-id="asset-portfolio.payout.accept-payout"
               size={EButtonSize.SMALL}
               onClick={() => acceptPayout(tokenDisbursal)}
-              layout={EButtonLayout.GHOST}
+              layout={EButtonLayout.PRIMARY}
             >
               <FormattedMessage id="portfolio.asset.payouts-from-neu.accept-payout" />
             </Button>
@@ -161,7 +161,7 @@ const AssetPortfolioLayout: React.FunctionComponent<ILayoutProps & IDispatchToPr
             data-test-id="asset-portfolio.payout.accept-all-payouts"
             size={EButtonSize.SMALL}
             onClick={() => acceptCombinedPayout(tokensDisbursal)}
-            layout={EButtonLayout.GHOST}
+            layout={EButtonLayout.PRIMARY}
           >
             <FormattedMessage id="portfolio.asset.payouts-from-neu.accept-all-payout" />
           </Button>

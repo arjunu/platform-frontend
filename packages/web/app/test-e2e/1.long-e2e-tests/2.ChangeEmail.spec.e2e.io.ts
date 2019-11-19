@@ -19,6 +19,7 @@ import {
 } from "../utils/index";
 
 describe("Change Email", function(): void {
+  this.retries(2);
   describe("Has verified email", () => {
     let email: string;
     beforeEach(() => {
@@ -78,6 +79,16 @@ describe("Change Email", function(): void {
       // assert if new email is pending for verification
 
       assertEmailPendingChange(email, newEmail);
+
+      getLatestVerifyUserEmailLink(newEmail).then(activationLink => {
+        cy.visit(activationLink);
+      });
+
+      logoutViaAccountMenu();
+
+      loginWithLightWallet(newEmail, DEFAULT_PASSWORD);
+
+      assertDashboard();
     });
 
     it("should allow to abort email change flow", () => {
@@ -100,33 +111,6 @@ describe("Change Email", function(): void {
       cy.get(tid("verify-email-widget.abort-change-email.button")).click();
 
       assertEmailChangeAbort(email);
-    });
-
-    it("should update metadata in wallet storage", () => {
-      goToProfile();
-      assertEmailChangeFlow();
-
-      const newEmail = generateRandomEmailAddress();
-      fillForm({
-        email: newEmail,
-        "verify-email-widget-form-submit": { type: "submit" },
-      });
-
-      confirmAccessModal();
-
-      // assert if new email is pending for verification
-
-      assertEmailPendingChange(email, newEmail);
-
-      getLatestVerifyUserEmailLink(newEmail, 5).then(activationLink => {
-        cy.visit(activationLink);
-      });
-
-      logoutViaAccountMenu();
-
-      loginWithLightWallet(newEmail, DEFAULT_PASSWORD);
-
-      assertDashboard();
     });
   });
 

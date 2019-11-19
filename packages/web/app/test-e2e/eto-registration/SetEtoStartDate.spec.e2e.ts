@@ -38,7 +38,8 @@ const setStartDay = (startDate: moment.Moment, textToCheck: RegExp) => {
     .should("be.enabled");
 };
 
-describe("Eto start date setup", () => {
+describe("Eto start date setup", function(): void {
+  this.retries(2);
   it("sets the date", () => {
     loginFixtureAccount("ISSUER_SETUP", {
       kyc: "business",

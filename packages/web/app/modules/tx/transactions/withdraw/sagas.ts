@@ -2,9 +2,11 @@ import BigNumber from "bignumber.js";
 import { fork, put, select, take } from "redux-saga/effects";
 
 import { IWindowWithData } from "../../../../../test/helperTypes";
+import { ECurrency } from "../../../../components/shared/formatters/utils";
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { ITxData } from "../../../../lib/web3/types";
 import { DEFAULT_UPPER_GAS_LIMIT } from "../../../../lib/web3/Web3Manager/Web3Manager";
+import { toEthereumAddress } from "../../../../utils/opaque-types/utils";
 import { actions } from "../../../actions";
 import { selectStandardGasPriceWithOverHead } from "../../../gas/selectors";
 import { neuTakeLatest } from "../../../sagasUtils";
@@ -13,11 +15,15 @@ import { selectEthereumAddressWithChecksum } from "../../../web3/selectors";
 import { isAddressValid } from "../../../web3/utils";
 import { txSendSaga } from "../../sender/sagas";
 import { ETxSenderType } from "../../types";
-import { TxUserFlowDetails, TxUserFlowInputData } from "../../user-flow/withdraw/reducer";
-import { selectUserFlowTxDetails, selectUserFlowTxInput } from "../../user-flow/withdraw/selectors";
+import { selectUserFlowTxDetails, selectUserFlowTxInput } from "../../user-flow/transfer/selectors";
 import { calculateGasLimitWithOverhead, EMPTY_DATA } from "../../utils";
 import { WrongValuesError } from "../errors";
+import { ETH_DECIMALS } from "./../../../../config/constants";
+import { selectLiquidEtherBalance } from "./../../../wallet/selectors";
+import { TxUserFlowInputData, TxUserFlowTransferDetails } from "./../../user-flow/transfer/types";
 import { TWithdrawAdditionalData } from "./types";
+
+import * as ethImage from "../../../../assets/img/eth_icon.svg";
 
 export interface IWithdrawTxGenerator {
   to: string;
@@ -27,7 +33,7 @@ export interface IWithdrawTxGenerator {
 export function* generateEthWithdrawTransaction(
   { contractsService, web3Manager }: TGlobalDependencies,
   { to, valueUlps }: IWithdrawTxGenerator,
-): any {
+): Iterator<any> {
   // Sanity checks
   if (!to || !isAddressValid(to)) throw new WrongValuesError();
   if (
@@ -42,46 +48,16 @@ export function* generateEthWithdrawTransaction(
   const from: string = yield select(selectEthereumAddressWithChecksum);
   const gasPriceWithOverhead = yield select(selectStandardGasPriceWithOverHead);
 
+  let txDetails: Partial<ITxData> = {};
+
   if (etherTokenBalance.isZero()) {
     // transaction can be fully covered ether balance
-    const txDetails: Partial<ITxData> = {
+    txDetails = {
       to,
       from,
       data: EMPTY_DATA,
       value: valueUlps,
       gasPrice: gasPriceWithOverhead,
-    };
-
-    // TODO: Think about combining both test flows
-    if (process.env.NF_CYPRESS_RUN === "1") {
-      const {
-        disableNotAcceptingEtherCheck,
-        forceLowGas,
-        forceStandardGas,
-      } = window as IWindowWithData;
-      if (disableNotAcceptingEtherCheck) {
-        // For the specific test cases return txDetails directly without estimating gas
-        return txDetails;
-      } else if (forceLowGas) {
-        // Return really low gas
-        return { ...txDetails, gas: 1000 };
-      } else if (forceStandardGas) {
-        // Return really low gas
-        return { ...txDetails, gas: 21000 };
-      }
-    }
-
-    const estimatedGasWithOverhead = yield web3Manager.estimateGasWithOverhead(txDetails);
-
-    // There is Smart Contract Attack Vector that extreme high gas amounts
-    const gas =
-      estimatedGasWithOverhead > DEFAULT_UPPER_GAS_LIMIT
-        ? DEFAULT_UPPER_GAS_LIMIT
-        : estimatedGasWithOverhead;
-
-    return {
-      ...txDetails,
-      gas,
     };
   } else {
     // transaction can be fully covered by etherTokens
@@ -89,44 +65,48 @@ export function* generateEthWithdrawTransaction(
 
     const difference = valueUlpsAsBigN.sub(etherTokenBalance);
 
-    const txDetails: Partial<ITxData> = {
+    txDetails = {
       to: contractsService.etherToken.address,
       from,
       data: txInput,
       value: difference.comparedTo("0") > 0 ? difference.toString() : "0",
       gasPrice: gasPriceWithOverhead,
     };
-
-    if (process.env.NF_CYPRESS_RUN === "1") {
-      const {
-        disableNotAcceptingEtherCheck,
-        forceLowGas,
-        forceStandardGas,
-      } = window as IWindowWithData;
-      if (disableNotAcceptingEtherCheck) {
-        // For the specific test cases return txDetails directly without estimating gas
-        return {
-          ...txDetails,
-          gas: calculateGasLimitWithOverhead(DEFAULT_UPPER_GAS_LIMIT.toString()),
-        };
-      } else if (forceLowGas) {
-        // Return really low gas
-        return { ...txDetails, gas: calculateGasLimitWithOverhead("1000") };
-      } else if (forceStandardGas) {
-        // Return really low gas
-        return { ...txDetails, gas: 21000 };
-      }
-    }
-
-    const estimatedGasWithOverhead = yield web3Manager.estimateGasWithOverhead(txDetails);
-    return { ...txDetails, gas: estimatedGasWithOverhead };
   }
+
+  if (process.env.NF_CYPRESS_RUN === "1") {
+    const {
+      disableNotAcceptingEtherCheck,
+      forceLowGas,
+      forceStandardGas,
+    } = window as IWindowWithData;
+    if (disableNotAcceptingEtherCheck) {
+      // For the specific test cases return txDetails directly without estimating gas
+      return {
+        ...txDetails,
+        gas: calculateGasLimitWithOverhead(DEFAULT_UPPER_GAS_LIMIT.toString()),
+      };
+    } else if (forceLowGas) {
+      // Return really low gas
+      return { ...txDetails, gas: 1000 };
+    } else if (forceStandardGas) {
+      // Return really low gas
+      return { ...txDetails, gas: 21000 };
+    }
+  }
+
+  const estimatedGasWithOverhead = yield web3Manager.estimateGasWithOverhead(txDetails);
+
+  return {
+    ...txDetails,
+    gas: estimatedGasWithOverhead,
+  };
 }
 
 function* ethWithdrawFlow(_: TGlobalDependencies): Iterator<any> {
   yield take(actions.txSender.txSenderAcceptDraft);
 
-  const txUserFlowData: TxUserFlowDetails = yield select(selectUserFlowTxDetails);
+  const txUserFlowData: TxUserFlowTransferDetails = yield select(selectUserFlowTxDetails);
   const txUserFlowInput: TxUserFlowInputData = yield select(selectUserFlowTxInput);
 
   // Internally we represent eth withdraw in two different modes (normal ether withdrawal and ether token withdrawal)
@@ -143,12 +123,25 @@ function* ethWithdrawFlow(_: TGlobalDependencies): Iterator<any> {
   yield put(actions.txSender.txSenderContinueToSummary<ETxSenderType.WITHDRAW>(additionalData));
 }
 
-function* withdrawSaga({ logger }: TGlobalDependencies): Iterator<any> {
+function* withdrawSaga({ logger, contractsService }: TGlobalDependencies): Iterator<any> {
   try {
+    const etherTokenAddress = contractsService.etherToken.address;
+    const userBalance: string = yield select(selectLiquidEtherBalance);
+
+    yield put(
+      actions.txUserFlowTransfer.setInitialValues({
+        userBalance,
+        tokenAddress: toEthereumAddress(etherTokenAddress),
+        tokenSymbol: ECurrency.ETH,
+        tokenImage: ethImage,
+        tokenDecimals: ETH_DECIMALS,
+      }),
+    );
     yield txSendSaga({
       type: ETxSenderType.WITHDRAW,
       transactionFlowGenerator: ethWithdrawFlow,
     });
+
     logger.info("Withdrawing successful");
   } catch (e) {
     logger.info("Withdrawing cancelled", e);

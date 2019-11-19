@@ -24,7 +24,8 @@ import { STIPEND_ELIGIBLE_WALLETS } from "./../../../lib/web3/constants";
 import { isGaslessTxEnabled } from "./../../../utils/isGaslessTxEnabled";
 import { EValidationState } from "./reducer";
 import { selectInvestmentFLow } from "./selectors";
-import { txValidateWithdraw } from "./withdraw/sagas";
+import { txValidateTokenTransfer } from "./transfer/token-transfer/sagas";
+import { txValidateWithdraw } from "./transfer/withdraw/sagas";
 
 export function* txValidateInvestment(): Iterator<any> {
   try {
@@ -55,12 +56,14 @@ export function* txValidateSaga(
   action: TAction,
 ): any {
   if (action.type !== actions.txValidator.validateDraft.getType()) return;
-
   try {
     let validationGenerator: any;
     switch (action.payload.type) {
       case ETxSenderType.WITHDRAW:
         validationGenerator = txValidateWithdraw(action.payload);
+        break;
+      case ETxSenderType.TRANSFER_TOKENS:
+        validationGenerator = txValidateTokenTransfer(action.payload);
         break;
       case ETxSenderType.INVEST:
         validationGenerator = txValidateInvestment();

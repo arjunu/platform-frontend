@@ -74,7 +74,7 @@ const connectCampaigningActivatedWidget = (
     setDisplayName("CampaigningActivatedWidget"),
     appConnect<IStateProps, {}, IExternalProps>({
       stateToProps: (state, props) => ({
-        isAuthorized: selectIsAuthorized(state.auth),
+        isAuthorized: selectIsAuthorized(state),
         isInvestor: selectIsInvestor(state),
         isVerifiedInvestor: selectIsVerifiedInvestor(state),
         pledgedAmount: selectPledgedAmount(state, props.etoId),

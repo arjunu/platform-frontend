@@ -64,6 +64,7 @@ export async function loadWalletDataAsync(
       etherTokenUpgradeTarget: contractsService.icbmEtherLock.currentMigrationTarget,
       euroTokenUpgradeTarget: contractsService.icbmEuroLock.currentMigrationTarget,
     })),
+    neumarkAddress: contractsService.neumark.address,
     ...numericValuesToString(
       await promiseAll({
         etherTokenBalance: contractsService.etherToken.balanceOf(ethAddress),

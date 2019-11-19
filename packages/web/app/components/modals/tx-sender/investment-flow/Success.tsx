@@ -10,7 +10,7 @@ import { appRoutes } from "../../../appRoutes";
 import { ButtonArrowRight } from "../../../shared/buttons";
 import { ConfettiEthereum } from "../../../shared/ethereum";
 import { EtherscanTxLink } from "../../../shared/links";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { InvestmentTransactionDetails } from "./InvestmentTransactionDetails";
 
 interface IProps {

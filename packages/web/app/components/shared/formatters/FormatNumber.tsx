@@ -21,6 +21,7 @@ interface IComponentProps {
   outputFormat: THumanReadableFormat;
   className?: string;
   "data-test-id"?: string;
+  decimals?: number;
 }
 
 export const FormatNumber: React.FunctionComponent<IComponentProps> = ({
@@ -31,6 +32,7 @@ export const FormatNumber: React.FunctionComponent<IComponentProps> = ({
   inputFormat,
   outputFormat = ENumberOutputFormat.FULL,
   className,
+  decimals,
   "data-test-id": dataTestId,
 }) => {
   if (value) {
@@ -39,7 +41,7 @@ export const FormatNumber: React.FunctionComponent<IComponentProps> = ({
         className={cn(styles.noBreak, className)}
         data-test-id={dataTestId ? dataTestId : "value"}
       >
-        {formatNumber({ value, inputFormat, outputFormat, roundingMode, decimalPlaces })}
+        {formatNumber({ value, inputFormat, outputFormat, roundingMode, decimalPlaces, decimals })}
       </span>
     );
   } else {

@@ -1,0 +1,16 @@
+{
+  "our_account": {
+    "bank_account_number": "LI78088110102905K002E",
+    "bank_name": "Bank Frick and Co. Aktiengesellschaft, LIECHTENSTEIN",
+    "is_sepa": true,
+    "name": "Quintessence AG",
+    "swift_code": "BFRILI22XXX"
+  },
+  "verified_user_account": {
+    "bank_account_number_last_4": "0423",
+    "bank_name": "Sparkasse Berlin",
+    "is_sepa": true,
+    "name": "Account Holder Name",
+    "swift_code": "BELADEBEXXX"
+  }
+}

@@ -111,7 +111,6 @@ function* txControllerSaga(controlledEffect: Iterator<Effect>): any {
 
 export function* txSendSaga({ type, transactionFlowGenerator, extraParam }: ITxSendParams): any {
   yield neuCall(ensureNoPendingTx);
-
   const sendProcessEffect = neuCall(txSendProcess, type, transactionFlowGenerator, extraParam);
 
   yield call(txControllerSaga, sendProcessEffect);
@@ -325,15 +324,15 @@ function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
 function* cleanUpTxSender(): Iterator<any> {
   // Conduct any general cleanup operations
   yield put(actions.txValidator.clearValidationState());
-  yield put(actions.txUserFlowWithdraw.clearDraftTx());
+  yield put(actions.txUserFlowTransfer.clearDraftTx());
 }
 
-function* updateWalletValues(): Iterator<any> {
-  // Refresh Wallet values
+function* updateRelatedValues(): Iterator<any> {
+  yield put(actions.eto.loadTokensData());
   yield put(actions.wallet.loadWalletData());
 }
 
 export const txSenderSagasWatcher = function*(): Iterator<any> {
   yield takeLatest("TX_SENDER_HIDE_MODAL", cleanUpTxSender);
-  yield takeLatest(["TX_SENDER_TX_MINED", "TX_SENDER_ERROR"], updateWalletValues);
+  yield takeLatest(["TX_SENDER_TX_MINED", "TX_SENDER_ERROR"], updateRelatedValues);
 };

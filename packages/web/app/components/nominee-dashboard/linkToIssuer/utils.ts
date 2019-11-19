@@ -43,11 +43,17 @@ export const validateEthAddress = (value: string | undefined) => {
   }
 };
 
-export const getNomineeRequestComponentState = (
-  nomineeRequest: INomineeRequest | undefined,
-  nomineeRequestError: ENomineeRequestError,
-  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined,
-) => {
+export type TGetNomineeRequestComponentState = {
+  nomineeRequest: INomineeRequest | undefined;
+  nomineeRequestError: ENomineeRequestError;
+  nomineeEto: TEtoWithCompanyAndContractReadonly | undefined;
+};
+
+export const getNomineeRequestComponentState = ({
+  nomineeRequest,
+  nomineeRequestError,
+  nomineeEto,
+}: TGetNomineeRequestComponentState) => {
   if (!nomineeRequest && nomineeRequestError === ENomineeRequestError.REQUEST_EXISTS) {
     throw new Error("invalid nominee request state");
   } else if (!nomineeRequest && nomineeRequestError === ENomineeRequestError.NONE) {

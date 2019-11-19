@@ -30,7 +30,7 @@ import { txHistorySaga } from "./tx-history/sagas";
 import { txMonitorSagas } from "./tx/monitor/sagas";
 import { txSenderSagasWatcher } from "./tx/sender/sagas";
 import { txTransactionsSagasWatcher } from "./tx/transactions/sagas";
-import { txUserFlowSagasWatcher } from "./tx/user-flow/withdraw/sagas";
+import { txUserFlowSagasWatcher } from "./tx/user-flow/sagas";
 import { txValidatorSagasWatcher } from "./tx/validator/sagas";
 import { browserWalletSagas } from "./wallet-selector/browser-wizard/sagas";
 import { ledgerSagas } from "./wallet-selector/ledger-wizard/sagas";

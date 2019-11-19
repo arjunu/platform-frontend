@@ -8,7 +8,7 @@ import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { ButtonArrowRight } from "../../../shared/buttons";
 import { ConfettiEthereum } from "../../../shared/ethereum";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { AcceptTransactionDetails } from "./AcceptTransactionDetails";
 
 interface IExternalProps {

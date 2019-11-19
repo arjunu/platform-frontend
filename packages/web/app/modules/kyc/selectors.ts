@@ -123,8 +123,8 @@ export const selectCombinedBeneficialOwnerOwnership = (state: DeepReadonly<IKycS
   );
 };
 
-export const selectKycLoading = (state: DeepReadonly<IKycState>): boolean =>
-  !!state.individualRequestStateLoading || !!state.businessRequestStateLoading;
+export const selectKycLoading = (state: IAppState): boolean =>
+  !!state.kyc.individualRequestStateLoading || !!state.kyc.businessRequestStateLoading;
 
 export const selectWidgetError = (state: DeepReadonly<IKycState>): string | undefined =>
   state.individualRequestError || state.businessRequestError;

@@ -5,7 +5,7 @@ import React from "react";
 import { testEto } from "../../../test/fixtures";
 import {
   EETOStateOnChain,
-  IEtoContractData,
+  TEtoContractData,
   TEtoWithCompanyAndContractReadonly,
 } from "../../modules/eto/types";
 import { withMockedDate } from "../../utils/storybookHelpers.unsafe";
@@ -27,7 +27,7 @@ const presaleEto: TEtoWithCompanyAndContractReadonly = {
       ...testEto.contract!.startOfStates,
       [EETOStateOnChain.Public]: date.toDate(),
     },
-  } as IEtoContractData,
+  } as TEtoContractData,
 };
 
 const publicEto: TEtoWithCompanyAndContractReadonly = {
@@ -39,7 +39,7 @@ const publicEto: TEtoWithCompanyAndContractReadonly = {
       ...testEto.contract!.startOfStates,
       [EETOStateOnChain.Signing]: date.toDate(),
     },
-  } as IEtoContractData,
+  } as TEtoContractData,
 };
 
 storiesOf("ETOFundraisingCounterWidget", module)

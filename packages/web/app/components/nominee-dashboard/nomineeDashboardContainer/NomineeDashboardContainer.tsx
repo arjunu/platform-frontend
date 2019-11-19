@@ -3,7 +3,7 @@ import { compose } from "recompose";
 
 import { selectIsBankAccountVerified } from "../../../modules/bank-transfer-flow/selectors";
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
-import { selectNomineeEtoWithCompanyAndContract } from "../../../modules/nominee-flow/selectors";
+import { selectActiveNomineeEto } from "../../../modules/nominee-flow/selectors";
 import { selectIsVerificationFullyDone } from "../../../modules/selectors";
 import { appConnect } from "../../../store";
 import { AccountSetupContainer } from "./AccountSetupContainer";
@@ -36,7 +36,7 @@ const NomineeDashboardContainerBase: React.FunctionComponent<IStateProps> = ({
 const NomineeDashboardContainer = compose<IStateProps, {}>(
   appConnect<IStateProps>({
     stateToProps: state => ({
-      nomineeEto: selectNomineeEtoWithCompanyAndContract(state),
+      nomineeEto: selectActiveNomineeEto(state),
       isBankAccountVerified: selectIsBankAccountVerified(state),
       verificationIsComplete: selectIsVerificationFullyDone(state),
     }),

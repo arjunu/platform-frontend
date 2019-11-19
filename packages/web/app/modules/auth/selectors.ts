@@ -13,8 +13,8 @@ import {
 import { selectIsLightWallet } from "../web3/selectors";
 import { EAuthStatus, IAuthState } from "./reducer";
 
-export const selectIsAuthorized = (state: IAuthState): boolean =>
-  !!(state.jwt && state.user && state.status === EAuthStatus.AUTHORIZED);
+export const selectIsAuthorized = (state: IAppState): boolean =>
+  !!(state.auth.jwt && state.auth.user && state.auth.status === EAuthStatus.AUTHORIZED);
 
 export const selectJwt = (state: IAppState): string | undefined => state.auth.jwt;
 

@@ -15,10 +15,10 @@ import {
 import { ETxSenderType, TSpecificTransactionState } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { ExternalLink } from "../../../shared/links/ExternalLink";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { TxDetails } from "../TxDetails.unsafe";
 import { TxName } from "../TxName";
-import { WithdrawError } from "../withdraw-flow/Error";
+import { TransferError } from "../withdraw-flow/Error/Error";
 import { TxHashAndBlock } from "./TxHashAndBlock";
 
 import * as failedImg from "../../../../assets/img/ether_fail.svg";
@@ -127,7 +127,7 @@ const TxErrorLayout: React.FunctionComponent<TTxErrorLayoutProps> = props => {
   switch (props.type) {
     case ETxSenderType.WITHDRAW:
       return (
-        <WithdrawError txHash={props.txHash} txTimestamp={props.txTimestamp} error={props.error} />
+        <TransferError txHash={props.txHash} txTimestamp={props.txTimestamp} error={props.error} />
       );
     default:
       return <TxErrorDefaultLayout {...props} />;
