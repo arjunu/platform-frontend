@@ -30,7 +30,6 @@ enum EButtonSize {
 enum EButtonWidth {
   NORMAL = "",
   BLOCK = "block",
-  // TODO: Remove no-padding
   NO_PADDING = "no-padding",
 }
 
@@ -68,7 +67,7 @@ const ButtonBase = React.forwardRef<
         className,
         layout,
         {
-          [styles.isActive]: isActive,
+          [styles.buttonIsActive]: isActive,
         },
         size,
         width,

@@ -83,7 +83,7 @@
 
   &:only-child {
     border: 1px solid $neu-gull-gray;
-    border-radius: 4px;
+    border-radius: $nds-border-radius;
     height: px-to-rem(46px);
     padding: 12px 16px;
   }

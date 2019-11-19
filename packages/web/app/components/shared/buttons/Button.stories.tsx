@@ -115,4 +115,109 @@ storiesOf("NDS|Atoms/Button", module)
       size={EButtonSize.NORMAL}
       width={EButtonWidth.NO_PADDING}
     />
+  ))
+  .add("secondary, normal size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.SECONDARY}
+      size={EButtonSize.NORMAL}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("secondary, small size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.SECONDARY}
+      size={EButtonSize.SMALL}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("secondary, huge size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.SECONDARY}
+      size={EButtonSize.HUGE}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("secondary, normal size, block width", () => (
+    <GenerateStory
+      layout={EButtonLayout.SECONDARY}
+      size={EButtonSize.SMALL}
+      width={EButtonWidth.BLOCK}
+    />
+  ))
+  .add("secondary, normal size, no-padding width", () => (
+    <GenerateStory
+      layout={EButtonLayout.SECONDARY}
+      size={EButtonSize.NORMAL}
+      width={EButtonWidth.NO_PADDING}
+    />
+  ))
+  .add("outline, normal size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.OUTLINE}
+      size={EButtonSize.NORMAL}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("outline, small size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.OUTLINE}
+      size={EButtonSize.SMALL}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("outline, huge size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.OUTLINE}
+      size={EButtonSize.HUGE}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("outline, normal size, block width", () => (
+    <GenerateStory
+      layout={EButtonLayout.OUTLINE}
+      size={EButtonSize.SMALL}
+      width={EButtonWidth.BLOCK}
+    />
+  ))
+  .add("outline, normal size, no-padding width", () => (
+    <GenerateStory
+      layout={EButtonLayout.OUTLINE}
+      size={EButtonSize.NORMAL}
+      width={EButtonWidth.NO_PADDING}
+    />
+  ))
+  .add("ghost, normal size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.GHOST}
+      size={EButtonSize.NORMAL}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("ghost, small size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.GHOST}
+      size={EButtonSize.SMALL}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("ghost, huge size, normal width", () => (
+    <GenerateStory
+      layout={EButtonLayout.GHOST}
+      size={EButtonSize.HUGE}
+      width={EButtonWidth.NORMAL}
+    />
+  ))
+  .add("ghost, normal size, block width", () => (
+    <GenerateStory
+      layout={EButtonLayout.GHOST}
+      size={EButtonSize.SMALL}
+      width={EButtonWidth.BLOCK}
+    />
+  ))
+  .add("ghost, normal size, no-padding width", () => (
+    <GenerateStory
+      layout={EButtonLayout.GHOST}
+      size={EButtonSize.NORMAL}
+      width={EButtonWidth.NO_PADDING}
+    />
   ));
