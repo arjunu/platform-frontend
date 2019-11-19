@@ -33,8 +33,7 @@
     background: $neu-neon-yellow;
     border: px-to-rem(1px) solid $neu-neon-yellow;
 
-    &:hover,
-    &:focus {
+    &:hover {
       box-shadow: 0 5px 10px 0 $hover-box-shadow;
     }
 
@@ -53,8 +52,7 @@
   &-outline {
     border: px-to-rem(1px) solid $neu-light-blue-grey-two;
 
-    &:hover,
-    &:focus {
+    &:hover {
       border-color: $neu-bitter-lemon;
     }
 
@@ -74,8 +72,7 @@
     border: px-to-rem(1px) solid $neu-very-light-blue;
     background: $neu-very-light-blue;
 
-    &:hover,
-    &:focus {
+    &:hover {
       background: transparent;
       border-color: $neu-bitter-lemon;
     }
@@ -94,8 +91,7 @@
   &-ghost {
     border: px-to-rem(1px) solid transparent;
 
-    &:hover,
-    &:focus {
+    &:hover {
       background: $neu-very-light-blue;
       border-color: $neu-very-light-blue;
     }

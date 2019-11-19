@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import "../app/polyfills";
 
 import * as React from "react";
 import { configure, addDecorator } from "@storybook/react";
