@@ -44,54 +44,37 @@ type TButtonLayout = {
 const ButtonBase = React.forwardRef<
   HTMLButtonElement,
   TButtonLayout & React.ComponentProps<typeof ButtonReset> & TDataTestId
->(
-  (
-    {
-      children,
+>(({ children, className, layout, disabled, size, width, isLoading, isActive, ...props }, ref) => (
+  <ButtonReset
+    ref={ref}
+    className={cn(
+      styles.button,
       className,
       layout,
-      disabled,
+      {
+        [styles.buttonIsActive]: isActive,
+      },
       size,
       width,
-      isLoading,
-      type = "button",
-      isActive,
-      ...props
-    },
-    ref,
-  ) => (
-    <ButtonReset
-      ref={ref}
-      className={cn(
-        styles.button,
-        className,
-        layout,
-        {
-          [styles.buttonIsActive]: isActive,
-        },
-        size,
-        width,
-      )}
-      disabled={disabled || isLoading}
-      type={type}
-      {...props}
-    >
-      {isLoading ? (
-        <>
-          {/*
+    )}
+    disabled={disabled || isLoading}
+    {...props}
+  >
+    {isLoading ? (
+      <>
+        {/*
                 &nbsp; makes button the same in height as normal button
                 (avoids height jumping after switching to loading state)
               */}
-          &nbsp;
-          <LoadingIndicator light />
-          &nbsp;
-        </>
-      ) : (
-        children
-      )}
-    </ButtonReset>
-  ),
-);
+        &nbsp;
+        <LoadingIndicator light />
+        &nbsp;
+      </>
+    ) : (
+      children
+    )}
+  </ButtonReset>
+));
 
 type ButtonBaseProps = React.ComponentProps<typeof ButtonBase>;
 

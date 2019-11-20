@@ -34,7 +34,6 @@ const CircleButton: React.FunctionComponent<TExternalProps & TButtonResetProps> 
   svgIcon,
   iconProps = {},
   iconPosition,
-  type = "button",
   ...props
 }) => {
   const withIconOnly = children === undefined;
@@ -55,7 +54,6 @@ const CircleButton: React.FunctionComponent<TExternalProps & TButtonResetProps> 
       className={cn(className, layout, styles.circleButton, {
         [styles.circleButtonOnlyIcon]: withIconOnly,
       })}
-      type={type}
       {...props}
     >
       {!withIconOnly && svgIcon && iconPosition === ECircleButtonIconPosition.ICON_BEFORE && (
