@@ -1035,7 +1035,7 @@
   "notifications.update-account": "Please update your profile before proceeding. After you have successfully verified your identity, you will be able to fundraise.",
   "pending-transaction-status.no-pending-transactions.tooltip": "Seems you don't have any pending ethereum transactions right now.",
   "people-swiper-widget.next": "Next",
-  "people-swiper-widget.prev": "",
+  "people-swiper-widget.prev": "Prev",
   "platform.landing.featured.description": "Easily access and invest in innovative companies from around the world through a single interface.",
   "platform.landing.featured.header": "Equity investments made better",
   "platform.landing.list.first": "Invest in EUR / ETH",
