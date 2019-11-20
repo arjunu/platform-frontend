@@ -19,9 +19,8 @@ interface IDispatchProps {
   confirm: () => void;
 }
 
-const JurisdicitonDisclaimerModalLayout: React.FunctionComponent<
-  IExternalProps & IDispatchProps
-> = ({ closeModal, confirm, restrictedJurisdiction }) => (
+const JurisdicitonDisclaimerModalLayout: React.FunctionComponent<IExternalProps &
+  IDispatchProps> = ({ closeModal, confirm, restrictedJurisdiction }) => (
   <Message
     data-test-id="jurisdiction-disclaimer-modal"
     image={<img src={cityIcon} alt="Image" className="mb-3 w-50" />}

@@ -33,7 +33,7 @@ export const convertToCalculatedContribution = ([
   BigNumber,
   BigNumber,
   BigNumber,
-  boolean
+  boolean,
 ]): ICalculatedContribution => ({
   isWhitelisted,
   isEligible,
@@ -65,7 +65,7 @@ export const convertToInvestorTicket = ([
   BigNumber,
   BigNumber,
   boolean,
-  boolean
+  boolean,
 ]): IInvestorTicket => ({
   equivEurUlps: equivEurUlps.toString(),
   rewardNmkUlps: rewardNmkUlps.toString(),
@@ -85,7 +85,7 @@ export const convertToTokenDisbursal = (
     BigNumber,
     BigNumber,
     BigNumber,
-    BigNumber
+    BigNumber,
   ],
 ): ITokenDisbursal => ({
   token,

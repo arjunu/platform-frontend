@@ -482,9 +482,7 @@ function* downloadDocument(
 
     if (denied) {
       logger.info(
-        `Confidentiality agreement acceptance denied of '${
-          document.documentType
-        }' document for eto '${eto.previewCode}'`,
+        `Confidentiality agreement acceptance denied of '${document.documentType}' document for eto '${eto.previewCode}'`,
       );
     }
 
@@ -766,7 +764,7 @@ export function* loadCapitalIncrease(
     BigNumber,
     BigNumber,
     BigNumber,
-    BigNumber
+    BigNumber,
   ] = yield contract.contributionSummary();
 
   return capitalIncrease.toString();

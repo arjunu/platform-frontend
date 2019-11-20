@@ -72,9 +72,7 @@ export interface IWalletLedgerChooserTableAdvanced {
   showNextAddresses: () => void;
 }
 
-export const WalletLedgerChooserTableAdvanced: React.FunctionComponent<
-  IWalletLedgerChooserTableAdvanced
-> = ({
+export const WalletLedgerChooserTableAdvanced: React.FunctionComponent<IWalletLedgerChooserTableAdvanced> = ({
   accounts,
   handleAddressChosen,
   hasPreviousAddress,

@@ -19,9 +19,9 @@ interface IProps {
   actions?: TAction[];
 }
 
-export const AccountBalance: React.FunctionComponent<
-  IProps & IMoneySuiteWidgetProps & TDataTestId
-> = ({
+export const AccountBalance: React.FunctionComponent<IProps &
+  IMoneySuiteWidgetProps &
+  TDataTestId> = ({
   icon,
   currency,
   currencyTotal,

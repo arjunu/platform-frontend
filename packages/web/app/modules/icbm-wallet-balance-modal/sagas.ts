@@ -50,7 +50,7 @@ function* loadIcbmWalletMigrationTransactionSaga({
 
     const investorMigrationWallet: [
       string[],
-      BigNumber[]
+      BigNumber[],
     ] = yield contractsService.etherLock.getInvestorMigrationWallets(icbmEthAddress);
 
     const etherLockAddress = yield contractsService.etherLock.address;

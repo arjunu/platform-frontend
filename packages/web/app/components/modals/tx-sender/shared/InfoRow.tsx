@@ -37,9 +37,15 @@ const selectCopyValue = (
   throw new Error("Value should be string or clipboardCopyValue should be set");
 };
 
-export const InfoRow: React.FunctionComponent<
-  TInfoRowCommonProps & TInfoRowCopyProps & TDataTestId
-> = ({ caption, value, allowClipboardCopy, "data-test-id": dataTestId, clipboardCopyValue }) => (
+export const InfoRow: React.FunctionComponent<TInfoRowCommonProps &
+  TInfoRowCopyProps &
+  TDataTestId> = ({
+  caption,
+  value,
+  allowClipboardCopy,
+  "data-test-id": dataTestId,
+  clipboardCopyValue,
+}) => (
   <ListGroupItem className={styles.infoRow}>
     <div className={styles.infoCell}>{caption}</div>
     <div className={styles.infoCell}>

@@ -106,9 +106,7 @@ const TxErrorMessage: React.FunctionComponent<{
   </ErrorAlert>
 );
 
-export const TransferTransactionWrapperLayout: React.FunctionComponent<
-  TTransferTransactionProps
-> = ({
+export const TransferTransactionWrapperLayout: React.FunctionComponent<TTransferTransactionProps> = ({
   error,
   additionalData,
   txHash,

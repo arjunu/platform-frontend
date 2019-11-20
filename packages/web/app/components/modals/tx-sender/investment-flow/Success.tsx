@@ -26,9 +26,9 @@ interface IDispatchProps {
   goToPortfolio: () => void;
 }
 
-const InvestmentSuccessComponent: React.FunctionComponent<
-  IProps & IStateProps & IDispatchProps
-> = ({ additionalData, goToPortfolio, txTimestamp, txHash }) => (
+const InvestmentSuccessComponent: React.FunctionComponent<IProps &
+  IStateProps &
+  IDispatchProps> = ({ additionalData, goToPortfolio, txTimestamp, txHash }) => (
   <Message
     data-test-id="investment-flow.success.title"
     image={<ConfettiEthereum className="mb-3" />}

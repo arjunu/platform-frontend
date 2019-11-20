@@ -9,9 +9,11 @@ import { InfoRow } from "../shared/InfoRow";
 import { TimestampRow } from "../shared/TimestampRow";
 import { TransactionDetailsComponent } from "../types";
 
-const RedistributeTransactionDetails: TransactionDetailsComponent<
-  ETxSenderType.INVESTOR_REDISTRIBUTE_PAYOUT
-> = ({ additionalData, className, txTimestamp }) => {
+const RedistributeTransactionDetails: TransactionDetailsComponent<ETxSenderType.INVESTOR_REDISTRIBUTE_PAYOUT> = ({
+  additionalData,
+  className,
+  txTimestamp,
+}) => {
   const tokenDisbursal = additionalData.tokenDisbursals;
 
   return (

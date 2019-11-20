@@ -25,9 +25,9 @@ interface IOwnProps {
   isLoading?: boolean;
 }
 
-export const KYCAddDocumentsComponent: React.FunctionComponent<
-  IStateProps & IDispatchProps & IOwnProps
-> = ({ onDropFile, files, fileUploading, uploadType, isLoading }) =>
+export const KYCAddDocumentsComponent: React.FunctionComponent<IStateProps &
+  IDispatchProps &
+  IOwnProps> = ({ onDropFile, files, fileUploading, uploadType, isLoading }) =>
   isLoading ? (
     <LoadingIndicator />
   ) : (

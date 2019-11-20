@@ -19,9 +19,11 @@ export const getAgreementHash = async () => {
   }
   // Since we are contacting the node directly here we need to prepare the data and parse it
   // Once we move all functions into web3 we don't need encoding/parsing data anymore
-  const response = await (await requestFromWeb3NodeFetch("eth_call", [
-    { to: UNIVERSE_ADDRESS, data: sha3("currentAgreement()").slice(0, 10) },
-  ])).json();
+  const response = await (
+    await requestFromWeb3NodeFetch("eth_call", [
+      { to: UNIVERSE_ADDRESS, data: sha3("currentAgreement()").slice(0, 10) },
+    ])
+  ).json();
   const currentAgreement = abiCoder.decodeParameters(
     ["address", "uint256", "string", "uint256"],
     response.result,

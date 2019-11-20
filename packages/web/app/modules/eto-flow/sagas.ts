@@ -91,9 +91,7 @@ export function* downloadBookBuildingStats({
   logger,
 }: TGlobalDependencies): Iterator<any> {
   try {
-    const detailedStatsResponse: IHttpResponse<
-      any
-    > = yield apiEtoService.getDetailedBookBuildingStats();
+    const detailedStatsResponse: IHttpResponse<any> = yield apiEtoService.getDetailedBookBuildingStats();
 
     const dataAsString = yield bookBuildingStatsToCsvString(detailedStatsResponse.body);
 

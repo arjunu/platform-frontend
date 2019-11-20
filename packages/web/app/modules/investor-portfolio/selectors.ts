@@ -226,17 +226,14 @@ export const selectTokensDisbursalError = (state: IAppState) =>
 /**
  * Selects tokens disbursal with `amountToBeClaimed` greater than zero
  */
-export const selectTokensDisbursal = createSelector(
-  selectInvestorTicketsState,
-  investorTickets => {
-    if (isArray(investorTickets.tokensDisbursal.data)) {
-      return investorTickets.tokensDisbursal.data
-        .filter(d => !isZero(d.amountToBeClaimed))
-        .filter(t => shouldShowToken(t.token, t.amountToBeClaimed));
-    }
-    return investorTickets.tokensDisbursal.data;
-  },
-);
+export const selectTokensDisbursal = createSelector(selectInvestorTicketsState, investorTickets => {
+  if (isArray(investorTickets.tokensDisbursal.data)) {
+    return investorTickets.tokensDisbursal.data
+      .filter(d => !isZero(d.amountToBeClaimed))
+      .filter(t => shouldShowToken(t.token, t.amountToBeClaimed));
+  }
+  return investorTickets.tokensDisbursal.data;
+});
 
 export const selectPayoutAvailable = (state: IAppState) => {
   const tokenDisbursal = selectTokensDisbursal(state);

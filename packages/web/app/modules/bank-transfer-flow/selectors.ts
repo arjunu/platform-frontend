@@ -33,9 +33,8 @@ export const selectBankTransferMinAmount = createSelector(
   bankTransferFlow => bankTransferFlow.minEuroUlps,
 );
 
-export const selectBankRedeemMinAmount = createSelector(
-  selectBankTransferFlow,
-  bankTransferFlow => (bankTransferFlow.redeem ? bankTransferFlow.redeem.minEuroUlps : "0"),
+export const selectBankRedeemMinAmount = createSelector(selectBankTransferFlow, bankTransferFlow =>
+  bankTransferFlow.redeem ? bankTransferFlow.redeem.minEuroUlps : "0",
 );
 
 export const selectInitialAmount = (state: IAppState) => state.txUserFlowRedeem.initialValue;
@@ -45,9 +44,8 @@ export const selectBankFeeUlps = createSelector(
   bankTransferFlow => bankTransferFlow.bankFeeUlps || "0",
 );
 
-export const selectRedeemFeeUlps = createSelector(
-  selectBankTransferFlow,
-  bankTransferFlow => (bankTransferFlow.redeem ? bankTransferFlow.redeem.bankFeeUlps : "0"),
+export const selectRedeemFeeUlps = createSelector(selectBankTransferFlow, bankTransferFlow =>
+  bankTransferFlow.redeem ? bankTransferFlow.redeem.bankFeeUlps : "0",
 );
 
 /**
@@ -62,15 +60,11 @@ export const selectIsBankAccountVerified = createSelector<
   DeepReadonly<TBankAccount> | undefined,
   TClaims | undefined,
   boolean
->(
-  selectBankAccount,
-  selectClaims,
-  (bankAccount, claims) => {
-    // claims and bankAccount can be undefined while loading
-    if (claims && bankAccount) {
-      return bankAccount.hasBankAccount && claims.hasBankAccount;
-    }
+>(selectBankAccount, selectClaims, (bankAccount, claims) => {
+  // claims and bankAccount can be undefined while loading
+  if (claims && bankAccount) {
+    return bankAccount.hasBankAccount && claims.hasBankAccount;
+  }
 
-    return false;
-  },
-);
+  return false;
+});

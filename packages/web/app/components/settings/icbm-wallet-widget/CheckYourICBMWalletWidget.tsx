@@ -50,9 +50,8 @@ class FormContent extends React.Component {
   }
 }
 
-export const CheckYourICBMWalletWidgetComponent: React.FunctionComponent<
-  IExternalProps & IDispatchProps
-> = ({ loadICBMWallet, columnSpan }) => (
+export const CheckYourICBMWalletWidgetComponent: React.FunctionComponent<IExternalProps &
+  IDispatchProps> = ({ loadICBMWallet, columnSpan }) => (
   <Panel
     headerText={
       <>

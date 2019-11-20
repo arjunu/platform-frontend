@@ -151,9 +151,8 @@ const UnverifiedEmail: React.FunctionComponent<IUnverifiedEmailWidgetProps & TDa
   </section>
 );
 
-const AccountSetupVerifyEmailWidgetLayout: React.FunctionComponent<
-  IStateProps & IDispatchProps
-> = ({
+const AccountSetupVerifyEmailWidgetLayout: React.FunctionComponent<IStateProps &
+  IDispatchProps> = ({
   resendEmail,
   unverifiedEmail,
   cancelEmail,

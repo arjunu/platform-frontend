@@ -17,9 +17,8 @@ type TExternalProps = {
 
 type TTooltipProps = React.ComponentProps<typeof Tooltip>;
 
-const FundraisingBreakdownTooltip: React.FunctionComponent<
-  TExternalProps & Partial<TTooltipProps>
-> = ({ etherTokenBalance, euroTokenBalance, ...props }) => (
+const FundraisingBreakdownTooltip: React.FunctionComponent<TExternalProps &
+  Partial<TTooltipProps>> = ({ etherTokenBalance, euroTokenBalance, ...props }) => (
   <Tooltip
     textPosition={ECustomTooltipTextPosition.LEFT}
     content={

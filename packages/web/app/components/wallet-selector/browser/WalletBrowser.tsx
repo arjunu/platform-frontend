@@ -31,9 +31,8 @@ interface IWalletBrowserDispatchProps {
   tryConnectingWithBrowserWallet: () => void;
 }
 
-export const WalletBrowserComponent: React.FunctionComponent<
-  IWalletBrowserProps & IWalletBrowserDispatchProps
-> = ({
+export const WalletBrowserComponent: React.FunctionComponent<IWalletBrowserProps &
+  IWalletBrowserDispatchProps> = ({
   errorMessage,
   isLoading,
   isLoginRoute,

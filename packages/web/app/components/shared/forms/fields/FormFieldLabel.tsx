@@ -35,9 +35,9 @@ const FormLabel: React.FunctionComponent<FormLabelExternalProps & CommonHtmlProp
   </label>
 );
 
-const FormFieldLabelLayout: React.FunctionComponent<
-  CommonHtmlProps & FormFieldLabelExternalProps & TFormikConnect
-> = ({ children, name, formik, inheritFont, ...rawProps }) => {
+const FormFieldLabelLayout: React.FunctionComponent<CommonHtmlProps &
+  FormFieldLabelExternalProps &
+  TFormikConnect> = ({ children, name, formik, inheritFont, ...rawProps }) => {
   if (formik.validationSchema) {
     return (
       <FormLabel for={name} inheritFont={inheritFont} {...rawProps}>

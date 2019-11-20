@@ -44,9 +44,9 @@ const getIndividualStateName = (address: ReturnType<typeof selectIndividualAddre
   throw new InvariantError("Individual US state should be defined at this point");
 };
 
-export const UnlockedNEURWallet: React.FunctionComponent<
-  IUnlockedNEURWallet & CommonHtmlProps & IExternalProps
-> = ({
+export const UnlockedNEURWallet: React.FunctionComponent<IUnlockedNEURWallet &
+  CommonHtmlProps &
+  IExternalProps> = ({
   onPurchase,
   onRedeem,
   neuroAmount,

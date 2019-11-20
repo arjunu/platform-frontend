@@ -149,7 +149,6 @@ export const selectRedeemShareCapitalTaskSubstate = (
 
 export const selectNomineeTaskStep = (state: IAppState) => state.nomineeFlow.activeNomineeTask;
 
-export const selectActiveEtoPreviewCodeFromQueryString = createSelector(
-  selectRouter,
-  state => getActiveEtoPreviewCodeFromQueryString(state.location.search),
+export const selectActiveEtoPreviewCodeFromQueryString = createSelector(selectRouter, state =>
+  getActiveEtoPreviewCodeFromQueryString(state.location.search),
 );

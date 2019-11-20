@@ -90,9 +90,8 @@ const selectComponent = ({
 /**
  * This component will only attempt to redirect on entering the route. So when user gets logged in you need to trigger redirection on your own.
  */
-const OnlyAuthorizedRouteComponent: React.FunctionComponent<
-  IComponentProps & IExternalProps
-> = props => {
+const OnlyAuthorizedRouteComponent: React.FunctionComponent<IComponentProps &
+  IExternalProps> = props => {
   const Component = selectComponent(props);
 
   return (

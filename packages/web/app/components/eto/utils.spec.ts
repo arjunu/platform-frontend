@@ -281,8 +281,14 @@ describe("convertInArray", () => {
     const conversionFunction3 = (n: number) => (data: any) => (data === n ? n * 100 : data);
 
     const data = {
-      key1: [{ elementKey1: "bla", elementKey2: "25" }, { elementKey1: "blo", elementKey2: "27" }],
-      key2: [{ elementKey1: "bla", elementKey2: "25" }, { elementKey1: "blo", elementKey2: "27" }],
+      key1: [
+        { elementKey1: "bla", elementKey2: "25" },
+        { elementKey1: "blo", elementKey2: "27" },
+      ],
+      key2: [
+        { elementKey1: "bla", elementKey2: "25" },
+        { elementKey1: "blo", elementKey2: "27" },
+      ],
     };
 
     const conversionSpecKey1 = {
@@ -300,8 +306,14 @@ describe("convertInArray", () => {
     };
 
     const expectedOutput = {
-      key1: [{ elementKey1: "bla", elementKey2: "25" }, { elementKey1: "wow", elementKey2: "27" }],
-      key2: [{ elementKey1: "bla", elementKey2: 2500 }, { elementKey1: "wow", elementKey2: 27 }],
+      key1: [
+        { elementKey1: "bla", elementKey2: "25" },
+        { elementKey1: "wow", elementKey2: "27" },
+      ],
+      key2: [
+        { elementKey1: "bla", elementKey2: 2500 },
+        { elementKey1: "wow", elementKey2: 27 },
+      ],
     };
 
     expect(convert(conversionSpec)(data)).to.be.deep.equal(expectedOutput);

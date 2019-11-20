@@ -92,9 +92,7 @@ class PersonalAccountDetailsLayout extends React.Component<
                   personalData.country && (
                     <Record
                       label={<FormattedMessage id="settings.account-details.address" />}
-                      value={`${personalData.street}, ${personalData.city} ${
-                        personalData.zipCode
-                      }, ${personalData.country}`}
+                      value={`${personalData.street}, ${personalData.city} ${personalData.zipCode}, ${personalData.country}`}
                     />
                   )}
                 {process.env.NF_DISABLE_HIGH_INCOME !== "1" && (

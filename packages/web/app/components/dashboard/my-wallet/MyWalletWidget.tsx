@@ -108,7 +108,7 @@ export const MyWalletWidgetComponentBody: React.FunctionComponent<StateProps> = 
         </Row>
         {process.env.NF_CHECK_LOCKED_WALLET_WIDGET_ENABLED === "1" &&
           process.env.NF_CHECK_LOCKED_WALLET_WIDGET_IN_DASHBOARD === "1" &&
-          (!(isIcbmWalletConnected || isLockedWalletConnected) && (
+          !(isIcbmWalletConnected || isLockedWalletConnected) && (
             <Row data-test-id="my-wallet-widget-icbm-help-text">
               <Col>
                 <p className={styles.icbmWallet}>
@@ -124,7 +124,7 @@ export const MyWalletWidgetComponentBody: React.FunctionComponent<StateProps> = 
                 </p>
               </Col>
             </Row>
-          ))}
+          )}
       </>
     );
   }

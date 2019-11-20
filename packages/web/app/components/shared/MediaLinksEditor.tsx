@@ -24,9 +24,8 @@ interface ISingleMediaLinkFieldInternalProps {
   blankField: object;
 }
 
-const SingleMediaLinkField: React.FunctionComponent<
-  ISingleMediaLinkFieldInternalProps & CommonHtmlProps
-> = props => {
+const SingleMediaLinkField: React.FunctionComponent<ISingleMediaLinkFieldInternalProps &
+  CommonHtmlProps> = props => {
   const {
     isFirstElement,
     onAddClick,

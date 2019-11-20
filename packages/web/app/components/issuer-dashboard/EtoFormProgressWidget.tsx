@@ -36,9 +36,17 @@ const ButtonText: React.FunctionComponent<IButtonTextProps> = ({ isInProgress, r
   return <FormattedMessage id="shared-component.eto-form-progress-widget.edit" />;
 };
 
-export const EtoFormProgressWidget: React.FunctionComponent<
-  IProps & IChartCircleProps & TDataTestId
-> = ({ to, progress, name, isLoading, disabled, readonly, "data-test-id": dataTestId }) => (
+export const EtoFormProgressWidget: React.FunctionComponent<IProps &
+  IChartCircleProps &
+  TDataTestId> = ({
+  to,
+  progress,
+  name,
+  isLoading,
+  disabled,
+  readonly,
+  "data-test-id": dataTestId,
+}) => (
   <Panel columnSpan={EColumnSpan.ONE_COL} className={styles.progressSection}>
     <Proportion width={100} height={108}>
       <div className={styles.contentWrapper} data-test-id={dataTestId}>

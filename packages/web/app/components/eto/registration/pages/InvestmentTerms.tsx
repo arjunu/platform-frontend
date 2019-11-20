@@ -254,7 +254,7 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
 );
 
 const validate = (values: TEtoSpecsData) => {
-  const errors: { -readonly [P in keyof (typeof values)]?: TTranslatedString } = {};
+  const errors: { -readonly [P in keyof typeof values]?: TTranslatedString } = {};
 
   if ((values.publicDiscountFraction || 0) > (values.whitelistDiscountFraction || 0)) {
     errors.whitelistDiscountFraction = (

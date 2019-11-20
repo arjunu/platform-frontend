@@ -72,9 +72,9 @@ const getValidators = (minAmount: string, neuroAmount: string) =>
   YupTS.object({
     amount: YupTS.number().enhance(v =>
       v
-        .typeError(((
-          <FormattedMessage id="investment-flow.validation-error" />
-        ) as unknown) as string)
+        .typeError(
+          ((<FormattedMessage id="investment-flow.validation-error" />) as unknown) as string,
+        )
         .moreThan(0)
         .test(
           "isEnoughNEuro",

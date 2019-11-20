@@ -116,9 +116,8 @@ const RegisterEnhancedLightWalletForm: React.FunctionComponent = compose<any>(
   }),
 )(RegisterLightWalletForm);
 
-export const RegisterWalletComponent: React.FunctionComponent<
-  IDispatchProps & IStateProps & { restore: boolean }
-> = props => (
+export const RegisterWalletComponent: React.FunctionComponent<IDispatchProps &
+  IStateProps & { restore: boolean }> = props => (
   <>
     {props.restore ? null : (
       <>

@@ -14,12 +14,10 @@ export interface IWalletValues {
   totalEuroAmount: string;
 }
 
-export const WalletBalanceContainer: React.FunctionComponent<
-  IPanelProps &
-    CommonHtmlProps & {
-      data?: IWalletValues;
-    }
-> = ({ headerText, className, children, columnSpan }) => (
+export const WalletBalanceContainer: React.FunctionComponent<IPanelProps &
+  CommonHtmlProps & {
+    data?: IWalletValues;
+  }> = ({ headerText, className, children, columnSpan }) => (
   <Panel
     headerText={headerText}
     className={cn(className, "d-flex flex-column")}

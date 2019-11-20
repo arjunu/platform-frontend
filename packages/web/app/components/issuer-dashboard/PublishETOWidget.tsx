@@ -18,9 +18,8 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const PublishETOWidgetComponent: React.FunctionComponent<
-  IDispatchProps & IExternalProps
-> = ({ publish, columnSpan }) => (
+export const PublishETOWidgetComponent: React.FunctionComponent<IDispatchProps &
+  IExternalProps> = ({ publish, columnSpan }) => (
   <DashboardCenteredWidget
     data-test-id="eto-dashboard-publish-eto-widget"
     title={<FormattedMessage id="settings.publish-eto.header" />}

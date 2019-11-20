@@ -10,9 +10,9 @@ interface IExternalProps {
   endTime: Date;
 }
 
-const EndTimeRunningWidget: React.FunctionComponent<
-  IExternalProps & CommonHtmlProps & TDataTestId
-> = ({ endTime, ...props }) => (
+const EndTimeRunningWidget: React.FunctionComponent<IExternalProps &
+  CommonHtmlProps &
+  TDataTestId> = ({ endTime, ...props }) => (
   <span {...props}>
     <FormattedMessage
       id="shared-component.eto-overview.invest.ends-in"

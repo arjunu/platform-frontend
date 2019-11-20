@@ -84,9 +84,9 @@ export const WaitingToBeSigned: React.FunctionComponent<IWaitingToBeSigned & IEx
   </DashboardCenteredWidget>
 );
 
-export const SignInvestmentAgreementLayout: React.FunctionComponent<
-  IStateProps & IDispatchProps & IExternalProps
-> = ({
+export const SignInvestmentAgreementLayout: React.FunctionComponent<IStateProps &
+  IDispatchProps &
+  IExternalProps> = ({
   eto,
   signedInvestmentAgreementUrl,
   uploadedAgreement,

@@ -133,9 +133,9 @@ const SuccessEtoState: React.FunctionComponent<ISizeLayoutProps & CommonHtmlProp
   </div>
 );
 
-const ETOIssuerState: React.FunctionComponent<
-  IExternalProps & ISizeLayoutProps & CommonHtmlProps
-> = ({
+const ETOIssuerState: React.FunctionComponent<IExternalProps &
+  ISizeLayoutProps &
+  CommonHtmlProps> = ({
   eto,
   className,
   size = EProjectStatusSize.MEDIUM,
@@ -154,9 +154,9 @@ const ETOIssuerState: React.FunctionComponent<
   );
 };
 
-const ETOInvestorState: React.FunctionComponent<
-  IExternalProps & ISizeLayoutProps & CommonHtmlProps
-> = ({
+const ETOInvestorState: React.FunctionComponent<IExternalProps &
+  ISizeLayoutProps &
+  CommonHtmlProps> = ({
   eto,
   className,
   size = EProjectStatusSize.MEDIUM,

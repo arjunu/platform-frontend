@@ -26,8 +26,7 @@ const Message: React.FunctionComponent<IExternalProps & TDataTestId> = ({
   </section>
 );
 
-const SuccessMessage: React.FunctionComponent<
-  OmitKeys<IExternalProps, "tick"> & TDataTestId
-> = props => <Message {...props} tick={<SuccessTick />} />;
+const SuccessMessage: React.FunctionComponent<OmitKeys<IExternalProps, "tick"> &
+  TDataTestId> = props => <Message {...props} tick={<SuccessTick />} />;
 
 export { Message, SuccessMessage };

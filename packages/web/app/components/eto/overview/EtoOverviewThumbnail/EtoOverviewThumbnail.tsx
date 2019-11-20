@@ -64,9 +64,9 @@ const getNextFundingRound = ({ company }: TEtoWithCompanyAndContractReadonly) =>
   return undefined;
 };
 
-const MockEtoOverviewLayout: React.FunctionComponent<
-  TMockEtoProps & CommonHtmlProps & IDispatchProps
-> = ({ mockedEto, openEtoView }) => (
+const MockEtoOverviewLayout: React.FunctionComponent<TMockEtoProps &
+  CommonHtmlProps &
+  IDispatchProps> = ({ mockedEto, openEtoView }) => (
   <EtoCardPanelButton
     data-test-id={`eto-overview-${mockedEto.id}`}
     onClick={() => openEtoView(mockedEto.url)}
@@ -183,9 +183,9 @@ const EtoOverviewLayoutBase: React.FunctionComponent<TEtoProps> = ({ eto }) => (
   </>
 );
 
-const EtoOverviewGridLayout: React.FunctionComponent<
-  TEtoProps & CommonHtmlProps & IDispatchProps
-> = ({ eto, openEtoView }) => (
+const EtoOverviewGridLayout: React.FunctionComponent<TEtoProps &
+  CommonHtmlProps &
+  IDispatchProps> = ({ eto, openEtoView }) => (
   <EtoCardPanelButton
     data-test-id={`eto-overview-${eto.etoId}`}
     onClick={() => openEtoView(etoPublicViewLink(eto.previewCode, eto.product.jurisdiction))}
@@ -194,9 +194,9 @@ const EtoOverviewGridLayout: React.FunctionComponent<
   </EtoCardPanelButton>
 );
 
-const EtoOverviewComponent: React.FunctionComponent<
-  TEtoProps & CommonHtmlProps & IDispatchProps
-> = ({ eto, openEtoView }) => (
+const EtoOverviewComponent: React.FunctionComponent<TEtoProps &
+  CommonHtmlProps &
+  IDispatchProps> = ({ eto, openEtoView }) => (
   <EtoCardButton
     data-test-id={`eto-overview-${eto.etoId}`}
     onClick={() => openEtoView(appRoutes.etoIssuerView)}

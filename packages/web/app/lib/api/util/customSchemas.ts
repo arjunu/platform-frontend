@@ -24,15 +24,13 @@ export const currencyCodeSchema = (v: Yup.StringSchema) =>
 
 export const dateSchema = (v: Yup.StringSchema) =>
   v
-    .transform(
-      (_value: unknown, originalValue: string): string => {
-        const date = parse(originalValue);
-        if (!date.isValid()) {
-          return "";
-        }
-        return date.format(DATE_SCHEME);
-      },
-    )
+    .transform((_value: unknown, originalValue: string): string => {
+      const date = parse(originalValue);
+      if (!date.isValid()) {
+        return "";
+      }
+      return date.format(DATE_SCHEME);
+    })
     .test(
       "is-valid",
       getMessageTranslation(createMessage(ValidationMessage.VALIDATION_INVALID_DATE)),

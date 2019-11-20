@@ -284,16 +284,14 @@ const VerifiedUserSection: React.FunctionComponent<TVerificationSection> = ({
   }
 };
 
-const EtoDashboardLayout: React.FunctionComponent<
-  Omit<
-    IStateProps,
-    | "combinedEtoCompanyData"
-    | "isMarketingDataVisibleInPreview"
-    | "areAgreementsSignedByNominee"
-    | "preEtoStartDate"
-  > &
-    RequiredByKeys<IComputedProps, "etoStep">
-> = props => {
+const EtoDashboardLayout: React.FunctionComponent<Omit<
+  IStateProps,
+  | "combinedEtoCompanyData"
+  | "isMarketingDataVisibleInPreview"
+  | "areAgreementsSignedByNominee"
+  | "preEtoStartDate"
+> &
+  RequiredByKeys<IComputedProps, "etoStep">> = props => {
   const { isVerificationSectionDone, ...rest } = props;
 
   return (
