@@ -1,4 +1,4 @@
-import "./polyfills";
+import "./polyfills.sideEffect";
 
 // tslint:disable-next-line:ordered-imports
 import "./components/translatedMessages/yupLocales.sideEffect";

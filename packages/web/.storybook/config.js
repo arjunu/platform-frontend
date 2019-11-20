@@ -1,4 +1,4 @@
-import "../app/polyfills";
+import "../app/polyfills.sideEffect";
 
 import * as React from "react";
 import { configure, addDecorator } from "@storybook/react";
