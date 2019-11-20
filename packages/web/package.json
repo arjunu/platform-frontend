@@ -1,7 +1,7 @@
 {
   "name": "@neufund/web",
   "sideEffects": [
-    "*.sideEffect.tsx",
+    "*.sideEffect.*",
     "*.scss",
     "*.css"
   ],

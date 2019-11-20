@@ -1,3 +1,5 @@
+// tslint:disable:no-any-on-steroid
+
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { setLocale } from "yup";
@@ -73,7 +75,6 @@ const array = {
   max: (values: any) => <FormattedMessage id={"form.field.error.array.max"} values={values} />,
 };
 
-// Need to cast as any to accept React.Element
 setLocale({
   mixed,
   string,

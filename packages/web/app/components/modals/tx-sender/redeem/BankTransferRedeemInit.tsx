@@ -78,9 +78,7 @@ const getValidators = (minAmount: string, neuroAmount: string) =>
         .moreThan(0)
         .test(
           "isEnoughNEuro",
-          ((
-            <FormattedMessage id="bank-transfer.redeem.init.errors.value-higher-than-balance" />
-          ) as unknown) as string,
+          <FormattedMessage id="bank-transfer.redeem.init.errors.value-higher-than-balance" />,
           (value: string) => doesUserHaveEnoughNEuro(value, neuroAmount),
         )
         .test(
