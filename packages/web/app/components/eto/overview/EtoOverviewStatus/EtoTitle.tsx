@@ -3,10 +3,11 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 
 import { EJurisdiction } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { etoPublicViewLink } from "../../../appRouteUtils";
 import { TokenSymbolWidget } from "./TokenSymbolWidget";
 
+import * as tokenIcon from "../../../../assets/img/token_icon.svg";
 import * as styles from "./EtoOverviewStatus.module.scss";
 
 interface IExternalProps {
@@ -14,7 +15,7 @@ interface IExternalProps {
 }
 
 interface IEtoProp {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface ITitleProps {
@@ -58,7 +59,7 @@ export const EtoTitle: React.FunctionComponent<IExternalProps & IEtoProp> = ({
       brandName={eto.company.brandName}
       tokenImage={{
         alt: eto.equityTokenName || "",
-        srcSet: { "1x": eto.equityTokenImage || "" },
+        srcSet: { "1x": eto.equityTokenImage || tokenIcon },
       }}
       tokenName={eto.equityTokenName}
       tokenSymbol={eto.equityTokenSymbol || ""}

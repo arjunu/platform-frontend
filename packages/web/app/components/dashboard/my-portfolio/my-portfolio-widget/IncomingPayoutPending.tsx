@@ -10,8 +10,8 @@ import {
   selectEuroTokenIncomingPayout,
 } from "../../../../modules/investor-portfolio/selectors";
 import { appConnect } from "../../../../store";
-import { isZero } from "../../../../utils/Number.utils";
-import { Counter } from "../../../shared/Counter.unsafe";
+import { isZero } from "../../../../utils/NumberUtils";
+import { Counter } from "../../../shared/Counter";
 import { ETheme, Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,
@@ -86,9 +86,9 @@ export const IncomingPayoutPendingBase: React.FunctionComponent<IIncomingPayoutD
   </div>
 );
 
-export const IncomingPayoutPendingLayout: React.FunctionComponent<
-  IIncomingPayoutData & TDispatchProps & TEndDate
-> = ({ endDate, loadPayoutsData, etherTokenIncomingPayout, euroTokenIncomingPayout }) => (
+export const IncomingPayoutPendingLayout: React.FunctionComponent<IIncomingPayoutData &
+  TDispatchProps &
+  TEndDate> = ({ endDate, loadPayoutsData, etherTokenIncomingPayout, euroTokenIncomingPayout }) => (
   <IncomingPayoutPendingBase
     dataTestId="my-portfolio-widget-incoming-payout-pending"
     etherTokenIncomingPayout={etherTokenIncomingPayout}

@@ -72,9 +72,9 @@ const LoginEnhancedLightWalletForm = withFormik<TProps, IFormValues>({
   validationSchema: LoginValidator,
 })(LoginLightWalletForm);
 
-export const LoginWithEmailLightWalletComponent: React.FunctionComponent<
-  IDispatchProps & IStateProps & IOwnProps
-> = props => (
+export const LoginWithEmailLightWalletComponent: React.FunctionComponent<IDispatchProps &
+  IStateProps &
+  IOwnProps> = props => (
   <>
     <Row>
       <p className={styles.prompt}>

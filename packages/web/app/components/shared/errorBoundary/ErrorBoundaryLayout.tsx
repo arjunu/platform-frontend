@@ -7,10 +7,10 @@ import { Layout } from "../../layouts/Layout";
 
 import * as styles from "./ErrorBoundary.module.scss";
 
-export const ErrorBoundaryLayoutComponent: React.FunctionComponent<{}> = () => (
+export const ErrorBoundaryComponent: React.FunctionComponent<{}> = () => (
   <div className={styles.errorLayout}>
     <FormattedMessage id="error-boundary.main-error-message" />
   </div>
 );
 
-export const ErrorBoundaryLayout = compose(withContainer(Layout))(ErrorBoundaryLayoutComponent);
+export const ErrorBoundaryLayout = compose(withContainer(Layout))(ErrorBoundaryComponent);

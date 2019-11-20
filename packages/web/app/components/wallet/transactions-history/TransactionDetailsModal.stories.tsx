@@ -4,9 +4,10 @@ import * as React from "react";
 
 import { ETransactionDirection, ETransactionType } from "../../../lib/api/analytics-api/interfaces";
 import { ETransactionStatus, ETransactionSubType } from "../../../modules/tx-history/types";
-import { EthereumAddressWithChecksum, EthereumTxHash } from "../../../types";
+import { EthereumAddressWithChecksum, EthereumTxHash } from "../../../utils/opaque-types/types";
+import { toEquityTokenSymbol } from "../../../utils/opaque-types/utils";
 import { withModalBody } from "../../../utils/storybookHelpers.unsafe";
-import { ECurrency, ENumberInputFormat, EquityToken } from "../../shared/formatters/utils";
+import { ECurrency, ENumberInputFormat } from "../../shared/formatters/utils";
 import { TransactionDetailsModal } from "./TransactionDetailsModal";
 
 import * as tokenIcon from "../../../assets/img/token_icon.svg";
@@ -62,7 +63,7 @@ storiesOf("Templates|TransacionDetailsModal", module)
       transaction={{
         amount: "1000",
         amountFormat: ENumberInputFormat.FLOAT,
-        currency: "QTT" as EquityToken,
+        currency: toEquityTokenSymbol("QTT"),
         etoId: "0xed1Dc67d0505019122bcf4E318bB750cb6FeF3de" as EthereumAddressWithChecksum,
         fromAddress: "0xfA1Af2E251ee739F83e14d7daCfd77B3d0E930b7" as EthereumAddressWithChecksum,
         icon: tokenIcon,
@@ -95,7 +96,7 @@ storiesOf("Templates|TransacionDetailsModal", module)
       transaction={{
         amount: "10460320",
         amountFormat: ENumberInputFormat.FLOAT,
-        currency: "QTT" as EquityToken,
+        currency: toEquityTokenSymbol("QTT"),
         etoId: "0xed1Dc67d0505019122bcf4E318bB750cb6FeF3de" as EthereumAddressWithChecksum,
         icon: tokenIcon,
         neuReward: "1.0282261234728144e+25",
@@ -182,7 +183,7 @@ storiesOf("Templates|TransacionDetailsModal", module)
         currency: ECurrency.ETH,
         equityTokenAmount: "10000000",
         equityTokenAmountFormat: ENumberInputFormat.FLOAT,
-        equityTokenCurrency: "QTT" as EquityToken,
+        equityTokenCurrency: toEquityTokenSymbol("QTT"),
         equityTokenIcon: tokenIcon,
         etoId: "0xed1Dc67d0505019122bcf4E318bB750cb6FeF3de" as EthereumAddressWithChecksum,
         fromAddress: "0xedBaa635e95ec605d577ACa41Ca0eeF62617802E" as EthereumAddressWithChecksum,
@@ -208,7 +209,7 @@ storiesOf("Templates|TransacionDetailsModal", module)
         currency: ECurrency.ETH,
         equityTokenAmount: "10000000",
         equityTokenAmountFormat: ENumberInputFormat.FLOAT,
-        equityTokenCurrency: "QTT" as EquityToken,
+        equityTokenCurrency: toEquityTokenSymbol("QTT"),
         equityTokenIcon: tokenIcon,
         etoId: "0xed1Dc67d0505019122bcf4E318bB750cb6FeF3de" as EthereumAddressWithChecksum,
         fromAddress: "0xedBaa635e95ec605d577ACa41Ca0eeF62617802E" as EthereumAddressWithChecksum,
@@ -234,7 +235,7 @@ storiesOf("Templates|TransacionDetailsModal", module)
         currency: ECurrency.ETH,
         equityTokenAmount: "10000000",
         equityTokenAmountFormat: ENumberInputFormat.FLOAT,
-        equityTokenCurrency: "QTT" as EquityToken,
+        equityTokenCurrency: toEquityTokenSymbol("QTT"),
         equityTokenIcon: tokenIcon,
         etoId: "0xed1Dc67d0505019122bcf4E318bB750cb6FeF3de" as EthereumAddressWithChecksum,
         fromAddress: "0xedBaa635e95ec605d577ACa41Ca0eeF62617802E" as EthereumAddressWithChecksum,

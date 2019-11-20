@@ -1,3 +1,5 @@
+$loading-background: rgba($neu-charcoal-grey, .8);
+
 .document {
   &:global(.doc),
   &:global(.docx) {
@@ -27,16 +29,14 @@
 .tile {
   position: relative;
   background-color: $neu-white-two;
-  color: $gray5;
-  border: 1px solid $gray10;
-  width: px-to-rem(160px);
-  height: px-to-rem(139.6px);
-  border-radius: px-to-rem(5px);
+  width: px-to-rem(162px);
+  height: px-to-rem(162px);
+  border-radius: px-to-rem(4px);
+  border: solid 1px $neu-gull-gray;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: px-to-rem(20px);
-  padding-bottom: px-to-rem(5px);
+  padding: px-to-rem(8px);
+  overflow: hidden;
 
   :global(.document-icon) {
     width: px-to-rem(70px);
@@ -44,100 +44,124 @@
   }
 
   .title {
-    color: $color-black;
-    font-size: px-to-rem(12px);
+    font-family: $font-family-roboto;
+    color: $neu-charcoal-grey;
+    font-size: px-to-rem(14px);
     margin-bottom: 0;
-    margin-top: px-to-rem(20px);
-    text-align: center;
+    margin-top: px-to-rem(6px);
   }
 
   .disabled-title {
     color: $gray10;
     justify-content: center;
   }
-}
 
-.sub-title {
-  color: $gray10;
-  justify-content: center;
-  text-align: center;
-  font-size: px-to-rem(8px);
-  margin-bottom: 0;
-}
-
-.enabled {
-
-  &:active,
-  &:hover,
-  &:focus {
-    box-shadow: 0 0 px-to-rem(5px) px-to-rem(1px) $gray10;
+  .file-name {
+    font-family: $font-family-roboto;
+    color: $neu-shuttle-gray;
+    font-size: px-to-rem(12px);
+    margin-bottom: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
-}
 
-.active {
-  border: 1px solid $green-light;
-
-  &:active,
-  &:hover {
-    box-shadow: 0 0 px-to-rem(5px) px-to-rem(1px) $green-light;
-  }
-}
-
-.busy {
-  cursor: default;
-}
-
-.clickable-area {
-  padding: 0;
-  background-color: transparent;
-  border-radius: px-to-rem(5px);
-  border: 0;
-}
-
-.sub-title-download {
-  width: 100%;
-  color: $color-black;
-  display: block;
-  font-size: px-to-rem(8px);
-  padding: 0;
-  background-color: transparent;
-  border: 0;
-
-  &:active,
-  &:hover,
-  &:focus {
-    text-decoration: underline;
-    text-decoration-color: $neu-piss-yellow;
-  }
-}
-
-.download-link-disabled {
-  color: $gray10;
-  cursor: default;
-
-  &:hover,
-  &:active,
-  &:focus {
-    text-decoration: none;
+  .buttons {
+    display: flex;
+    margin-top: auto;
+    align-items: center;
   }
 }
 
 .document-busy {
   position: absolute;
+  top: 0;
   left: 0;
   right: 0;
-  margin: 0 auto;
+  bottom: 0;
+  margin: -2px;
+  background-color: $loading-background;
+  color: $neu-white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: 3px;
 }
 
-.document-not-busy {
-  display: none;
+.extension {
+  width: 32px;
+  height: 16px;
+  text-transform: uppercase;
+  font-family: $font-family-roboto;
+  color: $neu-white;
+  font-size: px-to-rem(10px);
+  text-align: center;
+  border-radius: 3px;
+  line-height: 16px;
+
+  &:global(.pdf) {
+    background-color: $neu-flamingo-red;
+  }
+
+  &:global(.doc) {
+    background-color: $neu-science-blue;
+  }
 }
 
-.text-busy {
-  opacity: .5;
+.upload-title {
+  font-family: $font-family-roboto;
+  color: $neu-charcoal-grey;
+  font-size: px-to-rem(14px);
+  width: px-to-rem(162px);
+  margin: {
+    top: 12px;
+    bottom: 8px;
+  }
 }
 
-.document-icon-busy {
-  filter: grayscale(100%);
-  opacity: .5;
+.warning,
+.error {
+  display: flex;
+  width: px-to-rem(162px);
+
+  &-icon {
+    margin-right: px-to-rem(4px);
+    display: inline-block;
+    width: px-to-rem(16px);
+    height: px-to-rem(16px);
+  }
+}
+
+.file-size,
+.drag-description,
+.warning,
+.error {
+  font-family: $font-family-roboto;
+  color: $neu-shuttle-gray;
+  font-size: px-to-rem(12px);
+}
+
+.warning {
+  color: $neu-shuttle-gray;
+}
+
+.error {
+  color: $neu-flamingo-red;
+}
+
+.file-size {
+  width: px-to-rem(162px);
+  margin: {
+    top: px-to-rem(8px);
+    bottom: px-to-rem(8px);
+  }
+}
+
+.drag-description {
+  margin: {
+    top: 8px;
+    bottom: 0;
+  }
 }

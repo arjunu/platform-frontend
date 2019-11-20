@@ -15,10 +15,7 @@ export const selectTimestampOfLastChange = createSelector(
   state => state.timestampOfLastChange,
 );
 
-export const selectModuleStatus = createSelector(
-  selectTxHistoryState,
-  state => state.status,
-);
+export const selectModuleStatus = createSelector(selectTxHistoryState, state => state.status);
 
 export const selectTXById = (id: string, state: IAppState) => {
   const txHistoryRoot = selectTxHistoryState(state);

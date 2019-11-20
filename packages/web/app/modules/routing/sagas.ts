@@ -1,8 +1,13 @@
-import { Effect, fork } from "redux-saga/effects";
+import { LocationChangeAction } from "connected-react-router";
+import { Effect, fork, put, select } from "redux-saga/effects";
 
+import { appRoutes } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
+import { EUserType } from "../../lib/api/users/interfaces";
 import { actions, TActionFromCreator } from "../actions";
-import { neuTakeEvery } from "../sagasUtils";
+import { selectIsAuthorized, selectUserType } from "../auth/selectors";
+import { waitForAppInit } from "../init/sagas";
+import { neuCall, neuTakeEvery } from "../sagasUtils";
 
 function* openInNewWindowSaga(
   _: TGlobalDependencies,
@@ -19,6 +24,41 @@ function* openInNewWindowSaga(
   }
 }
 
+export function* startRouteBasedSagas(
+  { logger }: TGlobalDependencies,
+  action: LocationChangeAction,
+): IterableIterator<any> {
+  const appIsReady = yield waitForAppInit();
+  const userIsAuthorized: boolean = yield select(selectIsAuthorized);
+  const userType: EUserType | undefined = yield select(selectUserType);
+
+  logger.info(
+    `userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
+      action.payload.location.pathname
+    }`,
+  );
+
+  if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
+    yield neuCall(nomineeRouting, action);
+  }
+}
+
+export function* nomineeRouting(
+  _: TGlobalDependencies,
+  { payload }: LocationChangeAction,
+): Iterator<any> {
+  if (payload.location.pathname === appRoutes.dashboard) {
+    yield put(actions.nomineeFlow.nomineeDashboardView());
+  }
+  if (payload.location.pathname === appRoutes.etoIssuerView) {
+    yield put(actions.nomineeFlow.nomineeEtoView());
+  }
+  if (payload.location.pathname === appRoutes.documents) {
+    yield put(actions.nomineeFlow.nomineeDocumentsView());
+  }
+}
+
 export function* routingSagas(): Iterator<Effect> {
   yield fork(neuTakeEvery, actions.routing.openInNewWindow, openInNewWindowSaga);
+  yield fork(neuTakeEvery, "@@router/LOCATION_CHANGE", startRouteBasedSagas);
 }

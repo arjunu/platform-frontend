@@ -1,10 +1,10 @@
 import { fillForm } from "../utils/forms";
 import {
-  acceptWallet,
   assertDashboard,
   assertEmailChangeAbort,
   assertEmailChangeFlow,
   assertEmailPendingChange,
+  confirmAccessModal,
   createAndLoginNewUser,
   DEFAULT_PASSWORD,
   generateRandomEmailAddress,
@@ -19,6 +19,7 @@ import {
 } from "../utils/index";
 
 describe("Change Email", function(): void {
+  this.retries(2);
   describe("Has verified email", () => {
     let email: string;
     beforeEach(() => {
@@ -43,7 +44,7 @@ describe("Change Email", function(): void {
         "verify-email-widget-form-submit": { type: "submit" },
       });
 
-      acceptWallet();
+      confirmAccessModal();
 
       // assert if error message has popped in
       cy.get(tid("profile-email-exists")).should("exist");
@@ -73,46 +74,7 @@ describe("Change Email", function(): void {
         "verify-email-widget-form-submit": { type: "submit" },
       });
 
-      acceptWallet();
-
-      // assert if new email is pending for verification
-
-      assertEmailPendingChange(email, newEmail);
-    });
-
-    it("should allow to abort email change flow", () => {
-      const newEmail = generateRandomEmailAddress();
-
-      goToProfile();
-
-      assertEmailChangeFlow();
-
-      fillForm({
-        email: newEmail,
-        "verify-email-widget-form-submit": { type: "submit" },
-      });
-
-      acceptWallet();
-
-      // assert if new email is pending for verification
-      assertEmailPendingChange(email, newEmail);
-
-      cy.get(tid("verify-email-widget.abort-change-email.button")).click();
-
-      assertEmailChangeAbort(email);
-    });
-
-    it("should update metadata in wallet storage", () => {
-      goToProfile();
-      assertEmailChangeFlow();
-
-      const newEmail = generateRandomEmailAddress();
-      fillForm({
-        email: newEmail,
-        "verify-email-widget-form-submit": { type: "submit" },
-      });
-
-      acceptWallet();
+      confirmAccessModal();
 
       // assert if new email is pending for verification
 
@@ -127,6 +89,28 @@ describe("Change Email", function(): void {
       loginWithLightWallet(newEmail, DEFAULT_PASSWORD);
 
       assertDashboard();
+    });
+
+    it("should allow to abort email change flow", () => {
+      const newEmail = generateRandomEmailAddress();
+
+      goToProfile();
+
+      assertEmailChangeFlow();
+
+      fillForm({
+        email: newEmail,
+        "verify-email-widget-form-submit": { type: "submit" },
+      });
+
+      confirmAccessModal();
+
+      // assert if new email is pending for verification
+      assertEmailPendingChange(email, newEmail);
+
+      cy.get(tid("verify-email-widget.abort-change-email.button")).click();
+
+      assertEmailChangeAbort(email);
     });
   });
 
@@ -156,9 +140,9 @@ describe("Change Email", function(): void {
         .then(() => {
           cy.window().then(window => {
             // TODO: move into a seperate util method
-            const metaData = JSON.parse(window.localStorage.getItem(
-              "NF_WALLET_METADATA",
-            ) as string);
+            const metaData = JSON.parse(
+              window.localStorage.getItem("NF_WALLET_METADATA") as string,
+            );
             email = metaData.email;
           });
         })
@@ -177,7 +161,7 @@ describe("Change Email", function(): void {
             "verify-email-widget-form-submit": { type: "submit" },
           });
 
-          acceptWallet();
+          confirmAccessModal();
 
           // assert if error message has popped in
           cy.get(tid("profile-email-exists")).should("exist");

@@ -6,6 +6,7 @@ import {
   IIncomingPayouts,
   IInvestorTicket,
   TTokenDisbursalData,
+  TTokensPersonalDiscount,
 } from "./types";
 
 export interface IInvestorTicketsState {
@@ -14,6 +15,7 @@ export interface IInvestorTicketsState {
   initialCalculatedContributions: Dictionary<ICalculatedContribution | undefined>;
   tokensDisbursal: TTokenDisbursalData;
   incomingPayouts: IIncomingPayouts;
+  tokensPersonalDiscounts: Dictionary<TTokensPersonalDiscount | undefined>;
 }
 
 export const etoFlowInitialState: IInvestorTicketsState = {
@@ -30,6 +32,7 @@ export const etoFlowInitialState: IInvestorTicketsState = {
     error: false,
     data: undefined,
   },
+  tokensPersonalDiscounts: {},
 };
 
 export const investorTicketsReducer: AppReducer<IInvestorTicketsState> = (
@@ -37,7 +40,7 @@ export const investorTicketsReducer: AppReducer<IInvestorTicketsState> = (
   action,
 ): DeepReadonly<IInvestorTicketsState> => {
   switch (action.type) {
-    case "INVESTOR_TICKET_SET":
+    case actions.investorEtoTicket.setEtoInvestorTicket.getType():
       return {
         ...state,
         investorEtoTickets: {
@@ -45,7 +48,7 @@ export const investorTicketsReducer: AppReducer<IInvestorTicketsState> = (
           [action.payload.etoId]: action.payload.ticket,
         },
       };
-    case "INVESTOR_TICKET_SET_CALCULATED_CONTRIBUTION":
+    case actions.investorEtoTicket.setCalculatedContribution.getType():
       return {
         ...state,
         calculatedContributions: {
@@ -53,7 +56,7 @@ export const investorTicketsReducer: AppReducer<IInvestorTicketsState> = (
           [action.payload.etoId]: action.payload.contribution,
         },
       };
-    case "INVESTOR_TICKET_SET_INITIAL_CALCULATED_CONTRIBUTION":
+    case actions.investorEtoTicket.setInitialCalculatedContribution.getType():
       return {
         ...state,
         initialCalculatedContributions: {
@@ -124,6 +127,15 @@ export const investorTicketsReducer: AppReducer<IInvestorTicketsState> = (
           loading: true,
           error: false,
           data: undefined,
+        },
+      };
+
+    case actions.investorEtoTicket.setTokenPersonalDiscount.getType():
+      return {
+        ...state,
+        tokensPersonalDiscounts: {
+          ...state.tokensPersonalDiscounts,
+          [action.payload.etoId]: action.payload.tokenPersonalDiscount,
         },
       };
   }

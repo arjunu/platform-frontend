@@ -14,7 +14,7 @@ import {
   toFixedPrecision,
 } from "../../components/shared/formatters/utils";
 import { makeEthereumAddressChecksummed } from "../../modules/web3/utils";
-import { EthereumAddress } from "../../types";
+import { EthereumAddress } from "../../utils/opaque-types/types";
 import { mockApiUrl } from "../config";
 import {
   kycCompanyDocsForm,
@@ -32,7 +32,7 @@ import {
 import { fillForm } from "./forms";
 import { goToWallet } from "./navigation";
 import { tid } from "./selectors";
-import { DEFAULT_PASSWORD } from "./userHelpers";
+import { DEFAULT_PASSWORD, verifyUserEmailCall } from "./userHelpers";
 
 export const LONG_WAIT_TIME = 60000;
 
@@ -94,7 +94,7 @@ export const confirmAccessModal = (password: string = DEFAULT_PASSWORD) => {
   cy.get(tid("access-light-wallet-password-input")).type(password);
   cy.get(tid("access-light-wallet-confirm"))
     .should("be.enabled")
-    .click();
+    .awaitedClick();
 };
 
 export const confirmAccessModalNoPW = () => {
@@ -107,9 +107,9 @@ export const closeModal = () => {
 
 export const getLatestVerifyUserEmailLink = (
   email: string,
-  attempts = 3,
+  attempts = 5,
 ): Cypress.Chainable<string> =>
-  cy.request({ url: mockApiUrl + "sendgrid/session/mails", method: "GET" }).then(r => {
+  cy.request({ url: mockApiUrl + `sendgrid/session/mails?to=${email}`, method: "GET" }).then(r => {
     const latestEmailByUser = getLatestEmailByUser(r, email);
 
     const activationLink = get(latestEmailByUser, "template_vars.activation_link");
@@ -142,6 +142,10 @@ export const verifyLatestUserEmail = (email: string) => {
 
 export const verifyLatestUserEmailAccountSetup = (email: string) => {
   verifyLatestUserEmailBase(email, undefined);
+};
+
+export const verifyLatestUserEmailWithAPI = (email: string) => {
+  getLatestVerifyUserEmailLink(email).then(verifyUserEmailCall);
 };
 
 export const registerWithLightWallet = (
@@ -231,11 +235,6 @@ export const loginWithLightWallet = (email: string, password: string) => {
   lightWalletTypeLoginInfo(email, password);
 };
 
-export const acceptWallet = () => {
-  cy.get(tid("access-light-wallet-password-input")).type(DEFAULT_PASSWORD);
-  cy.get(tid("access-light-wallet-confirm")).awaitedClick();
-};
-
 export const etoFixtureByName = (name: string) => {
   const etoAddress = Object.keys(ETO_FIXTURES).find(a => ETO_FIXTURES[a].name === name);
   if (etoAddress) {
@@ -322,8 +321,10 @@ export const parseAmount = (amount: string) => new BigNumber(amount.replace(/\s|
 /**
  * Get eth wallet balance
  */
-export const getWalletEthAmount = () => {
-  goToWallet();
+export const getWalletEthAmount = (navigateToWallet: boolean = true) => {
+  if (navigateToWallet) {
+    goToWallet();
+  }
 
   return cy
     .get(tid("wallet-balance.ether.balance-values.large-value"))
@@ -368,7 +369,7 @@ export const removePendingExternalTransaction = () => {
 };
 
 export const getFormattedNumber = (
-  value: number | undefined,
+  value: string | undefined,
   roundingMode = ERoundingMode.UP,
   decimalPlaces = 4,
   inputFormat = ENumberInputFormat.FLOAT,
@@ -387,7 +388,7 @@ export const getFormattedNumber = (
     : "Unlimited";
 
 export const getShortFormattedNumber = (
-  value: number,
+  value: string,
   roundingMode = ERoundingMode.UP,
   decimalPlaces = 4,
   outputFormat = EAbbreviatedNumberOutputFormat.LONG,
@@ -411,9 +412,6 @@ export const getShortFormattedNumber = (
 };
 
 export const getPercentage = (value: number) => `${value * 100}%`;
-
-export const getYesOrNo = (value: any | undefined, assertion: any, returnTBAinsteadOfNo = false) =>
-  value ? (value === assertion ? "Yes" : returnTBAinsteadOfNo ? "TBA" : "No") : "TBA";
 
 // Reexport assertions so they are easy accessed through utils
 export * from "./assertions";

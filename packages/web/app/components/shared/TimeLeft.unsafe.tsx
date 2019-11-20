@@ -20,58 +20,38 @@ interface ITimeLeftProps {
 
 const RenderTimeLeft: React.ComponentType<ITimeLeftProps> = ({ timeLeft }) => {
   const [days, hours, minutes] = calculateTimeLeftUnits(timeLeft);
-
-  if (days > 0) {
-    return (
-      <>
-        {
-          <>
-            {days} <FormattedMessage values={{ days }} id="eto.settings.days" />
-          </>
-        }
-        {hours > 0 ? (
-          <>
-            {", "}
-            {hours} <FormattedMessage values={{ hours }} id="eto.settings.hours" />
-          </>
-        ) : null}
-      </>
-    );
-  } else if (hours > 0) {
-    return (
-      <>
-        {
-          <>
-            {hours} <FormattedMessage values={{ hours }} id="eto.settings.hours" />
-          </>
-        }
-        {minutes > 0 ? (
-          <>
-            {" "}
-            {minutes} <FormattedMessage values={{ minutes }} id="eto.settings.minutes" />
-          </>
-        ) : null}
-      </>
-    );
-  } else if (minutes > 0) {
-    return (
-      <>
-        {minutes} <FormattedMessage values={{ minutes }} id="eto.settings.minutes" />
-      </>
-    );
-  } else if (timeLeft > 0 && days === 0 && hours === 0 && minutes === 0) {
-    return (
-      <>
-        {timeLeft} <FormattedMessage values={{ timeLeft }} id="eto.settings.seconds" />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <FormattedMessage id="eto.settings.time-left-none" />
-      </>
-    );
-  }
+  return (
+    <>
+      {days > 0 && (
+        <>
+          {days} <FormattedMessage values={{ days }} id="eto.settings.days" />
+          &nbsp;
+        </>
+      )}
+      {hours > 0 && (
+        <>
+          {hours} <FormattedMessage values={{ hours }} id="eto.settings.hours" />
+          &nbsp;
+        </>
+      )}
+      {minutes > 0 && (
+        <>
+          {minutes} <FormattedMessage values={{ minutes }} id="eto.settings.minutes" />
+          &nbsp;
+        </>
+      )}
+      {timeLeft > 0 && days === 0 && hours === 0 && minutes === 0 && (
+        <>
+          {timeLeft} <FormattedMessage values={{ timeLeft }} id="eto.settings.seconds" />
+        </>
+      )}
+      {timeLeft === 0 && (
+        <>
+          <FormattedMessage id="eto.settings.time-left-none" />
+        </>
+      )}
+    </>
+  );
 };
 
 const FancyRenderTimeLeft: React.ComponentType<ITimeLeftProps> = ({ timeLeft }) => {
@@ -80,12 +60,8 @@ const FancyRenderTimeLeft: React.ComponentType<ITimeLeftProps> = ({ timeLeft }) 
   if (days > 0) {
     return (
       <span className={styles.etoTimeLeft}>
-        {
-          <>
-            <span className={styles.largeGreen}>{days}</span>{" "}
-            <FormattedMessage values={{ days }} id="eto.settings.days" />
-          </>
-        }
+        <span className={styles.largeGreen}>{days}</span>{" "}
+        <FormattedMessage values={{ days }} id="eto.settings.days" />
         {hours > 0 ? (
           <>
             {", "}
@@ -98,12 +74,8 @@ const FancyRenderTimeLeft: React.ComponentType<ITimeLeftProps> = ({ timeLeft }) 
   } else if (hours > 0) {
     return (
       <span className={styles.etoTimeLeft}>
-        {
-          <>
-            <span className={styles.largeGreen}>{hours}</span>{" "}
-            <FormattedMessage values={{ hours }} id="eto.settings.hours" />
-          </>
-        }
+        <span className={styles.largeGreen}>{hours}</span>{" "}
+        <FormattedMessage values={{ hours }} id="eto.settings.hours" />
         {minutes > 0 ? (
           <>
             {" "}

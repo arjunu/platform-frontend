@@ -13,12 +13,12 @@ import { selectInitError, selectIsInitInProgress } from "../modules/init/selecto
 import { appConnect } from "../store";
 import { ContainerContext } from "../utils/InversifyProvider";
 import { onEnterAction } from "../utils/OnEnterAction";
-import { ScrollToTop } from "../utils/ScrollToTop.unsafe";
+import { ScrollToTop } from "../utils/ScrollToTop";
 import { withRootMetaTag } from "../utils/withMetaTags.unsafe";
 import { AppRouter } from "./AppRouter";
 import { CriticalError } from "./layouts/CriticalError";
-import { GenericModal } from "./modals/GenericModal";
-import { VideoModal } from "./modals/VideoModal";
+import { GenericModal } from "./modals/generic-modal/GenericModal";
+import { VideoModal } from "./modals/video-modal/VideoModal";
 import { AccessWalletModal } from "./modals/wallet-access/AccessWalletModal";
 import { LoadingIndicator } from "./shared/loading-indicator/LoadingIndicator";
 import { ToastContainer } from "./shared/Toast";

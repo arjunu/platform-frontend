@@ -1,0 +1,46 @@
+$loading-background: rgba($neu-charcoal-grey, .8);
+$border-radius: px-to-rem(4px);
+
+.dropzone {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  border-radius: $border-radius;
+  border: dashed 2px $neu-gull-gray;
+  background-color: $neu-white-two;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: px-to-rem(162px);
+  height: px-to-rem(162px);
+
+  &:hover,
+  &:focus {
+    border: solid 2px $neu-bitter-lemon;
+  }
+
+  &.dropzone-disabled {
+    &,
+    &:disabled,
+    &:hover {
+      border: dashed 2px $neu-light-blue-grey-two;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.dropzone-busy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: -2px;
+  background-color: $loading-background;
+  color: $neu-white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: $border-radius;
+}

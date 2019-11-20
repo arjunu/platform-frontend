@@ -1,12 +1,16 @@
 import { isAddress, randomHex, toChecksumAddress } from "web3-utils";
 
 import { ERoundingMode } from "../../components/shared/formatters/utils";
-import { ETHEREUM_ADDRESS_LENGTH, MONEY_DECIMALS } from "../../config/constants";
-import { TBigNumberVariant } from "../../lib/web3/types";
-import { EthereumAddress, EthereumAddressWithChecksum, EthereumNetworkId } from "../../types";
+import { ETH_DECIMALS, ETHEREUM_ADDRESS_LENGTH } from "../../config/constants";
+import { TBigNumberVariants } from "../../lib/web3/types";
 import { compareBigNumbers } from "../../utils/BigNumberUtils";
-import { formatMoney } from "../../utils/Money.utils";
-import { convertToBigInt } from "../../utils/Number.utils";
+import { formatMoney } from "../../utils/MoneyUtils";
+import { convertToUlps } from "../../utils/NumberUtils";
+import {
+  EthereumAddress,
+  EthereumAddressWithChecksum,
+  EthereumNetworkId,
+} from "../../utils/opaque-types/types";
 
 export function makeEthereumAddressChecksummed(
   ethereumAddress: EthereumAddress,
@@ -33,30 +37,31 @@ export function ethereumNetworkIdToNetworkName(networkId: EthereumNetworkId): st
   }
 }
 
-export const isAddressValid = (value: string): boolean => !!(value && isAddress(value));
+export const isAddressValid = (value: string): value is EthereumAddress =>
+  !!(value && isAddress(value));
 
 export const doesUserHaveEnoughEther = (
-  value: TBigNumberVariant,
-  maxEther: TBigNumberVariant,
+  value: TBigNumberVariants,
+  maxEther: TBigNumberVariants,
 ): boolean => {
   if (value === "") return false;
-  return compareBigNumbers(convertToBigInt(value || "0"), maxEther) < 0;
+  return compareBigNumbers(convertToUlps(value || "0"), maxEther) < 0;
 };
 
 export const doesUserHaveEnoughNEuro = (
-  value: TBigNumberVariant,
-  maxNEuro: TBigNumberVariant,
+  value: TBigNumberVariants,
+  maxNEuro: TBigNumberVariants,
 ): boolean => {
   if (value === "") return false;
-  const formattedMax = formatMoney(maxNEuro, MONEY_DECIMALS, 2, ERoundingMode.DOWN);
+  const formattedMax = formatMoney(maxNEuro, ETH_DECIMALS, 2, ERoundingMode.DOWN);
 
-  return compareBigNumbers(convertToBigInt(value || "0"), convertToBigInt(formattedMax)) <= 0;
+  return compareBigNumbers(convertToUlps(value || "0"), convertToUlps(formattedMax)) <= 0;
 };
 
 export const doesUserWithdrawMinimal = (
-  value: TBigNumberVariant,
-  minNEuro: TBigNumberVariant,
+  value: TBigNumberVariants,
+  minNEuro: TBigNumberVariants,
 ): boolean => {
   if (value === "") return false;
-  return compareBigNumbers(convertToBigInt(value || "0"), minNEuro) >= 0;
+  return compareBigNumbers(convertToUlps(value || "0"), minNEuro) >= 0;
 };

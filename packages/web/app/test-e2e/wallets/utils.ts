@@ -4,7 +4,7 @@ import { multiplyBigNumbers } from "../../utils/BigNumberUtils";
 import { confirmAccessModal, DEFAULT_PASSWORD, parseAmount, tid } from "../utils";
 import { getBalanceRpc, getTransactionByHashRpc } from "../utils/ethRpcUtils";
 
-const Q18 = new BigNumber(10).pow(18);
+const Q18 = new BigNumber("10").pow(18);
 
 export const assertWithdrawButtonIsDisabled = () =>
   cy
@@ -71,14 +71,7 @@ export const checkTransactionWithRPCNode = (
     });
   });
 };
-
-export const fillWithdrawForm = (testAddress: string, testValue: number) => {
-  cy.get(tid("account-address.your.ether-address.from-div"))
-    .then(address => address.text())
-    .as("accountAddress");
-
-  cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
-  /*Test Address field validation*/
+export const typeWithdrawForm = (testAddress: string, testValue: string) => {
   typeWrongAddress();
   cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.to-address"))
     .type(testAddress)
@@ -91,9 +84,19 @@ export const fillWithdrawForm = (testAddress: string, testValue: number) => {
     .blur();
 };
 
+export const continueWithdrawFlow = (testAddress: string, testValue: string) => {
+  cy.get(tid("account-address.your.ether-address.from-div"))
+    .then(address => address.text())
+    .as("accountAddress");
+
+  cy.get(tid("wallet.eth.withdraw.button")).awaitedClick();
+
+  typeWithdrawForm(testAddress, testValue);
+};
+
 export const assertWithdrawFlow = (
   testAddress: string,
-  testValue: number,
+  testValue: string,
   expectedInput: string,
 ) => {
   getBalanceRpc(testAddress)
@@ -102,7 +105,7 @@ export const assertWithdrawFlow = (
 
   cy.get(tid(`etherscan-link.${testAddress}`)).should("exist");
   cy.get(tid("modals.tx-sender.withdraw-flow.summary.value.large-value"))
-    .then(e => parseAmount(e.text()).toNumber())
+    .then(e => parseAmount(e.text()).toString())
     .should("eq", testValue);
 
   cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).contains(/0\.\d{4}/);
@@ -112,7 +115,7 @@ export const assertWithdrawFlow = (
   confirmAccessModal(DEFAULT_PASSWORD);
 
   cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-  cy.get(tid("modals.tx-sender.withdraw-flow.success")).should("exist");
+  cy.get(tid("modals.shared.tx-success.modal")).should("exist");
 
   cy.get(tid("modals.tx-sender.withdraw-flow.tx-hash")).then(txHashObject => {
     const txHash = txHashObject.attr("data-test-hash")!;
@@ -127,7 +130,7 @@ export const assertWithdrawFlow = (
         expect(input).to.equal(expectedInput);
         // do not check expected gas limit - any change in the solidity implementation will make test fail
         // expect(gas).to.equal(expectedGasLimit);
-        expect(ethValue).to.equal(Q18.mul(0).toString());
+        expect(ethValue).to.equal(Q18.mul("0").toString());
 
         // TODO: Connect artifacts with tests to get deterministic addresses
         // expect(etherTokenAddress).to.equal(to);

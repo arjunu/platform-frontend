@@ -12,13 +12,13 @@ import {
 import { ETxSenderType, TSpecificTransactionState } from "../../../../modules/tx/types";
 import { selectEthereumAddressWithChecksum } from "../../../../modules/web3/selectors";
 import { appConnect } from "../../../../store";
-import { EthereumAddressWithChecksum } from "../../../../types";
+import { EthereumAddressWithChecksum } from "../../../../utils/opaque-types/types";
 import { Button } from "../../../shared/buttons/Button";
 import { EthereumIcon } from "../../../shared/ethereum";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { TxDetails } from "../TxDetails.unsafe";
 import { TxName } from "../TxName";
-import { WithdrawPending } from "../withdraw-flow/Pending";
+import { TransferPending } from "../withdraw-flow/Pending/Pending";
 import { TxHashAndBlock } from "./TxHashAndBlock";
 
 export interface IStateProps {
@@ -77,9 +77,10 @@ const TxDefaultPendingLayout: React.FunctionComponent<TTxPendingLayoutProps> = p
 const TxPendingLayout: React.FunctionComponent<TTxPendingLayoutProps> = props => {
   switch (props.type) {
     case ETxSenderType.WITHDRAW:
+    case ETxSenderType.TRANSFER_TOKENS:
       return (
-        <WithdrawPending
-          txHash={props.txHash!}
+        <TransferPending
+          txHash={props.txHash}
           blockId={props.blockId}
           txTimestamp={props.txTimestamp}
           walletAddress={props.walletAddress}
@@ -93,7 +94,7 @@ const TxPendingLayout: React.FunctionComponent<TTxPendingLayoutProps> = props =>
 const TxPending = compose<TTxPendingLayoutProps, ITxPendingProps>(
   appConnect<IStateProps, IDispatchProps>({
     dispatchToProps: d => ({
-      deletePendingTransaction: () => d(actions.txTransactions.deletePendingTransaction()),
+      deletePendingTransaction: () => d(actions.txMonitor.deletePendingTransaction()),
       goToWallet: () => d(actions.routing.goToWallet()),
     }),
     stateToProps: state => ({

@@ -1,7 +1,11 @@
 import * as React from "react";
+import { compose } from "recompose";
 
+import { actions } from "../../../modules/actions";
 import { isSupportingLedger } from "../../../modules/user-agent/reducer";
 import { appConnect } from "../../../store";
+import { onEnterAction } from "../../../utils/OnEnterAction";
+import { resetWalletOnEnter } from "../resetWallet";
 import { WalletLedgerChooser } from "./WalletLedgerChooser";
 import { WalletLedgerInit } from "./WalletLedgerInitComponent";
 import { WalletLedgerNotSupported } from "./WalletLedgerNotSupportedComponent";
@@ -24,9 +28,17 @@ export const WalletLedgerComponent: React.FunctionComponent<IWalletLedgerStatePr
   }
 };
 
-export const WalletLedger = appConnect<IWalletLedgerStateProps>({
-  stateToProps: state => ({
-    isConnectionEstablished: state.ledgerWizardState.isConnectionEstablished,
-    isLedgerSupported: isSupportingLedger(state.browser),
+export const WalletLedger = compose<IWalletLedgerStateProps, {}>(
+  onEnterAction({
+    actionCreator: dispatch => {
+      dispatch(actions.walletSelector.ledgerTryEstablishingConnectionWithLedger());
+    },
   }),
-})(WalletLedgerComponent);
+  resetWalletOnEnter(),
+  appConnect<IWalletLedgerStateProps>({
+    stateToProps: state => ({
+      isConnectionEstablished: state.ledgerWizardState.isConnectionEstablished,
+      isLedgerSupported: isSupportingLedger(state.browser),
+    }),
+  }),
+)(WalletLedgerComponent);

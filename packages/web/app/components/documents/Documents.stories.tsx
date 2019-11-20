@@ -27,6 +27,7 @@ const issuerProps: React.ComponentProps<typeof DocumentsLayout> = {
   documentsUploading: {},
   documentsGenerated: {},
   transactionPending: false,
+  startDocumentRemove: action("startDocumentRemove"),
 };
 
 const nomineeProps: React.ComponentProps<typeof NomineeDocumentsLayout> = {

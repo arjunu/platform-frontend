@@ -15,7 +15,10 @@ describe("Toggle", () => {
   it("should toggle true value", async () => {
     const submitFormHandler = spy();
 
-    const Component = formWrapper({ toggle: TRUE_VALUE }, submitFormHandler)(() => (
+    const Component = formWrapper(
+      { toggle: TRUE_VALUE },
+      submitFormHandler,
+    )(() => (
       <FormToggle
         name="toggle"
         enabledLabel="on"
@@ -41,7 +44,10 @@ describe("Toggle", () => {
   it("should toggle false value", async () => {
     const submitFormHandler = spy();
 
-    const Component = formWrapper({ toggle: FALSE_VALUE }, submitFormHandler)(() => (
+    const Component = formWrapper(
+      { toggle: FALSE_VALUE },
+      submitFormHandler,
+    )(() => (
       <FormToggle
         name="toggle"
         enabledLabel="on"
@@ -67,7 +73,10 @@ describe("Toggle", () => {
   it("should set default value", async () => {
     const submitFormHandler = spy();
 
-    const Component = formWrapper({}, submitFormHandler)(() => (
+    const Component = formWrapper(
+      {},
+      submitFormHandler,
+    )(() => (
       <FormToggle
         name="toggle"
         enabledLabel="on"

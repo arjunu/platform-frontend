@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { fork, put, select } from "redux-saga/effects";
 
 import { ETxValidationMessages } from "../../../components/translatedMessages/messages";
@@ -5,7 +6,9 @@ import { createMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { ITxData } from "../../../lib/web3/types";
 import { NotEnoughEtherForGasError } from "../../../lib/web3/Web3Adapter";
+import { IAppState } from "../../../store";
 import {
+  addBigNumbers,
   compareBigNumbers,
   multiplyBigNumbers,
   subtractBigNumbers,
@@ -13,15 +16,29 @@ import {
 import { actions, TAction } from "../../actions";
 import { neuCall, neuTakeLatestUntil } from "../../sagasUtils";
 import { selectEtherBalance } from "../../wallet/selectors";
+import { selectWalletType } from "../../web3/selectors";
 import { generateInvestmentTransaction } from "../transactions/investment/sagas";
-import { ETxSenderType, IInvestmentDraftType } from "../types";
+import { selectMaximumInvestment } from "../transactions/investment/selectors";
+import { ETxSenderType } from "../types";
+import { STIPEND_ELIGIBLE_WALLETS } from "./../../../lib/web3/constants";
+import { isGaslessTxEnabled } from "./../../../utils/isGaslessTxEnabled";
 import { EValidationState } from "./reducer";
-import { txValidateWithdraw } from "./withdraw/sagas";
+import { selectInvestmentFLow } from "./selectors";
+import { txValidateTokenTransfer } from "./transfer/token-transfer/sagas";
+import { txValidateWithdraw } from "./transfer/withdraw/sagas";
 
-export function* txValidateDefault(txDraft: IInvestmentDraftType): Iterator<any> {
+export function* txValidateInvestment(): Iterator<any> {
   try {
-    const generatedTxDetails = yield neuCall(generateInvestmentTransaction, txDraft);
-    yield validateGas(generatedTxDetails);
+    const investFlow = yield select(selectInvestmentFLow);
+    const investAmountUlps = yield select(selectMaximumInvestment);
+
+    const generatedTxDetails = yield neuCall(generateInvestmentTransaction, {
+      investmentType: investFlow.investmentType,
+      etoId: investFlow.etoId,
+      investAmountUlps: new BigNumber(investAmountUlps),
+    });
+
+    yield neuCall(validateGas, generatedTxDetails);
 
     yield put(actions.txValidator.setValidationState(EValidationState.VALIDATION_OK));
     return generatedTxDetails;
@@ -39,15 +56,17 @@ export function* txValidateSaga(
   action: TAction,
 ): any {
   if (action.type !== actions.txValidator.validateDraft.getType()) return;
-
   try {
     let validationGenerator: any;
     switch (action.payload.type) {
       case ETxSenderType.WITHDRAW:
         validationGenerator = txValidateWithdraw(action.payload);
         break;
+      case ETxSenderType.TRANSFER_TOKENS:
+        validationGenerator = txValidateTokenTransfer(action.payload);
+        break;
       case ETxSenderType.INVEST:
-        validationGenerator = txValidateDefault(action.payload);
+        validationGenerator = txValidateInvestment();
         break;
     }
 
@@ -63,14 +82,26 @@ export function* txValidateSaga(
   }
 }
 
-export function* validateGas(txDetails: ITxData): any {
+export function* validateGas({ apiUserService }: TGlobalDependencies, txDetails: ITxData): any {
   const maxEtherUlps = yield select(selectEtherBalance);
 
   const costUlps = multiplyBigNumbers([txDetails.gasPrice, txDetails.gas]);
   const valueUlps = subtractBigNumbers([maxEtherUlps, costUlps]);
 
   if (compareBigNumbers(txDetails.value, valueUlps) > 0) {
-    throw new NotEnoughEtherForGasError("Not enough Ether to pay the Gas for this transaction");
+    const walletType = yield select((state: IAppState) => selectWalletType(state.web3));
+    if (isGaslessTxEnabled && STIPEND_ELIGIBLE_WALLETS.includes(walletType)) {
+      // @SEE https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2015.md
+      // @SEE https://github.com/MetaMask/metamask-extension/issues/5101
+      const { gasStipend } = yield apiUserService.getGasStipend(txDetails);
+      const etherUlpsWithStipend = addBigNumbers([gasStipend, maxEtherUlps]);
+      const valueUlpsWithStipend = subtractBigNumbers([etherUlpsWithStipend, costUlps]);
+      if (compareBigNumbers(txDetails.value, valueUlpsWithStipend) > 0) {
+        throw new NotEnoughEtherForGasError("Not enough Ether to pay the Gas for this transaction");
+      }
+    } else {
+      throw new NotEnoughEtherForGasError("Not enough Ether to pay the Gas for this transaction");
+    }
   }
 }
 

@@ -93,11 +93,11 @@ export function* addNewEmail(
       createMessage(ProfileMessage.PROFILE_ADD_EMAIL_INPUT_LABEL),
     );
   } catch (e) {
-    if (e instanceof EmailAlreadyExists)
+    if (e instanceof EmailAlreadyExists) {
       notificationCenter.error(createMessage(ProfileMessage.PROFILE_EMAIL_ALREADY_EXISTS), {
         "data-test-id": "profile-email-exists",
       });
-    else {
+    } else {
       logger.error("Failed to Add new email", e);
       notificationCenter.error(createMessage(ProfileMessage.PROFILE_ADD_EMAIL_ERROR));
     }

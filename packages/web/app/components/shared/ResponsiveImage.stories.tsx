@@ -7,7 +7,6 @@ import * as image from "../../assets/img/wallet_selector/logo_metamask@2x.png";
 
 storiesOf("ResponsiveImage", module).add("default", () => (
   <ResponsiveImage
-    src={image}
     width={1}
     height={1}
     srcSet={{

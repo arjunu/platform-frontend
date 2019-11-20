@@ -5,11 +5,12 @@ import { actions } from "../actions";
 
 export interface IWalletSelectorState {
   isMessageSigning: boolean;
-  messageSigningError?: DeepReadonly<TMessage>;
+  messageSigningError: DeepReadonly<TMessage> | undefined;
 }
 
 const walletSelectorInitialState: IWalletSelectorState = {
   isMessageSigning: false,
+  messageSigningError: undefined,
 };
 
 export const walletSelectorReducer: AppReducer<IWalletSelectorState> = (

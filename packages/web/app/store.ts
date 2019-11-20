@@ -6,7 +6,8 @@ import { combineReducers, Reducer } from "redux";
 import { actions, TAction } from "./modules/actions";
 import { initInitialState } from "./modules/init/reducer";
 import { appReducers } from "./modules/reducer";
-import { DeepReadonly, FunctionWithDeps } from "./types";
+import { DeepReadonly } from "./types";
+import { FunctionWithDeps } from "./utils/opaque-types/types";
 
 export interface IAppAction {
   type: string;
@@ -24,7 +25,7 @@ export type AppActionTypes = DeepReadonly<TAction | LocationChangeAction>;
 
 // base on reducers we can infer type of app state
 type TReducersMapToReturnTypes<T extends Record<string, (...args: any[]) => any>> = {
-  [P in keyof T]: ReturnType<T[P]>
+  [P in keyof T]: ReturnType<T[P]>;
 };
 
 export type IAppState = TReducersMapToReturnTypes<typeof appReducers> & {

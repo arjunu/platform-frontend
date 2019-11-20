@@ -16,6 +16,7 @@ export interface IRawTxData extends ITxData {
 
 export interface IEthereumNetworkConfig {
   rpcUrl: string;
+  backendRpcUrl: string;
 }
 
-export type TBigNumberVariant = number | string | BigNumber;
+export type TBigNumberVariants = string | BigNumber;

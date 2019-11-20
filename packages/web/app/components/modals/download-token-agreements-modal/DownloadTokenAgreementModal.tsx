@@ -12,7 +12,7 @@ import {
 import { IImmutableFileId } from "../../../lib/api/immutable-storage/ImmutableStorage.interfaces";
 import { actions } from "../../../modules/actions";
 import { selectEtoWithCompanyAndContractById } from "../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { selectPendingDownloads } from "../../../modules/immutable-file/selectors";
 import { appConnect } from "../../../store";
 import { getInvestorDocumentTitles } from "../../documents/utils";
@@ -21,7 +21,7 @@ import {
   selectDownloadAgrementModalIsOpen,
 } from "../../portfolio/selectors";
 import { ButtonIcon } from "../../shared/buttons";
-import { DocumentTemplateLabel } from "../../shared/DocumentLink";
+import { DocumentLabel } from "../../shared/DocumentLink";
 import { EHeadingSize, Heading } from "../../shared/Heading";
 import { Modal } from "../Modal";
 import { InfoList } from "../tx-sender/shared/InfoList";
@@ -32,7 +32,7 @@ import * as styles from "./DownloadTokenAgreementModal.module.scss";
 
 interface IStateProps {
   isOpen: boolean;
-  eto: TEtoWithCompanyAndContract | undefined;
+  eto: TEtoWithCompanyAndContractReadonly | undefined;
   pendingDownloads: ReturnType<typeof selectPendingDownloads>;
 }
 
@@ -73,8 +73,7 @@ const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentPr
                   <InfoRow
                     key={document.ipfsHash}
                     caption={
-                      <DocumentTemplateLabel
-                        onClick={() => {}}
+                      <DocumentLabel
                         title={
                           getInvestorDocumentTitles(eto.product.offeringDocumentType)[
                             document.documentType
@@ -87,9 +86,7 @@ const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentPr
                         className={styles.icon}
                         svgIcon={iconDownload}
                         disabled={pendingDownloads[document.ipfsHash]}
-                        data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${
-                          eto.etoId
-                        }.download`}
+                        data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${eto.etoId}.download`}
                         onClick={() =>
                           downloadDocument(
                             {
@@ -115,8 +112,7 @@ const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentPr
                   <InfoRow
                     key={template.ipfsHash}
                     caption={
-                      <DocumentTemplateLabel
-                        onClick={() => {}}
+                      <DocumentLabel
                         title={
                           getInvestorDocumentTitles(eto.product.offeringDocumentType)[
                             template.documentType
@@ -129,9 +125,7 @@ const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentPr
                         className={styles.icon}
                         svgIcon={iconDownload}
                         disabled={pendingDownloads[template.ipfsHash]}
-                        data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${
-                          eto.etoId
-                        }.download`}
+                        data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${eto.etoId}.download`}
                         onClick={() =>
                           generateTemplateByEtoId({ ...template, asPdf: true }, eto.etoId)
                         }

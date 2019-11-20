@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { AbiCoder } from "web3-eth-abi";
 import Web3Accounts from "web3-eth-accounts";
 
 import { NODE_ADDRESS } from "../config";
@@ -42,6 +43,30 @@ export const requestFromWeb3NodeFetch = (methodName: string, params: string[] | 
 export const getTransactionByHashRpc = (txHash: string) =>
   requestFromWeb3Node("eth_getTransactionByHash", [txHash]);
 
+const abiCoder = new AbiCoder();
+
+export const getTokenBalance = (
+  tokenAddress: string,
+  walletAddress: string,
+  // decodeParameter is not typed correctly
+): Cypress.Chainable<any> =>
+  requestFromWeb3Node("eth_call", [
+    {
+      from: walletAddress,
+      to: tokenAddress,
+      data: abiCoder.encodeFunctionCall(
+        {
+          constant: true,
+          inputs: [{ name: "_owner", type: "address" }],
+          name: "balanceOf",
+          outputs: [{ name: "balance", type: "uint256" }],
+          type: "function",
+        },
+        [walletAddress],
+      ),
+    },
+  ]).then(response => abiCoder.decodeParameter("uint256", response.body.result));
+
 export const getBalanceRpc = (address: string) =>
   requestFromWeb3Node("eth_getBalance", [address, "latest"]);
 
@@ -74,9 +99,9 @@ export const sendEth = (fixture: string, to: string, amount: BigNumber | "all") 
   const account = new Web3Accounts(NODE_ADDRESS).privateKeyToAccount(privateKey);
 
   getBalanceRpc(account.address).then(balanceResponse => {
-    const availableAmount = new BigNumber(balanceResponse.body.result).minus(21000);
+    const availableAmount = new BigNumber(balanceResponse.body.result).minus("21000");
 
-    if (availableAmount.greaterThan(0)) {
+    if (availableAmount.greaterThan("0")) {
       cy.log("Sending ethereum");
 
       const amountToSend = new BigNumber(amount === "all" ? availableAmount : amount);

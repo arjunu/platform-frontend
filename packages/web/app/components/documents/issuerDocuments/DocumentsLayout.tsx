@@ -4,12 +4,13 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EEtoDocumentType } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { EtoFileIpfsModal } from "../../eto/shared/EtoFileIpfsModal";
-import { UploadableDocumentTile } from "../../shared/Document";
+import { DocumentUploadableTile } from "../../shared/DocumentUploadable";
 import { Heading } from "../../shared/Heading";
 import { ProductTemplates } from "../../shared/SingleColDocumentWidget";
 import { DocumentList } from "../DocumentList";
 import {
   getInvestorDocumentTitles,
+  getUploadedDocumentName,
   isBusy,
   isFileUploaded,
   renameDocuments,
@@ -33,6 +34,7 @@ const DocumentsLayout: React.FunctionComponent<TComponentProps> = ({
   documentsDownloading,
   transactionPending,
   documentsGenerated,
+  startDocumentRemove,
 }) => {
   const { productTemplates, documentsStateInfo } = etoFilesData;
   const documents = renameDocuments(documentsStateInfo, onChainState);
@@ -70,7 +72,7 @@ const DocumentsLayout: React.FunctionComponent<TComponentProps> = ({
           </h4>
           {documentsStateInfo &&
             documents.map((key: EEtoDocumentType) => (
-              <UploadableDocumentTile
+              <DocumentUploadableTile
                 key={key}
                 documentKey={key}
                 active={uploadAllowed(documentsStateInfo, etoState, key, onChainState)}
@@ -81,6 +83,8 @@ const DocumentsLayout: React.FunctionComponent<TComponentProps> = ({
                 documentDownloadLinkInactive={
                   Boolean(documentsUploading[key]) || Boolean(documentsDownloading[key])
                 }
+                startDocumentRemove={startDocumentRemove}
+                uploadedFileName={getUploadedDocumentName(etoDocuments, key)}
               />
             ))}
         </section>
@@ -91,6 +95,9 @@ const DocumentsLayout: React.FunctionComponent<TComponentProps> = ({
               key => productTemplates[key],
             )}
             title={<FormattedMessage id="documents.agreement-and-prospectus-templates" />}
+            description={
+              <FormattedMessage id="documents.agreement-and-prospectus-templates.description" />
+            }
             className={styles.documents}
             offeringDocumentType={offeringDocumentType}
           />

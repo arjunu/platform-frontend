@@ -3,9 +3,11 @@ import { inject, injectable } from "inversify";
 import * as Web3 from "web3";
 
 import { symbols } from "../../../di/symbols";
-import { EthereumNetworkId } from "../../../types";
+import { EWalletType } from "../../../modules/web3/types";
+import { EthereumNetworkId } from "../../../utils/opaque-types/types";
 import { IEthereumNetworkConfig } from "../types";
 import { Web3Adapter } from "../Web3Adapter";
+import { STIPEND_ELIGIBLE_WALLETS } from "./../constants";
 import { LedgerError, LedgerNotAvailableError, LedgerUnknownError } from "./errors";
 import {
   connectToLedger,
@@ -42,20 +44,23 @@ export class LedgerWalletConnector {
     derivationPath: string,
     networkId: EthereumNetworkId,
   ): Promise<LedgerWallet> {
-    if (!this.getTransport) {
-      throw new Error("Can't finish not started connection");
-    }
+    if (!this.getTransport) throw new LedgerNotAvailableError();
+
     let providerEngine: any;
     try {
       const { ledgerWeb3, ledgerInstance } = await createWeb3WithLedgerProvider(
         networkId,
-        this.web3Config.rpcUrl,
+        STIPEND_ELIGIBLE_WALLETS.includes(EWalletType.LEDGER)
+          ? this.web3Config.backendRpcUrl
+          : this.web3Config.rpcUrl,
         this.getTransport,
         derivationPath,
       );
       providerEngine = ledgerWeb3.currentProvider;
+
       this.web3 = ledgerWeb3;
-      this.ledgerInstance = { ...ledgerInstance, getTransport: this.getTransport };
+      this.ledgerInstance = ledgerInstance;
+
       const web3Adapter = new Web3Adapter(this.web3);
       const address = await web3Adapter.getAccountAddress();
       return new LedgerWallet(web3Adapter, address, this.ledgerInstance, derivationPath);
@@ -72,42 +77,35 @@ export class LedgerWalletConnector {
     derivationPaths: string,
     indexOffset: number = 1,
     accountsNo: number = 0,
-  ): Promise<{
-    [index: string]: string;
-  }> {
+  ): Promise<IDerivationPathToAddress> {
     if (!this.getTransport) throw new LedgerNotAvailableError();
-    {
-      const Transport = await this.getTransport();
-      try {
-        const pathComponents = obtainPathComponentsFromDerivationPath(derivationPaths);
 
-        const chainCode = false; // Include the chain code
-        const ethInstance = new Eth(Transport);
+    const Transport = await this.getTransport();
+    try {
+      const pathComponents = obtainPathComponentsFromDerivationPath(derivationPaths);
 
-        const addresses: { [index: string]: string } = {};
-        for (let i = indexOffset; i < indexOffset + accountsNo; i += 1) {
-          const path = pathComponents.basePath + (pathComponents.index + i).toString();
-          const address = await ethInstance.getAddress(path, false, chainCode);
-          addresses[path] = address.address;
-        }
-        return addresses;
-      } finally {
-        Transport.close();
+      const chainCode = false; // Include the chain code
+      const ethInstance = new Eth(Transport);
+
+      const addresses: IDerivationPathToAddress = {};
+      for (let i = indexOffset; i < indexOffset + accountsNo; i += 1) {
+        const path = pathComponents.basePath + (pathComponents.index + i).toString();
+        const address = await ethInstance.getAddress(path, false, chainCode);
+        addresses[path] = address.address;
       }
+      return addresses;
+    } finally {
+      await Transport.close();
     }
   }
 
   public async getMultipleAccounts(derivationPaths: string[]): Promise<IDerivationPathToAddress> {
-    const accounts: IDerivationPathToAddress = {};
+    const accounts = await Promise.all(
+      derivationPaths.map(path => this.getMultipleAccountsFromHdPath(path, 0, 1)),
+    );
 
-    for (const derivationPath of derivationPaths) {
-      if (!this.getTransport) throw new LedgerNotAvailableError();
-
-      const account = await this.getMultipleAccountsFromHdPath(derivationPath, 0, 1);
-      Object.assign(accounts, account);
-    }
-
-    return accounts;
+    // reduce to single object
+    return Object.assign({}, ...accounts);
   }
 
   public async getMultipleAccountsFromDerivationPrefix(

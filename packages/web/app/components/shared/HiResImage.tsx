@@ -1,44 +1,36 @@
 import * as React from "react";
 
+interface ISrcSet {
+  "1x": string;
+  "2x"?: string;
+  "3x"?: string;
+}
+
 interface IHiResImageProps {
-  partialPath: string;
+  srcSet: ISrcSet;
   className?: string;
   alt?: string;
   title?: string;
-  max2x?: boolean;
 }
 
-export const HiResImage: React.FunctionComponent<IHiResImageProps> = ({
-  partialPath,
+const srcSetToString = (srcSet: ISrcSet) =>
+  `${srcSet["1x"]} 1x,
+    ${srcSet["2x"] && srcSet["2x"] + " 2x"},
+    ${srcSet["3x"] && srcSet["3x"] + " 3x"}`;
+
+const HiResImage: React.FunctionComponent<IHiResImageProps> = ({
+  srcSet,
   className,
   alt,
   title,
-  max2x,
-}) => {
-  if (process.env.NODE_ENV === "test") {
-    return <div />;
-  }
+}) => (
+  <img
+    src={srcSet["1x"]}
+    srcSet={srcSetToString(srcSet)}
+    className={className}
+    alt={alt}
+    title={title}
+  />
+);
 
-  try {
-    const image = require("../../assets/img/" + partialPath + ".png");
-    const image2x = require("../../assets/img/" + partialPath + "@2x.png");
-
-    let srcSet: string;
-    if (max2x) {
-      srcSet = `${image} 1x, ${image2x} 2x`;
-    } else {
-      const image3x = require("../../assets/img/" + partialPath + "@3x.png");
-
-      srcSet = `${image} 1x, ${image2x} 2x, ${image3x} 3x`;
-    }
-
-    return <img src={image} srcSet={srcSet} className={className} alt={alt} title={title} />;
-  } catch (e) {
-    // we show error here. Otherwise react goes into loop
-    // tslint:disable-next-line
-    console.error(
-      `Couldnt find image at path assets/img/${partialPath}.png" or one of sub-resolutions`,
-    );
-    return <div />;
-  }
-};
+export { HiResImage, ISrcSet, srcSetToString };

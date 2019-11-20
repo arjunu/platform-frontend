@@ -4,8 +4,8 @@ import { calculateTimeLeft } from "../../../components/shared/utils";
 import { TMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { ICreateJwtEndpointResponse } from "../../../lib/api/auth/SignatureAuthApi";
-import { EthereumAddressWithChecksum } from "../../../types";
 import { getJwtExpiryDate, hasValidPermissions } from "../../../utils/JWTUtils";
+import { EthereumAddressWithChecksum } from "../../../utils/opaque-types/types";
 import { EDelayTiming, safeDelay } from "../../../utils/safeTimers";
 import { accessWalletAndRunEffect } from "../../access-wallet/sagas";
 import { actions } from "../../actions";
@@ -28,7 +28,7 @@ export function* loadJwt({ jwtStorage }: TGlobalDependencies): Iterator<Effect> 
 export function* setJwt({ jwtStorage }: TGlobalDependencies, jwt: string): Iterator<any> {
   jwtStorage.set(jwt);
 
-  yield put(actions.auth.loadJWT(jwt));
+  yield put(actions.auth.setJWT(jwt));
 }
 
 /**
@@ -143,7 +143,7 @@ export function* ensurePermissionsArePresentAndRunEffect(
   effect: Iterator<any>,
   permissions: Array<string> = [],
   title: TMessage,
-  message: TMessage,
+  message?: TMessage,
   inputLabel?: TMessage,
 ): Iterator<any> {
   const jwt: string = yield select(selectJwt);
@@ -213,5 +213,5 @@ export function* handleJwtTimeout({ logger }: TGlobalDependencies): Iterator<any
 }
 
 export function* authJwtSagas(): Iterator<Effect> {
-  yield fork(neuTakeLatest, actions.auth.loadJWT, handleJwtTimeout);
+  yield fork(neuTakeLatest, actions.auth.setJWT, handleJwtTimeout);
 }

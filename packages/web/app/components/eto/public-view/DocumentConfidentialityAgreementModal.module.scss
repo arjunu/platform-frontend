@@ -1,0 +1,13 @@
+.image {
+  width: 270px;
+  margin-bottom: px-to-rem(28px);
+}
+
+.button-block {
+  display: grid;
+  grid-template: auto / 1fr 1fr;
+  grid-auto-flow: column;
+  grid-gap: 2rem;
+
+  margin: 1.5rem 0;
+}

@@ -2,27 +2,30 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { LinkedBankAccountComponent } from "./LinkedBankAccountWidget";
+import { ENEURWalletStatus } from "../../../modules/wallet/types";
+import { LinkedBankAccountLayout } from "./LinkedBankAccountWidget";
 
 storiesOf("LinkedBankAccountWidget", module)
   .add("not verified", () => (
-    <LinkedBankAccountComponent
+    <LinkedBankAccountLayout
       verifyBankAccount={action("verify")}
       isBankAccountVerified={false}
-      isUserFullyVerified={true}
+      bankAccount={undefined}
+      neurStatus={ENEURWalletStatus.ENABLED}
     />
   ))
   .add("not verified and blocked to start", () => (
-    <LinkedBankAccountComponent
+    <LinkedBankAccountLayout
       verifyBankAccount={action("verify")}
       isBankAccountVerified={false}
-      isUserFullyVerified={false}
+      bankAccount={undefined}
+      neurStatus={ENEURWalletStatus.DISABLED_NON_VERIFIED}
     />
   ))
   .add("verified", () => (
-    <LinkedBankAccountComponent
+    <LinkedBankAccountLayout
       isBankAccountVerified={true}
-      isUserFullyVerified={true}
+      neurStatus={ENEURWalletStatus.ENABLED}
       verifyBankAccount={action("verify")}
       bankAccount={{
         hasBankAccount: true,
@@ -37,9 +40,9 @@ storiesOf("LinkedBankAccountWidget", module)
     />
   ))
   .add("verified but blocked to start", () => (
-    <LinkedBankAccountComponent
+    <LinkedBankAccountLayout
       isBankAccountVerified={true}
-      isUserFullyVerified={false}
+      neurStatus={ENEURWalletStatus.DISABLED_NON_VERIFIED}
       verifyBankAccount={action("verify")}
       bankAccount={{
         hasBankAccount: true,

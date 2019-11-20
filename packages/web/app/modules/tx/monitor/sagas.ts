@@ -1,6 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { addHexPrefix } from "ethereumjs-util";
-import { delay, END, eventChannel } from "redux-saga";
+import { delay } from "redux-saga";
 import { fork, put, select } from "redux-saga/effects";
 import * as Web3 from "web3";
 
@@ -11,14 +11,16 @@ import { OutOfGasError, RevertedTransactionError } from "../../../lib/web3/Web3A
 import { invariant } from "../../../utils/invariant";
 import { actions } from "../../actions";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../../sagasUtils";
+import { getTransactionOrThrow } from "../event-channel/sagas";
 import { ETransactionErrorType, ETxSenderState } from "../sender/reducer";
 import { txMonitorSaga } from "../sender/sagas";
+import { InvestmentAdditionalDataSchema } from "../transactions/investment/types";
 import { ETxSenderType, TSpecificTransactionState } from "../types";
+import { TransactionCancelledError } from "./../event-channel/errors";
 import { SchemaMismatchError } from "./errors";
 import { selectPlatformPendingTransaction } from "./selectors";
-import { EEventEmitterChannelEvents, TEventEmitterChannelEvents } from "./types";
 
-const TX_MONITOR_DELAY = 30000;
+const TX_MONITOR_DELAY = process.env.NF_CYPRESS_RUN === "1" ? 5000 : 30000;
 
 export function* deletePendingTransaction({
   apiUserService,
@@ -84,6 +86,7 @@ export function* markTransactionAsPending(
       chainId: undefined,
       status: undefined,
       transactionIndex: undefined,
+      failedRpcError: undefined,
     },
     transactionType: type,
     transactionAdditionalData: txAdditionalData,
@@ -99,35 +102,47 @@ export function* markTransactionAsPending(
   return transactionTimestamp;
 }
 
-export function* makeSureWithdrawSchemaIsUpToDate(
-  pendingTransaction: TxPendingWithMetadata | undefined,
+export function* ensumrePendingTransactionSchemaIsValid(
+  pendingTransaction: TxPendingWithMetadata,
 ): Iterator<any> {
   // THIS IS A TEMPORARY PATCH A GENERAL SOLUTION THAT INCLUDES VERSIONING SHOULD COVER ALL TX TYPES
-  if (pendingTransaction && pendingTransaction.transactionType === ETxSenderType.WITHDRAW) {
-    if (
-      pendingTransaction.transactionAdditionalData === undefined ||
-      (pendingTransaction.transactionAdditionalData &&
-        (pendingTransaction.transactionAdditionalData.to === undefined ||
-          pendingTransaction.transactionAdditionalData.amount === undefined ||
-          pendingTransaction.transactionAdditionalData.amountEur === undefined ||
-          pendingTransaction.transactionAdditionalData.totalEur === undefined ||
-          pendingTransaction.transactionAdditionalData.total === undefined))
-    ) {
-      throw new SchemaMismatchError();
+  switch (pendingTransaction.transactionType) {
+    case ETxSenderType.WITHDRAW:
+      if (
+        pendingTransaction.transactionAdditionalData === undefined ||
+        (pendingTransaction.transactionAdditionalData &&
+          (pendingTransaction.transactionAdditionalData.to === undefined ||
+            pendingTransaction.transactionAdditionalData.amount === undefined ||
+            pendingTransaction.transactionAdditionalData.amountEur === undefined ||
+            pendingTransaction.transactionAdditionalData.totalEur === undefined ||
+            pendingTransaction.transactionAdditionalData.total === undefined))
+      ) {
+        throw new SchemaMismatchError(ETxSenderType.WITHDRAW);
+      }
+      break;
+
+    case ETxSenderType.INVEST: {
+      const isValid = yield InvestmentAdditionalDataSchema.toYup().isValid(
+        pendingTransaction.transactionAdditionalData,
+      );
+
+      if (!isValid) {
+        throw new SchemaMismatchError(ETxSenderType.INVEST);
+      }
+      break;
     }
+
+    default:
+      return;
   }
 }
 
-export function* updatePendingTxs({
-  apiUserService,
-  web3Manager,
-  logger,
-}: TGlobalDependencies): any {
+export function* updatePendingTxs({ apiUserService, logger }: TGlobalDependencies): Iterator<any> {
   let apiPendingTx: TPendingTxs = yield apiUserService.pendingTxs();
-  const pendingTransaction: TxPendingWithMetadata | undefined = apiPendingTx.pendingTransaction;
 
   // check whether transaction was mined
-  if (pendingTransaction) {
+  if (apiPendingTx.pendingTransaction) {
+    const pendingTransaction = apiPendingTx.pendingTransaction;
     const txHash = pendingTransaction.transaction.hash;
 
     if (pendingTransaction.transactionStatus === undefined) {
@@ -137,9 +152,7 @@ export function* updatePendingTxs({
     }
 
     try {
-      const transaction: Web3.Transaction | null = yield web3Manager.internalWeb3Adapter.getTransactionOrThrow(
-        txHash,
-      );
+      const transaction: Web3.Transaction | null = yield neuCall(getTransactionOrThrow, txHash);
 
       if (transaction) {
         apiPendingTx = {
@@ -151,41 +164,50 @@ export function* updatePendingTxs({
         };
       }
     } catch (error) {
-      if (error instanceof RevertedTransactionError) {
-        apiPendingTx = {
-          ...apiPendingTx,
-          pendingTransaction: {
-            ...pendingTransaction,
-            transactionStatus: ETxSenderState.ERROR_SIGN,
-            transactionError: ETransactionErrorType.REVERTED_TX,
-          },
-        };
+      let transactionError = ETransactionErrorType.UNKNOWN_ERROR;
+
+      if (error instanceof TransactionCancelledError) {
+        transactionError = ETransactionErrorType.TX_WAS_REJECTED;
+      } else if (error instanceof RevertedTransactionError) {
+        transactionError = ETransactionErrorType.REVERTED_TX;
+      } else if (error instanceof OutOfGasError) {
+        transactionError = ETransactionErrorType.NOT_ENOUGH_ETHER_FOR_GAS;
+      } else {
+        logger.error(new Error("Unknown Pending Tx Error from 'updatePendingTxs'"));
       }
 
-      if (error instanceof OutOfGasError) {
-        apiPendingTx = {
-          ...apiPendingTx,
-          pendingTransaction: {
-            ...pendingTransaction,
-            transactionStatus: ETxSenderState.ERROR_SIGN,
-            transactionError: ETransactionErrorType.OUT_OF_GAS,
-          },
-        };
-      }
+      apiPendingTx = {
+        ...apiPendingTx,
+        pendingTransaction: {
+          ...pendingTransaction,
+          transactionStatus: ETxSenderState.ERROR_SIGN,
+          transactionError,
+        },
+      };
     }
   }
+
   try {
-    yield makeSureWithdrawSchemaIsUpToDate(pendingTransaction);
+    // If there is a pending transaction, check if schema is valid
+    if (apiPendingTx.pendingTransaction) {
+      yield ensumrePendingTransactionSchemaIsValid(apiPendingTx.pendingTransaction);
+    }
+
     yield put(actions.txMonitor.setPendingTxs(apiPendingTx));
   } catch (e) {
     if (e instanceof SchemaMismatchError) {
-      logger.warn(new Error("Found Withdraw Schema Mismatch"));
-      yield apiUserService.deletePendingTx(apiPendingTx.pendingTransaction!.transaction.hash);
+      logger.warn("Found pending transaction Schema Mismatch", e);
+
+      if (apiPendingTx.pendingTransaction) {
+        yield apiUserService.deletePendingTx(apiPendingTx.pendingTransaction.transaction.hash);
+      }
+    } else {
+      throw e;
     }
   }
 }
 
-function* txMonitor({ logger }: TGlobalDependencies): any {
+function* txMonitor({ logger }: TGlobalDependencies): Iterator<any> {
   while (true) {
     logger.info("Querying for pending txs...");
     try {
@@ -198,32 +220,21 @@ function* txMonitor({ logger }: TGlobalDependencies): any {
   }
 }
 
-export const createWatchTxChannel = ({ web3Manager }: TGlobalDependencies, txHash: string) =>
-  eventChannel<TEventEmitterChannelEvents>(emitter => {
-    web3Manager.internalWeb3Adapter
-      .waitForTx({
-        txHash,
-        onNewBlock: async blockId => {
-          emitter({ type: EEventEmitterChannelEvents.NEW_BLOCK, blockId });
-        },
-      })
-      .then(tx => emitter({ type: EEventEmitterChannelEvents.TX_MINED, tx }))
-      .catch(error => {
-        if (error instanceof RevertedTransactionError) {
-          emitter({ type: EEventEmitterChannelEvents.REVERTED_TRANSACTION, error });
-        } else if (error instanceof OutOfGasError) {
-          emitter({ type: EEventEmitterChannelEvents.OUT_OF_GAS, error });
-        } else {
-          emitter({ type: EEventEmitterChannelEvents.ERROR, error });
-        }
-      })
-      .then(() => emitter(END));
-    return () => {
-      // @todo missing unsubscribe
-    };
-  });
+function* removePendingTransaction({ logger }: TGlobalDependencies): Iterator<any> {
+  try {
+    // call delete transaction saga
+    yield neuCall(deletePendingTransaction);
+
+    logger.info("Pending transaction has been deleted");
+  } catch (e) {
+    logger.error(new Error("Unable to delete pending transaction"));
+  } finally {
+    yield put(actions.txSender.txSenderHideModal());
+  }
+}
 
 export function* txMonitorSagas(): any {
   yield fork(neuTakeUntil, actions.auth.setUser, actions.auth.logout, txMonitor);
   yield fork(neuTakeLatest, actions.txMonitor.monitorPendingPlatformTx, txMonitorSaga);
+  yield fork(neuTakeLatest, actions.txMonitor.deletePendingTransaction, removePendingTransaction);
 }

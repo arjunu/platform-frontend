@@ -15,6 +15,8 @@ const TxName: React.FunctionComponent<IProps> = ({ type }) => {
   switch (type) {
     case ETxSenderType.WITHDRAW:
       return <FormattedMessage id="withdraw-flow.name" />;
+    case ETxSenderType.TRANSFER_TOKENS:
+      return <FormattedMessage id="token-transfer-flow.name" />;
     case ETxSenderType.INVESTOR_ACCEPT_PAYOUT:
       return <FormattedMessage id="investor-payout.accept.name" />;
     case ETxSenderType.INVESTOR_REDISTRIBUTE_PAYOUT:

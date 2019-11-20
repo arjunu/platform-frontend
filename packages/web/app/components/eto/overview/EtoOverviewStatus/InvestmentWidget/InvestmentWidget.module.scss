@@ -22,6 +22,14 @@
 
 .invest-now-button {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: column;
 }
+
+.end-time {
+  @include font-label;
+
+  color: $neu-bright-orange;
+  margin-top: px-to-rem(10px);
+}
+

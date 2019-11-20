@@ -91,18 +91,24 @@ const Form = <Values extends {}>({
   className,
   initialValues,
   validationSchema,
+  validate,
   "data-test-id": dataTestId,
   ...props
 }: TFormProps<Values>) => (
   <>
-    {process.env.NODE_ENV === "development" && (
+    {process.env.NODE_ENV === "development" && validationSchema && (
       <SchemaFieldsGuard<Values>
         {...props}
         validationSchema={validationSchema}
         initialValues={initialValues}
       />
     )}
-    <Formik<Values> {...props} validationSchema={validationSchema} initialValues={initialValues}>
+    <Formik<Values>
+      {...props}
+      validate={validate}
+      validationSchema={validationSchema}
+      initialValues={initialValues}
+    >
       {formikProps => (
         <FormLayout {...formikProps} className={className} data-test-id={dataTestId}>
           {children}

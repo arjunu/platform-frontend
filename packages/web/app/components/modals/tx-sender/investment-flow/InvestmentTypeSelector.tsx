@@ -102,60 +102,59 @@ const WalletBalanceValues: React.FunctionComponent<WalletSelectionData> = wallet
   }
 };
 
-export class InvestmentTypeSelector extends React.Component<IProps> {
-  render(): React.ReactNode {
-    const { wallets, currentType, onSelect, startUpgradeFlow } = this.props;
-    return (
-      <div className={styles.container}>
-        {wallets.map(wallet => {
-          const checked = currentType === wallet.type;
-          const token =
-            wallet.type === EInvestmentType.ICBMnEuro ? ETokenType.EURO : ETokenType.ETHER;
+export const InvestmentTypeSelector: React.FunctionComponent<IProps> = ({
+  wallets,
+  currentType,
+  onSelect,
+  startUpgradeFlow,
+}) => (
+  <div className={styles.container}>
+    {wallets.map(wallet => {
+      const checked = currentType === wallet.type;
+      const token = wallet.type === EInvestmentType.ICBMnEuro ? ETokenType.EURO : ETokenType.ETHER;
 
-          return (
-            <Col md="6" key={wallet.type}>
-              <FormGroup>
-                <label className={cn(styles.wrapper, checked && styles.checked)}>
-                  <input
-                    className={styles.input}
-                    checked={checked}
-                    onChange={e => onSelect(e.target.value as EInvestmentType)}
-                    type="radio"
-                    name="investmentType"
-                    value={wallet.type}
-                    disabled={!wallet.enabled}
-                    data-test-id={`investment-type.selector.${wallet.type}`}
-                  />
-                  <div className={styles.box}>
-                    <CurrencyIcon
-                      currency={getCurrencyByInvestmentType(wallet.type)}
-                      className={styles.icon}
-                    />
-                    <div className={styles.label}>
-                      {wallet.name}
-                      {!wallet.enabled && (
-                        <Button
-                          layout={EButtonLayout.SIMPLE}
-                          theme={EButtonTheme.GREEN}
-                          className={styles.enableIcbm}
-                          width={ButtonWidth.BLOCK}
-                          innerClassName="justify-content-end"
-                          onClick={() => startUpgradeFlow(token)}
-                          data-test-id={`investment-type.selector.${wallet.type}.enable-wallet`}
-                        >
-                          <FormattedMessage id="investment-flow.enable-icbm-wallet" />
-                        </Button>
-                      )}
-                    </div>
+      return (
+        <Col md="6" key={wallet.type}>
+          <FormGroup>
+            <label className={cn(styles.wrapper, checked && styles.checked)}>
+              <input
+                className={styles.input}
+                checked={checked}
+                onChange={e => onSelect(e.target.value as EInvestmentType)}
+                type="radio"
+                name="investmentType"
+                value={wallet.type}
+                disabled={!wallet.enabled}
+                data-test-id={`investment-type.selector.${wallet.type}`}
+              />
+              <div className={styles.box}>
+                <CurrencyIcon
+                  currency={getCurrencyByInvestmentType(wallet.type)}
+                  className={styles.icon}
+                />
+                <div className={styles.label}>
+                  {wallet.name}
+                  {!wallet.enabled && (
+                    <Button
+                      layout={EButtonLayout.SIMPLE}
+                      theme={EButtonTheme.GREEN}
+                      className={styles.enableIcbm}
+                      width={ButtonWidth.BLOCK}
+                      innerClassName="justify-content-end"
+                      onClick={() => startUpgradeFlow(token)}
+                      data-test-id={`investment-type.selector.${wallet.type}.enable-wallet`}
+                    >
+                      <FormattedMessage id="investment-flow.enable-icbm-wallet" />
+                    </Button>
+                  )}
+                </div>
 
-                    <WalletBalance {...wallet} />
-                  </div>
-                </label>
-              </FormGroup>
-            </Col>
-          );
-        })}
-      </div>
-    );
-  }
-}
+                <WalletBalance {...wallet} />
+              </div>
+            </label>
+          </FormGroup>
+        </Col>
+      );
+    })}
+  </div>
+);

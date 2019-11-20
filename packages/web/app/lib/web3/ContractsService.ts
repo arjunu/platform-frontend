@@ -5,6 +5,7 @@ import { IConfig } from "../../config/getConfig";
 import { symbols } from "../../di/symbols";
 import { EtherToken } from "../contracts/EtherToken";
 import { ETOCommitment } from "../contracts/ETOCommitment";
+import { ETOTerms } from "../contracts/ETOTerms";
 import { EuroToken } from "../contracts/EuroToken";
 import { EuroTokenController } from "../contracts/EuroTokenController";
 import { FeeDisbursal } from "../contracts/FeeDisbursal";
@@ -12,6 +13,8 @@ import { ICBMLockedAccount } from "../contracts/ICBMLockedAccount";
 import { IControllerGovernance } from "../contracts/IControllerGovernance";
 import { IdentityRegistry } from "../contracts/IdentityRegistry";
 import { IEquityToken } from "../contracts/IEquityToken";
+import { IERC223Token } from "../contracts/IERC223Token";
+import { ITokenController } from "../contracts/ITokenController";
 import { ITokenExchangeRateOracle } from "../contracts/ITokenExchangeRateOracle";
 import * as knownInterfaces from "../contracts/knownInterfaces.json";
 import { LockedAccount } from "../contracts/LockedAccount";
@@ -19,13 +22,16 @@ import { Neumark } from "../contracts/Neumark";
 import { PlatformTerms } from "../contracts/PlatformTerms";
 import { Universe } from "../contracts/Universe";
 import { ILogger } from "../dependencies/logger";
+import { EthereumAddress } from "./../../utils/opaque-types/types";
 import { Web3Manager } from "./Web3Manager/Web3Manager";
 
 @injectable()
 export class ContractsService {
   private etoCommitmentCache: { [etoId: string]: ETOCommitment } = {};
   private equityTokensCache: { [equityTokenAddress: string]: IEquityToken } = {};
+  private etoTermsCache: { [etoTermsId: string]: ETOTerms } = {};
   private controllerGovernanceCache: { [tokenController: string]: IControllerGovernance } = {};
+  private tokenControllerCache: { [tokenController: string]: ITokenController } = {};
   private web3: Web3 | undefined;
 
   public universeContract!: Universe;
@@ -132,20 +138,45 @@ export class ContractsService {
   }
 
   async getEquityToken(equityTokenAddress: string): Promise<IEquityToken> {
-    if (this.equityTokensCache[equityTokenAddress])
+    if (this.equityTokensCache[equityTokenAddress]) {
       return this.equityTokensCache[equityTokenAddress];
+    }
 
     const contract = await create(IEquityToken, this.web3, equityTokenAddress);
     this.equityTokensCache[equityTokenAddress] = contract;
     return contract;
   }
 
+  async getERC223(equityTokenAddress: EthereumAddress): Promise<IERC223Token> {
+    const contract = await this.getEquityToken(equityTokenAddress);
+    return contract as IERC223Token;
+  }
+
+  async getEtoTerms(etoTermsAddress: string): Promise<ETOTerms> {
+    if (this.etoTermsCache[etoTermsAddress]) return this.etoTermsCache[etoTermsAddress];
+
+    const contract = await create(ETOTerms, this.web3, etoTermsAddress);
+    this.etoTermsCache[etoTermsAddress] = contract;
+    return contract;
+  }
+
   async getControllerGovernance(controllerAddress: string): Promise<IControllerGovernance> {
-    if (this.controllerGovernanceCache[controllerAddress])
+    if (this.controllerGovernanceCache[controllerAddress]) {
       return this.controllerGovernanceCache[controllerAddress];
+    }
 
     const contract = await create(IControllerGovernance, this.web3, controllerAddress);
     this.controllerGovernanceCache[controllerAddress] = contract;
+    return contract;
+  }
+
+  async getTokenController(controllerAddress: EthereumAddress): Promise<ITokenController> {
+    if (this.tokenControllerCache[controllerAddress]) {
+      return this.tokenControllerCache[controllerAddress];
+    }
+
+    const contract = await create(ITokenController, this.web3, controllerAddress);
+    this.tokenControllerCache[controllerAddress] = contract;
     return contract;
   }
 }

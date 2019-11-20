@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { Button, EButtonLayout } from "../../shared/buttons";
-import { DocumentTemplateButton } from "../../shared/DocumentLink";
+import { DocumentButton } from "../../shared/DocumentLink";
 import { Money } from "../../shared/formatters/Money";
 import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../../shared/formatters/utils";
 import { Heading } from "../../shared/Heading";
@@ -34,7 +34,7 @@ const BalanceFooter: React.FunctionComponent<{
     )}
     {!disabled && (
       <p className="text-center">
-        <DocumentTemplateButton
+        <DocumentButton
           onClick={() => downloadICBMAgreement()}
           title={<FormattedMessage id="wallet.icbm.reservation-agreement" />}
         />

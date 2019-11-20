@@ -7,7 +7,6 @@ $blue-gray: #86a0b5;
 // end of old color palette
 
 // colors not present in style guide but used in designs
-
 $gray: #d8e0eb;
 $gray2: #85a0b5;
 $gray3: #406483;
@@ -47,7 +46,9 @@ $neu-slate-grey: #656b72;
 $neu-pale-blue: #f6f8fb;
 $neu-silver: #c4c5c6;
 $neu-pale-grey: #e3eaf5;
-$neu-pale-grey-two: #f3f5f7;
+$neu-pale-grey-two: #f9fafb;
+$neu-pale-grey-three: #f3f5f7;
+$neu-grey-blue: #607382;
 $neu-charcoal-grey: #142431;
 $color-black: #0b0e11;
 $neu-greyish-brown: #4c4c4c;
@@ -55,15 +56,17 @@ $neu-cloudy-blue: #aabcca;
 $neu-light-blue-grey: #d8e0eb;
 $neu-light-blue-grey-two: #cfd7dd;
 $neu-red: #ed0000;
+$neu-flamingo-red: #ec5c39;
 $neu-white-two: #fff;
 $neu-blue: #4a90e2;
+$neu-science-blue: #0070e0;
 $neu-charcoal-grey2: #394651;
 $neu-shuttle-gray: #556877;
 $neu-gull-gray: #94a5b3;
 
 // Override colors that are used to generate classes like .text-warning, .bg-warning, .alert-warning and others
 // see https://getbootstrap.com/docs/4.0/getting-started/theming/#maps-and-loops
-$theme-colors:  (
+$theme-colors: (
   "error": $neu-red,
   "warning": $neu-bright-orange,
   "success": $neu-seaweed,

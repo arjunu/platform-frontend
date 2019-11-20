@@ -7,7 +7,7 @@ import { PLATFORM_UNLOCK_FEE, PLATFORM_ZERO_FEE } from "../../../../config/const
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { getUnlockedWalletEtherAmountAfterFee } from "../../../../modules/wallet/utils";
 import { multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
-import { getCurrentUTCTimestamp } from "../../../../utils/Date.utils";
+import { getCurrentUTCTimestamp } from "../../../../utils/DateUtils";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,
@@ -30,9 +30,15 @@ interface IAdditionalProps {
   updateUnlockFee: (unlockFee: number) => void;
 }
 
-const UnlockWalletTransactionDetailsLayout: React.FunctionComponent<
-  TTxPendingProps & IAdditionalProps
-> = ({ txData, additionalData, returnedEther, className, txTimestamp, unlockFee }) => (
+const UnlockWalletTransactionDetailsLayout: React.FunctionComponent<TTxPendingProps &
+  IAdditionalProps> = ({
+  txData,
+  additionalData,
+  returnedEther,
+  className,
+  txTimestamp,
+  unlockFee,
+}) => (
   <InfoList className={className}>
     <InfoRow
       caption={<FormattedMessage id="unlock-funds-flow.eth-committed" />}

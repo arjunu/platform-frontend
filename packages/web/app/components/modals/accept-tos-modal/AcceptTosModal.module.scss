@@ -3,25 +3,6 @@
   margin-bottom: px-to-rem(28px);
 }
 
-.text {
-  @include font-label;
-
-  max-width: 60%;
-  text-transform: none;
-  margin: {
-    top: px-to-rem(10px);
-    bottom: px-to-rem(16px);
-    left: auto;
-    right: auto;
-  }
-}
-
-.reject-tos {
-  @include font-label;
-
-  text-transform: none;
-}
-
 .tos-link {
   font-size: .9rem;
   font-weight: 700;
@@ -35,11 +16,4 @@
   grid-gap: 2rem;
 
   margin: 1.5rem 0;
-}
-
-.loading-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: px-to-rem(106px);
 }

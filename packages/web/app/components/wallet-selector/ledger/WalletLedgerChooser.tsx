@@ -8,7 +8,6 @@ import {
 } from "../../../modules/wallet-selector/ledger-wizard/reducer";
 import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
-import { withActionWatcher } from "../../../utils/withActionWatcher.unsafe";
 import {
   IWalletLedgerChooserComponent,
   IWalletLedgerChooserComponentDispatchProps,
@@ -45,10 +44,5 @@ export const WalletLedgerChooser = compose<React.FunctionComponent>(
   }),
   onEnterAction({
     actionCreator: dispatch => dispatch(actions.walletSelector.ledgerLoadAccounts()),
-  }),
-  withActionWatcher({
-    actionCreator: dispatch =>
-      dispatch(actions.walletSelector.ledgerVerifyIfLedgerStillConnected()),
-    interval: 1000,
   }),
 )(WalletLedgerChooserComponent);

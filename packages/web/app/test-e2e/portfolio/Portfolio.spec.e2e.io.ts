@@ -1,4 +1,4 @@
-import { convertToBigInt } from "../../utils/Number.utils";
+import { convertToUlps } from "../../utils/NumberUtils";
 import {
   etoFixtureAddressByName,
   goToPortfolio,
@@ -30,7 +30,7 @@ describe("Portfolio", () => {
         clearPendingTransactions: true,
       });
 
-      goToPortfolioWithRequiredPayoutAmountSet(convertToBigInt(5));
+      goToPortfolioWithRequiredPayoutAmountSet(convertToUlps("5"));
 
       cy.get(tid(`asset-portfolio.payout-eth`)).should("not.exist");
       cy.get(tid(`asset-portfolio.payout-eur_t`)).should("exist");
@@ -42,7 +42,7 @@ describe("Portfolio", () => {
         clearPendingTransactions: true,
       });
 
-      goToPortfolioWithRequiredPayoutAmountSet(convertToBigInt(5000));
+      goToPortfolioWithRequiredPayoutAmountSet(convertToUlps("5000"));
 
       cy.get(tid(`asset-portfolio.no-payouts`)).should("exist");
     });

@@ -10,7 +10,7 @@ import { appRoutes } from "../../../appRoutes";
 import { ButtonArrowRight } from "../../../shared/buttons";
 import { ConfettiEthereum } from "../../../shared/ethereum";
 import { EtherscanTxLink } from "../../../shared/links";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { InvestmentTransactionDetails } from "./InvestmentTransactionDetails";
 
 interface IProps {
@@ -26,9 +26,9 @@ interface IDispatchProps {
   goToPortfolio: () => void;
 }
 
-const InvestmentSuccessComponent: React.FunctionComponent<
-  IProps & IStateProps & IDispatchProps
-> = ({ additionalData, goToPortfolio, txTimestamp, txHash }) => (
+const InvestmentSuccessComponent: React.FunctionComponent<IProps &
+  IStateProps &
+  IDispatchProps> = ({ additionalData, goToPortfolio, txTimestamp, txHash }) => (
   <Message
     data-test-id="investment-flow.success.title"
     image={<ConfettiEthereum className="mb-3" />}

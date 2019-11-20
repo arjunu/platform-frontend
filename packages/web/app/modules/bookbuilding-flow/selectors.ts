@@ -9,10 +9,10 @@ export const selectMyPledge = (state: IAppState, etoId: string): IPledge | undef
 
 export const selectInvestorCount = (state: IAppState, etoId: string) => {
   const stats = selectBookbuildingStats(state, etoId);
-  return stats ? stats.investorsCount : 0;
+  return stats ? stats.investorsCount : undefined;
 };
 
 export const selectPledgedAmount = (state: IAppState, etoId: string) => {
   const stats = selectBookbuildingStats(state, etoId);
-  return stats ? stats.pledgedAmount : 0;
+  return stats ? stats.pledgedAmount : undefined;
 };

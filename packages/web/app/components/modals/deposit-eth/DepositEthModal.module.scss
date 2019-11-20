@@ -1,0 +1,39 @@
+.qr-code-wrapper {
+  @include rect(145px);
+
+  background-color: $neu-silver;
+  margin-bottom: $spacing-vertical-lg-2;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.title {
+  @include font-label;
+
+  text-align: center;
+}
+
+.description {
+  @include font-label;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: px-to-rem(24px);
+  max-width: px-to-rem(360px);
+  text-align: center;
+  text-transform: none;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: $spacing-vertical-lg-3;
+}
+
+.address {
+  @include media-breakpoint-up(sm) {
+    max-width: px-to-rem(400px);
+  }
+  margin: 0 auto;
+}

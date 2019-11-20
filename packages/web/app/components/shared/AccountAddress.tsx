@@ -28,9 +28,9 @@ const HistoryLink: React.FunctionComponent<IAccountAddressProps> = ({ address })
   </div>
 );
 
-const AccountAddress: React.FunctionComponent<
-  IAccountAddressProps & CommonHtmlProps & TDataTestId
-> = ({
+const AccountAddress: React.FunctionComponent<IAccountAddressProps &
+  CommonHtmlProps &
+  TDataTestId> = ({
   address,
   className,
   "data-test-id": dataTestId = "account-address.your.ether-address.from-div",
@@ -44,9 +44,9 @@ const AccountAddress: React.FunctionComponent<
   </div>
 );
 
-const AccountAddressWithHistoryLink: React.FunctionComponent<
-  IAccountAddressProps & CommonHtmlProps & TDataTestId
-> = ({
+const AccountAddressWithHistoryLink: React.FunctionComponent<IAccountAddressProps &
+  CommonHtmlProps &
+  TDataTestId> = ({
   address,
   className,
   "data-test-id": dataTestId = "account-address.your.ether-address.from-div",

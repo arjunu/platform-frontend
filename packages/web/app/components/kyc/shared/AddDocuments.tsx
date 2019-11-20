@@ -3,9 +3,11 @@ import { compose } from "redux";
 
 import { EKycRequestType, IKycFileInfo } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
-import { appConnect } from "../../../store";
+import { AppActionTypes, appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
+import { FunctionWithDeps } from "../../../utils/opaque-types/types";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
+import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
 
 interface IStateProps {
@@ -19,46 +21,64 @@ interface IDispatchProps {
 
 interface IOwnProps {
   uploadType: EKycRequestType;
+  onEnter?: AppActionTypes | FunctionWithDeps;
+  isLoading?: boolean;
 }
 
-export const KYCAddDocumentsComponent: React.FunctionComponent<
-  IStateProps & IDispatchProps & IOwnProps
-> = ({ onDropFile, files, fileUploading, uploadType }) => (
-  <MultiFileUpload
-    acceptedFiles={[EMimeType.ANY_IMAGE_TYPE, EMimeType.PDF]}
-    onDropFile={onDropFile}
-    files={files}
-    fileUploading={fileUploading}
-    uploadType={uploadType}
-    layout="vertical"
-  />
-);
+export const KYCAddDocumentsComponent: React.FunctionComponent<IStateProps &
+  IDispatchProps &
+  IOwnProps> = ({ onDropFile, files, fileUploading, uploadType, isLoading }) =>
+  isLoading ? (
+    <LoadingIndicator />
+  ) : (
+    <MultiFileUpload
+      data-test-id={
+        uploadType === EKycRequestType.US_ACCREDITATION
+          ? "kyc-personal-accreditation-upload-dropzone"
+          : undefined
+      }
+      acceptedFiles={[EMimeType.ANY_IMAGE_TYPE, EMimeType.PDF]}
+      onDropFile={onDropFile}
+      files={files}
+      fileUploading={fileUploading}
+      uploadType={uploadType}
+      layout="vertical"
+    />
+  );
 
 export const KYCAddDocuments = compose<React.FunctionComponent<IOwnProps>>(
   appConnect<IStateProps, IDispatchProps, IOwnProps>({
     stateToProps: (state, ownProps) => ({
-      files:
-        ownProps.uploadType === EKycRequestType.INDIVIDUAL
-          ? state.kyc.individualFiles
-          : state.kyc.businessFiles,
-      filesLoading:
-        ownProps.uploadType === EKycRequestType.INDIVIDUAL
-          ? !!state.kyc.individualFilesLoading
-          : !!state.kyc.businessFilesLoading,
-      fileUploading:
-        ownProps.uploadType === EKycRequestType.INDIVIDUAL
-          ? !!state.kyc.individualFileUploading
-          : !!state.kyc.businessFileUploading,
+      files: [EKycRequestType.INDIVIDUAL, EKycRequestType.US_ACCREDITATION].includes(
+        ownProps.uploadType,
+      )
+        ? state.kyc.individualFiles
+        : state.kyc.businessFiles,
+      filesLoading: [EKycRequestType.INDIVIDUAL, EKycRequestType.US_ACCREDITATION].includes(
+        ownProps.uploadType,
+      )
+        ? !!state.kyc.individualFilesLoading
+        : !!state.kyc.businessFilesLoading,
+      fileUploading: [EKycRequestType.INDIVIDUAL, EKycRequestType.US_ACCREDITATION].includes(
+        ownProps.uploadType,
+      )
+        ? !!state.kyc.individualFileUploading
+        : !!state.kyc.businessFileUploading,
       title: "",
     }),
     dispatchToProps: (dispatch, ownProps) => ({
       onDropFile: (file: File) =>
-        ownProps.uploadType === EKycRequestType.INDIVIDUAL
+        [EKycRequestType.INDIVIDUAL, EKycRequestType.US_ACCREDITATION].includes(ownProps.uploadType)
           ? dispatch(actions.kyc.kycUploadIndividualDocument(file))
           : dispatch(actions.kyc.kycUploadBusinessDocument(file)),
     }),
   }),
-  onEnterAction({
-    actionCreator: dispatch => dispatch(actions.kyc.kycLoadIndividualDocumentList()),
+  onEnterAction<IOwnProps>({
+    actionCreator: (dispatch, props) => {
+      dispatch(actions.kyc.kycLoadIndividualDocumentList());
+      if (props.onEnter) {
+        dispatch(props.onEnter);
+      }
+    },
   }),
 )(KYCAddDocumentsComponent);

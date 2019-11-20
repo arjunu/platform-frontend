@@ -14,9 +14,8 @@ interface IDispatchProps {
   startBackupProcess: () => void;
 }
 
-export const AccountSetupBackupWidgetLayout: React.FunctionComponent<
-  IStateProps & IDispatchProps
-> = ({ startBackupProcess }) => (
+export const AccountSetupBackupWidgetLayout: React.FunctionComponent<IStateProps &
+  IDispatchProps> = ({ startBackupProcess }) => (
   <section data-test-id="account-setup-backup-seed-section" className={styles.accountSetupSection}>
     <p className={styles.accountSetupText}>
       <FormattedMessage id="account-setup.backup-seed-widget.text-1" />

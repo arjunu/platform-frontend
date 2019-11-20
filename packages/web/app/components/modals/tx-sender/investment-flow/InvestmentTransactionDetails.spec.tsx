@@ -4,7 +4,10 @@ import * as React from "react";
 
 import { wrapWithIntl } from "../../../../../test/integrationTestUtils.unsafe";
 import { tid } from "../../../../../test/testUtils";
+import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { InvestmentTransactionDetails } from "./InvestmentTransactionDetails";
+
+import * as tokenIcon from "../../../../assets/img/token_icon.svg";
 
 describe("InvestmentTransactionDetails", () => {
   const additionalData = {
@@ -14,8 +17,11 @@ describe("InvestmentTransactionDetails", () => {
       existingShareCapital: 5000,
       equityTokensPerShare: 100,
       preMoneyValuationEur: 30000000,
-      investmentCalculatedValues: {
-        sharePrice: 30000000 / (5000 * 100),
+      sharePrice: 30000000 / (5000 * 100),
+      equityTokenInfo: {
+        equityTokenSymbol: toEquityTokenSymbol("QTT"),
+        equityTokenImage: tokenIcon,
+        equityTokenName: "Quintessence",
       },
     },
     investmentEth: "194415356251498492",

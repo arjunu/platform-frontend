@@ -1,35 +1,55 @@
-import { isEmpty } from "lodash/fp";
 import { createSelector } from "reselect";
 
-import { TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { nomineeIgnoredTemplates } from "../../lib/api/eto/EtoFileUtils";
 import { IAppState } from "../../store";
-import { nonNullable } from "../../utils/nonNullable";
+import { DataUnavailableError } from "../../utils/errors";
 import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
-import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
-import {
-  selectAgreementsStatus,
-  selectEtoContract,
-  selectEtoSubState,
-  selectInvestmentAgreement,
-} from "../eto/selectors";
-import {
-  EEtoAgreementStatus,
-  TEtoWithCompanyAndContract,
-  TOfferingAgreementsStatus,
-} from "../eto/types";
+import { TEtoWithCompanyAndContract, TOfferingAgreementsStatus } from "../eto/types";
 import { selectRouter } from "../routing/selectors";
-import { selectIsVerificationFullyDone } from "../selectors";
-import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
-import { ENomineeRequestStatus, TNomineeRequestStorage } from "./types";
-import { getActiveEtoPreviewCodeFromQueryString, getNomineeTaskStep } from "./utils";
+import {
+  ENomineeEtoSpecificTask,
+  ENomineeFlowError,
+  ENomineeRequestError,
+  ENomineeRequestStatus,
+  ENomineeTask,
+  ERedeemShareCapitalTaskSubstate,
+  TNomineeRequestStorage,
+} from "./types";
+import { getActiveEtoPreviewCodeFromQueryString } from "./utils";
 
 export const selectNomineeFlow = (state: IAppState) => state.nomineeFlow;
 
 export const selectNomineeStateIsLoading = (state: IAppState) => state.nomineeFlow.loading;
 
-export const selectNomineeStateError = (state: IAppState) => state.nomineeFlow.error;
+export const selectNomineeDashboardIsReady = (state: IAppState) => state.nomineeFlow.ready;
+
+export const selectNomineeFlowError = (state: IAppState) => state.nomineeFlow.error;
+
+export const selectNomineeFlowHasError = (state: IAppState) => {
+  const error = selectNomineeFlowError(state);
+  return error !== ENomineeFlowError.NONE;
+};
+
+export const selectNomineeRequestError = (state: IAppState): ENomineeRequestError => {
+  const linkToIssuerData = state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER];
+  if (linkToIssuerData === undefined) {
+    throw new DataUnavailableError("activeTaskData for the 'LINK_TO_ISSUER' step is missing");
+  } else {
+    return linkToIssuerData.error;
+  }
+};
+
+export const selectActiveTaskData = (state: IAppState) => state.nomineeFlow.activeTaskData;
+
+export const selectLinkToIssuerNextState = (state: IAppState) => {
+  const linkToIssuerData = state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER];
+  if (linkToIssuerData === undefined) {
+    throw new DataUnavailableError("activeTaskData for the 'LINK_TO_ISSUER' step is missing");
+  } else {
+    return linkToIssuerData && linkToIssuerData.nextState;
+  }
+};
 
 export const selectNomineeRequests = (state: IAppState): TNomineeRequestStorage =>
   state.nomineeFlow.nomineeRequests;
@@ -43,10 +63,20 @@ export const selectLinkedNomineeEtoId = (state: IAppState): string | undefined =
 
 export const selectNomineeEtos = (
   state: IAppState,
-): { [previewCode: string]: TEtoSpecsData | undefined } | undefined =>
+): { [previewCode: string]: TEtoWithCompanyAndContract | undefined } | undefined =>
   state.nomineeFlow.nomineeEtos;
 
-export const selectNomineeActiveEtoPreviewCode = (state: IAppState) =>
+export const selectNomineeEto = (
+  state: IAppState,
+  previewCode: string,
+): TEtoWithCompanyAndContract | undefined => {
+  const nomineeEtos = selectNomineeEtos(state);
+  return nomineeEtos && nomineeEtos[previewCode];
+};
+
+export const selectNomineeTasksStatus = (state: IAppState) => state.nomineeFlow.nomineeTasksStatus;
+
+export const selectNomineeActiveEtoPreviewCode = (state: IAppState): string | undefined =>
   state.nomineeFlow.activeNomineeEtoPreviewCode;
 
 export const selectActiveNomineeEto = createSelector(
@@ -61,46 +91,13 @@ export const selectActiveNomineeEto = createSelector(
   },
 );
 
-export const selectActiveNomineeEtoCompany = createSelector(
-  selectActiveNomineeEto,
-  selectNomineeFlow,
-  (activeEto, nomineeFlow) =>
-    activeEto ? nomineeFlow.nomineeEtosCompanies[activeEto.companyId] : undefined,
-);
-
-const selectNomineeEtoWithCompanyAndContractInternal = createSelector(
-  // forward eto param to combiner
-  (_: IAppState, eto: TEtoSpecsData) => eto,
-  (state: IAppState, eto: TEtoSpecsData) => selectEtoContract(state, eto.previewCode),
-  (state: IAppState) => nonNullable(selectActiveNomineeEtoCompany(state)),
-  (state: IAppState, eto: TEtoSpecsData) => selectEtoSubState(state, eto),
-  (eto, contract, company, subState) => ({
-    ...eto,
-    contract,
-    company,
-    subState,
-  }),
-);
-
-export const selectNomineeEtoWithCompanyAndContract = (
-  state: IAppState,
-): TEtoWithCompanyAndContract | undefined => {
-  const eto = selectActiveNomineeEto(state);
-
-  if (eto) {
-    return selectNomineeEtoWithCompanyAndContractInternal(state, eto);
-  }
-
-  return undefined;
-};
-
 export const selectNomineeEtoState = (state: IAppState) => {
-  const eto = selectNomineeEtoWithCompanyAndContract(state);
+  const eto = selectActiveNomineeEto(state);
   return eto ? eto.state : undefined;
 };
 
 export const selectNomineeEtoTemplatesArray = (state: IAppState): IEtoDocument[] => {
-  const eto = selectNomineeEtoWithCompanyAndContract(state);
+  const eto = selectActiveNomineeEto(state);
   const filterFunction = (key: string) =>
     !nomineeIgnoredTemplates.some((templateKey: string) => templateKey === key);
 
@@ -109,65 +106,49 @@ export const selectNomineeEtoTemplatesArray = (state: IAppState): IEtoDocument[]
 
 export const selectNomineeEtoDocumentsStatus = (
   state: IAppState,
+  previewCode: string,
 ): TOfferingAgreementsStatus | undefined => {
-  const etos = selectNomineeEtos(state);
-
-  if (etos !== undefined) {
-    // if nominee has no etos linked yet return `NOT_DONE` for all agreements
-    if (isEmpty(etos)) {
-      return {
-        [EAgreementType.RAAA]: EEtoAgreementStatus.NOT_DONE,
-        [EAgreementType.THA]: EEtoAgreementStatus.NOT_DONE,
-        [EAgreementType.ISHA]: EEtoAgreementStatus.NOT_DONE,
-      };
-    }
-
-    const eto = selectNomineeEtoWithCompanyAndContract(state);
-    if (eto !== undefined) {
-      return selectAgreementsStatus(state, eto.previewCode);
-    }
-  }
-
-  return undefined;
+  const statuses = state.nomineeFlow.nomineeEtosAdditionalData[previewCode];
+  return statuses && statuses.offeringAgreementsStatus;
 };
 
-export const selectIsISHASignedByIssuer = (state: IAppState) => {
-  const eto = selectNomineeEtoWithCompanyAndContract(state);
-
-  if (eto) {
-    const investmentAgreement = selectInvestmentAgreement(state, eto.previewCode);
-
-    if (investmentAgreement) {
-      return investmentAgreement.isLoading ? undefined : !!investmentAgreement.url;
-    }
-  }
-
-  return undefined;
+export const selectIsISHASignedByIssuer = (state: IAppState, previewCode: string) => {
+  const etoData = state.nomineeFlow.nomineeEtosAdditionalData[previewCode];
+  return etoData && etoData.investmentAgreementUrl;
 };
 
-export const selectNomineeTaskStep = createSelector(
-  selectIsVerificationFullyDone,
-  selectNomineeEtoWithCompanyAndContract,
-  selectIsBankAccountVerified,
-  selectNomineeEtoDocumentsStatus,
-  selectIsISHASignedByIssuer,
-  (
-    verificationIsComplete,
-    nomineeEto,
-    isBankAccountVerified,
-    documentsStatus,
-    isISHASignedByNominee,
-  ) =>
-    getNomineeTaskStep(
-      verificationIsComplete,
-      nomineeEto,
-      isBankAccountVerified,
-      documentsStatus,
-      isISHASignedByNominee,
-    ),
-);
+export const selectCapitalIncrease = (state: IAppState) => {
+  const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
+  const taskData =
+    activeNomineeEtoPreviewCode &&
+    state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode];
 
-export const selectActiveEtoPreviewCodeFromQueryString = createSelector(
-  selectRouter,
-  state => getActiveEtoPreviewCodeFromQueryString(state.location.search),
+  return (
+    taskData &&
+    taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL] &&
+    taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL].capitalIncrease
+  );
+};
+
+export const selectRedeemShareCapitalTaskSubstate = (
+  state: IAppState,
+): ERedeemShareCapitalTaskSubstate => {
+  const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
+  const taskData =
+    activeNomineeEtoPreviewCode &&
+    state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode];
+
+  if (taskData && taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]) {
+    return taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL].taskSubstate;
+  } else {
+    throw new DataUnavailableError(
+      `task substate is missing! activeNomineeEtoPreviewCode:${activeNomineeEtoPreviewCode}`,
+    );
+  }
+};
+
+export const selectNomineeTaskStep = (state: IAppState) => state.nomineeFlow.activeNomineeTask;
+
+export const selectActiveEtoPreviewCodeFromQueryString = createSelector(selectRouter, state =>
+  getActiveEtoPreviewCodeFromQueryString(state.location.search),
 );

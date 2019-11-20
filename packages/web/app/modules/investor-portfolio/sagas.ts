@@ -5,34 +5,37 @@ import { all, fork, put, select } from "redux-saga/effects";
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { InvestorPortfolioMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
+import { Q18 } from "../../config/constants";
 import { TGlobalDependencies } from "../../di/setupBindings";
-import {
-  EEtoState,
-  TEtoDataWithCompany,
-  TEtoSpecsData,
-} from "../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { EEtoState, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IUser } from "../../lib/api/users/interfaces";
 import { ETOCommitment } from "../../lib/contracts/ETOCommitment";
+import { ETOTerms } from "../../lib/contracts/ETOTerms";
 import { promisify } from "../../lib/contracts/typechain-runtime";
 import { IAppState } from "../../store";
-import { EthereumAddress } from "../../types";
 import { addBigNumbers } from "../../utils/BigNumberUtils";
-import { convertToBigInt } from "../../utils/Number.utils";
-import { actions, TAction } from "../actions";
-import { selectUser } from "../auth/selectors";
+import { nonNullable } from "../../utils/nonNullable";
+import { convertFromUlps, convertToUlps } from "../../utils/NumberUtils";
+import { EthereumAddress } from "../../utils/opaque-types/types";
+import { actions, TActionFromCreator } from "../actions";
+import { selectUser, selectUserId } from "../auth/selectors";
 import { calculateSnapshotDate } from "../contracts/utils";
-import { neuCall, neuTakeEvery } from "../sagasUtils";
+import { InvalidETOStateError } from "../eto/errors";
+import { isOnChain } from "../eto/utils";
+import { neuCall, neuTakeEvery, neuTakeLatest } from "../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../web3/selectors";
 import { ITokenDisbursal } from "./types";
 import {
   convertToCalculatedContribution,
   convertToInvestorTicket,
   convertToTokenDisbursal,
+  convertToWhitelistTicket,
 } from "./utils";
 
-export function* loadInvestorTickets({ logger }: TGlobalDependencies, action: TAction): any {
-  if (action.type !== "INVESTOR_TICKET_ETOS_LOAD") return;
-
+export function* loadInvestorTickets(
+  { logger }: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.investorEtoTicket.loadInvestorTickets>,
+): Iterator<any> {
   try {
     yield all(
       map(
@@ -49,10 +52,8 @@ export function* loadInvestorTickets({ logger }: TGlobalDependencies, action: TA
 
 export function* loadInvestorTicket(
   { contractsService }: TGlobalDependencies,
-  action: TAction,
-): any {
-  if (action.type !== "INVESTOR_TICKET_LOAD") return;
-
+  action: TActionFromCreator<typeof actions.investorEtoTicket.loadEtoInvestorTicket>,
+): Iterator<any> {
   if (action.payload.eto.state !== EEtoState.ON_CHAIN) {
     throw new Error("Should be called only when eto is on chain");
   }
@@ -62,7 +63,11 @@ export function* loadInvestorTicket(
 
   const etoContract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
 
-  const investorTickerRaw = yield etoContract.investorTicket(user.userId);
+  const { investorTickerRaw, contribution } = yield all({
+    investorTickerRaw: etoContract.investorTicket(user.userId),
+    contribution: neuCall(loadComputedContributionFromContract, action.payload.eto),
+  });
+
   yield put(
     actions.investorEtoTicket.setEtoInvestorTicket(
       etoId,
@@ -70,38 +75,35 @@ export function* loadInvestorTicket(
     ),
   );
 
-  const contribution = yield neuCall(loadComputedContributionFromContract, action.payload.eto);
-
   yield put(actions.investorEtoTicket.setInitialCalculatedContribution(etoId, contribution));
 }
 
 export function* loadComputedContributionFromContract(
   { contractsService }: TGlobalDependencies,
-  eto: TEtoDataWithCompany,
+  eto: TEtoSpecsData,
   amountEuroUlps?: string,
   isICBM = false,
 ): any {
   if (eto.state !== EEtoState.ON_CHAIN) return;
 
-  const state: IAppState = yield select();
   const etoContract: ETOCommitment = yield contractsService.getETOCommitmentContract(eto.etoId);
 
-  if (etoContract) {
-    const newInvestorContributionEurUlps =
-      amountEuroUlps || convertToBigInt((eto.minTicketEur && eto.minTicketEur.toString()) || "0");
+  const minTicketEur = (eto.minTicketEur && eto.minTicketEur.toString()) || "0";
+  const newInvestorContributionEurUlps = amountEuroUlps || convertToUlps(minTicketEur);
 
-    const from = selectEthereumAddressWithChecksum(state);
+  const from: ReturnType<typeof selectEthereumAddressWithChecksum> = yield select(
+    selectEthereumAddressWithChecksum,
+  );
 
-    // TODO: check whether typechain but still is not fixed
-    // sorry no typechain, typechain has a bug with boolean casting
-    const contribution = yield promisify(etoContract.rawWeb3Contract.calculateContribution, [
-      from,
-      isICBM,
-      newInvestorContributionEurUlps,
-    ]);
+  // TODO: check whether typechain bug still is not fixed
+  // sorry no typechain, typechain has a bug with boolean casting
+  const contributionRaw = yield promisify(etoContract.rawWeb3Contract.calculateContribution, [
+    from,
+    isICBM,
+    newInvestorContributionEurUlps,
+  ]);
 
-    return convertToCalculatedContribution(contribution);
-  }
+  return convertToCalculatedContribution(contributionRaw);
 }
 
 export function* loadClaimables({
@@ -184,9 +186,51 @@ export function* getIncomingPayouts({
   }
 }
 
+export function* loadPersonalTokenDiscount(
+  { contractsService }: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.eto.loadTokenTerms>,
+): Iterator<any> {
+  const { eto } = action.payload;
+
+  if (!isOnChain(eto)) {
+    throw new InvalidETOStateError(eto.state, EEtoState.ON_CHAIN);
+  }
+
+  const userId: string = nonNullable(yield select(selectUserId));
+
+  const etoTerms: ETOTerms = yield contractsService.getEtoTerms(eto.contract.etoTermsAddress);
+
+  const whitelistTicketRaw = yield etoTerms.whitelistTicket(userId);
+  const whitelistTicket = convertToWhitelistTicket(whitelistTicketRaw);
+
+  const whitelistDiscountFrac = Q18.mul("1").minus(whitelistTicket.fullTokenPriceFrac);
+
+  let discountTokenPriceUlps: BigNumber = new BigNumber("0");
+  // only check for price when we have discount
+  if (whitelistTicket.isWhitelisted) {
+    discountTokenPriceUlps = yield etoTerms.calculatePriceFraction(
+      Q18.minus(whitelistDiscountFrac),
+    );
+  }
+
+  yield put(
+    actions.investorEtoTicket.setTokenPersonalDiscount(eto.etoId, {
+      whitelistDiscountAmountEurUlps: whitelistTicket.whitelistDiscountAmountEurUlps.toString(),
+      whitelistDiscountFrac: convertFromUlps(whitelistDiscountFrac).toNumber(),
+      whitelistDiscountUlps: discountTokenPriceUlps.toString(),
+    }),
+  );
+}
+
 export function* investorTicketsSagas(): any {
-  yield fork(neuTakeEvery, "INVESTOR_TICKET_ETOS_LOAD", loadInvestorTickets);
-  yield fork(neuTakeEvery, "INVESTOR_TICKET_LOAD", loadInvestorTicket);
+  yield fork(neuTakeEvery, actions.investorEtoTicket.loadInvestorTickets, loadInvestorTickets);
+  yield fork(neuTakeEvery, actions.investorEtoTicket.loadEtoInvestorTicket, loadInvestorTicket);
+  yield fork(
+    neuTakeLatest,
+    actions.investorEtoTicket.loadTokenPersonalDiscount,
+    loadPersonalTokenDiscount,
+  );
+
   yield fork(
     neuTakeEvery,
     [

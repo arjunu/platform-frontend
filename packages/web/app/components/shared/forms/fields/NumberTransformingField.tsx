@@ -43,9 +43,8 @@ export const NumberTransformingField = ({
   min,
 }: FieldGroupProps) => (
   <FormikConsumer>
-    {({ touched, errors, setFieldValue, submitCount }) => {
+    {({ touched, errors, setFieldValue, setFieldTouched, submitCount }) => {
       const invalid = isNonValid(touched, errors, name, submitCount);
-
       return (
         <FormGroup>
           {label && <FormFieldLabel name={name}>{label}</FormFieldLabel>}
@@ -72,9 +71,10 @@ export const NumberTransformingField = ({
                     }
                     setFieldValue(name, convertToPrecision(2)(e.target.valueAsNumber));
                   }}
-                  onChange={e =>
-                    setFieldValue(name, e.target.value === "" ? undefined : e.target.value)
-                  }
+                  onChange={e => {
+                    setFieldValue(name, e.target.value === "" ? undefined : e.target.value);
+                    setFieldTouched(name, true);
+                  }}
                   value={field.value !== undefined ? field.value : ""}
                   placeholder={placeholder}
                   disabled={disabled}

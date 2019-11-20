@@ -12,10 +12,12 @@ import {
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
+import { ECountries } from "../../../utils/enums/countriesEnum";
 import { IIntlProps, injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { FormDeprecated, FormField, FormSelectCountryField } from "../../shared/forms";
+import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
 import { KycPanel } from "../KycPanel";
@@ -100,6 +102,13 @@ const KYCForm = injectIntlHelpers<FormikProps<IKycBusinessData> & IProps>(
         label={formatIntlMessage("form.label.country")}
         name="country"
       />
+      {props.values.country === ECountries.UNITED_STATES && (
+        <FormSelectStateField
+          label={formatIntlMessage("form.label.us-state")}
+          name="usState"
+          data-test-id="kyc-company-business-data-us-state"
+        />
+      )}
       <FormSelectCountryField
         data-test-id="kyc-company-business-data-jurisdiction"
         label={formatIntlMessage("form.label.jurisdiction")}

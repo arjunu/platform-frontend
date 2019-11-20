@@ -76,12 +76,12 @@ describe("Eto widget page", () => {
     });
   });
 
-  it("ETOInWhitelistState", () => {
+  it.skip("ETOInWhitelistState", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInWhitelistState");
     getEto(ETO_ID).then((eto: TEtoSpecsData) => {
       cy.visit(withParams(e2eRoutes.embeddedWidget, { previewCode: eto.previewCode }));
 
-      cy.iframe("iframe").find(tid("eto-whitelist-count-down"));
+      cy.iframe("iframe").find(tid("eto-whitelist-countdown"));
     });
   });
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { formatDate } from "../../utils/Date.utils";
+import { formatDate } from "../../utils/DateUtils";
 
 import * as styles from "./Date.module.scss";
 

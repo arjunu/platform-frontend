@@ -1,6 +1,6 @@
 import {
-  acceptWallet,
   assertPortfolio,
+  confirmAccessModal,
   etoFixtureAddressByName,
   fillForm,
   goToPortfolio,
@@ -33,7 +33,7 @@ describe("Token claim", () => {
 
     cy.get(tid("modals.tx-sender.user-claim-flow.summary.accept")).click();
 
-    acceptWallet();
+    confirmAccessModal();
 
     cy.get(tid("modals.tx-sender.user-claim-flow.success")).should("exist");
     cy.get(tid("modals.tx-sender.user-claim-flow.success.go-to-portfolio")).click();

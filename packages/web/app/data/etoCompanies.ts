@@ -20,7 +20,7 @@ export const etoMockCompanies: TMockEto[] = [
   {
     brandName: "ICBM Capital Raise",
     url: "https://commit.neufund.org",
-    totalAmount: Q18.mul(12582992.64).toString(),
+    totalAmount: Q18.mul("12582992.64").toString(),
     companyPreviewCardBanner: icbmThumbnail,
     id: "icbm",
     categories: ["Technology", "Blockchain"],

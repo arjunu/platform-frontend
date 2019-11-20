@@ -36,7 +36,6 @@ storiesOf("KYC/process", module).add("start", () => (
 storiesOf("KYC/process", module).add("personal/start", () => {
   const currentValues: IKycIndividualData = {
     ...personalData,
-    isUsCitizen: false,
     isHighIncome: false,
   };
 
@@ -45,6 +44,9 @@ storiesOf("KYC/process", module).add("personal/start", () => {
       currentValues={currentValues}
       loadingData={false}
       submitForm={() => {}}
+      isSavingForm={false}
+      uploadedFiles={[]}
+      uploadedFilesLoading={false}
     />
   );
 });

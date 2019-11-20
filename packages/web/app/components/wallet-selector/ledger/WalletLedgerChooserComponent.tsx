@@ -26,9 +26,8 @@ export interface IWalletLedgerChooserComponentDispatchProps {
   handleAdvanced: () => void;
 }
 
-export const WalletLedgerChooserComponent: React.FunctionComponent<
-  IWalletLedgerChooserComponent & IWalletLedgerChooserComponentDispatchProps
-> = ({
+export const WalletLedgerChooserComponent: React.FunctionComponent<IWalletLedgerChooserComponent &
+  IWalletLedgerChooserComponentDispatchProps> = ({
   accounts,
   handleAddressChosen,
   hasPreviousAddress,

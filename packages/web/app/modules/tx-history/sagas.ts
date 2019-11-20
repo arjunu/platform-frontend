@@ -12,8 +12,8 @@ import {
   TAnalyticsTransactionsResponse,
 } from "../../lib/api/analytics-api/interfaces";
 import { IAppState } from "../../store";
-import { EthereumAddressWithChecksum } from "../../types";
 import { subtractBigNumbers } from "../../utils/BigNumberUtils";
+import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
 import { actions, TActionFromCreator } from "../actions";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../sagasUtils";
 import { selectEurEquivalent } from "../shared/tokenPrice/selectors";
@@ -291,7 +291,7 @@ export function* mapAnalyticsApiTransactionResponse(
 
 export function* mapAnalyticsApiTransactionsResponse(
   _: TGlobalDependencies,
-  transactions: TAnalyticsTransaction[],
+  transactions: readonly TAnalyticsTransaction[],
 ): Iterator<any> {
   const txHistoryTransactions: ReadonlyArray<TTxHistory | undefined> = yield all(
     transactions.map(tx => neuCall(mapAnalyticsApiTransactionResponse, tx)),

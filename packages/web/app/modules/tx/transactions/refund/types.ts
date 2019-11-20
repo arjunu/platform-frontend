@@ -6,4 +6,5 @@ export type TRefundAdditionalData = {
   amountEurUlps: string;
   costUlps: string;
   costEurUlps: string;
+  companyName: string;
 };

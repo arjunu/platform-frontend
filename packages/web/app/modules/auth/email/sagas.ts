@@ -5,7 +5,7 @@ import { createMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { EUserType, IVerifyEmailUser } from "../../../lib/api/users/interfaces";
 import { EmailAlreadyExists } from "../../../lib/api/users/UsersApi";
-import { TStoredWalletMetadata } from "../../../lib/persistence/WalletMetadataObjectStorage";
+import { TStoredWalletMetadata } from "../../../lib/persistence/WalletStorage";
 import { IAppState } from "../../../store";
 import { actions } from "../../actions";
 import { userHasKycAndEmailVerified } from "../../eto-flow/selectors";
@@ -79,9 +79,11 @@ export async function verifyUserEmailPromise(
     await apiUserService.verifyUserEmail(userCode);
     notificationCenter.info(createMessage(AuthMessage.AUTH_EMAIL_VERIFIED));
   } catch (e) {
-    if (e instanceof EmailAlreadyExists)
+    if (e instanceof EmailAlreadyExists) {
       notificationCenter.error(createMessage(AuthMessage.AUTH_EMAIL_ALREADY_EXISTS));
-    else notificationCenter.error(createMessage(AuthMessage.AUTH_EMAIL_VERIFICATION_FAILED));
+    } else {
+      notificationCenter.error(createMessage(AuthMessage.AUTH_EMAIL_VERIFICATION_FAILED));
+    }
   }
 }
 

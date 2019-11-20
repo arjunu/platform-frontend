@@ -13,7 +13,7 @@ import { detectUserAgent } from "../user-agent/sagas";
 import { initWeb3ManagerEvents } from "../web3/sagas";
 import { WalletMetadataNotFoundError } from "./errors";
 import { EInitType } from "./reducer";
-import { selectIsSmartContractInitDone } from "./selectors";
+import { selectIsAppReady, selectIsSmartContractInitDone } from "./selectors";
 
 function* initSmartcontracts({ web3Manager, logger }: TGlobalDependencies): any {
   try {
@@ -23,11 +23,11 @@ function* initSmartcontracts({ web3Manager, logger }: TGlobalDependencies): any 
     yield neuCall(initializeContracts);
     yield neuCall(populatePlatformTermsConstants);
 
-    yield put(actions.init.done(EInitType.START_CONTRACTS_INIT));
+    yield put(actions.init.done(EInitType.SMART_CONTRACTS_INIT));
   } catch (e) {
     yield put(
       actions.init.error(
-        EInitType.START_CONTRACTS_INIT,
+        EInitType.SMART_CONTRACTS_INIT,
         "Error while connecting with Ethereum blockchain",
       ),
     );
@@ -56,6 +56,7 @@ function* initApp({ logger }: TGlobalDependencies): any {
 
           yield neuCall(setJwt, jwt);
           yield neuCall(loadUser);
+          yield put(actions.auth.finishSigning());
         } catch (e) {
           yield put(actions.auth.logout());
           logger.error(
@@ -89,7 +90,7 @@ export function* initStartSaga(
   switch (initType) {
     case EInitType.APP_INIT:
       return yield neuCall(initApp);
-    case EInitType.START_CONTRACTS_INIT:
+    case EInitType.SMART_CONTRACTS_INIT:
       return yield neuCall(initSmartcontracts);
     default:
       throw new Error("Unrecognized init type!");
@@ -110,16 +111,26 @@ export function* initSmartcontractsOnce(): any {
     return;
   }
 
-  yield put(actions.init.start(EInitType.START_CONTRACTS_INIT));
+  yield put(actions.init.start(EInitType.SMART_CONTRACTS_INIT));
 }
 
 export function* waitUntilSmartContractsAreInitialized(): Iterator<any> {
   const isSmartContractsInitialized = yield select(selectIsSmartContractInitDone);
 
   if (!isSmartContractsInitialized) {
-    yield neuTakeOnly(actions.init.done, { initType: EInitType.START_CONTRACTS_INIT });
+    yield neuTakeOnly(actions.init.done, { initType: EInitType.SMART_CONTRACTS_INIT });
   }
   return;
+}
+
+export function* waitForAppInit(): Iterator<any> {
+  let appIsReady: boolean = yield select(selectIsAppReady);
+
+  if (!appIsReady) {
+    yield neuTakeOnly(actions.init.done, { initType: EInitType.APP_INIT });
+    appIsReady = true;
+  }
+  return appIsReady;
 }
 
 export const initSagas = function*(): Iterator<effects.Effect> {

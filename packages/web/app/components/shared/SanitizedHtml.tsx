@@ -75,7 +75,7 @@ export const SanitizedHtml: React.FunctionComponent<TSanitizedHtml & CommonHtmlP
   unsafeHtml,
   className,
 }) => (
-  <div
+  <span
     className={className}
     dangerouslySetInnerHTML={{ __html: sanitizeHtml(unsafeHtml, SANITIZER_OPTIONS) }}
   />

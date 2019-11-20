@@ -120,6 +120,7 @@ describe("Money", () => {
       defaultValue: "-",
       decimalPlaces: 0,
       outputFormat: EAbbreviatedNumberOutputFormat.LONG,
+      decimals: undefined,
     };
 
     const component1 = shallow(

@@ -1,8 +1,9 @@
 import { branch, compose, renderComponent, withProps } from "recompose";
 
 import { actions } from "../../modules/actions";
+import { selectIsUserFullyVerified } from "../../modules/auth/selectors";
 import { selectIssuerEtoWithCompanyAndContract } from "../../modules/eto-flow/selectors";
-import { TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
@@ -13,12 +14,14 @@ import { LoadingIndicator } from "../shared/loading-indicator";
 import { EtoView } from "./shared/EtoView";
 
 type TStateProps = {
-  eto: TEtoWithCompanyAndContract | undefined;
+  eto: TEtoWithCompanyAndContractReadonly | undefined;
+  isUserFullyVerified: boolean;
 };
 
 type TViewProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   publicView: boolean;
+  isUserFullyVerified: boolean;
 };
 
 export const EtoIssuerView = compose<TViewProps, {}>(
@@ -31,6 +34,7 @@ export const EtoIssuerView = compose<TViewProps, {}>(
   appConnect<TStateProps>({
     stateToProps: state => ({
       eto: selectIssuerEtoWithCompanyAndContract(state),
+      isUserFullyVerified: selectIsUserFullyVerified(state),
     }),
   }),
   withProps<{ publicView: boolean }, TStateProps>(() => ({ publicView: false })),

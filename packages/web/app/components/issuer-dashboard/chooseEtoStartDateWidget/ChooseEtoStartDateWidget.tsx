@@ -1,5 +1,3 @@
-import BigNumber from "bignumber.js";
-import * as cn from "classnames";
 import * as moment from "moment";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
@@ -31,21 +29,15 @@ import { DatePicker } from "../../shared/DatePicker";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryPanel } from "../../shared/errorBoundary/ErrorBoundaryPanel";
 import { FormError } from "../../shared/forms/index";
-import { FancyTimeLeft, TimeLeft } from "../../shared/TimeLeft.unsafe";
-import {
-  calculateTimeLeft,
-  localTime,
-  timeZone,
-  utcTime,
-  weekdayLocal,
-  weekdayUTC,
-} from "../../shared/utils";
+import { TimeLeft } from "../../shared/TimeLeft.unsafe";
+import { TimeLeftWithUTC } from "../../shared/TimeLeftWithUTC";
+import { calculateTimeLeft } from "../../shared/utils";
 
 import * as styles from "./ChooseEtoStartDateWidget.module.scss";
 
 interface IStateProps {
   etoDate?: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   newDateSaving: boolean;
   transactionMining: boolean;
   issuerEtoLoading: boolean;
@@ -55,7 +47,7 @@ interface IStateProps {
 
 interface IChangeDateStateProps {
   etoDate: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   canChangeEtoStartDate: boolean;
 }
 
@@ -70,7 +62,7 @@ interface IDispatchProps {
 
 interface IDateChooserProps {
   etoDate?: Date;
-  minOffsetPeriod: BigNumber;
+  minOffsetPeriod: number;
   uploadDate: (time: moment.Moment) => void;
   canChangeEtoStartDate: boolean;
 }
@@ -200,7 +192,7 @@ const DateChooserClosed = ({
 );
 
 class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserState> {
-  minOffsetPeriodInMinutes = Math.floor(this.props.minOffsetPeriod.div(60).toNumber());
+  minOffsetPeriodInMinutes = Math.floor(this.props.minOffsetPeriod / 60);
   // dates get rounded down. Add 3 minutes so that it shows "in 14 days" instead of "in 13 days 23 hours"
   defaultOffsetInMinutes = this.minOffsetPeriodInMinutes * 2 + 3;
 
@@ -211,7 +203,8 @@ class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserSta
       ? moment.utc(this.props.etoDate)
       : moment()
           .utc()
-          .add(this.defaultOffsetInMinutes, "minutes"),
+          .add(this.defaultOffsetInMinutes, "minutes")
+          .startOf("minute"),
   };
 
   closeDatePicker = () => {
@@ -293,49 +286,26 @@ class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserSta
   }
 }
 
-const ChangeDate: React.ComponentType<IChangeDateStateProps & IDispatchProps> = props => {
-  const timeLeft = calculateTimeLeft(props.etoDate, true) > 0;
-  return (
-    <>
-      <div className={styles.etoDateWrapper}>
-        {timeLeft && (
-          <>
-            <span className={styles.etoTimeLeftStart}>
-              <FormattedMessage id="eto.settings.set-eto-start-date-time-left" />:
-            </span>
-            <FancyTimeLeft finalTime={props.etoDate} asUtc={true} refresh={true} />
-          </>
-        )}
-        <table className={cn(styles.etoDate, { [styles.etoDateBold]: !timeLeft })}>
-          <tbody>
-            <tr>
-              <td>UTC:</td>
-              <td data-test-id="eto-settings-display-start-date-utc">
-                {`${weekdayUTC(props.etoDate)}, ${utcTime(props.etoDate)}`}
-              </td>
-            </tr>
-            <tr>
-              <td>{`${timeZone()}: `}</td>
-              <td>{`${weekdayLocal(props.etoDate)}, ${localTime(props.etoDate)}`}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <DateChooser {...props} />
-    </>
-  );
-};
+const ChangeDate: React.ComponentType<IChangeDateStateProps & IDispatchProps> = props => (
+  <>
+    <TimeLeftWithUTC
+      countdownDate={props.etoDate}
+      label={<FormattedMessage id="eto.settings.set-eto-start-date-time-left" />}
+    />
+    <DateChooser {...props} />
+  </>
+);
 
-const EtoStartDateWidgetComponent: React.ComponentType<
-  IStateProps & IDispatchProps & IExternalProps
-> = ({ etoDate, columnSpan, ...props }) => (
+const EtoStartDateWidgetComponent: React.ComponentType<IStateProps &
+  IDispatchProps &
+  IExternalProps> = ({ etoDate, columnSpan, ...props }) => (
   <DashboardWidget
     title={<FormattedMessage id="eto.settings.eto-start-date" />}
     text={
       <FormattedHTMLMessage
         tagName="span"
         id="settings.choose-pre-eto-date.book-building-will-stop"
-        values={{ minOffsetPeriod: props.minOffsetPeriod.div(DAY).toNumber() }}
+        values={{ minOffsetPeriod: props.minOffsetPeriod / DAY }}
       />
     }
     columnSpan={columnSpan}
@@ -403,6 +373,10 @@ const ChooseEtoStartDateWidget = compose<
     props =>
       !props.areAgreementsSignedByNominee &&
       !(props.etoDate && calculateTimeLeft(props.etoDate, true) > 0),
+    renderNothing,
+  ),
+  branch<IStateProps>(
+    props => !!props.etoDate && calculateTimeLeft(props.etoDate, true) < 0,
     renderNothing,
   ),
   branch<IStateProps>(

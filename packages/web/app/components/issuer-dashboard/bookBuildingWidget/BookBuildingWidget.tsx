@@ -1,37 +1,45 @@
-import BigNumber from "bignumber.js";
 import * as React from "react";
-import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
-import { branch, renderComponent } from "recompose";
-import { compose } from "redux";
+import { branch, compose, renderComponent, renderNothing, withProps } from "recompose";
 
-import { DAY } from "../../../config/constants";
+import { TEtoInvestmentCalculatedValues } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IBookBuildingStats } from "../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
 import { actions } from "../../../modules/actions";
+import { selectIsAuthorized } from "../../../modules/auth/selectors";
 import { selectBookbuildingStats } from "../../../modules/bookbuilding-flow/selectors";
+import {
+  calculateWhitelistingState,
+  EWhitelistingState,
+} from "../../../modules/bookbuilding-flow/utils";
 import {
   selectCanEnableBookBuilding,
   selectIsBookBuilding,
   selectIssuerEtoDateToWhitelistMinDuration,
   selectIssuerEtoId,
+  selectIssuerEtoOnChainState,
   selectMaxPledges,
 } from "../../../modules/eto-flow/selectors";
+import { selectIssuerEtoInvestmentCalculatedValues } from "../../../modules/eto/selectors";
+import { EETOStateOnChain } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
-import { TTranslatedString } from "../../../types";
+import { OmitKeys, TTranslatedString } from "../../../types";
+import { assertNever } from "../../../utils/assertNever";
+import { InvariantError } from "../../../utils/invariant";
+import { nonNullable } from "../../../utils/nonNullable";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { onLeaveAction } from "../../../utils/OnLeaveAction";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight } from "../../shared/buttons/index";
-import { DashboardWidget } from "../../shared/dashboard-widget/DashboardWidget";
-import { Document } from "../../shared/Document";
-import { DocumentTemplateButton } from "../../shared/DocumentLink";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryPanel } from "../../shared/errorBoundary/ErrorBoundaryPanel";
-import { Money } from "../../shared/formatters/Money";
-import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../../shared/formatters/utils";
-import { LoadingIndicator } from "../../shared/loading-indicator/index";
+import { LoadingIndicator } from "../../shared/loading-indicator";
 import { Panel } from "../../shared/Panel";
+import { BookBuildingActiveWidget } from "./BookBuildingActiveWidget";
+import { BookBuildingNotActiveWidget } from "./BookBuildingNotActiveWidget";
+import { BookBuildingStoppedWidget } from "./BookBuildingStoppedWidget";
+import { BookBuildingSuspendedWidget } from "./BookBuildingSuspendedWidget";
 
-import * as styles from "./BookBuildingWidget.module.scss";
+interface IExternalProps {
+  columnSpan?: EColumnSpan;
+}
 
 interface IDispatchProps {
   startBookBuilding: (etoId: string) => void;
@@ -45,12 +53,14 @@ interface IStateProps {
   maxPledges: number | null;
   etoId: string;
   canEnableBookbuilding: boolean;
-  columnSpan?: EColumnSpan;
-  minOffsetPeriod: BigNumber;
+  onChainState: EETOStateOnChain | undefined;
+  minOffsetPeriod: number;
+  isAuthorized: boolean;
+  investmentCalculatedValues: TEtoInvestmentCalculatedValues | undefined;
 }
 
-interface IExternalProps {
-  columnSpan?: EColumnSpan;
+interface IWithProps {
+  whitelistingState: EWhitelistingState;
 }
 
 interface IPanelProps {
@@ -58,186 +68,93 @@ interface IPanelProps {
   columnSpan?: EColumnSpan;
 }
 
-interface IBookBuilding {
-  bookBuildingStats: IBookBuildingStats;
-  downloadCSV: () => void;
-  maxPledges: number | null;
-}
+type TProps = IWithProps &
+  IDispatchProps &
+  OmitKeys<IStateProps, "onChainState" | "canEnableBookbuilding" | "bookBuildingEnabled"> &
+  IExternalProps;
 
-interface ILayoutProps {
-  onClick: () => void;
-  headerText: TTranslatedString;
-  text: TTranslatedString;
-  buttonText: TTranslatedString;
-  canEnableBookbuilding: boolean;
-  columnSpan?: EColumnSpan;
-}
-
-type IProps = IDispatchProps & IStateProps;
-
-const BookBuildingStats = ({ bookBuildingStats, maxPledges, downloadCSV }: IBookBuilding) => (
-  <>
-    <div className={styles.groupWrapper}>
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview.amount-backed" />
-      </span>
-      <Money
-        value={bookBuildingStats.pledgedAmount}
-        inputFormat={ENumberInputFormat.FLOAT}
-        valueType={ECurrency.EUR}
-        outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-      />
-      <span className={styles.label}>
-        <FormattedMessage id="shared-component.eto-overview.investors-backed" />
-      </span>
-      <span data-test-id="eto-bookbuilding-investors-backed">
-        {maxPledges !== null ? (
-          <FormattedMessage
-            id="settings.book-building-stats-widget.number-of-pledges"
-            values={{ pledges: bookBuildingStats.investorsCount, maxPledges }}
-          />
-        ) : null}
-      </span>
-    </div>
-    {bookBuildingStats.investorsCount > 0 ? (
-      <DocumentTemplateButton
-        onClick={downloadCSV}
-        title={<FormattedMessage id="eto-bookbuilding-widget.download-bookbuilding-stats" />}
-        altIcon={<Document extension="csv" />}
-      />
-    ) : null}
-  </>
-);
-
-const BookBuildingWidgetLayout: React.FunctionComponent<ILayoutProps> = ({
-  children,
-  onClick,
-  headerText,
-  text,
-  buttonText,
-  canEnableBookbuilding,
-  columnSpan,
-}) => (
-  <DashboardWidget
-    title={headerText}
-    text={
-      canEnableBookbuilding ? (
-        text
-      ) : (
-        <FormattedMessage id="eto-bookbuilding-widget.button-disabled" />
-      )
-    }
-    columnSpan={columnSpan}
-  >
-    {children}
-
-    {canEnableBookbuilding && (
-      <div className="m-auto">
-        <ButtonArrowRight onClick={onClick} data-test-id="eto-flow-start-bookbuilding">
-          {buttonText}
-        </ButtonArrowRight>
-      </div>
-    )}
-  </DashboardWidget>
-);
-
-export const BookBuildingWidgetComponent: React.FunctionComponent<IProps> = ({
+export const BookBuildingWidgetComponent: React.FunctionComponent<TProps> = ({
   startBookBuilding,
-  bookBuildingEnabled,
   maxPledges,
   stopBookBuilding,
   bookBuildingStats,
   downloadCSV,
   minOffsetPeriod,
   etoId,
-  canEnableBookbuilding,
   columnSpan,
+  whitelistingState,
 }) => {
-  if (!bookBuildingEnabled && bookBuildingStats.investorsCount === 0) {
-    return (
-      <BookBuildingWidgetLayout
-        headerText={<FormattedMessage id="settings.book-building-widget.start-book-building" />}
-        text={<FormattedMessage id="settings.book-building-widget.proposal-accepted" />}
-        buttonText={<FormattedMessage id="settings.book-building-widget.start-book-building" />}
-        onClick={() => startBookBuilding(etoId)}
-        canEnableBookbuilding={canEnableBookbuilding}
-        columnSpan={columnSpan}
-      />
-    );
-  } else if (!bookBuildingEnabled && bookBuildingStats.investorsCount) {
-    return (
-      <BookBuildingWidgetLayout
-        headerText={<FormattedMessage id="settings.book-building-widget.book-building-disabled" />}
-        text={<FormattedMessage id="settings.book-building-widget.book-building-disabled-text" />}
-        buttonText={
-          <FormattedMessage id="settings.book-building-widget.reactivate-book-building" />
-        }
-        onClick={() => startBookBuilding(etoId)}
-        canEnableBookbuilding={canEnableBookbuilding}
-        columnSpan={columnSpan}
-      >
-        <BookBuildingStats
+  switch (whitelistingState) {
+    case EWhitelistingState.ACTIVE:
+      return (
+        <BookBuildingActiveWidget
+          columnSpan={columnSpan}
+          bookBuildingStats={bookBuildingStats}
+          downloadCSV={downloadCSV}
+          maxPledges={maxPledges}
+          minOffsetPeriod={minOffsetPeriod}
+          stopBookBuilding={stopBookBuilding}
+          etoId={etoId}
+        />
+      );
+    case EWhitelistingState.NOT_ACTIVE:
+      return (
+        <BookBuildingNotActiveWidget
+          etoId={etoId}
+          startBookBuilding={startBookBuilding}
+          columnSpan={columnSpan}
+        />
+      );
+    case EWhitelistingState.SUSPENDED:
+      return (
+        <BookBuildingSuspendedWidget
+          columnSpan={columnSpan}
+          bookBuildingStats={bookBuildingStats}
+          downloadCSV={downloadCSV}
+          maxPledges={maxPledges}
+          startBookBuilding={startBookBuilding}
+          etoId={etoId}
+        />
+      );
+    case EWhitelistingState.STOPPED:
+    case EWhitelistingState.LIMIT_REACHED:
+      return (
+        <BookBuildingStoppedWidget
+          columnSpan={columnSpan}
           bookBuildingStats={bookBuildingStats}
           downloadCSV={downloadCSV}
           maxPledges={maxPledges}
         />
-      </BookBuildingWidgetLayout>
-    );
-  } else {
-    return (
-      <BookBuildingWidgetLayout
-        headerText={<FormattedMessage id="settings.book-building-widget.book-building-enabled" />}
-        text={
-          <FormattedHTMLMessage
-            tagName="span"
-            id="settings.book-building-widget.book-building-enabled-text"
-            values={{ minOffsetPeriod: minOffsetPeriod.div(DAY).toNumber() }}
-          />
-        }
-        buttonText={<FormattedMessage id="settings.book-building-widget.stop-book-building" />}
-        onClick={() => stopBookBuilding(etoId)}
-        canEnableBookbuilding={canEnableBookbuilding}
-        columnSpan={columnSpan}
-      >
-        <BookBuildingStats
-          bookBuildingStats={bookBuildingStats}
-          downloadCSV={downloadCSV}
-          maxPledges={maxPledges}
-        />
-      </BookBuildingWidgetLayout>
-    );
+      );
+    case EWhitelistingState.LOADING:
+      return <LoadingIndicator />;
+    default:
+      return assertNever(whitelistingState);
   }
 };
 
 const WidgetLoading: React.ComponentType<IPanelProps> = ({ columnSpan }) => (
-  <WidgetPanel columnSpan={columnSpan}>
+  <Panel columnSpan={columnSpan}>
     <LoadingIndicator />
-  </WidgetPanel>
-);
-
-const WidgetPanel: React.ComponentType<IPanelProps> = ({ columnSpan, headerText, children }) => (
-  <Panel headerText={headerText} columnSpan={columnSpan}>
-    {children}
   </Panel>
 );
 
-export const BookBuildingWidget = compose<React.FunctionComponent<IExternalProps>>(
+export const BookBuildingWidget = compose<TProps, IExternalProps>(
   createErrorBoundary(ErrorBoundaryPanel),
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => {
-      const etoId = selectIssuerEtoId(state);
-
-      if (!etoId) {
-        throw new Error("Eto id is required for bookbuilding");
-      }
+      const etoId = nonNullable(selectIssuerEtoId(state));
 
       return {
         etoId,
+        investmentCalculatedValues: selectIssuerEtoInvestmentCalculatedValues(state),
         bookBuildingEnabled: selectIsBookBuilding(state),
         bookBuildingStats: selectBookbuildingStats(state, etoId),
         maxPledges: selectMaxPledges(state),
         canEnableBookbuilding: selectCanEnableBookBuilding(state),
+        onChainState: selectIssuerEtoOnChainState(state),
         minOffsetPeriod: selectIssuerEtoDateToWhitelistMinDuration(state),
+        isAuthorized: selectIsAuthorized(state),
       };
     },
     dispatchToProps: dispatch => ({
@@ -271,4 +188,52 @@ export const BookBuildingWidget = compose<React.FunctionComponent<IExternalProps
     },
   }),
   branch<IStateProps>(props => !props.bookBuildingStats, renderComponent(WidgetLoading)),
+  withProps<IWithProps, IStateProps>(
+    ({
+      bookBuildingStats,
+      maxPledges,
+      canEnableBookbuilding,
+      bookBuildingEnabled,
+      isAuthorized,
+      investmentCalculatedValues,
+    }) => {
+      if (maxPledges === null || bookBuildingEnabled === undefined) {
+        throw new InvariantError(
+          "Max pledges and bookbuilding status should be defined at this point",
+        );
+      }
+
+      const bookbuildingLimitReached = maxPledges - bookBuildingStats.investorsCount <= 0;
+
+      return {
+        whitelistingState: calculateWhitelistingState({
+          canEnableBookbuilding: canEnableBookbuilding,
+          whitelistingIsActive: bookBuildingEnabled,
+          bookbuildingLimitReached,
+          investmentCalculatedValues,
+          investorsCount: bookBuildingStats.investorsCount,
+          isAuthorized,
+        }),
+      };
+    },
+  ),
+  branch<IStateProps & IWithProps>(props => {
+    // show widget when bookbuilding can be enabled
+    if (props.canEnableBookbuilding) {
+      return false;
+    }
+
+    // show widget when limit reached or stopped up until end of presale
+    if (
+      [EWhitelistingState.LIMIT_REACHED, EWhitelistingState.STOPPED].includes(
+        props.whitelistingState,
+      )
+    ) {
+      return ![undefined, EETOStateOnChain.Setup, EETOStateOnChain.Whitelist].includes(
+        props.onChainState,
+      );
+    }
+
+    return true;
+  }, renderNothing),
 )(BookBuildingWidgetComponent);

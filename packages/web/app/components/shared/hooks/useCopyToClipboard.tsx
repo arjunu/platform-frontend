@@ -14,7 +14,7 @@ type TMessageOptions = {
 
 const useCopyClipboard = (): [
   TCopyToClipboard,
-  (value: string, options?: TMessageOptions) => void
+  (value: string, options?: TMessageOptions) => void,
 ] => {
   const logger = useLogger();
 

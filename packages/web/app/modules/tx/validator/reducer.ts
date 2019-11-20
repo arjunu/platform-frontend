@@ -4,6 +4,7 @@ import { actions } from "../../actions";
 export enum EValidationState {
   VALIDATING = "validation",
   NOT_ENOUGH_ETHER_FOR_GAS = "not_enough_ether_for_gas",
+  NOT_ENOUGH_TOKENS = "not_enough_token",
   VALIDATION_OK = "validation_ok",
   PARTIALLY_OK = "validation_partially_ok",
   IS_NOT_ACCEPTING_ETHER = "is_not_accepting_ether",

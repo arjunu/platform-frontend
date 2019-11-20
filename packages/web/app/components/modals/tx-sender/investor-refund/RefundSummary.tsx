@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FormattedMessage } from "react-intl-phraseapp";
+import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { Col, Container, Row } from "reactstrap";
 import { branch, compose, renderNothing } from "recompose";
 
@@ -36,7 +36,11 @@ export const RefundSummaryLayout: React.FunctionComponent<TComponentProps> = ({
     </Heading>
 
     <p>
-      <FormattedMessage id="user-refund-flow.description" />
+      <FormattedHTMLMessage
+        tagName="span"
+        id="user-refund-flow.description"
+        values={{ companyName: additionalData.companyName }}
+      />
     </p>
 
     <RefundTransactionDetails txData={txData} className="mb-4" additionalData={additionalData} />

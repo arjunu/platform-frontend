@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import * as Yup from "yup";
 
 import { symbols } from "../../../di/symbols";
-import { EthereumAddressWithChecksum } from "../../../types";
+import { EthereumAddressWithChecksum } from "../../../utils/opaque-types/types";
 import { SignerType } from "../../web3/PersonalWeb3";
 import { IHttpClient, IHttpResponse } from "../client/IHttpClient";
 

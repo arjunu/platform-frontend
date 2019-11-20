@@ -12,13 +12,29 @@ import {
 } from "./reducer";
 
 describe("Wallet selector > Ledger wizard > reducer", () => {
-  const getCommonInitialState = () => ({
-    ...ledgerWizardInitialState,
-    isInitialConnectionInProgress: false,
+  it("should act on LOAD_ACCOUNTS action", () => {
+    const state: ILedgerWizardState = {
+      isInitialConnectionInProgress: false,
+      isConnectionEstablished: true,
+      accounts: [],
+      derivationPathPrefix: DEFAULT_DERIVATION_PATH_PREFIX,
+      index: 1,
+      isLoadingAddresses: false,
+      numberOfAccountsPerPage: DEFAULT_LEDGER_ACCOUNTS_PER_PAGE,
+      advanced: false,
+    };
+
+    const newState = ledgerWizardReducer(state, actions.walletSelector.ledgerLoadAccounts());
+
+    expect(newState).to.be.deep.eq({
+      ...state,
+      isLoadingAddresses: true,
+    });
   });
+
   it("should act on LEDGER_WIZARD_ACCOUNTS_LIST_NEXT_PAGE action", () => {
     const newState = ledgerWizardReducer(
-      getCommonInitialState(),
+      ledgerWizardInitialState,
       actions.walletSelector.ledgerWizardAccountsListNextPage(),
     );
 
@@ -95,7 +111,7 @@ describe("Wallet selector > Ledger wizard > reducer", () => {
   describe("SET_LEDGER_WIZARD_ACCOUNTS", () => {
     it("should act on SET_LEDGER_WIZARD_ACCOUNTS action", () => {
       const newState = ledgerWizardReducer(
-        getCommonInitialState(),
+        ledgerWizardInitialState,
         actions.walletSelector.setLedgerAccounts(
           [{ address: "0x67", balanceETH: "123", balanceNEU: "0", derivationPath: "44/60" }],
           DEFAULT_DERIVATION_PATH_PREFIX,
@@ -165,7 +181,7 @@ describe("Wallet selector > Ledger wizard > reducer", () => {
       errorMsg: undefined,
       accounts: [],
       index: 0,
-      isLoadingAddresses: true,
+      isLoadingAddresses: false,
       derivationPathPrefix: DEFAULT_DERIVATION_PATH_PREFIX,
       numberOfAccountsPerPage: DEFAULT_LEDGER_ACCOUNTS_PER_PAGE,
       advanced: false,
@@ -176,7 +192,7 @@ describe("Wallet selector > Ledger wizard > reducer", () => {
     const expectedErrorMsg = createMessage(LedgerErrorMessage.GENERIC_ERROR);
     const action = actions.walletSelector.ledgerConnectionEstablishedError(expectedErrorMsg);
 
-    const newState = ledgerWizardReducer(getCommonInitialState(), action);
+    const newState = ledgerWizardReducer(ledgerWizardInitialState, action);
 
     expect(newState).to.be.deep.eq({
       isInitialConnectionInProgress: false,
@@ -184,7 +200,7 @@ describe("Wallet selector > Ledger wizard > reducer", () => {
       errorMsg: expectedErrorMsg,
       accounts: [],
       index: 0,
-      isLoadingAddresses: true,
+      isLoadingAddresses: false,
       derivationPathPrefix: DEFAULT_DERIVATION_PATH_PREFIX,
       numberOfAccountsPerPage: DEFAULT_LEDGER_ACCOUNTS_PER_PAGE,
       advanced: false,
@@ -194,7 +210,7 @@ describe("Wallet selector > Ledger wizard > reducer", () => {
   it("should act on SET_LEDGER_WIZARD_DERIVATION_PATH_PREFIX", () => {
     const newDerivationPath = "test";
     const newState = ledgerWizardReducer(
-      getCommonInitialState(),
+      ledgerWizardInitialState,
       actions.walletSelector.setLedgerWizardDerivationPathPrefix(newDerivationPath),
     );
 
@@ -212,14 +228,14 @@ describe("Wallet selector > Ledger wizard > reducer", () => {
 
   it("should act on LEDGER_WIZARD_DERIVATION_PATH_PREFIX_ERROR", () => {
     const newState = ledgerWizardReducer(
-      getCommonInitialState(),
+      ledgerWizardInitialState,
       actions.walletSelector.ledgerWizardDerivationPathPrefixError(),
     );
 
     expect(newState).to.be.deep.eq({
       isInitialConnectionInProgress: false,
       isConnectionEstablished: false,
-      isLoadingAddresses: true,
+      isLoadingAddresses: false,
       accounts: [],
       index: 0,
       derivationPathPrefix: "",
@@ -237,7 +253,8 @@ describe("Wallet selector > Ledger wizard > reducer", () => {
 
     expect(newState).to.be.deep.eq({
       ...state,
-      advanced: !state.advanced,
+      isLoadingAddresses: true,
+      advanced: true,
     });
   });
 });

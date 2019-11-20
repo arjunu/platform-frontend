@@ -1,4 +1,4 @@
-import { delay, Effect } from "redux-saga";
+import { Effect } from "redux-saga";
 import { call, put, race, select, take } from "redux-saga/effects";
 
 import { GenericErrorMessage } from "../../components/translatedMessages/messages";
@@ -124,7 +124,7 @@ export function* connectLightWallet(
   return wallet;
 }
 
-export function* connectWalletAndRunEffect(effect: Effect | Iterator<Effect>): any {
+export function* connectWallet(): Iterator<any> {
   while (true) {
     try {
       const walletType: EWalletType | undefined = yield select((state: IAppState) =>
@@ -135,21 +135,23 @@ export function* connectWalletAndRunEffect(effect: Effect | Iterator<Effect>): a
         const { payload }: TActionFromCreator<typeof actions.accessWallet.accept> = yield take(
           actions.accessWallet.accept,
         );
+
         yield neuCall(ensureWalletConnection, payload.password);
       } else {
-        // Password can be undefined if its Metamask or Ledger
+        // Password is undefined if its Metamask or Ledger
         yield neuCall(ensureWalletConnection);
       }
 
-      return yield effect;
+      return;
     } catch (e) {
       const error = mapSignMessageErrorToErrorMessage(e);
       yield put(actions.accessWallet.signingError(error));
 
-      if (e instanceof SignerError || error.messageType === GenericErrorMessage.GENERIC_ERROR)
+      if (e instanceof SignerError || error.messageType === GenericErrorMessage.GENERIC_ERROR) {
         throw e;
-
-      yield delay(500);
+      } else {
+        yield take(actions.accessWallet.tryToAccessWalletAgain);
+      }
     }
   }
 }
@@ -157,23 +159,20 @@ export function* connectWalletAndRunEffect(effect: Effect | Iterator<Effect>): a
 export function* accessWalletAndRunEffect(
   effect: Effect | Iterator<Effect>,
   title: TMessage,
-  message: TMessage,
-  inputLable?: TMessage,
-): any {
+  message?: TMessage,
+  inputLabel?: TMessage,
+): Iterator<any> {
   // guard against multiple modals
   const isSigning: boolean = yield select((s: IAppState) => selectIsSigning(s.accessWallet));
   if (isSigning) {
     throw new Error("Signing already in progress");
   }
-  yield put(actions.accessWallet.showAccessWalletModal(title, message, inputLable));
+  yield put(actions.accessWallet.showAccessWalletModal(title, message, inputLabel));
   // do required operation, or finish in case cancel button was hit
-  const { result, cancel } = yield race({
-    result: call(connectWalletAndRunEffect, effect),
+  const { cancel } = yield race({
+    result: call(connectWallet),
     cancel: take("HIDE_ACCESS_WALLET_MODAL"),
   });
-
-  // always hide the current modal
-  yield put(actions.accessWallet.hideAccessWalletModal());
 
   // if the cancel action was called
   // throw here
@@ -181,12 +180,8 @@ export function* accessWalletAndRunEffect(
     throw new MessageSignCancelledError("Cancelled");
   }
 
-  return result;
-}
+  // always hide the current modal
+  yield put(actions.accessWallet.hideAccessWalletModal());
 
-/**
- * Use only as a part of another saga. This won't trigger modal.
- */
-export function* connectWallet(): any {
-  yield connectWalletAndRunEffect(call(() => {}));
+  return yield effect;
 }

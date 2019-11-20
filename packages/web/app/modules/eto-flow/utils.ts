@@ -1,4 +1,3 @@
-import BigNumber from "bignumber.js";
 import { sortBy } from "lodash/fp";
 import * as Yup from "yup";
 
@@ -196,10 +195,10 @@ export const downloadFile = (uri: string, filename: string) => {
   link.click();
 };
 
-export const isValidEtoStartDate = (startDate: Date, dateToWhitelistMinDurationSec: BigNumber) => {
+export const isValidEtoStartDate = (startDate: Date, dateToWhitelistMinDurationSec: number) => {
   const startTimeSec = startDate.getTime() / 1000;
   const nowSec = Date.now() / 1000;
-  return dateToWhitelistMinDurationSec.add(nowSec).lessThan(startTimeSec);
+  return dateToWhitelistMinDurationSec + nowSec < startTimeSec;
 };
 
 const PRODUCTS_SORT_ORDER: EProductName[] = [

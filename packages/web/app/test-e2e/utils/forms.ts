@@ -1,7 +1,7 @@
 import { findKey, forEach } from "lodash";
 
 import { Dictionary } from "../../types";
-import { acceptWallet, formFieldValue } from "./index";
+import { confirmAccessModal, formFieldValue } from "./index";
 import { formField, formFieldErrorMessage, tid } from "./selectors";
 
 type TFormFieldFixture =
@@ -270,7 +270,7 @@ export const uploadDocumentToFieldWithTid = (
   cy.get(tid("documents-ipfs-modal-continue")).click();
 
   if (options.acceptWallet) {
-    acceptWallet();
+    confirmAccessModal();
   }
 
   cy.get(`${tid(targetTid)} ${tid("documents-download-document")}`).should("exist");

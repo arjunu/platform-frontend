@@ -3,8 +3,8 @@ import { branch, renderComponent } from "recompose";
 import { compose } from "redux";
 
 import { actions } from "../../../../modules/actions";
-import { selectIsUserFullyVerified } from "../../../../modules/auth/selectors";
 import { EBankTransferType } from "../../../../modules/bank-transfer-flow/reducer";
+import { selectIndividualAddress } from "../../../../modules/kyc/selectors";
 import { ETokenType } from "../../../../modules/tx/types";
 import {
   selectICBMLockedEtherBalance,
@@ -24,8 +24,10 @@ import {
   selectLockedEuroTokenBalance,
   selectLockedEuroTotalAmount,
   selectLockedWalletHasFunds,
+  selectNEURStatus,
   selectWalletError,
 } from "../../../../modules/wallet/selectors";
+import { ENEURWalletStatus } from "../../../../modules/wallet/types";
 import { selectEthereumAddressWithChecksum } from "../../../../modules/web3/selectors";
 import { appConnect } from "../../../../store";
 import { onEnterAction } from "../../../../utils/OnEnterAction";
@@ -45,7 +47,8 @@ interface IStateProps {
   icbmWalletData: IIcbmWalletValues;
   userAddress: string;
   isLoading: boolean;
-  isUserFullyVerified: boolean;
+  neurStatus: ENEURWalletStatus;
+  individualAddress: ReturnType<typeof selectIndividualAddress>;
 }
 
 interface IDispatchProps {
@@ -63,7 +66,7 @@ type TProps = IStateProps & IDispatchProps;
 export const WalletStartComponent: React.FunctionComponent<TProps> = ({
   depositEthUnlockedWallet,
   icbmWalletData,
-  isUserFullyVerified,
+  neurStatus,
   liquidWalletData,
   lockedWalletData,
   purchaseNEur,
@@ -73,6 +76,7 @@ export const WalletStartComponent: React.FunctionComponent<TProps> = ({
   userAddress,
   verifyBankAccount,
   withdrawEthUnlockedWallet,
+  individualAddress,
 }) => (
   <>
     <UnlockedETHWallet
@@ -91,7 +95,8 @@ export const WalletStartComponent: React.FunctionComponent<TProps> = ({
       onPurchase={purchaseNEur}
       onRedeem={redeemNEur}
       onVerify={verifyBankAccount}
-      isUserFullyVerified={isUserFullyVerified}
+      neurStatus={neurStatus}
+      individualAddress={individualAddress}
       columnSpan={EColumnSpan.ONE_AND_HALF_COL}
     />
 
@@ -118,7 +123,6 @@ export const WalletStart = compose<React.FunctionComponent>(
   onEnterAction({
     actionCreator: dispatch => {
       dispatch(actions.wallet.loadWalletData());
-
       dispatch(actions.kyc.loadBankAccountDetails());
     },
   }),
@@ -128,7 +132,8 @@ export const WalletStart = compose<React.FunctionComponent>(
       // Wallet Related State
       isLoading: selectIsLoading(state),
       error: selectWalletError(state),
-      isUserFullyVerified: selectIsUserFullyVerified(state),
+      neurStatus: selectNEURStatus(state),
+      individualAddress: selectIndividualAddress(state),
       liquidWalletData: {
         ethAmount: selectLiquidEtherBalance(state),
         ethEuroAmount: selectLiquidEtherBalanceEuroAmount(state),

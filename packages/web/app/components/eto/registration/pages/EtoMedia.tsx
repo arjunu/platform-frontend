@@ -128,7 +128,7 @@ const EtoRegistrationMedia = compose<React.FunctionComponent>(
     }),
     dispatchToProps: dispatch => ({
       saveData: (company: TPartialCompanyEtoData) => {
-        const convertedCompany = convert(company, fromFormState);
+        const convertedCompany = convert(fromFormState)(company);
         dispatch(actions.etoFlow.saveCompanyStart(convertedCompany));
       },
     }),

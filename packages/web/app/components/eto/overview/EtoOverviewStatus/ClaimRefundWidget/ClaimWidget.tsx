@@ -8,7 +8,7 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { Message } from "../Message";
+import { SuccessMessage } from "../Message";
 import { withCanClaimToken } from "./withCanClaimToken";
 
 interface IExternalProps {
@@ -29,7 +29,7 @@ const ClaimWidgetLayout: React.FunctionComponent<IExternalProps> = ({
   onClaim,
 }) => (
   <>
-    <Message
+    <SuccessMessage
       title={<FormattedMessage id="shared-component.eto-overview.success" />}
       summary={
         process.env.NF_MAY_SHOW_INVESTOR_STATS === "1" ? (

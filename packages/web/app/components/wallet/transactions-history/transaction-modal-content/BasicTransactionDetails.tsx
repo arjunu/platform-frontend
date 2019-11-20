@@ -38,7 +38,7 @@ const BasicTransactionDetails: React.FunctionComponent<IExternalProps> = ({
       caption={<FormattedMessage id="wallet.tx-list.modal.common.time.caption" />}
       value={
         <TransactionData
-          top={<FormattedRelative value={date} />}
+          top={<FormattedRelative value={date} initialNow={new Date()} />}
           bottom={
             <FormattedDate
               value={date}

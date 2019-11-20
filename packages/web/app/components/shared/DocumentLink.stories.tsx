@@ -1,7 +1,8 @@
+import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { DocumentLink, DocumentTemplateButton } from "./DocumentLink";
+import { DocumentButton, DocumentLabel, DocumentLink } from "./DocumentLink";
 import { InlineIcon } from "./icons";
 
 import * as link_out from "../../assets/img/inline_icons/link_out.svg";
@@ -14,12 +15,18 @@ storiesOf("Document/DocumentLink", module)
     <DocumentLink url="pdf" name="bar" altIcon={<InlineIcon svgIcon={link_out} />} />
   ));
 
-storiesOf("Document/DocumentTemplateButton", module)
-  .add("default", () => <DocumentTemplateButton title="my document template" onClick={() => {}} />)
+storiesOf("Document/DocumentButton", module)
+  .add("default", () => <DocumentButton title="my document template" onClick={action("onClick")} />)
   .add("custom icon", () => (
-    <DocumentTemplateButton
+    <DocumentButton
       title="my custom template"
-      onClick={() => {}}
+      onClick={action("onClick")}
       altIcon={<InlineIcon svgIcon={link} />}
     />
+  ));
+
+storiesOf("Document/DocumentLabel", module)
+  .add("default", () => <DocumentLabel title="my document template" />)
+  .add("custom icon", () => (
+    <DocumentLabel title="my custom template" altIcon={<InlineIcon svgIcon={link} />} />
   ));

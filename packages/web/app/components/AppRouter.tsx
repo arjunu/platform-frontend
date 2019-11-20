@@ -59,7 +59,6 @@ export const AppRouter: React.FunctionComponent = () => (
       render={({ match }) => (
         <EtoPublicView previewCode={GREYP_PREVIEW_CODE} jurisdiction={match.params.jurisdiction} />
       )}
-      exact
     />
     {/*<------------------------------- */}
     {/* routes that are available for all users */}
@@ -72,7 +71,6 @@ export const AppRouter: React.FunctionComponent = () => (
           jurisdiction={match.params.jurisdiction}
         />
       )}
-      exact
     />
     {/* Redirect Legacy ETO link to current link */}
     <Route
@@ -93,7 +91,6 @@ export const AppRouter: React.FunctionComponent = () => (
           jurisdiction={match.params.jurisdiction}
         />
       )}
-      exact
     />
     <Route
       path={appRoutes.etoWidgetView}
@@ -179,7 +176,6 @@ export const AppRouter: React.FunctionComponent = () => (
       path={appRoutes.etoIssuerView}
       issuerComponent={EtoIssuerView}
       nomineeComponent={EtoNomineeView}
-      exact
     />
 
     {/* common routes for both investors and issuers */}

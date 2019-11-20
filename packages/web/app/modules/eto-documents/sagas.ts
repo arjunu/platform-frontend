@@ -1,4 +1,3 @@
-import { findKey } from "lodash/fp";
 import { all, call, fork, put, select } from "redux-saga/effects";
 
 import { EtoDocumentsMessage, IpfsMessage } from "../../components/translatedMessages/messages";
@@ -12,18 +11,22 @@ import {
   TEtoDocumentTemplates,
   TStateInfo,
 } from "../../lib/api/eto/EtoFileApi.interfaces";
+import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { ensurePermissionsArePresentAndRunEffect } from "../auth/jwt/sagas";
 import { loadIssuerEto } from "../eto-flow/sagas";
 import {
+  selectIssuerEto,
   selectIssuerEtoDocuments,
   selectIssuerEtoId,
   selectIssuerEtoProduct,
 } from "../eto-flow/selectors";
+import { TEtoWithCompanyAndContractReadonly } from "../eto/types";
 import { downloadLink } from "../immutable-file/utils";
 import { neuCall, neuTakeEvery } from "../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../web3/selectors";
 import { selectEtoState } from "./selectors";
+import { getDocumentByType } from "./utils";
 
 export function* generateDocumentFromTemplate(
   { apiImmutableStorage, notificationCenter, logger, apiEtoFileService }: TGlobalDependencies,
@@ -174,9 +177,7 @@ export function* loadEtoFilesInfo({
 function* getDocumentOfType(documentType: EEtoDocumentType): Iterator<any> {
   const documents: TEtoDocumentTemplates = yield select(selectIssuerEtoDocuments);
 
-  const matchingDocument = findKey(document => document.documentType === documentType, documents);
-
-  return documents[matchingDocument!];
+  return getDocumentByType(documents, documentType);
 }
 
 function* uploadEtoFileEffect(
@@ -193,6 +194,21 @@ function* uploadEtoFileEffect(
   yield apiEtoFileService.uploadEtoDocument(file, documentType);
 
   notificationCenter.info(createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_FILE_UPLOADED));
+}
+
+function* removeEtoFileEffect(
+  { apiEtoFileService, notificationCenter, logger }: TGlobalDependencies,
+  documentType: EEtoDocumentType,
+): Iterator<any> {
+  const matchingDocument = yield getDocumentOfType(documentType);
+
+  if (matchingDocument) {
+    yield apiEtoFileService.deleteSpecificEtoDocument(matchingDocument.ipfsHash);
+    notificationCenter.info(createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVED));
+  } else {
+    logger.error("Could not remove, missing ETO document", documentType);
+    notificationCenter.error(createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVE_FAILED));
+  }
 }
 
 function* uploadEtoFile(
@@ -220,12 +236,43 @@ function* uploadEtoFile(
   } finally {
     yield neuCall(loadIssuerEto);
     if (documentType === EEtoDocumentType.INVESTMENT_AND_SHAREHOLDER_AGREEMENT) {
-      const etoId = yield select(selectIssuerEtoId);
-      const etoDocuments: TEtoDocumentTemplates = yield select(selectIssuerEtoDocuments);
-      const uploadResult = Object.values(etoDocuments).find(d => d.documentType === documentType)!;
-      yield put(actions.etoFlow.signInvestmentAgreement(etoId, uploadResult.ipfsHash));
+      const eto: TEtoWithCompanyAndContractReadonly = yield nonNullable(select(selectIssuerEto));
+
+      const uploadResult = Object.values(eto.documents).find(d => d.documentType === documentType)!;
+
+      // If user does not sign transaction uploadResult is undefined
+      if (uploadResult) {
+        yield put(actions.etoFlow.signInvestmentAgreement(eto, uploadResult.ipfsHash));
+      }
     }
     yield put(actions.etoDocuments.etoUploadDocumentFinish(documentType));
+  }
+}
+
+function* removeEtoFile(
+  { notificationCenter, logger }: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.etoDocuments.etoUploadDocumentStart>,
+): Iterator<any> {
+  const { documentType } = action.payload;
+  try {
+    yield put(actions.etoDocuments.hideIpfsModal());
+
+    yield neuCall(
+      ensurePermissionsArePresentAndRunEffect,
+      neuCall(removeEtoFileEffect, documentType),
+      [EJwtPermissions.UPLOAD_IMMUTABLE_DOCUMENT],
+      createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_CONFIRM_UPLOAD_DOCUMENT_TITLE),
+      createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_CONFIRM_UPLOAD_DOCUMENT_DESCRIPTION),
+    );
+  } catch (e) {
+    if (e instanceof FileAlreadyExists) {
+      notificationCenter.error(createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_FILE_EXISTS));
+    } else {
+      logger.error("Failed to remove ETO file data", e);
+      notificationCenter.error(createMessage(EtoDocumentsMessage.ETO_DOCUMENTS_FILE_UPLOAD_FAILED));
+    }
+  } finally {
+    yield neuCall(loadIssuerEto);
   }
 }
 
@@ -239,4 +286,5 @@ export function* etoDocumentsSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.etoDocuments.loadFileDataStart, loadEtoFilesInfo);
   yield fork(neuTakeEvery, actions.etoDocuments.etoUploadDocumentStart, uploadEtoFile);
   yield fork(neuTakeEvery, actions.etoDocuments.downloadDocumentStart, downloadDocumentStart);
+  yield fork(neuTakeEvery, actions.etoDocuments.etoRemoveDocumentStart, removeEtoFile);
 }

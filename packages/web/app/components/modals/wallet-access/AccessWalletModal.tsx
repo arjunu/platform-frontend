@@ -2,6 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { selectIsAccessWalletModalOpen } from "../../../modules/access-wallet/selectors";
 import { actions } from "../../../modules/actions";
 import {
   selectIsUnlocked,
@@ -11,13 +12,21 @@ import {
 import { EWalletSubType, EWalletType } from "../../../modules/web3/types";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
-import { HiResImage } from "../../shared/HiResImage";
+import { Button } from "../../shared/buttons";
+import { HiResImage, ISrcSet } from "../../shared/HiResImage";
+import { WarningAlert } from "../../shared/WarningAlert";
 import { getMessageTranslation } from "../../translatedMessages/messages";
 import { Modal } from "../Modal";
 import { AccessLightWalletPrompt } from "./AccessLightWalletPrompt";
 
 import * as ledgerConfirm from "../../../assets/img/wallet_selector/ledger_confirm.svg";
 import * as lockIcon from "../../../assets/img/wallet_selector/lock_icon.svg";
+import * as logoGnosis1x from "../../../assets/img/wallet_selector/logo_gnosis.png";
+import * as logoGnosis2x from "../../../assets/img/wallet_selector/logo_gnosis@2x.png";
+import * as logoGnosis3x from "../../../assets/img/wallet_selector/logo_gnosis@3x.png";
+import * as logoMetamask1x from "../../../assets/img/wallet_selector/logo_metamask.png";
+import * as logoMetamask2x from "../../../assets/img/wallet_selector/logo_metamask@2x.png";
+import * as logoMetamask3x from "../../../assets/img/wallet_selector/logo_metamask@3x.png";
 import * as styles from "./AccessWalletModal.module.scss";
 
 interface IStateProps {
@@ -32,6 +41,7 @@ interface IStateProps {
 
 interface IDispatchProps {
   onAccept: (password?: string) => void;
+  tryToAccessWalletAgain: () => void;
 }
 
 interface IExternalProps {
@@ -39,14 +49,26 @@ interface IExternalProps {
   message?: TTranslatedString;
 }
 
-export const AccessWalletContainerComponent: React.FunctionComponent<
-  IStateProps & IDispatchProps
-> = ({
+const logoGnosisSrcSet: ISrcSet = {
+  "1x": logoGnosis1x,
+  "2x": logoGnosis2x,
+  "3x": logoGnosis3x,
+};
+
+const logoMetamaskSrcSet: ISrcSet = {
+  "1x": logoMetamask1x,
+  "2x": logoMetamask2x,
+  "3x": logoMetamask3x,
+};
+
+export const AccessWalletContainerComponent: React.FunctionComponent<IStateProps &
+  IDispatchProps> = ({
   title,
   message,
   errorMessage,
   isUnlocked,
   onAccept,
+  tryToAccessWalletAgain,
   walletType,
   walletSubType,
   inputLabel,
@@ -66,7 +88,7 @@ export const AccessWalletContainerComponent: React.FunctionComponent<
     )}
     {walletType === EWalletType.LEDGER && (
       <div>
-        <img src={ledgerConfirm} className="mt-1 mb-3" />
+        <img src={ledgerConfirm} className="mt-1 mb-3" alt="" />
         <div className={cn("mt-2", styles.info)}>
           <FormattedMessage id="modal.access-wallet.ledger-info" />
         </div>
@@ -75,10 +97,7 @@ export const AccessWalletContainerComponent: React.FunctionComponent<
     {walletType === EWalletType.BROWSER && (
       <div>
         <HiResImage
-          partialPath={
-            "wallet_selector/" +
-            (walletSubType === EWalletSubType.GNOSIS ? "logo_gnosis" : "logo_metamask")
-          }
+          srcSet={walletSubType === EWalletSubType.GNOSIS ? logoGnosisSrcSet : logoMetamaskSrcSet}
           alt={walletSubType}
           title={walletSubType}
           className="mt-3 mb-3"
@@ -92,21 +111,32 @@ export const AccessWalletContainerComponent: React.FunctionComponent<
         </div>
       </div>
     )}
-    {errorMessage && <p className={cn("mt-3", "text-warning")}>{errorMessage}</p>}
+    {errorMessage && (
+      <>
+        <WarningAlert className="my-4" data-test-id="access-wallet.error-msg">
+          {errorMessage}
+        </WarningAlert>
+
+        {walletType !== EWalletType.LIGHT && (
+          <Button onClick={tryToAccessWalletAgain} data-test-id="access-wallet.try-again">
+            <FormattedMessage id="common.try-again" />
+          </Button>
+        )}
+      </>
+    )}
   </div>
 );
 
 export const AccessWalletContainer = appConnect<IStateProps, IDispatchProps, IExternalProps>({
-  stateToProps: (s, external) => ({
-    isOpen: s.accessWallet.isModalOpen,
+  stateToProps: (s, props) => ({
     errorMessage: s.accessWallet.errorMessage
       ? getMessageTranslation(s.accessWallet.errorMessage)
       : undefined,
-    title: external.title
-      ? external.title
+    title: props.title
+      ? props.title
       : s.accessWallet.modalTitle && getMessageTranslation(s.accessWallet.modalTitle),
-    message: external.message
-      ? external.message
+    message: props.message
+      ? props.message
       : s.accessWallet.modalMessage && getMessageTranslation(s.accessWallet.modalMessage),
     inputLabel: s.accessWallet.inputLabel && getMessageTranslation(s.accessWallet.inputLabel),
     walletType: selectWalletType(s.web3),
@@ -114,7 +144,11 @@ export const AccessWalletContainer = appConnect<IStateProps, IDispatchProps, IEx
     isUnlocked: selectIsUnlocked(s.web3),
   }),
   dispatchToProps: dispatch => ({
-    onAccept: (password?: string) => dispatch(actions.accessWallet.accept(password)),
+    onAccept: (password?: string) => {
+      dispatch(actions.accessWallet.tryToAccessWalletAgain());
+      dispatch(actions.accessWallet.accept(password));
+    },
+    tryToAccessWalletAgain: () => dispatch(actions.accessWallet.tryToAccessWalletAgain()),
   }),
 })(AccessWalletContainerComponent);
 
@@ -126,9 +160,8 @@ interface IModalDispatchProps {
   onCancel: () => void;
 }
 
-const AccessWalletModalComponent: React.FunctionComponent<
-  IModalStateProps & IModalDispatchProps
-> = props => (
+const AccessWalletModalComponent: React.FunctionComponent<IModalStateProps &
+  IModalDispatchProps> = props => (
   <Modal isOpen={props.isOpen} onClose={props.onCancel}>
     <AccessWalletContainer />
   </Modal>
@@ -136,7 +169,7 @@ const AccessWalletModalComponent: React.FunctionComponent<
 
 export const AccessWalletModal = appConnect<IModalStateProps, IModalDispatchProps>({
   stateToProps: s => ({
-    isOpen: s.accessWallet.isModalOpen,
+    isOpen: selectIsAccessWalletModalOpen(s),
   }),
   dispatchToProps: dispatch => ({
     onCancel: () => dispatch(actions.accessWallet.hideAccessWalletModal()),

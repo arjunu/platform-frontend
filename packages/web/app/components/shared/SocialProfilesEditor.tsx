@@ -141,9 +141,8 @@ interface ISingleMediaLinkFieldInternalProps {
   profile: ISocialProfile;
 }
 
-const SingleMediaLinkField: React.FunctionComponent<
-  ISingleMediaLinkFieldInternalProps & CommonHtmlProps
-> = props => {
+const SingleMediaLinkField: React.FunctionComponent<ISingleMediaLinkFieldInternalProps &
+  CommonHtmlProps> = props => {
   const { profile, name } = props;
 
   return (

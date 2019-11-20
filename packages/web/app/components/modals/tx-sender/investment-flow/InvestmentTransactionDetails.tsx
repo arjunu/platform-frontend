@@ -1,8 +1,13 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TEtoEquityTokenInfoType } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { ETxSenderType } from "../../../../modules/tx/types";
-import { addBigNumbers, multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
+import {
+  addBigNumbers,
+  divideBigNumbers,
+  multiplyBigNumbers,
+} from "../../../../utils/BigNumberUtils";
 import { FormatNumber } from "../../../shared/formatters/FormatNumber";
 import { Money } from "../../../shared/formatters/Money";
 import {
@@ -11,6 +16,8 @@ import {
   ENumberOutputFormat,
   EPriceFormat,
 } from "../../../shared/formatters/utils";
+import { CurrencyIcon } from "../../../shared/icons/CurrencyIcon";
+import { TokenIcon } from "../../../shared/icons/TokenIcon";
 import { TooltipBase } from "../../../shared/tooltips";
 import { InfoList } from "../shared/InfoList";
 import { InfoRow } from "../shared/InfoRow";
@@ -18,9 +25,7 @@ import { TimestampRow } from "../shared/TimestampRow";
 import { TransactionDetailsComponent } from "../types";
 import { getActualTokenPriceEur, getTokenPriceDiscount } from "./utils";
 
-import * as neuIcon from "../../../../assets/img/neu_icon.svg";
 import * as info from "../../../../assets/img/notifications/info.svg";
-import * as tokenIcon from "../../../../assets/img/token_icon.svg";
 import * as styles from "./Summary.module.scss";
 
 const NeuRewardCaption: React.FunctionComponent<{ isIcbm?: boolean }> = ({ isIcbm }) => {
@@ -39,6 +44,7 @@ const NeuRewardCaption: React.FunctionComponent<{ isIcbm?: boolean }> = ({ isIcb
 
 interface IEquityTockenValue {
   equityTokens: string;
+  equityTokenInfo: TEtoEquityTokenInfoType;
 }
 
 interface IEstimatedReward {
@@ -60,21 +66,24 @@ interface ITotal {
   totalCostEth: string;
 }
 
-const EquityTokensValue: React.FunctionComponent<IEquityTockenValue> = ({ equityTokens }) => (
+const EquityTokensValue: React.FunctionComponent<IEquityTockenValue> = ({
+  equityTokens,
+  equityTokenInfo,
+}) => (
   <span>
-    {/* TODO: Change to actual custom token icon (eto.equityTokenImage)*/}
-    <img src={tokenIcon} alt="" />{" "}
-    <FormatNumber
+    <TokenIcon srcSet={{ "1x": equityTokenInfo.equityTokenImage }} alt="" />{" "}
+    <Money
       value={equityTokens}
       inputFormat={ENumberInputFormat.FLOAT}
-      outputFormat={ENumberOutputFormat.INTEGER}
+      valueType={equityTokenInfo.equityTokenSymbol}
+      outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
     />
   </span>
 );
 
 const EstimatedRewardValue: React.FunctionComponent<IEstimatedReward> = ({ estimatedReward }) => (
   <span>
-    <img src={neuIcon} alt="" />{" "}
+    <CurrencyIcon currency={ECurrency.NEU} />{" "}
     <Money
       value={estimatedReward}
       inputFormat={ENumberInputFormat.ULPS}
@@ -165,11 +174,12 @@ const InvestmentTransactionDetails: TransactionDetailsComponent<ETxSenderType.IN
     additionalData.equityTokens,
   );
 
-  const fullTokenPrice =
-    additionalData.eto.investmentCalculatedValues.sharePrice! /
-    additionalData.eto.equityTokensPerShare;
+  const fullTokenPrice = divideBigNumbers(
+    additionalData.eto.sharePrice.toString(),
+    additionalData.eto.equityTokensPerShare.toString(),
+  );
 
-  const discount = getTokenPriceDiscount(fullTokenPrice.toString(), actualTokenPrice);
+  const discount = getTokenPriceDiscount(fullTokenPrice, actualTokenPrice);
   return (
     <InfoList className={className}>
       <InfoRow
@@ -211,7 +221,12 @@ const InvestmentTransactionDetails: TransactionDetailsComponent<ETxSenderType.IN
       <InfoRow
         data-test-id="investment-flow.summary.equity-tokens"
         caption={<FormattedMessage id="investment-flow.summary.equity-tokens" />}
-        value={<EquityTokensValue equityTokens={additionalData.equityTokens} />}
+        value={
+          <EquityTokensValue
+            equityTokens={additionalData.equityTokens}
+            equityTokenInfo={additionalData.eto.equityTokenInfo}
+          />
+        }
       />
       <InfoRow
         data-test-id="investment-flow.summary.neu-reward"

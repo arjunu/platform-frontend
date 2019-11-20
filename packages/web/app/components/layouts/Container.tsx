@@ -64,6 +64,7 @@ const resolveContainerType = (type: EContainerType, columnSpan: EColumnSpan) => 
 export interface IContainerProps {
   columnSpan?: EColumnSpan;
   type?: EContainerType;
+  id?: string;
 }
 
 const Container: React.FunctionComponent<IContainerProps & CommonHtmlProps & TDataTestId> = ({
@@ -72,6 +73,7 @@ const Container: React.FunctionComponent<IContainerProps & CommonHtmlProps & TDa
   columnSpan = EColumnSpan.THREE_COL,
   type = EContainerType.GRID,
   "data-test-id": dataTestId,
+  id,
 }) => (
   <section
     className={cn(
@@ -81,6 +83,7 @@ const Container: React.FunctionComponent<IContainerProps & CommonHtmlProps & TDa
       className,
     )}
     data-test-id={dataTestId}
+    id={id}
   >
     {children}
   </section>

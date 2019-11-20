@@ -143,8 +143,12 @@ export enum EtoFlowMessage {
 
 export enum EtoDocumentsMessage {
   ETO_DOCUMENTS_CONFIRM_UPLOAD_DOCUMENT_TITLE = "etoDocumentsConfirmUploadDocumentTitle",
+  ETO_DOCUMENTS_CONFIRM_REMOVE_DOCUMENT_TITLE = "etoDocumentsConfirmRemoveDocumentTitle",
   ETO_DOCUMENTS_CONFIRM_UPLOAD_DOCUMENT_DESCRIPTION = "etoDocumentsConfirmUploadDocumentDescription",
+  ETO_DOCUMENTS_CONFIRM_REMOVE_DOCUMENT_DESCRIPTION = "etoDocumentsConfirmRemoveDocumentDescription",
   ETO_DOCUMENTS_FILE_UPLOADED = "etoDocumentsFileUploaded",
+  ETO_DOCUMENTS_FILE_REMOVED = "etoDocumentsFileRemoved",
+  ETO_DOCUMENTS_FILE_REMOVE_FAILED = "etoDocumentsFileRemoveFailed",
   ETO_DOCUMENTS_FILE_EXISTS = "etoDocumentsFileExists",
   ETO_DOCUMENTS_FILE_UPLOAD_FAILED = "etoDocumentsFileUploadFailed",
   ETO_DOCUMENTS_FAILED_TO_DOWNLOAD_FILE = "etoDocumentsFailedToDownloadFile",
@@ -457,10 +461,18 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
 
     case EtoDocumentsMessage.ETO_DOCUMENTS_CONFIRM_UPLOAD_DOCUMENT_TITLE:
       return <FormattedMessage id="eto.modal.confirm-upload-document-title" />;
+    case EtoDocumentsMessage.ETO_DOCUMENTS_CONFIRM_REMOVE_DOCUMENT_TITLE:
+      return <FormattedMessage id="eto.modal.confirm-remove-document-title" />;
     case EtoDocumentsMessage.ETO_DOCUMENTS_CONFIRM_UPLOAD_DOCUMENT_DESCRIPTION:
       return <FormattedMessage id="eto.modal.confirm-upload-document-description" />;
+    case EtoDocumentsMessage.ETO_DOCUMENTS_CONFIRM_REMOVE_DOCUMENT_DESCRIPTION:
+      return <FormattedMessage id="eto.modal.confirm-remove-document-description" />;
     case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_UPLOADED:
       return <FormattedMessage id="eto.modal.file-uploaded" />;
+    case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVED:
+      return <FormattedMessage id="eto.modal.file-removed" />;
+    case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_REMOVE_FAILED:
+      return <FormattedMessage id="eto.modal.file-remove-failed" />;
     case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_EXISTS:
       return <FormattedMessage id="eto.modal.file-already-exists" />;
     case EtoDocumentsMessage.ETO_DOCUMENTS_FILE_UPLOAD_FAILED:
@@ -644,7 +656,8 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
           values={{
             minPledge: (
               <Money
-                value={messageData as number}
+                value={messageData as string}
+                // TODO: Investigate why is the value up force casted
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={ECurrency.EUR}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS_ROUND_UP}
@@ -660,7 +673,8 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
           values={{
             maxPledge: (
               <Money
-                value={messageData as number}
+                value={messageData as string}
+                // TODO: Investigate why we are force casting this
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={ECurrency.EUR}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}

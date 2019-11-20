@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { CommonHtmlProps } from "../../../types";
-import { isZero } from "../../../utils/Number.utils";
+import { isZero } from "../../../utils/NumberUtils";
 import { EColumnSpan } from "../../layouts/Container";
 import { AccountAddressWithHistoryLink } from "../../shared/AccountAddress";
 import { AccountBalance } from "../../shared/AccountBalance";
@@ -25,9 +25,17 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const UnlockedETHWallet: React.FunctionComponent<
-  IUnlockedETHWallet & CommonHtmlProps & IExternalProps
-> = ({ address, depositEth, withdrawEth, className, ethAmount, ethEuroAmount, columnSpan }) => (
+export const UnlockedETHWallet: React.FunctionComponent<IUnlockedETHWallet &
+  CommonHtmlProps &
+  IExternalProps> = ({
+  address,
+  depositEth,
+  withdrawEth,
+  className,
+  ethAmount,
+  ethEuroAmount,
+  columnSpan,
+}) => (
   <WalletBalanceContainer
     className={className}
     columnSpan={columnSpan}

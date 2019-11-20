@@ -26,9 +26,10 @@ import {
   NEW_SHARES_TO_ISSUE_IN_FIXED_SLOTS,
   NEW_SHARES_TO_ISSUE_IN_WHITELIST,
 } from "../../../config/constants";
-import { DeepPartial, DeepReadonly, EthereumAddressWithChecksum } from "../../../types";
+import { DeepPartial, DeepReadonly } from "../../../types";
+import { EquityToken, EthereumAddressWithChecksum } from "../../../utils/opaque-types/types";
 import * as YupTS from "../../yup-ts.unsafe";
-import { dateSchema, percentage } from "../util/customSchemas.unsafe";
+import { currencyCodeSchema, dateSchema, percentage } from "../util/customSchemas";
 import { TEtoDocumentTemplates } from "./EtoFileApi.interfaces";
 import { TEtoProduct } from "./EtoProductsApi.interfaces";
 
@@ -36,13 +37,7 @@ import { TEtoProduct } from "./EtoProductsApi.interfaces";
  *  only deals with "/companies/me"
  */
 
-export const CurrencyCodeType = YupTS.string().enhance((v: StringSchema) =>
-  v.matches(/^[A-Z]{3}$/, {
-    message: getMessageTranslation(
-      createMessage(ValidationMessage.VALIDATION_CURRENCY_CODE),
-    ) as string,
-  }),
-);
+export const CurrencyCodeType = YupTS.string().enhance(currencyCodeSchema);
 
 const EtoFounderType = YupTS.object({
   fullName: YupTS.string(),
@@ -79,8 +74,8 @@ export const EtoPitchType = YupTS.object({
   productVision: YupTS.wysiwygString().optional(),
   inspiration: YupTS.wysiwygString().optional(),
   roadmap: YupTS.wysiwygString().optional(),
-  useOfCapital: YupTS.string().optional(),
-  useOfCapitalList: YupTS.array(EtoCapitalListType).optional(),
+  useOfCapital: YupTS.wysiwygString(),
+  useOfCapitalList: YupTS.array(EtoCapitalListType),
   customerGroup: YupTS.wysiwygString().optional(),
   sellingProposition: YupTS.wysiwygString().optional(),
   marketingApproach: YupTS.wysiwygString().optional(),
@@ -173,14 +168,13 @@ export const EtoLegalInformationType = YupTS.object({
   vatNumber: YupTS.string().optional(),
   registrationNumber: YupTS.string(),
   foundingDate: YupTS.string().enhance((v: StringSchema) => dateSchema(v)),
-
   numberOfEmployees: YupTS.string().optional(),
   companyStage: YupTS.string<EFundingRound>().optional(),
   numberOfFounders: YupTS.number().optional(),
   lastFundingSizeEur: YupTS.number().optional(),
   companyShareCapital: YupTS.number().enhance(v => v.min(MIN_COMPANY_SHARE_CAPITAL)),
   shareCapitalCurrencyCode: CurrencyCodeType,
-  shareholders: YupTS.array(EtoLegalShareholderType.optional()).optional(),
+  shareholders: YupTS.array(EtoLegalShareholderType),
 });
 type TEtoLegalData = YupTS.TypeOf<typeof EtoLegalInformationType>;
 
@@ -364,7 +358,7 @@ export type TEtoTermsType = YupTS.TypeOf<ReturnType<typeof getEtoTermsSchema>>;
 
 export const EtoEquityTokenInfoType = YupTS.object({
   equityTokenName: YupTS.string(),
-  equityTokenSymbol: YupTS.string(),
+  equityTokenSymbol: YupTS.string<EquityToken>(),
   equityTokenImage: YupTS.string(),
 });
 

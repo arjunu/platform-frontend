@@ -25,7 +25,7 @@ describe("Invest with euro token", () => {
       cy.get(tid("invest-modal-invest-now-button")).click();
       cy.get(tid("invest-modal-summary-confirm-button")).click();
       confirmAccessModal();
-      cy.get(tid("investment-flow.success.title"));
+      cy.get(tid("investment-flow.success.title")).should("exist");
       // TODO check smart contracts balances
     });
   });

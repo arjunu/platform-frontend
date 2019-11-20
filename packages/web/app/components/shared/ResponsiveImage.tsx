@@ -1,15 +1,10 @@
 import * as cn from "classnames";
 import * as React from "react";
 
+import { HiResImage, ISrcSet } from "./HiResImage";
 import { Proportion } from "./Proportion";
 
 import * as styles from "./ResponsiveImage.module.scss";
-
-export interface ISrcSet {
-  "1x": string;
-  "2x"?: string;
-  "3x"?: string;
-}
 
 type TTheme = "light" | "dark" | "transparent";
 
@@ -19,7 +14,6 @@ export enum EImageFit {
 }
 
 interface IResponsiveImage {
-  src?: string;
   srcSet: ISrcSet;
   alt: string;
   theme?: TTheme;
@@ -30,15 +24,9 @@ interface IResponsiveImage {
   fit?: EImageFit;
 }
 
-const srcSetToString = (srcSet: ISrcSet) =>
-  `${srcSet["1x"]} 1x,
-    ${srcSet["2x"] && srcSet["2x"] + " 2x"},
-    ${srcSet["3x"] && srcSet["3x"] + " 3x"}`;
-
 const ResponsiveImage: React.FunctionComponent<IResponsiveImage> = ({
   alt,
   className,
-  src,
   srcSet,
   height,
   width,
@@ -52,14 +40,7 @@ const ResponsiveImage: React.FunctionComponent<IResponsiveImage> = ({
     className={cn(styles.responsiveImage, className, theme)}
     onClick={onClick}
   >
-    {srcSet["1x"] && (
-      <img
-        className={cn(styles.image, fit)}
-        src={src || srcSet["1x"]}
-        srcSet={srcSetToString(srcSet)}
-        alt={alt}
-      />
-    )}
+    {srcSet["1x"] && <HiResImage alt={alt} srcSet={srcSet} className={cn(styles.image, fit)} />}
   </Proportion>
 );
 
@@ -68,4 +49,4 @@ ResponsiveImage.defaultProps = {
   fit: EImageFit.CONTAIN,
 };
 
-export { ResponsiveImage, IResponsiveImage, srcSetToString };
+export { ResponsiveImage, IResponsiveImage };

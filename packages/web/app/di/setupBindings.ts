@@ -34,6 +34,7 @@ import { detectBrowser, TDetectBrowser } from "../lib/dependencies/detectBrowser
 import { ILogger, Logger } from "../lib/dependencies/logger";
 import { NotificationCenter } from "../lib/dependencies/NotificationCenter";
 import { IntlWrapper } from "../lib/intl/IntlWrapper";
+import { DocumentsConfidentialityAgreementsStorage } from "../lib/persistence/DocumentsConfidentialityAgreementsStorage";
 import { STORAGE_JWT_KEY } from "../lib/persistence/JwtObjectStorage";
 import { ObjectStorage } from "../lib/persistence/ObjectStorage";
 import { Storage } from "../lib/persistence/Storage";
@@ -118,7 +119,6 @@ export function setupBindings(config: IConfig): Container {
     .to(UsersApi)
     .inSingletonScope();
 
-  container.bind<Storage>(symbols.storage).toConstantValue(new Storage(window.localStorage));
   container
     .bind<NotificationCenter>(symbols.notificationCenter)
     .to(NotificationCenter)
@@ -179,10 +179,6 @@ export function setupBindings(config: IConfig): Container {
     .to(EtoNomineeApi)
     .inSingletonScope();
   container
-    .bind<WalletStorage>(symbols.walletStorage)
-    .to(WalletStorage)
-    .inSingletonScope();
-  container
     .bind(symbols.fileStorageService)
     .to(FileStorageApi)
     .inSingletonScope();
@@ -193,6 +189,41 @@ export function setupBindings(config: IConfig): Container {
   container
     .bind(symbols.gasApi)
     .to(GasApi)
+    .inSingletonScope();
+
+  // persistence storage
+  container.bind<Storage>(symbols.storage).toConstantValue(new Storage(window.localStorage));
+  container
+    .bind<WalletStorage>(symbols.walletStorage)
+    .to(WalletStorage)
+    .inSingletonScope();
+  container
+    .bind<DocumentsConfidentialityAgreementsStorage>(
+      symbols.documentsConfidentialityAgreementsStorage,
+    )
+    .to(DocumentsConfidentialityAgreementsStorage)
+    .inSingletonScope();
+  container
+    .bind<ObjectStorage<string>>(symbols.jwtStorage)
+    .toDynamicValue(
+      ctx =>
+        new ObjectStorage<string>(
+          ctx.container.get(symbols.storage),
+          ctx.container.get(symbols.logger),
+          STORAGE_JWT_KEY,
+        ),
+    )
+    .inSingletonScope();
+  container
+    .bind<ObjectStorage<string>>(symbols.userStorage)
+    .toDynamicValue(
+      ctx =>
+        new ObjectStorage<string>(
+          ctx.container.get(symbols.storage),
+          ctx.container.get(symbols.logger),
+          USER_JWT_KEY,
+        ),
+    )
     .inSingletonScope();
 
   // factories
@@ -207,31 +238,6 @@ export function setupBindings(config: IConfig): Container {
   container.bind<Web3FactoryType>(symbols.web3Factory).toFactory(web3Factory);
 
   container.bind<Web3BatchFactoryType>(symbols.web3BatchFactory).toFactory(web3BatchFactory);
-
-  // dynamic bindings (with inSingletonScope this works like lazy binding)
-  container
-    .bind<ObjectStorage<string>>(symbols.jwtStorage)
-    .toDynamicValue(
-      ctx =>
-        new ObjectStorage<string>(
-          ctx.container.get(symbols.storage),
-          ctx.container.get(symbols.logger),
-          STORAGE_JWT_KEY,
-        ),
-    )
-    .inSingletonScope();
-
-  container
-    .bind<ObjectStorage<string>>(symbols.userStorage)
-    .toDynamicValue(
-      ctx =>
-        new ObjectStorage<string>(
-          ctx.container.get(symbols.storage),
-          ctx.container.get(symbols.logger),
-          USER_JWT_KEY,
-        ),
-    )
-    .inSingletonScope();
 
   container.bind(symbols.intlWrapper).toConstantValue(new IntlWrapper());
   container
@@ -265,6 +271,9 @@ export const createGlobalDependencies = (container: Container) => ({
   // storage
   jwtStorage: container.get<ObjectStorage<string>>(symbols.jwtStorage),
   walletStorage: container.get<WalletStorage>(symbols.walletStorage),
+  documentsConfidentialityAgreementsStorage: container.get<
+    DocumentsConfidentialityAgreementsStorage
+  >(symbols.documentsConfidentialityAgreementsStorage),
   userStorage: container.get<ObjectStorage<string>>(symbols.userStorage),
 
   // network layer

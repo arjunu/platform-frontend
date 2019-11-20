@@ -8,21 +8,20 @@ import { EWalletType } from "../web3/types";
 
 export const selectRouter = (state: IAppState) => state.router;
 
-export const selectRedirectURLFromQueryString = createSelector(
-  selectRouter,
-  (state: RouterState): string | undefined => {
-    if (!(state.location && state.location.search)) {
-      return undefined;
-    }
-    const { redirect } = queryString.parse(state.location.search);
-
-    if (isString(redirect)) {
-      return redirect;
-    }
-
+export const selectRedirectURLFromQueryString = createSelector(selectRouter, (state: RouterState):
+  | string
+  | undefined => {
+  if (!(state.location && state.location.search)) {
     return undefined;
-  },
-);
+  }
+  const { redirect } = queryString.parse(state.location.search);
+
+  if (isString(redirect)) {
+    return redirect;
+  }
+
+  return undefined;
+});
 
 export const selectWalletTypeFromQueryString = createSelector(
   selectRouter,

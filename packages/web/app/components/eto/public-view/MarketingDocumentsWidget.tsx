@@ -4,6 +4,7 @@ import { Col, Row } from "reactstrap";
 
 import { TCompanyEtoData } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { CommonHtmlProps } from "../../../types";
+import { nonNullable } from "../../../utils/nonNullable";
 import { Container, EColumnSpan } from "../../layouts/Container";
 import { DocumentLink } from "../../shared/DocumentLink";
 import { InlineIcon } from "../../shared/icons";
@@ -32,17 +33,17 @@ const MarketingDocumentsWidget: React.FunctionComponent<TExternalProps & CommonH
         <section className={styles.group}>
           <Row>
             {companyMarketingLinks &&
-              companyMarketingLinks.map((link, i) =>
-                link.url && link.url !== "" ? (
+              companyMarketingLinks
+                .filter(link => link.url && link.title)
+                .map((link, i) => (
                   <Col sm="6" md="12" lg="6" key={i} className={styles.document}>
                     <DocumentLink
-                      url={link.url || ""}
-                      name={link.title || ""}
+                      url={nonNullable(link.url)}
+                      name={nonNullable(link.title)}
                       altIcon={<InlineIcon svgIcon={icon_link} />}
                     />
                   </Col>
-                ) : null,
-              )}
+                ))}
           </Row>
         </section>
       </Panel>

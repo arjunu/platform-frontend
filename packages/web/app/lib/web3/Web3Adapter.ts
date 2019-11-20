@@ -1,10 +1,13 @@
 import { BigNumber } from "bignumber.js";
-import { delay } from "redux-saga";
 import * as Web3 from "web3";
 
 import { makeEthereumAddressChecksummed } from "../../modules/web3/utils";
-import { EthereumAddress, EthereumAddressWithChecksum, EthereumNetworkId } from "../../types";
-import { promisify } from "../../utils/promisify";
+import {
+  EthereumAddress,
+  EthereumAddressWithChecksum,
+  EthereumNetworkId,
+} from "../../utils/opaque-types/types";
+import { promisify } from "../../utils/PromiseUtils";
 
 class Web3Error extends Error {}
 export class NeuWeb3Error extends Error {}
@@ -22,11 +25,6 @@ export class LongTransactionQueError extends EthNodeError {}
 export class InvalidRlpDataError extends EthNodeError {}
 export class InvalidChangeIdError extends EthNodeError {}
 export class UnknownEthNodeError extends EthNodeError {}
-
-enum TRANSACTION_STATUS {
-  REVERTED = "0x0",
-  SUCCESS = "0x1",
-}
 
 /**
  * Layer on top of raw Web3js. Simplifies API for common operations. Adds promise support.
@@ -160,94 +158,17 @@ export class Web3Adapter {
     return await send(txData);
   }
 
-  /**
-   * Get information about transactions (from `web3.eth.getTransaction`) or `null` when transaction is pending
-   * throws OutOfGasError or RevertedTransactionError in case of transaction not mined successfully
-   */
-  public async getTransactionOrThrow(txHash: string): Promise<Web3.Transaction | null> {
-    const tx = await this.getTransactionByHash(txHash);
-    const txReceipt = await this.getTransactionReceipt(txHash);
-
-    // Both requests `getTx` and `getTransactionReceipt` can end up in two seperate nodes
-    const isMined = tx && tx.blockNumber && txReceipt && txReceipt.blockNumber;
-    if (!isMined) {
-      return null;
-    }
-
-    if (txReceipt!.status === TRANSACTION_STATUS.REVERTED) {
-      if (txReceipt!.gasUsed === tx.gas) {
-        // All gas is burned in this case
-        throw new OutOfGasError();
-      }
-      throw new RevertedTransactionError();
-    }
-
-    return tx;
-  }
-
-  public async waitForTx(options: IWaitForTxOptions): Promise<Web3.Transaction> {
-    // TODO: Refactor Wait for TX
-    return new Promise<Web3.Transaction>((resolve, reject) => {
-      this.watchNewBlock(async blockId => {
-        try {
-          if (options.onNewBlock) {
-            await options.onNewBlock(blockId);
-          }
-
-          const tx = await this.getTransactionOrThrow(options.txHash);
-
-          if (!tx) {
-            return;
-          }
-
-          resolve(tx);
-          return true;
-        } catch (e) {
-          reject(e);
-          return false;
-        }
-      }).catch(reject);
-    });
-  }
-
-  // onNewBlock should return true to finish observing
-  public async watchNewBlock(
-    onNewBlock: (blockId: number) => Promise<boolean | void>,
-  ): Promise<void> {
-    let lastBlockId = -1;
-
-    while (true) {
-      const currentBlockNo = await this.getBlockNumber();
-      if (lastBlockId !== currentBlockNo) {
-        lastBlockId = currentBlockNo;
-
-        const isFinished = await onNewBlock(lastBlockId);
-
-        if (isFinished) {
-          break;
-        }
-      }
-
-      await delay(3000);
-    }
-  }
-
   public async getBlockNumber(): Promise<number> {
     const getBlockNumber = promisify<number>(this.web3.eth.getBlockNumber);
 
     return getBlockNumber();
   }
 
-  public isSmartContract(address: EthereumAddressWithChecksum): Promise<boolean> {
+  public isSmartContract(address: EthereumAddress): Promise<boolean> {
     // in case of missing smartcontract, code can be equal to "0x0" or "0x" depending on exact web3 implementation
     // to cover all these cases we just check against the source code length — there won't be any meaningful EVM program in less then 3 chars
     return promisify<string>(this.web3.eth.getCode)(address).then(v => v.length >= 4);
   }
-}
-
-interface IWaitForTxOptions {
-  txHash: string;
-  onNewBlock?: (blockId: number) => Promise<void>;
 }
 
 interface ITypedDataToSign {

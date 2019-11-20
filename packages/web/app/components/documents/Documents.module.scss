@@ -1,3 +1,5 @@
+$shadow-color: rgba($neu-charcoal-grey, .05);
+
 .layout {
   @include media-breakpoint-up (lg) {
     grid-template: repeat(2, auto) repeat(2, 1fr) / 2fr 1fr;
@@ -44,10 +46,9 @@
     grid-row: 3 / span 2;
   }
 
-  background-color: inherit;
-  box-shadow: inherit;
-  padding-top: 0;
-  height: 100%;
+  padding: 24px;
+  box-shadow: 0 1px 6px 0 $shadow-color;
+  background-color: $neu-white-two;
   align-self: start;
 }
 
