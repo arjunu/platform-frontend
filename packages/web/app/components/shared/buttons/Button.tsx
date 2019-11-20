@@ -28,9 +28,9 @@ enum EButtonSize {
 }
 
 enum EButtonWidth {
-  NORMAL = "",
-  BLOCK = "block",
-  NO_PADDING = "no-padding",
+  NORMAL,
+  BLOCK = styles.buttonBlock,
+  NO_PADDING = styles.buttonNoPadding,
 }
 
 type TButtonLayout = {

@@ -109,11 +109,11 @@
   }
 
   // widths
-  &:global(.block) {
+  &--block {
     width: 100%;
   }
 
-  &:global(.no-padding) {
+  &--no-padding {
     padding: 0;
   }
 
