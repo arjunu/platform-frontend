@@ -5,16 +5,19 @@ import { createErrorBoundary } from "../components/shared/errorBoundary/ErrorBou
 import { ErrorBoundaryLayout } from "../components/shared/errorBoundary/ErrorBoundaryLayout";
 import { LoadingIndicator } from "../components/shared/loading-indicator/LoadingIndicator";
 
-export const waitForLazyLoading = (Fallback: React.ComponentType) =>
-  (WrappedComponent: React.ComponentType) =>
-  () => <React.Suspense fallback={<Fallback />}>
+export const waitForLazyLoading = (Fallback: React.ComponentType) => (
+  WrappedComponent: React.ComponentType,
+) => () => (
+  <React.Suspense fallback={<Fallback />}>
     <WrappedComponent />
-  </React.Suspense>;
-
+  </React.Suspense>
+);
 
 export const lazyLoad = <T extends {}>(
   WrappedComponent: React.ComponentType<T>,
-  Fallback: React.ComponentType = LoadingIndicator) => compose<T,T>(
-  createErrorBoundary(ErrorBoundaryLayout),
-  waitForLazyLoading(Fallback),
-)(WrappedComponent);
+  Fallback: React.ComponentType = LoadingIndicator,
+) =>
+  compose<T, T>(
+    createErrorBoundary(ErrorBoundaryLayout),
+    waitForLazyLoading(Fallback),
+  )(WrappedComponent);
