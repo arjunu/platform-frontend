@@ -139,7 +139,7 @@
   "documents.nominee-legal-documents": "Legal documents",
   "documents.nominee-legal-documents.description": "Legal documents for your linked fundraising campaign.",
   "documents.please-fill-the-eto-forms-in-order-to-generate-templates": "Please fill the ETO forms in order to generate templates",
-  "documents.remove.alt": "Remove",
+  "documents.remove.alt": "Delete",
   "documents.upload.file-rejected": "File type not supported. Please upload a PDF.",
   "documents.upload.file-size": "PDF (Max size {size})",
   "documents.upload.terms-changed": "Your ETO terms have changed. Upload a new document.",

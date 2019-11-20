@@ -31,16 +31,16 @@
     background: $neu-neon-yellow;
     border: px-to-rem(1px) solid $neu-neon-yellow;
 
-    &:hover {
-      &:not(:disabled) {
+    &:not(:disabled) {
+      &:hover {
         box-shadow: 0 5px 10px 0 $hover-box-shadow;
       }
-    }
 
-    &:active,
-    &#{$button}--is-active {
-      background: $neu-bitter-lemon;
-      border-color: $neu-bitter-lemon;
+      &:active,
+      &#{$button}--is-active {
+        background: $neu-bitter-lemon;
+        border-color: $neu-bitter-lemon;
+      }
     }
 
     &:disabled {
@@ -52,16 +52,16 @@
   &--outline {
     border: px-to-rem(1px) solid $neu-light-blue-grey-two;
 
-    &:hover {
-      &:not(:disabled) {
+    &:not(:disabled) {
+      &:hover {
         border-color: $neu-bitter-lemon;
       }
-    }
 
-    &:active,
-    &#{$button}--is-active {
-      background: $neu-bitter-lemon;
-      border-color: $neu-bitter-lemon;
+      &:active,
+      &#{$button}--is-active {
+        background: $neu-bitter-lemon;
+        border-color: $neu-bitter-lemon;
+      }
     }
 
     &:disabled {
@@ -74,17 +74,17 @@
     border: px-to-rem(1px) solid $neu-very-light-blue;
     background: $neu-very-light-blue;
 
-    &:hover {
-      &:not(:disabled) {
+    &:not(:disabled) {
+      &:hover {
         background: transparent;
         border-color: $neu-bitter-lemon;
       }
-    }
 
-    &:active,
-    &#{$button}--is-active {
-      border-color: $neu-bitter-lemon;
-      background: $neu-bitter-lemon;
+      &:active,
+      &#{$button}--is-active {
+        border-color: $neu-bitter-lemon;
+        background: $neu-bitter-lemon;
+      }
     }
 
     &:disabled {
@@ -95,16 +95,16 @@
   &--ghost {
     border: px-to-rem(1px) solid transparent;
 
-    &:hover {
-      &:not(:disabled) {
+    &:not(:disabled) {
+      &:hover {
         background: $neu-very-light-blue;
       }
-    }
 
-    &:active,
-    &#{$button}--is-active {
-      background: transparent;
-      color: $neu-bitter-lemon;
+      &:active,
+      &#{$button}--is-active {
+        background: transparent;
+        color: $neu-bitter-lemon;
+      }
     }
   }
 

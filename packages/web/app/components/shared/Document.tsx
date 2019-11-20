@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { CircleButtonIcon, CircleButtonWarning } from "./buttons/RoundedButton";
+import { CircleButton, ECircleButtonLayout } from "./buttons";
 import { ELoadingIndicator, LoadingIndicator } from "./loading-indicator/LoadingIndicator";
 
 import * as remove from "../../assets/img/inline_icons/delete.svg";
@@ -106,31 +106,35 @@ export const DocumentTile: React.FunctionComponent<IDocumentProps & IDocumentTil
       {/* Show name only for uploaded files */}
       {!onlyDownload && <p className={styles.fileName}>{fileName}</p>}
       <div className={styles.buttons}>
-        <CircleButtonIcon
+        <CircleButton
           data-test-id="documents-download-document"
+          layout={ECircleButtonLayout.SECONDARY}
           onClick={downloadAction}
-          type="button"
           svgIcon={download}
+          iconProps={{
+            alt: <FormattedMessage id="documents.download.alt" />,
+          }}
           disabled={busy || linkDisabled}
-          alt={<FormattedMessage id="documents.download.alt" />}
         />
         {activeUpload &&
           (confirmRemove ? (
-            <CircleButtonWarning
+            <CircleButton
+              layout={ECircleButtonLayout.DANGER}
               data-test-id="documents-remove-document-confirm"
               onClick={removeAction}
-              type="button"
               disabled={busy}
             >
-              Remove?
-            </CircleButtonWarning>
+              <FormattedMessage id="documents.remove.alt" />?
+            </CircleButton>
           ) : (
-            <CircleButtonIcon
+            <CircleButton
+              layout={ECircleButtonLayout.SECONDARY}
               data-test-id="documents-remove-document"
               onClick={() => toggleConfirmRemove(!confirmRemove)}
-              type="button"
               svgIcon={remove}
-              alt={<FormattedMessage id="documents.remove.alt" />}
+              iconProps={{
+                alt: <FormattedMessage id="documents.remove.alt" />,
+              }}
             />
           ))}
       </div>

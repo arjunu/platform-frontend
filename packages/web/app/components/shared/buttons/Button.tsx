@@ -80,7 +80,7 @@ const ButtonBase = React.forwardRef<
         <>
           {/*
                 &nbsp; makes button the same in height as normal button
-                (avoids height dumping after switching to loading state)
+                (avoids height jumping after switching to loading state)
               */}
           &nbsp;
           <LoadingIndicator light />
@@ -150,7 +150,7 @@ const Button = React.forwardRef<HTMLButtonElement, TButtonProps>(
           <>
             {/*
                 &nbsp; makes button the same in height as normal button
-                (avoids height dumping after switching to loading state)
+                (avoids height jumping after switching to loading state)
               */}
             &nbsp;
             <InlineIcon

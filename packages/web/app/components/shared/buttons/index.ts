@@ -4,4 +4,4 @@ export * from "./ButtonGroup";
 export * from "./CommonButtons";
 export * from "./ButtonInline";
 export * from "./ButtonLink";
-export * from "./RoundedButton";
+export * from "./CircleButton";
