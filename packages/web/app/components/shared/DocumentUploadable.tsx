@@ -7,7 +7,7 @@ import { ETOAddDocuments } from "../eto/shared/EtoAddDocument";
 import { Button, ButtonSize, EButtonLayout } from "./buttons/Button";
 import { DocumentTile } from "./Document";
 import { InlineIcon } from "./icons/InlineIcon";
-import {SingleFileUploadInner, SingleFileUploadSpinner} from "./SingleFileUpload";
+import { SingleFileUploadInner, SingleFileUploadSpinner } from "./SingleFileUpload";
 
 import * as error from "../../assets/img/inline_icons/error.svg";
 import * as warning from "../../assets/img/inline_icons/warning.svg";
@@ -108,7 +108,10 @@ export const DocumentUploadableDropzone: React.FunctionComponent<IUploadableDocu
         onDropAccepted={() => setRejected(false)}
       >
         {busy && <SingleFileUploadSpinner />}
-        <SingleFileUploadInner data-test-id={`form.name.${documentKey}.upload`} isDisabled={isDisabled} />
+        <SingleFileUploadInner
+          data-test-id={`form.name.${documentKey}.upload`}
+          isDisabled={isDisabled}
+        />
       </ETOAddDocuments>
       <DocumentUploadTypeDescription typedFileName={typedFileName} />
       {rejected && <DocumentUploadDropzoneError />}

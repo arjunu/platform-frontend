@@ -12,9 +12,11 @@ interface IUploadButton extends TDataTestId {
   isDisabled?: boolean;
 }
 
-const RoundedButton: React.ForwardRefExoticComponent<
-  { children?: React.ReactNode } & IButtonProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef<HTMLButtonElement, IButtonProps & TDataTestId>((props, ref) => (
+const RoundedButton: React.ForwardRefExoticComponent<{ children?: React.ReactNode } & IButtonProps &
+  React.RefAttributes<HTMLButtonElement>> = React.forwardRef<
+  HTMLButtonElement,
+  IButtonProps & TDataTestId
+>((props, ref) => (
   <Button {...props} ref={ref} className={cn(props.className, styles.rounded)}>
     {props.children}
   </Button>
@@ -43,9 +45,9 @@ const CircleButtonWarning: React.FunctionComponent<React.ComponentProps<typeof C
   </CircleButton>
 );
 
-const CircleButtonIcon: React.FunctionComponent<
-  React.ComponentProps<typeof ButtonIcon>
-> = props => <ButtonIcon className={cn(props.className, styles.buttonIcon)} {...props} />;
+const CircleButtonIcon: React.FunctionComponent<React.ComponentProps<
+  typeof ButtonIcon
+>> = props => <ButtonIcon className={cn(props.className, styles.buttonIcon)} {...props} />;
 
 const UploadButton: React.FunctionComponent<IUploadButton> = ({
   isDisabled,

@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import {SingleFileUploadActionButtons, SingleFileUploadSpinner} from "./SingleFileUpload";
+import { SingleFileUploadActionButtons, SingleFileUploadSpinner } from "./SingleFileUpload";
 
 import * as styles from "./Document.module.scss";
 
@@ -77,29 +77,38 @@ export const DocumentTile: React.FunctionComponent<IDocumentProps & IDocumentTil
   downloadAction,
   removeAction,
   linkDisabled,
-}) =>
-  (
-    <div className={cn(styles.tile, className)}>
-      {busy && (
-        <SingleFileUploadSpinner message={onlyDownload ? (
-          <FormattedMessage id="documents.generating" />
-        ) : (
-          <FormattedMessage id="documents.downloading" />
-        )} />
-      )}
-      <DocumentExtension extension={extension} />
-      <p
-        className={cn(styles.title, {
-          [styles.blankTitle]: blank,
-        })}
-      >
-        {title}
-      </p>
-      {/* Show name only for uploaded files */}
-      {!onlyDownload && <p className={styles.fileName}>{fileName}</p>}
-      <SingleFileUploadActionButtons downloadAction={downloadAction} busy={busy} linkDisabled={linkDisabled} removeAction={removeAction} activeUpload={activeUpload} />
-    </div>
-  );
+}) => (
+  <div className={cn(styles.tile, className)}>
+    {busy && (
+      <SingleFileUploadSpinner
+        message={
+          onlyDownload ? (
+            <FormattedMessage id="documents.generating" />
+          ) : (
+            <FormattedMessage id="documents.downloading" />
+          )
+        }
+      />
+    )}
+    <DocumentExtension extension={extension} />
+    <p
+      className={cn(styles.title, {
+        [styles.blankTitle]: blank,
+      })}
+    >
+      {title}
+    </p>
+    {/* Show name only for uploaded files */}
+    {!onlyDownload && <p className={styles.fileName}>{fileName}</p>}
+    <SingleFileUploadActionButtons
+      downloadAction={downloadAction}
+      busy={busy}
+      linkDisabled={linkDisabled}
+      removeAction={removeAction}
+      activeUpload={activeUpload}
+    />
+  </div>
+);
 
 DocumentTile.defaultProps = {
   busy: false,
