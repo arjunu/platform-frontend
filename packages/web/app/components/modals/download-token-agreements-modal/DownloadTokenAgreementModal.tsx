@@ -86,9 +86,7 @@ const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentPr
                         className={styles.icon}
                         svgIcon={iconDownload}
                         disabled={pendingDownloads[document.ipfsHash]}
-                        data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${
-                          eto.etoId
-                        }.download`}
+                        data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${eto.etoId}.download`}
                         onClick={() =>
                           downloadDocument(
                             {
@@ -127,9 +125,7 @@ const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentPr
                         className={styles.icon}
                         svgIcon={iconDownload}
                         disabled={pendingDownloads[template.ipfsHash]}
-                        data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${
-                          eto.etoId
-                        }.download`}
+                        data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${eto.etoId}.download`}
                         onClick={() =>
                           generateTemplateByEtoId({ ...template, asPdf: true }, eto.etoId)
                         }

@@ -453,13 +453,10 @@ export function* loadNomineeEtos({
   try {
     const etos: TEtoWithCompanyAndContract[] = yield apiEtoService.loadNomineeEtos();
     const etosByPreviewCode: Dictionary<TEtoWithCompanyAndContract, string> = yield all(
-      etos.reduce(
-        (acc: { [key: string]: Iterator<Effect> }, eto: TEtoWithCompanyAndContract) => {
-          acc[eto.previewCode] = neuCall(loadNomineeEto, eto);
-          return acc;
-        },
-        {} as { [key: string]: Iterator<Effect> },
-      ),
+      etos.reduce((acc: { [key: string]: Iterator<Effect> }, eto: TEtoWithCompanyAndContract) => {
+        acc[eto.previewCode] = neuCall(loadNomineeEto, eto);
+        return acc;
+      }, {} as { [key: string]: Iterator<Effect> }),
     );
 
     yield put(actions.nomineeFlow.setNomineeEtos({ etos: etosByPreviewCode }));
@@ -480,9 +477,9 @@ export function* setActiveNomineeEto({
     if (etos === undefined || isEmpty(etos)) {
       yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(undefined));
     } else {
-      const forcedActiveEtoPreviewCode: ReturnType<
-        typeof selectActiveEtoPreviewCodeFromQueryString
-      > = yield select(selectActiveEtoPreviewCodeFromQueryString);
+      const forcedActiveEtoPreviewCode: ReturnType<typeof selectActiveEtoPreviewCodeFromQueryString> = yield select(
+        selectActiveEtoPreviewCodeFromQueryString,
+      );
 
       // For testing purpose we can force another ETO to be active (by default it's the first one)
       const shouldForceSpecificEtoToBeActive =

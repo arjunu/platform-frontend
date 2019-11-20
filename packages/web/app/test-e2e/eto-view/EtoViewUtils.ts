@@ -9,9 +9,7 @@ export const assertEtoView = (etoID: string) => {
     cy.get(tid("eto.public-view")).should("exist");
     cy.title().should(
       "eq",
-      `${eto.company.brandName} - ${eto.equityTokenName} (${
-        eto.equityTokenSymbol
-      }) - Neufund Platform`,
+      `${eto.company.brandName} - ${eto.equityTokenName} (${eto.equityTokenSymbol}) - Neufund Platform`,
     );
 
     if (eto.product.jurisdiction) {

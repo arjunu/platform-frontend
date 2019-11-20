@@ -53,9 +53,8 @@ export const selectIsVisibleSecurityNotification = (state: IAppState): boolean =
   return selectIsActionRequiredSettings(state);
 };
 
-export const selectSettingsNotificationType = createSelector(
-  selectIsInvestor,
-  isInvestor => (isInvestor ? settingsNotificationInvestor() : settingsNotificationIssuer()),
+export const selectSettingsNotificationType = createSelector(selectIsInvestor, isInvestor =>
+  isInvestor ? settingsNotificationInvestor() : settingsNotificationIssuer(),
 );
 
 export const selectSettingsNotification = (state: IAppState) =>

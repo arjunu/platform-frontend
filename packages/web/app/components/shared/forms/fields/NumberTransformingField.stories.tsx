@@ -9,4 +9,7 @@ storiesOf("forms/fields/TransformingField", module)
     "with ratio",
     formWrapper({ name: 0.5 })(() => <NumberTransformingField name="name" ratio={100} />),
   )
-  .add("no ratio", formWrapper({ name: 0.5 })(() => <NumberTransformingField name="name" />));
+  .add(
+    "no ratio",
+    formWrapper({ name: 0.5 })(() => <NumberTransformingField name="name" />),
+  );

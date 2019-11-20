@@ -140,9 +140,9 @@ describe("Change Email", function(): void {
         .then(() => {
           cy.window().then(window => {
             // TODO: move into a seperate util method
-            const metaData = JSON.parse(window.localStorage.getItem(
-              "NF_WALLET_METADATA",
-            ) as string);
+            const metaData = JSON.parse(
+              window.localStorage.getItem("NF_WALLET_METADATA") as string,
+            );
             email = metaData.email;
           });
         })

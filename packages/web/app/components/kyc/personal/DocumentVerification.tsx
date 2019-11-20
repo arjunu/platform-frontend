@@ -44,9 +44,9 @@ interface IProps {
   layout: EKycRequestType;
 }
 
-export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<
-  IProps & IStateProps & IDispatchProps
-> = ({ ...props }) => (
+export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<IProps &
+  IStateProps &
+  IDispatchProps> = ({ ...props }) => (
   <KycPanel
     title={<FormattedMessage id="kyc.panel.individual-verification" />}
     steps={personalSteps}

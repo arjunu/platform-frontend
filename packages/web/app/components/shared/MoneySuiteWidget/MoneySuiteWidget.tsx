@@ -91,9 +91,8 @@ const IconWithWallet: React.FunctionComponent<{ icon: string; walletName: TTrans
   </div>
 );
 
-const MoneySingleSuiteWidget: React.FunctionComponent<
-  IMoneySingleSuiteWidgetProps & TDataTestId
-> = ({
+const MoneySingleSuiteWidget: React.FunctionComponent<IMoneySingleSuiteWidgetProps &
+  TDataTestId> = ({
   icon,
   currency,
   value,

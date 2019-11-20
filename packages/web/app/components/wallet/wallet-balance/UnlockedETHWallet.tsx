@@ -25,9 +25,17 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const UnlockedETHWallet: React.FunctionComponent<
-  IUnlockedETHWallet & CommonHtmlProps & IExternalProps
-> = ({ address, depositEth, withdrawEth, className, ethAmount, ethEuroAmount, columnSpan }) => (
+export const UnlockedETHWallet: React.FunctionComponent<IUnlockedETHWallet &
+  CommonHtmlProps &
+  IExternalProps> = ({
+  address,
+  depositEth,
+  withdrawEth,
+  className,
+  ethAmount,
+  ethEuroAmount,
+  columnSpan,
+}) => (
   <WalletBalanceContainer
     className={className}
     columnSpan={columnSpan}

@@ -67,9 +67,15 @@ const LayoutWrapper: React.FunctionComponent<TDataTestId> = ({
   </div>
 );
 
-const LayoutComponent: React.FunctionComponent<
-  IStateProps & TDataTestId & TContentExternalProps & ILayoutUnauthProps
-> = ({ children, userIsAuthorized, "data-test-id": dataTestId, ...contentProps }) => (
+const LayoutComponent: React.FunctionComponent<IStateProps &
+  TDataTestId &
+  TContentExternalProps &
+  ILayoutUnauthProps> = ({
+  children,
+  userIsAuthorized,
+  "data-test-id": dataTestId,
+  ...contentProps
+}) => (
   <LayoutWrapper data-test-id={dataTestId}>
     {userIsAuthorized ? (
       <LayoutAuthorized {...contentProps}>{children}</LayoutAuthorized>
@@ -87,9 +93,9 @@ const Layout = compose<IStateProps, TDataTestId & TContentExternalProps & ILayou
   }),
 )(LayoutComponent);
 
-const TransitionalLayout: React.FunctionComponent<
-  TDataTestId & TContentExternalProps & ILayoutUnauthProps
-> = ({ children, "data-test-id": dataTestId, ...contentProps }) => (
+const TransitionalLayout: React.FunctionComponent<TDataTestId &
+  TContentExternalProps &
+  ILayoutUnauthProps> = ({ children, "data-test-id": dataTestId, ...contentProps }) => (
   <LayoutWrapper data-test-id={dataTestId}>
     <HeaderTransitional />
     <Content {...contentProps}>{children}</Content>

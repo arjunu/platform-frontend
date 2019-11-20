@@ -120,7 +120,7 @@ const FormatShortNumber: React.FunctionComponent<IProps> = ({
     const shortValue = roundingFn(number / range.divider, 1).toString();
 
     const translation = (translationKeys[range.key] as {
-      [key in THumanReadableFormat]: TTranslatedString
+      [key in THumanReadableFormat]: TTranslatedString;
     })[outputFormat];
 
     return (

@@ -27,9 +27,9 @@ type TDispatchProps = {
   downloadDocument: (document: IEtoDocument) => void;
 };
 
-const DocumentsWidgetLayout: React.FunctionComponent<
-  TDispatchProps & TExternalProps & CommonHtmlProps
-> = ({ downloadDocument, className, columnSpan, isUserFullyVerified, eto }) => {
+const DocumentsWidgetLayout: React.FunctionComponent<TDispatchProps &
+  TExternalProps &
+  CommonHtmlProps> = ({ downloadDocument, className, columnSpan, isUserFullyVerified, eto }) => {
   const { templates, documents, product } = eto;
 
   const documentTitles = getInvestorDocumentTitles(product.offeringDocumentType);

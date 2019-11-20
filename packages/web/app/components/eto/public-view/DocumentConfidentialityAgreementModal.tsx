@@ -20,9 +20,8 @@ interface IDispatchProps {
   confirm: () => void;
 }
 
-const DocumentConfidentialityAgreementModalLayout: React.FunctionComponent<
-  IExternalProps & IDispatchProps
-> = ({ closeModal, confirm, companyName, documentTitle }) => (
+const DocumentConfidentialityAgreementModalLayout: React.FunctionComponent<IExternalProps &
+  IDispatchProps> = ({ closeModal, confirm, companyName, documentTitle }) => (
   <Message
     data-test-id="eto.document-confidentiality-agreement-modal"
     image={<img src={tosImg} className={styles.image} alt="" />}

@@ -24,9 +24,10 @@ interface IMoneyRangeProps {
   separator?: string;
 }
 
-export const MoneyRange: React.FunctionComponent<
-  IMoneyRangeProps & IMoneyCommonProps & CommonHtmlProps & TDataTestId
-> = ({
+export const MoneyRange: React.FunctionComponent<IMoneyRangeProps &
+  IMoneyCommonProps &
+  CommonHtmlProps &
+  TDataTestId> = ({
   valueFrom,
   valueUpto,
   inputFormat = ENumberInputFormat.ULPS,

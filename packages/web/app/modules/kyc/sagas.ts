@@ -310,9 +310,7 @@ function* cancelIndividualInstantId({
 function* loadLegalRepresentative({ apiKycService, logger }: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentative(true));
-    const result: IHttpResponse<
-      IKycLegalRepresentative
-    > = yield apiKycService.getLegalRepresentative();
+    const result: IHttpResponse<IKycLegalRepresentative> = yield apiKycService.getLegalRepresentative();
     yield put(actions.kyc.kycUpdateLegalRepresentative(false, result.body));
   } catch (e) {
     // TODO: There is something wrong here as reponse parsing error is thrown.
@@ -329,9 +327,9 @@ function* submitLegalRepresentative(
 ): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentative(true));
-    const result: IHttpResponse<
-      IKycLegalRepresentative
-    > = yield apiKycService.putLegalRepresentative(action.payload.data);
+    const result: IHttpResponse<IKycLegalRepresentative> = yield apiKycService.putLegalRepresentative(
+      action.payload.data,
+    );
     yield put(actions.kyc.kycUpdateLegalRepresentative(false, result.body));
   } catch (e) {
     logger.error("Failed to submit KYC legal representative", e);
@@ -348,9 +346,9 @@ function* uploadLegalRepresentativeFile(
   const { file } = action.payload;
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocument(true));
-    const result: IHttpResponse<
-      IKycFileInfo
-    > = yield apiKycService.uploadLegalRepresentativeDocument(file);
+    const result: IHttpResponse<IKycFileInfo> = yield apiKycService.uploadLegalRepresentativeDocument(
+      file,
+    );
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocument(false, result.body));
   } catch (e) {
     logger.error("Failed to upload KYC legal representative file", e);
@@ -367,9 +365,7 @@ function* loadLegalRepresentativeFiles({
 }: TGlobalDependencies): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocuments(true));
-    const result: IHttpResponse<
-      IKycFileInfo[]
-    > = yield apiKycService.getLegalRepresentativeDocuments();
+    const result: IHttpResponse<IKycFileInfo[]> = yield apiKycService.getLegalRepresentativeDocuments();
     yield put(actions.kyc.kycUpdateLegalRepresentativeDocuments(false, result.body));
   } catch (e) {
     logger.error("Failed to load KYC legal representative file", e);

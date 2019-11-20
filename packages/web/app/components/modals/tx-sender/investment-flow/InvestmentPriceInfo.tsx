@@ -20,9 +20,10 @@ interface IExternalProps {
   etoTokenStandardPrice: number;
 }
 
-const PersonalWhitelistDiscountMessage: React.FunctionComponent<
-  Pick<IExternalProps, "etoTokenPersonalDiscount">
-> = ({ etoTokenPersonalDiscount }) => (
+const PersonalWhitelistDiscountMessage: React.FunctionComponent<Pick<
+  IExternalProps,
+  "etoTokenPersonalDiscount"
+>> = ({ etoTokenPersonalDiscount }) => (
   <FormattedMessage
     id="investment-flow.token-price-info.personal-discount"
     values={{
@@ -53,9 +54,10 @@ const PersonalWhitelistDiscountMessage: React.FunctionComponent<
   />
 );
 
-const PersonalWhitelistDiscountGeneralDiscountMessage: React.FunctionComponent<
-  Pick<IExternalProps, "etoTokenGeneralDiscounts">
-> = ({ etoTokenGeneralDiscounts }) => (
+const PersonalWhitelistDiscountGeneralDiscountMessage: React.FunctionComponent<Pick<
+  IExternalProps,
+  "etoTokenGeneralDiscounts"
+>> = ({ etoTokenGeneralDiscounts }) => (
   <FormattedMessage
     id="investment-flow.token-price-info.personal-discount.general-discount"
     values={{
@@ -77,9 +79,10 @@ const PersonalWhitelistDiscountGeneralDiscountMessage: React.FunctionComponent<
   />
 );
 
-const PersonalWhitelistDiscountNoGeneralDiscountMessage: React.FunctionComponent<
-  Pick<IExternalProps, "etoTokenStandardPrice">
-> = ({ etoTokenStandardPrice }) => (
+const PersonalWhitelistDiscountNoGeneralDiscountMessage: React.FunctionComponent<Pick<
+  IExternalProps,
+  "etoTokenStandardPrice"
+>> = ({ etoTokenStandardPrice }) => (
   <FormattedMessage
     id="investment-flow.token-price-info.personal-discount.no-discount"
     values={{
@@ -95,9 +98,10 @@ const PersonalWhitelistDiscountNoGeneralDiscountMessage: React.FunctionComponent
   />
 );
 
-const GeneralWhitelistDiscountMessage: React.FunctionComponent<
-  Pick<IExternalProps, "etoTokenGeneralDiscounts">
-> = ({ etoTokenGeneralDiscounts }) => (
+const GeneralWhitelistDiscountMessage: React.FunctionComponent<Pick<
+  IExternalProps,
+  "etoTokenGeneralDiscounts"
+>> = ({ etoTokenGeneralDiscounts }) => (
   <FormattedMessage
     id="investment-flow.token-price-info.general-discount"
     values={{
@@ -119,9 +123,10 @@ const GeneralWhitelistDiscountMessage: React.FunctionComponent<
   />
 );
 
-const GeneralPublicDiscountMessage: React.FunctionComponent<
-  Pick<IExternalProps, "etoTokenGeneralDiscounts">
-> = ({ etoTokenGeneralDiscounts }) => (
+const GeneralPublicDiscountMessage: React.FunctionComponent<Pick<
+  IExternalProps,
+  "etoTokenGeneralDiscounts"
+>> = ({ etoTokenGeneralDiscounts }) => (
   <FormattedMessage
     id="investment-flow.token-price-info.general-discount"
     values={{
@@ -208,9 +213,7 @@ const InvestmentPriceInfo: React.FunctionComponent<IExternalProps> = ({
       return <NoDiscountMessage etoTokenStandardPrice={etoTokenStandardPrice} />;
     default:
       throw new Error(
-        `Eto on chain state should be either ${EETOStateOnChain.Whitelist} or ${
-          EETOStateOnChain.Public
-        }, received ${onChainState}`,
+        `Eto on chain state should be either ${EETOStateOnChain.Whitelist} or ${EETOStateOnChain.Public}, received ${onChainState}`,
       );
   }
 };

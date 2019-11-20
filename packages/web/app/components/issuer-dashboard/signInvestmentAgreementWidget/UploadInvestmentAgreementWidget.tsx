@@ -38,9 +38,12 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const UploadInvestmentAgreementLayout: React.FunctionComponent<
-  OmitKeys<IStateProps, "stateOnChain"> & IDispatchProps & IExternalProps
-> = ({ downloadAgreementTemplate, agreementTemplate, columnSpan }) => (
+export const UploadInvestmentAgreementLayout: React.FunctionComponent<OmitKeys<
+  IStateProps,
+  "stateOnChain"
+> &
+  IDispatchProps &
+  IExternalProps> = ({ downloadAgreementTemplate, agreementTemplate, columnSpan }) => (
   <DashboardCenteredWidget
     data-test-id="dashboard-upload-signed-isha-widget"
     title={<FormattedMessage id="download-agreement-widget.signing-title" />}

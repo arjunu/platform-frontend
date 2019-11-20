@@ -24,9 +24,9 @@ interface IStateProps {
   eto: TEtoWithCompanyAndContractReadonly;
 }
 
-const PortfolioAssetActionComponent: React.FunctionComponent<
-  TExternalProps & IDispatchProps & IStateProps
-> = ({ state, etoId, onClaim, eto, onRefund }) => {
+const PortfolioAssetActionComponent: React.FunctionComponent<TExternalProps &
+  IDispatchProps &
+  IStateProps> = ({ state, etoId, onClaim, eto, onRefund }) => {
   switch (state) {
     case EETOStateOnChain.Claim:
     case EETOStateOnChain.Payout:

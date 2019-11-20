@@ -91,9 +91,7 @@ const DownloadIshaOrTermsheetLink: React.FunctionComponent<TExternalProps & TDis
   if (signedTermsheetDoc) {
     return (
       <DocumentButton
-        data-test-id={`eto-public-view.investment-terms.document.${
-          signedTermsheetDoc.documentType
-        }`}
+        data-test-id={`eto-public-view.investment-terms.document.${signedTermsheetDoc.documentType}`}
         title={<FormattedMessage id="eto.documents.signed-termsheet" />}
         onClick={() => downloadDocument(signedTermsheetDoc)}
       />

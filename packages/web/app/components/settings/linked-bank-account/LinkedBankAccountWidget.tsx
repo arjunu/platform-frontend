@@ -40,9 +40,8 @@ const LinkAccount: React.FunctionComponent<IComponentProps> = ({
   </>
 );
 
-const LinkedBankAccountLayout: React.FunctionComponent<
-  IComponentProps & IExternalProps
-> = props => (
+const LinkedBankAccountLayout: React.FunctionComponent<IComponentProps &
+  IExternalProps> = props => (
   <Panel
     data-test-id="linked-bank-account-widget"
     headerText={<FormattedMessage id="linked-bank-account-widget.header" />}

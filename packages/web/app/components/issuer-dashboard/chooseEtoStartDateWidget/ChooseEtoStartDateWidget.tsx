@@ -296,9 +296,9 @@ const ChangeDate: React.ComponentType<IChangeDateStateProps & IDispatchProps> = 
   </>
 );
 
-const EtoStartDateWidgetComponent: React.ComponentType<
-  IStateProps & IDispatchProps & IExternalProps
-> = ({ etoDate, columnSpan, ...props }) => (
+const EtoStartDateWidgetComponent: React.ComponentType<IStateProps &
+  IDispatchProps &
+  IExternalProps> = ({ etoDate, columnSpan, ...props }) => (
   <DashboardWidget
     title={<FormattedMessage id="eto.settings.eto-start-date" />}
     text={

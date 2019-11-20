@@ -12,7 +12,10 @@ describe("FormFieldCheckboxGroup", () => {
   it("should work", async () => {
     const submitFormHandler = spy();
 
-    const Component = formWrapper({}, submitFormHandler)(() => (
+    const Component = formWrapper(
+      {},
+      submitFormHandler,
+    )(() => (
       <FormFieldCheckboxGroup name="checkboxes">
         <FormFieldCheckbox label="A" value="a" data-test-id="a" />
         <FormFieldCheckbox label="B" value="b" data-test-id="b" />
@@ -46,7 +49,10 @@ describe("FormFieldCheckboxGroup", () => {
   it("should set default value", async () => {
     const submitFormHandler = spy();
 
-    const Component = formWrapper({}, submitFormHandler)(() => (
+    const Component = formWrapper(
+      {},
+      submitFormHandler,
+    )(() => (
       <FormFieldCheckboxGroup name="checkboxes">
         <FormFieldCheckbox label="A" value="a" data-test-id="a" />
         <FormFieldCheckbox label="B" value="b" data-test-id="b" />

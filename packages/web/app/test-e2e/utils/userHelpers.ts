@@ -86,9 +86,7 @@ export const createAndLoginNewUser = (
 
       cy.log(
         `Logged in as ${params.type}`,
-        `KYC: ${params.kyc}, clearPendingTransactions: ${params.clearPendingTransactions}, seed: ${
-          params.seed
-        }`,
+        `KYC: ${params.kyc}, clearPendingTransactions: ${params.clearPendingTransactions}, seed: ${params.seed}`,
       );
     }
 
@@ -287,10 +285,12 @@ export const getUserData = async (jwt: string) => {
     "Content-Type": "application/json",
     authorization: `Bearer ${jwt}`,
   };
-  return (await fetch(USER_PATH, {
-    headers,
-    method: "GET",
-  })).json();
+  return (
+    await fetch(USER_PATH, {
+      headers,
+      method: "GET",
+    })
+  ).json();
 };
 
 export const getKycData = async (jwt: string) => {
@@ -299,14 +299,22 @@ export const getKycData = async (jwt: string) => {
     authorization: `Bearer ${jwt}`,
   };
   return {
-    individual: (await (await fetch(KYC_PATH + KYC_INDIVIDUAL, {
-      headers,
-      method: "GET",
-    })).json()).status,
-    business: (await (await fetch(KYC_PATH + KYC_COMPANY, {
-      headers,
-      method: "GET",
-    })).json()).status,
+    individual: (
+      await (
+        await fetch(KYC_PATH + KYC_INDIVIDUAL, {
+          headers,
+          method: "GET",
+        })
+      ).json()
+    ).status,
+    business: (
+      await (
+        await fetch(KYC_PATH + KYC_COMPANY, {
+          headers,
+          method: "GET",
+        })
+      ).json()
+    ).status,
   };
 };
 
@@ -412,9 +420,9 @@ export const clearPendingTransactions = () =>
       );
     });
 
-export const getPendingTransactions = (): Cypress.Chainable<
-  ReadonlyArray<{ transaction_type: string }>
-> =>
+export const getPendingTransactions = (): Cypress.Chainable<ReadonlyArray<{
+  transaction_type: string;
+}>> =>
   cy
     .request({
       url: PENDING_TRANSACTIONS_PATH,

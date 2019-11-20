@@ -72,9 +72,9 @@ const LoadingIndicator: React.FunctionComponent<ILoadingIndicatorProps & CommonH
  *  Wraps loading indicator in `Container` and set it to span all columns
  *  Useful to render loading indicator inside `WidgetGrid`.
  */
-const LoadingIndicatorContainer: React.FunctionComponent<
-  React.ComponentProps<typeof LoadingIndicator>
-> = props => (
+const LoadingIndicatorContainer: React.FunctionComponent<React.ComponentProps<
+  typeof LoadingIndicator
+>> = props => (
   <Container type={EContainerType.CONTAINER} columnSpan={EColumnSpan.THREE_COL}>
     <LoadingIndicator {...props} />
   </Container>
