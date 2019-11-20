@@ -82,7 +82,12 @@ export const Counter: React.FunctionComponent<IProps & CommonHtmlProps> = ({
       <CounterLayout className={className} timeLeft={timeLeft} data-test-id={dataTestId} />
     )}
     timerFinishedComponent={timeLeft => (
-      <CounterLayout className={className} timeLeft={timeLeft} data-test-id={dataTestId} />
+      <CounterLayout
+        className={className}
+        timeLeft={timeLeft}
+        data-test-id={dataTestId}
+        blink={true}
+      />
     )}
   />
 );

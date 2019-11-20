@@ -5,7 +5,8 @@ import { COMPANY_TAGS_LIMIT } from "../../../config/constants";
 import { EJurisdiction } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { TTranslatedString } from "../../../types";
 import { Container, EColumnSpan, EContainerType } from "../../layouts/Container";
-import { IResponsiveImage, srcSetToString } from "../../shared/ResponsiveImage";
+import { srcSetToString } from "../../shared/HiResImage";
+import { IResponsiveImage } from "../../shared/ResponsiveImage";
 import { Tag } from "../../shared/Tag";
 
 import * as styles from "./Cover.module.scss";

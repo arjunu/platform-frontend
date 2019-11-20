@@ -25,7 +25,7 @@ storiesOf("PendingTransactionStatus", module)
       monitorPendingTransaction={action("monitorPendingTransaction")}
     />
   ))
-  .add("Error", () => (
+  .add("error", () => (
     <PendingTransactionStatusLayout
       className="className"
       pendingTransaction={{

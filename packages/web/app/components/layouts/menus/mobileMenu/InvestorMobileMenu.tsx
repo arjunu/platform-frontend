@@ -7,6 +7,6 @@ import { MobileMenuInternal } from "./MobileMenuInternal";
 export const InvestorMobileMenu = compose<
   IMenuDataByUserType & IMobileMenuExternalProps,
   IMobileMenuExternalProps
->(withProps<IMenuDataByUserType, {}>({ menuDataByUserType: investorMenuData() }))(
-  MobileMenuInternal,
-);
+>(
+  withProps<IMenuDataByUserType, {}>({ menuDataByUserType: investorMenuData() }),
+)(MobileMenuInternal);

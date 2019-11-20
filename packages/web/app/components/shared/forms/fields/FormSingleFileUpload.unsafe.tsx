@@ -3,7 +3,7 @@ import * as React from "react";
 import { compose } from "recompose";
 
 import { actions } from "../../../../modules/actions";
-import { ENotificationModalType } from "../../../../modules/notificationModal/actions";
+import { ENotificationModalType } from "../../../../modules/notification-modal/actions";
 import { appConnect } from "../../../../store";
 import { ArrayWithAtLeastOneMember, CommonHtmlProps, TFormikConnect } from "../../../../types";
 import { ImageUploadMessage } from "../../../translatedMessages/messages";

@@ -55,7 +55,6 @@ export const FormInput: React.FunctionComponent<TExternalProps & FormInputProps>
           validate={customValidation}
           render={({ field }: FieldProps) => {
             const val = transform(field.value);
-
             return (
               <InputLayout
                 name={name}

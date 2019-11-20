@@ -69,7 +69,7 @@ export const WhitelistingActive: React.FunctionComponent<TWhitelistingActiveProp
         </span>
         <span className={styles.value} data-test-id="eto-bookbuilding-amount-backed">
           <Money
-            value={pledgedAmount}
+            value={pledgedAmount ? pledgedAmount.toString() : undefined}
             valueType={ECurrency.EUR}
             inputFormat={ENumberInputFormat.FLOAT}
             outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}

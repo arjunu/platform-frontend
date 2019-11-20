@@ -5,7 +5,7 @@ import { fork, put, select, take } from "redux-saga/effects";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { ICBMLockedAccount } from "../../lib/contracts/ICBMLockedAccount";
 import { LockedAccount } from "../../lib/contracts/LockedAccount";
-import { EthereumAddress } from "../../types";
+import { EthereumAddress } from "../../utils/opaque-types/types";
 import { actions } from "../actions";
 import { numericValuesToString } from "../contracts/utils";
 import { waitUntilSmartContractsAreInitialized } from "../init/sagas";
@@ -64,6 +64,7 @@ export async function loadWalletDataAsync(
       etherTokenUpgradeTarget: contractsService.icbmEtherLock.currentMigrationTarget,
       euroTokenUpgradeTarget: contractsService.icbmEuroLock.currentMigrationTarget,
     })),
+    neumarkAddress: contractsService.neumark.address,
     ...numericValuesToString(
       await promiseAll({
         etherTokenBalance: contractsService.etherToken.balanceOf(ethAddress),

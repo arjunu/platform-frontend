@@ -15,7 +15,7 @@ const TotalRedeemed: React.FunctionComponent<{ amount: string; bankFee: string }
   amount,
   bankFee,
 }) => {
-  const providedAmount = isValidNumber(amount) || (isEmptyValue(amount) && 0) ? amount : 0;
+  const providedAmount = isValidNumber(amount) || (isEmptyValue(amount) && 0) ? amount : "0";
   const calculatedFee = multiplyBigNumbers([providedAmount, bankFee]);
   const totalRedeemed = subtractBigNumbers([Q18.mul(providedAmount), calculatedFee]);
 

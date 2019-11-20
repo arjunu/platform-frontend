@@ -7,6 +7,7 @@ import { Container, EColumnSpan, EContainerType } from "../../layouts/Container"
 import { InlineIcon } from "../icons/InlineIcon";
 import { LoadingIndicatorHexagon } from "./LoadingIndicatorHexagon";
 
+import * as loadingSpinner from "./../../../assets/img/inline_icons/loading_spinner.svg";
 import * as spinning from "./../../../assets/img/inline_icons/spinner.svg";
 import * as styles from "./LoadingIndicator.module.scss";
 
@@ -15,6 +16,7 @@ export enum ELoadingIndicator {
   BLOCKS = "blocks",
   HEXAGON = "hexagon",
   SPINNER = "spinner",
+  SPINNER_SMALL = "spinner-small",
 }
 
 interface ILoadingIndicatorProps {
@@ -53,6 +55,12 @@ const LoadingIndicator: React.FunctionComponent<ILoadingIndicatorProps & CommonH
           <InlineIcon svgIcon={spinning} />
         </div>
       );
+    case ELoadingIndicator.SPINNER_SMALL:
+      return (
+        <div className={cn(className, styles.spinnerSmall)}>
+          <InlineIcon svgIcon={loadingSpinner} />
+        </div>
+      );
     case ELoadingIndicator.HEXAGON:
       return <LoadingIndicatorHexagon />;
     default:
@@ -64,9 +72,9 @@ const LoadingIndicator: React.FunctionComponent<ILoadingIndicatorProps & CommonH
  *  Wraps loading indicator in `Container` and set it to span all columns
  *  Useful to render loading indicator inside `WidgetGrid`.
  */
-const LoadingIndicatorContainer: React.FunctionComponent<
-  React.ComponentProps<typeof LoadingIndicator>
-> = props => (
+const LoadingIndicatorContainer: React.FunctionComponent<React.ComponentProps<
+  typeof LoadingIndicator
+>> = props => (
   <Container type={EContainerType.CONTAINER} columnSpan={EColumnSpan.THREE_COL}>
     <LoadingIndicator {...props} />
   </Container>

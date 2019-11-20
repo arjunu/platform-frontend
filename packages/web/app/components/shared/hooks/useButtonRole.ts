@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { EKeys } from "../../../utils/enums/keys.enum";
+import { EKeys } from "../../../utils/enums/keysEnum";
 
 /**
  * Returns props that should be applied to element that needs to be focusable/clickable.

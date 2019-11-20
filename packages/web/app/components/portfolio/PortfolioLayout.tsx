@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { ITokenDisbursal, TETOWithInvestorTicket } from "../../modules/investor-portfolio/types";
 import { WidgetGrid } from "../layouts/WidgetGrid";
 import { AssetPortfolio } from "./AssetPortfolio";
@@ -9,7 +9,7 @@ import { PortfolioPastInvestments } from "./PortfolioPastInvestments";
 import { PortfolioReservedAssets } from "./PortfolioReservedAssets";
 
 export type TPortfolioLayoutProps = {
-  myAssets: TEtoWithCompanyAndContract[];
+  myAssets: TEtoWithCompanyAndContractReadonly[];
   walletAddress: string;
   pendingAssets: TETOWithInvestorTicket[];
   isRetailEto: boolean;

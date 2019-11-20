@@ -31,7 +31,9 @@
   user-select: none;
 
   // state: active
-  &:global(.is-active) {
+  &:global(.is-active),
+  &:hover,
+  &:focus {
     border-bottom-color: $neu-piss-yellow;
   }
 

@@ -3,6 +3,7 @@
   "rulesDirectory": ["./config/tslint-rules"],
   "rules": {
     "arrow-return-shorthand": [true, "multiline"],
+    "curly": [true, "ignore-same-line"],
     "interface-name": [true, "always-prefix"],
     "no-invalid-template-strings": true,
     "no-sparse-arrays": true,

@@ -9,9 +9,9 @@ const ChartDoughnut = React.lazy(() =>
 /**
  * @note We need to wrap lazy loaded chart into suspense to prevent `PeopleSwiperWidget` wrong width calculation bug
  */
-const ChartDoughnutLazy: React.FunctionComponent<
-  React.ComponentProps<typeof ChartDoughnut>
-> = props => (
+const ChartDoughnutLazy: React.FunctionComponent<React.ComponentProps<
+  typeof ChartDoughnut
+>> = props => (
   <React.Suspense fallback={<LoadingIndicator />}>
     <ChartDoughnut {...props} />
   </React.Suspense>

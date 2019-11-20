@@ -5,8 +5,11 @@ import { Col } from "reactstrap";
 import { branch, compose, renderComponent } from "recompose";
 
 import { actions } from "../../modules/actions";
-import { selectEtoWidgetError, selectEtoWithCompanyAndContract } from "../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import {
+  selectEtoWidgetError,
+  selectInvestorEtoWithCompanyAndContract,
+} from "../../modules/eto/selectors";
+import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
@@ -16,7 +19,7 @@ import { EtoOverviewStatus } from "./overview/EtoOverviewStatus/EtoOverviewStatu
 import * as styles from "./overview/EtoOverviewStatus/EtoOverviewStatus.module.scss";
 
 interface IStateProps {
-  eto?: TEtoWithCompanyAndContract;
+  eto?: TEtoWithCompanyAndContractReadonly;
   widgetError: boolean | undefined;
 }
 
@@ -25,7 +28,7 @@ interface IRouterParams {
 }
 
 type TProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   widgetError: boolean | undefined;
 };
 
@@ -56,7 +59,7 @@ const EtoWidgetView = compose<TProps, IRouterParams>(
   createErrorBoundary(() => <Col xs={12} />),
   appConnect<IStateProps, {}, IRouterParams>({
     stateToProps: (state, props) => ({
-      eto: selectEtoWithCompanyAndContract(state, props.previewCode),
+      eto: selectInvestorEtoWithCompanyAndContract(state, props.previewCode),
       widgetError: selectEtoWidgetError(state.eto),
     }),
   }),

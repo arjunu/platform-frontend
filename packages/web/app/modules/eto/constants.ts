@@ -1,6 +1,6 @@
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
-import { ECountries } from "../../lib/api/util/countries.enum";
-import { minutesToMs } from "../../utils/Date.utils";
+import { minutesToMs } from "../../utils/DateUtils";
+import { ECountries } from "../../utils/enums/countriesEnum";
 
 export const etoInProgressPollingDelay = minutesToMs(1);
 export const etoNormalPollingDelay = minutesToMs(10);

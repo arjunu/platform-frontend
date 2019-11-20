@@ -656,7 +656,8 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
           values={{
             minPledge: (
               <Money
-                value={messageData as number}
+                value={messageData as string}
+                // TODO: Investigate why is the value up force casted
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={ECurrency.EUR}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS_ROUND_UP}
@@ -672,7 +673,8 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
           values={{
             maxPledge: (
               <Money
-                value={messageData as number}
+                value={messageData as string}
+                // TODO: Investigate why we are force casting this
                 inputFormat={ENumberInputFormat.FLOAT}
                 valueType={ECurrency.EUR}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}

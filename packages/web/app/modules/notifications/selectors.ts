@@ -11,19 +11,24 @@ import {
   selectUserType,
 } from "../auth/selectors";
 import { selectKycLoading, selectKycRequestStatus } from "../kyc/selectors";
-import { INotification, settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
+import { EKycRequestStatus } from "./../../lib/api/kyc/KycApi.interfaces";
+import { settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
+import { INotification } from "./types";
 
 export const selectNotifications = (state: IAppState): ReadonlyArray<INotification> =>
   state.notifications.notifications;
 
 export const selectIsActionRequiredSettings = (state: IAppState): boolean => {
-  if (selectKycLoading(state.kyc)) {
+  if (selectKycLoading(state)) {
     return false;
   }
   return (
     !selectIsUserEmailVerified(state.auth) ||
     !selectBackupCodesVerified(state) ||
-    !includes(["Outsourced", "Pending", "Accepted"], selectKycRequestStatus(state))
+    !includes(
+      [EKycRequestStatus.OUTSOURCED, EKycRequestStatus.PENDING, EKycRequestStatus.ACCEPTED],
+      selectKycRequestStatus(state),
+    )
   );
 };
 
@@ -48,9 +53,8 @@ export const selectIsVisibleSecurityNotification = (state: IAppState): boolean =
   return selectIsActionRequiredSettings(state);
 };
 
-export const selectSettingsNotificationType = createSelector(
-  selectIsInvestor,
-  isInvestor => (isInvestor ? settingsNotificationInvestor() : settingsNotificationIssuer()),
+export const selectSettingsNotificationType = createSelector(selectIsInvestor, isInvestor =>
+  isInvestor ? settingsNotificationInvestor() : settingsNotificationIssuer(),
 );
 
 export const selectSettingsNotification = (state: IAppState) =>

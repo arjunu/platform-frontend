@@ -2,18 +2,53 @@ import { storiesOf } from "@storybook/react";
 import * as moment from "moment";
 import * as React from "react";
 
+import { testEto } from "../../../../../../test/fixtures";
 import { EWhitelistingState } from "../../../../../modules/bookbuilding-flow/utils";
 import { EETOStateOnChain } from "../../../../../modules/eto/types";
-import { withStore } from "../../../../../utils/storeDecorator.unsafe";
 import { ECurrency } from "../../../../shared/formatters/utils";
 import { Panel } from "../../../../shared/Panel";
-import { CampaigningActivatedWidgetComponent } from "./CampaigningActivatedWidget";
+import { CampaigningActivatedWidgetLayout } from "./CampaigningActivatedWidget";
 
-storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
-  .addDecorator(withStore({}))
+storiesOf("ETO/CampaigningActivatedWidgetLayout", module)
   .addDecorator(story => <Panel>{story()}</Panel>)
+  .add("Active, not authorized, no investors pledged", () => (
+    <CampaigningActivatedWidgetLayout
+      whitelistingState={EWhitelistingState.ACTIVE}
+      countdownDate={undefined}
+      etoId="test"
+      investorsLimit={500}
+      minPledge={10}
+      nextState={EETOStateOnChain.Whitelist}
+      keyQuoteFounder="Quotes are like boats"
+      pledgedAmount={0}
+      investorsCount={0}
+      isInvestor={false}
+      isVerifiedInvestor={false}
+      isAuthorized={false}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
+    />
+  ))
+  .add("Active, not authorized, some investors pledged", () => (
+    <CampaigningActivatedWidgetLayout
+      whitelistingState={EWhitelistingState.ACTIVE}
+      countdownDate={undefined}
+      etoId="test"
+      investorsLimit={500}
+      minPledge={10}
+      nextState={EETOStateOnChain.Whitelist}
+      keyQuoteFounder="Quotes are like boats"
+      pledgedAmount={10000}
+      investorsCount={5}
+      isInvestor={false}
+      isVerifiedInvestor={false}
+      isAuthorized={false}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
+    />
+  ))
   .add("Active, verified investor view, investor didn't pledge", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.ACTIVE}
       countdownDate={undefined}
       etoId="test"
@@ -25,10 +60,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={5}
       isInvestor={true}
       isVerifiedInvestor={true}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Active, verified investor view, investor did pledge", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.ACTIVE}
       countdownDate={undefined}
       etoId="test"
@@ -41,10 +79,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       isInvestor={true}
       isVerifiedInvestor={true}
       pledge={{ amountEur: 999, currency: ECurrency.EUR_TOKEN, consentToRevealEmail: true }}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Active, non-verified-investor view", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.ACTIVE}
       countdownDate={undefined}
       etoId="test"
@@ -56,10 +97,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={1}
       isInvestor={true}
       isVerifiedInvestor={false}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Active, non-investor view", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.ACTIVE}
       countdownDate={undefined}
       etoId="test"
@@ -71,10 +115,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={1}
       isInvestor={false}
       isVerifiedInvestor={false}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Suspended, is verified investor, has pledged", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.SUSPENDED}
       countdownDate={undefined}
       etoId="test"
@@ -87,10 +134,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       isInvestor={true}
       isVerifiedInvestor={true}
       pledge={{ amountEur: 999, currency: ECurrency.EUR_TOKEN, consentToRevealEmail: true }}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Suspended, is verified investor, has not pledged", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.SUSPENDED}
       countdownDate={undefined}
       etoId="test"
@@ -103,10 +153,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       isInvestor={true}
       isVerifiedInvestor={true}
       pledge={undefined}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Suspended, is investor, is not a verified investor", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.SUSPENDED}
       countdownDate={undefined}
       etoId="test"
@@ -118,10 +171,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={8}
       isInvestor={true}
       isVerifiedInvestor={false}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Suspended, is not an investor", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.SUSPENDED}
       countdownDate={undefined}
       etoId="test"
@@ -133,10 +189,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={8}
       isInvestor={false}
       isVerifiedInvestor={false}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("NotActive, is verified investor", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.NOT_ACTIVE}
       countdownDate={undefined}
       etoId="test"
@@ -148,10 +207,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={1}
       isInvestor={true}
       isVerifiedInvestor={true}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("NotActive, not an investor", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.NOT_ACTIVE}
       countdownDate={undefined}
       etoId="test"
@@ -163,10 +225,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={1}
       isInvestor={false}
       isVerifiedInvestor={false}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Investor Limit Reached, is verified investor, has pledged, next start date not set", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.LIMIT_REACHED}
       countdownDate={undefined}
       etoId="test"
@@ -179,12 +244,15 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       isInvestor={true}
       isVerifiedInvestor={true}
       pledge={{ amountEur: 999, currency: ECurrency.EUR_TOKEN, consentToRevealEmail: true }}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add(
     "Investor Limit Reached, is verified investor, has not pledged, next start date not set",
     () => (
-      <CampaigningActivatedWidgetComponent
+      <CampaigningActivatedWidgetLayout
         whitelistingState={EWhitelistingState.LIMIT_REACHED}
         countdownDate={undefined}
         etoId="test"
@@ -196,13 +264,16 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
         investorsCount={1}
         isInvestor={true}
         isVerifiedInvestor={true}
+        isAuthorized={true}
+        isEmbedded={false}
+        investmentCalculatedValues={testEto.investmentCalculatedValues}
       />
     ),
   )
   .add(
     "Investor Limit Reached, is investor, is not a verified investor, next start date not set",
     () => (
-      <CampaigningActivatedWidgetComponent
+      <CampaigningActivatedWidgetLayout
         whitelistingState={EWhitelistingState.LIMIT_REACHED}
         countdownDate={undefined}
         etoId="test"
@@ -214,11 +285,14 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
         investorsCount={1}
         isInvestor={true}
         isVerifiedInvestor={false}
+        isAuthorized={true}
+        isEmbedded={false}
+        investmentCalculatedValues={testEto.investmentCalculatedValues}
       />
     ),
   )
   .add("Investor Limit Reached, is not an investor, next start date not set", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.LIMIT_REACHED}
       countdownDate={undefined}
       etoId="test"
@@ -230,10 +304,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={12}
       isInvestor={false}
       isVerifiedInvestor={false}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Investor Limit Reached, Start date is set, is verified investor", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.LIMIT_REACHED}
       etoId="test"
       investorsLimit={500}
@@ -248,10 +325,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       isInvestor={true}
       isVerifiedInvestor={true}
       pledge={{ amountEur: 999, currency: ECurrency.EUR_TOKEN, consentToRevealEmail: true }}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Investor Limit Reached, Start date is set, is investor, not a verified investor", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.LIMIT_REACHED}
       etoId="test"
       investorsLimit={500}
@@ -265,10 +345,13 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={1}
       isInvestor={true}
       isVerifiedInvestor={false}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ))
   .add("Investor Limit Reached, Start date is set, is not an investor", () => (
-    <CampaigningActivatedWidgetComponent
+    <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.LIMIT_REACHED}
       etoId="test"
       investorsLimit={500}
@@ -282,5 +365,8 @@ storiesOf("ETO/CampaigningActivatedWidgetComponent", module)
       investorsCount={1}
       isInvestor={false}
       isVerifiedInvestor={false}
+      isAuthorized={true}
+      isEmbedded={false}
+      investmentCalculatedValues={testEto.investmentCalculatedValues}
     />
   ));

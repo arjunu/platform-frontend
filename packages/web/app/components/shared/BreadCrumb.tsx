@@ -6,9 +6,8 @@ interface IBreadCrumbProps {
   view: string | React.ReactNode;
 }
 
-export const BreadCrumb: React.FunctionComponent<
-  IBreadCrumbProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ path, view, ...props }) => (
+export const BreadCrumb: React.FunctionComponent<IBreadCrumbProps &
+  React.HTMLAttributes<HTMLDivElement>> = ({ path, view, ...props }) => (
   <Row {...props}>
     <Col>
       {path !== undefined && path.length > 0 && (

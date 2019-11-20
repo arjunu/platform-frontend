@@ -63,7 +63,7 @@ describe("Invest with ethereum", () => {
   it("Invest ALL", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
-    const value = 2;
+    const value = "2";
     createAndLoginNewUser({
       type: "investor",
       kyc: "individual",

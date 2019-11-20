@@ -1,10 +1,10 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { ECountries } from "../../../lib/api/util/countries.enum";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
-import { Message } from "../../modals/Message";
+import { ECountries } from "../../../utils/enums/countriesEnum";
+import { Message } from "../../modals/message/Message";
 import { ButtonArrowRight, EButtonLayout } from "../../shared/buttons/Button";
 import { VALUES } from "../../shared/forms/fields/FormSelectCountryField.unsafe";
 
@@ -19,9 +19,8 @@ interface IDispatchProps {
   confirm: () => void;
 }
 
-const JurisdicitonDisclaimerModalLayout: React.FunctionComponent<
-  IExternalProps & IDispatchProps
-> = ({ closeModal, confirm, restrictedJurisdiction }) => (
+const JurisdicitonDisclaimerModalLayout: React.FunctionComponent<IExternalProps &
+  IDispatchProps> = ({ closeModal, confirm, restrictedJurisdiction }) => (
   <Message
     data-test-id="jurisdiction-disclaimer-modal"
     image={<img src={cityIcon} alt="Image" className="mb-3 w-50" />}

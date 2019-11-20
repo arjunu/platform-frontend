@@ -1,11 +1,15 @@
 import * as React from "react";
 
-import { EImageFit, IResponsiveImage, ResponsiveImage } from "../../../shared/ResponsiveImage";
+import { ISrcSet } from "../../../shared/HiResImage";
+import { TokenIcon } from "../../../shared/icons/TokenIcon";
 
 import * as styles from "./TokenSymbolWidget.module.scss";
 
 export interface ITokenSymbolWidgetProps {
-  tokenImage: IResponsiveImage;
+  tokenImage: {
+    srcSet: ISrcSet;
+    alt: string;
+  };
   brandName?: string;
   tokenName?: string;
   tokenSymbol?: string;
@@ -18,7 +22,7 @@ const TokenSymbolWidget: React.FunctionComponent<ITokenSymbolWidgetProps> = ({
 }) => (
   <div className={styles.tokenSymbolWidget}>
     <div className={styles.tokenImageWrapper}>
-      <ResponsiveImage {...tokenImage} className={styles.tokenImage} fit={EImageFit.COVER} />
+      <TokenIcon {...tokenImage} className={styles.tokenImage} />
     </div>
     <div>
       <h3 className={styles.tokenName}>

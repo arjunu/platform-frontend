@@ -95,6 +95,9 @@ const DocumentsLayout: React.FunctionComponent<TComponentProps> = ({
               key => productTemplates[key],
             )}
             title={<FormattedMessage id="documents.agreement-and-prospectus-templates" />}
+            description={
+              <FormattedMessage id="documents.agreement-and-prospectus-templates.description" />
+            }
             className={styles.documents}
             offeringDocumentType={offeringDocumentType}
           />

@@ -43,9 +43,17 @@ const toolbar = [
   areTagsAllowed("figure", "img", "figcaption") && "imageUpload",
 ].filter(Boolean);
 
-const RichTextAreaLayoutComponent: React.FunctionComponent<
-  TExternalProps & TRenderPropsProp & CommonHtmlProps
-> = ({ name, invalid, disabled, value, onChange, placeholder, uploadAdapterFactory }) => {
+const RichTextAreaLayoutComponent: React.FunctionComponent<TExternalProps &
+  TRenderPropsProp &
+  CommonHtmlProps> = ({
+  name,
+  invalid,
+  disabled,
+  value,
+  onChange,
+  placeholder,
+  uploadAdapterFactory,
+}) => {
   const [editor, setEditor] = React.useState<TCkEditor>();
 
   React.useEffect(() => {

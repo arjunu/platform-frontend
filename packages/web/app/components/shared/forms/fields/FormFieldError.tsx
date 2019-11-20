@@ -49,16 +49,29 @@ const FormFieldError: React.FunctionComponent<IProps> = ({
   invalid,
 }) => (
   <FormikConsumer>
-    {({ touched, errors, submitCount }) =>
-      (isNonValid(touched, errors, name, submitCount, ignoreTouched) || invalid) && (
-        <FormError
-          name={name}
-          message={getIn(errors, name) || defaultMessage}
-          className={className}
-          alignLeft={alignLeft}
-        />
-      )
-    }
+    {({ touched, errors, submitCount }) => {
+      const error = getIn(errors, name);
+      // 1. this component is sometimes used not in the formik context to just show an error passed as
+      // `defaultMessage` and `invalid`. I allow this by `!error`. TODO: All those cases must be refactored to use FormError directly
+      // 2. when going through multiple validation steps on different levels of data it is possible that a key in the errors dictionary
+      // resolves to an error message OR to a dictionary of children that are error messages. I can only show a valid React element or a string,
+      // if it's a dictionary it should be ignored and those errors should be shown by respective components
+      // see https://github.com/Neufund/platform-frontend/pull/3501/files#r327009024
+      if (!error || typeof error === "string" || React.isValidElement(error)) {
+        return (
+          (isNonValid(touched, errors, name, submitCount, ignoreTouched) || invalid) && (
+            <FormError
+              name={name}
+              message={getIn(errors, name) || defaultMessage}
+              className={className}
+              alignLeft={alignLeft}
+            />
+          )
+        );
+      } else {
+        return null;
+      }
+    }}
   </FormikConsumer>
 );
 

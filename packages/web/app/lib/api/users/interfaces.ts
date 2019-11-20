@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { ETransactionErrorType, ETxSenderState } from "../../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../../modules/tx/types";
 import { EWalletSubType, EWalletType } from "../../../modules/web3/types";
+import { EthereumAddressWithChecksum } from "../../../utils/opaque-types/types";
 import * as YupTS from "../../yup-ts.unsafe";
 
 export const OOO_TRANSACTION_TYPE = "mempool";
@@ -14,7 +15,7 @@ export enum EUserType {
 }
 
 export interface IUser {
-  userId: string;
+  userId: EthereumAddressWithChecksum;
   backupCodesVerified?: boolean;
   latestAcceptedTosIpfs?: string;
   language?: string;
@@ -42,6 +43,9 @@ export interface IUserInput {
 export interface IVerifyEmailUser {
   verificationCode: string;
 }
+export const GasStipendValidator = Yup.object()
+  .shape({ gasStipend: Yup.number().required() })
+  .required();
 
 export const UserValidator = Yup.object()
   .shape({
@@ -62,6 +66,7 @@ export const emailStatus = Yup.object().shape({
 });
 
 export const TxSchema = YupTS.object({
+  failedRpcError: YupTS.string().optional(),
   blockHash: YupTS.string().optional(),
   blockNumber: YupTS.string().optional(),
   chainId: YupTS.string().optional(),

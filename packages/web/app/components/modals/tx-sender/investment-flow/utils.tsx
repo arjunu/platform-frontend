@@ -3,6 +3,7 @@ import { includes } from "lodash/fp";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TBigNumberVariants } from "../../../../lib/web3/types";
 import {
   EInvestmentErrorState,
   EInvestmentType,
@@ -22,7 +23,9 @@ import {
 } from "../../../../modules/wallet/selectors";
 import { IAppState } from "../../../../store";
 import { Dictionary, TTranslatedString } from "../../../../types";
+import { assertNever } from "../../../../utils/assertNever";
 import { divideBigNumbers } from "../../../../utils/BigNumberUtils";
+import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,
   ENumberInputFormat,
@@ -34,6 +37,24 @@ import {
   toFixedPrecision,
 } from "../../../shared/formatters/utils";
 import { WalletSelectionData } from "./InvestmentTypeSelector";
+
+export enum EInvestmentCurrency {
+  ETH = ECurrency.ETH,
+  EUR_TOKEN = ECurrency.EUR_TOKEN,
+}
+
+export const getInvestmentCurrency = (investmentType: EInvestmentType) => {
+  switch (investmentType) {
+    case EInvestmentType.Eth:
+    case EInvestmentType.ICBMEth:
+      return EInvestmentCurrency.ETH;
+    case EInvestmentType.NEur:
+    case EInvestmentType.ICBMnEuro:
+      return EInvestmentCurrency.EUR_TOKEN;
+    default:
+      return assertNever(investmentType);
+  }
+};
 
 function isICBMWallet(type: EInvestmentType): boolean {
   return includes(type, [EInvestmentType.ICBMnEuro, EInvestmentType.ICBMEth]);
@@ -104,6 +125,8 @@ export function getInputErrorMessage(
   tokenName: string,
   maxTicketEur: string,
   minTicketEur: string,
+  minTicketEth: string,
+  investmentCurrency: EInvestmentCurrency,
 ): TTranslatedString | undefined {
   switch (investmentTxErrorState) {
     case EInvestmentErrorState.ExceedsTokenAmount:
@@ -118,12 +141,14 @@ export function getInputErrorMessage(
         <FormattedMessage
           id="investment-flow.error-message.above-maximum-ticket-size"
           values={{
-            maxAmount: formatNumber({
-              value: maxTicketEur || 0,
-              decimalPlaces: selectDecimalPlaces(ECurrency.EUR),
-              inputFormat: ENumberInputFormat.FLOAT,
-              outputFormat: ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
-            }),
+            maxEurAmount: (
+              <Money
+                value={maxTicketEur || "0"}
+                inputFormat={ENumberInputFormat.FLOAT}
+                valueType={ECurrency.EUR}
+                outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
+              />
+            ),
           }}
         />
       );
@@ -132,15 +157,27 @@ export function getInputErrorMessage(
         <FormattedMessage
           id="investment-flow.error-message.below-minimum-ticket-size"
           values={{
-            minAmount: formatNumber({
-              value: minTicketEur || 0,
-              decimalPlaces: selectDecimalPlaces(ECurrency.EUR),
-              inputFormat: ENumberInputFormat.FLOAT,
-              outputFormat: ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
-            }),
+            investmentCurrency,
+            minEurAmount: (
+              <Money
+                value={minTicketEur || "0"}
+                inputFormat={ENumberInputFormat.FLOAT}
+                valueType={ECurrency.EUR}
+                outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
+              />
+            ),
+            minEthAmount: (
+              <Money
+                value={minTicketEth || "0"}
+                inputFormat={ENumberInputFormat.FLOAT}
+                valueType={ECurrency.ETH}
+                outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS_ROUND_UP}
+              />
+            ),
           }}
         />
       );
+
     case EInvestmentErrorState.ExceedsWalletBalance:
       return <FormattedMessage id="investment-flow.error-message.exceeds-wallet-balance" />;
   }
@@ -153,7 +190,7 @@ export function getInputErrorMessage(
   return undefined;
 }
 
-export const formatMinMaxTickets = (value: string | BigNumber, roundingMode: ERoundingMode) =>
+export const formatMinMaxTickets = (value: TBigNumberVariants, roundingMode: ERoundingMode) =>
   toFixedPrecision({
     value,
     inputFormat: ENumberInputFormat.ULPS,
@@ -167,16 +204,17 @@ export function getActualTokenPriceEur(
   equityTokenCount: string | number,
 ): string {
   return formatNumber({
-    value: divideBigNumbers(investmentEurUlps, equityTokenCount).toString(),
+    value: divideBigNumbers(investmentEurUlps, equityTokenCount.toString()).toString(),
     decimalPlaces: selectDecimalPlaces(EPriceFormat.EQUITY_TOKEN_PRICE_EUR_TOKEN),
   });
 }
 
 export const getTokenPriceDiscount = (fullTokenPrice: string, actualTokenPrice: string) => {
-  const discount = new BigNumber(1)
+  // round up effective discount
+  const discount = new BigNumber("1")
     .sub(new BigNumber(actualTokenPrice).div(new BigNumber(fullTokenPrice)))
-    .mul(100)
-    .round(0, 4);
+    .mul("100")
+    .round(0, BigNumber.ROUND_HALF_UP);
 
-  return discount.gte(1) ? discount.toString() : null;
+  return discount.gte("1") ? discount.toString() : null;
 };

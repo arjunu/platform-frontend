@@ -1,17 +1,21 @@
 import * as React from "react";
 
 import { EWhitelistingState } from "../../../../../modules/bookbuilding-flow/utils";
-import { CounterWidget } from "../index";
+import { assertNever } from "../../../../../utils/assertNever";
+import { LoadingIndicator } from "../../../../shared/loading-indicator/LoadingIndicator";
+import { CounterWidget } from "../CounterWidget";
 import {
   connectCampaigningActivatedWidget,
   TComponentProps,
 } from "./connectCampaigningActivatedWidget";
+import { RegisterNowWidget } from "./RegisterNowWidget";
+import { StartDateNotSet } from "./StartDateNotSet";
 import { WhitelistingActive } from "./WhitelistingActive";
 import { WhitelistingLimitReached } from "./WhitelistingLimitReached";
 import { WhitelistingNotActive } from "./WhitelistingNotActive";
 import { WhitelistingSuspended } from "./WhitelistingSuspended";
 
-const CampaigningActivatedWidgetComponent: React.FunctionComponent<TComponentProps> = ({
+const CampaigningActivatedWidgetLayout: React.FunctionComponent<TComponentProps> = ({
   investorsLimit,
   pledgedAmount,
   investorsCount,
@@ -25,7 +29,19 @@ const CampaigningActivatedWidgetComponent: React.FunctionComponent<TComponentPro
   pledge,
   isVerifiedInvestor,
   whitelistingState,
+  isAuthorized,
+  isEmbedded,
 }) => {
+  if (!isAuthorized) {
+    return (
+      <RegisterNowWidget
+        isEmbedded={isEmbedded}
+        investorsCount={investorsCount}
+        pledgedAmount={pledgedAmount}
+      />
+    );
+  }
+
   switch (whitelistingState) {
     case EWhitelistingState.ACTIVE:
       return (
@@ -44,9 +60,15 @@ const CampaigningActivatedWidgetComponent: React.FunctionComponent<TComponentPro
     case EWhitelistingState.LIMIT_REACHED:
       return (
         <>
-          <WhitelistingLimitReached pledgedAmount={pledgedAmount} investorsCount={investorsCount} />
-          {countdownDate && (
+          <WhitelistingLimitReached
+            isPledgedByUser={!!pledge}
+            pledgedAmount={pledgedAmount}
+            investorsCount={investorsCount}
+          />
+          {countdownDate ? (
             <CounterWidget endDate={countdownDate} awaitedState={nextState} etoId={etoId} />
+          ) : (
+            <StartDateNotSet nextState={nextState} />
           )}
         </>
       );
@@ -54,20 +76,29 @@ const CampaigningActivatedWidgetComponent: React.FunctionComponent<TComponentPro
     case EWhitelistingState.STOPPED:
       return (
         <>
-          <WhitelistingSuspended pledgedAmount={pledgedAmount} investorsCount={investorsCount} />
-          {countdownDate && (
+          <WhitelistingSuspended
+            isPledgedByUser={!!pledge}
+            pledgedAmount={pledgedAmount}
+            investorsCount={investorsCount}
+          />
+          {countdownDate ? (
             <CounterWidget endDate={countdownDate} awaitedState={nextState} etoId={etoId} />
+          ) : (
+            <StartDateNotSet nextState={nextState} />
           )}
         </>
       );
     case EWhitelistingState.NOT_ACTIVE:
-    default:
       return <WhitelistingNotActive keyQuoteFounder={keyQuoteFounder} />;
+    case EWhitelistingState.LOADING:
+      return <LoadingIndicator />;
+    default:
+      return assertNever(whitelistingState);
   }
 };
 
 const CampaigningActivatedWidget = connectCampaigningActivatedWidget(
-  CampaigningActivatedWidgetComponent,
+  CampaigningActivatedWidgetLayout,
 );
 
-export { CampaigningActivatedWidget, CampaigningActivatedWidgetComponent };
+export { CampaigningActivatedWidget, CampaigningActivatedWidgetLayout };

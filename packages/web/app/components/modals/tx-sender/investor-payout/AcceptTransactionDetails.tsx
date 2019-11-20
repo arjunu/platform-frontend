@@ -13,9 +13,11 @@ import { InfoRow } from "../shared/InfoRow";
 import { TimestampRow } from "../shared/TimestampRow";
 import { TransactionDetailsComponent } from "../types";
 
-const AcceptTransactionDetails: TransactionDetailsComponent<
-  ETxSenderType.INVESTOR_ACCEPT_PAYOUT
-> = ({ additionalData, className, txTimestamp }) => (
+const AcceptTransactionDetails: TransactionDetailsComponent<ETxSenderType.INVESTOR_ACCEPT_PAYOUT> = ({
+  additionalData,
+  className,
+  txTimestamp,
+}) => (
   <InfoList className={className}>
     {additionalData.tokensDisbursals.map(disbursal => (
       <InfoRow

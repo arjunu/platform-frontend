@@ -1,6 +1,7 @@
 import { TMessage } from "../../../components/translatedMessages/utils";
 import { AppReducer } from "../../../store";
 import { DeepReadonly } from "../../../types";
+import { actions } from "../../actions";
 
 export const DEFAULT_DERIVATION_PATH_PREFIX = "44'/60'/0'/";
 export const DEFAULT_LEDGER_ACCOUNTS_PER_PAGE = 10;
@@ -25,9 +26,9 @@ export interface ILedgerWizardState {
 }
 
 export const ledgerWizardInitialState: ILedgerWizardState = {
-  isInitialConnectionInProgress: true,
+  isInitialConnectionInProgress: false,
   isConnectionEstablished: false,
-  isLoadingAddresses: true,
+  isLoadingAddresses: false,
   derivationPathPrefix: DEFAULT_DERIVATION_PATH_PREFIX,
   index: 0,
   numberOfAccountsPerPage: DEFAULT_LEDGER_ACCOUNTS_PER_PAGE,
@@ -40,6 +41,11 @@ export const ledgerWizardReducer: AppReducer<ILedgerWizardState> = (
   action,
 ): DeepReadonly<ILedgerWizardState> => {
   switch (action.type) {
+    case "LEDGER_TRY_ESTABLISHING_CONNECTION":
+      return {
+        ...ledgerWizardInitialState,
+        isInitialConnectionInProgress: true,
+      };
     case "LEDGER_CONNECTION_ESTABLISHED":
       return {
         ...state,
@@ -81,6 +87,12 @@ export const ledgerWizardReducer: AppReducer<ILedgerWizardState> = (
       }
       break;
     }
+    case actions.walletSelector.ledgerLoadAccounts.getType(): {
+      return {
+        ...state,
+        isLoadingAddresses: true,
+      };
+    }
     case "SET_LEDGER_WIZARD_DERIVATION_PATH_PREFIX":
       return {
         ...state,
@@ -101,8 +113,6 @@ export const ledgerWizardReducer: AppReducer<ILedgerWizardState> = (
         isLoadingAddresses: true,
         advanced: !state.advanced,
       };
-    case "LEDGER_WIZARD_RESET":
-      return ledgerWizardInitialState;
   }
 
   return state;

@@ -6,7 +6,7 @@ import { EJurisdiction } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { EUserType } from "../../../lib/api/users/interfaces";
 import { selectUserType } from "../../../modules/auth/selectors";
 import { selectIssuerEtoPreviewCode } from "../../../modules/eto-flow/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { TDataTestId } from "../../../types";
 import { selectBaseUrl } from "../../../utils/locationUtils";
@@ -17,7 +17,7 @@ import * as infoIcon from "../../../assets/img/notifications/info.svg";
 import * as styles from "./CoverBanner.module.scss";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   publicView: boolean;
 }
 

@@ -131,3 +131,50 @@
   background-color: $new-gray-two;
   margin: 0 auto;
 }
+
+.nominee-step-widget {
+  display: grid;
+  grid-template: auto / auto 1fr;
+  grid-template-areas: "title" "content" "button";
+  grid-row-gap: 1.2rem;
+  justify-items: flex-start;
+}
+
+.nominee-step-widget-title {
+  grid-area: title;
+
+  font-family: $font-family-roboto;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.56;
+  color: $neu-charcoal-grey2;
+
+  margin: 0;
+}
+
+.nominee-step-widget-content {
+  grid-area: content;
+  display: grid;
+  grid-row-gap: 1rem;
+
+  font-family: $font-family-roboto;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $neu-charcoal-grey2;
+  margin: 0;
+
+  p {
+    margin: 0;
+  }
+}
+
+.nominee-step-widget-button {
+  grid-area: button;
+  margin: 0;
+}
+
+.text-bold {
+  font-family: $font-family-roboto;
+  font-weight: 500;
+  white-space: pre;
+}

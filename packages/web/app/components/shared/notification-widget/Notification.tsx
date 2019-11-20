@@ -2,9 +2,12 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { ENotificationText, ENotificationType } from "../../../modules/notifications/reducer";
+import { externalRoutes } from "../../../config/externalRoutes";
+import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { TDataTestId } from "../../../types";
+import { getHostname } from "../../../utils/StringUtils";
 import { Button, ButtonClose, ButtonTextPosition, ButtonWidth, EButtonLayout } from "../buttons";
+import { ExternalLink } from "../links/ExternalLink";
 
 import * as infoIcon from "../../../assets/img/notifications/info.svg";
 import * as warningIcon from "../../../assets/img/notifications/warning.svg";
@@ -36,6 +39,23 @@ const notificationTexts = {
   ),
   [ENotificationText.AUTH_SESSION_TIMEOUT]: (
     <FormattedMessage id="notifications.auth-session-timeout" />
+  ),
+  [ENotificationText.NOT_ACCREDITED_INVESTOR]: (
+    <FormattedMessage
+      id="notifications.not-accredited-investor"
+      values={{
+        accreditationHref: (
+          <ExternalLink href={externalRoutes.accreditationHelp}>
+            {getHostname(externalRoutes.accreditationHelp)}
+          </ExternalLink>
+        ),
+        accreditationHrefSecond: (
+          <ExternalLink href={externalRoutes.accreditationHelpSecond}>
+            {getHostname(externalRoutes.accreditationHelpSecond)}
+          </ExternalLink>
+        ),
+      }}
+    />
   ),
 };
 

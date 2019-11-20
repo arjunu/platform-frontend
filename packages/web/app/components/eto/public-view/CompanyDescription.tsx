@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { Container, EColumnSpan } from "../../layouts/Container";
 import { Field } from "../../shared/Field";
 import { ExternalLink } from "../../shared/links";
@@ -13,7 +13,7 @@ import { DashboardHeading } from "../shared/DashboardHeading";
 
 import * as styles from "./PublicView.module.scss";
 
-const CompanyDescription: React.FunctionComponent<{ eto: TEtoWithCompanyAndContract }> = ({
+const CompanyDescription: React.FunctionComponent<{ eto: TEtoWithCompanyAndContractReadonly }> = ({
   eto,
 }) => {
   const {

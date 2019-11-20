@@ -9,6 +9,7 @@ storiesOf("LoadingIndicator", module)
   .add("blocks", () => <LoadingIndicator type={ELoadingIndicator.BLOCKS} />)
   .add("hexagon", () => <LoadingIndicator type={ELoadingIndicator.HEXAGON} />)
   .add("spinner", () => <LoadingIndicator type={ELoadingIndicator.SPINNER} />)
+  .add("spinner small", () => <LoadingIndicator type={ELoadingIndicator.SPINNER_SMALL} />)
   .add("as container", () => (
     <WidgetGrid>
       <LoadingIndicatorContainer type={ELoadingIndicator.PULSE} />

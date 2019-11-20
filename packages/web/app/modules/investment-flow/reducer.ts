@@ -1,5 +1,6 @@
 import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
+import { actions } from "../actions";
 
 export enum EInvestmentType {
   Eth = "ETH",
@@ -39,41 +40,41 @@ export const investmentFlowReducer: AppReducer<IInvestmentFlowState> = (
   action,
 ): DeepReadonly<IInvestmentFlowState> => {
   switch (action.type) {
-    case "INVESTMENT_FLOW_RESET":
+    case actions.investmentFlow.resetInvestment.getType():
       return investmentFlowInitialState;
-    case "INVESTMENT_FLOW_SELECT_INVESTMENT_TYPE":
+    case actions.investmentFlow.selectInvestmentType.getType():
       return {
         ...investmentFlowInitialState,
         etoId: state.etoId,
         activeInvestmentTypes: state.activeInvestmentTypes,
         investmentType: action.payload.type,
       };
-    case "INVESTMENT_FLOW_SET_ETO_ID":
+    case actions.investmentFlow.setEtoId.getType():
       return {
         ...state,
         etoId: action.payload.etoId,
       };
-    case "INVESTMENT_FLOW_SET_INVESTMENT_ERROR_STATE":
+    case actions.investmentFlow.setErrorState.getType():
       return {
         ...state,
         errorState: action.payload.errorState,
       };
-    case "INVESTMENT_FLOW_SET_INVESTMENT_ETH_VALUE":
+    case actions.investmentFlow.setEthValue.getType():
       return {
         ...state,
         ethValueUlps: action.payload.value,
       };
-    case "INVESTMENT_FLOW_SET_INVESTMENT_EUR_VALUE":
+    case actions.investmentFlow.setEurValue.getType():
       return {
         ...state,
         euroValueUlps: action.payload.value,
       };
-    case "INVESTMENT_FLOW_SET_IS_INPUT_VALIDATED":
+    case actions.investmentFlow.setIsInputValidated.getType():
       return {
         ...state,
         isValidatedInput: action.payload.isValidated,
       };
-    case "INVESTMENT_FLOW_SET_ACTIVE_INVESTMENT_TYPES":
+    case actions.investmentFlow.setActiveInvestmentTypes.getType():
       return {
         ...state,
         ...action.payload,

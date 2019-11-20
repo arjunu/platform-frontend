@@ -44,7 +44,7 @@ $_logo-padding-sm: 16px;
   }
 
   @include circle($_logo-size-sm);
-  overflow: hidden;
+
   display: flex;
   justify-content: center;
   align-items: center;

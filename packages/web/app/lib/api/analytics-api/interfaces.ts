@@ -1,5 +1,8 @@
-import { EquityToken } from "../../../components/shared/formatters/utils";
-import { EthereumAddressWithChecksum, EthereumTxHash } from "../../../types";
+import {
+  EquityToken,
+  EthereumAddressWithChecksum,
+  EthereumTxHash,
+} from "../../../utils/opaque-types/types";
 import * as YupTS from "../../yup-ts.unsafe";
 
 export enum ETransactionDirection {

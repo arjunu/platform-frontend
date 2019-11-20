@@ -1,7 +1,7 @@
-import BigNumber from "bignumber.js";
 import * as cn from "classnames";
 import * as React from "react";
 
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import { CommonHtmlProps } from "../../../types";
 import { FormatNumber } from "./FormatNumber";
 import { FormatShortNumber } from "./FormatShortNumber";
@@ -35,7 +35,8 @@ enum ETheme {
 }
 
 interface IMoneyProps {
-  value: string | BigNumber | number | null | undefined;
+  value: TBigNumberVariants | null | undefined;
+  decimals?: number;
 }
 
 interface IMoneyCommonProps {
@@ -63,6 +64,7 @@ const Money: React.FunctionComponent<IMoneyProps & IMoneyCommonProps & CommonHtm
   transfer,
   theme,
   className,
+  decimals,
   "data-test-id": dataTestId,
 }) => {
   let formattedValue = null;
@@ -81,6 +83,7 @@ const Money: React.FunctionComponent<IMoneyProps & IMoneyCommonProps & CommonHtm
           roundingMode={ERoundingMode.HALF_UP}
           decimalPlaces={decimalPlaces}
           outputFormat={outputFormat}
+          decimals={decimals}
         />
       );
     } else if (
@@ -96,6 +99,7 @@ const Money: React.FunctionComponent<IMoneyProps & IMoneyCommonProps & CommonHtm
           decimalPlaces={decimalPlaces}
           inputFormat={inputFormat}
           outputFormat={outputFormat}
+          decimals={decimals}
         />
       );
     } else {
@@ -107,6 +111,7 @@ const Money: React.FunctionComponent<IMoneyProps & IMoneyCommonProps & CommonHtm
           decimalPlaces={decimalPlaces}
           inputFormat={inputFormat}
           outputFormat={outputFormat}
+          decimals={decimals}
         />
       );
     }

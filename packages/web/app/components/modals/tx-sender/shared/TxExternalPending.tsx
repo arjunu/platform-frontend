@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EthereumIcon } from "../../../shared/ethereum";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { TxHashAndBlock } from "./TxHashAndBlock";
 
 export interface IProps {

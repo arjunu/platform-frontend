@@ -18,9 +18,8 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const SubmitProposalWidgetComponent: React.FunctionComponent<
-  IDispatchProps & IExternalProps
-> = ({ submitProposal, columnSpan }) => (
+export const SubmitProposalWidgetComponent: React.FunctionComponent<IDispatchProps &
+  IExternalProps> = ({ submitProposal, columnSpan }) => (
   <DashboardCenteredWidget
     title={<FormattedMessage id="settings.submit-your-proposal.header" />}
     text={<FormattedMessage id="settings.submit-your-proposal.description" />}

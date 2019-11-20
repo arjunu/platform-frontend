@@ -3,6 +3,7 @@ import * as React from "react";
 import { CommonHtmlProps } from "../../../types";
 import { assertNever } from "../../../utils/assertNever";
 import { ECurrency, selectUnits } from "../formatters/utils";
+import { TokenIcon } from "./TokenIcon";
 
 import * as ethIcon from "../../../assets/img/eth_icon.svg";
 import * as eurIcon from "../../../assets/img/euro_icon.svg";
@@ -24,12 +25,14 @@ const getIconForCurrency = (currency: ECurrency) => {
   }
 };
 
-const CurrencyIcon: React.FunctionComponent<{ currency: ECurrency } & CommonHtmlProps> = ({
+type TExternalProps = { currency: ECurrency };
+
+const CurrencyIcon: React.FunctionComponent<TExternalProps & CommonHtmlProps> = ({
   currency,
   className,
 }) => (
-  <img
-    src={getIconForCurrency(currency)}
+  <TokenIcon
+    srcSet={{ "1x": getIconForCurrency(currency) }}
     alt={`${selectUnits(currency)} token`}
     className={className}
   />

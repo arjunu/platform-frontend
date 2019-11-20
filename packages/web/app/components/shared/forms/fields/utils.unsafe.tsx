@@ -1,4 +1,4 @@
-import { FormikErrors, FormikTouched } from "formik";
+import { FormikContext, FormikErrors, FormikTouched } from "formik";
 import { get } from "lodash";
 import * as React from "react";
 import { FormGroup, InputProps } from "reactstrap";
@@ -88,10 +88,14 @@ export const withCountedCharacters = (val: InputProps["value"] = "", limit: numb
   return `${val.length}/${limit}`;
 };
 
-export const isFieldRequired = (validationSchema: any, name: string) => {
+export const isFieldRequired = (
+  validationSchema: any,
+  name: string,
+  context?: FormikContext<any>,
+) => {
   if (validationSchema) {
     const schema = getValidationSchema(validationSchema);
-    const fieldSchema = getSchemaField(name, schema);
+    const fieldSchema = getSchemaField(name, schema, context);
     return isRequired(fieldSchema);
   } else {
     return false;

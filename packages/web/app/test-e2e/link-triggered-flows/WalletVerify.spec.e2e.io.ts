@@ -58,8 +58,6 @@ describe("Verify Wallet", () => {
       // try to activate previous user when second one is logged in
       cy.visit(activationLink);
 
-      cy.get(tid("light-wallet-login-with-email-email-field")).contains(email);
-
       // Asserts if error toast shows up
       // @SEE https://github.com/Neufund/platform-frontend/issues/2709
       cy.get(tid("modules.auth.sagas.verify-user-email.toast.verification-failed")).should("exist");

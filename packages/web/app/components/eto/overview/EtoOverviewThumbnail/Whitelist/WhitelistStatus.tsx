@@ -30,7 +30,7 @@ const WhitelistStatus: React.FunctionComponent<IInvestmentWidgetProps> = ({
           values={{
             amount: (
               <Money
-                value={pledgedAmount}
+                value={pledgedAmount ? pledgedAmount.toString() : null}
                 inputFormat={ENumberInputFormat.FLOAT}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
                 valueType={ECurrency.EUR}

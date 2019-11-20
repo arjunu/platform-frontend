@@ -1,7 +1,7 @@
-import BigNumber from "bignumber.js";
 import * as cn from "classnames";
 import * as React from "react";
 
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import {
   ENumberInputFormat,
   ENumberOutputFormat,
@@ -13,7 +13,7 @@ import {
 import * as styles from "./FormatNumber.module.scss";
 
 interface IComponentProps {
-  value: string | BigNumber | number | undefined | null;
+  value: TBigNumberVariants | undefined | null;
   defaultValue?: React.ReactChild;
   roundingMode?: ERoundingMode;
   decimalPlaces?: number;
@@ -21,6 +21,7 @@ interface IComponentProps {
   outputFormat: THumanReadableFormat;
   className?: string;
   "data-test-id"?: string;
+  decimals?: number;
 }
 
 export const FormatNumber: React.FunctionComponent<IComponentProps> = ({
@@ -31,6 +32,7 @@ export const FormatNumber: React.FunctionComponent<IComponentProps> = ({
   inputFormat,
   outputFormat = ENumberOutputFormat.FULL,
   className,
+  decimals,
   "data-test-id": dataTestId,
 }) => {
   if (value) {
@@ -39,7 +41,7 @@ export const FormatNumber: React.FunctionComponent<IComponentProps> = ({
         className={cn(styles.noBreak, className)}
         data-test-id={dataTestId ? dataTestId : "value"}
       >
-        {formatNumber({ value, inputFormat, outputFormat, roundingMode, decimalPlaces })}
+        {formatNumber({ value, inputFormat, outputFormat, roundingMode, decimalPlaces, decimals })}
       </span>
     );
   } else {

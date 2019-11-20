@@ -13,6 +13,7 @@ import { StepCard } from "../../shared/StepCard";
 import { WarningAlert } from "../../shared/WarningAlert";
 import { getMessageTranslation } from "../../translatedMessages/messages";
 import { TMessage } from "../../translatedMessages/utils";
+import { resetWalletOnEnter } from "../resetWallet";
 
 import * as check_metamask from "../../../assets/img/wallet_selector/check_metamask.svg";
 import * as enter_password from "../../../assets/img/wallet_selector/enter_password.svg";
@@ -27,12 +28,17 @@ interface IWalletBrowserProps {
 }
 
 interface IWalletBrowserDispatchProps {
-  handleReset: () => void;
+  tryConnectingWithBrowserWallet: () => void;
 }
 
-export const WalletBrowserComponent: React.FunctionComponent<
-  IWalletBrowserProps & IWalletBrowserDispatchProps
-> = ({ errorMessage, isLoading, isLoginRoute, approvalRejected, handleReset }) => (
+export const WalletBrowserComponent: React.FunctionComponent<IWalletBrowserProps &
+  IWalletBrowserDispatchProps> = ({
+  errorMessage,
+  isLoading,
+  isLoginRoute,
+  approvalRejected,
+  tryConnectingWithBrowserWallet,
+}) => (
   <div>
     <h2 className={styles.title} data-test-id="modals.wallet-selector.wallet-browser.title">
       {isLoginRoute ? (
@@ -45,16 +51,22 @@ export const WalletBrowserComponent: React.FunctionComponent<
     {isLoading ? (
       <LoadingIndicator />
     ) : (
-      <div>
+      <>
         {errorMessage && (
-          <Row className="justify-content-center mb-4">
-            <WarningAlert>
-              <span data-test-id="browser-wallet-error-msg">
-                {getMessageTranslation(errorMessage)}
-              </span>
+          <section className="text-center my-5">
+            <WarningAlert className="mb-4" data-test-id="browser-wallet-error-msg">
+              {getMessageTranslation(errorMessage)}
             </WarningAlert>
-          </Row>
+
+            <Button
+              onClick={tryConnectingWithBrowserWallet}
+              data-test-id="ledger-wallet-init.try-again"
+            >
+              <FormattedMessage id="common.try-again" />
+            </Button>
+          </section>
         )}
+
         {approvalRejected && (
           <>
             <Row className="justify-content-center mb-4">
@@ -63,12 +75,13 @@ export const WalletBrowserComponent: React.FunctionComponent<
               </div>
             </Row>
             <Row className="justify-content-center mb-4">
-              <Button onClick={handleReset}>
+              <Button onClick={tryConnectingWithBrowserWallet}>
                 <FormattedMessage id="wallet-selector.browser.approval-resend" />
               </Button>
             </Row>
           </>
         )}
+
         <div className={styles.stepCardWrapper}>
           <StepCard
             img={check_metamask}
@@ -80,7 +93,7 @@ export const WalletBrowserComponent: React.FunctionComponent<
           />
           <StepCard img={reload} text={<FormattedMessage id="wallet-selector.browser.steps.3" />} />
         </div>
-      </div>
+      </>
     )}
   </div>
 );
@@ -94,13 +107,15 @@ export const WalletBrowser = compose<React.FunctionComponent>(
       approvalRejected: state.browserWalletWizardState.approvalRejected,
     }),
     dispatchToProps: dispatch => ({
-      handleReset: () => {
-        dispatch(actions.walletSelector.browserWalletResetApprovalRequest());
+      tryConnectingWithBrowserWallet: () => {
         dispatch(actions.walletSelector.tryConnectingWithBrowserWallet());
       },
     }),
   }),
   onEnterAction({
-    actionCreator: dispatch => dispatch(actions.walletSelector.tryConnectingWithBrowserWallet()),
+    actionCreator: dispatch => {
+      dispatch(actions.walletSelector.tryConnectingWithBrowserWallet());
+    },
   }),
+  resetWalletOnEnter(),
 )(WalletBrowserComponent);

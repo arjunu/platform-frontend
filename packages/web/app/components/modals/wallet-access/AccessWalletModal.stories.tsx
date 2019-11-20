@@ -1,3 +1,4 @@
+import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -19,7 +20,8 @@ const props = {
   ),
   errorMsg: undefined,
   isUnlocked: false,
-  onAccept: () => {},
+  onAccept: action("onAccept"),
+  tryToAccessWalletAgain: action("tryToAccessWalletAgain"),
   walletType: EWalletType.LIGHT,
   walletSubType: EWalletSubType.UNKNOWN,
 };

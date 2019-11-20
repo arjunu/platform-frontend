@@ -7,7 +7,7 @@ import { TNEurRedeemAdditionalDetails } from "../../../../modules/tx/transaction
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { ButtonArrowRight, EButtonLayout } from "../../../shared/buttons/Button";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { TxHashAndBlock } from "../shared/TxHashAndBlock";
 import { BankTransferRedeemDetails } from "./BankTransferRedeemDetails";
 

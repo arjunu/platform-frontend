@@ -1,6 +1,6 @@
 import { IWindowWithData } from "../../../test/helperTypes";
 import { compareBigNumbers } from "../../utils/BigNumberUtils";
-import { convertToBigInt } from "../../utils/Number.utils";
+import { convertToUlps } from "../../utils/NumberUtils";
 import { ECurrency } from "../shared/formatters/utils";
 
 export const getRequiredAmount = (token: ECurrency) => {
@@ -13,10 +13,10 @@ export const getRequiredAmount = (token: ECurrency) => {
 
   switch (token) {
     case ECurrency.ETH: {
-      return convertToBigInt(0.01);
+      return convertToUlps("0.01");
     }
     case ECurrency.EUR_TOKEN: {
-      return convertToBigInt(1);
+      return convertToUlps("1");
     }
     default:
       return "0";

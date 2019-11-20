@@ -6,7 +6,7 @@ import { EEtoState } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import {
   EETOStateOnChain,
   EEtoSubState,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "../../../modules/eto/types";
 import { isComingSoon, isOnChain } from "../../../modules/eto/utils";
 import { CommonHtmlProps, Dictionary, PartialDictionary, TTranslatedString } from "../../../types";
@@ -27,7 +27,7 @@ export enum EProjectStatusLayout {
 }
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface ISizeLayoutProps {
@@ -63,16 +63,13 @@ export const generalStateToName: Dictionary<
   ),
   [EEtoSubState.CAMPAIGNING]: <FormattedMessage id="eto.status.onchain.setup" />,
   [EEtoSubState.WHITELISTING]: <FormattedMessage id="eto.status.sub-state.whitelisting" />,
-  [EEtoSubState.WHITELISTING_LIMIT_REACHED]: <FormattedMessage id="eto.status.onchain.setup" />,
   [EEtoSubState.COUNTDOWN_TO_PRESALE]: <FormattedMessage id="eto.status.onchain.setup" />,
   [EEtoSubState.COUNTDOWN_TO_PUBLIC_SALE]: <FormattedMessage id="eto.status.onchain.setup" />,
 };
 
-export const issuerStateToName: PartialDictionary<
-  TTranslatedString,
-  EEtoState | EETOStateOnChain | EEtoSubState
-> = {
+export const issuerOnChainStateToName: PartialDictionary<TTranslatedString, EETOStateOnChain> = {
   // on chain state mappings
+  [EETOStateOnChain.Whitelist]: <FormattedMessage id="eto.status.onchain.whitelist" />,
   [EETOStateOnChain.Claim]: <FormattedMessage id="eto.status.onchain.issuer-withdraw-funds" />,
   [EETOStateOnChain.Payout]: <FormattedMessage id="eto.status.onchain.issuer-withdraw-funds" />,
 };
@@ -93,13 +90,14 @@ const stateToClassName: Partial<Record<EEtoState | EETOStateOnChain | EEtoSubSta
   // eto sub states
   [EEtoSubState.MARKETING_LISTING_IN_REVIEW]: styles.orange,
   [EEtoSubState.CAMPAIGNING]: styles.green,
-  [EEtoSubState.WHITELISTING_LIMIT_REACHED]: styles.green,
   [EEtoSubState.WHITELISTING]: styles.green,
   [EEtoSubState.COUNTDOWN_TO_PUBLIC_SALE]: styles.green,
   [EEtoSubState.COUNTDOWN_TO_PRESALE]: styles.green,
 };
 
-const getState = (eto: TEtoWithCompanyAndContract): EETOStateOnChain | EEtoState | EEtoSubState => {
+const getState = (
+  eto: TEtoWithCompanyAndContractReadonly,
+): EETOStateOnChain | EEtoState | EEtoSubState => {
   if (eto.subState) {
     return eto.subState;
   } else if (isOnChain(eto)) {
@@ -135,29 +133,30 @@ const SuccessEtoState: React.FunctionComponent<ISizeLayoutProps & CommonHtmlProp
   </div>
 );
 
-const ETOIssuerState: React.FunctionComponent<
-  IExternalProps & ISizeLayoutProps & CommonHtmlProps
-> = ({
+const ETOIssuerState: React.FunctionComponent<IExternalProps &
+  ISizeLayoutProps &
+  CommonHtmlProps> = ({
   eto,
   className,
   size = EProjectStatusSize.MEDIUM,
   layout = EProjectStatusLayout.NORMAL,
 }) => {
   const state = getState(eto);
+  const timedState = isOnChain(eto) ? eto.contract.timedState : undefined;
 
   return (
     <div
       className={cn(styles.projectStatus, stateToClassName[state], size, layout, className)}
       data-test-id={`eto-state-${state}`}
     >
-      {issuerStateToName[state] || generalStateToName[state]}
+      {(timedState && issuerOnChainStateToName[timedState]) || generalStateToName[state]}
     </div>
   );
 };
 
-const ETOInvestorState: React.FunctionComponent<
-  IExternalProps & ISizeLayoutProps & CommonHtmlProps
-> = ({
+const ETOInvestorState: React.FunctionComponent<IExternalProps &
+  ISizeLayoutProps &
+  CommonHtmlProps> = ({
   eto,
   className,
   size = EProjectStatusSize.MEDIUM,

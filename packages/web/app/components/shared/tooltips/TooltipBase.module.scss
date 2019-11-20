@@ -1,4 +1,6 @@
 .tooltip {
+  min-width: 200px;
+
   &--text-center {
     .tooltip-inner {
       text-align: center;

@@ -21,18 +21,12 @@ export type PartialDictionary<T, R extends string | number | symbol = string> = 
 // read: https://codemix.com/opaque-types-in-javascript/
 type Opaque<K, T> = T & { __TYPE__: K };
 
-export type EthereumNetworkId = Opaque<"EthereumNetworkId", string>;
-export type EthereumTxHash = Opaque<"EthereumTxHash", string>;
-export type EthereumAddress = Opaque<"EthereumAddress", string>;
-export type EthereumAddressWithChecksum = Opaque<"EthereumAddressWithChecksum", string>;
-export type FunctionWithDeps = Opaque<"FunctionWithDeps", Function>;
-
 type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
     ? Array<DeepPartial<U>>
     : T[P] extends ReadonlyArray<infer U>
     ? ReadonlyArray<DeepPartial<U>>
-    : DeepPartial<T[P]>
+    : DeepPartial<T[P]>;
 };
 
 export type TDictionaryValues<T> = T extends Dictionary<infer U> ? U : never;
@@ -56,7 +50,7 @@ export type DeepReadonlyObject<T> = { readonly [P in keyof T]: DeepReadonly<T[P]
 
 export type DeepWritable<T> = T extends Primitive | WhitelistedWritableTypes | Function
   ? T
-  : T extends (any[] | ReadonlyArray<any>)
+  : T extends any[] | ReadonlyArray<any>
   ? IWritableArray<T[number]>
   : DeepWritableObject<T>;
 type DeepWritableObject<T> = { -readonly [P in keyof T]: DeepWritable<T[P]> };

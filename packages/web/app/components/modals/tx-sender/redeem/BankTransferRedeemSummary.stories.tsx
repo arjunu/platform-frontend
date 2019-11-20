@@ -13,7 +13,7 @@ storiesOf("BankTransferRedeem/Summary", module)
       confirm={action("CONFIRM")}
       additionalData={{
         amount: "20.50",
-        bankFee: Q18.mul(0.005).toString(),
+        bankFee: Q18.mul("0.005").toString(),
         bankAccount: {
           bankName: "mBank",
           accountNumberLast4: "1234",

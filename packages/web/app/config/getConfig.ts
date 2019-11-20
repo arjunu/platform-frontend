@@ -1,3 +1,4 @@
+import { isGaslessTxEnabled } from "../utils/isGaslessTxEnabled";
 import { getOptionalEnv, getRequiredEnv, verifyOptionalFlagEnv } from "./configUtils";
 
 export interface IBackendRoot {
@@ -6,6 +7,7 @@ export interface IBackendRoot {
 export interface IConfig {
   ethereumNetwork: {
     rpcUrl: string;
+    backendRpcUrl: string;
   };
   contractsAddresses: {
     universeContractAddress: string;
@@ -20,6 +22,10 @@ export function getConfig(env: NodeJS.ProcessEnv): IConfig {
   return {
     ethereumNetwork: {
       rpcUrl: getRequiredEnv(env, "NF_RPC_PROVIDER"),
+      // Falls back to the regular settings when NF_TRANSACTIONAL_RPC_PROVIDER is not provided
+      backendRpcUrl: isGaslessTxEnabled
+        ? getRequiredEnv(env, "NF_TRANSACTIONAL_RPC_PROVIDER")
+        : getRequiredEnv(env, "NF_RPC_PROVIDER"),
     },
     contractsAddresses: {
       universeContractAddress: getRequiredEnv(env, "NF_UNIVERSE_CONTRACT_ADDRESS"),

@@ -17,9 +17,8 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const YourEthereumAddressWidgetComponent: React.FunctionComponent<
-  IStateProps & IExternalProps
-> = ({ address, columnSpan }) => (
+export const YourEthereumAddressWidgetComponent: React.FunctionComponent<IStateProps &
+  IExternalProps> = ({ address, columnSpan }) => (
   <Panel
     columnSpan={columnSpan}
     headerText={<FormattedMessage id="your-ethereum-address-widget.header" />}

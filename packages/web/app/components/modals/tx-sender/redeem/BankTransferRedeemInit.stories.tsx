@@ -16,10 +16,10 @@ storiesOf("BankTransferRedeem/Init", module)
   ))
   .add("default", () => (
     <BankTransferRedeemLayout
-      minAmount={Q18.mul(5).toString()}
-      neuroAmount={Q18.mul(1305.89).toString()}
-      neuroEuroAmount={Q18.mul(1305.89).toString()}
-      bankFee={Q18.mul(0.005).toString()}
+      minAmount={Q18.mul("5").toString()}
+      neuroAmount={Q18.mul("1305.89").toString()}
+      neuroEuroAmount={Q18.mul("1305.89").toString()}
+      bankFee={Q18.mul("0.005").toString()}
       confirm={action("CONFIRM")}
       verifyBankAccount={action("LINK_ACCOUNT")}
     />

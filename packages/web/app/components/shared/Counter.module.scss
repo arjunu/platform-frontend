@@ -31,9 +31,10 @@
 }
 
 .label {
-  margin-top: px-to-rem(6px);
-  font-size: px-to-rem(12px);
-  font-weight: $font-weight-light;
+  @include font-thin;
+
+  line-height: 1;
+  margin-top: px-to-rem(8px);
   text-align: center;
   text-transform: uppercase;
 }

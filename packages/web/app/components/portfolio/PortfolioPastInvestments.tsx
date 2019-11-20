@@ -19,6 +19,7 @@ import {
   EPriceFormat,
 } from "../shared/formatters/utils";
 import { CurrencyIcon } from "../shared/icons/CurrencyIcon";
+import { TokenIcon } from "../shared/icons/TokenIcon";
 import { ENewTableCellLayout, NewTable, NewTableRow } from "../shared/table";
 
 import * as styles from "./PortfolioLayout.module.scss";
@@ -64,7 +65,11 @@ const PortfolioPastInvestments: React.FunctionComponent<IExternalProps> = ({ pas
           >
             <FormattedDate value={investmentDate} />
             <>
-              <img src={eto.equityTokenImage} alt="" className={cn("mr-2", styles.token)} />
+              <TokenIcon
+                srcSet={{ "1x": eto.equityTokenImage }}
+                alt=""
+                className={cn("mr-2", styles.token)}
+              />
               <span className={styles.tokenName} data-test-id="past-investments-token-name">
                 {eto.equityTokenName} ({eto.equityTokenSymbol})
               </span>

@@ -16,10 +16,20 @@ export enum ENomineeRequestError {
   GENERIC_ERROR = "nominee_request_generic_error",
 }
 
-export enum ENomineeRedeemShareholderCapitalStatus {
+export enum ENomineeFlowError {
+  NONE = "none",
+  FETCH_DATA_ERROR = "nominee_fetch_data_error",
+}
+
+export enum ENomineeTaskStatus {
   NOT_DONE = "not_done",
   DONE = "done",
   ERROR = "error",
+}
+
+export enum ERedeemShareCapitalTaskSubstate {
+  REDEEM_CAPITAL_INCREASE = "redeemCapitalIncrease",
+  WAITING_FOR_ISSUER_TO_SIGN_ISHA = "waitingForIssuerToSignIsha",
 }
 
 export enum ENomineeLinkBankAccountStatus {
@@ -55,7 +65,7 @@ export interface INomineeRequest {
   metadata: INomineeRequestMetadata;
 }
 
-// TODO: Refactor to store separately, nominee-flow module should be used for issuer
+// TODO: Refactor to store separately, nominee-flow module should not be used for issuer
 export type TNomineeRequestStorage = { [id: string]: INomineeRequest }; //can be etoId or nomineeId
 
 export enum ENomineeTask {
@@ -63,6 +73,9 @@ export enum ENomineeTask {
   ACCOUNT_SETUP = "accountSetup",
   LINK_TO_ISSUER = "linkToIssuer",
   LINK_BANK_ACCOUNT = "linkBankAccount",
+}
+
+export enum ENomineeEtoSpecificTask {
   ACCEPT_THA = "acceptTha",
   ACCEPT_RAAA = "acceptRaaa",
   REDEEM_SHARE_CAPITAL = "redeemShareCapital",

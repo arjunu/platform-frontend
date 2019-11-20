@@ -107,7 +107,7 @@ class ArrayYTS<T extends YTS<any>> extends YTS<Array<TypeOf<T>>> {
     if (this.isRequired) {
       // we can't use here .required() since it will throw on empty array. See: https://github.com/jquense/yup/issues/189
       return this.validator.test(
-        "is-required",
+        "required",
         "This field is required",
         val => val !== undefined && val !== null,
       );

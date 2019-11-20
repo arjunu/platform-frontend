@@ -1,8 +1,8 @@
-import BigNumber from "bignumber.js";
 import { ceil, findLast, floor, round } from "lodash";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TBigNumberVariants } from "../../../lib/web3/types";
 import { TTranslatedString } from "../../../types";
 import {
   EAbbreviatedNumberOutputFormat,
@@ -23,7 +23,7 @@ type TRangeDescriptor = {
 };
 
 interface IProps {
-  value: string | BigNumber | number | undefined | null;
+  value: TBigNumberVariants | undefined | null;
   outputFormat: EAbbreviatedNumberOutputFormat;
   inputFormat: ENumberInputFormat;
   decimalPlaces?: number;
@@ -31,11 +31,12 @@ interface IProps {
   defaultValue?: React.ReactChild;
   roundingMode?: ERoundingMode;
   className?: string;
+  decimals?: number;
 }
 
 interface IRangeProps {
-  valueFrom: string | BigNumber | number | undefined | null;
-  valueUpto: string | BigNumber | number | undefined | null;
+  valueFrom: TBigNumberVariants | undefined | null;
+  valueUpto: TBigNumberVariants | undefined | null;
   outputFormat: EAbbreviatedNumberOutputFormat;
   inputFormat: ENumberInputFormat;
   decimalPlaces?: number;
@@ -101,6 +102,7 @@ const FormatShortNumber: React.FunctionComponent<IProps> = ({
   outputFormat = EAbbreviatedNumberOutputFormat.LONG,
   className,
   divider,
+  decimals,
 }) => {
   if (!value) {
     return (
@@ -109,9 +111,8 @@ const FormatShortNumber: React.FunctionComponent<IProps> = ({
       </span>
     );
   }
-
   const number = parseFloat(
-    toFixedPrecision({ value, roundingMode, inputFormat, decimalPlaces, outputFormat }),
+    toFixedPrecision({ value, roundingMode, inputFormat, decimalPlaces, outputFormat, decimals }),
   );
   const range = getRange(number, divider);
   if (range) {
@@ -119,7 +120,7 @@ const FormatShortNumber: React.FunctionComponent<IProps> = ({
     const shortValue = roundingFn(number / range.divider, 1).toString();
 
     const translation = (translationKeys[range.key] as {
-      [key in THumanReadableFormat]: TTranslatedString
+      [key in THumanReadableFormat]: TTranslatedString;
     })[outputFormat];
 
     return (

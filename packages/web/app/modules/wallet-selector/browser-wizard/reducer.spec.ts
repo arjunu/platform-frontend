@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { GenericErrorMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
 import { actions } from "../../actions";
-import { browserWalletWizardInitialState, browserWalletWizardReducer } from "./reducer";
+import { browserWalletWizardReducer } from "./reducer";
 
 describe("Wallet selector > Browser wizard > reducer", () => {
   it("should act on BROWSER_WALLET_CONNECTION_ERROR action", () => {
@@ -30,23 +30,7 @@ describe("Wallet selector > Browser wizard > reducer", () => {
     expect(state).to.be.deep.eq({
       isLoading: false,
       approvalRejected: true,
-    });
-  });
-
-  it("should act on BROWSER_WALLET_APPROVAL_REQUEST_RESET action", () => {
-    const initialState = {
-      ...browserWalletWizardInitialState,
-      approvalRejected: true,
-    };
-
-    const state = browserWalletWizardReducer(
-      initialState,
-      actions.walletSelector.browserWalletResetApprovalRequest(),
-    );
-
-    expect(state).to.be.deep.eq({
-      isLoading: true,
-      approvalRejected: false,
+      errorMsg: undefined,
     });
   });
 });

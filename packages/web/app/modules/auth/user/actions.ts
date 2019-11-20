@@ -9,6 +9,7 @@ type TLogoutActionOptions = {
 
 export const authUserActions = {
   setUser: createActionFactory("AUTH_SET_USER", (user: IUser) => ({ user })),
+  finishSigning: createActionFactory("AUTH_FINISH_SIGNING"),
   logout: createActionFactory("AUTH_LOGOUT", (options: TLogoutActionOptions = {}) => options),
   userActive: createActionFactory("AUTH_USER_ACTIVE"),
   userActivityTimeout: createActionFactory("AUTH_USER_TIMEOUT"),

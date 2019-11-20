@@ -1,16 +1,14 @@
-.document-link {
+.document-label {
   align-items: center;
   display: inline-flex;
-}
-
-.document-link,
-.document-button {
-  font-size: px-to-rem(14px);
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(16px);
 
   :global {
     .fa-link,
     .document-icon,
     .inline-icon {
+      text-decoration: none;
       width: 18px;
       margin-right: 10px;
       flex-shrink: 0;

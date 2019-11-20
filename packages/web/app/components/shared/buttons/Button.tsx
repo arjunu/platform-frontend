@@ -67,9 +67,11 @@ export interface IButtonProps extends TGeneralButton, CommonHtmlProps {
   iconStyle?: string;
 }
 
-const Button: React.ForwardRefExoticComponent<
-  { children?: React.ReactNode } & IButtonProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef<HTMLButtonElement, IButtonProps & TDataTestId>(
+const Button: React.ForwardRefExoticComponent<{ children?: React.ReactNode } & IButtonProps &
+  React.RefAttributes<HTMLButtonElement>> = React.forwardRef<
+  HTMLButtonElement,
+  IButtonProps & TDataTestId
+>(
   (
     {
       children,
@@ -115,7 +117,15 @@ const Button: React.ForwardRefExoticComponent<
     >
       <div className={cn(styles.content, innerClassName, textPosition)} tabIndex={-1}>
         {isLoading ? (
-          <LoadingIndicator light />
+          <>
+            {/*
+              &nbsp; makes button the same in height as normal button
+              (avoids height dumping after switching to loading state)
+            */}
+            &nbsp;
+            <LoadingIndicator light />
+            &nbsp;
+          </>
         ) : (
           <>
             {iconPosition === EIconPosition.ICON_BEFORE && (

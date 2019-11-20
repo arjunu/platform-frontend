@@ -1,9 +1,11 @@
-import BigNumber from "bignumber.js";
 import { find, some } from "lodash";
 import { createSelector } from "reselect";
 
-import { DEFAULT_DATE_TO_WHITELIST_MIN_DURATION } from "../../config/constants";
-import { EEtoState, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
+import {
+  EEtoState,
+  TCompanyEtoData,
+  TEtoSpecsData,
+} from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import {
   EEtoDocumentType,
   IEtoDocument,
@@ -26,7 +28,7 @@ import { selectAgreementsStatus, selectEtoContract, selectEtoSubState } from "..
 import {
   EEtoAgreementStatus,
   EETOStateOnChain,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
   TOfferingAgreementsStatus,
 } from "../eto/types";
 import { isOnChain } from "../eto/utils";
@@ -78,7 +80,7 @@ const selectIssuerEtoWithCompanyAndContractInternal = createSelector(
 
 export const selectIssuerEtoWithCompanyAndContract = (
   state: IAppState,
-): TEtoWithCompanyAndContract | undefined => {
+): TEtoWithCompanyAndContractReadonly | undefined => {
   const eto = selectIssuerEto(state);
 
   if (eto) {
@@ -154,12 +156,9 @@ export const selectIssuerEtoOfferingDocumentType = (
   return undefined;
 };
 
-export const selectIssuerEtoDateToWhitelistMinDuration = (state: IAppState): BigNumber => {
+export const selectIssuerEtoDateToWhitelistMinDuration = (state: IAppState): number => {
   const eto = selectIssuerEto(state);
-  // in case of undefined return platform default (7 days)
-  return new BigNumber(
-    eto ? eto.product.dateToWhitelistMinDuration : DEFAULT_DATE_TO_WHITELIST_MIN_DURATION,
-  );
+  return eto!.product.dateToWhitelistMinDuration;
 };
 
 export const selectIssuerEtoLoading = (state: IAppState): boolean => state.etoIssuer.loading;
@@ -169,7 +168,10 @@ export const selectNewEtoDateSaving = (state: IAppState): boolean => state.etoIs
 export const selectCombinedEtoCompanyData = createSelector(
   selectIssuerCompany,
   selectIssuerEto,
-  (company, eto) => ({ ...company, ...eto }),
+  (company: TCompanyEtoData | undefined, eto: TEtoSpecsData | undefined) => ({
+    ...company,
+    ...eto,
+  }),
 );
 
 export const selectIssuerEtoTemplates = (state: IAppState): TEtoDocumentTemplates | undefined => {
@@ -299,30 +301,24 @@ const recognizedProductTypes = [
   EProductName.FIFTH_FORCE_ETO,
 ];
 
-export const selectAvailableProducts = createSelector(
-  selectIssuerEtoFlow,
-  ({ products }) => {
-    if (products !== undefined) {
-      const availableProducts = products
-        .filter(product => product.available)
-        // TODO: remove after platform-backend/#1550 is done
-        .filter(product => product.name !== EProductName.FIFTH_FORCE_ETO)
-        // Remove unrecognized product types
-        .filter(product =>
-          recognizedProductTypes.some(recognizedProd => recognizedProd === product.name),
-        );
+export const selectAvailableProducts = createSelector(selectIssuerEtoFlow, ({ products }) => {
+  if (products !== undefined) {
+    const availableProducts = products
+      .filter(product => product.available)
+      // TODO: remove after platform-backend/#1550 is done
+      .filter(product => product.name !== EProductName.FIFTH_FORCE_ETO)
+      // Remove unrecognized product types
+      .filter(product =>
+        recognizedProductTypes.some(recognizedProd => recognizedProd === product.name),
+      );
 
-      return sortProducts(availableProducts);
-    }
+    return sortProducts(availableProducts);
+  }
 
-    return undefined;
-  },
-);
+  return undefined;
+});
 
-export const selectIssuerEtoSaving = createSelector(
-  selectIssuerEtoFlow,
-  state => state.saving,
-);
+export const selectIssuerEtoSaving = createSelector(selectIssuerEtoFlow, state => state.saving);
 
 export const selectIsMarketingDataVisibleInPreview = createSelector(
   selectIssuerEto,

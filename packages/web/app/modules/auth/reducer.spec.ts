@@ -1,36 +1,42 @@
 import { expect } from "chai";
 
 import { EUserType } from "../../lib/api/users/interfaces";
+import { IAppState } from "../../store";
+import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
 import { EWalletSubType, EWalletType } from "../web3/types";
-import { IAuthState } from "./reducer";
+import { EAuthStatus, IAuthState } from "./reducer";
 import { selectIsAuthorized, selectUserEmail } from "./selectors";
 
 describe("auth > selectors", () => {
   describe("selectIsAuthorized", () => {
     it("should return true for authorized users", () => {
-      const state: IAuthState = {
+      const authState: IAuthState = {
         jwt: "eyjwt",
         user: {
-          userId: "user-id",
+          userId: "user-id" as EthereumAddressWithChecksum,
           type: EUserType.INVESTOR,
           walletType: EWalletType.LIGHT,
           walletSubtype: EWalletSubType.UNKNOWN,
         },
+        status: EAuthStatus.AUTHORIZED,
+        currentAgreementHash: undefined,
       };
 
-      const actualValue = selectIsAuthorized(state);
+      const actualValue = selectIsAuthorized({ auth: authState } as IAppState);
 
       expect(actualValue).to.be.true;
     });
 
     it("should return false for not authorized users", () => {
       // this should only happen in the middle of auth process
-      const state: IAuthState = {
+      const authState: IAuthState = {
         jwt: "eyjwt",
         user: undefined,
+        status: EAuthStatus.NON_AUTHORIZED,
+        currentAgreementHash: undefined,
       };
 
-      const actualValue = selectIsAuthorized(state);
+      const actualValue = selectIsAuthorized({ auth: authState } as IAppState);
 
       expect(actualValue).to.be.false;
     });
@@ -41,13 +47,15 @@ describe("auth > selectors", () => {
       const state: IAuthState = {
         jwt: "eyjwt",
         user: {
-          userId: "user-id",
+          userId: "user-id" as EthereumAddressWithChecksum,
           unverifiedEmail: "unverified@email.com",
           verifiedEmail: "some.verified@email.com",
           type: EUserType.INVESTOR,
           walletType: EWalletType.LIGHT,
           walletSubtype: EWalletSubType.UNKNOWN,
         },
+        status: EAuthStatus.AUTHORIZED,
+        currentAgreementHash: undefined,
       };
 
       const actualValue = selectUserEmail(state);
@@ -58,6 +66,9 @@ describe("auth > selectors", () => {
     it("should return undefined when user is missing", () => {
       const state: IAuthState = {
         jwt: "eyjwt",
+        user: undefined,
+        status: EAuthStatus.NON_AUTHORIZED,
+        currentAgreementHash: undefined,
       };
 
       const actualValue = selectUserEmail(state);

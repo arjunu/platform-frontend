@@ -1,7 +1,8 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { ISrcSet, ResponsiveImage } from "./ResponsiveImage";
+import { ISrcSet } from "./HiResImage";
+import { ResponsiveImage } from "./ResponsiveImage";
 import { IEtoSocialProfile, SocialProfilesList } from "./SocialProfilesList";
 
 import * as styles from "./SlidePerson.module.scss";

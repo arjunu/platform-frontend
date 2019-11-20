@@ -10,7 +10,7 @@ describe("Browser Storage", () => {
 
   describe("native local storage", () => {
     it("should store an item", async () => {
-      const localStorageMock = {
+      const localStorageMock: any = {
         setItem: spy(),
         getItem: spy(() => expectedPhrase),
         removeItem: spy(),
@@ -23,7 +23,7 @@ describe("Browser Storage", () => {
     });
 
     it("should retrieve an item given a key", async () => {
-      const localStorageMock = {
+      const localStorageMock: any = {
         setItem: spy(),
         getItem: spy(() => expectedPhrase),
         removeItem: spy(),
@@ -36,7 +36,7 @@ describe("Browser Storage", () => {
     });
 
     it("should clear given key", async () => {
-      const localStorageMock = {
+      const localStorageMock: any = {
         setItem: spy(),
         getItem: spy(() => expectedPhrase),
         removeItem: spy(),
@@ -52,7 +52,7 @@ describe("Browser Storage", () => {
 
   describe("memory local storage", () => {
     it("should store an item in memory local storage", async () => {
-      const storage = new Storage(null);
+      const storage = new Storage(null as any);
 
       storage.setKey(key, expectedPhrase);
       const returnedPhrase = storage.getKey(key);
@@ -61,13 +61,13 @@ describe("Browser Storage", () => {
     });
 
     it("should return false when checkIsSupported is called", async () => {
-      const storage = new Storage(null);
+      const storage = new Storage(null as any);
 
       expect(storage.checkIsSupported()).to.be.equal(false);
     });
 
     it("should return true when checkIsSupported is called", async () => {
-      const localStorageMock = {
+      const localStorageMock: any = {
         setItem: spy(),
         getItem: spy(() => expectedPhrase),
         removeItem: spy(),

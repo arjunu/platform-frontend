@@ -10,7 +10,7 @@ import {
 } from "../../../modules/eto-flow/utils";
 import { TDataTestId, TFormikConnect, TTranslatedString } from "../../../types";
 import { pickSchemaValues } from "../../../utils/yupUtils";
-import { Form, TFormProps } from "../../shared/forms";
+import { Form, TFormProps } from "../../shared/forms/index";
 import { PercentageIndicatorBar } from "../../shared/PercentageIndicatorBar";
 import { Section } from "./Shared";
 
@@ -20,12 +20,16 @@ interface IProps {
   title: TTranslatedString;
 }
 
-interface IFormPercentageDoneProps {
+type TFormPercentageDoneProps = {
   validationSchema: Yup.Schema<unknown>;
   progressOptions?: IProgressOptions;
-}
+};
 
-type TProps = IFormPercentageDoneProps & TFormikConnect;
+type TValidatorProps<Values> = {
+  validate?: (x: Values, y: unknown) => void;
+};
+
+type TProps = TFormPercentageDoneProps & TFormikConnect;
 
 class PercentageFormDoneLayout extends React.Component<TProps> {
   calculate: ProgressCalculator = getFormFractionDoneCalculator(
@@ -49,14 +53,15 @@ class PercentageFormDoneLayout extends React.Component<TProps> {
   }
 }
 
-const PercentageFormDone = compose<TProps, IFormPercentageDoneProps>(connect)(
+const PercentageFormDone = compose<TProps, TFormPercentageDoneProps>(connect)(
   PercentageFormDoneLayout,
 );
 
 type TExternalProps<Values extends {}> = IProps &
   TDataTestId &
-  IFormPercentageDoneProps &
-  TFormProps<Values>;
+  TFormPercentageDoneProps &
+  TFormProps<Values> &
+  TValidatorProps<Values>;
 
 export const EtoFormBase = <Values extends {}>({
   children,
@@ -64,6 +69,7 @@ export const EtoFormBase = <Values extends {}>({
   progressOptions,
   initialValues,
   validationSchema,
+  validate,
   ...formProps
 }: TExternalProps<Values>) => {
   // Filter to contain only known schema values
@@ -77,6 +83,7 @@ export const EtoFormBase = <Values extends {}>({
       className={styles.form}
       initialValues={values}
       validationSchema={validationSchema}
+      validate={validate}
       {...formProps}
     >
       <h4 className={styles.header}>{title}</h4>

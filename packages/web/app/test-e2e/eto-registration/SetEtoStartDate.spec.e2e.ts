@@ -28,7 +28,7 @@ const setStartDay = (startDate: moment.Moment, textToCheck: RegExp) => {
 
   closeModal();
 
-  cy.get(tid("eto-settings-display-start-date-utc"))
+  cy.get(tid("time-left.start-date-utc"))
     .should($e =>
       expect($e.text()).to.be.equal(
         `${weekdayUTC(startDate.toDate())}, ${utcTime(startDate.toDate())}`,
@@ -38,8 +38,10 @@ const setStartDay = (startDate: moment.Moment, textToCheck: RegExp) => {
     .should("be.enabled");
 };
 
-describe("Eto start date setup", () => {
+describe("Eto start date setup", function(): void {
+  this.retries(2);
   it("sets the date", () => {
+    // enable after
     loginFixtureAccount("ISSUER_SETUP", {
       kyc: "business",
     }).then(() => {
@@ -50,7 +52,10 @@ describe("Eto start date setup", () => {
         .add(5, "hours")
         .add(5, "minute");
 
-      const newStartDateText = new RegExp(/^(19|20) days, \d\d? hour(s?)/);
+      // match non breaking spaces
+      const newStartDateText = new RegExp(
+        /^(19|20) days[\s|\u00A0]\d\d? hour(s?)[\s|\u00A0]\d\d? minute(s?)/,
+      );
 
       setStartDay(newStartDate, newStartDateText);
 
@@ -65,10 +70,7 @@ describe("Eto start date setup", () => {
       setStartDay(tomorrowStartDate, tomorrowStartDateText);
 
       // should not be allowed to set a date that is too soon
-      const falseDate = newStartDate
-        .clone()
-        .subtract(19, "days")
-        .subtract(8, "hours");
+      const falseDate = newStartDate.clone().subtract(20, "days");
 
       cy.get(tid("eto-settings-start-date-open-date-picker"))
         .click()

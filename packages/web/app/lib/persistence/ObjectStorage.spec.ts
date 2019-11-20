@@ -35,7 +35,7 @@ describe("Object storage", () => {
   it("should get non-existent key from storage", () => {
     const expectedKey = "SOME_KEY";
     const storageMock = createMock(Storage, {
-      getKey: () => undefined,
+      getKey: () => null,
     });
 
     const objectStorage = new ObjectStorage<string>(storageMock, noopLogger, expectedKey);

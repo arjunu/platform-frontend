@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { delay } from "redux-saga";
-import { put, select, take, takeEvery, takeLatest } from "redux-saga/effects";
+import { all, put, select, take, takeEvery, takeLatest } from "redux-saga/effects";
 
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { TGlobalDependencies } from "../../di/setupBindings";
@@ -8,11 +8,16 @@ import { ETOCommitment } from "../../lib/contracts/ETOCommitment";
 import { ITxData } from "../../lib/web3/types";
 import { IAppState } from "../../store";
 import { addBigNumbers, compareBigNumbers, subtractBigNumbers } from "../../utils/BigNumberUtils";
-import { convertToBigInt } from "../../utils/Number.utils";
+import { nonNullable } from "../../utils/nonNullable";
+import { convertToUlps } from "../../utils/NumberUtils";
 import { extractNumber } from "../../utils/StringUtils";
-import { actions, TAction } from "../actions";
-import { selectEtoById, selectEtoOnChainStateById } from "../eto/selectors";
-import { EETOStateOnChain } from "../eto/types";
+import { actions, TActionFromCreator } from "../actions";
+import {
+  selectEtoById,
+  selectEtoOnChainStateById,
+  selectEtoWithCompanyAndContractById,
+} from "../eto/selectors";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../eto/types";
 import { selectStandardGasPriceWithOverHead } from "../gas/selectors";
 import { loadComputedContributionFromContract } from "../investor-portfolio/sagas";
 import {
@@ -31,8 +36,10 @@ import {
   selectLiquidEuroTokenBalance,
   selectLockedEtherBalance,
   selectLockedEuroTokenBalance,
+  selectNEURStatus,
   selectWalletData,
 } from "../wallet/selectors";
+import { ENEURWalletStatus } from "../wallet/types";
 import { EInvestmentErrorState, EInvestmentType } from "./reducer";
 import {
   selectInvestmentEthValueUlps,
@@ -43,11 +50,12 @@ import {
 } from "./selectors";
 import { getCurrencyByInvestmentType } from "./utils";
 
-function* processCurrencyValue(action: TAction): any {
-  if (action.type !== "INVESTMENT_FLOW_SUBMIT_INVESTMENT_VALUE") return;
+function* processCurrencyValue(
+  action: TActionFromCreator<typeof actions.investmentFlow.submitCurrencyValue>,
+): Iterator<any> {
   const state: IAppState = yield select();
 
-  const value = action.payload.value && convertToBigInt(extractNumber(action.payload.value));
+  const value = action.payload.value && convertToUlps(extractNumber(action.payload.value));
   const curr = action.payload.currency;
   const oldVal =
     curr === ECurrency.ETH
@@ -71,17 +79,21 @@ function* computeAndSetCurrencies(value: string, currency: ECurrency): any {
     yield put(actions.investmentFlow.setEthValue(""));
     yield put(actions.investmentFlow.setEurValue(""));
   } else if (etherPriceEur && etherPriceEur !== "0") {
-    const bignumber = new BigNumber(value);
+    const valueAsBigNumber = new BigNumber(value);
     switch (currency) {
       case ECurrency.ETH:
-        const eurVal = bignumber.mul(etherPriceEur);
-        yield put(actions.investmentFlow.setEthValue(bignumber.toFixed(0, BigNumber.ROUND_UP)));
+        const eurVal = valueAsBigNumber.mul(etherPriceEur);
+        yield put(
+          actions.investmentFlow.setEthValue(valueAsBigNumber.toFixed(0, BigNumber.ROUND_UP)),
+        );
         yield put(actions.investmentFlow.setEurValue(eurVal.toFixed(0, BigNumber.ROUND_UP)));
         return;
       case ECurrency.EUR_TOKEN:
-        const ethVal = bignumber.mul(eurPriceEther);
+        const ethVal = valueAsBigNumber.mul(eurPriceEther);
         yield put(actions.investmentFlow.setEthValue(ethVal.toFixed(0, BigNumber.ROUND_UP)));
-        yield put(actions.investmentFlow.setEurValue(bignumber.toFixed(0, BigNumber.ROUND_UP)));
+        yield put(
+          actions.investmentFlow.setEurValue(valueAsBigNumber.toFixed(0, BigNumber.ROUND_UP)),
+        );
         return;
     }
   }
@@ -186,10 +198,12 @@ function* validateAndCalculateInputs({ contractsService }: TGlobalDependencies):
   let state: IAppState = yield select();
   const eto = selectEtoById(state, state.investmentFlow.etoId);
   const value = state.investmentFlow.euroValueUlps;
+
   if (value && eto) {
     const etoContract: ETOCommitment = yield contractsService.getETOCommitmentContract(eto.etoId);
     if (etoContract) {
       const isICBM = selectIsICBMInvestment(state);
+
       const contribution = yield neuCall(loadComputedContributionFromContract, eto, value, isICBM);
 
       yield put(actions.investorEtoTicket.setCalculatedContribution(eto.etoId, contribution));
@@ -214,15 +228,29 @@ function* validateAndCalculateInputs({ contractsService }: TGlobalDependencies):
   }
 }
 
-function* start(action: TAction): any {
-  if (action.type !== "INVESTMENT_FLOW_START") return;
+function* start(
+  action: TActionFromCreator<typeof actions.investmentFlow.startInvestment>,
+): Iterator<any> {
   const etoId = action.payload.etoId;
-  const state: IAppState = yield select();
+  const eto: TEtoWithCompanyAndContractReadonly = nonNullable(
+    yield select((state: IAppState) => selectEtoWithCompanyAndContractById(state, etoId)),
+  );
+
   yield put(actions.investmentFlow.resetInvestment());
   yield put(actions.investmentFlow.setEtoId(etoId));
   yield put(actions.kyc.kycLoadClientData());
-  yield put(actions.txTransactions.startInvestment());
-  yield put(actions.investorEtoTicket.loadEtoInvestorTicket(selectEtoById(state, etoId)!));
+  yield put(actions.investorEtoTicket.loadEtoInvestorTicket(eto));
+
+  yield put(actions.investorEtoTicket.loadTokenPersonalDiscount(eto));
+  yield put(actions.eto.loadTokenTerms(eto));
+
+  // wait for discount to be in the state
+  yield all([
+    take(actions.eto.setTokenGeneralDiscounts),
+    take(actions.investorEtoTicket.setTokenPersonalDiscount),
+  ]);
+
+  yield put(actions.txTransactions.startInvestment(etoId));
 
   yield take("TX_SENDER_SHOW_MODAL");
   yield getActiveInvestmentTypes();
@@ -233,23 +261,29 @@ export function* onInvestmentTxModalHide(): any {
   yield put(actions.investmentFlow.resetInvestment());
 }
 
-function* getActiveInvestmentTypes(): any {
+function* getActiveInvestmentTypes(): Iterator<any> {
   const state: IAppState = yield select();
   const etoId = selectInvestmentEtoId(state);
-  const etoState = selectEtoOnChainStateById(state, etoId);
+  const etoOnChainState = selectEtoOnChainStateById(state, etoId);
+  const neurStatus = selectNEURStatus(state);
 
-  let activeTypes: EInvestmentType[] = [EInvestmentType.Eth, EInvestmentType.NEur];
+  let activeTypes: EInvestmentType[] = [EInvestmentType.Eth];
+
+  // if neur is not restricted because of the us state
+  if (neurStatus !== ENEURWalletStatus.DISABLED_RESTRICTED_US_STATE) {
+    activeTypes.unshift(EInvestmentType.NEur);
+  }
 
   // no regular investment if not whitelisted in pre eto
-  if (etoState === EETOStateOnChain.Whitelist && !selectIsWhitelisted(state, etoId)) {
+  if (etoOnChainState === EETOStateOnChain.Whitelist && !selectIsWhitelisted(state, etoId)) {
     activeTypes = [];
   }
 
   // only ICBM investment if balance available
-  if (compareBigNumbers(selectLockedEuroTokenBalance(state), 0) > 0) {
+  if (compareBigNumbers(selectLockedEuroTokenBalance(state), "0") > 0) {
     activeTypes.unshift(EInvestmentType.ICBMnEuro);
   }
-  if (compareBigNumbers(selectLockedEtherBalance(state), 0) > 0) {
+  if (compareBigNumbers(selectLockedEtherBalance(state), "0") > 0) {
     activeTypes.unshift(EInvestmentType.ICBMEth);
   }
 
@@ -312,11 +346,11 @@ function* stop(): any {
 }
 
 export function* investmentFlowSagas(): any {
-  yield takeEvery("INVESTMENT_FLOW_SUBMIT_INVESTMENT_VALUE", processCurrencyValue);
-  yield takeLatest("INVESTMENT_FLOW_VALIDATE_INPUTS", neuCall, validateAndCalculateInputs);
-  yield takeEvery("INVESTMENT_FLOW_START", start);
+  yield takeEvery(actions.investmentFlow.submitCurrencyValue, processCurrencyValue);
+  yield takeLatest(actions.investmentFlow.validateInputs, neuCall, validateAndCalculateInputs);
+  yield takeEvery(actions.investmentFlow.startInvestment, start);
   yield takeEvery("TOKEN_PRICE_SAVE", recalculateCurrencies);
-  yield takeEvery("INVESTMENT_FLOW_SELECT_INVESTMENT_TYPE", resetTxDataAndValidations);
-  yield takeEvery("INVESTMENT_FLOW_INVEST_ENTIRE_BALANCE", investEntireBalance);
+  yield takeEvery(actions.investmentFlow.selectInvestmentType, resetTxDataAndValidations);
+  yield takeEvery(actions.investmentFlow.investEntireBalance, investEntireBalance);
   yield takeEvery("@@router/LOCATION_CHANGE", stop); // stop investment if some link is clicked
 }

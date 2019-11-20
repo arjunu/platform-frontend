@@ -95,5 +95,7 @@ export function assertType<T extends true>(expected: T): void {
  * const cond: AssertEqual<string, string> = true;
  */
 export type AssertEqual<T, Expected> = [T] extends [Expected]
-  ? ([Expected] extends [T] ? true : never)
+  ? [Expected] extends [T]
+    ? true
+    : never
   : never;

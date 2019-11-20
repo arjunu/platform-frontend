@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { normalize } from "../../../../../utils/Number.utils";
+import { normalize } from "../../../../../utils/NumberUtils";
 import {
   PercentageIndicatorBar,
   TProgressBarProps,

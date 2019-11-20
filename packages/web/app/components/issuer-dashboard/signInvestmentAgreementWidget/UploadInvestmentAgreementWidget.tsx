@@ -1,7 +1,6 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { branch, renderComponent, renderNothing } from "recompose";
-import { compose } from "redux";
+import { branch, compose, renderComponent, renderNothing } from "recompose";
 
 import { IEtoDocument } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { actions } from "../../../modules/actions";
@@ -13,6 +12,7 @@ import {
 import { selectEtoOnChainState } from "../../../modules/eto/selectors";
 import { EETOStateOnChain } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
+import { OmitKeys } from "../../../types";
 import { appRoutes } from "../../appRoutes";
 import { EColumnSpan } from "../../layouts/Container";
 import { ButtonArrowRight, ButtonGroup, ButtonLink } from "../../shared/buttons";
@@ -34,18 +34,16 @@ interface IStateProps {
   uploadedAgreement: IEtoDocument | undefined;
 }
 
-interface IUploadComponentStateProps {
-  agreementTemplate: IEtoDocument;
-  uploadedAgreement: IEtoDocument | undefined;
-}
-
 interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const UploadInvestmentAgreementLayout: React.FunctionComponent<
-  IUploadComponentStateProps & IDispatchProps & IExternalProps
-> = ({ downloadAgreementTemplate, agreementTemplate, columnSpan }) => (
+export const UploadInvestmentAgreementLayout: React.FunctionComponent<OmitKeys<
+  IStateProps,
+  "stateOnChain"
+> &
+  IDispatchProps &
+  IExternalProps> = ({ downloadAgreementTemplate, agreementTemplate, columnSpan }) => (
   <DashboardCenteredWidget
     data-test-id="dashboard-upload-signed-isha-widget"
     title={<FormattedMessage id="download-agreement-widget.signing-title" />}
@@ -80,7 +78,10 @@ export const EtoCompletedWidgetLayout: React.ComponentType<IExternalProps> = ({ 
   />
 );
 
-export const UploadInvestmentAgreement = compose<React.FunctionComponent<IExternalProps>>(
+export const UploadInvestmentAgreement = compose<
+  IStateProps & IDispatchProps & IExternalProps,
+  IExternalProps
+>(
   createErrorBoundary(ErrorBoundaryPanel),
   appConnect<IStateProps | null, IDispatchProps>({
     stateToProps: state => {

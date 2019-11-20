@@ -1,48 +1,59 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { setDisplayName } from "recompose";
-import { compose } from "redux";
+import { compose, setDisplayName, withProps } from "recompose";
 
 import { actions } from "../../../../../modules/actions";
+import { selectIsAuthorized } from "../../../../../modules/auth/selectors";
 import { selectBookbuildingStats } from "../../../../../modules/bookbuilding-flow/selectors";
 import {
-  EETOStateOnChain,
-  EEtoSubState,
-  TEtoWithCompanyAndContract,
-} from "../../../../../modules/eto/types";
+  calculateWhitelistingState,
+  EWhitelistingState,
+} from "../../../../../modules/bookbuilding-flow/utils";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { appConnect } from "../../../../../store";
+import { assertNever } from "../../../../../utils/assertNever";
 import { onEnterAction } from "../../../../../utils/OnEnterAction";
-import { CounterWidget } from "../../EtoOverviewStatus/CounterWidget";
+import { Money } from "../../../../shared/formatters/Money";
+import {
+  EAbbreviatedNumberOutputFormat,
+  ECurrency,
+  ENumberInputFormat,
+} from "../../../../shared/formatters/utils";
+import { LoadingIndicator } from "../../../../shared/loading-indicator/LoadingIndicator";
+import { GreyInfo, Info } from "../Info";
 import { WhitelistStatus } from "./WhitelistStatus";
 
-import * as styles from "../EtoStatusManager.module.scss";
-
 export interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IStateProps {
   pledgedAmount: number | null;
   investorsCount: number;
+  isAuthorized: boolean;
 }
 
-type IProps = IExternalProps & IStateProps;
+interface IWithProps {
+  whitelistingState: EWhitelistingState;
+}
+
+type IProps = IExternalProps & IStateProps & IWithProps;
 
 const WhitelistLayout: React.FunctionComponent<IProps> = ({
   eto,
   pledgedAmount,
   investorsCount,
+  whitelistingState,
 }) => {
-  switch (eto.subState) {
-    case EEtoSubState.CAMPAIGNING:
+  switch (whitelistingState) {
+    case EWhitelistingState.NOT_ACTIVE:
       return (
-        <p className={styles.info}>
+        <Info>
           <FormattedMessage id="eto-overview-thumbnail.whitelist.is-not-started" />
-        </p>
+        </Info>
       );
 
-    case EEtoSubState.WHITELISTING:
-    case EEtoSubState.WHITELISTING_LIMIT_REACHED:
+    case EWhitelistingState.ACTIVE:
       return (
         <>
           <WhitelistStatus
@@ -51,39 +62,79 @@ const WhitelistLayout: React.FunctionComponent<IProps> = ({
             investorsLimit={eto.maxPledges}
           />
 
-          <p className={styles.info}>
-            {eto.subState === EEtoSubState.WHITELISTING_LIMIT_REACHED && (
-              <FormattedMessage id="eto-overview-thumbnail.whitelist.is-closed" />
-            )}
-            {eto.subState === EEtoSubState.WHITELISTING && (
-              <FormattedMessage id="eto-overview-thumbnail.whitelist.is-open" />
-            )}
-          </p>
+          <Info>
+            <FormattedMessage id="eto-overview-thumbnail.whitelist.is-open" />
+          </Info>
         </>
       );
 
-    case EEtoSubState.COUNTDOWN_TO_PRESALE:
-    case EEtoSubState.COUNTDOWN_TO_PUBLIC_SALE:
-      const nextState =
-        eto.subState === EEtoSubState.COUNTDOWN_TO_PRESALE
-          ? EETOStateOnChain.Whitelist
-          : EETOStateOnChain.Public;
-      const nextStateStartDate = eto.contract!.startOfStates[nextState];
-
-      if (nextStateStartDate === undefined) {
-        throw new Error("Next state should be defined as this point");
-      }
-
+    case EWhitelistingState.LIMIT_REACHED:
       return (
-        <CounterWidget endDate={nextStateStartDate} awaitedState={nextState} etoId={eto.etoId} />
+        <GreyInfo
+          upperText={
+            <FormattedMessage
+              id="eto-overview-thumbnail.whitelist.limit-reached"
+              values={{
+                maxPledges: eto.maxPledges,
+              }}
+            />
+          }
+          lowerText={
+            <FormattedMessage
+              id="eto-overview-thumbnail.whitelist.committed-amount"
+              values={{
+                pledgedAmount: (
+                  <Money
+                    value={pledgedAmount ? pledgedAmount.toString() : null}
+                    inputFormat={ENumberInputFormat.FLOAT}
+                    valueType={ECurrency.EUR}
+                    outputFormat={EAbbreviatedNumberOutputFormat.SHORT}
+                  />
+                ),
+              }}
+            />
+          }
+        />
       );
 
+    case EWhitelistingState.STOPPED:
+    case EWhitelistingState.SUSPENDED:
+      return (
+        <GreyInfo
+          upperText={
+            <FormattedMessage
+              id="eto-overview-thumbnail.whitelist.closed"
+              values={{
+                maxPledges: eto.maxPledges,
+                pledgesCount: investorsCount,
+              }}
+            />
+          }
+          lowerText={
+            <FormattedMessage
+              id="eto-overview-thumbnail.whitelist.committed-amount"
+              values={{
+                pledgedAmount: (
+                  <Money
+                    value={pledgedAmount ? pledgedAmount.toString() : null}
+                    inputFormat={ENumberInputFormat.FLOAT}
+                    valueType={ECurrency.EUR}
+                    outputFormat={EAbbreviatedNumberOutputFormat.SHORT}
+                  />
+                ),
+              }}
+            />
+          }
+        />
+      );
+    case EWhitelistingState.LOADING:
+      return <LoadingIndicator />;
     default:
-      throw new Error(`Campaign doesn't implement ${eto.subState} state`);
+      return assertNever(whitelistingState);
   }
 };
 
-const Whitelist = compose<React.FunctionComponent<IExternalProps>>(
+const Whitelist = compose<IProps, IExternalProps>(
   appConnect<IStateProps, {}, IExternalProps>({
     stateToProps: (state, props) => {
       const stats = selectBookbuildingStats(state, props.eto.etoId);
@@ -91,8 +142,23 @@ const Whitelist = compose<React.FunctionComponent<IExternalProps>>(
       return {
         pledgedAmount: stats ? stats.pledgedAmount : null,
         investorsCount: stats ? stats.investorsCount : 0,
+        isAuthorized: selectIsAuthorized(state),
       };
     },
+  }),
+  withProps<IWithProps, IStateProps & IExternalProps>(({ eto, investorsCount, isAuthorized }) => {
+    const bookbuildingLimitReached = eto.maxPledges - investorsCount <= 0;
+
+    return {
+      whitelistingState: calculateWhitelistingState({
+        canEnableBookbuilding: eto.canEnableBookbuilding,
+        whitelistingIsActive: eto.isBookbuilding,
+        bookbuildingLimitReached,
+        investorsCount,
+        investmentCalculatedValues: eto.investmentCalculatedValues,
+        isAuthorized,
+      }),
+    };
   }),
   onEnterAction<IExternalProps & IStateProps>({
     actionCreator: (dispatch, props) => {

@@ -12,7 +12,7 @@ import { EUserType } from "../../lib/api/users/interfaces";
 import { actions, TActionFromCreator } from "../actions";
 import { ensurePermissionsArePresentAndRunEffect } from "../auth/jwt/sagas";
 import { selectIsUserFullyVerified, selectUserType } from "../auth/selectors";
-import { neuCall, neuTakeEvery, neuTakeUntil } from "../sagasUtils";
+import { neuCall, neuTakeEvery, neuTakeLatestUntil } from "../sagasUtils";
 
 export function* saveMyPledgeEffect(
   { apiEtoPledgeService }: TGlobalDependencies,
@@ -148,7 +148,7 @@ export function* loadMyPledge(
 export function* bookBuildingFlowSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.bookBuilding.loadBookBuildingStats, loadBookBuildingStats);
   yield fork(
-    neuTakeUntil,
+    neuTakeLatestUntil,
     actions.bookBuilding.bookBuildingStartWatch,
     actions.bookBuilding.bookBuildingStopWatch,
     watchBookBuildingStats,

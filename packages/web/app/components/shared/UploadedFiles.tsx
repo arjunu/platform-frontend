@@ -1,6 +1,5 @@
 import * as cn from "classnames";
 import * as React from "react";
-import { FormattedMessage } from "react-intl-phraseapp";
 
 import { IKycFileInfo } from "../../lib/api/kyc/KycApi.interfaces";
 
@@ -13,18 +12,14 @@ interface IProps {
 
 export const UploadedFiles: React.FunctionComponent<IProps> = ({ files }) => (
   <div className={cn("c-uploaded-files", styles.uploadedFiles)}>
-    <h6>
-      {" "}
-      <FormattedMessage id="shared-component.uploaded-files.title" />
-    </h6>
     {files.map(({ fileName }, index) => (
       <div data-test-id={`multi-file-upload-file-${fileName}`} key={index} className={styles.file}>
+        <img src={confirmIcon} className={styles.icon} alt="Uploaded image" />
         <span className={styles.text} title={fileName}>
           {fileName}
         </span>
-        <img src={confirmIcon} className={styles.icon} />
+        {/* TODO Add ability to download and remove file */}
       </div>
     ))}
-    <br />
   </div>
 );

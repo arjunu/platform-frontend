@@ -52,7 +52,7 @@ describe("Wallet Migration Flow", () => {
         const neuBalance = new BigNumber(
           FIXTURE_ACCOUNTS[INV_ETH_ICBM_NO_KYC_ADDRESS].icbmEtherLockBalance[1],
         )
-          .div(FIXTURE_DIV_CONSTANT)
+          .div(FIXTURE_DIV_CONSTANT.toString())
           .round(undefined, BigNumber.ROUND_DOWN);
 
         const ethBalance = new BigNumber(

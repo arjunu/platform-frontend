@@ -33,4 +33,4 @@ export const selectOppositeRootPath = (state: RouterState): string =>
   selectIsLoginRoute(state) ? appRoutes.register : appRoutes.login;
 
 export const selectIsMessageSigning = (state: IAppState): boolean =>
-  !!state.walletSelector.isMessageSigning;
+  state.walletSelector.isMessageSigning;

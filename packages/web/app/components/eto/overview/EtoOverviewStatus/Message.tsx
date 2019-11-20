@@ -1,29 +1,32 @@
 import * as React from "react";
 
-import { TDataTestId, TTranslatedString } from "../../../../types";
+import { OmitKeys, TDataTestId, TTranslatedString } from "../../../../types";
 import { SuccessTick } from "../../../shared/SuccessTick";
 
 import * as styles from "./Message.module.scss";
 
 interface IExternalProps {
-  showTick?: boolean;
+  tick?: React.ReactElement;
   title?: TTranslatedString;
   summary?: TTranslatedString;
 }
 
 const Message: React.FunctionComponent<IExternalProps & TDataTestId> = ({
-  showTick = true,
+  tick,
   title,
   summary,
+  children,
   "data-test-id": dataTestId,
 }) => (
   <section className={styles.widget} data-test-id={dataTestId}>
-    {showTick && <SuccessTick />}
-    <header className={styles.message}>
-      {title && <h5>{title}</h5>}
-      {summary && <p>{summary}</p>}
-    </header>
+    {tick}
+    {title && <h5 className={styles.title}>{title}</h5>}
+    {summary && <p className="mb-0">{summary}</p>}
+    {children}
   </section>
 );
 
-export { Message };
+const SuccessMessage: React.FunctionComponent<OmitKeys<IExternalProps, "tick"> &
+  TDataTestId> = props => <Message {...props} tick={<SuccessTick />} />;
+
+export { Message, SuccessMessage };

@@ -1,8 +1,9 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
+import { branch, compose, renderNothing } from "recompose";
 
-import { TBankAccount } from "../../../modules/kyc/types";
-import { DeepReadonly } from "../../../types";
+import { ENEURWalletStatus } from "../../../modules/wallet/types";
+import { THocProps } from "../../../types";
 import { EColumnSpan } from "../../layouts/Container";
 import { Button, ButtonSize, EButtonLayout, EIconPosition } from "../../shared/buttons";
 import { Panel } from "../../shared/Panel";
@@ -13,31 +14,21 @@ import * as bankIcon from "../../../assets/img/bank-transfer/bank-icon.svg";
 import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./LinkedBankAccountWidget.module.scss";
 
-interface IDispatchProps {
-  verifyBankAccount: () => void;
-}
-
-interface IStateProps {
-  bankAccount?: DeepReadonly<TBankAccount>;
-  isBankAccountVerified: boolean;
-  isUserFullyVerified: boolean;
-}
-
 interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-type IComponentProps = IStateProps & IDispatchProps;
+type IComponentProps = THocProps<typeof connectLinkBankAccountComponent>;
 
 const LinkAccount: React.FunctionComponent<IComponentProps> = ({
   verifyBankAccount,
-  isUserFullyVerified,
+  neurStatus,
 }) => (
   <>
     <img className={styles.icon} src={bankIcon} alt="" />
     <Button
       onClick={verifyBankAccount}
-      disabled={!isUserFullyVerified}
+      disabled={neurStatus !== ENEURWalletStatus.ENABLED}
       data-test-id="linked-bank-account-widget.link-account"
       layout={EButtonLayout.SECONDARY}
       size={ButtonSize.SMALL}
@@ -49,10 +40,10 @@ const LinkAccount: React.FunctionComponent<IComponentProps> = ({
   </>
 );
 
-const LinkedBankAccountComponent: React.FunctionComponent<
-  IComponentProps & IExternalProps
-> = props => (
+const LinkedBankAccountLayout: React.FunctionComponent<IComponentProps &
+  IExternalProps> = props => (
   <Panel
+    data-test-id="linked-bank-account-widget"
     headerText={<FormattedMessage id="linked-bank-account-widget.header" />}
     columnSpan={props.columnSpan}
   >
@@ -69,7 +60,7 @@ const LinkedBankAccountComponent: React.FunctionComponent<
       <Button
         className={styles.linkButton}
         onClick={props.verifyBankAccount}
-        disabled={!props.isUserFullyVerified}
+        disabled={props.neurStatus !== ENEURWalletStatus.ENABLED}
         data-test-id="linked-bank-account-widget.link-different-account"
         layout={EButtonLayout.INLINE}
         size={ButtonSize.SMALL}
@@ -80,8 +71,13 @@ const LinkedBankAccountComponent: React.FunctionComponent<
   </Panel>
 );
 
-const LinkedBankAccountWidget = connectLinkBankAccountComponent<IExternalProps>(
-  LinkedBankAccountComponent,
-);
+const LinkedBankAccountWidget = compose<IComponentProps & IExternalProps, IExternalProps>(
+  connectLinkBankAccountComponent(),
+  // in case it's an restricted US state we hide fully widget from portfolio
+  branch<IComponentProps>(
+    props => props.neurStatus === ENEURWalletStatus.DISABLED_RESTRICTED_US_STATE,
+    renderNothing,
+  ),
+)(LinkedBankAccountLayout);
 
-export { LinkedBankAccountWidget, LinkedBankAccountComponent };
+export { LinkedBankAccountWidget, LinkedBankAccountLayout };

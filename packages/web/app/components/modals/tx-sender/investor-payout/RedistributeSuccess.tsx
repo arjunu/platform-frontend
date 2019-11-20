@@ -7,7 +7,7 @@ import { TRedistributePayoutAdditionalData } from "../../../../modules/tx/transa
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { ButtonArrowRight } from "../../../shared/buttons";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { RedistributeTransactionDetails } from "./RedistributeTransactionDetails";
 
 import * as redistributeIcon from "../../../../assets/img/redistribute.svg";

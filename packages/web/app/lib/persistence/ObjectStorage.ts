@@ -21,7 +21,7 @@ export class ObjectStorage<T> {
     this.logger.info(`Getting key: ${this.key} from storage`);
     const value = this.storage.getKey(this.key);
     if (!value) {
-      return;
+      return undefined;
     } else {
       return JSON.parse(value);
     }

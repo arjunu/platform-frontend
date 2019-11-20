@@ -1,8 +1,17 @@
 .group-name {
-  @include font-label;
-
-  color: $neu-slate-grey;
+  font-family: $font-family-roboto;
+  color: $neu-charcoal-grey2;
   margin-bottom: $spacing-vertical-lg-1;
+  font-size: px-to-rem(18px);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.group-description {
+  font-family: $font-family-roboto;
+  color: $neu-shuttle-gray;
+  font-size: px-to-rem(16px);
+  line-height: 1.5;
 }
 
 .group {

@@ -9,7 +9,7 @@ import { TUpgradeAdditionalData } from "../../../../modules/tx/transactions/upgr
 import { ETokenType, ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { Button } from "../../../shared/buttons";
-import { DocumentTemplateButton } from "../../../shared/DocumentLink";
+import { DocumentButton } from "../../../shared/DocumentLink";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { UpgradeTransactionDetails } from "./UpgradeTransactionDetails.unsafe";
 
@@ -41,7 +41,7 @@ export const UpgradeSummaryComponent: React.FunctionComponent<TComponentProps> =
     {downloadICBMAgreement && (
       <Row>
         <Col className="my-3 text-center">
-          <DocumentTemplateButton
+          <DocumentButton
             onClick={() => downloadICBMAgreement(additionalData.tokenType)}
             title={<FormattedMessage id="wallet.icbm.reservation-agreement" />}
           />

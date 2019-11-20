@@ -1,5 +1,7 @@
 import BigNumber from "bignumber.js";
 
+import { EUSState } from "../utils/enums/usStatesEnum";
+
 export const LIGHT_WALLET_PASSWORD_CACHE_TIME = 1000 * 10;
 // If running in cypress wait for a short time
 export const LIGHT_WALLET_PRIVATE_DATA_CACHE_TIME =
@@ -14,7 +16,7 @@ export const PLATFORM_ZERO_FEE = 0;
 /**
  * We assume common digits for all currencies on our platform.
  */
-export const MONEY_DECIMALS = 18;
+export const ETH_DECIMALS = 18;
 
 export const DEFAULT_DECIMAL_PLACES = 4;
 
@@ -36,7 +38,7 @@ export enum EJwtPermissions {
 /**
  * Useful for money related calculations
  */
-export const Q18 = new BigNumber(10).pow(MONEY_DECIMALS);
+export const Q18 = new BigNumber("10").pow(ETH_DECIMALS);
 
 /**
  * Represent zero address on Ethereum - non existing address used by ERC20 to mark minting and burning
@@ -62,27 +64,8 @@ export const NEW_SHARES_TO_ISSUE_IN_WHITELIST = 1;
 export const NEW_SHARES_TO_ISSUE_IN_FIXED_SLOTS = 1;
 export const BOOKBUILDING_WATCHER_DELAY = 6000;
 export const COMPANY_TAGS_LIMIT = 6;
-export const DEFAULT_DATE_TO_WHITELIST_MIN_DURATION = 7 * 24 * 60 * 60;
 export const DAY = 24 * 60 * 60;
 export const MAX_PERCENTAGE = 100;
-/**
- * Constants for react components
- */
-export const TOAST_COMPONENT_DELAY = 4000;
-
-export const BROWSER_WALLET_RECONNECT_INTERVAL = 1000;
-
-/*
- * Storage Listener Constants
- */
-
-export const REDIRECT_CHANNEL_WATCH_DELAY = 5000;
-
-export const IPFS_PROTOCOL = "ipfs";
-
-export const NOMINEE_REQUESTS_WATCHER_DELAY = 10000;
-export const NOMINEE_BANK_ACCOUNT_WATCHER_DELAY = 1000 * 60 * 5;
-
 export const MIN_VOTING_DURATION = 7;
 export const MAX_VOTING_DURATION = 30;
 export const MIN_RESTRICTED_ACT_VOTING_DURATION = 10;
@@ -94,5 +77,31 @@ export const MAX_VOTING_MAJORITY_FRACTION = 0.99;
 export const MIN_VOTING_QUORUM = 0.01;
 export const MAX_VOTING_QUORUM = 1;
 export const ADVISORY_BOARD_TEXT_MIN_LENGTH = 1;
+
+/**
+ * Constants for react components
+ */
+export const TOAST_COMPONENT_DELAY = 4000;
+
+export const BROWSER_WALLET_RECONNECT_INTERVAL = 1000;
+
+/*
+ * Storage Listener Constants
+ */
+
+export const IPFS_PROTOCOL = "ipfs";
+
+export const NOMINEE_REQUESTS_WATCHER_DELAY = 10000;
+export const NOMINEE_RECALCULATE_TASKS_DELAY = 10000;
+export const NOMINEE_BANK_ACCOUNT_WATCHER_DELAY = 1000 * 60 * 5;
 export const PAYOUT_POLLING_DELAY = 1000;
 export const NEXT_ETO_STATE_POLLING_DELAY = 5000;
+
+/* WEB3 Related Constants */
+export const BLOCK_MINING_TIME_DELAY = 12000;
+
+/**
+ * NEUR is only allowed (by legal) for a couple of US states
+ * For now we need to disable NEUR for all US states
+ */
+export const NEUR_ALLOWED_US_STATES: EUSState[] = [];

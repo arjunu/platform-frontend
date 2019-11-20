@@ -37,12 +37,6 @@ $_active-color: lighten($_hover-color, 20%);
     position: relative;
     text-decoration: inherit;
     transition: 200ms ease-out background-color, color;
-
-    // makes button same in height with different content (for e.g. loading indicator)
-    &::before {
-      content: "\A0"; // space character
-      width: 0;
-    }
   }
 
   &:disabled,

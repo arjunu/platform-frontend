@@ -3,13 +3,14 @@ import { AppReducer } from "../../../store";
 import { DeepReadonly } from "../../../types";
 
 export interface IBrowserWalletWizardState {
-  errorMsg?: DeepReadonly<TMessage>;
+  errorMsg: DeepReadonly<TMessage> | undefined;
   isLoading: boolean;
   approvalRejected: boolean;
 }
 
 export const browserWalletWizardInitialState: IBrowserWalletWizardState = {
-  isLoading: true,
+  errorMsg: undefined,
+  isLoading: false,
   approvalRejected: false,
 };
 
@@ -18,6 +19,11 @@ export const browserWalletWizardReducer: AppReducer<IBrowserWalletWizardState> =
   action,
 ): IBrowserWalletWizardState => {
   switch (action.type) {
+    case "BROWSER_WALLET_TRY_CONNECTING":
+      return {
+        ...browserWalletWizardInitialState,
+        isLoading: true,
+      };
     case "BROWSER_WALLET_CONNECTION_ERROR":
       return {
         ...state,
@@ -30,12 +36,8 @@ export const browserWalletWizardReducer: AppReducer<IBrowserWalletWizardState> =
         isLoading: false,
         approvalRejected: true,
       };
-    case "BROWSER_WALLET_APPROVAL_REQUEST_RESET":
-      return {
-        ...state,
-        approvalRejected: false,
-      };
-  }
 
-  return state;
+    default:
+      return state;
+  }
 };

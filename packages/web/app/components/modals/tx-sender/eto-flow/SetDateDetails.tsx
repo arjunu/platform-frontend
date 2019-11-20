@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { TimeLeft } from "../../../shared/TimeLeft.unsafe";
-import { localTime, utcTime, weekdayLocal, weekdayUTC } from "../../../shared/utils";
+import { localTime, timeZone, utcTime, weekdayLocal, weekdayUTC } from "../../../shared/utils";
 import { InfoList } from "../shared/InfoList";
 import { InfoRow } from "../shared/InfoRow";
 import { TimestampRow } from "../shared/TimestampRow";
@@ -15,6 +15,7 @@ const SetDateDetails: TransactionDetailsComponent<ETxSenderType.ETO_SET_DATE> = 
   txTimestamp,
 }) => {
   const newStartDate = additionalData.newStartDate;
+  const timezone = timeZone();
 
   return (
     <InfoList className={className}>
@@ -28,10 +29,14 @@ const SetDateDetails: TransactionDetailsComponent<ETxSenderType.ETO_SET_DATE> = 
         value={`${weekdayUTC(newStartDate)}, ${utcTime(newStartDate)}`}
       />
       <InfoRow
-        caption={<FormattedMessage id="eto.settings.eto-start-date-summary.new-start-date-local" />}
+        caption={
+          <FormattedMessage
+            id="eto.settings.eto-start-date-summary.new-start-date-local"
+            values={{ timezone }}
+          />
+        }
         value={`${weekdayLocal(newStartDate)}, ${localTime(newStartDate)}`}
       />
-
       {txTimestamp && <TimestampRow timestamp={txTimestamp} />}
     </InfoList>
   );

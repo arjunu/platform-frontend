@@ -4,23 +4,16 @@ import { compose } from "recompose";
 
 import { NOMINEE_BANK_ACCOUNT_WATCHER_DELAY } from "../../../config/constants";
 import { actions } from "../../../modules/actions";
+import { THocProps } from "../../../types";
 import { withActionWatcher } from "../../../utils/withActionWatcher.unsafe";
 import { connectLinkBankAccountComponent } from "../../settings/linked-bank-account/ConnectLinkBankAccount";
 import { Button, EButtonLayout, EButtonTheme, EIconPosition } from "../../shared/buttons/Button";
 
 import * as link from "../../../assets/img/inline_icons/social_link.svg";
 
-interface IProps {
-  verifyBankAccount: () => void;
-}
+type TProps = Pick<THocProps<typeof connectLinkBankAccountComponent>, "verifyBankAccount">;
 
-interface IExternalProps {
-  verifyBankAccount: () => void;
-  isBankAccountVerified: boolean;
-  isUserFullyVerified: boolean;
-}
-
-const NomineeLinkBankAccountLayout: React.FunctionComponent<IProps> = ({ verifyBankAccount }) => (
+const NomineeLinkBankAccountLayout: React.FunctionComponent<TProps> = ({ verifyBankAccount }) => (
   <>
     <h4>
       <FormattedMessage id="nominee-flow.link-bank-account.title" />
@@ -41,13 +34,12 @@ const NomineeLinkBankAccountLayout: React.FunctionComponent<IProps> = ({ verifyB
   </>
 );
 
-const NomineeLinkBankAccountBase = compose<IProps, IExternalProps>(
+const LinkBankAccount = compose<TProps, {}>(
+  connectLinkBankAccountComponent(),
   withActionWatcher({
     actionCreator: dispatch => dispatch(actions.kyc.loadBankAccountDetails()),
     interval: NOMINEE_BANK_ACCOUNT_WATCHER_DELAY,
   }),
 )(NomineeLinkBankAccountLayout);
-
-const LinkBankAccount = connectLinkBankAccountComponent<{}>(NomineeLinkBankAccountBase);
 
 export { LinkBankAccount, NomineeLinkBankAccountLayout };

@@ -3,10 +3,13 @@ import * as React from "react";
 
 import { ETransactionErrorType } from "../../../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../../../modules/tx/types";
-import { convertToBigInt } from "../../../../utils/Number.utils";
+import { convertToUlps } from "../../../../utils/NumberUtils";
+import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withStore } from "../../../../utils/storeDecorator.unsafe";
 import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { TxErrorLayout } from "./TxError";
+
+import * as tokenIcon from "../../../../assets/img/token_icon.svg";
 
 const baseTxData = {
   blockId: 4623487932,
@@ -25,6 +28,7 @@ const baseTxData = {
     blockNumber: undefined,
     chainId: undefined,
     transactionIndex: undefined,
+    failedRpcError: undefined,
   },
   error: ETransactionErrorType.REVERTED_TX,
 };
@@ -47,19 +51,20 @@ const investTxData: React.ComponentProps<typeof TxErrorLayout> = {
     eto: {
       etoId: "123",
       companyName: "Test Co",
-      existingShareCapital: 20,
-      preMoneyValuationEur: 100,
       equityTokensPerShare: 10,
-      investmentCalculatedValues: {
-        sharePrice: 100 / (20 * 10),
+      sharePrice: 100 / (20 * 10),
+      equityTokenInfo: {
+        equityTokenSymbol: toEquityTokenSymbol("QTT"),
+        equityTokenImage: tokenIcon,
+        equityTokenName: "Quintessence",
       },
     },
     equityTokens: "211",
-    estimatedReward: convertToBigInt("125"),
+    estimatedReward: convertToUlps("125"),
     etherPriceEur: "2542.22",
-    gasCostEth: convertToBigInt("0.124"),
-    investmentEth: convertToBigInt("120"),
-    investmentEur: convertToBigInt("22506"),
+    gasCostEth: convertToUlps("0.124"),
+    investmentEth: convertToUlps("120"),
+    investmentEur: convertToUlps("22506"),
     isIcbm: false,
   },
   ...baseTxData,

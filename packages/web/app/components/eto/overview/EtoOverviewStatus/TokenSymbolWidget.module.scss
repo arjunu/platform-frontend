@@ -20,11 +20,8 @@
 }
 
 .token-image {
-  @include circle;
   @include responsive-size(width, 34px, 70px);
   @include responsive-size(height, 34px, 70px);
-
-  overflow: hidden;
 }
 
 .token-name {

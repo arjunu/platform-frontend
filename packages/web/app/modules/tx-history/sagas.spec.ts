@@ -7,7 +7,7 @@ import {
   TAnalyticsTransaction,
 } from "../../lib/api/analytics-api/interfaces";
 import { noopLogger } from "../../lib/dependencies/logger";
-import { EthereumAddressWithChecksum, EthereumTxHash } from "../../types";
+import { EthereumAddressWithChecksum, EthereumTxHash } from "../../utils/opaque-types/types";
 import { mapAnalyticsApiTransactionResponse } from "./sagas";
 import { ETransactionStatus } from "./types";
 

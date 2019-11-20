@@ -3,46 +3,38 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
 import { compose } from "recompose";
 
-import { TCompanyEtoData } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { IEtoDocument, TEtoDocumentTemplates } from "../../../lib/api/eto/EtoFileApi.interfaces";
-import { ignoredDocuments, ignoredTemplatesPublicView } from "../../../lib/api/eto/EtoFileUtils";
-import { EOfferingDocumentType } from "../../../lib/api/eto/EtoProductsApi.interfaces";
+import { IEtoDocument } from "../../../lib/api/eto/EtoFileApi.interfaces";
+import { canShowDocument, ignoredTemplatesPublicView } from "../../../lib/api/eto/EtoFileUtils";
 import { actions } from "../../../modules/actions";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { CommonHtmlProps } from "../../../types";
 import { getInvestorDocumentTitles } from "../../documents/utils";
 import { Container, EColumnSpan } from "../../layouts/Container";
-import { DocumentTemplateButton } from "../../shared/DocumentLink";
+import { DocumentButton } from "../../shared/DocumentLink";
 import { Panel } from "../../shared/Panel";
 import { DashboardHeading } from "../shared/DashboardHeading";
 
 import * as styles from "./DocumentsWidget.module.scss";
 
 type TExternalProps = {
-  companyMarketingLinks: TCompanyEtoData["marketingLinks"];
-  etoTemplates: TEtoDocumentTemplates;
-  etoDocuments: TEtoDocumentTemplates;
-  offeringDocumentType: EOfferingDocumentType;
+  eto: TEtoWithCompanyAndContractReadonly;
   columnSpan?: EColumnSpan;
+  isUserFullyVerified: boolean;
 };
 
 type TDispatchProps = {
   downloadDocument: (document: IEtoDocument) => void;
 };
 
-const DocumentsWidgetLayout: React.FunctionComponent<
-  TDispatchProps & TExternalProps & CommonHtmlProps
-> = ({
-  downloadDocument,
-  etoDocuments,
-  etoTemplates,
-  className,
-  offeringDocumentType,
-  columnSpan,
-}) => {
-  const documentTitles = getInvestorDocumentTitles(offeringDocumentType);
+const DocumentsWidgetLayout: React.FunctionComponent<TDispatchProps &
+  TExternalProps &
+  CommonHtmlProps> = ({ downloadDocument, className, columnSpan, isUserFullyVerified, eto }) => {
+  const { templates, documents, product } = eto;
 
-  return etoTemplates || etoDocuments ? (
+  const documentTitles = getInvestorDocumentTitles(product.offeringDocumentType);
+
+  return templates || documents ? (
     <Container columnSpan={EColumnSpan.ONE_COL}>
       <DashboardHeading
         title={<FormattedMessage id="eto.public-view.documents.legal-documents" />}
@@ -50,26 +42,24 @@ const DocumentsWidgetLayout: React.FunctionComponent<
       <Panel className={className} columnSpan={columnSpan}>
         <section className={styles.group}>
           <Row>
-            {Object.keys(etoTemplates)
+            {Object.keys(templates)
               .filter(key => !ignoredTemplatesPublicView.some(template => template === key))
               .map((key, i) => (
                 <Col sm="6" md="12" lg="6" key={i} className={styles.document}>
-                  <DocumentTemplateButton
-                    onClick={() => downloadDocument(etoTemplates[key])}
-                    title={documentTitles[etoTemplates[key].documentType]}
+                  <DocumentButton
+                    onClick={() => downloadDocument(templates[key])}
+                    title={documentTitles[templates[key].documentType]}
                   />
                 </Col>
               ))}
-            {Object.keys(etoDocuments)
-              .filter(
-                key =>
-                  !ignoredDocuments.some(document => document === etoDocuments[key].documentType),
-              )
-              .map((key, i) => (
+            {Object.values(documents)
+              .filter(document => canShowDocument(document, isUserFullyVerified))
+              .map((document, i) => (
                 <Col sm="6" md="12" lg="6" key={i} className={styles.document}>
-                  <DocumentTemplateButton
-                    onClick={() => downloadDocument(etoDocuments[key])}
-                    title={documentTitles[etoDocuments[key].documentType]}
+                  <DocumentButton
+                    data-test-id={`eto-public-view.documents.${document.documentType}`}
+                    onClick={() => downloadDocument(document)}
+                    title={documentTitles[document.documentType]}
                   />
                 </Col>
               ))}
@@ -85,9 +75,9 @@ const DocumentsWidget = compose<
   TExternalProps & CommonHtmlProps
 >(
   appConnect<{}, TDispatchProps, TExternalProps>({
-    dispatchToProps: dispatch => ({
+    dispatchToProps: (dispatch, { eto }) => ({
       downloadDocument: (document: IEtoDocument) =>
-        dispatch(actions.eto.downloadEtoDocument(document)),
+        dispatch(actions.eto.downloadEtoDocument(document, eto)),
     }),
   }),
 )(DocumentsWidgetLayout);

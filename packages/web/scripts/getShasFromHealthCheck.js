@@ -9,9 +9,11 @@ const getApiSha = async () => {
   try {
     console.log(`Requesting SHA from Health Check API`);
 
-    const response = await (await fetch("https://platform.neufund.io/api/health", {
-      method: "GET",
-    })).json();
+    const response = await (
+      await fetch("https://platform.neufund.io/api/health", {
+        method: "GET",
+      })
+    ).json();
 
     console.log(`Artifacts SHA: ${response.artifacts_sha}`);
     console.log(`Commit SHA: ${response.commit_sha}`);
@@ -40,12 +42,8 @@ const getApiSha = async () => {
 
       const contractArtifactsDir = getArtifactsSubmoduleRelativePath();
 
-      const CI_COMMAND = `git submodule update --init --recursive && git fetch && git checkout ${
-        response.artifacts_sha
-      } && git status`;
-      const LOCAL_COMMAND = `git submodule update --init --recursive && cd ${contractArtifactsDir} && git fetch && git checkout ${
-        response.artifacts_sha
-      } && git status`;
+      const CI_COMMAND = `git submodule update --init --recursive && git fetch && git checkout ${response.artifacts_sha} && git status`;
+      const LOCAL_COMMAND = `git submodule update --init --recursive && cd ${contractArtifactsDir} && git fetch && git checkout ${response.artifacts_sha} && git status`;
 
       if (process.env.CIRCLE_BUILD_NUM) {
         console.log("Detected Circle-CI running");

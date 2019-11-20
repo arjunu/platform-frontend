@@ -13,7 +13,6 @@ import { BankTransferRedeemDetails } from "./redeem/BankTransferRedeemDetails";
 import { UnlockWalletTransactionDetails } from "./unlock-wallet-flow/UnlockWalletTransactionDetails";
 import { UpgradeTransactionDetails } from "./upgrade-flow/UpgradeTransactionDetails.unsafe";
 import { ClaimTransactionDetails } from "./user-claim/ClaimTransactionDetails";
-import { WithdrawTransactionDetails } from "./withdraw-flow/WithdrawTransactionDetails";
 
 type IProps = {
   txData?: Partial<ITxData>;
@@ -28,18 +27,18 @@ const TxDetails: React.FunctionComponent<IProps & CommonHtmlProps> = props => {
   if (!props.txData) {
     return null;
   }
-
   // TODO: investigate why typescript marks `txData` still as undefined after condition above
   const propsAsAny = props as any;
 
   const type = props.type;
   switch (type) {
+    case ETxSenderType.WITHDRAW:
+    case ETxSenderType.TRANSFER_TOKENS:
+      return null;
     case ETxSenderType.INVESTOR_ACCEPT_PAYOUT:
       return <AcceptTransactionDetails {...propsAsAny} />;
     case ETxSenderType.USER_CLAIM:
       return <ClaimTransactionDetails {...propsAsAny} />;
-    case ETxSenderType.WITHDRAW:
-      return <WithdrawTransactionDetails {...propsAsAny} />;
     case ETxSenderType.UPGRADE:
       return <UpgradeTransactionDetails {...propsAsAny} />;
     case ETxSenderType.UNLOCK_FUNDS:

@@ -3,8 +3,8 @@ import { isEmpty } from "lodash";
 import * as React from "react";
 import { branch, compose, renderNothing } from "recompose";
 
-import { INotification } from "../../../modules/notifications/reducer";
 import { selectNotificationsWithDerived } from "../../../modules/notifications/selectors";
+import { INotification } from "../../../modules/notifications/types";
 import { appConnect, AppDispatch } from "../../../store";
 import { Notification } from "./Notification";
 

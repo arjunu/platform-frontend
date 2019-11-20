@@ -4,15 +4,15 @@ import { compose } from "recompose";
 import { actions } from "../../../modules/actions";
 import {
   selectEtoWidgetError,
-  selectEtoWithCompanyAndContract,
+  selectInvestorEtoWithCompanyAndContract,
 } from "../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { etoWidgetViewLink } from "../../appRouteUtils";
 
 interface IStateProps {
-  eto: TEtoWithCompanyAndContract | undefined;
+  eto: TEtoWithCompanyAndContractReadonly | undefined;
   widgetError: boolean | undefined;
 }
 
@@ -34,7 +34,7 @@ const EmbeddedWidgetLayout: React.FunctionComponent<IStateProps> = ({ eto, widge
 const EmbeddedWidget = compose<IStateProps, IRouterParams>(
   appConnect<IStateProps, {}, IRouterParams & IRouterParams>({
     stateToProps: (state, props) => ({
-      eto: selectEtoWithCompanyAndContract(state, props.previewCode),
+      eto: selectInvestorEtoWithCompanyAndContract(state, props.previewCode),
       widgetError: selectEtoWidgetError(state.eto),
     }),
   }),

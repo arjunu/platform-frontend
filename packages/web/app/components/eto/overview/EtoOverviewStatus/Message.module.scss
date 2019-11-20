@@ -3,21 +3,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 
-  .message {
-    text-align: center;
-    margin-bottom: $spacing-vertical-sm-1;
+  .title {
+    @include font-default;
 
-    h5,
-    p {
-      margin: 0;
-    }
-
-    h5 {
-      @include font-default;
-
-      color: $neu-seaweed;
-      text-transform: uppercase;
-    }
+    color: $neu-seaweed;
+    margin: 0;
+    text-transform: uppercase;
   }
 }

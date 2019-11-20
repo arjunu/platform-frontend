@@ -40,6 +40,7 @@ export const symbols = makeDebugSymbols({
 
   // storages
   walletStorage: Symbol(),
+  documentsConfidentialityAgreementsStorage: Symbol(),
   userStorage: Symbol(),
   jwtStorage: Symbol(),
 

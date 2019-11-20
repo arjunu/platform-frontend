@@ -2,7 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { ECountries } from "../../../lib/api/util/countries.enum";
+import { ECountries } from "../../../utils/enums/countriesEnum";
 import { withModalBody } from "../../../utils/storybookHelpers.unsafe";
 import { JurisdicitonDisclaimerModalLayout } from "./JurisdictionDisclaimerModal";
 

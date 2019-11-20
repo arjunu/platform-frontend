@@ -1,16 +1,21 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { compose } from "recompose";
+import { branch, compose, renderComponent } from "recompose";
 
 import { EEtoState } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { actions } from "../../../../../modules/actions";
-import { selectIsAuthorized, selectIsInvestor } from "../../../../../modules/auth/selectors";
+import {
+  selectIsAuthorized,
+  selectIsInvestor,
+  selectIsUSInvestor,
+} from "../../../../../modules/auth/selectors";
 import { InvalidETOStateError } from "../../../../../modules/eto/errors";
 import { selectEtoOnChainNextStateStartDate } from "../../../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { isOnChain } from "../../../../../modules/eto/utils";
 import { selectIsUserVerifiedOnBlockchain } from "../../../../../modules/kyc/selectors";
 import { appConnect } from "../../../../../store";
+import { OmitKeys } from "../../../../../types";
 import { invariant } from "../../../../../utils/invariant";
 import { appRoutes } from "../../../../appRoutes";
 import { etoPublicViewLink } from "../../../../appRouteUtils";
@@ -22,24 +27,27 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { EndTimeWidget } from "../EndTimeWidget";
-import { InvestmentProgress } from "./InvestmentProgress";
+import { InvestmentProgress } from "../../InvestmentProgress";
+import { EndTimeWidget } from "../../shared/EndTimeWidget";
+import { FundraisingBreakdownTooltip } from "./FundraisingBreakdownTooltip";
+import { USInvestorMessage } from "./USInvestorMessage";
 
 import * as styles from "./InvestmentWidget.module.scss";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   isEmbedded: boolean;
 }
 
 interface IInvestmentStatsProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IStateProps {
   isAuthorized: boolean;
   isAllowedToInvest: boolean;
   isInvestor: boolean;
+  isUsInvestor: boolean;
   nextStateDate: Date | undefined;
 }
 
@@ -47,7 +55,7 @@ interface IDispatchProps {
   startInvestmentFlow: () => void;
 }
 
-type TInvestWidgetProps = IExternalProps & IStateProps & IDispatchProps;
+type TInvestWidgetProps = IExternalProps & OmitKeys<IStateProps, "isUsInvestor"> & IDispatchProps;
 
 const InvestNowButton: React.FunctionComponent<TInvestWidgetProps> = ({
   eto,
@@ -103,7 +111,7 @@ const InvestNowButton: React.FunctionComponent<TInvestWidgetProps> = ({
   return (
     <div className={styles.investNowButton}>
       {investNowButtonSelector()}
-      <EndTimeWidget endTime={nextStateDate} />
+      {nextStateDate && <EndTimeWidget endTime={nextStateDate} className={styles.endTime} />}
     </div>
   );
 };
@@ -118,18 +126,17 @@ const InvestmentStats: React.FunctionComponent<IInvestmentStatsProps> = ({ eto }
     <div>
       <div className={styles.header}>
         <div>
+          {"≈"}
           <Money
-            value={eto.contract.totalInvestment.etherTokenBalance}
+            data-test-id="investment-widget-total-nEur-invested"
+            value={eto.contract.totalInvestment.totalEquivEurUlps}
             inputFormat={ENumberInputFormat.ULPS}
-            outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-            valueType={ECurrency.ETH}
+            valueType={ECurrency.EUR}
+            outputFormat={ENumberOutputFormat.FULL}
           />
-          <br />
-          <Money
-            value={eto.contract.totalInvestment.euroTokenBalance}
-            inputFormat={ENumberInputFormat.ULPS}
-            outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-            valueType={ECurrency.EUR_TOKEN}
+          <FundraisingBreakdownTooltip
+            etherTokenBalance={eto.contract.totalInvestment.etherTokenBalance}
+            euroTokenBalance={eto.contract.totalInvestment.euroTokenBalance}
           />
         </div>
         {process.env.NF_MAY_SHOW_INVESTOR_STATS === "1" && (
@@ -140,6 +147,7 @@ const InvestmentStats: React.FunctionComponent<IInvestmentStatsProps> = ({ eto }
                 totalInvestors,
                 totalInvestorsAsString: (
                   <FormatNumber
+                    data-test-id="investment-widget-investors-invested"
                     value={totalInvestors}
                     outputFormat={ENumberOutputFormat.INTEGER}
                     inputFormat={ENumberInputFormat.FLOAT}
@@ -166,15 +174,17 @@ const InvestmentWidgetLayout: React.FunctionComponent<TInvestWidgetProps> = prop
 const InvestmentWidget = compose<TInvestWidgetProps, IExternalProps>(
   appConnect<IStateProps, IDispatchProps, IExternalProps>({
     stateToProps: (state, props) => ({
-      isAuthorized: selectIsAuthorized(state.auth),
+      isAuthorized: selectIsAuthorized(state),
       isAllowedToInvest: selectIsUserVerifiedOnBlockchain(state),
       isInvestor: selectIsInvestor(state),
+      isUsInvestor: selectIsUSInvestor(state),
       nextStateDate: selectEtoOnChainNextStateStartDate(state, props.eto.previewCode),
     }),
     dispatchToProps: (dispatch, props) => ({
       startInvestmentFlow: () => dispatch(actions.investmentFlow.startInvestment(props.eto.etoId)),
     }),
   }),
+  branch<IStateProps>(props => props.isUsInvestor, renderComponent(USInvestorMessage)),
 )(InvestmentWidgetLayout);
 
 export { InvestmentWidgetLayout, InvestmentWidget };
