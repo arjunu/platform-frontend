@@ -59,6 +59,7 @@ describe("Pending Transactions During TX flow", () => {
       clearPendingTransactions();
     });
   });
+
   it("platform pending transaction should show cancelled transaction when transactional node fails", () => {
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
       kyc: "business",
@@ -84,6 +85,7 @@ describe("Pending Transactions During TX flow", () => {
       assertTxErrorDialogueNoCost();
     });
   });
+
   it("platform pending transaction should delete Pending Transaction with version mismatch", () => {
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
       kyc: "business",

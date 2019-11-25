@@ -56,14 +56,8 @@ export const doWithdraw = (
       closeModal();
 
       break;
-    case "never":
-      // wait for transaction to finish
-      cy.get(
-        `${tid("modals.shared.tx-success.modal")}, ${tid("modals.shared.tx-error.modal")}`,
-      ).should("exist");
-
-      break;
   }
+
   return cy.get("@txHash").then(txHashWithLink => txHashWithLink.slice(0, 10));
 };
 

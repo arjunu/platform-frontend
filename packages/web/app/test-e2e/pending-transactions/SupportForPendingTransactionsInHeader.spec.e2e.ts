@@ -2,15 +2,15 @@ import {
   accountFixtureAddress,
   addFailedPendingTransactions,
   addPendingExternalTransaction,
+  addPendingTransactions,
+  assertTxErrorDialogueNoCost,
   closeModal,
   goToDashboard,
   goToWallet,
+  loginFixtureAccount,
   removePendingExternalTransaction,
   tid,
 } from "../utils";
-import { loginFixtureAccount } from "../utils/userHelpers";
-import { assertTxErrorDialogueNoCost } from "./../utils/assertions";
-import { addPendingTransactions } from "./../utils/userHelpers";
 import { generalPendingTxFixture } from "./generalPendingTxFixture";
 import { assertPendingWithdrawModal, assertSuccessWithdrawModal, doWithdraw } from "./utils";
 
@@ -84,6 +84,8 @@ describe("Pending Transactions In Header", () => {
       const amount = "10";
 
       doWithdraw(address, amount, { closeWhen: "never" });
+
+      cy.get(tid("modals.shared.tx-success.modal")).should("exist");
 
       cy.reload();
 

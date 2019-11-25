@@ -51,6 +51,7 @@ export const investorMenuData = (): TMenuEntry[] => {
       key: "portfolio",
       to: appRoutes.portfolio,
       menuName: <FormattedMessage id="menu.portfolio" />,
+      "data-test-id": "menu-go-to-portfolio",
     },
     {
       type: EMenuEntryType.LINK,

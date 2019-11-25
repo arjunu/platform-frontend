@@ -61,7 +61,7 @@ export function* getTransactionOrThrow(
 
 /**
  * Watch for a given `txHash` and emit events to the `txChannel`
- * @note `watchForTx` won't cancel watching on her own.
+ * @note `watchForTx` won't cancel watching on it's own.
  *       It's a responsibility of the consumer to cancel the watcher (by canceling the saga)
  */
 export function* watchForTx(
