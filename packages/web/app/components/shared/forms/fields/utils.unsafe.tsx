@@ -15,7 +15,7 @@ import {
 import { ECurrency } from "../../formatters/utils";
 import { selectDecimalPlaces } from "../../Money.unsafe";
 import { FormFieldLabel } from "./FormFieldLabel";
-import { IImageDimensions } from "./FormSingleFileUpload.unsafe";
+import { IImageDimensions } from "./FormSingleFileUpload";
 
 export enum EMimeType {
   PDF = "application/pdf",

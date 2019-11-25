@@ -4,9 +4,10 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TFormikConnect } from "../../../../../types";
 import { FormFieldError } from "../../../../shared/forms/fields/FormFieldError";
-import { FormFieldLabel, FormLabel } from "../../../../shared/forms/fields/FormFieldLabel";
+import { FormFieldLabel } from "../../../../shared/forms/fields/FormFieldLabel";
 import { FormTextArea } from "../../../../shared/forms/fields/FormTextArea";
 import { RadioButtonLayout } from "../../../../shared/forms/layouts/CheckboxLayout";
+import { FormLabel } from "../../../../shared/forms/layouts/FormLabel";
 
 import * as styles from "../../Shared.module.scss";
 

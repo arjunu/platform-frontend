@@ -129,7 +129,7 @@ export const SignInvestmentAgreement = compose<React.FunctionComponent<IExternal
     },
     dispatchToProps: dispatch => ({
       signInvestmentAgreement: (eto: TEtoWithCompanyAndContractReadonly, agreementHash: string) =>
-        dispatch(actions.etoFlow.signInvestmentAgreement(eto, agreementHash)),
+        dispatch(actions.etoFlow.issuerSignInvestmentAgreement(eto, agreementHash)),
     }),
   }),
   branch<IStateProps | null>(props => props === null, renderNothing),

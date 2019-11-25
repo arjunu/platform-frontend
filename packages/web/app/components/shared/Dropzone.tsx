@@ -1,6 +1,6 @@
 import * as cn from "classnames";
 import * as React from "react";
-import ReactDropzone, { DropFileEventHandler, DropzoneProps } from "react-dropzone";
+import ReactDropzone, { DropzoneProps, ImageFile } from "react-dropzone";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TDataTestId } from "../../types";
@@ -9,8 +9,14 @@ import { ELoadingIndicator, LoadingIndicator } from "./loading-indicator/Loading
 
 import * as styles from "./Dropzone.module.scss";
 
+// If we try to reexport typescript will have an error
+type DropFileEventHandler = (
+  acceptedOrRejected: ImageFile[],
+  event: React.DragEvent<HTMLDivElement>,
+) => void;
+
 interface IProps {
-  isUploading?: boolean;
+  isUploading: boolean;
   name: string;
   isDisabled?: boolean;
 }
@@ -31,7 +37,7 @@ const DocumentDropzoneContent: React.FunctionComponent<{
       <FormattedMessage id="shared.dropzone.upload.upload" />
     </UploadButton>
     <p className={cn(styles.dragDescription)}>
-      <FormattedMessage id="shared.dropzone.upload.drag-n-drop" />
+      <FormattedMessage id="shared.dropzone.upload.drop-here" />
     </p>
   </>
 );

@@ -4,4 +4,10 @@ import * as React from "react";
 
 import { AcceptISHALayout } from "./AcceptIsha";
 
-storiesOf("AcceptIsha", module).add("default", () => <AcceptISHALayout sign={action("sign")} />);
+storiesOf("AcceptIsha", module).add("default", () => (
+  <AcceptISHALayout
+    deadlineTimestamp={123456789}
+    companyName={"SupaCompanyLtd"}
+    sign={action("sign")}
+  />
+));

@@ -36,14 +36,17 @@ const CircleButton: React.FunctionComponent<React.ComponentProps<typeof RoundedB
   </RoundedButton>
 );
 
-const CircleButtonWarning: React.FunctionComponent<React.ComponentProps<typeof CircleButton>> = ({
-  children,
-  ...props
-}) => (
-  <CircleButton className={styles.buttonWarning} {...props}>
+const CircleButtonWarning: React.ForwardRefExoticComponent<{
+  children?: React.ReactNode;
+} & React.ComponentProps<typeof CircleButton> &
+  React.RefAttributes<HTMLButtonElement>> = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<typeof CircleButton>
+>(({ children, ...props }, ref) => (
+  <CircleButton ref={ref} className={styles.buttonWarning} {...props}>
     {children}
   </CircleButton>
-);
+));
 
 const CircleButtonIcon: React.FunctionComponent<React.ComponentProps<
   typeof ButtonIcon

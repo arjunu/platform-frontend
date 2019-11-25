@@ -1,0 +1,12 @@
+.form-label {
+  @include nds-label;
+
+  text-transform: uppercase;
+  color: $neu-charcoal-grey;
+  margin-bottom: px-to-rem(4px);
+}
+
+.inherit-font {
+  font-size: inherit;
+  color: inherit;
+}

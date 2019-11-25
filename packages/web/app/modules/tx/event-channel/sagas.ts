@@ -2,11 +2,11 @@ import { buffers, channel, Channel, delay } from "redux-saga";
 import { call, put, race } from "redux-saga/effects";
 import * as Web3 from "web3";
 
+import { BLOCK_MINING_TIME_DELAY } from "../../../config/constants";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { TPendingTxs } from "../../../lib/api/users/interfaces";
 import { OutOfGasError, RevertedTransactionError } from "../../../lib/web3/Web3Adapter";
 import { neuCall } from "../../sagasUtils";
-import { BLOCK_MINING_TIME_DELAY } from "./../../../config/constants";
 import { TransactionCancelledError } from "./errors";
 import { EEventEmitterChannelEvents, TEventEmitterChannelEvents } from "./types";
 
@@ -59,16 +59,21 @@ export function* getTransactionOrThrow(
   return tx;
 }
 
-// onNewBlock should return true to finish observing
+/**
+ * Watch for a given `txHash` and emit events to the `txChannel`
+ * @note `watchForTx` won't cancel watching on her own.
+ *       It's a responsibility of the consumer to cancel the watcher (by canceling the saga)
+ */
 export function* watchForTx(
   { web3Manager }: TGlobalDependencies,
   txHash: string,
   txChannel: Channel<TEventEmitterChannelEvents>,
 ): Iterator<any> {
   let lastBlockId = -1;
-  try {
-    while (true) {
+  while (true) {
+    try {
       const currentBlockNo: number = yield web3Manager.internalWeb3Adapter.getBlockNumber();
+
       if (lastBlockId !== currentBlockNo) {
         lastBlockId = currentBlockNo;
 
@@ -76,6 +81,7 @@ export function* watchForTx(
           type: EEventEmitterChannelEvents.NEW_BLOCK,
           blockId: currentBlockNo,
         });
+
         const tx = yield neuCall(getTransactionOrThrow, txHash);
         if (tx) {
           yield put(txChannel, { type: EEventEmitterChannelEvents.TX_MINED });
@@ -83,22 +89,29 @@ export function* watchForTx(
       }
 
       yield delay(BLOCK_MINING_TIME_DELAY);
-    }
-  } catch (error) {
-    if (error instanceof TransactionCancelledError) {
-      yield put(txChannel, { type: EEventEmitterChannelEvents.CANCELLED, error });
-    } else if (error instanceof RevertedTransactionError) {
-      yield put(txChannel, { type: EEventEmitterChannelEvents.REVERTED_TRANSACTION, error });
-    } else if (error instanceof OutOfGasError) {
-      yield put(txChannel, { type: EEventEmitterChannelEvents.OUT_OF_GAS, error });
-    } else {
-      yield put(txChannel, { type: EEventEmitterChannelEvents.ERROR, error });
+    } catch (error) {
+      if (error instanceof TransactionCancelledError) {
+        yield put(txChannel, { type: EEventEmitterChannelEvents.CANCELLED, error });
+      } else if (error instanceof RevertedTransactionError) {
+        yield put(txChannel, { type: EEventEmitterChannelEvents.REVERTED_TRANSACTION, error });
+      } else if (error instanceof OutOfGasError) {
+        yield put(txChannel, { type: EEventEmitterChannelEvents.OUT_OF_GAS, error });
+      } else {
+        yield put(txChannel, { type: EEventEmitterChannelEvents.ERROR, error });
+      }
     }
   }
 }
 
-export function* createWatchTxChannel(txHash: string, actionGeneratingSaga: any): Iterator<any> {
+export function* createWatchTxChannel(
+  txHash: string,
+  actionGeneratingSaga: (channel: Channel<TEventEmitterChannelEvents>) => Iterator<any>,
+): Iterator<any> {
+  // Be really careful here as `channel` only allows single subscriber and
+  // it's really hard to catch why not all subscribers are notified
+  // TODO: replace by `multicastChannel` after migration to redux-saga 1.*
   const txChannel: Channel<TEventEmitterChannelEvents> = yield channel(buffers.sliding(50));
+
   yield race({
     action: call(actionGeneratingSaga, txChannel),
     blockWatcher: neuCall(watchForTx, txHash, txChannel),

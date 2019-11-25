@@ -65,10 +65,16 @@ const SetEtoDateSummaryComponent: React.FunctionComponent<IProps> = ({
     </Heading>
 
     <p className="mb-4">
-      <FormattedMessage id="eto.status.onchain.change-eto-date-countdown-text" />{" "}
-      <i>
-        <TimeLeft refresh={false} asUtc={true} finalTime={changeableTill.utc().toDate()} />
-      </i>
+      <FormattedMessage
+        id="eto.status.onchain.change-eto-date-countdown-text"
+        values={{
+          timeLeft: (
+            <i>
+              <TimeLeft refresh={false} asUtc={true} finalTime={changeableTill.utc().toDate()} />
+            </i>
+          ),
+        }}
+      />
     </p>
 
     <SetDateDetails additionalData={additionalData} className="mb-4" />

@@ -9,6 +9,7 @@ import * as styles from "./Heading.module.scss";
 
 export enum EHeadingSize {
   SMALL = styles.sizeSmall,
+  MEDIUM = styles.sizeMedium,
   HUGE = styles.sizeHuge,
 }
 

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { Col, Row } from "reactstrap";
 import { setDisplayName } from "recompose";
 import { compose } from "redux";
 
@@ -17,10 +16,11 @@ import {
 } from "../../../../modules/eto-flow/selectors";
 import { EEtoFormTypes } from "../../../../modules/eto-flow/types";
 import { appConnect } from "../../../../store";
+import { ArrayWithAtLeastOneMember } from "../../../../types";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import { FormField, FormTextArea } from "../../../shared/forms";
-import { FormSingleFileUpload } from "../../../shared/forms/fields/FormSingleFileUpload.unsafe";
-import { EMimeType } from "../../../shared/forms/fields/utils.unsafe";
+import { FormSingleFileUpload } from "../../../shared/forms/fields/FormSingleFileUpload";
+import { EMimeType, TAcceptedFileType } from "../../../shared/forms/fields/utils.unsafe";
 import { EtoTagWidget, generateTagOptions } from "../../shared/EtoTagWidget.unsafe";
 import { EtoFormBase } from "../EtoFormBase";
 import { Section } from "../Shared";
@@ -38,6 +38,11 @@ interface IDispatchProps {
 }
 
 const tagList = ["Science", "Technology", "Blockchain", "Medical", "Research"];
+
+const acceptedImageTypes: ArrayWithAtLeastOneMember<TAcceptedFileType> = [
+  EMimeType.JPEG,
+  EMimeType.PNG,
+];
 
 type IProps = IStateProps & IDispatchProps;
 
@@ -96,41 +101,41 @@ const EtoRegistrationCompanyInformationComponent = ({
         className="mb-4"
       />
 
-      <Row>
-        <Col>
-          <FormSingleFileUpload
-            dimensions={{ width: 150, height: 150 }}
-            name="companyLogo"
-            label={<FormattedMessage id="eto.form.company-information.logo" />}
-            acceptedFiles={[EMimeType.JPEG, EMimeType.PNG]}
-            fileFormatInformation="*150 x 150 png"
-            className="mb-3"
-            data-test-id="eto-registration-company-logo"
-          />
-        </Col>
-        <Col>
-          <FormSingleFileUpload
-            dimensions={{ width: 1250, height: 400 }}
-            name="companyBanner"
-            label={<FormattedMessage id="eto.form.company-information.banner" />}
-            acceptedFiles={[EMimeType.JPEG, EMimeType.PNG]}
-            fileFormatInformation="*1250 x 400 png"
-            className="mb-3"
-            data-test-id="eto-registration-company-banner"
-          />
-        </Col>
-        <Col>
-          <FormSingleFileUpload
-            dimensions={{ width: 768, height: 400 }}
-            name="companyPreviewCardBanner"
-            label={<FormattedMessage id="eto.form.company-information.preview-image" />}
-            acceptedFiles={[EMimeType.JPEG, EMimeType.PNG]}
-            fileFormatInformation="*768 x 400 png"
-            className="mb-3"
-            data-test-id="companyPreviewCardBanner"
-          />
-        </Col>
-      </Row>
+      <FormSingleFileUpload
+        dimensions={{ width: 150, height: 150 }}
+        exactDimensions={true}
+        name="companyLogo"
+        label={<FormattedMessage id="eto.form.company-information.logo" />}
+        acceptedFiles={acceptedImageTypes}
+        fileFormatInformation="*150 x 150 png"
+        uploadRequirements={{ dimensions: "150x150", size: "4MB" }}
+        className="mb-3"
+        data-test-id="eto-registration-company-logo"
+      />
+
+      <FormSingleFileUpload
+        dimensions={{ width: 1250, height: 400 }}
+        exactDimensions={true}
+        name="companyBanner"
+        label={<FormattedMessage id="eto.form.company-information.banner" />}
+        acceptedFiles={acceptedImageTypes}
+        fileFormatInformation="*1250 x 400 png"
+        uploadRequirements={{ dimensions: "1250x400", size: "4MB" }}
+        className="mb-3"
+        data-test-id="eto-registration-company-banner"
+      />
+
+      <FormSingleFileUpload
+        dimensions={{ width: 768, height: 400 }}
+        exactDimensions={true}
+        name="companyPreviewCardBanner"
+        label={<FormattedMessage id="eto.form.company-information.preview-image" />}
+        acceptedFiles={acceptedImageTypes}
+        fileFormatInformation="*768 x 400 png"
+        uploadRequirements={{ dimensions: "768x400", size: "4MB" }}
+        className="mb-3"
+        data-test-id="companyPreviewCardBanner"
+      />
     </Section>
     <Section className={styles.buttonSection}>
       <Button

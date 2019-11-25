@@ -111,7 +111,7 @@ export interface IKycBusinessData {
 
 export const KycBusinessDataSchema = Yup.object<any>().shape({
   name: Yup.string().required(),
-  registrationNumber: Yup.string(),
+  registrationNumber: Yup.string().required(),
   legalForm: Yup.string().required(),
   legalFormType: Yup.string(),
   street: Yup.string().required(),

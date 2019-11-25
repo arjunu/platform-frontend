@@ -1,3 +1,4 @@
+import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -16,6 +17,8 @@ storiesOf("Upload/SingleFileUpload", module)
       label="Some image"
       onDropFile={() => {}}
       name="someImage"
+      onDownload={() => action("Download")}
+      onRemove={() => action("Remove")}
     />
   ))
   .add("with file", () => (
@@ -27,5 +30,7 @@ storiesOf("Upload/SingleFileUpload", module)
       file={image}
       onDropFile={() => {}}
       name="someImage"
+      onDownload={() => action("Download")}
+      onRemove={() => action("Remove")}
     />
   ));

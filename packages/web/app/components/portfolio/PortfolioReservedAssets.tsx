@@ -5,9 +5,11 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { Link } from "react-router-dom";
 
 import { EETOStateOnChain } from "../../modules/eto/types";
+import { getEtoNextStateStartDate, isOnChain } from "../../modules/eto/utils";
 import { TETOWithInvestorTicket } from "../../modules/investor-portfolio/types";
 import { getTokenPrice } from "../../modules/investor-portfolio/utils";
 import { etoPublicViewLink } from "../appRouteUtils";
+import { EndTimeWidget } from "../eto/overview/shared/EndTimeWidget";
 import { DashboardHeading } from "../eto/shared/DashboardHeading";
 import { EProjectStatusSize, ETOInvestorState } from "../eto/shared/ETOState";
 import { Container } from "../layouts/Container";
@@ -42,7 +44,6 @@ const PortfolioReservedAssets: React.FunctionComponent<IExternalProps> = ({ pend
       }
       titles={[
         <FormattedMessage id="portfolio.section.reserved-assets.table.header.token" />,
-        "",
         <FormattedMessage id="portfolio.section.reserved-assets.table.header.balance" />,
         <FormattedMessage id="portfolio.section.reserved-assets.table.header.value-eur" />,
         <FormattedMessage id="portfolio.section.reserved-assets.table.header.price-eur" />,
@@ -53,14 +54,20 @@ const PortfolioReservedAssets: React.FunctionComponent<IExternalProps> = ({ pend
         <FormattedMessage id="portfolio.section.reserved-assets.table.header.eto-status" />,
         {
           title: "",
-          width: "20%",
+          width: "30%",
         },
       ]}
     >
       {pendingAssets.map(({ investorTicket, ...eto }) => {
-        const timedState = eto.contract!.timedState;
+        if (!isOnChain(eto)) {
+          throw new Error(`${eto.etoId} should be on chain`);
+        }
+        const timedState = eto.contract.timedState;
         const isWhitelistedOrPublic =
           timedState === EETOStateOnChain.Whitelist || timedState === EETOStateOnChain.Public;
+
+        // Eto states are integer numbers in order
+        const nextStateStartDate = getEtoNextStateStartDate(eto);
 
         return (
           <NewTableRow
@@ -69,22 +76,28 @@ const PortfolioReservedAssets: React.FunctionComponent<IExternalProps> = ({ pend
             cellLayout={ENewTableCellLayout.MIDDLE}
           >
             <>
-              <TokenIcon
-                srcSet={{ "1x": eto.equityTokenImage }}
-                alt=""
-                className={cn("mr-2", styles.token)}
-              />
-              <span className={styles.tokenName} data-test-id="portfolio-reserved-asset-token-name">
-                {eto.equityTokenName} ({eto.equityTokenSymbol})
-              </span>
+              <Link
+                to={etoPublicViewLink(eto.previewCode, eto.product.jurisdiction)}
+                data-test-id="portfolio-reserved-assets-view-profile"
+              >
+                <TokenIcon
+                  srcSet={{ "1x": eto.equityTokenImage }}
+                  alt=""
+                  className={cn("mr-2", styles.token)}
+                />
+                <span
+                  className={styles.tokenName}
+                  data-test-id="portfolio-reserved-asset-token-name"
+                >
+                  {eto.equityTokenName} ({eto.equityTokenSymbol})
+                </span>
+              </Link>
+              {isWhitelistedOrPublic && nextStateStartDate && (
+                <div className={styles.endTime}>
+                  <EndTimeWidget endTime={nextStateStartDate} />
+                </div>
+              )}
             </>
-
-            <Link
-              to={etoPublicViewLink(eto.previewCode, eto.product.jurisdiction)}
-              data-test-id="portfolio-reserved-assets-view-profile"
-            >
-              <FormattedMessage id="portfolio.section.reserved-assets.view-profile" />
-            </Link>
             <FormatNumber
               value={investorTicket.equityTokenInt}
               inputFormat={ENumberInputFormat.FLOAT}
@@ -123,7 +136,7 @@ const PortfolioReservedAssets: React.FunctionComponent<IExternalProps> = ({ pend
                     values={{
                       endsIn: (
                         <FormattedRelative
-                          value={eto.contract!.startOfStates[EETOStateOnChain.Signing]!}
+                          value={eto.contract.startOfStates[EETOStateOnChain.Signing]!}
                           style="numeric"
                           initialNow={new Date()}
                         />

@@ -20,12 +20,13 @@ interface IUploadableDocumentTileProps {
   active: boolean;
   typedFileName: TTranslatedString;
   isFileUploaded: boolean;
-  downloadDocumentStart: (documentType: EEtoDocumentType) => void;
+  downloadDocumentStart?: (documentType: EEtoDocumentType) => void;
   startDocumentRemove: (documentType: EEtoDocumentType) => void;
   documentDownloadLinkInactive: boolean;
   busy?: boolean;
   disabled?: boolean;
   uploadedFileName?: string;
+  onDropFile: (file: File, documentType: EEtoDocumentType) => void;
 }
 
 interface IUploadableDocumentDropzone {
@@ -35,9 +36,16 @@ interface IUploadableDocumentDropzone {
   typedFileName: TTranslatedString;
   busy?: boolean;
   isFileUploaded: boolean;
-  downloadDocumentStart: (documentType: EEtoDocumentType) => void;
+  downloadDocumentStart?: (documentType: EEtoDocumentType) => void;
   uploadedFileName?: string;
+  onDropFile: (file: File, documentType: EEtoDocumentType) => void;
 }
+
+type TDocumentUploadTermsChangedProps = {
+  documentKey: EEtoDocumentType;
+  downloadDocumentStart?: (documentType: EEtoDocumentType) => void;
+  uploadedFileName?: string;
+};
 
 const DocumentUploadDropzoneError: React.FunctionComponent = () => (
   <div className={styles.error}>
@@ -62,15 +70,15 @@ const DocumentUploadTypeDescription: React.FunctionComponent<{
   </>
 );
 
-const DocumentUploadTermsChanged: React.FunctionComponent<{
-  documentKey: EEtoDocumentType;
-  downloadDocumentStart: (documentType: EEtoDocumentType) => void;
-  uploadedFileName?: string;
-}> = ({ downloadDocumentStart, documentKey, uploadedFileName }) => (
+const DocumentUploadTermsChanged: React.FunctionComponent<TDocumentUploadTermsChangedProps> = ({
+  downloadDocumentStart,
+  documentKey,
+  uploadedFileName,
+}) => (
   <>
     <Button
       data-test-id="documents-download-document"
-      onClick={() => downloadDocumentStart(documentKey)}
+      onClick={downloadDocumentStart && (() => downloadDocumentStart(documentKey))}
       layout={EButtonLayout.INLINE}
       size={ButtonSize.SMALL}
     >
@@ -94,6 +102,7 @@ export const DocumentUploadableDropzone: React.FunctionComponent<IUploadableDocu
   isFileUploaded,
   downloadDocumentStart,
   uploadedFileName,
+  onDropFile,
 }) => {
   const [rejected, setRejected] = React.useState(false);
 
@@ -105,7 +114,8 @@ export const DocumentUploadableDropzone: React.FunctionComponent<IUploadableDocu
         maxSize={MAX_UPLOADABLE_SIZE}
         onDropRejected={() => setRejected(true)}
         onDropAccepted={() => setRejected(false)}
-        isUploading={busy}
+        isUploading={!!busy}
+        onDropFile={onDropFile}
       />
       <DocumentUploadTypeDescription typedFileName={typedFileName} />
       {rejected && <DocumentUploadDropzoneError />}
@@ -132,6 +142,7 @@ export const DocumentUploadableTile: React.FunctionComponent<IUploadableDocument
   disabled,
   startDocumentRemove,
   uploadedFileName,
+  onDropFile,
 }) => {
   const linkDisabled = documentDownloadLinkInactive || busy;
   const isDisabled = !active || busy || disabled;
@@ -146,7 +157,7 @@ export const DocumentUploadableTile: React.FunctionComponent<IUploadableDocument
             activeUpload={active}
             blank={!isFileUploaded}
             busy={busy}
-            downloadAction={() => downloadDocumentStart(documentKey)}
+            downloadAction={downloadDocumentStart && (() => downloadDocumentStart(documentKey))}
             fileName={uploadedFileName}
             removeAction={() => startDocumentRemove(documentKey)}
             linkDisabled={linkDisabled}
@@ -162,6 +173,7 @@ export const DocumentUploadableTile: React.FunctionComponent<IUploadableDocument
           isFileUploaded={isFileUploaded}
           downloadDocumentStart={downloadDocumentStart}
           uploadedFileName={uploadedFileName}
+          onDropFile={onDropFile}
         />
       )}
     </div>

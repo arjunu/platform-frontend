@@ -10,7 +10,7 @@ import {
   TEtoWithCompanyAndContractReadonly,
 } from "../eto/types";
 import { isOnChain } from "../eto/utils";
-import { TNomineeTasksStatus } from "./reducer";
+import { generateHash } from "./lazy";
 import {
   ENomineeEtoSpecificTask,
   ENomineeRequestStatus,
@@ -18,6 +18,7 @@ import {
   ENomineeTaskStatus,
   INomineeRequest,
   TNomineeRequestStorage,
+  TNomineeTasksStatus,
 } from "./types";
 
 export const nomineeRequestToTranslationMessage = (status: ENomineeRequestStatus): TMessage => {
@@ -175,3 +176,21 @@ export const getActiveEtoPreviewCodeFromQueryString = (query: string) => {
 
   return isString(eto) ? eto : undefined;
 };
+
+const generateBuffer = (file: File): Promise<Buffer> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result !== null) {
+        return resolve(Buffer.from(reader.result as ArrayBuffer));
+      } else {
+        return reject("generateBuffer returned null");
+      }
+    };
+    reader.onabort = () => reject("generateBuffer aborted");
+    reader.onerror = (e: Event) => reject(e);
+    reader.readAsArrayBuffer(file);
+  });
+
+export const generateIpfsHash = (file: File) =>
+  generateBuffer(file).then((buffer: Buffer) => generateHash(buffer));

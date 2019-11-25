@@ -29,8 +29,8 @@ import {
   formatNumber,
   selectDecimalPlaces,
 } from "../../../shared/formatters/utils";
-import { FormLabel } from "../../../shared/forms/fields/FormFieldLabel";
 import { FormDeprecated } from "../../../shared/forms/FormDeprecated";
+import { FormLabel } from "../../../shared/forms/layouts/FormLabel";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { MaskedNumberInput } from "../../../shared/MaskedNumberInput";
 import { ETheme, MoneySuiteWidget } from "../../../shared/MoneySuiteWidget/MoneySuiteWidget";

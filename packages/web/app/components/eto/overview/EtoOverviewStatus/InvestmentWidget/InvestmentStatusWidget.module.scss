@@ -1,0 +1,42 @@
+.stats-wrapper-normal,
+.stats-wrapper-small {
+  width: 100%;
+}
+
+.stats-wrapper-normal {
+  margin-bottom: px-to-rem(16px);
+
+  .funded {
+    @include font-headline-small-roboto;
+  }
+}
+
+.stats-wrapper-small {
+  .funded {
+    @include font-small-roboto;
+  }
+}
+
+.funded {
+  font-weight: 500;
+}
+
+.row {
+  @include font-small-roboto;
+
+  color: $neu-charcoal-grey;
+  display: flex;
+  justify-content: space-between;
+  text-transform: none;
+  align-items: baseline;
+
+  & > span {
+    &:first-of-type {
+      text-align: left;
+    }
+
+    &:last-of-type {
+      text-align: right;
+    }
+  }
+}

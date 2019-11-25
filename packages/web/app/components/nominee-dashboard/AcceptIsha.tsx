@@ -1,27 +1,48 @@
 import * as React from "react";
+import { FormattedRelative } from "react-intl";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
 import { actions } from "../../modules/actions";
+import {
+  selectClaimStateDeadlineTimestamp,
+  selectNomineeActiveEtoCompanyName,
+} from "../../modules/nominee-flow/selectors";
 import { appConnect } from "../../store";
+import { nonNullable } from "../../utils/nonNullable";
 import { Button, EButtonLayout, EButtonTheme } from "../shared/buttons/Button";
 
-interface IDispatchProps {
-  sign: () => void;
-}
+import * as styles from "./NomineeDashboard.module.scss";
 
-export const AcceptISHALayout: React.FunctionComponent<IDispatchProps> = ({ sign }) => (
+type TDispatchProps = {
+  sign: () => void;
+};
+
+type TStateProps = {
+  deadlineTimestamp: number;
+  companyName: string;
+};
+
+export const AcceptISHALayout: React.FunctionComponent<TStateProps & TDispatchProps> = ({
+  sign,
+  deadlineTimestamp,
+  companyName,
+}) => (
   <section data-test-id="nominee-flow-sign-isha">
     <h4>
       <FormattedMessage id="nominee.upload-isha.title" />
     </h4>
     <p>
-      <FormattedMessage id="nominee.upload-isha.text" />
+      <FormattedMessage id="nominee.upload-isha.text" values={{ companyName }} />
+    </p>
+    <p className={styles.textBold}>
+      <FormattedMessage id="nominee-flow.redeem-share-capital.text-note" />
+      <FormattedRelative value={deadlineTimestamp} initialNow={new Date()} style={"numeric"} />
     </p>
     <Button
       layout={EButtonLayout.PRIMARY}
       theme={EButtonTheme.BRAND}
-      data-test-id="eto-nominee-sign-isha-action"
+      data-test-id="nominee-sign-isha-button"
       onClick={sign}
     >
       <FormattedMessage id="nominee-flow.sign-agreement.sign-button" />
@@ -29,8 +50,12 @@ export const AcceptISHALayout: React.FunctionComponent<IDispatchProps> = ({ sign
   </section>
 );
 
-const AcceptISHA = compose<IDispatchProps, {}>(
-  appConnect<{}, IDispatchProps>({
+const AcceptISHA = compose<TStateProps & TDispatchProps, {}>(
+  appConnect<TStateProps, TDispatchProps>({
+    stateToProps: state => ({
+      companyName: nonNullable(selectNomineeActiveEtoCompanyName(state)),
+      deadlineTimestamp: nonNullable(selectClaimStateDeadlineTimestamp(state)),
+    }),
     dispatchToProps: dispatch => ({
       sign: () => dispatch(actions.txTransactions.startNomineeISHASign()),
     }),

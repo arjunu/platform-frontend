@@ -315,7 +315,8 @@ describe("Wallet Withdraw", () => {
       });
     });
 
-    it("should allow to withdraw to smart contract accepting ether", () => {
+    // TODO: Uncomment when mock smart contract is done
+    it.skip("should allow to withdraw to smart contract accepting ether", () => {
       loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
         signTosAgreement: true,
         onlyLogin: true,

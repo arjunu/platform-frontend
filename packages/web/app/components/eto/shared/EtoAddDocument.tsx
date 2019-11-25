@@ -1,10 +1,7 @@
 import * as cn from "classnames";
 import * as React from "react";
-import { compose } from "redux";
 
 import { EEtoDocumentType } from "../../../lib/api/eto/EtoFileApi.interfaces";
-import { actions } from "../../../modules/actions";
-import { appConnect } from "../../../store";
 import { DropFileEventHandler, Dropzone } from "../../shared/Dropzone";
 
 import * as styles from "./EtoAddDocument.module.scss";
@@ -13,17 +10,19 @@ interface IDispatchProps {
   onDropFile: (file: File, documentType: EEtoDocumentType) => void;
 }
 
-interface IOwnProps {
+type TExternalProps = {
   documentType: EEtoDocumentType;
   disabled?: boolean;
   className?: string;
   maxSize?: number;
   onDropRejected?: DropFileEventHandler;
   onDropAccepted?: DropFileEventHandler;
-  isUploading?: boolean;
-}
+  isUploading: boolean;
+  onDropFile: (file: File, documentType: EEtoDocumentType) => void;
+};
+
 //todo dropzone should accept all files dropped, not only the first one, see #2243
-export const ETOAddDocumentsComponent: React.FunctionComponent<IDispatchProps & IOwnProps> = ({
+export const ETOAddDocuments: React.FunctionComponent<IDispatchProps & TExternalProps> = ({
   onDropFile,
   children,
   documentType,
@@ -56,16 +55,3 @@ export const ETOAddDocumentsComponent: React.FunctionComponent<IDispatchProps & 
     </Dropzone>
   );
 };
-
-export const ETOAddDocuments = compose<React.FunctionComponent<IOwnProps>>(
-  appConnect<{}, IDispatchProps, IOwnProps>({
-    dispatchToProps: dispatch => ({
-      onDropFile: (file: File, documentType: EEtoDocumentType) =>
-        dispatch(
-          actions.etoDocuments.showIpfsModal(() =>
-            dispatch(actions.etoDocuments.etoUploadDocumentStart(file, documentType)),
-          ),
-        ),
-    }),
-  }),
-)(ETOAddDocumentsComponent);

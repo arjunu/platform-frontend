@@ -4,8 +4,8 @@ import { FormGroup, Input, InputGroup, InputGroupAddon } from "reactstrap";
 
 import { TTranslatedString } from "../../../../types";
 import { FormError } from "../fields/FormFieldError";
-import { FormLabel } from "../fields/FormFieldLabel";
 import { applyCharactersLimit, withCountedCharacters } from "../fields/utils.unsafe";
+import { FormLabel } from "./FormLabel";
 import { InputLayout } from "./InputLayout";
 
 import * as styles from "../fields/FormStyles.module.scss";

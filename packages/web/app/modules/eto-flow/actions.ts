@@ -50,8 +50,12 @@ export const etoFlowActions = {
   clearNewStartDate: createActionFactory("ETO_FLOW_CLEAR_START_DATE", () => ({
     newStartDate: undefined,
   })),
-  signInvestmentAgreement: createActionFactory(
-    "ETO_FLOW_SIGN_INVESTMENT_AGREEMENT",
+  issuerSignInvestmentAgreement: createActionFactory(
+    "ISSUER_FLOW_SIGN_INVESTMENT_AGREEMENT",
+    (eto: TEtoWithCompanyAndContractReadonly, agreementHash: string) => ({ eto, agreementHash }),
+  ),
+  nomineeSignInvestmentAgreement: createActionFactory(
+    "NOMINEE_FLOW_SIGN_INVESTMENT_AGREEMENT",
     (eto: TEtoWithCompanyAndContractReadonly, agreementHash: string) => ({ eto, agreementHash }),
   ),
   setEtoDateStart: createActionFactory("ETO_FLOW_SET_ETO_DATE_START"),

@@ -5,7 +5,10 @@ import { actions } from "../../modules/actions";
 import { selectEtoWithCompanyAndContractById } from "../../modules/eto/selectors";
 import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
-import { InvestmentProgress } from "../eto/overview/InvestmentProgress";
+import {
+  EInvestmentStatusSize,
+  InvestmentStatusWidget,
+} from "../eto/overview/EtoOverviewStatus/InvestmentWidget/InvestmentStatusWidget";
 import { Button, ButtonSize, EButtonLayout, EIconPosition } from "../shared/buttons";
 
 import * as arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
@@ -63,7 +66,7 @@ const PortfolioAssetActionComponent: React.FunctionComponent<TExternalProps &
 
     case EETOStateOnChain.Public:
     case EETOStateOnChain.Whitelist:
-      return <InvestmentProgress eto={eto} />;
+      return <InvestmentStatusWidget eto={eto} size={EInvestmentStatusSize.SMALL} />;
 
     default:
       return null;

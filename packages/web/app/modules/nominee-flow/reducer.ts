@@ -1,81 +1,18 @@
 import { ENomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/types";
 import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
+import { EProcessState } from "../../utils/enums/processStates";
 import { actions } from "../actions";
-import { TEtoWithCompanyAndContractReadonly, TOfferingAgreementsStatus } from "../eto/types";
 import {
   ENomineeEtoSpecificTask,
   ENomineeFlowError,
   ENomineeRequestError,
   ENomineeTask,
   ENomineeTaskStatus,
-  ERedeemShareCapitalTaskSubstate,
-  TNomineeRequestStorage,
+  TNomineeFlowState,
 } from "./types";
 
-export type ENomineeEtoSpecificTasksStatus = {
-  [previewCode: string]: { [key in ENomineeEtoSpecificTask]: ENomineeTaskStatus };
-};
-
-export type TNomineeTasksStatus = { [key in ENomineeTask]: ENomineeTaskStatus } & {
-  byPreviewCode: ENomineeEtoSpecificTasksStatus;
-};
-
-export type TNomineeEtosAdditionalData = {
-  investmentAgreementUrl: string | undefined;
-  offeringAgreementsStatus: TOfferingAgreementsStatus;
-  capitalIncrease: string | undefined;
-};
-
-export type TNomineeTaskLinkToIssuerData = {
-  nextState: ENomineeRequestComponentState;
-  error: ENomineeRequestError;
-};
-
-export type TNoTasksData = {};
-export type TLinkBankAccountData = {};
-export type TAccountSetupData = {};
-
-export type TNomineeTaskRedeemShareCapitalData = {
-  capitalIncrease: string;
-  walletBalance: string;
-  taskSubstate: ERedeemShareCapitalTaskSubstate;
-};
-
-export type TNomineeTaskAcceptThaData = {};
-export type TNomineeTaskAcceptRaaaData = {};
-export type TNomineeTaskAcceptIshaData = {};
-
-export type TNomineeEtoSpecificTaskData = {
-  [ENomineeEtoSpecificTask.ACCEPT_THA]: TNomineeTaskAcceptThaData;
-} & { [ENomineeEtoSpecificTask.ACCEPT_RAAA]: TNomineeTaskAcceptRaaaData } & {
-  [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: TNomineeTaskRedeemShareCapitalData;
-} & { [ENomineeEtoSpecificTask.ACCEPT_ISHA]: TNomineeTaskAcceptIshaData };
-
-export type TTaskSpecificData = { [ENomineeTask.NONE]: TNoTasksData } & {
-  [ENomineeTask.ACCOUNT_SETUP]: TAccountSetupData;
-} & { [ENomineeTask.LINK_TO_ISSUER]: TNomineeTaskLinkToIssuerData } & {
-  [ENomineeTask.LINK_BANK_ACCOUNT]: TLinkBankAccountData;
-} & {
-  byPreviewCode: {
-    [previewCode: string]: TNomineeEtoSpecificTaskData | undefined;
-  };
-};
-
-export type TNomineeFlowState = {
-  ready: boolean;
-  loading: boolean;
-  error: ENomineeFlowError;
-  activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask;
-  activeTaskData: TTaskSpecificData;
-  activeNomineeEtoPreviewCode: string | undefined;
-  nomineeRequests: TNomineeRequestStorage;
-  nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContractReadonly };
-  nomineeEtosAdditionalData: { [previewCode: string]: TNomineeEtosAdditionalData };
-  nomineeTasksStatus: TNomineeTasksStatus;
-};
-
-export const initalTaskSpecificData = {
+export const initalTaskData = {
   [ENomineeTask.NONE]: {},
   [ENomineeTask.ACCOUNT_SETUP]: {},
   [ENomineeTask.LINK_TO_ISSUER]: {
@@ -86,23 +23,42 @@ export const initalTaskSpecificData = {
   byPreviewCode: {},
 };
 
+export const initialEtoSpecificTaskData = {
+  [ENomineeEtoSpecificTask.ACCEPT_THA]: {},
+  [ENomineeEtoSpecificTask.ACCEPT_RAAA]: {},
+  [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: {},
+  [ENomineeEtoSpecificTask.ACCEPT_ISHA]: {
+    uploadState: EProcessState.NOT_STARTED,
+    uploadedFileName: undefined,
+  },
+};
+
+export const initalNomineeTaskStatus = {
+  [ENomineeTask.NONE]: ENomineeTaskStatus.NOT_DONE,
+  [ENomineeTask.ACCOUNT_SETUP]: ENomineeTaskStatus.NOT_DONE,
+  [ENomineeTask.LINK_TO_ISSUER]: ENomineeTaskStatus.NOT_DONE,
+  [ENomineeTask.LINK_BANK_ACCOUNT]: ENomineeTaskStatus.NOT_DONE,
+  byPreviewCode: {},
+};
+
+export const initialNomineeEtoSpecificTaskStatus = {
+  [ENomineeEtoSpecificTask.ACCEPT_THA]: ENomineeTaskStatus.NOT_DONE,
+  [ENomineeEtoSpecificTask.ACCEPT_RAAA]: ENomineeTaskStatus.NOT_DONE,
+  [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: ENomineeTaskStatus.NOT_DONE,
+  [ENomineeEtoSpecificTask.ACCEPT_ISHA]: ENomineeTaskStatus.NOT_DONE,
+};
+
 const nomineeFlowInitialState: TNomineeFlowState = {
   ready: false,
   loading: false,
   error: ENomineeFlowError.NONE,
   activeNomineeTask: ENomineeTask.NONE,
-  activeTaskData: initalTaskSpecificData,
+  nomineeTasksData: initalTaskData,
   activeNomineeEtoPreviewCode: undefined,
   nomineeRequests: {},
   nomineeEtos: {},
   nomineeEtosAdditionalData: {},
-  nomineeTasksStatus: {
-    [ENomineeTask.NONE]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeTask.ACCOUNT_SETUP]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeTask.LINK_TO_ISSUER]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeTask.LINK_BANK_ACCOUNT]: ENomineeTaskStatus.NOT_DONE,
-    byPreviewCode: {},
-  },
+  nomineeTasksStatus: initalNomineeTaskStatus,
 };
 
 export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
@@ -131,10 +87,7 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
         loading: false,
         ready: true,
         activeNomineeTask: action.payload.activeNomineeTask,
-        activeTaskData: {
-          ...state.activeTaskData,
-          ...action.payload.activeTaskData,
-        },
+        nomineeTasksData: action.payload.nomineeTasksData,
       };
     case actions.nomineeFlow.setNomineeRequests.getType():
       return {
@@ -143,10 +96,10 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
           ...state.nomineeRequests,
           ...action.payload.nomineeRequests,
         },
-        activeTaskData: {
-          ...state.activeTaskData,
+        nomineeTasksData: {
+          ...state.nomineeTasksData,
           [ENomineeTask.LINK_TO_ISSUER]: {
-            ...state.activeTaskData[ENomineeTask.LINK_TO_ISSUER],
+            ...state.nomineeTasksData[ENomineeTask.LINK_TO_ISSUER],
             error: ENomineeRequestError.NONE,
           },
         },
@@ -159,10 +112,10 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
           ...state.nomineeRequests,
           [action.payload.etoId]: action.payload.nomineeRequest,
         },
-        activeTaskData: {
-          ...state.activeTaskData,
+        nomineeTasksData: {
+          ...state.nomineeTasksData,
           [ENomineeTask.LINK_TO_ISSUER]: {
-            ...state.activeTaskData[ENomineeTask.LINK_TO_ISSUER],
+            ...state.nomineeTasksData[ENomineeTask.LINK_TO_ISSUER],
             error: ENomineeRequestError.NONE,
           },
         },
@@ -171,10 +124,10 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
     case actions.nomineeFlow.storeNomineeRequestError.getType():
       return {
         ...state,
-        activeTaskData: {
-          ...state.activeTaskData,
+        nomineeTasksData: {
+          ...state.nomineeTasksData,
           [ENomineeTask.LINK_TO_ISSUER]: {
-            ...state.activeTaskData[ENomineeTask.LINK_TO_ISSUER],
+            ...state.nomineeTasksData[ENomineeTask.LINK_TO_ISSUER],
             error: action.payload.requestError,
           },
         },
@@ -195,7 +148,23 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
         ...state,
         nomineeEtos: action.payload.etos,
       };
-    case actions.eto.setInvestmentAgreementHash.getType():
+    case actions.nomineeFlow.setNomineeEtoSpecificTasksData.getType():
+      return {
+        ...state,
+        nomineeTasksData: {
+          ...state.nomineeTasksData,
+          byPreviewCode: action.payload.tasksByPreviewCode,
+        },
+      };
+    case actions.nomineeFlow.setNomineeEtoSpecificTasksStatus.getType():
+      return {
+        ...state,
+        nomineeTasksStatus: {
+          ...state.nomineeTasksStatus,
+          byPreviewCode: action.payload.tasksStatusByPreviewCode,
+        },
+      };
+    case actions.nomineeFlow.nomineeSetInvestmentAgreementHash.getType():
       return {
         ...state,
         nomineeEtosAdditionalData: {
@@ -206,7 +175,7 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
           },
         },
       };
-    case actions.eto.setAgreementsStatus.getType():
+    case actions.nomineeFlow.nomineeSetAgreementsStatus.getType():
       return {
         ...state,
         nomineeEtosAdditionalData: {
@@ -214,6 +183,74 @@ export const nomineeFlowReducer: AppReducer<TNomineeFlowState> = (
           [action.payload.previewCode]: {
             ...state.nomineeEtosAdditionalData[action.payload.previewCode],
             offeringAgreementsStatus: action.payload.statuses,
+          },
+        },
+      };
+    case actions.nomineeFlow.nomineeIshaCheckSuccess.getType():
+      return {
+        ...state,
+        nomineeTasksData: {
+          ...state.nomineeTasksData,
+          byPreviewCode: {
+            ...state.nomineeTasksData.byPreviewCode,
+            [action.payload.previewCode]: {
+              ...state.nomineeTasksData.byPreviewCode[action.payload.previewCode],
+              [ENomineeEtoSpecificTask.ACCEPT_ISHA]: {
+                uploadState: EProcessState.SUCCESS,
+                uploadedFileName: action.payload.uploadedFileName,
+              },
+            },
+          },
+        },
+      };
+    case actions.nomineeFlow.nomineeIshaUploadInProgress.getType():
+      return {
+        ...state,
+        nomineeTasksData: {
+          ...state.nomineeTasksData,
+          byPreviewCode: {
+            ...state.nomineeTasksData.byPreviewCode,
+            [action.payload.previewCode]: {
+              ...state.nomineeTasksData.byPreviewCode[action.payload.previewCode],
+              [ENomineeEtoSpecificTask.ACCEPT_ISHA]: {
+                uploadState: EProcessState.IN_PROGRESS,
+                uploadedFileName: undefined,
+              },
+            },
+          },
+        },
+      };
+    case actions.nomineeFlow.nomineeRemoveUploadedIsha.getType():
+      return {
+        ...state,
+        nomineeTasksData: {
+          ...state.nomineeTasksData,
+          byPreviewCode: {
+            ...state.nomineeTasksData.byPreviewCode,
+            [action.payload.previewCode]: {
+              ...state.nomineeTasksData.byPreviewCode[action.payload.previewCode],
+              [ENomineeEtoSpecificTask.ACCEPT_ISHA]: {
+                uploadState: EProcessState.NOT_STARTED,
+                uploadedFileName: undefined,
+              },
+            },
+          },
+        },
+      };
+    case actions.nomineeFlow.nomineeIshaCheckError.getType():
+      return {
+        ...state,
+        nomineeTasksData: {
+          ...state.nomineeTasksData,
+          byPreviewCode: {
+            ...state.nomineeTasksData.byPreviewCode,
+            [action.payload.previewCode]: {
+              ...state.nomineeTasksData.byPreviewCode[action.payload.previewCode],
+              [ENomineeEtoSpecificTask.ACCEPT_ISHA]: {
+                uploadState: EProcessState.ERROR,
+                uploadedFileName: action.payload.uploadedFileName,
+              },
+            },
           },
         },
       };

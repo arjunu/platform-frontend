@@ -3,6 +3,7 @@ import { cloneDeep, isEmpty } from "lodash/fp";
 import { delay, Effect } from "redux-saga";
 import { all, fork, put, select, take } from "redux-saga/effects";
 
+import { hashFromIpfsLink } from "../../components/documents/utils";
 import { getNomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/utils";
 import {
   EEtoNomineeActiveEtoNotifications,
@@ -17,12 +18,18 @@ import {
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EEtoState, TNomineeRequestResponse } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IssuerIdInvalid, NomineeRequestExists } from "../../lib/api/eto/EtoNomineeApi";
+import { ETOCommitment } from "../../lib/contracts/ETOCommitment";
 import { Dictionary } from "../../types";
 import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserFullyVerified } from "../auth/selectors";
 import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";
-import { getEtoContract, loadCapitalIncrease, loadInvestmentAgreement } from "../eto/sagas";
+import {
+  getEtoContract,
+  loadAgreementsStatus,
+  loadCapitalIncrease,
+  loadInvestmentAgreement,
+} from "../eto/sagas";
 import { selectEtoSubStateEtoEtoWithContract } from "../eto/selectors";
 import { EEtoAgreementStatus, EETOStateOnChain, TEtoWithCompanyAndContract } from "../eto/types";
 import { isOnChain } from "../eto/utils";
@@ -30,16 +37,23 @@ import { loadBankAccountDetails } from "../kyc/sagas";
 import { neuCall, neuTakeLatest, neuTakeLatestUntil } from "../sagasUtils";
 import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
 import { selectLiquidEuroTokenBalance } from "../wallet/selectors";
-import { initalTaskSpecificData, TTaskSpecificData } from "./reducer";
+import {
+  initalNomineeTaskStatus,
+  initialEtoSpecificTaskData,
+  initialNomineeEtoSpecificTaskStatus,
+} from "./reducer";
 import {
   selectActiveEtoPreviewCodeFromQueryString,
   selectActiveNomineeEto,
+  selectEtoSpecificTaskData,
+  selectEtoSpecificTasksStatus,
   selectIsISHASignedByIssuer,
   selectNomineeActiveEtoPreviewCode,
   selectNomineeEtoDocumentsStatus,
   selectNomineeEtos,
   selectNomineeRequestError,
   selectNomineeRequests,
+  selectNomineeTasksData,
   selectNomineeTasksStatus,
 } from "./selectors";
 import {
@@ -50,9 +64,11 @@ import {
   ENomineeTaskStatus,
   ERedeemShareCapitalTaskSubstate,
   INomineeRequest,
+  TNomineeEtoSpecificTasksStatus,
   TNomineeRequestStorage,
 } from "./types";
 import {
+  generateIpfsHash,
   getNomineeTaskStep,
   nomineeApiDataToNomineeRequests,
   nomineeRequestResponseToRequestStatus,
@@ -72,8 +88,8 @@ export function* initNomineeEtoSpecificTasks(
     };
 
     if (isOnChain(eto)) {
-      yield put(actions.eto.loadEtoAgreementsStatus(eto));
-      yield take(actions.eto.setAgreementsStatus);
+      yield put(actions.nomineeFlow.nomineeLoadEtoAgreementsStatus(eto));
+      yield take(actions.nomineeFlow.nomineeSetAgreementsStatus);
 
       const documentsStatus = yield select(selectNomineeEtoDocumentsStatus, eto.previewCode);
 
@@ -88,12 +104,11 @@ export function* initNomineeEtoSpecificTasks(
 
     if (isOnChain(eto) && eto.contract.timedState >= EETOStateOnChain.Signing) {
       yield neuCall(
-        loadInvestmentAgreement,
-        actions.eto.loadSignedInvestmentAgreement(eto.etoId, eto.previewCode),
+        nomineeFlowLoadInvestmentAgreement,
+        actions.nomineeFlow.nomineeLoadSignedInvestmentAgreement(eto.etoId, eto.previewCode),
       );
 
       const ishaIsSignedByIssuer = yield select(selectIsISHASignedByIssuer, eto.previewCode);
-
       if (ishaIsSignedByIssuer) {
         nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL] =
           ENomineeTaskStatus.DONE;
@@ -113,14 +128,8 @@ export function* initNomineeEtoSpecificTasks(
   }
 }
 
-export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
-  const nomineeTasksStatus = {
-    [ENomineeTask.ACCOUNT_SETUP]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeTask.LINK_BANK_ACCOUNT]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeTask.LINK_TO_ISSUER]: ENomineeTaskStatus.NOT_DONE,
-    [ENomineeTask.NONE]: ENomineeTaskStatus.NOT_DONE,
-    byPreviewCode: {},
-  };
+export function* getDataAndInitNomineeTasks(_: TGlobalDependencies): Iterator<any> {
+  const nomineeTasksStatus = cloneDeep(initalNomineeTaskStatus);
 
   const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
     selectIsUserFullyVerified,
@@ -141,7 +150,7 @@ export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
     if (data.bankAccountIsVerified) {
       nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] = ENomineeTaskStatus.DONE;
     }
-    if (!data.nomineeEtos || isEmpty(data.nomineeEtos)) {
+    if (isEmpty(data.nomineeEtos)) {
       yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
       return;
     } else {
@@ -162,8 +171,8 @@ export function* initNomineeTasks(_: TGlobalDependencies): Iterator<any> {
   }
 }
 
-export function* getNomineeDashboardData(): Iterator<any> {
-  yield neuCall(initNomineeTasks);
+export function* initNomineeDashboardView(): Iterator<any> {
+  yield neuCall(getDataAndInitNomineeTasks);
 
   const nomineeTasksStatus = yield select(selectNomineeTasksStatus);
 
@@ -207,10 +216,32 @@ export function* nomineeDashboardView({
   }
 }
 
+export function* nomineeFlowLoadInvestmentAgreement(
+  _: TGlobalDependencies,
+  {
+    payload: { etoId, previewCode },
+  }: TActionFromCreator<typeof actions.nomineeFlow.nomineeLoadSignedInvestmentAgreement>,
+): Iterator<any> {
+  const url = yield neuCall(loadInvestmentAgreement, etoId);
+  yield put(actions.nomineeFlow.nomineeSetInvestmentAgreementHash(previewCode, url));
+}
+
+export function* nomineeFlowLoadAgreementsStatus(
+  _: TGlobalDependencies,
+  { payload }: TActionFromCreator<typeof actions.nomineeFlow.nomineeLoadEtoAgreementsStatus>,
+): Iterator<any> {
+  const statuses: Dictionary<EEtoAgreementStatus, EAgreementType> = yield neuCall(
+    loadAgreementsStatus,
+    payload.eto,
+  );
+
+  yield put(actions.nomineeFlow.nomineeSetAgreementsStatus(payload.eto.previewCode, statuses));
+}
+
 export function* nomineeViewDataWatcher({ logger }: TGlobalDependencies): Iterator<any> {
   while (true) {
     logger.info("Getting nominee data and tasks");
-    yield neuCall(getNomineeDashboardData);
+    yield neuCall(initNomineeDashboardView);
     yield delay(NOMINEE_RECALCULATE_TASKS_DELAY);
   }
 }
@@ -241,7 +272,7 @@ export function* getTaskSpecificData(
   _: TGlobalDependencies,
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask,
 ): Iterator<any> {
-  const taskSpecificData: TTaskSpecificData = cloneDeep(initalTaskSpecificData);
+  const taskSpecificData = cloneDeep(yield select(selectNomineeTasksData));
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
     taskSpecificData[ENomineeTask.LINK_TO_ISSUER] = yield neuCall(getNomineeTaskLinkToIssuerData);
@@ -357,7 +388,6 @@ export function* loadNomineeRequests({
   logger,
   notificationCenter,
 }: TGlobalDependencies): Iterator<any> {
-  logger.info("---loading nominee requests");
   try {
     const nomineeRequests = yield apiEtoNomineeService.getNomineeRequests();
     const nomineeRequestsConverted: TNomineeRequestStorage = yield nomineeApiDataToNomineeRequests(
@@ -429,7 +459,7 @@ export function* loadNomineeAgreements(): Iterator<any> {
   );
 
   if (nomineeEto) {
-    yield put(actions.eto.loadEtoAgreementsStatus(nomineeEto));
+    yield put(actions.nomineeFlow.nomineeLoadEtoAgreementsStatus(nomineeEto));
   }
 }
 
@@ -452,19 +482,58 @@ export function* loadNomineeEtos({
 }: TGlobalDependencies): Iterable<any> {
   try {
     const etos: TEtoWithCompanyAndContract[] = yield apiEtoService.loadNomineeEtos();
-    const etosByPreviewCode: Dictionary<TEtoWithCompanyAndContract, string> = yield all(
-      etos.reduce((acc: { [key: string]: Iterator<Effect> }, eto: TEtoWithCompanyAndContract) => {
-        acc[eto.previewCode] = neuCall(loadNomineeEto, eto);
-        return acc;
-      }, {} as { [key: string]: Iterator<Effect> }),
-    );
 
-    yield put(actions.nomineeFlow.setNomineeEtos({ etos: etosByPreviewCode }));
+    let getEtoDataEffects: Dictionary<Iterator<Effect>, string> = {};
+    let getEtoSpecificTaskStatusEffects: Dictionary<Iterator<Effect>, string> = {};
+    let getEtoSpecificTaskDataEffects: Dictionary<Iterator<Effect>, string> = {};
+
+    etos.forEach((eto: TEtoWithCompanyAndContract) => {
+      getEtoDataEffects[eto.previewCode] = neuCall(loadNomineeEto, eto);
+      getEtoSpecificTaskStatusEffects[eto.previewCode] = neuCall(
+        initEtoSpecificTaskStatus,
+        eto.previewCode,
+      );
+      getEtoSpecificTaskDataEffects[eto.previewCode] = neuCall(
+        initEtoSpecificTaskData,
+        eto.previewCode,
+      );
+    });
+
+    const result = yield all({
+      etoData: all(getEtoDataEffects),
+      etoSpecificTaskStatus: all(getEtoSpecificTaskStatusEffects),
+      etoSpecificTaskData: all(getEtoSpecificTaskDataEffects),
+    });
+
+    yield all([
+      put(actions.nomineeFlow.setNomineeEtos({ etos: result.etoData })),
+      put(actions.nomineeFlow.setNomineeEtoSpecificTasksData(result.etoSpecificTaskData)),
+      put(actions.nomineeFlow.setNomineeEtoSpecificTasksStatus(result.etoSpecificTaskStatus)),
+    ]);
   } catch (e) {
     logger.error("Nominee ETOs could not be loaded", e);
     notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETOS));
-    //TODO save error to state and show and error UI
+    yield put(actions.nomineeFlow.storeError(ENomineeFlowError.LOAD_ETOS_ERROR));
   }
+}
+
+export function* initEtoSpecificTaskStatus(
+  _: TGlobalDependencies,
+  previewCode: string,
+): Iterator<any> {
+  const taskStatus: TNomineeEtoSpecificTasksStatus = yield select(
+    selectEtoSpecificTasksStatus,
+    previewCode,
+  );
+  return taskStatus === undefined ? cloneDeep(initialNomineeEtoSpecificTaskStatus) : taskStatus;
+}
+
+export function* initEtoSpecificTaskData(
+  _: TGlobalDependencies,
+  preivewCode: string,
+): Iterator<any> {
+  const taskData = yield select(selectEtoSpecificTaskData, preivewCode);
+  return taskData === undefined ? cloneDeep(initialEtoSpecificTaskData) : taskData;
 }
 
 export function* setActiveNomineeEto({
@@ -500,7 +569,41 @@ export function* setActiveNomineeEto({
     logger.fatal("Could not set active eto", e);
 
     notificationCenter.error(createMessage(EEtoNomineeActiveEtoNotifications.ACTIVE_ETO_SET_ERROR));
-    //TODO save error to state and show and error UI
+    yield put(actions.nomineeFlow.storeError(ENomineeFlowError.ACTIVE_ETO_SET_ERROR));
+  }
+}
+
+export function* uploadAndCheckIsha(
+  _: TGlobalDependencies,
+  { payload: { file } }: TActionFromCreator<typeof actions.nomineeFlow.nomineeUploadIsha>,
+): Iterator<any> {
+  const nomineeEto = yield select(selectActiveNomineeEto);
+  yield put(actions.nomineeFlow.nomineeIshaUploadInProgress(nomineeEto.etoId));
+
+  const hashes = yield all({
+    issuerIshaHash: neuCall(loadIshaHash, nomineeEto.etoId),
+    nomineeIshaHash: generateIpfsHash(file),
+  });
+
+  if (hashes.issuerIshaHash === hashes.nomineeIshaHash) {
+    yield put(actions.nomineeFlow.nomineeIshaCheckSuccess(nomineeEto.previewCode, file.name));
+  } else {
+    yield put(actions.nomineeFlow.nomineeIshaCheckError(nomineeEto.previewCode, file.name));
+  }
+}
+
+export function* loadIshaHash(
+  { contractsService }: TGlobalDependencies,
+  etoId: string,
+): Iterator<any> {
+  const etoCommitmentContract: ETOCommitment = yield contractsService.getETOCommitmentContract(
+    etoId,
+  );
+  const ishaUrl = yield etoCommitmentContract.signedInvestmentAgreementUrl;
+  if (ishaUrl !== "") {
+    return hashFromIpfsLink(ishaUrl);
+  } else {
+    throw new Error("isha hash is empty");
   }
 }
 
@@ -528,6 +631,11 @@ export function* nomineeFlowSagas(): Iterator<any> {
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
   yield fork(
     neuTakeLatest,
+    actions.nomineeFlow.nomineeLoadEtoAgreementsStatus,
+    nomineeFlowLoadAgreementsStatus,
+  );
+  yield fork(
+    neuTakeLatest,
     actions.nomineeFlow.startSetingActiveNomineeEtoPreviewCode,
     setActiveNomineeEto,
   );
@@ -543,4 +651,5 @@ export function* nomineeFlowSagas(): Iterator<any> {
     [actions.nomineeFlow.stopNomineeTaskWatcher, "@@router/LOCATION_CHANGE"],
     nomineeViewDataWatcher,
   );
+  yield fork(neuTakeLatest, actions.nomineeFlow.nomineeUploadIsha, uploadAndCheckIsha);
 }

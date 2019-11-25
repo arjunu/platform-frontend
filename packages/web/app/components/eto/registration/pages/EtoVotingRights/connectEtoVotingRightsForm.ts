@@ -66,7 +66,7 @@ export const EtoVotingRightsValidator = Yup.object().shape({
     .required()
     .min(MIN_VOTING_MAJORITY_FRACTION * 100)
     .max(MAX_VOTING_MAJORITY_FRACTION * 100),
-  advisoryBoardSelector: Yup.boolean().required(),
+  advisoryBoardSelector: Yup.boolean(),
   advisoryBoard: Yup.string().when("advisoryBoardSelector", (v: boolean) =>
     v
       ? Yup.string()

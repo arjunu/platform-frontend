@@ -5,7 +5,7 @@ import { branch, compose, renderComponent, withProps } from "recompose";
 
 import { actions } from "../../modules/actions";
 import { selectStartOfOnchainState } from "../../modules/eto/selectors";
-import { EETOStateOnChain, TEtoStartOfStates } from "../../modules/eto/types";
+import { EETOStateOnChain } from "../../modules/eto/types";
 import {
   selectActiveNomineeEto,
   selectCapitalIncrease,
@@ -95,15 +95,6 @@ export const WaitForIshaSigning = () => (
     </p>
   </section>
 );
-
-export const getStartOfClaimState = (startOfStates: TEtoStartOfStates) => {
-  const startOfClaimState = startOfStates && startOfStates[EETOStateOnChain.Claim];
-  if (startOfClaimState === undefined) {
-    throw new DataUnavailableError("start of claim state is undefined");
-  }
-  const timeLeft = startOfClaimState.getTime() - Date.now();
-  return timeLeft > 0 ? startOfClaimState.getTime() : Date.now();
-};
 
 const RedeemShareCapital = compose<TComponentProps, {}>(
   appConnect<{ taskSubstate: ERedeemShareCapitalTaskSubstate }>({

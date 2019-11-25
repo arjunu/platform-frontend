@@ -139,7 +139,7 @@ $_dropzone-size-sm: 120px;
 }
 
 .upload-title {
-  @include font-medium-roboto;
+  @include nds-label;
 
   line-height: 1.43;
   color: $neu-charcoal-grey;

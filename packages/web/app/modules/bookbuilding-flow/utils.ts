@@ -31,6 +31,7 @@ type TcalculateWhitelistingState = {
   investorsCount: number | undefined;
   investmentCalculatedValues: TEtoInvestmentCalculatedValues | undefined;
   isAuthorized: boolean;
+  isInvestor: boolean;
 };
 
 export const isPledgeAboveMinimum = (minPledge: number): TestOptions => ({
@@ -75,12 +76,14 @@ export const calculateWhitelistingState = ({
   investorsCount,
   investmentCalculatedValues,
   isAuthorized,
+  isInvestor,
 }: TcalculateWhitelistingState) => {
   //TODO this should be put in line with api after API's canEnableBookbuilding after limit is reached gets fixed by Marcin
   if (
     isAuthorized &&
+    isInvestor &&
     whitelistingIsActive &&
-    (investorsCount === undefined || investmentCalculatedValues === undefined)
+    investmentCalculatedValues === undefined
   ) {
     return EWhitelistingState.LOADING;
   } else if (bookbuildingLimitReached) {

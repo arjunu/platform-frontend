@@ -54,6 +54,7 @@ import { DashboardStep } from "./dashboardStep/DashboardStep";
 import { ETOFormsProgressSection } from "./ETOFormsProgressSection";
 import { ETOFundraisingCounterWidget } from "./ETOFundraisingCounterWidget";
 import { ETOFundraisingStatistics } from "./ETOFundraisingStatistics";
+import { ETOISHASignCounter } from "./ETOISHASignCounter";
 import { PublishETOWidget } from "./PublishETOWidget";
 import { UploadInvestmentAgreement } from "./signInvestmentAgreementWidget/UploadInvestmentAgreementWidget";
 import { SubmitProposalWidget } from "./submitProposalWidget/SubmitProposalWidget";
@@ -213,6 +214,7 @@ const EtoDashboardStateViewComponent: React.FunctionComponent<IEtoStateRender> =
           )}
 
           <UploadInvestmentAgreement columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
+          <ETOISHASignCounter eto={eto} columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <BookBuildingWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <ChooseEtoStartDateWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <ETOFormsProgressSection shouldViewEtoSettings={shouldViewSubmissionSection} />

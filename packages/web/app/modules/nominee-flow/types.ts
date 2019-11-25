@@ -1,3 +1,7 @@
+import { ENomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/types";
+import { EProcessState } from "../../utils/enums/processStates";
+import { TEtoWithCompanyAndContractReadonly, TOfferingAgreementsStatus } from "../eto/types";
+
 export enum ENomineeRequestStatus {
   PENDING = "pending",
   APPROVED = "approved",
@@ -18,7 +22,9 @@ export enum ENomineeRequestError {
 
 export enum ENomineeFlowError {
   NONE = "none",
-  FETCH_DATA_ERROR = "nominee_fetch_data_error",
+  FETCH_DATA_ERROR = "nomineeFetchDataError",
+  ACTIVE_ETO_SET_ERROR = "activeEtoSetError",
+  LOAD_ETOS_ERROR = "loadEtosError",
 }
 
 export enum ENomineeTaskStatus {
@@ -81,3 +87,61 @@ export enum ENomineeEtoSpecificTask {
   REDEEM_SHARE_CAPITAL = "redeemShareCapital",
   ACCEPT_ISHA = "acceptIsha",
 }
+
+export type TNomineeEtoSpecificTasksStatus = {
+  [key in ENomineeEtoSpecificTask]: ENomineeTaskStatus;
+};
+export type TNomineeTasksStatus = { [key in ENomineeTask]: ENomineeTaskStatus } & {
+  byPreviewCode: {
+    [previewCode: string]: TNomineeEtoSpecificTasksStatus;
+  };
+};
+export type TNomineeEtosAdditionalData = {
+  investmentAgreementUrl: string | undefined;
+  offeringAgreementsStatus: TOfferingAgreementsStatus;
+  capitalIncrease: string | undefined;
+};
+export type TNomineeTaskLinkToIssuerData = {
+  nextState: ENomineeRequestComponentState;
+  error: ENomineeRequestError;
+};
+export type TNoTasksData = {};
+export type TLinkBankAccountData = {};
+export type TAccountSetupData = {};
+export type TNomineeTaskRedeemShareCapitalData = {
+  capitalIncrease: string;
+  walletBalance: string;
+  taskSubstate: ERedeemShareCapitalTaskSubstate;
+};
+export type TNomineeTaskAcceptThaData = {};
+export type TNomineeTaskAcceptRaaaData = {};
+export type TNomineeTaskAcceptIshaData = {
+  uploadState: EProcessState;
+  uploadedFileName: string | undefined;
+};
+export type TNomineeEtoSpecificTaskData = {
+  [ENomineeEtoSpecificTask.ACCEPT_THA]: TNomineeTaskAcceptThaData;
+  [ENomineeEtoSpecificTask.ACCEPT_RAAA]: TNomineeTaskAcceptRaaaData;
+  [ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]: TNomineeTaskRedeemShareCapitalData;
+  [ENomineeEtoSpecificTask.ACCEPT_ISHA]: TNomineeTaskAcceptIshaData;
+};
+export type TTaskSpecificData = {
+  byPreviewCode: {
+    [previewCode: string]: TNomineeEtoSpecificTaskData;
+  };
+  [ENomineeTask.NONE]: TNoTasksData;
+  [ENomineeTask.ACCOUNT_SETUP]: TAccountSetupData;
+  [ENomineeTask.LINK_TO_ISSUER]: TNomineeTaskLinkToIssuerData;
+};
+export type TNomineeFlowState = {
+  ready: boolean;
+  loading: boolean;
+  error: ENomineeFlowError;
+  activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask;
+  nomineeTasksData: TTaskSpecificData;
+  activeNomineeEtoPreviewCode: string | undefined;
+  nomineeRequests: TNomineeRequestStorage;
+  nomineeEtos: { [previewCode: string]: TEtoWithCompanyAndContractReadonly };
+  nomineeEtosAdditionalData: { [previewCode: string]: TNomineeEtosAdditionalData };
+  nomineeTasksStatus: TNomineeTasksStatus;
+};

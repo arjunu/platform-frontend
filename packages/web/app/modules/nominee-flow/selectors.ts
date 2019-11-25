@@ -5,7 +5,12 @@ import { nomineeIgnoredTemplates } from "../../lib/api/eto/EtoFileUtils";
 import { IAppState } from "../../store";
 import { DataUnavailableError } from "../../utils/errors";
 import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
-import { TEtoWithCompanyAndContract, TOfferingAgreementsStatus } from "../eto/types";
+import { selectStartOfOnchainState } from "../eto/selectors";
+import {
+  EETOStateOnChain,
+  TEtoWithCompanyAndContract,
+  TOfferingAgreementsStatus,
+} from "../eto/types";
 import { selectRouter } from "../routing/selectors";
 import {
   ENomineeEtoSpecificTask,
@@ -14,7 +19,10 @@ import {
   ENomineeRequestStatus,
   ENomineeTask,
   ERedeemShareCapitalTaskSubstate,
+  TNomineeEtoSpecificTaskData,
+  TNomineeEtoSpecificTasksStatus,
   TNomineeRequestStorage,
+  TNomineeTaskAcceptIshaData,
 } from "./types";
 import { getActiveEtoPreviewCodeFromQueryString } from "./utils";
 
@@ -32,20 +40,20 @@ export const selectNomineeFlowHasError = (state: IAppState) => {
 };
 
 export const selectNomineeRequestError = (state: IAppState): ENomineeRequestError => {
-  const linkToIssuerData = state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER];
+  const linkToIssuerData = state.nomineeFlow.nomineeTasksData[ENomineeTask.LINK_TO_ISSUER];
   if (linkToIssuerData === undefined) {
-    throw new DataUnavailableError("activeTaskData for the 'LINK_TO_ISSUER' step is missing");
+    throw new DataUnavailableError("taskData for the 'LINK_TO_ISSUER' step is missing");
   } else {
     return linkToIssuerData.error;
   }
 };
 
-export const selectActiveTaskData = (state: IAppState) => state.nomineeFlow.activeTaskData;
+export const selectNomineeTasksData = (state: IAppState) => state.nomineeFlow.nomineeTasksData;
 
 export const selectLinkToIssuerNextState = (state: IAppState) => {
-  const linkToIssuerData = state.nomineeFlow.activeTaskData[ENomineeTask.LINK_TO_ISSUER];
+  const linkToIssuerData = state.nomineeFlow.nomineeTasksData[ENomineeTask.LINK_TO_ISSUER];
   if (linkToIssuerData === undefined) {
-    throw new DataUnavailableError("activeTaskData for the 'LINK_TO_ISSUER' step is missing");
+    throw new DataUnavailableError("taskData for the 'LINK_TO_ISSUER' step is missing");
   } else {
     return linkToIssuerData && linkToIssuerData.nextState;
   }
@@ -63,16 +71,8 @@ export const selectLinkedNomineeEtoId = (state: IAppState): string | undefined =
 
 export const selectNomineeEtos = (
   state: IAppState,
-): { [previewCode: string]: TEtoWithCompanyAndContract | undefined } | undefined =>
+): { [previewCode: string]: TEtoWithCompanyAndContract | undefined } =>
   state.nomineeFlow.nomineeEtos;
-
-export const selectNomineeEto = (
-  state: IAppState,
-  previewCode: string,
-): TEtoWithCompanyAndContract | undefined => {
-  const nomineeEtos = selectNomineeEtos(state);
-  return nomineeEtos && nomineeEtos[previewCode];
-};
 
 export const selectNomineeTasksStatus = (state: IAppState) => state.nomineeFlow.nomineeTasksStatus;
 
@@ -121,7 +121,7 @@ export const selectCapitalIncrease = (state: IAppState) => {
   const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
   const taskData =
     activeNomineeEtoPreviewCode &&
-    state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode];
+    state.nomineeFlow.nomineeTasksData.byPreviewCode[activeNomineeEtoPreviewCode];
 
   return (
     taskData &&
@@ -136,7 +136,7 @@ export const selectRedeemShareCapitalTaskSubstate = (
   const activeNomineeEtoPreviewCode = selectNomineeActiveEtoPreviewCode(state);
   const taskData =
     activeNomineeEtoPreviewCode &&
-    state.nomineeFlow.activeTaskData.byPreviewCode[activeNomineeEtoPreviewCode];
+    state.nomineeFlow.nomineeTasksData.byPreviewCode[activeNomineeEtoPreviewCode];
 
   if (taskData && taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL]) {
     return taskData[ENomineeEtoSpecificTask.REDEEM_SHARE_CAPITAL].taskSubstate;
@@ -152,3 +152,66 @@ export const selectNomineeTaskStep = (state: IAppState) => state.nomineeFlow.act
 export const selectActiveEtoPreviewCodeFromQueryString = createSelector(selectRouter, state =>
   getActiveEtoPreviewCodeFromQueryString(state.location.search),
 );
+
+export const selectNomineeInvestmentAgreementHash = (state: IAppState, previewCode: string) => {
+  const nomineeEtosAdditionalData = state.nomineeFlow.nomineeEtosAdditionalData[previewCode];
+  return nomineeEtosAdditionalData && nomineeEtosAdditionalData.investmentAgreementUrl;
+};
+
+export const selectEtoSpecificTasksStatus = (
+  state: IAppState,
+  previewCode: string,
+): TNomineeEtoSpecificTasksStatus | undefined =>
+  state.nomineeFlow.nomineeTasksStatus.byPreviewCode[previewCode];
+
+export const selectEtoSpecificTaskData = (
+  state: IAppState,
+  previewCode: string,
+): TNomineeEtoSpecificTaskData | undefined =>
+  state.nomineeFlow.nomineeTasksData.byPreviewCode[previewCode];
+
+export const selectAcceptIshaStateData = (
+  state: IAppState,
+): TNomineeTaskAcceptIshaData | undefined => {
+  const previewCode = selectNomineeActiveEtoPreviewCode(state);
+  const taskData = previewCode && selectEtoSpecificTaskData(state, previewCode);
+
+  if (!(taskData && taskData[ENomineeEtoSpecificTask.ACCEPT_ISHA])) {
+    return undefined;
+  } else {
+    return taskData[ENomineeEtoSpecificTask.ACCEPT_ISHA];
+  }
+};
+
+export const selectNomineeAcceptIshaUploadState = (state: IAppState) => {
+  const acceptIshaStateData = selectAcceptIshaStateData(state);
+  return acceptIshaStateData && acceptIshaStateData.uploadState;
+};
+
+export const selectNomineeAcceptIshaUploadedFileName = (state: IAppState) => {
+  const acceptIshaStateData = selectAcceptIshaStateData(state);
+  return acceptIshaStateData && acceptIshaStateData.uploadedFileName;
+};
+
+export const selectNomineeCompanyName = (state: IAppState, previewCode: string) => {
+  const eto = selectNomineeEtos(state)[previewCode];
+  return eto && eto.company.name;
+};
+
+export const selectNomineeActiveEtoCompanyName = (state: IAppState) => {
+  const previewCode = selectNomineeActiveEtoPreviewCode(state);
+  return previewCode && selectNomineeCompanyName(state, previewCode);
+};
+
+export const selectClaimStateDeadlineTimestamp = (state: IAppState) => {
+  const previewCode = selectNomineeActiveEtoPreviewCode(state);
+  const startOfClaimState =
+    previewCode && selectStartOfOnchainState(state, previewCode, EETOStateOnChain.Claim);
+
+  if (startOfClaimState) {
+    const timeLeft = startOfClaimState.getTime() - Date.now();
+    return timeLeft > 0 ? startOfClaimState.getTime() : Date.now();
+  } else {
+    return undefined;
+  }
+};
