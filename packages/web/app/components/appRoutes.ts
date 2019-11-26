@@ -1,3 +1,7 @@
+import { EJurisdiction } from "../lib/api/eto/EtoProductsApi.interfaces";
+
+export type TEtoViewByPreviewCodeMatch = {jurisdiction: EJurisdiction, previewCode: string}
+
 export const appRoutes = {
   verify: "/email-verify",
   icbmMigration: "/migrate",

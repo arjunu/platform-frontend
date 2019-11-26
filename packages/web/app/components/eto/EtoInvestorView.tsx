@@ -11,7 +11,6 @@ import { selectEtoViewData } from "../../modules/eto-view/selectors";
 import { EProcessState } from "../../utils/enums/processStates";
 import { TEtoViewState, TReadyEtoView } from "../../modules/eto-view/reducer";
 import { withMetaTags } from "../../utils/withMetaTags.unsafe";
-import { withRouter } from "react-router";
 import { EtoViewInvestorLayout } from "./shared/EtoInvestorViewLayout";
 
 // interface IRouterParams {
@@ -33,11 +32,7 @@ export const EtoInvestorView = compose<TReadyEtoView, {}>(
   //   previewCode: props.eto.previewCode,
   //   jurisdiction: props.jurisdiction,
   // })),
-  withMetaTags<TReadyEtoView>((props) => {
-    console.log("EtoInvestorView",props)
-    const {eto} = props
-    return ({
+  withMetaTags<TReadyEtoView>(({eto}) => ({
       title: `${eto.company.brandName} - ${eto.equityTokenName} (${eto.equityTokenSymbol})`
-    })}),
-  withRouter,
+    })),
 )(EtoViewInvestorLayout);

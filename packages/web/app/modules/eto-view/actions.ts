@@ -1,10 +1,12 @@
 import { createActionFactory } from "@neufund/shared";
 import { TInvestorEtoViewData } from "./reducer";
+import { match } from "react-router";
+import { TEtoViewByPreviewCodeMatch } from "../../components/appRoutes";
 
 export const etoViewActions = {
   loadInvestorEtoView: createActionFactory(
     "ETO_VIEW_LOAD_INVESTOR_ETO_VIEW",
-    (previewCode:string) => ({previewCode})
+    (previewCode:string, match: match<TEtoViewByPreviewCodeMatch>) => ({previewCode,match})
   ),
   loadNotAuthorizedEtoView: createActionFactory(
     "ETO_VIEW_LOAD_NOT_AUTH_ETO_VIEW",

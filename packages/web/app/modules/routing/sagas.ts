@@ -2,14 +2,13 @@ import { LocationChangeAction } from "connected-react-router";
 import { Effect, fork, put, select } from "redux-saga/effects";
 import { matchPath } from 'react-router';
 
-import { appRoutes } from "../../components/appRoutes";
+import { appRoutes, TEtoViewByPreviewCodeMatch } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsAuthorized, selectUserType } from "../auth/selectors";
 import { waitForAppInit } from "../init/sagas";
 import { neuCall, neuTakeEvery } from "../sagasUtils";
-import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
 
 function* openInNewWindowSaga(
   _: TGlobalDependencies,
@@ -30,7 +29,7 @@ export function* startRouteBasedSagas(
   { logger }: TGlobalDependencies,
   action: LocationChangeAction,
 ): IterableIterator<any> {
-  console.log("---startRouteBasedSagas")
+
   const appIsReady = yield waitForAppInit();
   const userIsAuthorized: boolean = yield select(selectIsAuthorized);
   const userType: EUserType | undefined = yield select(selectUserType);
@@ -38,7 +37,8 @@ export function* startRouteBasedSagas(
   console.log(`userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
       action.payload.location.pathname
     }`,
-  )
+  );
+
   logger.info(
     `userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
       action.payload.location.pathname
@@ -66,10 +66,10 @@ export function* investorRouting(
   _: TGlobalDependencies,
   { payload }: LocationChangeAction,
 ) {
-  const etoInvestorView = yield matchPath<{previewCode:string, jurisdiction:EJurisdiction}>(payload.location.pathname, { path: appRoutes.etoInvestorView });
-  if (etoInvestorView !== null) {
-    const previewCode = etoInvestorView.params.previewCode;
-    yield put(actions.etoView.loadInvestorEtoView(previewCode))
+  const etoInvestorViewMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(payload.location.pathname, { path: appRoutes.etoInvestorView });
+  if (etoInvestorViewMatch !== null) {
+    const previewCode = etoInvestorViewMatch.params.previewCode;
+    yield put(actions.etoView.loadInvestorEtoView(previewCode, etoInvestorViewMatch))
   }
 }
 

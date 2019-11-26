@@ -46,7 +46,7 @@ const BannerBase: React.FunctionComponent<TDataTestId> = ({
   </Container>
 );
 
-export const InvestorBannerLayout: React.FunctionComponent<IJurisdictionBannerProps> = ({
+export const InvestorCoverBannerLayout: React.FunctionComponent<IJurisdictionBannerProps> = ({
   jurisdiction,
 }) => {
   switch (jurisdiction) {
@@ -112,4 +112,4 @@ export const CoverBanner = compose<TBannerProps, IExternalProps & TBannerProps>(
     props => props.userType === EUserType.ISSUER && !props.publicView,
     renderComponent(IssuerBannerLayout),
   ),
-)(InvestorBannerLayout);
+)(InvestorCoverBannerLayout);

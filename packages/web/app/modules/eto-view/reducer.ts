@@ -1,12 +1,18 @@
+import { match } from "react-router";
+
 import { AppReducer } from "../../store";
 import { DeepReadonly, XOR } from "../../types";
 import { actions } from "../actions";
 import { EProcessState } from "../../utils/enums/processStates";
 import { TEtoWithCompanyAndContractReadonly } from "../eto/types";
+import { TEtoViewByPreviewCodeMatch } from "../../components/appRoutes";
+import { EEtoViewCampaignOverviewType } from "./sagas";
 
 export type TInvestorEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly,
-  userIsFullyVerified: boolean
+  userIsFullyVerified: boolean,
+  campaignOverviewType: EEtoViewCampaignOverviewType,
+  match: match<TEtoViewByPreviewCodeMatch>,
 }
 
 export type TReadyEtoView = {
