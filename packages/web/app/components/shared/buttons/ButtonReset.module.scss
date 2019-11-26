@@ -30,7 +30,9 @@
   }
 
   &:global(.focus-visible) {
-    outline: 3px dashed $neu-neon-yellow;
-    outline-offset: 1px;
+    $button-focus-shadow-color: rgba($neu-base-blue, .3);
+
+    box-shadow: 0 0 0 .2rem $button-focus-shadow-color;
+    border-color: $neu-base-blue;
   }
 }
