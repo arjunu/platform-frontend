@@ -49,12 +49,10 @@ export const businessSteps = [
 ];
 
 type IProps = {
-  requestLoading?: boolean;
   requestStatus?: EKycRequestStatus;
   redirectUrl: string;
-  pendingRequestType: EKycRequestType | undefined;
+  requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
-  reopenRequest: () => void;
   goToProfile: () => void;
   goToDashboard: () => void;
 };
@@ -70,7 +68,8 @@ class RequestStateInfo extends React.Component<IProps, IState> {
 
   render(): React.ReactNode {
     const steps =
-      this.props.pendingRequestType === EKycRequestType.BUSINESS ? businessSteps : personalSteps;
+      this.props.requestType === EKycRequestType.BUSINESS ? businessSteps : personalSteps;
+
     const settingsButton = (
       <div className="p-4 text-center">
         <Button
@@ -111,10 +110,13 @@ class RequestStateInfo extends React.Component<IProps, IState> {
               <FormattedMessage id="kyc.request-state.pending.add-files-button" />
             </Button>
           )}
-          {this.props.pendingRequestType && this.state.showAdditionalFileUpload && (
-            <KYCAddDocuments uploadType={this.props.pendingRequestType} />
+
+          {this.props.requestType && this.state.showAdditionalFileUpload && (
+            <KYCAddDocuments uploadType={this.props.requestType} />
           )}
+
           <br /> <br />
+
           {settingsButton}
         </KycPanel>
       );

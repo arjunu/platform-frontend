@@ -5,10 +5,7 @@ import { Col, Row } from "reactstrap";
 import { compose } from "recompose";
 
 import { externalRoutes } from "../../../config/externalRoutes";
-import {
-  EKycRequestStatus,
-  ERequestOutsourcedStatus,
-} from "../../../lib/api/kyc/KycApi.interfaces";
+import { EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
 import { EUserType } from "../../../lib/api/users/interfaces";
 import { THocProps } from "../../../types";
 import { EColumnSpan } from "../../layouts/Container";
@@ -57,39 +54,9 @@ const statusTextMap: Record<EKycRequestStatus, React.ReactNode> = {
       values={{ url: externalRoutes.neufundSupportHome }}
     />
   ),
+  // TODO: Update text for outsourced
   [EKycRequestStatus.OUTSOURCED]: (
     <FormattedMessage id="settings.kyc-status-widget.status.outsourced.started" />
-  ),
-};
-
-const outsourcedStatusTextMap: Record<ERequestOutsourcedStatus, React.ReactNode> = {
-  review_pending: (
-    <FormattedMessage id="settings.kyc-status-widget.status.outsourced.review_pending" />
-  ),
-  aborted: (
-    <FormattedHTMLMessage
-      id="settings.kyc-status-widget.status.outsourced.abortedOrCancelled"
-      tagName="span"
-      values={{ url: externalRoutes.neufundSupportHome }}
-    />
-  ),
-  canceled: (
-    <FormattedHTMLMessage
-      id="settings.kyc-status-widget.status.outsourced.abortedOrCancelled"
-      tagName="span"
-    />
-  ),
-  other: (
-    <FormattedHTMLMessage
-      tagName="span"
-      id="settings.kyc-status-widget.status.outsourced.other-info"
-      values={{ url: externalRoutes.neufundSupportHome }}
-    />
-  ),
-  started: <FormattedMessage id="settings.kyc-status-widget.status.outsourced.started" />,
-  success: <FormattedMessage id="settings.kyc-status-widget.status.outsourced.review_pending" />,
-  success_data_changed: (
-    <FormattedMessage id="settings.kyc-status-widget.status.outsourced.review_pending" />
   ),
 };
 
@@ -98,7 +65,6 @@ const getStatus = (
   isKycFlowBlockedByRegion: boolean,
   isRestrictedCountryInvestor: boolean,
   requestStatus: EKycRequestStatus | undefined,
-  requestOutsourcedStatus: ERequestOutsourcedStatus | undefined,
 ): React.ReactNode => {
   // In case KYC flow is blocked show message immediately
   if (isKycFlowBlockedByRegion) {
@@ -125,8 +91,8 @@ const getStatus = (
     );
   }
 
-  if (requestStatus === EKycRequestStatus.OUTSOURCED && requestOutsourcedStatus) {
-    return outsourcedStatusTextMap[requestOutsourcedStatus];
+  if (requestStatus === EKycRequestStatus.OUTSOURCED) {
+    return "TODO: Add an appropriate text in case it was outsourced";
   }
 
   return statusTextMap[requestStatus];
@@ -134,7 +100,6 @@ const getStatus = (
 
 const ActionButton = ({
   requestStatus,
-  requestOutsourcedStatus,
   onGoToKycHome,
   isUserEmailVerified,
   externalKycUrl,
@@ -188,13 +153,7 @@ const ActionButton = ({
     );
   }
 
-  if (
-    externalKycUrl &&
-    requestStatus === EKycRequestStatus.OUTSOURCED &&
-    (requestOutsourcedStatus === ERequestOutsourcedStatus.CANCELED ||
-      requestOutsourcedStatus === ERequestOutsourcedStatus.ABORTED ||
-      requestOutsourcedStatus === ERequestOutsourcedStatus.STARTED)
-  ) {
+  if (externalKycUrl && requestStatus === EKycRequestStatus.OUTSOURCED) {
     return (
       <>
         <ButtonLink
@@ -224,32 +183,17 @@ const ActionButton = ({
 const StatusIcon = ({
   requestStatus,
   isLoading,
-  requestOutsourcedStatus,
   isRestrictedCountryInvestor,
 }: IKycStatusWidgetProps) => {
   if (isLoading) {
     return null;
   }
 
-  if (
-    (!isRestrictedCountryInvestor && requestStatus === EKycRequestStatus.ACCEPTED) ||
-    (requestStatus === EKycRequestStatus.OUTSOURCED &&
-      [ERequestOutsourcedStatus.SUCCESS, ERequestOutsourcedStatus.SUCCESS_DATA_CHANGED].includes(
-        requestOutsourcedStatus!,
-      ))
-  ) {
+  if (!isRestrictedCountryInvestor && requestStatus === EKycRequestStatus.ACCEPTED) {
     return <img src={successIcon} className={styles.icon} alt="" />;
   }
 
-  if (
-    requestStatus === EKycRequestStatus.PENDING ||
-    (requestStatus === EKycRequestStatus.OUTSOURCED &&
-      [
-        ERequestOutsourcedStatus.STARTED,
-        ERequestOutsourcedStatus.REVIEW_PENDING,
-        ERequestOutsourcedStatus.OTHER,
-      ].includes(requestOutsourcedStatus!))
-  ) {
+  if (requestStatus === EKycRequestStatus.PENDING) {
     return <img src={infoIcon} className={styles.icon} alt="" />;
   }
 

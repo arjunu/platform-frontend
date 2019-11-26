@@ -77,7 +77,7 @@ export const KycStatusSchema = YupTS.object({
   instantIdProvider: YupTS.string(),
   originCountry: YupTS.string<ECountries>(),
   recommendedInstantIdProvider: YupTS.string(),
-  status: YupTS.string(),
+  status: YupTS.string<EKycRequestStatus>(),
   supportedInstantIdProviders: YupTS.array(YupTS.string()),
   type: YupTS.string<EKycRequestType>(),
 });
@@ -165,25 +165,13 @@ export enum EKycRequestStatus {
   IGNORED = "ignored",
 }
 
-export enum ERequestOutsourcedStatus {
-  STARTED = "started",
-  SUCCESS = "success",
-  SUCCESS_DATA_CHANGED = "success_data_changed",
-  REVIEW_PENDING = "review_pending",
-  ABORTED = "aborted",
-  CANCELED = "canceled",
-  OTHER = "other",
-}
-
 export interface IKycRequestState {
   status: EKycRequestStatus;
-  outsourcedStatus?: ERequestOutsourcedStatus;
   redirectUrl?: string;
 }
 
 export const KycRequestStateSchema = Yup.object().shape({
-  status: Yup.string().required("Request state is required"),
-  outsourcedStatus: Yup.string(),
+  status: Yup.string().required(),
   redirectUrl: Yup.string(),
   type: Yup.string(),
 });

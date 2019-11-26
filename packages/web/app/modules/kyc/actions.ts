@@ -7,7 +7,6 @@ import {
   IKycFileInfo,
   IKycIndividualData,
   IKycLegalRepresentative,
-  IKycRequestState,
   KycBankQuintessenceBankAccount,
   TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
@@ -18,6 +17,9 @@ export const kycActions = {
    * General
    */
   setStatus: createActionFactory("KYC_SET_STATUS", (status: TKycStatus) => ({ status })),
+  setStatusLoading: createActionFactory("KYC_SET_STATUS_LOADING"),
+  setStatusError: createActionFactory("KYC_SET_STATUS_ERROR", (error: string) => ({ error })),
+
   kycLoadClientData: createActionFactory("KYC_LOAD_CLIENT_DATA"),
   kycFinishedLoadingData: createActionFactory("KYC_FINISHED_LOADING_DATA"),
 
@@ -81,19 +83,6 @@ export const kycActions = {
     "KYC_LOAD_INDIVIDUAL_REQUEST_STATE",
     (inBackground: boolean = false) => ({
       inBackground,
-    }),
-  ),
-
-  kycUpdateIndividualRequestState: createActionFactory(
-    "KYC_UPDATE_INDIVIDUAL_REQUEST_STATE",
-    (
-      individualRequestStateLoading?: boolean,
-      individualRequestState?: IKycRequestState,
-      individualRequestError?: string,
-    ) => ({
-      individualRequestState,
-      individualRequestStateLoading,
-      individualRequestError,
     }),
   ),
 
@@ -249,19 +238,6 @@ export const kycActions = {
   kycLoadBusinessRequest: createActionFactory(
     "KYC_LOAD_BUSINESS_REQUEST_STATE",
     (inBackground: boolean = false) => ({ inBackground }),
-  ),
-
-  kycUpdateBusinessRequestState: createActionFactory(
-    "KYC_UPDATE_BUSINESS_REQUEST_STATE",
-    (
-      businessRequestStateLoading?: boolean,
-      businessRequestState?: IKycRequestState,
-      businessRequestError?: string,
-    ) => ({
-      businessRequestState,
-      businessRequestStateLoading,
-      businessRequestError,
-    }),
   ),
 
   kycSubmitBusinessRequest: createActionFactory("KYC_SUBMIT_BUSINESS_REQUEST"),

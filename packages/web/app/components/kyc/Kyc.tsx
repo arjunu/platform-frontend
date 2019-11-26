@@ -8,8 +8,7 @@ import { selectIsUserEmailVerified } from "../../modules/auth/selectors";
 import {
   selectIsKycFlowBlockedByRegion,
   selectKycOutSourcedURL,
-  selectKycRequestStatus,
-  selectPendingKycRequestType,
+  selectKycRequestStatus, selectKycRequestType,
 } from "../../modules/kyc/selectors";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";
@@ -22,16 +21,14 @@ import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout
 const KycLayout = React.lazy(() => import("./KycLayout").then(imp => ({ default: imp.KycLayout })));
 
 interface IStateProps {
-  requestLoading?: boolean;
   requestStatus?: EKycRequestStatus;
   redirectUrl: string;
-  pendingRequestType: EKycRequestType | undefined;
+  requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
   isKycFlowBlockedByRegion: boolean;
 }
 
 interface IDispatchProps {
-  reopenRequest: () => void;
   goToProfile: () => void;
   goToDashboard: () => void;
 }
@@ -40,16 +37,13 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
   createErrorBoundary(ErrorBoundaryLayout),
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
-      requestLoading:
-        state.kyc.individualRequestStateLoading || state.kyc.businessRequestStateLoading,
       requestStatus: selectKycRequestStatus(state),
       redirectUrl: selectKycOutSourcedURL(state.kyc),
-      pendingRequestType: selectPendingKycRequestType(state.kyc),
+      requestType: selectKycRequestType(state),
       hasVerifiedEmail: selectIsUserEmailVerified(state.auth),
       isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
     }),
     dispatchToProps: dispatch => ({
-      reopenRequest: () => {},
       goToProfile: () => dispatch(actions.routing.goToProfile()),
       goToDashboard: () => dispatch(actions.routing.goToDashboard()),
     }),
@@ -61,8 +55,7 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
   ),
   onEnterAction({
     actionCreator: dispatch => {
-      dispatch(actions.kyc.kycLoadIndividualRequest());
-      dispatch(actions.kyc.kycLoadBusinessRequest());
+      dispatch(actions.kyc.kycLoadClientData());
     },
   }),
   withContainer(Layout),

@@ -3,7 +3,6 @@ import * as React from "react";
 
 import {
   EKycRequestStatus,
-  ERequestOutsourcedStatus,
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { EUserType } from "../../../lib/api/users/interfaces";
 import { KycStatusWidgetBase } from "./KycStatusWidget";
@@ -66,61 +65,11 @@ storiesOf("KYC/StatusWidget", module)
       isRestrictedCountryInvestor={true}
     />
   ))
-  .add("outsourced-started", () => (
+  .add("outsourced", () => (
     <KycStatusWidgetBase
       {...commonProps}
       userType={EUserType.INVESTOR}
       requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.STARTED}
-      externalKycUrl={"https://neufund.org"}
-    />
-  ))
-  .add("outsourced-aborted", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.ABORTED}
-    />
-  ))
-  .add("outsourced-canceled", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.CANCELED}
-    />
-  ))
-  .add("outsourced-other", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.OTHER}
-    />
-  ))
-  .add("outsourced-review_pending", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.REVIEW_PENDING}
-    />
-  ))
-  .add("outsourced-success", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.SUCCESS}
-    />
-  ))
-  .add("outsourced-success-data-changed", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.SUCCESS_DATA_CHANGED}
     />
   ))
   .add("error", () => (
@@ -128,8 +77,7 @@ storiesOf("KYC/StatusWidget", module)
       {...commonProps}
       error="bla bla error"
       userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.REVIEW_PENDING}
+      requestStatus={EKycRequestStatus.PENDING}
     />
   ))
   .add("loading", () => (
@@ -137,7 +85,6 @@ storiesOf("KYC/StatusWidget", module)
       {...commonProps}
       isLoading={true}
       userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.REVIEW_PENDING}
+      requestStatus={EKycRequestStatus.PENDING}
     />
   ));

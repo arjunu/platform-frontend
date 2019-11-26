@@ -3,7 +3,6 @@ import * as moment from "moment";
 import * as React from "react";
 
 import { testEto } from "../../../../../test/fixtures";
-import { EKycRequestStatus } from "../../../../lib/api/kyc/KycApi.interfaces";
 import { EUserType } from "../../../../lib/api/users/interfaces";
 import {
   EETOStateOnChain,
@@ -49,9 +48,6 @@ storiesOf("ETO/EtoOverviewStatus", module)
         },
       },
       kyc: {
-        individualRequestState: {
-          status: EKycRequestStatus.ACCEPTED,
-        },
         claims: {
           isVerified: true,
         },
@@ -140,9 +136,6 @@ storiesOf("ETO/EtoOverviewStatus", module)
         },
       },
       kyc: {
-        individualRequestState: {
-          status: EKycRequestStatus.ACCEPTED,
-        },
         claims: {
           isVerified: true,
         },
@@ -213,9 +206,6 @@ storiesOf("ETO/EtoOverviewStatus/whitelisting, investor limit reached", module)
         },
       },
       kyc: {
-        individualRequestState: {
-          status: EKycRequestStatus.ACCEPTED,
-        },
         claims: {
           isVerified: true,
         },

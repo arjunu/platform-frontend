@@ -3,7 +3,6 @@ import { branch, compose, renderNothing } from "recompose";
 
 import {
   EKycRequestStatus,
-  ERequestOutsourcedStatus,
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { EUserType } from "../../../lib/api/users/interfaces";
 import { actions } from "../../../modules/actions";
@@ -17,7 +16,6 @@ import {
   selectExternalKycUrl,
   selectIsKycFlowBlockedByRegion,
   selectKycLoading,
-  selectKycRequestOutsourcedStatus,
   selectKycRequestStatus,
   selectWidgetError,
 } from "../../../modules/kyc/selectors";
@@ -27,7 +25,6 @@ import { onLeaveAction } from "../../../utils/OnLeaveAction";
 
 interface IStateProps {
   requestStatus: EKycRequestStatus | undefined;
-  requestOutsourcedStatus: ERequestOutsourcedStatus | undefined;
   isUserEmailVerified: boolean;
   isLoading: boolean;
   isKycFlowBlockedByRegion: boolean;
@@ -58,7 +55,6 @@ const connectKycStatusWidget = () => (
             isUserEmailVerified: selectIsUserEmailVerified(state.auth),
             backupCodesVerified: selectBackupCodesVerified(state),
             requestStatus: selectKycRequestStatus(state),
-            requestOutsourcedStatus: selectKycRequestOutsourcedStatus(state.kyc),
             externalKycUrl: selectExternalKycUrl(state.kyc),
             isLoading: selectKycLoading(state),
             isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),

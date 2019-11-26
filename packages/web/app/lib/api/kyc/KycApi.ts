@@ -107,14 +107,6 @@ export class KycApi {
   }
 
   // request
-  public async getIndividualRequest(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.get<IKycRequestState>({
-      baseUrl: BASE_PATH,
-      url: INDIVIDUAL_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
-    });
-  }
-
   public async submitIndividualRequest(): Promise<IHttpResponse<IKycRequestState>> {
     return await this.httpClient.put<IKycRequestState>({
       baseUrl: BASE_PATH,
@@ -274,14 +266,6 @@ export class KycApi {
   }
 
   // request
-  public async getBusinessRequest(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.get<IKycRequestState>({
-      baseUrl: BASE_PATH,
-      url: BUSINESS_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
-    });
-  }
-
   public async submitBusinessRequest(): Promise<IHttpResponse<IKycRequestState>> {
     return await this.httpClient.put<IKycRequestState>({
       baseUrl: BASE_PATH,
