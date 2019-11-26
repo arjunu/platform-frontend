@@ -50,7 +50,7 @@ export const businessSteps = [
 
 type IProps = {
   requestStatus?: EKycRequestStatus;
-  redirectUrl: string;
+  redirectUrl: string | undefined;
   requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
   goToProfile: () => void;
@@ -82,6 +82,7 @@ class RequestStateInfo extends React.Component<IProps, IState> {
         </Button>
       </div>
     );
+
     if (!this.props.requestStatus) {
       return (
         <KycPanel
@@ -110,13 +111,10 @@ class RequestStateInfo extends React.Component<IProps, IState> {
               <FormattedMessage id="kyc.request-state.pending.add-files-button" />
             </Button>
           )}
-
           {this.props.requestType && this.state.showAdditionalFileUpload && (
             <KYCAddDocuments uploadType={this.props.requestType} />
           )}
-
           <br /> <br />
-
           {settingsButton}
         </KycPanel>
       );
@@ -143,7 +141,9 @@ class RequestStateInfo extends React.Component<IProps, IState> {
         </KycPanel>
       );
     }
-    if (this.props.requestStatus === EKycRequestStatus.OUTSOURCED) {
+
+    // TODO: check what we need to modify here
+    if (this.props.requestStatus === EKycRequestStatus.OUTSOURCED && false) {
       return (
         <KycPanel
           title={<FormattedMessage id="kyc.request-state.outsourced.title" />}
@@ -159,12 +159,17 @@ class RequestStateInfo extends React.Component<IProps, IState> {
         </KycPanel>
       );
     }
+
     return <div />;
   }
 }
 
 const KycLayout: React.FunctionComponent<IProps> = props => {
-  const router = props.requestStatus === EKycRequestStatus.DRAFT ? <KycRouter /> : null;
+  const router =
+    props.requestStatus === EKycRequestStatus.DRAFT ||
+    props.requestStatus === EKycRequestStatus.OUTSOURCED ? (
+      <KycRouter />
+    ) : null;
   return (
     <>
       <RequestStateInfo {...props} />

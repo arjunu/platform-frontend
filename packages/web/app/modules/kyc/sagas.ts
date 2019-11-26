@@ -238,20 +238,6 @@ function* startIndividualInstantId({
   }
 }
 
-function* cancelIndividualInstantId({
-  apiKycService,
-  notificationCenter,
-  logger,
-}: TGlobalDependencies): Iterator<any> {
-  try {
-    yield apiKycService.cancelInstantId();
-  } catch (e) {
-    logger.error("KYC instant id failed to stop", e);
-
-    notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED)); //module.kyc.sagas.problem.submitting
-  }
-}
-
 /**
  * Company Request
  */
@@ -660,7 +646,6 @@ export function* kycSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualDocumentList, loadIndividualFiles);
   // Outsourced
   yield fork(neuTakeEvery, actions.kyc.kycStartInstantId, startIndividualInstantId);
-  yield fork(neuTakeEvery, actions.kyc.kycCancelInstantId, cancelIndividualInstantId);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitIndividualRequest, submitIndividualRequest);
 
   yield fork(neuTakeEvery, actions.kyc.kycLoadLegalRepresentative, loadLegalRepresentative);

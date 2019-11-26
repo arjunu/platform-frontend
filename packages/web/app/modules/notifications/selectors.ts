@@ -10,7 +10,7 @@ import {
   selectIsUserEmailVerified,
   selectUserType,
 } from "../auth/selectors";
-import { selectKycLoading, selectKycRequestStatus } from "../kyc/selectors";
+import { selectKycIsLoading, selectKycRequestStatus } from "../kyc/selectors";
 import { EKycRequestStatus } from "./../../lib/api/kyc/KycApi.interfaces";
 import { settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
 import { INotification } from "./types";
@@ -19,7 +19,7 @@ export const selectNotifications = (state: IAppState): ReadonlyArray<INotificati
   state.notifications.notifications;
 
 export const selectIsActionRequiredSettings = (state: IAppState): boolean => {
-  if (selectKycLoading(state)) {
+  if (selectKycIsLoading(state)) {
     return false;
   }
   return (

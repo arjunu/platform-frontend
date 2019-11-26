@@ -7,7 +7,7 @@ import { actions } from "../../modules/actions";
 import { selectIsUserEmailVerified } from "../../modules/auth/selectors";
 import {
   selectIsKycFlowBlockedByRegion,
-  selectKycOutSourcedURL,
+  selectKycIdNowRedirectUrl,
   selectKycRequestStatus, selectKycRequestType,
 } from "../../modules/kyc/selectors";
 import { appConnect } from "../../store";
@@ -22,7 +22,7 @@ const KycLayout = React.lazy(() => import("./KycLayout").then(imp => ({ default:
 
 interface IStateProps {
   requestStatus?: EKycRequestStatus;
-  redirectUrl: string;
+  redirectUrl: string | undefined;
   requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
   isKycFlowBlockedByRegion: boolean;
@@ -38,7 +38,7 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
       requestStatus: selectKycRequestStatus(state),
-      redirectUrl: selectKycOutSourcedURL(state.kyc),
+      redirectUrl: selectKycIdNowRedirectUrl(state),
       requestType: selectKycRequestType(state),
       hasVerifiedEmail: selectIsUserEmailVerified(state.auth),
       isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),

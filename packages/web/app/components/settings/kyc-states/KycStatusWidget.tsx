@@ -5,11 +5,11 @@ import { Col, Row } from "reactstrap";
 import { compose } from "recompose";
 
 import { externalRoutes } from "../../../config/externalRoutes";
-import { EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
-import { EUserType } from "../../../lib/api/users/interfaces";
+import { EKycInstantIdStatus, EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
 import { THocProps } from "../../../types";
+import { InvariantError } from "../../../utils/invariant";
 import { EColumnSpan } from "../../layouts/Container";
-import { Button, ButtonLink, EButtonLayout, EIconPosition } from "../../shared/buttons/index";
+import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons/index";
 import { LoadingIndicator } from "../../shared/loading-indicator";
 import { Panel } from "../../shared/Panel";
 import { WarningAlert } from "../../shared/WarningAlert";
@@ -54,18 +54,22 @@ const statusTextMap: Record<EKycRequestStatus, React.ReactNode> = {
       values={{ url: externalRoutes.neufundSupportHome }}
     />
   ),
-  // TODO: Update text for outsourced
   [EKycRequestStatus.OUTSOURCED]: (
     <FormattedMessage id="settings.kyc-status-widget.status.outsourced.started" />
   ),
 };
 
-const getStatus = (
-  selectIsUserEmailVerified: boolean,
-  isKycFlowBlockedByRegion: boolean,
-  isRestrictedCountryInvestor: boolean,
-  requestStatus: EKycRequestStatus | undefined,
-): React.ReactNode => {
+const getStatus = ({
+  isUserEmailVerified,
+  isKycFlowBlockedByRegion,
+  isRestrictedCountryInvestor,
+  requestStatus,
+  instantIdStatus,
+}: IKycStatusWidgetProps): React.ReactNode => {
+  if (!requestStatus) {
+    throw new InvariantError("Request status should be defined at this point");
+  }
+
   // In case KYC flow is blocked show message immediately
   if (isKycFlowBlockedByRegion) {
     return (
@@ -75,12 +79,8 @@ const getStatus = (
     );
   }
 
-  if (!selectIsUserEmailVerified) {
+  if (!isUserEmailVerified) {
     return <FormattedMessage id="settings.kyc-status-widget.status.error-verification-email" />;
-  }
-
-  if (!requestStatus) {
-    return "";
   }
 
   if (requestStatus === EKycRequestStatus.ACCEPTED && isRestrictedCountryInvestor) {
@@ -91,8 +91,11 @@ const getStatus = (
     );
   }
 
-  if (requestStatus === EKycRequestStatus.OUTSOURCED) {
-    return "TODO: Add an appropriate text in case it was outsourced";
+  if (
+    requestStatus === EKycRequestStatus.OUTSOURCED &&
+    instantIdStatus === EKycInstantIdStatus.PENDING
+  ) {
+    return <FormattedMessage id="settings.kyc-status-widget.status.outsourced.review_pending" />;
   }
 
   return statusTextMap[requestStatus];
@@ -102,14 +105,12 @@ const ActionButton = ({
   requestStatus,
   onGoToKycHome,
   isUserEmailVerified,
-  externalKycUrl,
-  userType,
   onGoToDashboard,
   backupCodesVerified,
-  cancelInstantId,
   isKycFlowBlockedByRegion,
+  instantIdStatus,
 }: IKycStatusWidgetProps) => {
-  if (requestStatus === EKycRequestStatus.ACCEPTED && userType === EUserType.INVESTOR) {
+  if (requestStatus === EKycRequestStatus.ACCEPTED) {
     return (
       <Button
         layout={EButtonLayout.SECONDARY}
@@ -153,27 +154,22 @@ const ActionButton = ({
     );
   }
 
-  if (externalKycUrl && requestStatus === EKycRequestStatus.OUTSOURCED) {
+  if (
+    requestStatus === EKycRequestStatus.OUTSOURCED &&
+    instantIdStatus === EKycInstantIdStatus.DRAFT
+  ) {
     return (
-      <>
-        <ButtonLink
-          to={externalKycUrl}
-          layout={EButtonLayout.SECONDARY}
-          iconPosition={EIconPosition.ICON_AFTER}
-          svgIcon={arrowRight}
-        >
-          <FormattedMessage id="settings.kyc-status-widget.continue-external-kyc" />
-        </ButtonLink>
-        <Button
-          layout={EButtonLayout.SECONDARY}
-          iconPosition={EIconPosition.ICON_AFTER}
-          svgIcon={arrowRight}
-          onClick={cancelInstantId}
-          data-test-id="settings.kyc-status-widget.cancel-external-kyc-button"
-        >
-          <FormattedMessage id="settings.kyc-status-widget.cancel-external-kyc" />
-        </Button>
-      </>
+      <Button
+        id="start-kyc-process-again"
+        layout={EButtonLayout.SECONDARY}
+        iconPosition={EIconPosition.ICON_AFTER}
+        svgIcon={arrowRight}
+        onClick={onGoToKycHome}
+        disabled={!isUserEmailVerified || !backupCodesVerified}
+        data-test-id="settings.kyc-status-widget.start-kyc-process-again"
+      >
+        <FormattedMessage id="settings.kyc-status-widget.start-kyc-process" />
+      </Button>
     );
   }
 
@@ -201,17 +197,7 @@ const StatusIcon = ({
 };
 
 export const KycStatusWidgetBase: React.FunctionComponent<IKycStatusWidgetProps> = props => {
-  const {
-    requestStatus,
-    requestOutsourcedStatus,
-    isUserEmailVerified,
-    isLoading,
-    error,
-    step,
-    columnSpan,
-    isKycFlowBlockedByRegion,
-    isRestrictedCountryInvestor,
-  } = props;
+  const { isLoading, error, step, columnSpan } = props;
 
   return (
     <Panel
@@ -233,15 +219,7 @@ export const KycStatusWidgetBase: React.FunctionComponent<IKycStatusWidgetProps>
         </WarningAlert>
       ) : (
         <section className={cn(styles.section)}>
-          <p className={cn(styles.text, "pt-2")}>
-            {getStatus(
-              isUserEmailVerified,
-              isKycFlowBlockedByRegion,
-              isRestrictedCountryInvestor,
-              requestStatus,
-              requestOutsourcedStatus,
-            )}
-          </p>
+          <p className={cn(styles.text, "pt-2")}>{getStatus(props)}</p>
           <ActionButton {...props} />
         </section>
       )}

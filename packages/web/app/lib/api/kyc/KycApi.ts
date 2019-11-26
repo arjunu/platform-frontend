@@ -24,7 +24,7 @@ const STATUS_PATH = "/status";
 
 const INDIVIDUAL_DATA_PATH = "/individual/data";
 const INDIVIDUAL_REQUEST_PATH = "/individual/request";
-const INSTANT_ID_REQUEST_PATH = "/individual/request/instant-id";
+const INSTANT_ID_REQUEST_PATH = "/individual/request/id-now/identification-request";
 const INDIVIDUAL_DOCUMENT_PATH = "/individual/document";
 
 const BUSINESS_REQUEST_PATH = "/business/request";
@@ -120,13 +120,6 @@ export class KycApi {
       baseUrl: BASE_PATH,
       url: INSTANT_ID_REQUEST_PATH,
       responseSchema: KycRequestStateSchema,
-    });
-  }
-
-  public async cancelInstantId(): Promise<IHttpResponse<void>> {
-    return await this.httpClient.delete<void>({
-      baseUrl: BASE_PATH,
-      url: INSTANT_ID_REQUEST_PATH,
     });
   }
 

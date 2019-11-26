@@ -17,6 +17,18 @@ export enum EKycRequestType {
   US_ACCREDITATION = "us_accreditation",
 }
 
+export type TInstantIdNoneProvider = "none";
+
+export enum EKycInstantIdProvider {
+  ID_NOW = "id_now",
+  ONFIDO = "onfido",
+}
+
+export enum EKycInstantIdStatus {
+  DRAFT = "draft",
+  PENDING = "pending",
+}
+
 export interface IKycPerson {
   firstName?: string;
   lastName?: string;
@@ -74,11 +86,12 @@ const KycIndividualDataShape =
 
 export const KycStatusSchema = YupTS.object({
   inProhibitedRegion: YupTS.boolean(),
-  instantIdProvider: YupTS.string(),
+  instantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
+  instantIdStatus: YupTS.string<EKycInstantIdStatus>().optional(),
   originCountry: YupTS.string<ECountries>(),
-  recommendedInstantIdProvider: YupTS.string(),
+  recommendedInstantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
   status: YupTS.string<EKycRequestStatus>(),
-  supportedInstantIdProviders: YupTS.array(YupTS.string()),
+  supportedInstantIdProviders: YupTS.array(YupTS.string<EKycInstantIdProvider>()),
   type: YupTS.string<EKycRequestType>(),
 });
 

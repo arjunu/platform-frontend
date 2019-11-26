@@ -47,6 +47,11 @@ export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus | un
   return undefined;
 };
 
+export const selectKycInstantIdStatus = createSelector(
+  selectKycStatus,
+  status => status && status.instantIdStatus,
+);
+
 /**
  * In case it's a prohibited region by ip and kyc process was not yet started (DRAFT) returns true.
  */
@@ -56,19 +61,11 @@ export const selectIsKycFlowBlockedByRegion = createSelector(
   (isProhibited, status) => isProhibited && status === EKycRequestStatus.DRAFT,
 );
 
-export const selectKycOutSourcedURL = (state: DeepReadonly<IKycState>): string => {
+export const selectKycIdNowRedirectUrl = (state: IAppState): string | undefined => {
   // if (state.individualRequestState && state.individualRequestState.redirectUrl) {
   //   return state.individualRequestState.redirectUrl;
   // }
-  return "";
-};
 
-export const selectExternalKycUrl = (state: DeepReadonly<IKycState>): string | undefined => {
-  // const requestState =
-  //   state.individualRequestState && state.individualRequestState.status === EKycRequestStatus.DRAFT
-  //     ? state.businessRequestState
-  //     : state.individualRequestState;
-  // if (requestState) return requestState.redirectUrl;
   return undefined;
 };
 
@@ -80,7 +77,13 @@ export const selectCombinedBeneficialOwnerOwnership = (state: DeepReadonly<IKycS
   );
 };
 
-export const selectKycLoading = (state: IAppState): boolean => state.kyc.statusLoading;
+export const selectKycIsLoading = (state: IAppState): boolean => state.kyc.statusLoading;
+
+export const selectKycIsInitialLoading = createSelector(
+  selectKycStatus,
+  selectKycIsLoading,
+  (status, isLoading) => status === undefined && isLoading,
+);
 
 export const selectWidgetError = (state: DeepReadonly<IKycState>): string | undefined =>
   state.statusError;

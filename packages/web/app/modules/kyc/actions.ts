@@ -89,7 +89,6 @@ export const kycActions = {
   kycSubmitIndividualRequest: createActionFactory("KYC_SUBMIT_INDIVIDUAL_REQUEST"),
 
   kycStartInstantId: createActionFactory("KYC_START_INSTANT_ID"),
-  kycCancelInstantId: createActionFactory("KYC_CANCEL_INSTANT_ID"),
 
   /*
     Business
