@@ -103,13 +103,24 @@ export const kycReducer: AppReducer<IKycState> = (
 ): DeepReadonly<IKycState> => {
   switch (action.type) {
     // general
-    // TODO: Add missing setStatus actions (loading and error)
+    case actions.kyc.setStatusLoading.getType():
+      return {
+        ...state,
+        statusLoading: true,
+      };
     case actions.kyc.setStatus.getType():
       return {
         ...state,
         status: action.payload.status,
         statusLoading: false,
         statusError: undefined,
+      };
+    case actions.kyc.setStatusError.getType():
+      return {
+        ...state,
+        status: undefined,
+        statusLoading: false,
+        statusError: action.payload.error,
       };
 
     // individual
