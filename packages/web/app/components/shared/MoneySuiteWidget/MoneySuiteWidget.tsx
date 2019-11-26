@@ -61,6 +61,7 @@ interface IMoneySingleSuiteWidgetProps {
   textPosition?: ETextPosition;
   outputFormat?: THumanReadableFormat;
   inputFormat?: ENumberInputFormat;
+  decimals?: number;
 }
 
 const getSize = (size: ESize | undefined) => {
@@ -90,14 +91,14 @@ const IconWithWallet: React.FunctionComponent<{ icon: string; walletName: TTrans
   </div>
 );
 
-const MoneySingleSuiteWidget: React.FunctionComponent<
-  IMoneySingleSuiteWidgetProps & TDataTestId
-> = ({
+const MoneySingleSuiteWidget: React.FunctionComponent<IMoneySingleSuiteWidgetProps &
+  TDataTestId> = ({
   icon,
   currency,
   value,
   "data-test-id": dataTestId,
   theme,
+  decimals,
   size,
   textPosition = ETextPosition.LEFT,
   outputFormat = ENumberOutputFormat.ONLY_NONZERO_DECIMALS,
@@ -111,6 +112,7 @@ const MoneySingleSuiteWidget: React.FunctionComponent<
       inputFormat={inputFormat}
       outputFormat={outputFormat}
       valueType={currency}
+      decimals={decimals}
     />
     {textPosition === ETextPosition.RIGHT && <Icon icon={icon} />}
   </div>
@@ -151,7 +153,7 @@ const MoneySuiteWidget: React.FunctionComponent<IMoneySuiteWidgetProps & TDataTe
   currency,
   currencyTotal,
   largeNumber,
-  value,
+  value: smallNumber,
   theme,
   size,
   walletName,
@@ -185,7 +187,7 @@ const MoneySuiteWidget: React.FunctionComponent<IMoneySuiteWidgetProps & TDataTe
           <>
             {useTildeSign ? <>~</> : <>=</>}{" "}
             <Money
-              value={value}
+              value={smallNumber}
               inputFormat={inputFormat}
               outputFormat={outputFormat}
               valueType={currencyTotal}

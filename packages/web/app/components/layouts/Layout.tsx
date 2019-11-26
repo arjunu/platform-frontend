@@ -6,10 +6,10 @@ import { appConnect } from "../../store";
 import { TDataTestId } from "../../types";
 import { AcceptTosModal } from "../modals/accept-tos-modal/AcceptTosModal";
 import { BankTransferFlowModal } from "../modals/bank-transfer-flow/BankTransferFlow";
-import { DepositEthModal } from "../modals/DepositEthModal";
+import { DepositEthModal } from "../modals/deposit-eth/DepositEthModal";
 import { DownloadTokenAgreementModal } from "../modals/download-token-agreements-modal/DownloadTokenAgreementModal";
 import { IcbmWalletBalanceModal } from "../modals/icbm-wallet-balance-modal/IcbmWalletBalanceModal";
-import { TxSenderModal } from "../modals/tx-sender/TxSender";
+import { TxSenderModal } from "../modals/tx-sender/TxSender/TxSender";
 import { NotificationWidget } from "../shared/notification-widget/NotificationWidget";
 import { Content } from "./Content";
 import { Footer } from "./Footer";
@@ -67,9 +67,15 @@ const LayoutWrapper: React.FunctionComponent<TDataTestId> = ({
   </div>
 );
 
-const LayoutComponent: React.FunctionComponent<
-  IStateProps & TDataTestId & TContentExternalProps & ILayoutUnauthProps
-> = ({ children, userIsAuthorized, "data-test-id": dataTestId, ...contentProps }) => (
+const LayoutComponent: React.FunctionComponent<IStateProps &
+  TDataTestId &
+  TContentExternalProps &
+  ILayoutUnauthProps> = ({
+  children,
+  userIsAuthorized,
+  "data-test-id": dataTestId,
+  ...contentProps
+}) => (
   <LayoutWrapper data-test-id={dataTestId}>
     {userIsAuthorized ? (
       <LayoutAuthorized {...contentProps}>{children}</LayoutAuthorized>
@@ -82,14 +88,14 @@ const LayoutComponent: React.FunctionComponent<
 const Layout = compose<IStateProps, TDataTestId & TContentExternalProps & ILayoutUnauthProps>(
   appConnect<IStateProps, {}, {}>({
     stateToProps: state => ({
-      userIsAuthorized: selectIsAuthorized(state.auth),
+      userIsAuthorized: selectIsAuthorized(state),
     }),
   }),
 )(LayoutComponent);
 
-const TransitionalLayout: React.FunctionComponent<
-  TDataTestId & TContentExternalProps & ILayoutUnauthProps
-> = ({ children, "data-test-id": dataTestId, ...contentProps }) => (
+const TransitionalLayout: React.FunctionComponent<TDataTestId &
+  TContentExternalProps &
+  ILayoutUnauthProps> = ({ children, "data-test-id": dataTestId, ...contentProps }) => (
   <LayoutWrapper data-test-id={dataTestId}>
     <HeaderTransitional />
     <Content {...contentProps}>{children}</Content>

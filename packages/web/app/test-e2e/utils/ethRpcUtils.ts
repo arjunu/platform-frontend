@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { AbiCoder } from "web3-eth-abi";
 import Web3Accounts from "web3-eth-accounts";
 
 import { NODE_ADDRESS } from "../config";
@@ -41,6 +42,30 @@ export const requestFromWeb3NodeFetch = (methodName: string, params: string[] | 
 // TODO: Wrap all node functions into a Web3 instance for testing purposes
 export const getTransactionByHashRpc = (txHash: string) =>
   requestFromWeb3Node("eth_getTransactionByHash", [txHash]);
+
+const abiCoder = new AbiCoder();
+
+export const getTokenBalance = (
+  tokenAddress: string,
+  walletAddress: string,
+  // decodeParameter is not typed correctly
+): Cypress.Chainable<any> =>
+  requestFromWeb3Node("eth_call", [
+    {
+      from: walletAddress,
+      to: tokenAddress,
+      data: abiCoder.encodeFunctionCall(
+        {
+          constant: true,
+          inputs: [{ name: "_owner", type: "address" }],
+          name: "balanceOf",
+          outputs: [{ name: "balance", type: "uint256" }],
+          type: "function",
+        },
+        [walletAddress],
+      ),
+    },
+  ]).then(response => abiCoder.decodeParameter("uint256", response.body.result));
 
 export const getBalanceRpc = (address: string) =>
   requestFromWeb3Node("eth_getBalance", [address, "latest"]);

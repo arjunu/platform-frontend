@@ -82,36 +82,36 @@ describe("Verify Email Widget", () => {
 
     assertVerifyEmailWidgetIsInVerfiedEmailState();
   });
-});
 
-it("should automatically update email after change", () => {
-  const email = generateRandomEmailAddress();
-  const password = "strongpassword";
+  it.skip("should automatically update email after change", () => {
+    const email = generateRandomEmailAddress();
+    const password = "strongpassword";
 
-  registerWithLightWallet(email, password);
-  assertDashboard();
+    registerWithLightWallet(email, password);
+    assertDashboard();
 
-  goToUserAccountSettings();
-  assertVerifyEmailWidgetIsInUnverifiedEmailState();
+    goToUserAccountSettings();
+    assertVerifyEmailWidgetIsInUnverifiedEmailState();
 
-  verifyLatestUserEmailWithAPI(email);
+    verifyLatestUserEmailWithAPI(email);
 
-  assertVerifyEmailWidgetIsInVerfiedEmailState();
+    assertVerifyEmailWidgetIsInVerfiedEmailState();
 
-  assertEmailChangeFlow();
+    assertEmailChangeFlow();
 
-  const newEmail = generateRandomEmailAddress();
+    const newEmail = generateRandomEmailAddress();
 
-  fillForm({
-    email: newEmail,
-    "verify-email-widget-form-submit": { type: "submit" },
+    fillForm({
+      email: newEmail,
+      "verify-email-widget-form-submit": { type: "submit" },
+    });
+
+    confirmAccessModal();
+
+    assertEmailPendingChange(email, newEmail);
+
+    verifyLatestUserEmailWithAPI(newEmail);
+
+    assertVerifyEmailWidgetIsInVerfiedEmailState();
   });
-
-  confirmAccessModal();
-
-  assertEmailPendingChange(email, newEmail);
-
-  verifyLatestUserEmailWithAPI(newEmail);
-
-  assertVerifyEmailWidgetIsInVerfiedEmailState();
 });

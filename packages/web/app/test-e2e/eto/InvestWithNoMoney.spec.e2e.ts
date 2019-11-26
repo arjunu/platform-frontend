@@ -36,7 +36,7 @@ describe("Try and invest without money", () => {
     });
   });
 
-  it("should invest when user has no ether - Gasless Transaction", () => {
+  it.skip("should invest when user has no ether - Gasless Transaction", () => {
     const fixture = "INV_ETH_EUR_ICBM_M_HAS_KYC_DUP_HAS_NEUR_AND_NO_ETH";
 
     sendEth(fixture, ETHEREUM_ZERO_ADDRESS, "all");

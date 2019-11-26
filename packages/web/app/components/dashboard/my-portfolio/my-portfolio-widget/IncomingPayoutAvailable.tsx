@@ -19,9 +19,9 @@ type TIncomingPayoutAvailableProps = {
   tokensDisbursal: ITokenDisbursal[];
 };
 
-export const IncomingPayoutAvailableBase: React.FunctionComponent<
-  TIncomingPayoutAvailableProps
-> = ({ tokensDisbursal }) => (
+export const IncomingPayoutAvailableBase: React.FunctionComponent<TIncomingPayoutAvailableProps> = ({
+  tokensDisbursal,
+}) => (
   <div className={styles.main} data-test-id="my-portfolio-widget-incoming-payout-available">
     <h3 className={styles.header} data-test-id="incoming-payout-done">
       <FormattedMessage id="dashboard.incoming-payout-widget.incoming-payout-done" />

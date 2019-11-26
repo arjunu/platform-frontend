@@ -57,7 +57,7 @@ describe("Eto ISHA documents", () => {
     asserISHADocumentsHidden();
   });
 
-  it("should ask for ISHA confidentiality agreement once when downloading from eto investment terms section", () => {
+  it.skip("should ask for ISHA confidentiality agreement once when downloading from eto investment terms section", () => {
     createAndLoginNewUser({ type: "investor", kyc: "business" });
 
     getEto(etoFixtureAddressByName("ETOInSigningState")).then((eto: TEtoSpecsData) => {

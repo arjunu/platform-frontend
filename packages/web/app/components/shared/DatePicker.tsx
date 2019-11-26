@@ -68,8 +68,7 @@ class DatePicker extends React.PureComponent<DatetimeProps & IDatePickerProps & 
               <div className={styles.chosenDate}>
                 <span>{utcTime(props.value)}</span>
                 <span>
-                  <FormattedMessage id="eto.settings.set-eto-start-date-time-left" />
-                  {`: `}
+                  <FormattedMessage id="eto.settings.set-eto-start-date-time-left" />{" "}
                   <TimeLeft key={props.value} refresh={true} finalTime={props.value} asUtc={true} />
                 </span>
               </div>

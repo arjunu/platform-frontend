@@ -1,7 +1,6 @@
 import BigNumber from "bignumber.js";
 import { curry } from "lodash/fp";
 
-import { Q18 } from "../config/constants";
 import { TBigNumberVariants } from "../lib/web3/types";
 
 export function isZero(value: TBigNumberVariants): boolean {
@@ -16,10 +15,14 @@ export function isLessThanOrEqualToZero(value: TBigNumberVariants): boolean {
   return bigNumberValue.lessThanOrEqualTo("0");
 }
 
-export const convertFromUlps = (value: TBigNumberVariants) => new BigNumber(value).div(Q18);
+export const convertFromUlps = (value: TBigNumberVariants, decimals = 18) =>
+  new BigNumber(value).div(new BigNumber("10").pow(decimals));
 
-export const convertToUlps = (value: TBigNumberVariants) =>
-  Q18.mul(value).toFixed(0, BigNumber.ROUND_UP);
+export const convertToUlps = (value: TBigNumberVariants, decimals = 18) =>
+  new BigNumber("10")
+    .pow(decimals)
+    .mul(value)
+    .toFixed(0, BigNumber.ROUND_UP);
 
 /*
  * @deprecated

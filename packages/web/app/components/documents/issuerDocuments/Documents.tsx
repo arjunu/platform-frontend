@@ -64,6 +64,7 @@ type TDispatchProps = {
   generateTemplate: (document: IEtoDocument) => void;
   startDocumentDownload: (documentType: EEtoDocumentType) => void;
   startDocumentRemove: (documentType: EEtoDocumentType) => void;
+  startDocumentUpload: (file: File, documentType: EEtoDocumentType) => void;
 };
 
 type TComponentProps = TDispatchProps & {
@@ -117,6 +118,12 @@ const Documents = compose<TComponentProps, {}>(
         dispatch(actions.etoDocuments.downloadDocumentStart(documentType)),
       startDocumentRemove: documentType =>
         dispatch(actions.etoDocuments.etoRemoveDocumentStart(documentType)),
+      startDocumentUpload: (file, documentType) =>
+        dispatch(
+          actions.etoDocuments.showIpfsModal(() =>
+            dispatch(actions.etoDocuments.etoUploadDocumentStart(file, documentType)),
+          ),
+        ),
     }),
   }),
   withMetaTags((_, intl) => ({ title: intl.formatIntlMessage("menu.documents-page") })),

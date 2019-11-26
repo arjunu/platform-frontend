@@ -4,11 +4,11 @@ import { TCompanyEtoData, TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfa
 import { EEtoDocumentType, IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { Dictionary } from "../../types";
 import {
-  IEtoContractData,
   IEtoTokenData,
   IEtoTokenGeneralDiscounts,
   SignedISHAStatus,
-  TEtoWithCompanyAndContract,
+  TEtoContractData,
+  TEtoWithCompanyAndContractReadonly,
   TOfferingAgreementsStatus,
 } from "./types";
 
@@ -28,11 +28,11 @@ export const etoActions = {
   loadEtos: createActionFactory("ETO_LOAD_ETOS"),
   loadTokenTerms: createActionFactory(
     "INVESTOR_TOKEN_PRICE_LOAD",
-    (eto: TEtoWithCompanyAndContract) => ({ eto }),
+    (eto: TEtoWithCompanyAndContractReadonly) => ({ eto }),
   ),
   downloadEtoDocument: createActionFactory(
     "ETO_DOWNLOAD_DOCUMENT",
-    (document: IEtoDocument, eto: TEtoWithCompanyAndContract) => ({
+    (document: IEtoDocument, eto: TEtoWithCompanyAndContractReadonly) => ({
       document,
       eto,
     }),
@@ -44,7 +44,7 @@ export const etoActions = {
   loadTokensData: createActionFactory("ETO_LOAD_TOKENS_DATA"),
   loadEtoAgreementsStatus: createActionFactory(
     "ETO_LOAD_AGREEMENTS_STATUS",
-    (eto: TEtoWithCompanyAndContract) => ({
+    (eto: TEtoWithCompanyAndContractReadonly) => ({
       eto,
     }),
   ),
@@ -81,7 +81,7 @@ export const etoActions = {
   })),
   setEtoDataFromContract: createActionFactory(
     "ETO_SET_ETO_DATA_FROM_CONTRACT",
-    (previewCode: string, data: IEtoContractData) => ({ previewCode, data }),
+    (previewCode: string, data: TEtoContractData) => ({ previewCode, data }),
   ),
   setEtoWidgetError: createActionFactory("ETO_SET_ETO_WIDGET_ERROR"),
   setTokenData: createActionFactory(
@@ -107,10 +107,14 @@ export const etoActions = {
   ),
   loadSignedInvestmentAgreement: createActionFactory(
     "ETO_LOAD_INVESTMENT_AGREEMENT",
-    (eto: TEtoWithCompanyAndContract) => ({ eto }),
+    (etoId: string, previewCode: string) => ({ etoId, previewCode }),
   ),
   setInvestmentAgreementHash: createActionFactory(
     "ETO_SET_INVESTMENT_AGREEMENT_URL",
     (previewCode: string, url: SignedISHAStatus["url"]) => ({ url, previewCode }),
+  ),
+  loadCapitalIncrease: createActionFactory(
+    "ETO_LOAD_CAPITAL_INCREASE",
+    (etoId: string, previewCode: string) => ({ etoId, previewCode }),
   ),
 };

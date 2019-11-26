@@ -42,9 +42,9 @@ type TProgressBarProps = TProgressBarExternalProps & CommonHtmlProps;
 const DEFAULT_CURVE = 20;
 const NARROW_CURVE = 5;
 
-const BackgroundBar: React.FunctionComponent<
-  TProgressBarBaseProps & TProgressBarBaseProps & CommonHtmlProps
-> = ({ className, style, height, radius }) => (
+const BackgroundBar: React.FunctionComponent<TProgressBarBaseProps &
+  TProgressBarBaseProps &
+  CommonHtmlProps> = ({ className, style, height, radius }) => (
   <rect
     width="100%"
     height={height}

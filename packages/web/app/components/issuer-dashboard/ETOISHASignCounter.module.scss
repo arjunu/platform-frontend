@@ -1,0 +1,6 @@
+.warning {
+  @include nds-label;
+
+  color: $neu-flamingo-red;
+  margin-top: px-to-rem(6px);
+}

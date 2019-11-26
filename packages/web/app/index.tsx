@@ -2,11 +2,7 @@ import "reflect-metadata";
 
 import "./components/translatedMessages/yupLocales.sideEffect";
 
-import "font-awesome/scss/font-awesome.scss";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
-import "./styles/bootstrap.scss";
-import "./styles/overrides.scss";
+import "./index.scss";
 
 // tslint:disable-next-line:ordered-imports
 import { ConnectedRouter, routerMiddleware } from "connected-react-router";
@@ -103,7 +99,7 @@ if (process.env.NF_ENABLE_TRANSLATE_OVERLAY) {
 
 ga.installGA();
 /* tslint:disable-next-line:no-floating-promises */
-serviceWorker.unregister();
+serviceWorker.unregister(); //todo remove this
 
 const history = createBrowserHistory();
 const { store, container } = startupApp(history);

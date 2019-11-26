@@ -20,6 +20,7 @@ export * from "./fields/utils.unsafe";
 export * from "./layouts/CheckboxLayout";
 export * from "./layouts/FormFieldLayout";
 export * from "./layouts/InputLayout";
+export * from "./layouts/FormLabel";
 
 export * from "./FormDeprecated";
 export * from "./Form";

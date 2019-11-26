@@ -20,7 +20,7 @@ import { ETxSenderState } from "../../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../../modules/tx/types";
 import { appConnect } from "../../../store";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight, ButtonWidth } from "../../shared/buttons/index";
+import { Button, ButtonWidth, EButtonLayout } from "../../shared/buttons/index";
 import {
   DashboardLoadingWidget,
   DashboardWidget,
@@ -100,12 +100,18 @@ const ChangeDateCountdown: React.ComponentType<IChangeDateCountdown> = ({
 }) => {
   if (etoDate) {
     return (
-      <p className="mb-0">
-        <FormattedMessage id="eto.status.onchain.change-eto-date-countdown-text" />{" "}
-        <TimeLeft
-          finalTime={moment(etoDate).subtract(minOffsetPeriodInMinutes, "minutes")}
-          asUtc={true}
-          refresh={true}
+      <p className={styles.timeLeft}>
+        <FormattedMessage
+          id="eto.status.onchain.change-eto-date-countdown-text"
+          values={{
+            timeLeft: (
+              <TimeLeft
+                finalTime={moment(etoDate).subtract(minOffsetPeriodInMinutes, "minutes")}
+                asUtc={true}
+                refresh={true}
+              />
+            ),
+          }}
         />
       </p>
     );
@@ -150,21 +156,23 @@ const DateChooserOpen = ({
         )}
       </FormGroup>
       <div className={styles.widgetButton}>
-        <ButtonArrowRight
+        <Button
+          layout={EButtonLayout.SECONDARY}
           width={ButtonWidth.NO_PADDING}
           onClick={closeDatePicker}
           data-test-id="eto-settings-start-date-cancel"
         >
           <FormattedMessage id="eto.settings.cancel-change-eto-start-date" />
-        </ButtonArrowRight>
-        <ButtonArrowRight
+        </Button>
+        <Button
+          layout={EButtonLayout.SECONDARY}
           width={ButtonWidth.NO_PADDING}
           onClick={uploadDate}
           disabled={!(newDateIsSet && newDateIsValid(newEtoDate))}
           data-test-id="eto-settings-start-date-confirm"
         >
           <FormattedMessage id="eto.settings.confirm-change-eto-start-date" />
-        </ButtonArrowRight>
+        </Button>
       </div>
     </>
   );
@@ -177,7 +185,8 @@ const DateChooserClosed = ({
 }: IDateChooserClosedProps) => (
   <>
     <ChangeDateCountdown etoDate={etoDate} minOffsetPeriodInMinutes={minOffsetPeriodInMinutes} />
-    <ButtonArrowRight
+    <Button
+      layout={EButtonLayout.SECONDARY}
       className="m-auto"
       onClick={openDatePicker}
       data-test-id="eto-settings-start-date-open-date-picker"
@@ -187,7 +196,7 @@ const DateChooserClosed = ({
       ) : (
         <FormattedMessage id="eto.settings.set-eto-start-date" />
       )}
-    </ButtonArrowRight>
+    </Button>
   </>
 );
 
@@ -256,9 +265,19 @@ class DateChooser extends React.PureComponent<IDateChooserProps, IDateChooserSta
     {
       if (!canChangeEtoStartDate) {
         return (
-          <p className="mb-0">
-            <FormattedMessage id="eto.settings.changing-eto-start-date-not-possible" />
-          </p>
+          <>
+            <p className={styles.changeDisabled}>
+              <FormattedMessage id="eto.settings.changing-eto-start-date-not-possible" />
+            </p>
+            <Button
+              layout={EButtonLayout.SECONDARY}
+              className="m-auto"
+              data-test-id="eto-settings-start-date-open-date-picker"
+              disabled={true}
+            >
+              <FormattedMessage id="eto.settings.change-eto-start-date" />
+            </Button>
+          </>
         );
       } else if (canChangeEtoStartDate && this.state.isOpen) {
         return (
@@ -296,9 +315,9 @@ const ChangeDate: React.ComponentType<IChangeDateStateProps & IDispatchProps> = 
   </>
 );
 
-const EtoStartDateWidgetComponent: React.ComponentType<
-  IStateProps & IDispatchProps & IExternalProps
-> = ({ etoDate, columnSpan, ...props }) => (
+const EtoStartDateWidgetComponent: React.ComponentType<IStateProps &
+  IDispatchProps &
+  IExternalProps> = ({ etoDate, columnSpan, ...props }) => (
   <DashboardWidget
     title={<FormattedMessage id="eto.settings.eto-start-date" />}
     text={

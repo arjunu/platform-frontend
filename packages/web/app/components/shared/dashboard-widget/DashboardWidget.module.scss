@@ -10,5 +10,7 @@
 }
 
 .text {
+  @include nds-label;
+
   margin-bottom: 0;
 }

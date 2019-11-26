@@ -13,8 +13,8 @@ import {
 import { selectIsLightWallet } from "../web3/selectors";
 import { EAuthStatus, IAuthState } from "./reducer";
 
-export const selectIsAuthorized = (state: IAuthState): boolean =>
-  !!(state.jwt && state.user && state.status === EAuthStatus.AUTHORIZED);
+export const selectIsAuthorized = (state: IAppState): boolean =>
+  !!(state.auth.jwt && state.auth.user && state.auth.status === EAuthStatus.AUTHORIZED);
 
 export const selectJwt = (state: IAppState): string | undefined => state.auth.jwt;
 
@@ -69,6 +69,26 @@ export const selectIsUSInvestor = (state: IAppState): boolean => {
 
   return isInvestor && country === ECountries.UNITED_STATES;
 };
+
+/**
+ * Investor is restricted when country of residence is blocked for some (often legal) reason
+ * TODO: Connect both selectIsRestrictedInvestor and selectIsUsInvestor to single selector returning enum
+ */
+export const selectIsRestrictedInvestor = createSelector(
+  selectIsInvestor,
+  selectClientCountry,
+  (isInvestor, country) => {
+    if (isInvestor && country && process.env.NF_RESTRICTED_INVESTOR_COUNTRIES) {
+      const restrictedCountries: string[] = process.env.NF_RESTRICTED_INVESTOR_COUNTRIES.split(
+        ",",
+      ).map(c => c.trim());
+
+      return restrictedCountries.includes(country);
+    }
+
+    return false;
+  },
+);
 
 export const selectIsIssuer = (state: IAppState): boolean =>
   selectUserType(state) === EUserType.ISSUER;

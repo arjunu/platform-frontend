@@ -28,6 +28,7 @@ const data = {
     etherPriceEur: "200",
     isIcbm: false,
   },
+  isRestrictedCountryInvestor: false,
   onAccept: () => {},
   downloadAgreement: () => {},
   onChange: () => {},
@@ -58,4 +59,7 @@ storiesOf("Investment/InvestmentSummary", module)
   .addDecorator(withModalBody())
   .add("default", () => <InvestmentSummaryComponent {...data} />)
   .add("with token price discount", () => <InvestmentSummaryComponent {...dataWithPriceDiscount} />)
-  .add("isIcbm", () => <InvestmentSummaryComponent {...dataWithIcbm} />);
+  .add("isIcbm", () => <InvestmentSummaryComponent {...dataWithIcbm} />)
+  .add("restricted country investor", () => (
+    <InvestmentSummaryComponent {...data} isRestrictedCountryInvestor={true} />
+  ));

@@ -35,6 +35,7 @@ const DocumentsLayout: React.FunctionComponent<TComponentProps> = ({
   transactionPending,
   documentsGenerated,
   startDocumentRemove,
+  startDocumentUpload,
 }) => {
   const { productTemplates, documentsStateInfo } = etoFilesData;
   const documents = renameDocuments(documentsStateInfo, onChainState);
@@ -85,6 +86,7 @@ const DocumentsLayout: React.FunctionComponent<TComponentProps> = ({
                 }
                 startDocumentRemove={startDocumentRemove}
                 uploadedFileName={getUploadedDocumentName(etoDocuments, key)}
+                onDropFile={startDocumentUpload}
               />
             ))}
         </section>

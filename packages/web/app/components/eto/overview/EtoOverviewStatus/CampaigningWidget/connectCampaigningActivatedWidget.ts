@@ -74,7 +74,7 @@ const connectCampaigningActivatedWidget = (
     setDisplayName("CampaigningActivatedWidget"),
     appConnect<IStateProps, {}, IExternalProps>({
       stateToProps: (state, props) => ({
-        isAuthorized: selectIsAuthorized(state.auth),
+        isAuthorized: selectIsAuthorized(state),
         isInvestor: selectIsInvestor(state),
         isVerifiedInvestor: selectIsVerifiedInvestor(state),
         pledgedAmount: selectPledgedAmount(state, props.etoId),
@@ -91,6 +91,7 @@ const connectCampaigningActivatedWidget = (
         investorsCount,
         investmentCalculatedValues,
         isAuthorized,
+        isInvestor,
       }) => {
         const bookbuildingLimitReached =
           investorsCount !== undefined && investorsLimit - investorsCount === 0;
@@ -102,6 +103,7 @@ const connectCampaigningActivatedWidget = (
             investorsCount,
             investmentCalculatedValues,
             isAuthorized,
+            isInvestor,
           }),
           maxPledge: investmentCalculatedValues && investmentCalculatedValues.effectiveMaxTicket,
           countdownDate: nextStateStartDate,

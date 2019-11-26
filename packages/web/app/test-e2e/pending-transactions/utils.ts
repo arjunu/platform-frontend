@@ -46,7 +46,7 @@ export const doWithdraw = (
       closeModal();
       break;
     case "success":
-      cy.get(tid("modals.tx-sender.withdraw-flow.success")).should("exist");
+      cy.get(tid("modals.shared.tx-success.modal")).should("exist");
 
       closeModal();
       break;
@@ -59,7 +59,7 @@ export const doWithdraw = (
     case "never":
       // wait for transaction to finish
       cy.get(
-        `${tid("modals.tx-sender.withdraw-flow.success")}, ${tid("modals.shared.tx-error.modal")}`,
+        `${tid("modals.shared.tx-success.modal")}, ${tid("modals.shared.tx-error.modal")}`,
       ).should("exist");
 
       break;
@@ -78,11 +78,11 @@ export const assertPendingWithdrawModal = (address: string, amount: string) => {
 };
 
 export const assertDraftWithdrawModal = () => {
-  cy.get(tid("modals.shared.tx-withdraw.modal")).should("exist");
+  cy.get(tid("modals.shared.tx-transfer.modal")).should("exist");
 };
 export const assertSuccessWithdrawModal = (address: string, amount: string) => {
   // when mined should show success modal
-  cy.get(tid("modals.tx-sender.withdraw-flow.success")).should("exist");
+  cy.get(tid("modals.shared.tx-success.modal")).should("exist");
 
   // should propagate correct data to modal
   cy.get(tid(`etherscan-link.${address}`)).should("exist");

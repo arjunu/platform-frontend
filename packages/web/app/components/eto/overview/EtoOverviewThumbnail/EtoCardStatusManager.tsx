@@ -5,7 +5,7 @@ import { EEtoState } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import {
   EETOStateOnChain,
   EEtoSubState,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "../../../../modules/eto/types";
 import { isOnChain } from "../../../../modules/eto/utils";
 import { nonNullable } from "../../../../utils/nonNullable";
@@ -17,13 +17,14 @@ import {
   ENumberOutputFormat,
 } from "../../../shared/formatters/utils";
 import { CounterWidget } from "../EtoOverviewStatus/CounterWidget";
+import { InvestmentStatusWidget } from "../EtoOverviewStatus/InvestmentWidget/InvestmentStatusWidget";
 import { EndTimeWidget } from "../shared/EndTimeWidget";
 import { GreenInfo, Info } from "./Info";
 import { InvestmentStatus } from "./InvestmentStatus/InvestmentStatus";
 import { Whitelist } from "./Whitelist/Whitelist";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 const EtoCardStatusManager = ({ eto }: IExternalProps) => {
@@ -89,7 +90,7 @@ const EtoCardStatusManager = ({ eto }: IExternalProps) => {
 
       return (
         <>
-          <InvestmentStatus eto={eto} />
+          <InvestmentStatusWidget eto={eto} />
           <Info>
             <EndTimeWidget endTime={endDate} />
           </Info>
@@ -100,7 +101,7 @@ const EtoCardStatusManager = ({ eto }: IExternalProps) => {
     case EETOStateOnChain.Signing: {
       return (
         <>
-          <InvestmentStatus eto={eto} />
+          <InvestmentStatusWidget eto={eto} />
 
           <Info>
             <FormattedMessage
@@ -150,7 +151,7 @@ const EtoCardStatusManager = ({ eto }: IExternalProps) => {
     case EETOStateOnChain.Refund: {
       return (
         <>
-          <InvestmentStatus eto={eto} />
+          <InvestmentStatusWidget eto={eto} />
           <Info>
             <FormattedMessage id="eto-overview-thumbnail.refund.claim-refund" />
           </Info>

@@ -1,10 +1,10 @@
 import { IEtoDocument } from "../../../../../lib/api/eto/EtoFileApi.interfaces";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { ETxSenderType } from "../../../../../modules/tx/types";
 
 export const selectDocument = (
   txType: ETxSenderType | undefined,
-  nomineeEto: TEtoWithCompanyAndContract,
+  nomineeEto: TEtoWithCompanyAndContractReadonly,
 ): IEtoDocument => {
   switch (txType) {
     case ETxSenderType.NOMINEE_THA_SIGN:

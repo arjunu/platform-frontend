@@ -1,7 +1,11 @@
 import { etherscanAddressLink } from "../../components/appRouteUtils";
 import { etoFixtureAddressByName, tid } from "../utils";
 import { assertIsExternalLink } from "../utils/assertions";
-import { createAndLoginNewUser, shouldDownloadDocument } from "../utils/index";
+import {
+  accountFixtureAddress,
+  createAndLoginNewUser,
+  shouldDownloadDocument,
+} from "../utils/index";
 import { goToEtoViewById, goToIssuerEtoView } from "./EtoViewUtils";
 
 const assertIsNonClickableTag = (testId: string) =>
@@ -68,6 +72,18 @@ describe("Eto view widget", () => {
     cy.get(tid("eto-overview.stats.target-investment-amount")).contains("3 529 412 EUR");
     cy.get(tid("eto-overview.stats.new-shares-generated")).contains("10.00–12.00 %");
     cy.get(tid("eto-overview.stats.equity-token-price")).contains("0.6000 EUR");
+    cy.get(tid("eto-overview.stats.equity-token-price-public-discount")).should("not.exist");
+  });
+
+  it("should render TBA for comming soon state", () => {
+    const etoId = accountFixtureAddress("ISSUER_PREVIEW");
+
+    goToEtoViewById(etoId);
+
+    cy.get(tid("eto-overview.stats.pre-money-valuation")).contains("TBA");
+    cy.get(tid("eto-overview.stats.target-investment-amount")).contains("TBA");
+    cy.get(tid("eto-overview.stats.new-shares-generated")).contains("TBA");
+    cy.get(tid("eto-overview.stats.equity-token-price")).contains("TBA");
     cy.get(tid("eto-overview.stats.equity-token-price-public-discount")).should("not.exist");
   });
 });

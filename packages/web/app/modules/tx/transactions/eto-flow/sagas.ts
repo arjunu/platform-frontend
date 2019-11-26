@@ -14,7 +14,7 @@ import {
   selectNewPreEtoStartDate,
   selectPreEtoStartDate,
 } from "../../../eto-flow/selectors";
-import { TEtoWithCompanyAndContract } from "../../../eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../eto/types";
 import { selectStandardGasPriceWithOverHead } from "../../../gas/selectors";
 import { neuCall, neuTakeLatest } from "../../../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../../../web3/selectors";
@@ -59,7 +59,7 @@ function* generateSetStartDateTransaction({
   return txDetails;
 }
 
-type TExtraParams = { eto: TEtoWithCompanyAndContract; agreementHash: string };
+type TExtraParams = { eto: TEtoWithCompanyAndContractReadonly; agreementHash: string };
 
 function* generateSignInvestmentAgreementTx(
   { contractsService, web3Manager }: TGlobalDependencies,
@@ -141,7 +141,7 @@ function* etoSetDateSaga({ logger }: TGlobalDependencies): Iterator<any> {
 
 function* etoSignInvestmentAgreementSaga(
   { logger }: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.etoFlow.signInvestmentAgreement>,
+  action: TActionFromCreator<typeof actions.etoFlow.issuerSignInvestmentAgreement>,
 ): Iterator<any> {
   try {
     yield txSendSaga({
@@ -153,11 +153,20 @@ function* etoSignInvestmentAgreementSaga(
   } catch (e) {
     logger.info("Signing investment agreement was cancelled", e);
   } finally {
-    yield put(actions.eto.loadSignedInvestmentAgreement(action.payload.eto));
+    yield put(
+      actions.eto.loadSignedInvestmentAgreement(
+        action.payload.eto.etoId,
+        action.payload.eto.previewCode,
+      ),
+    );
   }
 }
 
 export const txEtoSetDateSagas = function*(): Iterator<any> {
   yield fork(neuTakeLatest, "TRANSACTIONS_START_ETO_SET_DATE", etoSetDateSaga);
-  yield fork(neuTakeLatest, etoFlowActions.signInvestmentAgreement, etoSignInvestmentAgreementSaga);
+  yield fork(
+    neuTakeLatest,
+    etoFlowActions.issuerSignInvestmentAgreement,
+    etoSignInvestmentAgreementSaga,
+  );
 };

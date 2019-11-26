@@ -141,9 +141,9 @@ describe("transformValidator", () => {
       companyMission: Yup.string(),
     }) as ObjectSchema<any>;
 
-    const result = transformValidator(transformationSpec)(baseValidator as ObjectSchema<
-      any
-    >) as ObjectSchema<any>;
+    const result = transformValidator(transformationSpec)(
+      baseValidator as ObjectSchema<any>,
+    ) as ObjectSchema<any>;
 
     expect(Object.keys(result.fields)).to.deep.eq(Object.keys(expectedResult.fields));
     expect(result.fields["useOfCapitalList"]).to.be.instanceOf(Yup.number);

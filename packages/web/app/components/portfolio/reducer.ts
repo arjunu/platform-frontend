@@ -14,9 +14,7 @@ export const portfolioDownloadAgreementsModalInitialState: IPortfolioDownloadAgr
   isRetailEto: undefined,
 };
 
-export const portfolioDownloadAgreementsModalReducer: AppReducer<
-  IPortfolioDownloadAgreementsModalState
-> = (
+export const portfolioDownloadAgreementsModalReducer: AppReducer<IPortfolioDownloadAgreementsModalState> = (
   state = portfolioDownloadAgreementsModalInitialState,
   action,
 ): DeepReadonly<IPortfolioDownloadAgreementsModalState> => {

@@ -15,7 +15,8 @@ import { appConnect } from "../../../store";
 import { OmitKeys } from "../../../types";
 import { appRoutes } from "../../appRoutes";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight, ButtonGroup, ButtonLink } from "../../shared/buttons";
+import { ButtonGroup, ButtonLink } from "../../shared/buttons";
+import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import {
   DashboardCenteredWidget,
   DashboardLinkWidget,
@@ -38,9 +39,12 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const UploadInvestmentAgreementLayout: React.FunctionComponent<
-  OmitKeys<IStateProps, "stateOnChain"> & IDispatchProps & IExternalProps
-> = ({ downloadAgreementTemplate, agreementTemplate, columnSpan }) => (
+export const UploadInvestmentAgreementLayout: React.FunctionComponent<OmitKeys<
+  IStateProps,
+  "stateOnChain"
+> &
+  IDispatchProps &
+  IExternalProps> = ({ downloadAgreementTemplate, agreementTemplate, columnSpan }) => (
   <DashboardCenteredWidget
     data-test-id="dashboard-upload-signed-isha-widget"
     title={<FormattedMessage id="download-agreement-widget.signing-title" />}
@@ -48,15 +52,17 @@ export const UploadInvestmentAgreementLayout: React.FunctionComponent<
     columnSpan={columnSpan}
   >
     <ButtonGroup>
-      <ButtonArrowRight
+      <Button
+        layout={EButtonLayout.SECONDARY}
         onClick={() => downloadAgreementTemplate(agreementTemplate)}
         data-test-id="dashboard-upload-signed-isha-widget.download-investment-summary"
       >
         <FormattedMessage id="download-agreement-widget.download-investment-summary" />
-      </ButtonArrowRight>
+      </Button>
       <ButtonLink
+        layout={EButtonLayout.SECONDARY}
         to={appRoutes.documents}
-        component={ButtonArrowRight}
+        component={Button}
         data-test-id="dashboard-upload-signed-isha-widget.upload-signed-isha"
       >
         <FormattedMessage id="download-agreement-widget.download-and-sign" />

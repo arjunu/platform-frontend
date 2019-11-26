@@ -28,7 +28,7 @@ import { selectAgreementsStatus, selectEtoContract, selectEtoSubState } from "..
 import {
   EEtoAgreementStatus,
   EETOStateOnChain,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
   TOfferingAgreementsStatus,
 } from "../eto/types";
 import { isOnChain } from "../eto/utils";
@@ -80,7 +80,7 @@ const selectIssuerEtoWithCompanyAndContractInternal = createSelector(
 
 export const selectIssuerEtoWithCompanyAndContract = (
   state: IAppState,
-): TEtoWithCompanyAndContract | undefined => {
+): TEtoWithCompanyAndContractReadonly | undefined => {
   const eto = selectIssuerEto(state);
 
   if (eto) {
@@ -301,30 +301,24 @@ const recognizedProductTypes = [
   EProductName.FIFTH_FORCE_ETO,
 ];
 
-export const selectAvailableProducts = createSelector(
-  selectIssuerEtoFlow,
-  ({ products }) => {
-    if (products !== undefined) {
-      const availableProducts = products
-        .filter(product => product.available)
-        // TODO: remove after platform-backend/#1550 is done
-        .filter(product => product.name !== EProductName.FIFTH_FORCE_ETO)
-        // Remove unrecognized product types
-        .filter(product =>
-          recognizedProductTypes.some(recognizedProd => recognizedProd === product.name),
-        );
+export const selectAvailableProducts = createSelector(selectIssuerEtoFlow, ({ products }) => {
+  if (products !== undefined) {
+    const availableProducts = products
+      .filter(product => product.available)
+      // TODO: remove after platform-backend/#1550 is done
+      .filter(product => product.name !== EProductName.FIFTH_FORCE_ETO)
+      // Remove unrecognized product types
+      .filter(product =>
+        recognizedProductTypes.some(recognizedProd => recognizedProd === product.name),
+      );
 
-      return sortProducts(availableProducts);
-    }
+    return sortProducts(availableProducts);
+  }
 
-    return undefined;
-  },
-);
+  return undefined;
+});
 
-export const selectIssuerEtoSaving = createSelector(
-  selectIssuerEtoFlow,
-  state => state.saving,
-);
+export const selectIssuerEtoSaving = createSelector(selectIssuerEtoFlow, state => state.saving);
 
 export const selectIsMarketingDataVisibleInPreview = createSelector(
   selectIssuerEto,
@@ -353,6 +347,20 @@ export const selectAreAgreementsSignedByNominee = createSelector(
       );
     }
 
+    return undefined;
+  },
+);
+
+export const selectIssuerEtoNextStateStartDate = createSelector(
+  selectIssuerEtoWithCompanyAndContract,
+  eto => {
+    if (eto && isOnChain(eto)) {
+      const nextState: EETOStateOnChain | undefined = eto.contract.timedState + 1;
+
+      if (nextState) {
+        return eto.contract.startOfStates[nextState];
+      }
+    }
     return undefined;
   },
 );

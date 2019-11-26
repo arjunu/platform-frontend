@@ -22,7 +22,7 @@ import { TFormikConnect, TTranslatedString } from "../../../../types";
 import { getSchemaField, getValidationSchema, isRequired } from "../../../../utils/yupUtils";
 import { Button, ButtonIcon, EButtonLayout, EIconPosition } from "../../../shared/buttons";
 import { FormField, FormTextArea } from "../../../shared/forms";
-import { FormSingleFileUpload } from "../../../shared/forms/fields/FormSingleFileUpload.unsafe";
+import { FormSingleFileUpload } from "../../../shared/forms/fields/FormSingleFileUpload";
 import { EMimeType } from "../../../shared/forms/fields/utils.unsafe";
 import { FormHighlightGroup } from "../../../shared/forms/FormHighlightGroup";
 import { FormSection } from "../../../shared/forms/FormSection";
@@ -118,9 +118,11 @@ const Individual: React.FunctionComponent<IIndividual> = ({
         <FormSingleFileUpload
           label={<FormattedMessage id="eto.form.key-individuals.image" />}
           name={`${member}.image`}
-          acceptedFiles={[EMimeType.PNG, EMimeType.JPG]}
+          acceptedFiles={[EMimeType.PNG, EMimeType.JPEG]}
           fileFormatInformation="*150 x 150px png"
+          uploadRequirements={{ dimensions: "150x150", size: "4MB" }}
           dimensions={{ width: 150, height: 150 }}
+          exactDimensions={true}
           data-test-id={`${member}.image`}
         />
         <FormField className="mt-4" name={`${member}.website`} placeholder="website" />

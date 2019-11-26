@@ -4,7 +4,7 @@ import { compose, withProps } from "recompose";
 
 import { EEtoState } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { InvalidETOStateError } from "../../modules/eto/errors";
-import { TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { isOnChain } from "../../modules/eto/utils";
 import { selectEtherPriceEur } from "../../modules/shared/tokenPrice/selectors";
 import { appConnect } from "../../store";
@@ -17,7 +17,7 @@ import { IPanelProps } from "../shared/Panel";
 import * as styles from "./ETOFundraisingStatistics.module.scss";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IStateProps {

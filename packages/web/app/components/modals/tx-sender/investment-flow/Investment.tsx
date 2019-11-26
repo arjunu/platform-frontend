@@ -47,7 +47,7 @@ import { selectTxGasCostEthUlps } from "../../../../modules/tx/sender/selectors"
 import { ETokenType } from "../../../../modules/tx/types";
 import { EValidationState } from "../../../../modules/tx/validator/reducer";
 import { selectTxValidationState } from "../../../../modules/tx/validator/selectors";
-import { isValidFormNumber } from "../../../../modules/tx/validator/withdraw/utils";
+import { isValidFormNumber } from "../../../../modules/tx/validator/transfer/utils";
 import { appConnect } from "../../../../store";
 import { addBigNumbers, multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
 import { IIntlProps, injectIntlHelpers } from "../../../../utils/injectIntlHelpers.unsafe";

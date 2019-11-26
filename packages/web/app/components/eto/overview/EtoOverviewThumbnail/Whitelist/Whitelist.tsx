@@ -3,13 +3,13 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, setDisplayName, withProps } from "recompose";
 
 import { actions } from "../../../../../modules/actions";
-import { selectIsAuthorized } from "../../../../../modules/auth/selectors";
+import { selectIsAuthorized, selectIsInvestor } from "../../../../../modules/auth/selectors";
 import { selectBookbuildingStats } from "../../../../../modules/bookbuilding-flow/selectors";
 import {
   calculateWhitelistingState,
   EWhitelistingState,
 } from "../../../../../modules/bookbuilding-flow/utils";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { appConnect } from "../../../../../store";
 import { assertNever } from "../../../../../utils/assertNever";
 import { onEnterAction } from "../../../../../utils/OnEnterAction";
@@ -24,13 +24,14 @@ import { GreyInfo, Info } from "../Info";
 import { WhitelistStatus } from "./WhitelistStatus";
 
 export interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IStateProps {
   pledgedAmount: number | null;
   investorsCount: number;
   isAuthorized: boolean;
+  isInvestor: boolean;
 }
 
 interface IWithProps {
@@ -142,24 +143,28 @@ const Whitelist = compose<IProps, IExternalProps>(
       return {
         pledgedAmount: stats ? stats.pledgedAmount : null,
         investorsCount: stats ? stats.investorsCount : 0,
-        isAuthorized: selectIsAuthorized(state.auth),
+        isAuthorized: selectIsAuthorized(state),
+        isInvestor: selectIsInvestor(state),
       };
     },
   }),
-  withProps<IWithProps, IStateProps & IExternalProps>(({ eto, investorsCount, isAuthorized }) => {
-    const bookbuildingLimitReached = eto.maxPledges - investorsCount <= 0;
+  withProps<IWithProps, IStateProps & IExternalProps>(
+    ({ eto, investorsCount, isAuthorized, isInvestor }) => {
+      const bookbuildingLimitReached = eto.maxPledges - investorsCount <= 0;
 
-    return {
-      whitelistingState: calculateWhitelistingState({
-        canEnableBookbuilding: eto.canEnableBookbuilding,
-        whitelistingIsActive: eto.isBookbuilding,
-        bookbuildingLimitReached,
-        investorsCount,
-        investmentCalculatedValues: eto.investmentCalculatedValues,
-        isAuthorized,
-      }),
-    };
-  }),
+      return {
+        whitelistingState: calculateWhitelistingState({
+          canEnableBookbuilding: eto.canEnableBookbuilding,
+          whitelistingIsActive: eto.isBookbuilding,
+          bookbuildingLimitReached,
+          investorsCount,
+          investmentCalculatedValues: eto.investmentCalculatedValues,
+          isAuthorized,
+          isInvestor,
+        }),
+      };
+    },
+  ),
   onEnterAction<IExternalProps & IStateProps>({
     actionCreator: (dispatch, props) => {
       dispatch(actions.bookBuilding.loadBookBuildingStats(props.eto.etoId));

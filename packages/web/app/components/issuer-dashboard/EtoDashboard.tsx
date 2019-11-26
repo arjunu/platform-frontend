@@ -29,7 +29,7 @@ import {
   calculateMarketingEtoData,
   calculateVotingRightsEtoData,
 } from "../../modules/eto-flow/utils";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { isOnChain } from "../../modules/eto/utils";
 import { selectKycRequestStatus } from "../../modules/kyc/selectors";
 import { selectIsLightWallet } from "../../modules/web3/selectors";
@@ -54,6 +54,7 @@ import { DashboardStep } from "./dashboardStep/DashboardStep";
 import { ETOFormsProgressSection } from "./ETOFormsProgressSection";
 import { ETOFundraisingCounterWidget } from "./ETOFundraisingCounterWidget";
 import { ETOFundraisingStatistics } from "./ETOFundraisingStatistics";
+import { ETOISHASignCounter } from "./ETOISHASignCounter";
 import { PublishETOWidget } from "./PublishETOWidget";
 import { UploadInvestmentAgreement } from "./signInvestmentAgreementWidget/UploadInvestmentAgreementWidget";
 import { SubmitProposalWidget } from "./submitProposalWidget/SubmitProposalWidget";
@@ -73,7 +74,7 @@ interface IStateProps {
   isLightWallet: boolean;
   userHasKycAndEmailVerified: boolean;
   requestStatus?: EKycRequestStatus;
-  eto?: TEtoWithCompanyAndContract;
+  eto?: TEtoWithCompanyAndContractReadonly;
   combinedEtoCompanyData: ReturnType<typeof selectCombinedEtoCompanyData>;
   isTermSheetSubmitted?: boolean;
   isOfferingDocumentSubmitted: boolean | undefined;
@@ -116,7 +117,7 @@ const SubmitDashBoardSection: React.FunctionComponent<{
   );
 
 interface IEtoStateRender {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   shouldViewSubmissionSection?: boolean;
   isTermSheetSubmitted?: boolean;
   isOfferingDocumentSubmitted?: boolean;
@@ -213,6 +214,7 @@ const EtoDashboardStateViewComponent: React.FunctionComponent<IEtoStateRender> =
           )}
 
           <UploadInvestmentAgreement columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
+          <ETOISHASignCounter eto={eto} columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <BookBuildingWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <ChooseEtoStartDateWidget columnSpan={EColumnSpan.ONE_AND_HALF_COL} />
           <ETOFormsProgressSection shouldViewEtoSettings={shouldViewSubmissionSection} />
@@ -284,16 +286,14 @@ const VerifiedUserSection: React.FunctionComponent<TVerificationSection> = ({
   }
 };
 
-const EtoDashboardLayout: React.FunctionComponent<
-  Omit<
-    IStateProps,
-    | "combinedEtoCompanyData"
-    | "isMarketingDataVisibleInPreview"
-    | "areAgreementsSignedByNominee"
-    | "preEtoStartDate"
-  > &
-    RequiredByKeys<IComputedProps, "etoStep">
-> = props => {
+const EtoDashboardLayout: React.FunctionComponent<Omit<
+  IStateProps,
+  | "combinedEtoCompanyData"
+  | "isMarketingDataVisibleInPreview"
+  | "areAgreementsSignedByNominee"
+  | "preEtoStartDate"
+> &
+  RequiredByKeys<IComputedProps, "etoStep">> = props => {
   const { isVerificationSectionDone, ...rest } = props;
 
   return (

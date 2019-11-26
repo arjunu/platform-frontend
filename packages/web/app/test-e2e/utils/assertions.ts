@@ -71,15 +71,17 @@ export const assertWaitForLatestEmailSentWithSalt = (
 
   cy.wait(1000);
 
-  cy.request({ url: mockApiUrl + "sendgrid/session/mails", method: "GET" }).then(r => {
-    if (r.status === 200 && getLatestEmailByUser(r, userEmail)) {
-      const loginLink = get(getLatestEmailByUser(r, userEmail), "template_vars.login_link");
+  cy.request({ url: mockApiUrl + `sendgrid/session/mails?to=${userEmail}`, method: "GET" }).then(
+    r => {
+      if (r.status === 200 && getLatestEmailByUser(r, userEmail)) {
+        const loginLink = get(getLatestEmailByUser(r, userEmail), "template_vars.login_link");
 
-      expect(loginLink).to.contain("salt");
-      return;
-    }
-    assertWaitForLatestEmailSentWithSalt(userEmail, timeout - 1000);
-  });
+        expect(loginLink).to.contain("salt");
+        return;
+      }
+      assertWaitForLatestEmailSentWithSalt(userEmail, timeout - 1000);
+    },
+  );
 };
 
 export const assertVerifyEmailWidgetIsInUnverifiedEmailState = (shouldNotExist?: boolean) => {
@@ -199,13 +201,13 @@ export const assertIsExternalLink = (
 };
 
 export const assertTxErrorDialogueNoCost = () => {
-  cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
+  cy.get(tid("modals.shared.tx-error.modal")).should("exist");
 
   cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).should("not.exist");
 };
 
 export const assertTxErrorDialogueWithCost = () => {
-  cy.get(tid("modals.tx-sender.withdraw-flow.error")).should("exist");
+  cy.get(tid("modals.shared.tx-error.modal")).should("exist");
 
   cy.get(tid("modals.tx-sender.withdraw-flow.summary.cost.large-value")).contains(/0\.\d{4}/);
 };

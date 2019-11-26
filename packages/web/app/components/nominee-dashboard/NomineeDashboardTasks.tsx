@@ -1,7 +1,7 @@
 import * as React from "react";
 import { compose, withProps } from "recompose";
 
-import { ENomineeTask } from "../../modules/nominee-flow/types";
+import { ENomineeEtoSpecificTask, ENomineeTask } from "../../modules/nominee-flow/types";
 import { NomineeDashboardContainer } from "./nomineeDashboardContainer/NomineeDashboardContainer";
 import { getNomineeTasks, ITask, nomineeTasksData } from "./NomineeTasksData";
 
@@ -10,8 +10,7 @@ interface IDashboardProps {
 }
 
 interface IExternalProps {
-  isLoading: boolean;
-  nomineeTaskStep: ENomineeTask;
+  nomineeTaskStep: ENomineeTask | ENomineeEtoSpecificTask;
 }
 
 const NomineeDashboardTasksLayout: React.FunctionComponent<IDashboardProps> = ({

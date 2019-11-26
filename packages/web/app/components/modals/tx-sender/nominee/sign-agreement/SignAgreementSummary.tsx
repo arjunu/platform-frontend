@@ -7,8 +7,8 @@ import { IEtoDocument } from "../../../../../lib/api/eto/EtoFileApi.interfaces";
 import { IImmutableFileId } from "../../../../../lib/api/immutable-storage/ImmutableStorage.interfaces";
 import * as YupTS from "../../../../../lib/yup-ts.unsafe";
 import { actions } from "../../../../../modules/actions";
-import { TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
-import { selectNomineeEtoWithCompanyAndContract } from "../../../../../modules/nominee-flow/selectors";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
+import { selectActiveNomineeEto } from "../../../../../modules/nominee-flow/selectors";
 import { selectTxType } from "../../../../../modules/tx/sender/selectors";
 import { ETxSenderType } from "../../../../../modules/tx/types";
 import { appConnect } from "../../../../../store";
@@ -24,7 +24,7 @@ import { isRAASign, selectDocument } from "./utils";
 import * as link from "../../../../../assets/img/inline_icons/download.svg";
 
 interface IStateProps {
-  nomineeEto?: TEtoWithCompanyAndContract;
+  nomineeEto?: TEtoWithCompanyAndContractReadonly;
   txType?: ETxSenderType;
 }
 
@@ -135,7 +135,7 @@ const SignNomineeAgreementSummaryLayout: React.FunctionComponent<TComponentProps
 const SignNomineeAgreementSummary = compose<TComponentProps, {}>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
-      nomineeEto: selectNomineeEtoWithCompanyAndContract(state),
+      nomineeEto: selectActiveNomineeEto(state),
       txType: selectTxType(state),
     }),
     dispatchToProps: dispatch => ({

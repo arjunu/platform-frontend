@@ -1,7 +1,7 @@
 import { isAddress, randomHex, toChecksumAddress } from "web3-utils";
 
 import { ERoundingMode } from "../../components/shared/formatters/utils";
-import { ETHEREUM_ADDRESS_LENGTH, MONEY_DECIMALS } from "../../config/constants";
+import { ETH_DECIMALS, ETHEREUM_ADDRESS_LENGTH } from "../../config/constants";
 import { TBigNumberVariants } from "../../lib/web3/types";
 import { compareBigNumbers } from "../../utils/BigNumberUtils";
 import { formatMoney } from "../../utils/MoneyUtils";
@@ -53,7 +53,7 @@ export const doesUserHaveEnoughNEuro = (
   maxNEuro: TBigNumberVariants,
 ): boolean => {
   if (value === "") return false;
-  const formattedMax = formatMoney(maxNEuro, MONEY_DECIMALS, 2, ERoundingMode.DOWN);
+  const formattedMax = formatMoney(maxNEuro, ETH_DECIMALS, 2, ERoundingMode.DOWN);
 
   return compareBigNumbers(convertToUlps(value || "0"), convertToUlps(formattedMax)) <= 0;
 };

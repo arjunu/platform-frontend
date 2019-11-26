@@ -30,9 +30,15 @@ interface IAdditionalProps {
   updateUnlockFee: (unlockFee: number) => void;
 }
 
-const UnlockWalletTransactionDetailsLayout: React.FunctionComponent<
-  TTxPendingProps & IAdditionalProps
-> = ({ txData, additionalData, returnedEther, className, txTimestamp, unlockFee }) => (
+const UnlockWalletTransactionDetailsLayout: React.FunctionComponent<TTxPendingProps &
+  IAdditionalProps> = ({
+  txData,
+  additionalData,
+  returnedEther,
+  className,
+  txTimestamp,
+  unlockFee,
+}) => (
   <InfoList className={className}>
     <InfoRow
       caption={<FormattedMessage id="unlock-funds-flow.eth-committed" />}

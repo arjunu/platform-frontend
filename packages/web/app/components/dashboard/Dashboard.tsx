@@ -43,5 +43,7 @@ export const Dashboard = compose<{}, {}>(
       d(actions.wallet.loadWalletData());
     },
   }),
-  withContainer(withProps<TDataTestId, {}>({ "data-test-id": "dashboard-application" })(Layout)),
+  withContainer(
+    withProps<TDataTestId, {}>({ "data-test-id": "dashboard-application" })(Layout),
+  ),
 )(DashboardLayout);

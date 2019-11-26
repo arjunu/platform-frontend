@@ -30,17 +30,17 @@ type TDashboardLinkWidgetExternalProps = {
   buttonText: TTranslatedString;
 } & TDashboardCommonProps;
 
-export const DashboardLoadingWidget: React.FunctionComponent<
-  TDashboardLoadingWidgetExternalProps
-> = ({ title, columnSpan }) => (
+export const DashboardLoadingWidget: React.FunctionComponent<TDashboardLoadingWidgetExternalProps> = ({
+  title,
+  columnSpan,
+}) => (
   <Panel headerText={title} columnSpan={columnSpan}>
     <LoadingIndicator />
   </Panel>
 );
 
-export const DashboardWidget: React.FunctionComponent<
-  TDashboardWidgetExternalProps & TDataTestId
-> = ({ title, text, columnSpan, children, "data-test-id": dataTestId }) => (
+export const DashboardWidget: React.FunctionComponent<TDashboardWidgetExternalProps &
+  TDataTestId> = ({ title, text, columnSpan, children, "data-test-id": dataTestId }) => (
   <Panel headerText={title} columnSpan={columnSpan} data-test-id={dataTestId}>
     <div className={styles.content}>
       {text && <p className={styles.text}>{text}</p>}
@@ -49,17 +49,15 @@ export const DashboardWidget: React.FunctionComponent<
   </Panel>
 );
 
-export const DashboardCenteredWidget: React.FunctionComponent<
-  TDashboardWidgetExternalProps & TDataTestId
-> = ({ children, ...rest }) => (
+export const DashboardCenteredWidget: React.FunctionComponent<TDashboardWidgetExternalProps &
+  TDataTestId> = ({ children, ...rest }) => (
   <DashboardWidget {...rest}>
     {children && <div className="d-flex justify-content-center">{children}</div>}
   </DashboardWidget>
 );
 
-export const DashboardLinkWidget: React.FunctionComponent<
-  TDashboardLinkWidgetExternalProps & TDataTestId
-> = ({ to, buttonText, "data-test-id": dataTestId, ...rest }) => (
+export const DashboardLinkWidget: React.FunctionComponent<TDashboardLinkWidgetExternalProps &
+  TDataTestId> = ({ to, buttonText, "data-test-id": dataTestId, ...rest }) => (
   <DashboardWidget data-test-id={dataTestId} {...rest}>
     <ButtonLink
       to={to}

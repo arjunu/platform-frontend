@@ -57,9 +57,16 @@ type TDispatchProps = {
   saveData: (values: TPartialEtoSpecData) => void;
 };
 
-const EtoVotingRightsComponent: React.FunctionComponent<
-  TExternalProps & TStateProps & TDispatchProps
-> = ({ readonly, savingData, currentNomineeName, stateValues, currentNomineeId, saveData }) => {
+const EtoVotingRightsComponent: React.FunctionComponent<TExternalProps &
+  TStateProps &
+  TDispatchProps> = ({
+  readonly,
+  savingData,
+  currentNomineeName,
+  stateValues,
+  currentNomineeId,
+  saveData,
+}) => {
   const values = React.useMemo(() => {
     const converted = convert(toFormState)(stateValues);
 

@@ -26,7 +26,7 @@ const Jurisdiction: React.FunctionComponent<{ jurisdiction: EJurisdiction }> = (
         <FormattedMessage
           id="eto-overview-thumbnail.cover.jurisdiction.de"
           values={{
-            breakingLine: <br />,
+            lineBreak: <br />,
           }}
         />
       );
@@ -35,7 +35,7 @@ const Jurisdiction: React.FunctionComponent<{ jurisdiction: EJurisdiction }> = (
         <FormattedMessage
           id="eto-overview-thumbnail.cover.jurisdiction.li"
           values={{
-            breakingLine: <br />,
+            lineBreak: <br />,
           }}
         />
       );

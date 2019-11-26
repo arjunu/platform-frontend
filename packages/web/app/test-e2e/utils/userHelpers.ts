@@ -86,9 +86,7 @@ export const createAndLoginNewUser = (
 
       cy.log(
         `Logged in as ${params.type}`,
-        `KYC: ${params.kyc}, clearPendingTransactions: ${params.clearPendingTransactions}, seed: ${
-          params.seed
-        }`,
+        `KYC: ${params.kyc}, clearPendingTransactions: ${params.clearPendingTransactions}, seed: ${params.seed}`,
       );
     }
 
@@ -127,18 +125,28 @@ export const loginFixtureAccount = (
     onlyLogin?: boolean;
     signTosAgreement?: boolean;
     permissions?: string[];
+    customDerivationPath?: string;
   },
 ) => {
   const fixture = accountFixtureByName(accountFixtureName);
-  let hdPath = fixture.definition.derivationPath;
-  if (hdPath) {
-    // cut last element which corresponds to account, will be added by light wallet
-    hdPath = hdPath.substr(0, hdPath.lastIndexOf("/"));
+  let hdPath: string;
+
+  if (params.customDerivationPath) {
+    hdPath = params.customDerivationPath;
+  } else {
+    hdPath = fixture.definition.derivationPath;
+    if (hdPath) {
+      hdPath = fixture.definition.derivationPath.substr(
+        0,
+        fixture.definition.derivationPath.lastIndexOf("/"),
+      );
+    }
   }
+
   return createAndLoginNewUser({
     type: fixture.type,
     seed: fixture.definition.seed,
-    hdPath: hdPath,
+    hdPath,
     ...params,
   });
 };
@@ -277,10 +285,12 @@ export const getUserData = async (jwt: string) => {
     "Content-Type": "application/json",
     authorization: `Bearer ${jwt}`,
   };
-  return (await fetch(USER_PATH, {
-    headers,
-    method: "GET",
-  })).json();
+  return (
+    await fetch(USER_PATH, {
+      headers,
+      method: "GET",
+    })
+  ).json();
 };
 
 export const getKycData = async (jwt: string) => {
@@ -289,14 +299,22 @@ export const getKycData = async (jwt: string) => {
     authorization: `Bearer ${jwt}`,
   };
   return {
-    individual: (await (await fetch(KYC_PATH + KYC_INDIVIDUAL, {
-      headers,
-      method: "GET",
-    })).json()).status,
-    business: (await (await fetch(KYC_PATH + KYC_COMPANY, {
-      headers,
-      method: "GET",
-    })).json()).status,
+    individual: (
+      await (
+        await fetch(KYC_PATH + KYC_INDIVIDUAL, {
+          headers,
+          method: "GET",
+        })
+      ).json()
+    ).status,
+    business: (
+      await (
+        await fetch(KYC_PATH + KYC_COMPANY, {
+          headers,
+          method: "GET",
+        })
+      ).json()
+    ).status,
   };
 };
 
@@ -402,9 +420,9 @@ export const clearPendingTransactions = () =>
       );
     });
 
-export const getPendingTransactions = (): Cypress.Chainable<
-  ReadonlyArray<{ transaction_type: string }>
-> =>
+export const getPendingTransactions = (): Cypress.Chainable<ReadonlyArray<{
+  transaction_type: string;
+}>> =>
   cy
     .request({
       url: PENDING_TRANSACTIONS_PATH,

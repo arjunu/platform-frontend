@@ -9,7 +9,7 @@ import { IBookBuildingStats } from "../../../../lib/api/eto/EtoPledgeApi.interfa
 import {
   EETOStateOnChain,
   EEtoSubState,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "../../../../modules/eto/types";
 import { ICalculatedContribution } from "../../../../modules/investor-portfolio/types";
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
@@ -19,7 +19,7 @@ import { EtoOverviewThumbnail } from "./EtoOverviewThumbnail";
 
 import * as icbmThumbnail from "../../../../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";
 
-const rootEto: TEtoWithCompanyAndContract = {
+const rootEto: TEtoWithCompanyAndContractReadonly = {
   ...testEto,
   preMoneyValuationEur: 10000,
   existingShareCapital: 10,
@@ -42,7 +42,7 @@ const withEto = ({
   bookbuildingStats,
   calculatedContributions,
 }: {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   bookbuildingStats?: IBookBuildingStats;
   calculatedContributions?: ICalculatedContribution;
 }) =>

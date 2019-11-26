@@ -3,17 +3,17 @@ import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
 import {
-  IEtoContractData,
   IEtoTokenData,
   IEtoTokenGeneralDiscounts,
   SignedISHAStatus,
+  TEtoContractData,
   TOfferingAgreementsStatus,
 } from "./types";
 
 export interface IEtoState {
   etos: { [previewCode: string]: TEtoSpecsData | undefined };
   companies: { [companyId: string]: TCompanyEtoData | undefined };
-  contracts: { [previewCode: string]: IEtoContractData | undefined };
+  contracts: { [previewCode: string]: TEtoContractData | undefined };
   displayOrder: string[] | undefined;
   maxCapExceeded: { [previewCode: string]: boolean | undefined };
   etoWidgetError: boolean | undefined;
@@ -102,6 +102,9 @@ export const etoReducer: AppReducer<IEtoState> = (
         },
       };
     case actions.eto.setAgreementsStatus.getType():
+      //todo actions.eto.setAgreementsStatus writes to both nominee-flow reducer and here.
+      // This is for the backwards compat. until the issuer flow is refactored to use sagas
+      // in the same way as nominee flow.
       return {
         ...state,
         offeringAgreementsStatus: {
@@ -109,6 +112,9 @@ export const etoReducer: AppReducer<IEtoState> = (
           [action.payload.previewCode]: action.payload.statuses,
         },
       };
+    //todo actions.eto.setInvestmentAgreementHash writes to both nominee-flow reducer and here.
+    // This is for the backwards compat. until the issuer flow is refactored to use sagas
+    // in the same way as nominee flow.
     case actions.eto.setInvestmentAgreementHash.getType():
       return {
         ...state,
@@ -120,12 +126,15 @@ export const etoReducer: AppReducer<IEtoState> = (
           },
         },
       };
+    //todo actions.eto.loadInvestmentAgreementHash writes to both nominee-flow reducer and here.
+    // This is for the backwards compat. until the issuer flow is refactored to use sagas
+    // in the same way as nominee flow.
     case actions.eto.loadSignedInvestmentAgreement.getType():
       return {
         ...state,
         signedInvestmentAgreements: {
           ...state.signedInvestmentAgreements,
-          [action.payload.eto.previewCode]: { isLoading: true, url: undefined },
+          [action.payload.previewCode]: { isLoading: true, url: undefined },
         },
       };
   }

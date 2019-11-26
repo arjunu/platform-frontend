@@ -3,7 +3,7 @@ import { compose, setDisplayName } from "recompose";
 
 import { actions } from "../../../modules/actions";
 import { selectEtos } from "../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { RequiredByKeys } from "../../../types";
 import { onEnterAction } from "../../../utils/OnEnterAction";
@@ -15,7 +15,7 @@ import { ELoadingIndicator, LoadingIndicator } from "../../shared/loading-indica
 import * as styles from "./EtoList.module.scss";
 
 interface IStateProps {
-  etos?: TEtoWithCompanyAndContract[];
+  etos?: TEtoWithCompanyAndContractReadonly[];
 }
 
 type TExternalProps = {

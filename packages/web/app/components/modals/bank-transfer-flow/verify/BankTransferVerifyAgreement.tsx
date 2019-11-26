@@ -11,7 +11,7 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../shared/formatters/utils";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 import { BankTransferAgreement } from "../shared/BankTransferAgreement";
 
 import * as bankVaultIcon from "../../../../assets/img/bank-transfer/bank-vault.svg";

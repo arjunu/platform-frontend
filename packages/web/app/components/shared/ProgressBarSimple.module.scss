@@ -1,0 +1,12 @@
+.progress {
+  background-color: $neu-pale-grey-three;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 4px 0;
+  display: flex;
+
+  &-value {
+    background-color: $neu-bitter-lemon;
+  }
+}

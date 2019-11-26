@@ -4,8 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { Link } from "react-router-dom";
 
 import { EJurisdiction } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
-import { TEtoWithCompanyAndContract } from "../../../../modules/eto/types";
-import { isEtoSoftCapReached, isFundraisingActive } from "../../../../modules/eto/utils";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { CommonHtmlProps, XOR } from "../../../../types";
 import { etoPublicViewLink } from "../../../appRouteUtils";
 import { Container, EColumnSpan } from "../../../layouts/Container";
@@ -13,7 +12,6 @@ import { ETOInvestorState, ETOIssuerState } from "../../shared/ETOState";
 import { EtoStats } from "./EtoStats";
 import { EtoStatusManager } from "./EtoStatusManager/EtoStatusManager";
 import { EtoTitle } from "./EtoTitle";
-import { GreyInfo } from "./Info";
 import { TagsWidget } from "./TagsWidget";
 
 import * as styles from "./EtoOverviewStatus.module.scss";
@@ -23,16 +21,11 @@ type TExternalProps = XOR<
     isEmbedded: true;
   },
   { isEmbedded: false; url: string }
-> & { eto: TEtoWithCompanyAndContract; publicView: boolean };
+> & { eto: TEtoWithCompanyAndContractReadonly; publicView: boolean };
 
 interface IStatusOfEtoProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   publicView: boolean;
-}
-
-interface IInfoProps {
-  eto: TEtoWithCompanyAndContract;
-  url: string;
 }
 
 interface IAdditionalInfoProps {
@@ -83,34 +76,10 @@ const Divider: React.FunctionComponent<CommonHtmlProps> = ({
   className?: string;
 }) => <div className={cn(styles.divider, className)} />;
 
-const EtoInfo: React.FunctionComponent<IInfoProps> = ({ eto, url }) => {
-  const isSoftCapReached = isEtoSoftCapReached(eto);
-  const isActive = isFundraisingActive(eto);
-
-  if (isSoftCapReached && isActive) {
-    return (
-      <GreyInfo>
-        <FormattedMessage id="shared-component.eto-overview.info.soft-cap-reached" />{" "}
-        <Link
-          to={{
-            pathname: `${url}/stats`,
-            hash: "#eto-view-tabs",
-          }}
-        >
-          <FormattedMessage id="shared-component.eto-overview.info.soft-cap-reached.view-details" />
-        </Link>
-      </GreyInfo>
-    );
-  }
-
-  return null;
-};
-
 export const EtoOverviewStatus: React.FunctionComponent<TExternalProps> = ({
   eto,
   publicView,
   isEmbedded,
-  url,
 }) => (
   <Container
     className={styles.etoOverviewStatus}
@@ -133,7 +102,5 @@ export const EtoOverviewStatus: React.FunctionComponent<TExternalProps> = ({
         jurisdiction={eto.product.jurisdiction}
       />
     </div>
-
-    {!isEmbedded && url && <EtoInfo eto={eto} url={url} />}
   </Container>
 );

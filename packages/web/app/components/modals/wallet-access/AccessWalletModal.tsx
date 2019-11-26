@@ -61,9 +61,8 @@ const logoMetamaskSrcSet: ISrcSet = {
   "3x": logoMetamask3x,
 };
 
-export const AccessWalletContainerComponent: React.FunctionComponent<
-  IStateProps & IDispatchProps
-> = ({
+export const AccessWalletContainerComponent: React.FunctionComponent<IStateProps &
+  IDispatchProps> = ({
   title,
   message,
   errorMessage,
@@ -161,9 +160,8 @@ interface IModalDispatchProps {
   onCancel: () => void;
 }
 
-const AccessWalletModalComponent: React.FunctionComponent<
-  IModalStateProps & IModalDispatchProps
-> = props => (
+const AccessWalletModalComponent: React.FunctionComponent<IModalStateProps &
+  IModalDispatchProps> = props => (
   <Modal isOpen={props.isOpen} onClose={props.onCancel}>
     <AccessWalletContainer />
   </Modal>

@@ -2,7 +2,10 @@ import * as React from "react";
 import { compose } from "recompose";
 
 import { selectEtoOnChainStateById } from "../../../../../modules/eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../../../../modules/eto/types";
+import {
+  EETOStateOnChain,
+  TEtoWithCompanyAndContractReadonly,
+} from "../../../../../modules/eto/types";
 import { isOnChain } from "../../../../../modules/eto/utils";
 import {
   selectInitialMaxCapExceeded,
@@ -21,7 +24,7 @@ import * as styles from "../EtoOverviewStatus.module.scss";
 
 interface IExternalProps {
   isEmbedded: boolean;
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IStateProps {

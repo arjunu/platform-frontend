@@ -6,3 +6,13 @@
   align-self: end;
   justify-content: space-between; //more than one button
 }
+
+.time-left {
+  color: $neu-charcoal-grey;
+  margin-bottom: px-to-rem(14px);
+}
+
+.change-disabled {
+  color: $neu-charcoal-grey;
+  margin: px-to-rem(18px) auto px-to-rem(14px);
+}

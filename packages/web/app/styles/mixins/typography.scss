@@ -127,9 +127,11 @@
   font-size: px-to-rem(12px);
 }
 
-@mixin font-medium-roboto {
+@mixin nds-label {
   font-family: $font-family-roboto;
   font-size: px-to-rem(14px);
+  font-weight: 500;
+  line-height: 1.71;
 }
 
 // Typography utils

@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
-import { Message } from "../../modals/Message";
+import { Message } from "../../modals/message/Message";
 import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons";
 
 import * as tosImg from "../../../assets/img/tos.jpg";
@@ -20,9 +20,8 @@ interface IDispatchProps {
   confirm: () => void;
 }
 
-const DocumentConfidentialityAgreementModalLayout: React.FunctionComponent<
-  IExternalProps & IDispatchProps
-> = ({ closeModal, confirm, companyName, documentTitle }) => (
+const DocumentConfidentialityAgreementModalLayout: React.FunctionComponent<IExternalProps &
+  IDispatchProps> = ({ closeModal, confirm, companyName, documentTitle }) => (
   <Message
     data-test-id="eto.document-confidentiality-agreement-modal"
     image={<img src={tosImg} className={styles.image} alt="" />}

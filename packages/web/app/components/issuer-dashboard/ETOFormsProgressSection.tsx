@@ -69,9 +69,8 @@ interface IExternalProps {
   shouldViewEtoSettings?: boolean;
 }
 
-export const ETOFormsProgressSectionComponent: React.FunctionComponent<
-  IStateProps & IExternalProps
-> = ({
+export const ETOFormsProgressSectionComponent: React.FunctionComponent<IStateProps &
+  IExternalProps> = ({
   etoStatus,
   loadingData,
   shouldEtoDataLoad,

@@ -3,9 +3,12 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { actions } from "../../modules/actions";
 import { selectEtoWithCompanyAndContractById } from "../../modules/eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
-import { InvestmentProgress } from "../eto/overview/InvestmentProgress";
+import {
+  EInvestmentStatusSize,
+  InvestmentStatusWidget,
+} from "../eto/overview/EtoOverviewStatus/InvestmentWidget/InvestmentStatusWidget";
 import { Button, ButtonSize, EButtonLayout, EIconPosition } from "../shared/buttons";
 
 import * as arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
@@ -21,12 +24,12 @@ interface IDispatchProps {
 }
 
 interface IStateProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
-const PortfolioAssetActionComponent: React.FunctionComponent<
-  TExternalProps & IDispatchProps & IStateProps
-> = ({ state, etoId, onClaim, eto, onRefund }) => {
+const PortfolioAssetActionComponent: React.FunctionComponent<TExternalProps &
+  IDispatchProps &
+  IStateProps> = ({ state, etoId, onClaim, eto, onRefund }) => {
   switch (state) {
     case EETOStateOnChain.Claim:
     case EETOStateOnChain.Payout:
@@ -63,7 +66,7 @@ const PortfolioAssetActionComponent: React.FunctionComponent<
 
     case EETOStateOnChain.Public:
     case EETOStateOnChain.Whitelist:
-      return <InvestmentProgress eto={eto} />;
+      return <InvestmentStatusWidget eto={eto} size={EInvestmentStatusSize.SMALL} />;
 
     default:
       return null;

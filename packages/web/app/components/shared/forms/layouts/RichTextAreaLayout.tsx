@@ -11,7 +11,7 @@ import { CommonHtmlProps } from "../../../../types";
 import { ContainerContext, TContainerContext } from "../../../../utils/InversifyProvider";
 import { SANITIZER_OPTIONS } from "../../SanitizedHtml";
 import { generateErrorId } from "../fields/FormFieldError";
-import { generateLabelId } from "../fields/FormFieldLabel";
+import { generateLabelId } from "./FormLabel";
 
 import * as fieldStyles from "../../Field.module.scss";
 import * as styles from "./RichTextAreaLayout.module.scss";
@@ -43,9 +43,17 @@ const toolbar = [
   areTagsAllowed("figure", "img", "figcaption") && "imageUpload",
 ].filter(Boolean);
 
-const RichTextAreaLayoutComponent: React.FunctionComponent<
-  TExternalProps & TRenderPropsProp & CommonHtmlProps
-> = ({ name, invalid, disabled, value, onChange, placeholder, uploadAdapterFactory }) => {
+const RichTextAreaLayoutComponent: React.FunctionComponent<TExternalProps &
+  TRenderPropsProp &
+  CommonHtmlProps> = ({
+  name,
+  invalid,
+  disabled,
+  value,
+  onChange,
+  placeholder,
+  uploadAdapterFactory,
+}) => {
   const [editor, setEditor] = React.useState<TCkEditor>();
 
   React.useEffect(() => {

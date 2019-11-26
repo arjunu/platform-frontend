@@ -64,6 +64,7 @@ interface IToFixedPrecision {
   decimalPlaces: number | undefined;
   isPrice?: boolean;
   outputFormat?: THumanReadableFormat;
+  decimals?: number;
 }
 
 interface IFormatNumber {
@@ -73,6 +74,7 @@ interface IFormatNumber {
   decimalPlaces?: number;
   isPrice?: boolean;
   outputFormat?: THumanReadableFormat;
+  decimals?: number;
 }
 
 export const selectDecimalPlaces = (
@@ -162,6 +164,7 @@ export const toFixedPrecision = ({
   inputFormat = ENumberInputFormat.ULPS,
   decimalPlaces = undefined,
   outputFormat = ENumberOutputFormat.FULL,
+  decimals,
 }: IToFixedPrecision): string => {
   invariant(
     value !== null &&
@@ -175,7 +178,7 @@ export const toFixedPrecision = ({
   const asBigNumber = value instanceof BigNumber ? value : new BigNumber(value.toString());
 
   const moneyInPrimaryBase =
-    inputFormat === ENumberInputFormat.ULPS ? convertFromUlps(asBigNumber) : asBigNumber;
+    inputFormat === ENumberInputFormat.ULPS ? convertFromUlps(asBigNumber, decimals) : asBigNumber;
   return moneyInPrimaryBase.toFixed(dp, getBigNumberRoundingMode(roundingMode, outputFormat));
 };
 
@@ -192,6 +195,7 @@ export const formatNumber = ({
   inputFormat = ENumberInputFormat.ULPS,
   decimalPlaces,
   outputFormat = ENumberOutputFormat.FULL,
+  decimals,
 }: IFormatNumber): string => {
   const asFixedPrecisionNumber = toFixedPrecision({
     value,
@@ -199,6 +203,7 @@ export const formatNumber = ({
     inputFormat,
     outputFormat,
     decimalPlaces,
+    decimals,
   });
 
   return outputFormat === ENumberOutputFormat.ONLY_NONZERO_DECIMALS ||

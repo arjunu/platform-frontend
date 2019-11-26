@@ -36,7 +36,6 @@ export type TranslatedMessageType =
   | ProfileMessage
   | EtoMessage
   | FileUploadMessage
-  | ImageUploadMessage
   | RemoteFileMessage
   | Web3Message
   | ValidationMessage
@@ -174,12 +173,6 @@ export enum IpfsMessage {
 
 export enum FileUploadMessage {
   FILE_UPLOAD_ERROR = "fileUploadError",
-}
-
-export enum ImageUploadMessage {
-  IMAGE_UPLOAD_WRONG_IMAGE_DIMENSIONS = "imageUploadWrongImageDimensions",
-  IMAGE_UPLOAD_FAILURE = "imageUploadFailure",
-  IMAGE_UPLOAD_FAILURE_WITH_DETAILS = "imageUploadFailureWithDetails",
 }
 
 export enum ETxHistoryMessage {
@@ -511,20 +504,6 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
 
     case FileUploadMessage.FILE_UPLOAD_ERROR:
       return <FormattedMessage id="form.single-file-upload-error" />;
-
-    case ImageUploadMessage.IMAGE_UPLOAD_WRONG_IMAGE_DIMENSIONS:
-      return <FormattedMessage id="form.image-upload-wrong-image-dimensions" />;
-    case ImageUploadMessage.IMAGE_UPLOAD_FAILURE:
-      return <FormattedMessage id="form.image-upload-failure" />;
-    case ImageUploadMessage.IMAGE_UPLOAD_FAILURE_WITH_DETAILS:
-      return (
-        <FormattedMessage
-          id="form.image-upload-failure-with-details"
-          values={{
-            error: messageData ? messageData.toString() : "unknown error",
-          }}
-        />
-      );
 
     case RemoteFileMessage.GET_FILES_DETAILS_ERROR:
       return <FormattedMessage id="remote.file.details-error" />;

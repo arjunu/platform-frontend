@@ -52,6 +52,9 @@ describe("KYC Personal flow with manual verification", () => {
       // fill the form
       fillForm(kycInvidualFormUS, { submit: false });
 
+      // form should be disabled before the accreditation file is uploaded
+      cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
+
       // Upload accreditation documents
       uploadMultipleFilesToFieldWithTid("kyc-personal-accreditation-upload-dropzone", [
         "example.jpg",
@@ -62,7 +65,6 @@ describe("KYC Personal flow with manual verification", () => {
       // go to the manual verification with file upload
       cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
       cy.url().should("contain", kycRoutes.individualUpload);
-
       // upload file
       uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
 

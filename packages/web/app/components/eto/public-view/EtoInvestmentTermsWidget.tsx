@@ -8,7 +8,8 @@ import { canShowDocument } from "../../../lib/api/eto/EtoFileUtils";
 import { EAssetType, EJurisdiction } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { getDocumentByType } from "../../../modules/eto-documents/utils";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
+import { getEtoEurMinTarget } from "../../../modules/eto/utils";
 import { appConnect } from "../../../store";
 import { TDataTestId, TTranslatedString } from "../../../types";
 import { divideBigNumbers } from "../../../utils/BigNumberUtils";
@@ -33,7 +34,7 @@ import { ToBeAnnounced, ToBeAnnouncedTooltip } from "../shared/ToBeAnnouncedTool
 import * as styles from "./EtoInvestmentTermsWidget.module.scss";
 
 type TExternalProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   isUserFullyVerified: boolean;
 };
 
@@ -91,9 +92,7 @@ const DownloadIshaOrTermsheetLink: React.FunctionComponent<TExternalProps & TDis
   if (signedTermsheetDoc) {
     return (
       <DocumentButton
-        data-test-id={`eto-public-view.investment-terms.document.${
-          signedTermsheetDoc.documentType
-        }`}
+        data-test-id={`eto-public-view.investment-terms.document.${signedTermsheetDoc.documentType}`}
         title={<FormattedMessage id="eto.documents.signed-termsheet" />}
         onClick={() => downloadDocument(signedTermsheetDoc)}
       />
@@ -111,6 +110,8 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
   const newSharePrice = eto.investmentCalculatedValues
     ? eto.investmentCalculatedValues.sharePrice
     : undefined;
+
+  const minTarget = getEtoEurMinTarget(eto);
 
   return (
     <Panel className={styles.tokenTerms}>
@@ -229,7 +230,13 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
               data-test-id="eto-public-view-new-share-price"
             />
             <Entry
-              label={<FormattedMessage id="eto.public-view.token-terms.investment-amount" />}
+              label={
+                minTarget ? (
+                  <FormattedMessage id="eto.public-view.token-terms.investment-amount-with-discount" />
+                ) : (
+                  <FormattedMessage id="eto.public-view.token-terms.investment-amount" />
+                )
+              }
               value={<InvestmentAmount etoData={eto} />}
               data-test-id="eto-public-view-investment-amount"
             />

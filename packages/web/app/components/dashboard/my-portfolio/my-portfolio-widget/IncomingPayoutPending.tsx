@@ -86,9 +86,9 @@ export const IncomingPayoutPendingBase: React.FunctionComponent<IIncomingPayoutD
   </div>
 );
 
-export const IncomingPayoutPendingLayout: React.FunctionComponent<
-  IIncomingPayoutData & TDispatchProps & TEndDate
-> = ({ endDate, loadPayoutsData, etherTokenIncomingPayout, euroTokenIncomingPayout }) => (
+export const IncomingPayoutPendingLayout: React.FunctionComponent<IIncomingPayoutData &
+  TDispatchProps &
+  TEndDate> = ({ endDate, loadPayoutsData, etherTokenIncomingPayout, euroTokenIncomingPayout }) => (
   <IncomingPayoutPendingBase
     dataTestId="my-portfolio-widget-incoming-payout-pending"
     etherTokenIncomingPayout={etherTokenIncomingPayout}

@@ -96,7 +96,7 @@ const CalculatorField: React.FunctionComponent<ICalculatorField> = ({
     suffix={selectUnits(valueType)}
     name={name}
     value={formatNumber({
-      value: value,
+      value,
       inputFormat: ENumberInputFormat.FLOAT,
       outputFormat: outputFormat,
       decimalPlaces: selectDecimalPlaces(valueType, outputFormat),
@@ -254,7 +254,7 @@ const InvestmentCalculator: React.FunctionComponent<ICalculatorProps> = ({
 );
 
 const validate = (values: TEtoSpecsData) => {
-  const errors: { -readonly [P in keyof (typeof values)]?: TTranslatedString } = {};
+  const errors: { -readonly [P in keyof typeof values]?: TTranslatedString } = {};
 
   if ((values.publicDiscountFraction || 0) > (values.whitelistDiscountFraction || 0)) {
     errors.whitelistDiscountFraction = (

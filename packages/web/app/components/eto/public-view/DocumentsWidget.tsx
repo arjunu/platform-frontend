@@ -6,7 +6,7 @@ import { compose } from "recompose";
 import { IEtoDocument } from "../../../lib/api/eto/EtoFileApi.interfaces";
 import { canShowDocument, ignoredTemplatesPublicView } from "../../../lib/api/eto/EtoFileUtils";
 import { actions } from "../../../modules/actions";
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { CommonHtmlProps } from "../../../types";
 import { getInvestorDocumentTitles } from "../../documents/utils";
@@ -18,7 +18,7 @@ import { DashboardHeading } from "../shared/DashboardHeading";
 import * as styles from "./DocumentsWidget.module.scss";
 
 type TExternalProps = {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
   columnSpan?: EColumnSpan;
   isUserFullyVerified: boolean;
 };
@@ -27,9 +27,9 @@ type TDispatchProps = {
   downloadDocument: (document: IEtoDocument) => void;
 };
 
-const DocumentsWidgetLayout: React.FunctionComponent<
-  TDispatchProps & TExternalProps & CommonHtmlProps
-> = ({ downloadDocument, className, columnSpan, isUserFullyVerified, eto }) => {
+const DocumentsWidgetLayout: React.FunctionComponent<TDispatchProps &
+  TExternalProps &
+  CommonHtmlProps> = ({ downloadDocument, className, columnSpan, isUserFullyVerified, eto }) => {
   const { templates, documents, product } = eto;
 
   const documentTitles = getInvestorDocumentTitles(product.offeringDocumentType);

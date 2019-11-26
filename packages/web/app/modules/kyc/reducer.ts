@@ -1,5 +1,3 @@
-import { filter, findIndex, isNil, omitBy } from "lodash";
-
 import {
   IKycBeneficialOwner,
   IKycBusinessData,
@@ -8,13 +6,17 @@ import {
   IKycLegalRepresentative,
   IKycRequestState,
   KycBankQuintessenceBankAccount,
+  TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
 import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
 import { TBankAccount, TClaims } from "./types";
+import { appendIfExists, omitUndefined, updateArrayItem } from "./utils";
 
 export interface IKycState {
+  status: TKycStatus | undefined;
+
   // individual
   individualRequestState?: IKycRequestState;
   individualRequestStateLoading?: boolean;
@@ -64,6 +66,7 @@ export interface IKycState {
 }
 
 const kycInitialState: IKycState = {
+  status: undefined,
   individualFiles: [],
   businessFiles: [],
   legalRepresentativeFiles: [],
@@ -77,59 +80,40 @@ const kycInitialState: IKycState = {
   kycSaving: undefined,
 };
 
-function appendIfExists<T>(array: ReadonlyArray<T>, item: T | undefined): ReadonlyArray<T> {
-  if (!array) array = [];
-  if (item) return [...array, item];
-  return array;
-}
-
-export function updateArrayItem<T extends { id?: string }>(
-  array: ReadonlyArray<T>,
-  id?: string,
-  item?: T,
-): ReadonlyArray<T> {
-  if (!id) return array; // no changes
-  if (id && !item) return filter(array, i => i.id !== id); // delete item
-  if (id && item) {
-    const index = findIndex(array, i => i.id === id);
-    if (index === -1) return [...array, item]; // append
-
-    return [...array.slice(0, index), item, ...array.slice(index + 1)];
-  }
-  return array;
-}
-
-function omitUndefined<T>(obj: T): { [P in keyof T]?: T[P] } {
-  return omitBy(obj, isNil) as any;
-}
-
 export const kycReducer: AppReducer<IKycState> = (
   state = kycInitialState,
   action,
 ): DeepReadonly<IKycState> => {
   switch (action.type) {
+    // general
+    case actions.kyc.setStatus.getType():
+      return {
+        ...state,
+        status: action.payload.status,
+      };
+
     // individual
-    case "KYC_SUBMIT_INDIVIDUAL_FORM":
+    case actions.kyc.kycSubmitIndividualData.getType():
       return { ...state, kycSaving: action.payload.skipContinue };
-    case "KYC_UPDATE_INDIVIDUAL_DATA":
+    case actions.kyc.kycUpdateIndividualData.getType():
       return { ...state, kycSaving: false, ...omitUndefined(action.payload) };
-    case "KYC_UPDATE_INDIVIDUAL_REQUEST_STATE":
-    case "KYC_UPDATE_INDIVIDUAL_FILES_INFO":
+    case actions.kyc.kycUpdateIndividualRequestState.getType():
+    case actions.kyc.kycUpdateIndividualDocuments.getType():
       return { ...state, ...omitUndefined(action.payload) };
-    case "KYC_UPDATE_INDIVIDUAL_FILE_INFO":
+    case actions.kyc.kycUpdateIndividualDocument.getType():
       return {
         ...state,
         individualFileUploading: action.payload.individualFileUploading,
         individualFiles: appendIfExists(state.individualFiles, action.payload.file),
       };
-    case "KYC_UPDATE_BUSINESS_DATA":
-    case "KYC_UPDATE_BUSINESS_REQUEST_STATE":
-    case "KYC_UPDATE_BUSINESS_FILES_INFO":
-    case "KYC_UPDATE_LEGAL_REPRESENTATIVE":
-    case "KYC_UPDATE_LEGAL_REPRESENTATIVE_FILES_INFO":
-    case "KYC_UPDATE_BENEFICIAL_OWNERS":
+    case actions.kyc.kycUpdateBusinessData.getType():
+    case actions.kyc.kycUpdateBusinessRequestState.getType():
+    case actions.kyc.kycUpdateBusinessDocuments.getType():
+    case actions.kyc.kycUpdateLegalRepresentative.getType():
+    case actions.kyc.kycUpdateLegalRepresentativeDocuments.getType():
+    case actions.kyc.kycUpdateBeneficialOwners.getType():
       return { ...state, ...omitUndefined(action.payload) };
-    case "KYC_UPDATE_LEGAL_REPRESENTATIVE_FILE_INFO":
+    case actions.kyc.kycUpdateLegalRepresentativeDocument.getType():
       return {
         ...state,
         legalRepresentativeFileUploading: action.payload.legalRepresentativeUploading,
@@ -138,13 +122,13 @@ export const kycReducer: AppReducer<IKycState> = (
           action.payload.file,
         ),
       };
-    case "KYC_UPDATE_BUSINESS_FILE_INFO":
+    case actions.kyc.kycUpdateBusinessDocument.getType():
       return {
         ...state,
         businessFileUploading: action.payload.businessFileUploading,
         businessFiles: appendIfExists(state.businessFiles, action.payload.file),
       };
-    case "KYC_UPDATE_BENEFICIAL_OWNER":
+    case actions.kyc.kycUpdateBeneficialOwner.getType():
       return {
         ...state,
         loadingBeneficialOwner: action.payload.loadingBeneficialOwner,
@@ -154,7 +138,7 @@ export const kycReducer: AppReducer<IKycState> = (
           action.payload.beneficialOwner,
         ),
       };
-    case "KYC_UPDATE_BENEFICIAL_OWNER_FILES_INFO":
+    case actions.kyc.kycUpdateBeneficialOwnerDocuments.getType():
       return {
         ...state,
         beneficialOwnerFilesLoading: {
@@ -166,7 +150,7 @@ export const kycReducer: AppReducer<IKycState> = (
           [action.payload.boid]: action.payload.beneficialOwnerFiles,
         },
       };
-    case "KYC_UPDATE_BENEFICIAL_OWNER_FILE_INFO":
+    case actions.kyc.kycUpdateBeneficialOwnerDocument.getType():
       const { boid } = action.payload;
       return {
         ...state,
@@ -180,7 +164,7 @@ export const kycReducer: AppReducer<IKycState> = (
         },
       };
     // contract claims
-    case "KYC_SET_CLAIMS":
+    case actions.kyc.kycSetClaims.getType():
       return { ...state, claims: action.payload.claims };
 
     // api bank account

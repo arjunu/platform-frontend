@@ -15,14 +15,21 @@ export interface IWithdrawDraftType {
   value: string;
 }
 
+export interface ITokenTransferDraftType {
+  type: ETxSenderType.TRANSFER_TOKENS;
+  to: string;
+  value: string;
+}
+
 export interface IInvestmentDraftType {
   type: ETxSenderType.INVEST;
 }
 
-export type IDraftType = IWithdrawDraftType | IInvestmentDraftType;
+export type IDraftType = IWithdrawDraftType | IInvestmentDraftType | ITokenTransferDraftType;
 
 export enum ETxSenderType {
   UNLOCK_FUNDS = "UNLOCK_FUNDS",
+  TRANSFER_TOKENS = "TRANSFER_TOKENS",
   WITHDRAW = "WITHDRAW",
   INVEST = "INVEST",
   UPGRADE = "UPGRADE",
@@ -42,6 +49,12 @@ export interface ITxTypeWithData<T extends ETxSenderType | undefined, P> {
   type: T;
   additionalData: P;
 }
+
+type TTxSenderTokenTransferState = ITxTypeWithData<
+  ETxSenderType.TRANSFER_TOKENS,
+  TWithdrawAdditionalData
+>;
+// THINK ABOUT WHAT TO ADD UP
 
 type TTxSenderWithdrawState = ITxTypeWithData<ETxSenderType.WITHDRAW, TWithdrawAdditionalData>;
 
@@ -68,6 +81,8 @@ type TTxSenderNEurRedeemState = ITxTypeWithData<
   ETxSenderType.NEUR_REDEEM,
   TNEurRedeemAdditionalDetails
 >;
+
+export type TTxSenderNEurRedeemInitialValues = { initialAmount?: string };
 
 type TTxSenderUnlockState = ITxTypeWithData<ETxSenderType.UNLOCK_FUNDS, TUnlockAdditionalData>;
 
@@ -100,6 +115,7 @@ export type TSpecificTransactionState =
   | TTxSenderRefundState
   | TTxSenderNomineeSignTHAState
   | TTxSenderNomineeSignRAAAState
+  | TTxSenderTokenTransferState
   | TTxSenderNomineeSignISHAState;
 
 export type TAdditionalDataByType<T extends ETxSenderType> = Extract<

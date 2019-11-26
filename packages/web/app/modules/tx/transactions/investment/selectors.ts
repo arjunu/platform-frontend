@@ -1,6 +1,6 @@
 import { BigNumber } from "bignumber.js";
 
-import { MONEY_DECIMALS } from "../../../../config/constants";
+import { ETH_DECIMALS } from "../../../../config/constants";
 import { IAppState } from "../../../../store";
 import { compareBigNumbers, subtractBigNumbers } from "../../../../utils/BigNumberUtils";
 import { convertToUlps } from "../../../../utils/NumberUtils";
@@ -67,7 +67,7 @@ export const selectMaximumInvestment = (state: IAppState): string => {
 
   // Round balance value to fixed number with precision based on investment type
   const roundedBalance = new BigNumber(walletBalanceUlps)
-    .div(new BigNumber("10").pow(MONEY_DECIMALS))
+    .div(new BigNumber("10").pow(ETH_DECIMALS))
     .toFixed(decimalsPrecision, BigNumber.ROUND_DOWN);
 
   // Compare rounded balance to value provided by user

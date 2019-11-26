@@ -30,6 +30,7 @@ import { EtherToken } from "../../lib/contracts/EtherToken";
 import { ETOCommitment } from "../../lib/contracts/ETOCommitment";
 import { ETOTerms } from "../../lib/contracts/ETOTerms";
 import { EuroToken } from "../../lib/contracts/EuroToken";
+import { ITokenController } from "../../lib/contracts/ITokenController";
 import { IAppState } from "../../store";
 import { Dictionary } from "../../types";
 import { divideBigNumbers, multiplyBigNumbers } from "../../utils/BigNumberUtils";
@@ -49,6 +50,7 @@ import {
   IAgreementContractAndHash,
 } from "../tx/transactions/nominee/sign-agreement/types";
 import { selectEthereumAddressWithChecksum } from "../web3/selectors";
+import { generateRandomEthereumAddress } from "./../web3/utils";
 import { etoInProgressPollingDelay, etoNormalPollingDelay } from "./constants";
 import { InvalidETOStateError } from "./errors";
 import {
@@ -59,7 +61,7 @@ import {
   selectInvestorEtoWithCompanyAndContract,
   selectIsEtoAnOffer,
 } from "./selectors";
-import { EEtoAgreementStatus, EETOStateOnChain, TEtoWithCompanyAndContract } from "./types";
+import { EEtoAgreementStatus, EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "./types";
 import {
   convertToEtoTotalInvestment,
   convertToStateStartDate,
@@ -177,9 +179,10 @@ function* loadEto(
   }
 }
 
-export function* loadEtoContract(
+export function* getEtoContract(
   { contractsService, logger }: TGlobalDependencies,
-  { etoId, previewCode, state }: TEtoSpecsData,
+  etoId: string,
+  state: EEtoState,
 ): Iterator<any> {
   if (state !== EEtoState.ON_CHAIN) {
     logger.error("Invalid eto state", new InvalidETOStateError(state, EEtoState.ON_CHAIN), {
@@ -214,25 +217,31 @@ export function* loadEtoContract(
       etoContract.etoTerms,
     ]);
 
-    yield put(
-      actions.eto.setEtoDataFromContract(previewCode, {
-        equityTokenAddress,
-        etoTermsAddress,
-        timedState: timedStateRaw.toNumber(),
-        totalInvestment: convertToEtoTotalInvestment(
-          totalInvestmentRaw,
-          euroTokenBalance,
-          etherTokenBalance,
-        ),
-        startOfStates: convertToStateStartDate(startOfStatesRaw),
-      }),
-    );
+    return {
+      equityTokenAddress,
+      etoTermsAddress,
+      timedState: timedStateRaw.toNumber(),
+      totalInvestment: convertToEtoTotalInvestment(
+        totalInvestmentRaw,
+        euroTokenBalance,
+        etherTokenBalance,
+      ),
+      startOfStates: convertToStateStartDate(startOfStatesRaw),
+    };
   } catch (e) {
     logger.error("ETO contract data could not be loaded", e, { etoId: etoId });
 
     // rethrow original error so it can be handled by caller saga
     throw e;
   }
+}
+
+export function* loadEtoContract(
+  _: TGlobalDependencies,
+  { etoId, previewCode, state }: TEtoSpecsData,
+): Iterator<any> {
+  const contract = yield neuCall(getEtoContract, etoId, state);
+  yield put(actions.eto.setEtoDataFromContract(previewCode, contract));
 }
 
 function* watchEtoSetAction(
@@ -297,7 +306,7 @@ function* calculateNextStateDelay({ logger }: TGlobalDependencies, previewCode: 
 
 export function* delayEtoRefresh(
   _: TGlobalDependencies,
-  eto: TEtoWithCompanyAndContract,
+  eto: TEtoWithCompanyAndContractReadonly,
 ): Iterator<any> {
   const strategies: Dictionary<Promise<true>> = {
     default: delay(etoNormalPollingDelay),
@@ -321,7 +330,7 @@ export function* delayEtoRefresh(
 }
 
 export function* watchEto(_: TGlobalDependencies, previewCode: string): any {
-  const eto: TEtoWithCompanyAndContract = yield select((state: IAppState) =>
+  const eto: TEtoWithCompanyAndContractReadonly = yield select((state: IAppState) =>
     selectInvestorEtoWithCompanyAndContract(state, previewCode),
   );
 
@@ -473,9 +482,7 @@ function* downloadDocument(
 
     if (denied) {
       logger.info(
-        `Confidentiality agreement acceptance denied of '${
-          document.documentType
-        }' document for eto '${eto.previewCode}'`,
+        `Confidentiality agreement acceptance denied of '${document.documentType}' document for eto '${eto.previewCode}'`,
       );
     }
 
@@ -524,8 +531,16 @@ function* loadTokensData({ contractsService }: TGlobalDependencies): any {
       tokensPerShare: equityToken.tokensPerShare,
       tokenController: equityToken.tokenController,
     });
-
     const controllerGovernance = yield contractsService.getControllerGovernance(tokenController);
+    const tokenControllerMe: ITokenController = yield contractsService.getTokenController(
+      tokenController,
+    );
+    const canTransferToken = yield tokenControllerMe.onTransfer(
+      walletAddress,
+      walletAddress,
+      generateRandomEthereumAddress(),
+      new BigNumber("1"),
+    );
 
     let [
       shareCapital,
@@ -564,6 +579,7 @@ function* loadTokensData({ contractsService }: TGlobalDependencies): any {
         totalCompanyShares: shareCapital.toString(),
         companyValuationEurUlps: companyValuationEurUlps.toString(),
         tokenPrice: tokenPrice.toString(),
+        canTransferToken,
       }),
     );
   }
@@ -649,7 +665,7 @@ function* verifyEtoAccess(
 function* loadAgreementStatus(
   { logger }: TGlobalDependencies,
   agreementType: EAgreementType,
-  eto: TEtoWithCompanyAndContract,
+  eto: TEtoWithCompanyAndContractReadonly,
 ): Iterator<any> {
   try {
     if (!isOnChain(eto)) {
@@ -688,7 +704,7 @@ function* loadAgreementStatus(
 
 function* loadISHAStatus(
   { logger }: TGlobalDependencies,
-  eto: TEtoWithCompanyAndContract,
+  eto: TEtoWithCompanyAndContractReadonly,
 ): Iterator<any> {
   try {
     if (!isOnChain(eto)) {
@@ -707,31 +723,68 @@ function* loadISHAStatus(
   }
 }
 
-function* loadAgreementsStatus(
+export function* issuerFlowLoadAgreementsStatus(
   _: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.eto.loadEtoAgreementsStatus>,
 ): Iterator<any> {
-  const statuses: Dictionary<EEtoAgreementStatus, EAgreementType> = yield all({
-    [EAgreementType.THA]: neuCall(loadAgreementStatus, EAgreementType.THA, payload.eto),
-    [EAgreementType.RAAA]: neuCall(loadAgreementStatus, EAgreementType.RAAA, payload.eto),
-    [EAgreementType.ISHA]: neuCall(loadISHAStatus, payload.eto),
-  });
+  const statuses: Dictionary<EEtoAgreementStatus, EAgreementType> = yield neuCall(
+    loadAgreementsStatus,
+    payload.eto,
+  );
 
   yield put(actions.eto.setAgreementsStatus(payload.eto.previewCode, statuses));
 }
 
+export function* loadAgreementsStatus(
+  _: TGlobalDependencies,
+  eto: TEtoWithCompanyAndContractReadonly,
+): Iterator<any> {
+  return yield all({
+    [EAgreementType.THA]: neuCall(loadAgreementStatus, EAgreementType.THA, eto),
+    [EAgreementType.RAAA]: neuCall(loadAgreementStatus, EAgreementType.RAAA, eto),
+    [EAgreementType.ISHA]: neuCall(loadISHAStatus, eto),
+  });
+}
+
+export function* issuerFlowLoadInvestmentAgreement(
+  _: TGlobalDependencies,
+  {
+    payload: { etoId, previewCode },
+  }: TActionFromCreator<typeof actions.eto.loadSignedInvestmentAgreement>,
+): Iterator<any> {
+  const url = yield neuCall(loadInvestmentAgreement, etoId);
+
+  yield put(actions.eto.setInvestmentAgreementHash(previewCode, url));
+}
+
 export function* loadInvestmentAgreement(
   { contractsService }: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.eto.loadSignedInvestmentAgreement>,
+  etoId: string,
 ): Iterator<any> {
-  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(
-    action.payload.eto.etoId,
-  );
+  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
   const url: string = yield contract.signedInvestmentAgreementUrl;
 
-  const parsedUrl = url === "" ? undefined : url;
+  return url === "" ? undefined : url;
+}
 
-  yield put(actions.eto.setInvestmentAgreementHash(action.payload.eto.previewCode, parsedUrl));
+export function* loadCapitalIncrease(
+  { contractsService }: TGlobalDependencies,
+  { payload }: TActionFromCreator<typeof actions.eto.loadCapitalIncrease>,
+): Iterator<any> {
+  const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(payload.etoId);
+
+  const [, capitalIncrease]: [
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+    BigNumber,
+  ] = yield contract.contributionSummary();
+
+  return capitalIncrease.toString();
 }
 
 export function* loadEtoGeneralTokenDiscounts(
@@ -777,13 +830,17 @@ export function* etoSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.eto.loadEto, loadEto);
   yield fork(neuTakeEvery, actions.eto.loadEtos, loadEtos);
   yield fork(neuTakeEvery, actions.eto.loadTokensData, loadTokensData);
-  yield fork(neuTakeEvery, actions.eto.loadEtoAgreementsStatus, loadAgreementsStatus);
+  yield fork(neuTakeEvery, actions.eto.loadEtoAgreementsStatus, issuerFlowLoadAgreementsStatus);
   yield fork(neuTakeLatest, actions.eto.loadTokenTerms, loadEtoGeneralTokenDiscounts);
 
   yield fork(neuTakeEvery, actions.eto.downloadEtoDocument, downloadDocument);
   yield fork(neuTakeEvery, actions.eto.downloadEtoTemplateByType, downloadTemplateByType);
 
-  yield fork(neuTakeLatest, actions.eto.loadSignedInvestmentAgreement, loadInvestmentAgreement);
+  yield fork(
+    neuTakeLatest,
+    actions.eto.loadSignedInvestmentAgreement,
+    issuerFlowLoadInvestmentAgreement,
+  );
 
   yield fork(neuTakeLatest, actions.eto.verifyEtoAccess, verifyEtoAccess);
   yield fork(neuTakeLatest, actions.eto.ensureEtoJurisdiction, ensureEtoJurisdiction);

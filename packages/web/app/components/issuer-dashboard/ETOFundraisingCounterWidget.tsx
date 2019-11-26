@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EEtoState } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { InvalidETOStateError } from "../../modules/eto/errors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../../modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { isOnChain } from "../../modules/eto/utils";
 import { nonNullable } from "../../utils/nonNullable";
 import { DashboardWidget } from "../shared/dashboard-widget/DashboardWidget";
@@ -11,7 +11,7 @@ import { IPanelProps } from "../shared/Panel";
 import { TimeLeftWithUTC } from "../shared/TimeLeftWithUTC";
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface IFundraisingProps extends IPanelProps {

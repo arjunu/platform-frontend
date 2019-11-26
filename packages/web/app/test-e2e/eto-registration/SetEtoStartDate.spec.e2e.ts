@@ -38,8 +38,10 @@ const setStartDay = (startDate: moment.Moment, textToCheck: RegExp) => {
     .should("be.enabled");
 };
 
-describe("Eto start date setup", () => {
+describe("Eto start date setup", function(): void {
+  this.retries(2);
   it("sets the date", () => {
+    // enable after
     loginFixtureAccount("ISSUER_SETUP", {
       kyc: "business",
     }).then(() => {
@@ -68,10 +70,7 @@ describe("Eto start date setup", () => {
       setStartDay(tomorrowStartDate, tomorrowStartDateText);
 
       // should not be allowed to set a date that is too soon
-      const falseDate = newStartDate
-        .clone()
-        .subtract(19, "days")
-        .subtract(8, "hours");
+      const falseDate = newStartDate.clone().subtract(20, "days");
 
       cy.get(tid("eto-settings-start-date-open-date-picker"))
         .click()

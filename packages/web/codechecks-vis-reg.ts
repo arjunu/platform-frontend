@@ -19,9 +19,7 @@ async function visReg(): Promise<void> {
     const reportData = require("./.reg/out.json");
     await codechecks.success({
       name: "Visual regression for Storybook",
-      shortDescription: `Changed: ${reportData.failedItems.length}, New: ${
-        reportData.newItems.length
-      }, Deleted: ${reportData.deletedItems.length}`,
+      shortDescription: `Changed: ${reportData.failedItems.length}, New: ${reportData.newItems.length}, Deleted: ${reportData.deletedItems.length}`,
       detailsUrl: codechecks.getArtifactLink("/storybook-vis-reg-report/index.html"),
     });
   }

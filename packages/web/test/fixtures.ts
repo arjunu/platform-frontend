@@ -23,13 +23,14 @@ import {
   EOfferingDocumentType,
   EProductName,
 } from "../app/lib/api/eto/EtoProductsApi.interfaces";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../app/modules/eto/types";
+import { EETOStateOnChain } from "../app/modules/eto/types";
 import {
   EthereumAddress,
   EthereumAddressWithChecksum,
   EthereumNetworkId,
 } from "../app/utils/opaque-types/types";
 import { toEquityTokenSymbol } from "../app/utils/opaque-types/utils";
+import { TEtoWithCompanyAndContractReadonly } from "./../app/modules/eto/types";
 
 import * as companyBanner from "./assets/company-banner.png";
 import * as companyPreviewCardBanner from "./assets/company-preview-banner.png";
@@ -794,7 +795,7 @@ export const testProduct = {
   dateToWhitelistMinDuration: 7 * 24 * 60 * 60,
 };
 
-export const testEto: TEtoWithCompanyAndContract = {
+export const testEto: TEtoWithCompanyAndContractReadonly = {
   authorizedCapital: undefined,
   newSharesToIssueInFixedSlots: undefined,
   canEnableBookbuilding: false,

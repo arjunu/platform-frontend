@@ -2,7 +2,13 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight } from "../../shared/buttons/Button";
+import {
+  Button,
+  ButtonSize,
+  ButtonWidth,
+  EButtonLayout,
+  EButtonTheme,
+} from "../../shared/buttons/Button";
 import { DashboardWidget } from "../../shared/dashboard-widget/DashboardWidget";
 
 type TExternalProps = {
@@ -17,17 +23,22 @@ const BookBuildingNotActiveWidget: React.FunctionComponent<TExternalProps> = ({
   startBookBuilding,
 }) => (
   <DashboardWidget
-    title={<FormattedMessage id="settings.book-building-widget.start-book-building" />}
-    text={<FormattedMessage id="settings.book-building-widget.proposal-accepted" />}
+    title={<FormattedMessage id="settings.book-building-widget.enable-whitelist" />}
+    text={<FormattedMessage id="settings.book-building-widget.whitelist-description" />}
     columnSpan={columnSpan}
   >
     <div className="m-auto">
-      <ButtonArrowRight
+      <Button
+        layout={EButtonLayout.SECONDARY}
+        theme={EButtonTheme.DARK}
+        type="button"
+        size={ButtonSize.NORMAL}
+        width={ButtonWidth.NORMAL}
         onClick={() => startBookBuilding(etoId)}
         data-test-id="eto-flow-start-bookbuilding"
       >
-        <FormattedMessage id="settings.book-building-widget.start-book-building" />
-      </ButtonArrowRight>
+        <FormattedMessage id="settings.book-building-widget.enable-whitelisting-button" />
+      </Button>
     </div>
   </DashboardWidget>
 );

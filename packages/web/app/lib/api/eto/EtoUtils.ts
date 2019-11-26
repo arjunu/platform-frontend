@@ -1,3 +1,5 @@
+import { divideBigNumbers, multiplyBigNumbers } from "../../../utils/BigNumberUtils";
+import { convertFromUlps } from "../../../utils/NumberUtils";
 import { TPartialEtoSpecData } from "./EtoApi.interfaces.unsafe";
 
 export const calcInvestmentAmount = (eto: TPartialEtoSpecData, sharePrice: number | undefined) => ({
@@ -140,4 +142,21 @@ const calcMaxInvestmentAmount = (sharePrice = 0, shares = 0) => {
     return 0;
   }
   return shares * sharePrice;
+};
+
+export const calculateTarget = (
+  sharesToIssue: string,
+  equityTokensPerShare: string,
+  totalTokensInt: string,
+  totalEquivEurUlps: string,
+) => {
+  if (totalTokensInt === "0" || totalEquivEurUlps === "0") {
+    return undefined;
+  }
+
+  const totalEquivEur = convertFromUlps(totalEquivEurUlps);
+
+  const averageTokenPrice = divideBigNumbers(totalEquivEur, totalTokensInt);
+  const targetTokens = multiplyBigNumbers([sharesToIssue, equityTokensPerShare]);
+  return multiplyBigNumbers([averageTokenPrice, targetTokens]);
 };

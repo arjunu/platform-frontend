@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { TEtoWithCompanyAndContract } from "../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { Container, EColumnSpan, EContainerType } from "../../layouts/Container";
 import { Accordion, AccordionElement, AccordionField } from "../../shared/Accordion";
 import { ChartDoughnutLazy } from "../../shared/charts/ChartDoughnutLazy";
@@ -12,9 +12,9 @@ import { CHART_COLORS } from "../shared/EtoView";
 
 import * as styles from "./PublicView.module.scss";
 
-const EtoAccordionElements: React.FunctionComponent<{ eto: TEtoWithCompanyAndContract }> = ({
-  eto,
-}) => {
+const EtoAccordionElements: React.FunctionComponent<{
+  eto: TEtoWithCompanyAndContractReadonly;
+}> = ({ eto }) => {
   const {
     keyBenefitsForInvestors,
     targetMarketAndIndustry,

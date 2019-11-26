@@ -11,13 +11,13 @@ import { addBigNumbers, compareBigNumbers, subtractBigNumbers } from "../../util
 import { nonNullable } from "../../utils/nonNullable";
 import { convertToUlps } from "../../utils/NumberUtils";
 import { extractNumber } from "../../utils/StringUtils";
-import { actions, TAction } from "../actions";
+import { actions, TActionFromCreator } from "../actions";
 import {
   selectEtoById,
   selectEtoOnChainStateById,
   selectEtoWithCompanyAndContractById,
 } from "../eto/selectors";
-import { EETOStateOnChain, TEtoWithCompanyAndContract } from "../eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../eto/types";
 import { selectStandardGasPriceWithOverHead } from "../gas/selectors";
 import { loadComputedContributionFromContract } from "../investor-portfolio/sagas";
 import {
@@ -50,8 +50,9 @@ import {
 } from "./selectors";
 import { getCurrencyByInvestmentType } from "./utils";
 
-function* processCurrencyValue(action: TAction): any {
-  if (action.type !== "INVESTMENT_FLOW_SUBMIT_INVESTMENT_VALUE") return;
+function* processCurrencyValue(
+  action: TActionFromCreator<typeof actions.investmentFlow.submitCurrencyValue>,
+): Iterator<any> {
   const state: IAppState = yield select();
 
   const value = action.payload.value && convertToUlps(extractNumber(action.payload.value));
@@ -227,10 +228,11 @@ function* validateAndCalculateInputs({ contractsService }: TGlobalDependencies):
   }
 }
 
-function* start(action: TAction): any {
-  if (action.type !== "INVESTMENT_FLOW_START") return;
+function* start(
+  action: TActionFromCreator<typeof actions.investmentFlow.startInvestment>,
+): Iterator<any> {
   const etoId = action.payload.etoId;
-  const eto: TEtoWithCompanyAndContract = nonNullable(
+  const eto: TEtoWithCompanyAndContractReadonly = nonNullable(
     yield select((state: IAppState) => selectEtoWithCompanyAndContractById(state, etoId)),
   );
 
@@ -344,11 +346,11 @@ function* stop(): any {
 }
 
 export function* investmentFlowSagas(): any {
-  yield takeEvery("INVESTMENT_FLOW_SUBMIT_INVESTMENT_VALUE", processCurrencyValue);
-  yield takeLatest("INVESTMENT_FLOW_VALIDATE_INPUTS", neuCall, validateAndCalculateInputs);
-  yield takeEvery("INVESTMENT_FLOW_START", start);
+  yield takeEvery(actions.investmentFlow.submitCurrencyValue, processCurrencyValue);
+  yield takeLatest(actions.investmentFlow.validateInputs, neuCall, validateAndCalculateInputs);
+  yield takeEvery(actions.investmentFlow.startInvestment, start);
   yield takeEvery("TOKEN_PRICE_SAVE", recalculateCurrencies);
-  yield takeEvery("INVESTMENT_FLOW_SELECT_INVESTMENT_TYPE", resetTxDataAndValidations);
-  yield takeEvery("INVESTMENT_FLOW_INVEST_ENTIRE_BALANCE", investEntireBalance);
+  yield takeEvery(actions.investmentFlow.selectInvestmentType, resetTxDataAndValidations);
+  yield takeEvery(actions.investmentFlow.investEntireBalance, investEntireBalance);
   yield takeEvery("@@router/LOCATION_CHANGE", stop); // stop investment if some link is clicked
 }

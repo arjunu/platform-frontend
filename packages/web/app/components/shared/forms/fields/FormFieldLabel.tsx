@@ -1,49 +1,31 @@
-import * as cn from "classnames";
 import { connect } from "formik";
 import * as React from "react";
+import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, shouldUpdate } from "recompose";
 
 import { CommonHtmlProps, TFormikConnect } from "../../../../types";
+import { FormLabel } from "../layouts/FormLabel";
 import { isFieldRequired } from "./utils.unsafe";
 
 import * as styles from "./FormFieldLabel.module.scss";
 
-export type FormLabelExternalProps = {
-  for: string;
-  inheritFont?: boolean;
-};
-
-export type FormFieldLabelExternalProps = {
+type FormFieldLabelExternalProps = {
   name: string;
   inheritFont?: boolean;
 };
 
-const generateLabelId = (name: string) => `${name}-label`;
-
-const FormLabel: React.FunctionComponent<FormLabelExternalProps & CommonHtmlProps> = ({
-  for: htmlFor,
-  children,
-  className,
-  inheritFont,
-}) => (
-  <label
-    htmlFor={htmlFor}
-    id={generateLabelId(htmlFor)}
-    className={cn(styles.formLabel, className, { [styles.inheritFont]: inheritFont })}
-  >
-    {children}
-  </label>
-);
-
-const FormFieldLabelLayout: React.FunctionComponent<
-  CommonHtmlProps & FormFieldLabelExternalProps & TFormikConnect
-> = ({ children, name, formik, inheritFont, ...rawProps }) => {
+const FormFieldLabelLayout: React.FunctionComponent<CommonHtmlProps &
+  FormFieldLabelExternalProps &
+  TFormikConnect> = ({ children, name, formik, inheritFont, ...rawProps }) => {
   if (formik.validationSchema) {
     return (
       <FormLabel for={name} inheritFont={inheritFont} {...rawProps}>
         {children}
-        {isFieldRequired(formik.validationSchema, name, formik) && (
-          <span aria-hidden="true"> *</span>
+        {!isFieldRequired(formik.validationSchema, name, formik) && (
+          <span className={styles.optionalField}>
+            {" "}
+            (<FormattedMessage id="form.label.optional" />)
+          </span>
         )}
       </FormLabel>
     );
@@ -69,4 +51,4 @@ const FormFieldLabel = compose<
   ),
 )(FormFieldLabelLayout);
 
-export { FormFieldLabel, FormLabel, generateLabelId };
+export { FormFieldLabel };

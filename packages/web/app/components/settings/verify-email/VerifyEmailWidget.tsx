@@ -225,9 +225,9 @@ const UnVerifiedUser: React.FunctionComponent<{
   </section>
 );
 
-export const VerifyEmailWidgetBase: React.FunctionComponent<
-  IStateProps & IDispatchProps & IExternalProps
-> = ({
+export const VerifyEmailWidgetBase: React.FunctionComponent<IStateProps &
+  IDispatchProps &
+  IExternalProps> = ({
   isUserEmailVerified,
   isThereUnverifiedEmail,
   resendEmail,

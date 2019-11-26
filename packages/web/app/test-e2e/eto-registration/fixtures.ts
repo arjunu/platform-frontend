@@ -99,9 +99,9 @@ export const investmentTermsForm: TFormFixture = {
 // investment terms expected values
 export const investmentTermsRequiredFormExpectedResult: TFormFixtureExpectedValues = {
   shareCapitalCurrencyCode: "EUR",
-  newShareNominalValue: "150.00",
-  newShareNominalValueEur: "150.00",
-  preMoneyValuationEur: "1 000 000.00",
+  newShareNominalValue: "150",
+  newShareNominalValueEur: "150",
+  preMoneyValuationEur: "1 000 000",
   existingShareCapital: "1 253 862",
   minimumNewSharesToIssue: "10 000",
   newSharesToIssue: "20 000",

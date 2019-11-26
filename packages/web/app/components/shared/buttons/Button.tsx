@@ -67,9 +67,11 @@ export interface IButtonProps extends TGeneralButton, CommonHtmlProps {
   iconStyle?: string;
 }
 
-const Button: React.ForwardRefExoticComponent<
-  { children?: React.ReactNode } & IButtonProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef<HTMLButtonElement, IButtonProps & TDataTestId>(
+const Button: React.ForwardRefExoticComponent<{ children?: React.ReactNode } & IButtonProps &
+  React.RefAttributes<HTMLButtonElement>> = React.forwardRef<
+  HTMLButtonElement,
+  IButtonProps & TDataTestId
+>(
   (
     {
       children,

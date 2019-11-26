@@ -20,9 +20,8 @@ export const selectConnectedWeb3State = (state: IWeb3State): IConnectedWeb3State
 const selectEthereumAddress = (state: IAppState): EthereumAddress =>
   state.web3.connected ? state.web3.wallet.address : state.web3.previousConnectedWallet!.address;
 
-export const selectEthereumAddressWithChecksum = createSelector(
-  selectEthereumAddress,
-  address => makeEthereumAddressChecksummed(address),
+export const selectEthereumAddressWithChecksum = createSelector(selectEthereumAddress, address =>
+  makeEthereumAddressChecksummed(address),
 );
 
 export const selectWalletPrivateData = (state: IWeb3State): IWalletPrivateData | undefined =>
@@ -59,8 +58,8 @@ export const selectWalletSubType = (state: IWeb3State): EWalletSubType | undefin
   state.connected
     ? (state.wallet.walletType === EWalletType.BROWSER && state.wallet.walletSubType) || undefined
     : (state.previousConnectedWallet &&
-        (state.previousConnectedWallet.walletType === EWalletType.BROWSER &&
-          state.previousConnectedWallet.walletSubType)) ||
+        state.previousConnectedWallet.walletType === EWalletType.BROWSER &&
+        state.previousConnectedWallet.walletSubType) ||
       undefined;
 
 export const selectWalletType = (state: IWeb3State): EWalletType | undefined =>
@@ -146,40 +145,34 @@ export const selectLightWalletFromQueryString = createSelector(
   },
 );
 
-export const selectActivationCodeFromQueryString = createSelector(
-  selectRouter,
-  state => {
-    if (!state.location) {
-      return undefined;
-    }
+export const selectActivationCodeFromQueryString = createSelector(selectRouter, state => {
+  if (!state.location) {
+    return undefined;
+  }
 
-    const { redirect } = queryString.parse(state.location.search);
-    const verificationCode =
-      getCodeFromQueryString(state.location.search) ||
-      (isString(redirect) ? getCodeFromQueryString(redirect) : undefined);
+  const { redirect } = queryString.parse(state.location.search);
+  const verificationCode =
+    getCodeFromQueryString(state.location.search) ||
+    (isString(redirect) ? getCodeFromQueryString(redirect) : undefined);
 
-    if (!verificationCode) {
-      return undefined;
-    }
+  if (!verificationCode) {
+    return undefined;
+  }
 
-    return {
-      verificationCode,
-    };
-  },
-);
+  return {
+    verificationCode,
+  };
+});
 
 export const selectLightWalletEmailFromQueryString = createSelector(
   selectLightWalletFromQueryString,
   lightWallet => lightWallet && lightWallet.email,
 );
 
-export const selectEmailFromQueryString = createSelector(
-  selectRouter,
-  (state: RouterState) => {
-    if (!state.location) {
-      return undefined;
-    }
+export const selectEmailFromQueryString = createSelector(selectRouter, (state: RouterState) => {
+  if (!state.location) {
+    return undefined;
+  }
 
-    return getEmailFromQueryString(state.location.search);
-  },
-);
+  return getEmailFromQueryString(state.location.search);
+});

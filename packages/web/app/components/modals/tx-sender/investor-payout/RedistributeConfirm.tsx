@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { actions } from "../../../../modules/actions";
 import { appConnect } from "../../../../store";
 import { Button, ButtonArrowRight, EButtonLayout } from "../../../shared/buttons";
-import { Message } from "../../Message";
+import { Message } from "../../message/Message";
 
 import * as redistributeIcon from "../../../../assets/img/redistribute.svg";
 

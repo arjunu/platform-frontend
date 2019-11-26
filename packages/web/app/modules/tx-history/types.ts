@@ -142,7 +142,8 @@ export type TTxHistory = (
   | TNEURRedeemPendingTransfer
   | TNEURRedeemCompletedTransfer
   | TNEURDestroyTransfer
-  | EtoTokensClaimTransfer) &
+  | EtoTokensClaimTransfer
+) &
   TTxHistoryCommon;
 
 export type TExtractTxHistoryFromType<T extends ETransactionType> = Extract<

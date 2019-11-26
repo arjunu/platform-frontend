@@ -13,6 +13,8 @@ import { ICBMLockedAccount } from "../contracts/ICBMLockedAccount";
 import { IControllerGovernance } from "../contracts/IControllerGovernance";
 import { IdentityRegistry } from "../contracts/IdentityRegistry";
 import { IEquityToken } from "../contracts/IEquityToken";
+import { IERC223Token } from "../contracts/IERC223Token";
+import { ITokenController } from "../contracts/ITokenController";
 import { ITokenExchangeRateOracle } from "../contracts/ITokenExchangeRateOracle";
 import * as knownInterfaces from "../contracts/knownInterfaces.json";
 import { LockedAccount } from "../contracts/LockedAccount";
@@ -20,6 +22,7 @@ import { Neumark } from "../contracts/Neumark";
 import { PlatformTerms } from "../contracts/PlatformTerms";
 import { Universe } from "../contracts/Universe";
 import { ILogger } from "../dependencies/logger";
+import { EthereumAddress } from "./../../utils/opaque-types/types";
 import { Web3Manager } from "./Web3Manager/Web3Manager";
 
 @injectable()
@@ -28,6 +31,7 @@ export class ContractsService {
   private equityTokensCache: { [equityTokenAddress: string]: IEquityToken } = {};
   private etoTermsCache: { [etoTermsId: string]: ETOTerms } = {};
   private controllerGovernanceCache: { [tokenController: string]: IControllerGovernance } = {};
+  private tokenControllerCache: { [tokenController: string]: ITokenController } = {};
   private web3: Web3 | undefined;
 
   public universeContract!: Universe;
@@ -143,6 +147,11 @@ export class ContractsService {
     return contract;
   }
 
+  async getERC223(equityTokenAddress: EthereumAddress): Promise<IERC223Token> {
+    const contract = await this.getEquityToken(equityTokenAddress);
+    return contract as IERC223Token;
+  }
+
   async getEtoTerms(etoTermsAddress: string): Promise<ETOTerms> {
     if (this.etoTermsCache[etoTermsAddress]) return this.etoTermsCache[etoTermsAddress];
 
@@ -158,6 +167,16 @@ export class ContractsService {
 
     const contract = await create(IControllerGovernance, this.web3, controllerAddress);
     this.controllerGovernanceCache[controllerAddress] = contract;
+    return contract;
+  }
+
+  async getTokenController(controllerAddress: EthereumAddress): Promise<ITokenController> {
+    if (this.tokenControllerCache[controllerAddress]) {
+      return this.tokenControllerCache[controllerAddress];
+    }
+
+    const contract = await create(ITokenController, this.web3, controllerAddress);
+    this.tokenControllerCache[controllerAddress] = contract;
     return contract;
   }
 }

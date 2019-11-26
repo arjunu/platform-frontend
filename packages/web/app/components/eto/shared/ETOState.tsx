@@ -6,7 +6,7 @@ import { EEtoState } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import {
   EETOStateOnChain,
   EEtoSubState,
-  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly,
 } from "../../../modules/eto/types";
 import { isComingSoon, isOnChain } from "../../../modules/eto/utils";
 import { CommonHtmlProps, Dictionary, PartialDictionary, TTranslatedString } from "../../../types";
@@ -27,7 +27,7 @@ export enum EProjectStatusLayout {
 }
 
 interface IExternalProps {
-  eto: TEtoWithCompanyAndContract;
+  eto: TEtoWithCompanyAndContractReadonly;
 }
 
 interface ISizeLayoutProps {
@@ -95,7 +95,9 @@ const stateToClassName: Partial<Record<EEtoState | EETOStateOnChain | EEtoSubSta
   [EEtoSubState.COUNTDOWN_TO_PRESALE]: styles.green,
 };
 
-const getState = (eto: TEtoWithCompanyAndContract): EETOStateOnChain | EEtoState | EEtoSubState => {
+const getState = (
+  eto: TEtoWithCompanyAndContractReadonly,
+): EETOStateOnChain | EEtoState | EEtoSubState => {
   if (eto.subState) {
     return eto.subState;
   } else if (isOnChain(eto)) {
@@ -131,9 +133,9 @@ const SuccessEtoState: React.FunctionComponent<ISizeLayoutProps & CommonHtmlProp
   </div>
 );
 
-const ETOIssuerState: React.FunctionComponent<
-  IExternalProps & ISizeLayoutProps & CommonHtmlProps
-> = ({
+const ETOIssuerState: React.FunctionComponent<IExternalProps &
+  ISizeLayoutProps &
+  CommonHtmlProps> = ({
   eto,
   className,
   size = EProjectStatusSize.MEDIUM,
@@ -152,9 +154,9 @@ const ETOIssuerState: React.FunctionComponent<
   );
 };
 
-const ETOInvestorState: React.FunctionComponent<
-  IExternalProps & ISizeLayoutProps & CommonHtmlProps
-> = ({
+const ETOInvestorState: React.FunctionComponent<IExternalProps &
+  ISizeLayoutProps &
+  CommonHtmlProps> = ({
   eto,
   className,
   size = EProjectStatusSize.MEDIUM,
