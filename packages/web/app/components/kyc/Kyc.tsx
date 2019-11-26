@@ -8,7 +8,8 @@ import { selectIsUserEmailVerified } from "../../modules/auth/selectors";
 import {
   selectIsKycFlowBlockedByRegion,
   selectKycIdNowRedirectUrl,
-  selectKycRequestStatus, selectKycRequestType,
+  selectKycRequestStatus,
+  selectKycRequestType,
 } from "../../modules/kyc/selectors";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";

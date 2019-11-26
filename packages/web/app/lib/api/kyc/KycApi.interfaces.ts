@@ -97,6 +97,12 @@ export const KycStatusSchema = YupTS.object({
 
 export type TKycStatus = YupTS.TypeOf<typeof KycStatusSchema>;
 
+export const KycIdNowIdentificationSchema = YupTS.object({
+  redirectUrl: YupTS.string(),
+});
+
+export type TKycIdNowIdentification = YupTS.TypeOf<typeof KycIdNowIdentificationSchema>;
+
 export const KycIndividualDataSchema = KycPersonSchema.concat(
   Yup.object().shape(KycIndividualDataShape),
 );
@@ -180,13 +186,12 @@ export enum EKycRequestStatus {
 
 export interface IKycRequestState {
   status: EKycRequestStatus;
-  redirectUrl?: string;
+  instantIdProvider?: EKycInstantIdProvider;
 }
 
 export const KycRequestStateSchema = Yup.object().shape({
   status: Yup.string().required(),
-  redirectUrl: Yup.string(),
-  type: Yup.string(),
+  instantIdProvider: Yup.string(),
 });
 
 export enum EKycBusinessType {

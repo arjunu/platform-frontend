@@ -11,10 +11,7 @@ import { TBankAccount } from "./types";
 
 export const selectKyc = (state: IAppState) => state.kyc;
 
-export const selectKycStatus = createSelector(
-  selectKyc,
-  kyc => kyc.status,
-);
+export const selectKycStatus = createSelector(selectKyc, kyc => kyc.status);
 
 export const selectIsKycProhibitedRegion = createSelector(
   selectKycStatus,
@@ -61,13 +58,8 @@ export const selectIsKycFlowBlockedByRegion = createSelector(
   (isProhibited, status) => isProhibited && status === EKycRequestStatus.DRAFT,
 );
 
-export const selectKycIdNowRedirectUrl = (state: IAppState): string | undefined => {
-  // if (state.individualRequestState && state.individualRequestState.redirectUrl) {
-  //   return state.individualRequestState.redirectUrl;
-  // }
-
-  return undefined;
-};
+// TODO: Implement
+export const selectKycIdNowRedirectUrl = (): string | undefined => undefined;
 
 export const selectCombinedBeneficialOwnerOwnership = (state: DeepReadonly<IKycState>): number => {
   if (state.beneficialOwners.length === 0) return 0;
@@ -136,27 +128,21 @@ export const selectIndividualAddress = createSelector(
 
 export const selectClaims = (state: IAppState) => state.kyc.claims;
 
-export const selectIsClaimsVerified = createSelector(
-  selectClaims,
-  claims => {
-    if (claims) {
-      return claims.isVerified;
-    }
+export const selectIsClaimsVerified = createSelector(selectClaims, claims => {
+  if (claims) {
+    return claims.isVerified;
+  }
 
-    return false;
-  },
-);
+  return false;
+});
 
-export const selectIsAccountFrozen = createSelector(
-  selectClaims,
-  claims => {
-    if (claims) {
-      return claims.isAccountFrozen;
-    }
+export const selectIsAccountFrozen = createSelector(selectClaims, claims => {
+  if (claims) {
+    return claims.isAccountFrozen;
+  }
 
-    return false;
-  },
-);
+  return false;
+});
 
 export const selectIsUserVerifiedOnBlockchain = (state: IAppState) =>
   selectIsClaimsVerified(state) && !selectIsAccountFrozen(state);

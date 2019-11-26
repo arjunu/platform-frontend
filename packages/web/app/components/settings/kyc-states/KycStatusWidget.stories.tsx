@@ -1,10 +1,8 @@
+import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import {
-  EKycRequestStatus,
-} from "../../../lib/api/kyc/KycApi.interfaces";
-import { EUserType } from "../../../lib/api/users/interfaces";
+import { EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
 import { KycStatusWidgetBase } from "./KycStatusWidget";
 
 const commonProps = {
@@ -15,12 +13,10 @@ const commonProps = {
   isLoading: false,
   error: undefined,
   externalKycUrl: undefined,
-  requestOutsourcedStatus: undefined,
+  instantIdStatus: undefined,
   step: 1,
-  userType: EUserType.INVESTOR,
-  onGoToKycHome: () => {},
-  onGoToDashboard: () => {},
-  cancelInstantId: () => {},
+  onGoToKycHome: action("onGoToKycHome"),
+  onGoToDashboard: action("onGoToDashboard"),
 };
 
 storiesOf("KYC/StatusWidget", module)
@@ -66,17 +62,12 @@ storiesOf("KYC/StatusWidget", module)
     />
   ))
   .add("outsourced", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-    />
+    <KycStatusWidgetBase {...commonProps} requestStatus={EKycRequestStatus.OUTSOURCED} />
   ))
   .add("error", () => (
     <KycStatusWidgetBase
       {...commonProps}
       error="bla bla error"
-      userType={EUserType.INVESTOR}
       requestStatus={EKycRequestStatus.PENDING}
     />
   ))
@@ -84,7 +75,6 @@ storiesOf("KYC/StatusWidget", module)
     <KycStatusWidgetBase
       {...commonProps}
       isLoading={true}
-      userType={EUserType.INVESTOR}
       requestStatus={EKycRequestStatus.PENDING}
     />
   ));

@@ -10,11 +10,13 @@ import {
   IKycLegalRepresentative,
   IKycRequestState,
   KycFileInfoShape,
+  KycIdNowIdentificationSchema,
   KycIndividualDataSchema,
   KycLegalRepresentativeSchema,
   KycRequestStateSchema,
   KycStatusSchema,
   TKycBankTransferPurpose,
+  TKycIdNowIdentification,
   TKycStatus,
 } from "./KycApi.interfaces";
 
@@ -115,11 +117,11 @@ export class KycApi {
     });
   }
 
-  public async startInstantId(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.put<IKycRequestState>({
+  public async startInstantId(): Promise<IHttpResponse<TKycIdNowIdentification>> {
+    return await this.httpClient.put<TKycIdNowIdentification>({
       baseUrl: BASE_PATH,
       url: INSTANT_ID_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
+      responseSchema: KycIdNowIdentificationSchema,
     });
   }
 
