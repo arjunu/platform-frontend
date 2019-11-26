@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import { some } from "lodash";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { match as routerMatch, Route, RouteComponentProps, withRouter } from "react-router";
+import { match as routerMatch, Route } from "react-router";
 import { branch, compose, renderComponent } from "recompose";
 
 import { ETHEREUM_ZERO_ADDRESS } from "../../../config/constants";
@@ -47,6 +47,7 @@ import { DashboardHeading } from "./DashboardHeading";
 import { EtoViewFundraisingStatistics } from "./EtoViewFundraisingStatistics";
 
 import * as styles from "./EtoView.module.scss";
+import { TEtoViewState, TReadyEtoView } from "../../../modules/eto-view/reducer";
 
 export const CHART_COLORS = ["#50e3c2", "#2fb194", "#4a90e2", "#0b0e11", "#394652", "#c4c5c6"];
 export const DEFAULT_CHART_COLOR = "#c4c5c6";
@@ -80,7 +81,7 @@ const EtoViewCampaignOverview: React.FunctionComponent<IProps> = ({ eto, isUserF
     companyNews,
     marketingLinks,
   } = eto.company;
-
+  console.log("----EtoViewCampaignOverview")
   const isTwitterFeedEnabled =
     some<TSocialChannelsType[0]>(
       socialChannels,
@@ -183,10 +184,12 @@ const EtoViewTabsLayout: React.FunctionComponent<IEtoViewTabsState & IEtoViewTab
   match,
 }) => (
   <Container id="eto-view-tabs" columnSpan={EColumnSpan.THREE_COL}>
+    {console.log("-------EtoViewTabsLayout")}
+
     <Tabs
       className="mb-3"
       layoutSize="large"
-      layoutOrnament={false}
+      layoutOrnament={true}
       data-test-id="eto.public-view.campaign-overview"
     >
       <TabContent
@@ -225,18 +228,6 @@ const EtoViewTabs = compose<
   IEtoViewTabsExternalProps & IEtoViewTabsState,
   IEtoViewTabsExternalProps
 >(
-  appConnect<IEtoViewTabsState, {}, IProps>({
-    stateToProps: state => ({
-      isIssuer: selectIsIssuer(state),
-    }),
-  }),
-  branch<IProps & IEtoViewTabsState>(
-    props =>
-      isOnChain(props.eto) &&
-      props.eto.contract.timedState === EETOStateOnChain.Whitelist &&
-      props.eto.subState !== EEtoSubState.COUNTDOWN_TO_PUBLIC_SALE,
-    renderComponent(EtoViewTabsLayout),
-  ),
   branch<IProps & IEtoViewTabsState>(
     props =>
       isOnChain(props.eto) &&
@@ -261,19 +252,13 @@ const EtoViewTabs = compose<
   ),
 )(EtoViewCampaignOverview);
 
-const EtoViewLayout: React.FunctionComponent<IProps & RouteComponentProps<unknown>> = ({
-  eto,
-  publicView,
-  isUserFullyVerified,
-  match,
-}) => {
+const EtoViewInvestorLayout: React.FunctionComponent<TReadyEtoView> = ({eto, isUserFullyVerified, match}) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
-
   return (
     <FieldSchemaProvider value={EtoViewSchema}>
       <PersonProfileModal />
       <WidgetGrid className={styles.etoLayout} data-test-id="eto.public-view">
-        <CoverBanner eto={eto} publicView={publicView} />
+        <CoverBanner eto={eto} publicView={true} />
         <Cover
           companyName={brandName}
           companyOneliner={companyOneliner}
@@ -292,11 +277,11 @@ const EtoViewLayout: React.FunctionComponent<IProps & RouteComponentProps<unknow
           }}
           tags={categories}
         />
-        <EtoOverviewStatus eto={eto} publicView={publicView} isEmbedded={false} />
+        <EtoOverviewStatus eto={eto} publicView={true} isEmbedded={false} />
         <EtoViewTabs
           match={match}
           eto={eto}
-          publicView={publicView}
+          publicView={true}
           isUserFullyVerified={isUserFullyVerified}
         />
       </WidgetGrid>
@@ -304,18 +289,4 @@ const EtoViewLayout: React.FunctionComponent<IProps & RouteComponentProps<unknow
   );
 };
 
-const EtoView = compose<IProps & RouteComponentProps<unknown>, IProps>(
-  withMetaTags<IProps>(({ eto }, intl) => {
-    const requiredDataPresent =
-      eto.company.brandName && eto.equityTokenName && eto.equityTokenSymbol;
-
-    return {
-      title: requiredDataPresent
-        ? `${eto.company.brandName} - ${eto.equityTokenName} (${eto.equityTokenSymbol})`
-        : intl.formatIntlMessage("menu.eto-page"),
-    };
-  }),
-  withRouter,
-)(EtoViewLayout);
-
-export { EtoView, EtoViewLayout };
+export { EtoViewInvestorLayout };

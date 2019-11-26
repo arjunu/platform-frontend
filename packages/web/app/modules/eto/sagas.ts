@@ -61,7 +61,12 @@ import {
   selectInvestorEtoWithCompanyAndContract,
   selectIsEtoAnOffer,
 } from "./selectors";
-import { EEtoAgreementStatus, EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "./types";
+import {
+  EEtoAgreementStatus,
+  EETOStateOnChain,
+  TEtoWithCompanyAndContract,
+  TEtoWithCompanyAndContractReadonly
+} from "./types";
 import {
   convertToEtoTotalInvestment,
   convertToStateStartDate,
@@ -69,6 +74,7 @@ import {
   isRestrictedEto,
   isUserAssociatedWithEto,
 } from "./utils";
+import { loadNomineeEto } from "../nominee-flow/sagas";
 
 function* loadEtoPreview(
   { apiEtoService, notificationCenter, logger }: TGlobalDependencies,
@@ -120,9 +126,9 @@ function* loadEto(
 
 
 function* loadEtoInternal(
-  { apiEtoService  }: TGlobalDependencies,
+  { apiEtoService }: TGlobalDependencies,
   eto: TEtoSpecsData
-){
+) {
   const company: TCompanyEtoData = yield apiEtoService.getCompanyById(eto.companyId);
 
   // Load contract data if eto is already on blockchain
@@ -158,6 +164,19 @@ function* loadEtoInternal(
   yield put(actions.eto.setEto({ eto, company }));
 }
 
+
+export function* loadEtoWithCompanyAndContract(
+  { apiEtoService }: TGlobalDependencies,
+  previewCode: string
+): Iterator<any> {
+
+  const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEtoPreview(previewCode);
+  eto.company = yield apiEtoService.getCompanyById(eto.companyId);
+  const etoWithCompanyAndContract = yield neuCall(loadNomineeEto, eto); //fixme loadNomineeEto
+
+  return etoWithCompanyAndContract
+
+}
 
 export function* getEtoContract(
   { contractsService, logger }: TGlobalDependencies,

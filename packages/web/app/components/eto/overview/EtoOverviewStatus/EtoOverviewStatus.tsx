@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import { EJurisdiction } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
-import { CommonHtmlProps, XOR } from "../../../../types";
+import { CommonHtmlProps } from "../../../../types";
 import { etoPublicViewLink } from "../../../appRouteUtils";
 import { Container, EColumnSpan } from "../../../layouts/Container";
 import { ETOInvestorState, ETOIssuerState } from "../../shared/ETOState";
@@ -16,12 +16,11 @@ import { TagsWidget } from "./TagsWidget";
 
 import * as styles from "./EtoOverviewStatus.module.scss";
 
-type TExternalProps = XOR<
-  {
-    isEmbedded: true;
-  },
-  { isEmbedded: false; url: string }
-> & { eto: TEtoWithCompanyAndContractReadonly; publicView: boolean };
+type TExternalProps = {
+  eto: TEtoWithCompanyAndContractReadonly;
+  publicView: boolean,
+  isEmbedded: boolean
+};
 
 interface IStatusOfEtoProps {
   eto: TEtoWithCompanyAndContractReadonly;

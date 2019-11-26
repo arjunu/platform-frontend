@@ -40,6 +40,7 @@ import { videoModalActions } from "./video-modal/actions";
 import { walletSelectorActions } from "./wallet-selector/actions";
 import { walletActions } from "./wallet/actions";
 import { web3Actions } from "./web3/actions";
+import { etoViewActions } from "./eto-view/actions";
 
 /** You should add new actions also here (with a namespace).*/
 export const actions = {
@@ -67,6 +68,7 @@ export const actions = {
   etoFlow: etoFlowActions,
   etoDocuments: etoDocumentsActions,
   etoNominee: etoNomineeActions,
+  etoView: etoViewActions,
   eto: etoActions,
   bookBuilding: bookBuildingFlowActions,
   formSingleFileUpload: formSingleFileUploadActions,

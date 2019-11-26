@@ -37,6 +37,7 @@ import { EmbeddedWidget } from "./testing/embeded-widget/TestEmbededWidget";
 import { WalletRecoverMain } from "./wallet-selector/wallet-recover/WalletRecoverMain";
 import { WalletSelector } from "./wallet-selector/WalletSelector";
 import { Wallet } from "./wallet/Wallet";
+import { EtoInvestorView } from "./eto/EtoInvestorView";
 
 // TEMPORARY CONSTANTS -------->
 const GREYP_URL = "/greyp";
@@ -61,16 +62,11 @@ export const AppRouter: React.FunctionComponent = () => (
       )}
     />
     {/*<------------------------------- */}
-    {/* routes that are available for all users */}
 
-    <Route
-      path={appRoutes.etoPublicView}
-      render={({ match }) => (
-        <EtoPublicView
-          previewCode={match.params.previewCode}
-          jurisdiction={match.params.jurisdiction}
-        />
-      )}
+    <OnlyAuthorizedRoute
+      path={appRoutes.etoInvestorView}
+      investorComponent={EtoInvestorView}
+      //todo
     />
     {/* Redirect Legacy ETO link to current link */}
     <Route
@@ -112,6 +108,15 @@ export const AppRouter: React.FunctionComponent = () => (
     <OnlyPublicRoute path={appRoutes.register} component={WalletSelector} />
     <OnlyPublicRoute path={appRoutes.login} component={WalletSelector} />
     <OnlyPublicRoute path={appRoutes.restore} component={WalletRecoverMain} />
+    {/*<OnlyPublicRoute*/}
+    {/*  path={appRoutes.etoPublicView}*/}
+    {/*  render={({ match }) => (*/}
+    {/*    <EtoPublicView*/}
+    {/*      previewCode={match.params.previewCode}*/}
+    {/*      jurisdiction={match.params.jurisdiction}*/}
+    {/*    />*/}
+    {/*  )}*/}
+    {/*/>*/}
     {process.env.NF_ISSUERS_ENABLED === "1" && [
       <OnlyPublicRoute
         key={appRoutes.etoLanding}
@@ -178,7 +183,8 @@ export const AppRouter: React.FunctionComponent = () => (
       nomineeComponent={EtoNomineeView}
     />
 
-    {/* common routes for both investors and issuers */}
+    {/* common routes for both investors and issuers and nominees */}
+
     <OnlyAuthorizedRoute
       path={appRoutes.wallet}
       investorComponent={Wallet}

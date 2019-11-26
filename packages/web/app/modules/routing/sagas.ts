@@ -9,6 +9,7 @@ import { actions, TActionFromCreator } from "../actions";
 import { selectIsAuthorized, selectUserType } from "../auth/selectors";
 import { waitForAppInit } from "../init/sagas";
 import { neuCall, neuTakeEvery } from "../sagasUtils";
+import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
 
 function* openInNewWindowSaga(
   _: TGlobalDependencies,
@@ -45,7 +46,7 @@ export function* startRouteBasedSagas(
   );
 
   if (appIsReady && !userIsAuthorized) {
-    // yield neuCall(nomineeRouting, action);
+    // yield neuCall(nonAuthorizedRouting, action);
   }
 
   if (appIsReady && userIsAuthorized && userType === EUserType.INVESTOR) {
@@ -53,7 +54,7 @@ export function* startRouteBasedSagas(
   }
 
   if (appIsReady && userIsAuthorized && userType === EUserType.ISSUER) {
-    // yield neuCall(nomineeRouting, action);
+    // yield neuCall(issuerRouting, action);
   }
 
   if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
@@ -65,8 +66,10 @@ export function* investorRouting(
   _: TGlobalDependencies,
   { payload }: LocationChangeAction,
 ) {
-  if (matchPath(payload.location.pathname, { path: appRoutes.etoPublicView })) {
-    yield console.log("match: ",appRoutes.etoPublicView)
+  const etoInvestorView = yield matchPath<{previewCode:string, jurisdiction:EJurisdiction}>(payload.location.pathname, { path: appRoutes.etoInvestorView });
+  if (etoInvestorView !== null) {
+    const previewCode = etoInvestorView.params.previewCode;
+    yield put(actions.etoView.loadInvestorEtoView(previewCode))
   }
 }
 

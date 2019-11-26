@@ -81,7 +81,7 @@ storiesOf("ETO/EtoOverviewStatus", module)
   .addDecorator(withMockedDate(dummyNow))
   .add("default", () => <EtoOverviewStatus eto={eto} publicView={false} isEmbedded={true} />)
   .add("not public", () => (
-    <EtoOverviewStatus eto={eto} isEmbedded={false} publicView={false} url="eto" />
+    <EtoOverviewStatus eto={eto} isEmbedded={false} publicView={false} />
   ))
   .add("with whitelist discount", () => (
     <EtoOverviewStatus eto={eto} isEmbedded={true} publicView={false} />

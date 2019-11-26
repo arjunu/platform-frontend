@@ -16,6 +16,7 @@ export const appRoutes = {
 
   etoIssuerView: "/eto/view",
 
+  etoInvestorView: "/eto/view/:jurisdiction/:previewCode",
   etoPublicView: "/eto/view/:jurisdiction/:previewCode",
   etoPublicViewById: "/eto/by-id/:jurisdiction/:etoId",
 
