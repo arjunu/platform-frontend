@@ -21,13 +21,14 @@ const issuerProps: React.ComponentProps<typeof DocumentsLayout> = {
   etoDocuments: etoDocuments,
   offeringDocumentType: EOfferingDocumentType.MEMORANDUM,
   generateTemplate: action("generateTemplate"),
-  startDocumentDownload: action("startDocumentDownload"),
   onChainState: EETOStateOnChain.Signing,
   documentsDownloading: {},
   documentsUploading: {},
   documentsGenerated: {},
   transactionPending: false,
+  startDocumentDownload: action("startDocumentDownload"),
   startDocumentRemove: action("startDocumentRemove"),
+  startDocumentUpload: action("startDocumentUpload"),
 };
 
 const nomineeProps: React.ComponentProps<typeof NomineeDocumentsLayout> = {

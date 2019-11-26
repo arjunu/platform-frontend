@@ -12,7 +12,7 @@ const USInvestorMessage: React.FunctionComponent = () => (
       <FormattedMessage
         id="shared-component.eto-overview.is-investor-message"
         values={{
-          breakingLine: <br />,
+          lineBreak: <br />,
         }}
       />
     }

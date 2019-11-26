@@ -1,5 +1,5 @@
 import { assertIssuerDashboard } from "../utils/assertions";
-import { fillForm, uploadSingleFileToField } from "../utils/forms";
+import { fillForm } from "../utils/forms";
 import { goToEtoPreview } from "../utils/navigation";
 import { formField, tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
@@ -76,6 +76,9 @@ describe("Eto Company Information Rich Text Editor", () => {
   it("should allow to add images", () => {
     goToCompanyInformation();
 
+    cy.get(tid("companyPreviewCardBanner.uploaded.remove-confirm")).click();
+    cy.get(tid("companyPreviewCardBanner.uploaded.remove")).click();
+
     fillForm(
       {
         ...aboutFormRequired,
@@ -85,7 +88,10 @@ describe("Eto Company Information Rich Text Editor", () => {
 
     cy.get(formField("companyDescription")).clear();
 
-    uploadSingleFileToField("companyDescription", "example.jpg");
+    cy.get(formField("companyDescription")).within(() => {
+      cy.root().dropFile("example.jpg");
+      cy.get("img").should("exist");
+    });
 
     // TODO: check if it's possible to get editor state and block saving until image is properly uploaded
     cy.wait(3000);

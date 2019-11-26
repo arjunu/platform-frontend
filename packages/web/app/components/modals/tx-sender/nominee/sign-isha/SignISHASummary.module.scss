@@ -1,0 +1,9 @@
+.section-layout {
+  display: grid;
+  grid-gap: 1rem;
+  justify-items: center;
+}
+
+.hash-error {
+  color: $neu-bright-orange;
+}

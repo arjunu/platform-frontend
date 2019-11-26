@@ -27,6 +27,16 @@
     }
   }
 
+  &.size-medium {
+    .heading {
+      @include font-headline-small;
+    }
+
+    .description {
+      @include font-button-small;
+    }
+  }
+
   &.size-huge {
     .heading {
       @include font-headline;

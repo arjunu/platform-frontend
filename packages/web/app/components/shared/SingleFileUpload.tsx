@@ -1,15 +1,19 @@
-import * as cn from "classnames";
 import * as React from "react";
-import Dropzone from "react-dropzone";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { ArrayWithAtLeastOneMember, CommonHtmlProps } from "../../types";
-import { Button, EButtonLayout, EIconPosition } from "./buttons";
+import { ArrayWithAtLeastOneMember, CommonHtmlProps, TTranslatedString } from "../../types";
+import { Dropzone } from "./Dropzone";
+import { DropzoneActionButtons } from "./DropzoneActionButtons";
 import { FormFieldError } from "./forms/fields/FormFieldError";
 import { TAcceptedFileType } from "./forms/fields/utils.unsafe";
 
-import * as uploadIcon from "../../assets/img/inline_icons/upload.svg";
 import * as styles from "./SingleFileUpload.module.scss";
+
+export interface IUploadRequirements {
+  [key: string]: TTranslatedString;
+  dimensions: TTranslatedString;
+  size: TTranslatedString;
+}
 
 interface IProps {
   name: string;
@@ -21,65 +25,80 @@ interface IProps {
   label: string | React.ReactNode;
   onDropFile: (file: File) => void;
   "data-test-id"?: string;
+  onDownload: () => void;
+  onRemove: () => void;
+  uploadRequirements?: IUploadRequirements;
 }
 
-export class SingleFileUpload extends React.Component<IProps & CommonHtmlProps> {
-  onDrop = (accepted: File[]) => accepted[0] && this.props.onDropFile(accepted[0]);
+const SingleFileUploadUploaded: React.FunctionComponent<Pick<
+  IProps,
+  "file" | "onRemove" | "onDownload" | "data-test-id"
+>> = ({ file, onRemove, onDownload, "data-test-id": dataTestId }) => (
+  <div className={styles.fileUploaded}>
+    <img src={file} alt="File uploaded" data-test-id={`${dataTestId}.image`} />
+    <DropzoneActionButtons
+      data-test-id={dataTestId}
+      className={styles.buttons}
+      onRemove={onRemove}
+      onDownload={onDownload}
+    />
+  </div>
+);
 
-  render(): React.ReactNode {
-    const {
-      disabled,
-      acceptedFiles,
-      file,
-      fileUploading,
-      fileFormatInformation,
-      label,
-      className,
-      style,
-    } = this.props;
+export const SingleFileUpload: React.FunctionComponent<IProps & CommonHtmlProps> = ({
+  disabled,
+  acceptedFiles,
+  file,
+  fileUploading,
+  label,
+  className,
+  style,
+  name,
+  onDownload,
+  onRemove,
+  uploadRequirements,
+  onDropFile,
+  "data-test-id": dataTestId,
+}) => {
+  const onDrop = (accepted: File[]) => accepted[0] && onDropFile(accepted[0]);
 
-    const dropzoneInner = fileUploading ? (
-      <div>
-        <FormattedMessage id="shared-component.single-file-upload.uploading" />
+  return (
+    <div className={styles.fileContainer} data-test-id={dataTestId}>
+      {file ? (
+        <SingleFileUploadUploaded
+          file={file}
+          onDownload={onDownload}
+          onRemove={onRemove}
+          data-test-id={`${dataTestId}.uploaded`}
+        />
+      ) : (
+        <Dropzone
+          accept={acceptedFiles}
+          disabled={disabled || fileUploading}
+          onDrop={onDrop}
+          multiple={false}
+          acceptClassName="accept"
+          rejectClassName="reject"
+          disabledClassName="disabled"
+          className={className}
+          style={style}
+          data-test-id={"dropzone"}
+          isUploading={fileUploading}
+          name={name}
+        />
+      )}
+      <div className={styles.uploadRequirements}>
+        <p className={styles.fieldLabel}>{label}</p>
+        {uploadRequirements && (
+          <p>
+            <FormattedMessage
+              id="shared.form.single-file-upload.requirements"
+              values={uploadRequirements}
+            />
+          </p>
+        )}
+        <FormFieldError name={name} className="text-left" />
       </div>
-    ) : (
-      <div>
-        <FormattedMessage id="shared-component.single-file-upload.dropzone-cta" />
-      </div>
-    );
-
-    return (
-      <Dropzone
-        accept={acceptedFiles}
-        disabled={disabled || fileUploading}
-        onDrop={this.onDrop}
-        multiple={false}
-        acceptClassName="accept"
-        rejectClassName="reject"
-        disabledClassName="disabled"
-        className={cn(styles.dropzone, className)}
-        style={style}
-        data-test-id={this.props["data-test-id"]}
-      >
-        <div className={styles.fakeDropzoneArea}>
-          {file !== undefined ? <img src={file} alt="File uploaded" /> : dropzoneInner}
-        </div>
-        <div className={styles.sideBox}>
-          {!disabled && (
-            <>
-              <Button
-                layout={EButtonLayout.GHOST}
-                iconPosition={EIconPosition.ICON_BEFORE}
-                svgIcon={uploadIcon}
-              >
-                {label}
-              </Button>
-              <div className={styles.acceptedFiles}>{fileFormatInformation}</div>
-            </>
-          )}
-          <FormFieldError name={this.props.name} />
-        </div>
-      </Dropzone>
-    );
-  }
-}
+    </div>
+  );
+};

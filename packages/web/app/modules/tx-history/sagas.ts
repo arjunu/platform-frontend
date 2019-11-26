@@ -363,43 +363,48 @@ export function* loadTransactionsHistory({
 
 export function* watchTransactions({ analyticsApi, logger }: TGlobalDependencies): Iterator<any> {
   while (true) {
-    yield delay(TX_POLLING_INTERVAL);
+    try {
+      yield delay(TX_POLLING_INTERVAL);
 
-    const timestampOfLastChange: number | undefined = yield select(selectTimestampOfLastChange);
+      const timestampOfLastChange: number | undefined = yield select(selectTimestampOfLastChange);
 
-    if (timestampOfLastChange === undefined) {
-      logger.error(
-        new Error("Transaction latest version can't be undefined. Stopping transaction polling"),
-      );
-      break;
-    }
+      if (timestampOfLastChange === undefined) {
+        logger.error(
+          new Error("Transaction latest version can't be undefined. Stopping transaction polling"),
+        );
+        break;
+      }
 
-    const {
-      version: newTimestampOfLastChange,
-      transactions,
-      beforeTransaction: lastTransactionId,
-    }: TAnalyticsTransactionsResponse = yield analyticsApi.getUpdatedTransactions(
-      timestampOfLastChange,
-    );
-
-    // check if version is higher than existing and of we have new transactions
-    if (
-      newTimestampOfLastChange !== undefined &&
-      newTimestampOfLastChange > timestampOfLastChange &&
-      transactions.length > 0
-    ) {
-      const processedTransactions: TTxHistory[] = yield neuCall(
-        mapAnalyticsApiTransactionsResponse,
+      const {
+        version: newTimestampOfLastChange,
         transactions,
+        beforeTransaction: lastTransactionId,
+      }: TAnalyticsTransactionsResponse = yield analyticsApi.getUpdatedTransactions(
+        timestampOfLastChange,
       );
 
-      yield put(
-        actions.txHistory.updateTransactions(
-          processedTransactions,
-          lastTransactionId,
-          newTimestampOfLastChange,
-        ),
-      );
+      // check if version is higher than existing and of we have new transactions
+      if (
+        newTimestampOfLastChange !== undefined &&
+        newTimestampOfLastChange > timestampOfLastChange &&
+        transactions.length > 0
+      ) {
+        const processedTransactions: TTxHistory[] = yield neuCall(
+          mapAnalyticsApiTransactionsResponse,
+          transactions,
+        );
+
+        yield put(
+          actions.txHistory.updateTransactions(
+            processedTransactions,
+            lastTransactionId,
+            newTimestampOfLastChange,
+          ),
+        );
+      }
+    } catch (e) {
+      // Log error and continue looping
+      logger.error("Failed to watch for analytics transaction", e);
     }
   }
 }

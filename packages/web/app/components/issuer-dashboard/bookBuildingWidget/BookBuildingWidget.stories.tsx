@@ -16,6 +16,7 @@ const data = {
   minOffsetPeriod: 17345,
   isAuthorized: true,
   investmentCalculatedValues: testEto.investmentCalculatedValues,
+  isInvestor: true,
 };
 
 storiesOf("BookBuildingWidget", module)

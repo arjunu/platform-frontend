@@ -86,6 +86,7 @@ storiesOf("Document/Tiles/uploadable documents", module)
       isFileUploaded={false}
       downloadDocumentStart={() => action("DOWNLOAD")}
       startDocumentRemove={() => action("REMOVE")}
+      onDropFile={() => action("DROP_FILE")}
       documentDownloadLinkInactive={false}
       busy={false}
     />
@@ -98,6 +99,7 @@ storiesOf("Document/Tiles/uploadable documents", module)
       isFileUploaded={false}
       downloadDocumentStart={() => action("DOWNLOAD")}
       startDocumentRemove={() => action("REMOVE")}
+      onDropFile={() => action("DROP_FILE")}
       documentDownloadLinkInactive={false}
       busy={false}
       disabled={true}
@@ -111,6 +113,7 @@ storiesOf("Document/Tiles/uploadable documents", module)
       isFileUploaded={false}
       downloadDocumentStart={() => action("DOWNLOAD")}
       startDocumentRemove={() => action("REMOVE")}
+      onDropFile={() => action("DROP_FILE")}
       documentDownloadLinkInactive={false}
       busy={true}
     />

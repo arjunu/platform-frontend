@@ -10,5 +10,7 @@
 }
 
 .text {
+  @include nds-button-label;
+
   margin-bottom: 0;
 }

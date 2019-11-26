@@ -20,7 +20,7 @@ import { appConnect } from "../../../../store";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import { FormField } from "../../../shared/forms";
 import { FormFieldLabel } from "../../../shared/forms/fields/FormFieldLabel";
-import { FormSingleFileUpload } from "../../../shared/forms/fields/FormSingleFileUpload.unsafe";
+import { FormSingleFileUpload } from "../../../shared/forms/fields/FormSingleFileUpload";
 import { EMimeType } from "../../../shared/forms/fields/utils.unsafe";
 import { EtoFormBase } from "../EtoFormBase";
 import { Section } from "../Shared";
@@ -76,9 +76,11 @@ const EtoEquityTokenInfoComponent: React.FunctionComponent<IProps> = ({
         <FormSingleFileUpload
           label={<FormattedMessage id="eto.form.section.equity-token-information.token-icon" />}
           name="equityTokenImage"
-          acceptedFiles={[EMimeType.PNG, EMimeType.JPG]}
+          acceptedFiles={[EMimeType.JPEG, EMimeType.PNG]}
           fileFormatInformation="*200 x 200px png"
+          uploadRequirements={{ dimensions: "200x200", size: "4MB" }}
           dimensions={{ width: 200, height: 200 }}
+          exactDimensions={true}
           data-test-id="eto-registration-token-logo"
           disabled={readonly}
         />

@@ -23,6 +23,7 @@ export enum EEtoStep {
   ETO_SUSPENDED_FROM_ON_CHAIN = "eto_suspended",
   FILL_INFORMATION_ABOUT_ETO = "fill_information_about_eto",
   SIGN_YOUR_ISHA = "sign_your_isha_agreement",
+  FUNDRAISING_FINISHED = "fundraising_finished",
 }
 
 type TEtoStepArgs = {
@@ -157,6 +158,10 @@ export const selectEtoStep = ({
 
     if (etoOnChainState === EETOStateOnChain.Signing) {
       return EEtoStep.SIGN_YOUR_ISHA;
+    }
+
+    if (etoOnChainState && etoOnChainState > EETOStateOnChain.Signing) {
+      return EEtoStep.FUNDRAISING_FINISHED;
     }
 
     return EEtoStep.FUNDRAISING_IS_LIVE;

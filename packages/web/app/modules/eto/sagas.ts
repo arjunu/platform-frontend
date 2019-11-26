@@ -723,31 +723,48 @@ function* loadISHAStatus(
   }
 }
 
-export function* loadAgreementsStatus(
+export function* issuerFlowLoadAgreementsStatus(
   _: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.eto.loadEtoAgreementsStatus>,
 ): Iterator<any> {
-  const statuses: Dictionary<EEtoAgreementStatus, EAgreementType> = yield all({
-    [EAgreementType.THA]: neuCall(loadAgreementStatus, EAgreementType.THA, payload.eto),
-    [EAgreementType.RAAA]: neuCall(loadAgreementStatus, EAgreementType.RAAA, payload.eto),
-    [EAgreementType.ISHA]: neuCall(loadISHAStatus, payload.eto),
-  });
+  const statuses: Dictionary<EEtoAgreementStatus, EAgreementType> = yield neuCall(
+    loadAgreementsStatus,
+    payload.eto,
+  );
 
   yield put(actions.eto.setAgreementsStatus(payload.eto.previewCode, statuses));
 }
 
-export function* loadInvestmentAgreement(
-  { contractsService }: TGlobalDependencies,
+export function* loadAgreementsStatus(
+  _: TGlobalDependencies,
+  eto: TEtoWithCompanyAndContractReadonly,
+): Iterator<any> {
+  return yield all({
+    [EAgreementType.THA]: neuCall(loadAgreementStatus, EAgreementType.THA, eto),
+    [EAgreementType.RAAA]: neuCall(loadAgreementStatus, EAgreementType.RAAA, eto),
+    [EAgreementType.ISHA]: neuCall(loadISHAStatus, eto),
+  });
+}
+
+export function* issuerFlowLoadInvestmentAgreement(
+  _: TGlobalDependencies,
   {
     payload: { etoId, previewCode },
   }: TActionFromCreator<typeof actions.eto.loadSignedInvestmentAgreement>,
 ): Iterator<any> {
+  const url = yield neuCall(loadInvestmentAgreement, etoId);
+
+  yield put(actions.eto.setInvestmentAgreementHash(previewCode, url));
+}
+
+export function* loadInvestmentAgreement(
+  { contractsService }: TGlobalDependencies,
+  etoId: string,
+): Iterator<any> {
   const contract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
   const url: string = yield contract.signedInvestmentAgreementUrl;
 
-  const parsedUrl = url === "" ? undefined : url;
-
-  yield put(actions.eto.setInvestmentAgreementHash(previewCode, parsedUrl));
+  return url === "" ? undefined : url;
 }
 
 export function* loadCapitalIncrease(
@@ -813,13 +830,17 @@ export function* etoSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.eto.loadEto, loadEto);
   yield fork(neuTakeEvery, actions.eto.loadEtos, loadEtos);
   yield fork(neuTakeEvery, actions.eto.loadTokensData, loadTokensData);
-  yield fork(neuTakeEvery, actions.eto.loadEtoAgreementsStatus, loadAgreementsStatus);
+  yield fork(neuTakeEvery, actions.eto.loadEtoAgreementsStatus, issuerFlowLoadAgreementsStatus);
   yield fork(neuTakeLatest, actions.eto.loadTokenTerms, loadEtoGeneralTokenDiscounts);
 
   yield fork(neuTakeEvery, actions.eto.downloadEtoDocument, downloadDocument);
   yield fork(neuTakeEvery, actions.eto.downloadEtoTemplateByType, downloadTemplateByType);
 
-  yield fork(neuTakeLatest, actions.eto.loadSignedInvestmentAgreement, loadInvestmentAgreement);
+  yield fork(
+    neuTakeLatest,
+    actions.eto.loadSignedInvestmentAgreement,
+    issuerFlowLoadInvestmentAgreement,
+  );
 
   yield fork(neuTakeLatest, actions.eto.verifyEtoAccess, verifyEtoAccess);
   yield fork(neuTakeLatest, actions.eto.ensureEtoJurisdiction, ensureEtoJurisdiction);

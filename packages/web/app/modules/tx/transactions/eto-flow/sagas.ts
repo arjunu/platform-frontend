@@ -141,7 +141,7 @@ function* etoSetDateSaga({ logger }: TGlobalDependencies): Iterator<any> {
 
 function* etoSignInvestmentAgreementSaga(
   { logger }: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.etoFlow.signInvestmentAgreement>,
+  action: TActionFromCreator<typeof actions.etoFlow.issuerSignInvestmentAgreement>,
 ): Iterator<any> {
   try {
     yield txSendSaga({
@@ -164,5 +164,9 @@ function* etoSignInvestmentAgreementSaga(
 
 export const txEtoSetDateSagas = function*(): Iterator<any> {
   yield fork(neuTakeLatest, "TRANSACTIONS_START_ETO_SET_DATE", etoSetDateSaga);
-  yield fork(neuTakeLatest, etoFlowActions.signInvestmentAgreement, etoSignInvestmentAgreementSaga);
+  yield fork(
+    neuTakeLatest,
+    etoFlowActions.issuerSignInvestmentAgreement,
+    etoSignInvestmentAgreementSaga,
+  );
 };

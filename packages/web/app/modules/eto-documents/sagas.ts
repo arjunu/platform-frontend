@@ -242,7 +242,7 @@ function* uploadEtoFile(
 
       // If user does not sign transaction uploadResult is undefined
       if (uploadResult) {
-        yield put(actions.etoFlow.signInvestmentAgreement(eto, uploadResult.ipfsHash));
+        yield put(actions.etoFlow.issuerSignInvestmentAgreement(eto, uploadResult.ipfsHash));
       }
     }
     yield put(actions.etoDocuments.etoUploadDocumentFinish(documentType));

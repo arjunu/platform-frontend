@@ -1,9 +1,14 @@
 .group-wrapper {
+  @include nds-button-label;
+
+  color: $neu-charcoal-grey;
   display: grid;
   grid-template: auto / 50% 50%;
   grid-gap: .1rem;
+  margin-bottom: px-to-rem(14px);
 }
 
 .label {
-  @include font-label;
+  font-weight: 500;
+  text-transform: uppercase;
 }

@@ -11,11 +11,14 @@ import { nonNullable } from "../../../../../utils/nonNullable";
 import { EthereumAddressWithChecksum } from "../../../../../utils/opaque-types/types";
 import { actions } from "../../../../actions";
 import { InvalidETOStateError } from "../../../../eto/errors";
-import { selectSignedInvestmentAgreementHash } from "../../../../eto/selectors";
 import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../../../eto/types";
 import { isOnChain } from "../../../../eto/utils";
 import { selectStandardGasPriceWithOverHead } from "../../../../gas/selectors";
-import { selectActiveNomineeEto } from "../../../../nominee-flow/selectors";
+import {
+  selectActiveNomineeEto,
+  selectNomineeActiveEtoPreviewCode,
+  selectNomineeInvestmentAgreementHash,
+} from "../../../../nominee-flow/selectors";
 import { neuCall, neuTakeLatest } from "../../../../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../../../../web3/selectors";
 import { txSendSaga } from "../../../sender/sagas";
@@ -135,7 +138,7 @@ function* generateSignNomineeInvestmentAgreementTx({
   }
 
   const agreementLink = yield select((state: IAppState) =>
-    selectSignedInvestmentAgreementHash(state, nomineeEto.previewCode),
+    selectNomineeInvestmentAgreementHash(state, nomineeEto.previewCode),
   );
 
   if (agreementLink === undefined) {
@@ -174,6 +177,7 @@ function* generateSignNomineeInvestmentAgreementTx({
 function* nomineeSignInvestmentAgreementGenerator(_: TGlobalDependencies): Iterator<any> {
   const generatedTxDetails = yield neuCall(generateSignNomineeInvestmentAgreementTx);
   yield put(actions.txSender.setTransactionData(generatedTxDetails));
+
   yield put(actions.txSender.txSenderContinueToSummary<ETxSenderType.NOMINEE_ISHA_SIGN>(undefined));
 }
 
@@ -213,7 +217,9 @@ function* startNomineeISHASignSaga({ logger }: TGlobalDependencies): Iterator<an
     });
     logger.info("ISHA sign successful");
   } catch (e) {
-    logger.info("ISHA sign cancelled", e);
+    const previewCode = yield select(selectNomineeActiveEtoPreviewCode);
+    yield put(actions.nomineeFlow.nomineeRemoveUploadedIsha(previewCode));
+    logger.info(`ISHA sign cancelled. PreviewCode: ${previewCode}`, e);
   } finally {
     yield put(actions.nomineeFlow.getNomineeDashboardData());
   }

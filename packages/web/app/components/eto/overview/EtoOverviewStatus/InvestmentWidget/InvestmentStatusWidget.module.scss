@@ -1,0 +1,42 @@
+.stats-wrapper-normal,
+.stats-wrapper-small {
+  width: 100%;
+}
+
+.stats-wrapper-normal {
+  margin-bottom: px-to-rem(16px);
+
+  .funded {
+    @include font-headline-small-roboto;
+  }
+}
+
+.stats-wrapper-small {
+  .funded {
+    @include nds-helper-text;
+  }
+}
+
+.funded {
+  font-weight: $font-weight-medium;
+}
+
+.row {
+  @include nds-helper-text;
+
+  color: $neu-charcoal-grey;
+  display: flex;
+  justify-content: space-between;
+  text-transform: none;
+  align-items: baseline;
+
+  & > span {
+    &:first-of-type {
+      text-align: left;
+    }
+
+    &:last-of-type {
+      text-align: right;
+    }
+  }
+}

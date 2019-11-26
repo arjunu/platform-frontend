@@ -1,14 +1,13 @@
 .button {
   $button: &;
 
-  @include font-medium-roboto;
+  @include nds-button-label;
 
   @include media-breakpoint-up(sm) {
     min-width: px-to-rem(140px);
   }
 
   color: $neu-charcoal-grey;
-  font-weight: $font-weight-medium;
   border-radius: $nds-border-radius;
 
   flex-shrink: 0;
@@ -119,7 +118,7 @@
 
   // sizes
   &--small {
-    @include font-small-roboto;
+    @include nds-overline;
 
     text-transform: uppercase;
     min-width: px-to-rem(110px);

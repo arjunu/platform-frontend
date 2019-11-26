@@ -29,7 +29,7 @@ const JurisdicitonDisclaimerModalLayout: React.FunctionComponent<IExternalProps 
         id="jurisdiction-disclaimer.text"
         values={{
           jurisdiction: VALUES[restrictedJurisdiction],
-          breakingLine: <br />,
+          lineBreak: <br />,
         }}
       />
     }

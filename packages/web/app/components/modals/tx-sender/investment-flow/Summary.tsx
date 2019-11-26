@@ -58,7 +58,7 @@ const InvestmentSummaryComponent: React.FunctionComponent<IProps> = ({
         <FormattedMessage
           id="investment-flow.restricted-country-investor"
           values={{
-            breakingLine: <br />,
+            lineBreak: <br />,
           }}
         />
       </ErrorAlert>

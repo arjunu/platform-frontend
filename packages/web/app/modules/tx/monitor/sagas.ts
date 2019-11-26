@@ -102,7 +102,7 @@ export function* markTransactionAsPending(
   return transactionTimestamp;
 }
 
-export function* ensumrePendingTransactionSchemaIsValid(
+export function* ensurePendingTransactionSchemaIsValid(
   pendingTransaction: TxPendingWithMetadata,
 ): Iterator<any> {
   // THIS IS A TEMPORARY PATCH A GENERAL SOLUTION THAT INCLUDES VERSIONING SHOULD COVER ALL TX TYPES
@@ -173,7 +173,7 @@ export function* updatePendingTxs({ apiUserService, logger }: TGlobalDependencie
       } else if (error instanceof OutOfGasError) {
         transactionError = ETransactionErrorType.NOT_ENOUGH_ETHER_FOR_GAS;
       } else {
-        logger.error(new Error("Unknown Pending Tx Error from 'updatePendingTxs'"));
+        logger.error("Unknown Pending Tx Error from 'updatePendingTxs'", error);
       }
 
       apiPendingTx = {
@@ -190,7 +190,7 @@ export function* updatePendingTxs({ apiUserService, logger }: TGlobalDependencie
   try {
     // If there is a pending transaction, check if schema is valid
     if (apiPendingTx.pendingTransaction) {
-      yield ensumrePendingTransactionSchemaIsValid(apiPendingTx.pendingTransaction);
+      yield ensurePendingTransactionSchemaIsValid(apiPendingTx.pendingTransaction);
     }
 
     yield put(actions.txMonitor.setPendingTxs(apiPendingTx));

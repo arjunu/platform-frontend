@@ -1,12 +1,7 @@
 import * as React from "react";
 
 import { normalize } from "../../../../../utils/NumberUtils";
-import {
-  PercentageIndicatorBar,
-  TProgressBarProps,
-} from "../../../../shared/PercentageIndicatorBar";
-
-import * as styles from "./WhitelistProgress.module.scss";
+import { ProgressBarSimple } from "../../../../shared/ProgressBarSimple";
 
 type TProps = {
   investorsCount: number;
@@ -18,19 +13,9 @@ const WhitelistProgress: React.FunctionComponent<TProps> = ({ investorsCount, in
 
   const currentProgressNormalized = getNormalizedValue(investorsCount);
 
-  const progress: TProgressBarProps[] = [
-    { progress: Math.ceil(currentProgressNormalized * 100), theme: "green" },
-  ];
+  const progress = currentProgressNormalized * 100;
 
-  return (
-    <PercentageIndicatorBar
-      className={styles.investmentProgress}
-      layout="narrow"
-      progress={progress}
-      svgGroupStyle={{ transform: `translate(0 4)` }}
-      svgHeight={40}
-    />
-  );
+  return <ProgressBarSimple progress={progress} />;
 };
 
 export { WhitelistProgress };

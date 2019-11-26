@@ -1,14 +1,12 @@
 import { connect as formikConnect, Field, FieldProps } from "formik";
 import * as React from "react";
+import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
 import { actions } from "../../../../modules/actions";
-import { ENotificationModalType } from "../../../../modules/notification-modal/actions";
 import { appConnect } from "../../../../store";
 import { ArrayWithAtLeastOneMember, CommonHtmlProps, TFormikConnect } from "../../../../types";
-import { ImageUploadMessage } from "../../../translatedMessages/messages";
-import { createMessage, TMessage } from "../../../translatedMessages/utils";
-import { SingleFileUpload } from "../../SingleFileUpload";
+import { IUploadRequirements, SingleFileUpload } from "../../SingleFileUpload";
 import {
   generateFileInformationDescription,
   readImageAndGetDimensions,
@@ -23,12 +21,13 @@ interface IOwnProps {
   fileFormatInformation?: string;
   "data-test-id"?: string;
   dimensions?: IImageDimensions;
+  uploadRequirements?: IUploadRequirements;
+  exactDimensions?: boolean;
 }
 
 interface IDispatchProps {
   uploadFile: (file: File, onDone: (error: unknown, fileUrl?: string) => void) => void;
   getFile: (fileUrl: string, onDone: (error: unknown, fileInfo?: unknown) => void) => void;
-  showNotification: (message: TMessage) => void;
 }
 
 interface IState {
@@ -40,6 +39,37 @@ export interface IImageDimensions {
   height: number;
 }
 
+const downloadImage = (url: string) => {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = url.substring(url.lastIndexOf("/") + 1);
+  link.target = "_blank";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const validateExactDimensions = (
+  imageDimensions: IImageDimensions,
+  requiredDimensions: IImageDimensions,
+): boolean =>
+  imageDimensions.width === requiredDimensions.width &&
+  imageDimensions.height === requiredDimensions.height;
+
+const validateBelowDimensions = (
+  imageDimensions: IImageDimensions,
+  requiredDimensions: IImageDimensions,
+): boolean =>
+  imageDimensions.width <= requiredDimensions.width &&
+  imageDimensions.height <= requiredDimensions.height;
+
+const getValidator = (exactDimensions: boolean | undefined) => {
+  if (exactDimensions) {
+    return validateExactDimensions;
+  }
+  return validateBelowDimensions;
+};
+
 export class FormSingleFileUploadComponent extends React.Component<
   IOwnProps & IDispatchProps & CommonHtmlProps & TFormikConnect,
   IState
@@ -48,25 +78,41 @@ export class FormSingleFileUploadComponent extends React.Component<
     isUploading: false,
   };
 
-  private validateImage = async (file: File): Promise<TMessage | null> => {
-    //null for no error -- go style :)
-    if (this.props.dimensions) {
+  private validateImage = async (file: File): Promise<boolean> => {
+    const { name, formik, dimensions, exactDimensions } = this.props;
+    const { setFieldError } = formik;
+
+    formik.setFieldTouched(name, true);
+
+    if (dimensions) {
+      const isValid = getValidator(exactDimensions);
+
       try {
         const readImageResult: IImageDimensions = await readImageAndGetDimensions(file);
-        if (
-          readImageResult.width === this.props.dimensions.width &&
-          readImageResult.height === this.props.dimensions.height
-        ) {
-          return null;
-        } else {
-          return createMessage(ImageUploadMessage.IMAGE_UPLOAD_WRONG_IMAGE_DIMENSIONS);
+        if (!isValid(readImageResult, dimensions)) {
+          setFieldError(
+            name,
+            ((
+              <FormattedMessage id="shared.dropzone.upload.image.errors.wrong-dimensions" />
+            ) as unknown) as string,
+          );
+          return false;
         }
       } catch (e) {
-        return createMessage(ImageUploadMessage.IMAGE_UPLOAD_FAILURE_WITH_DETAILS, e.message);
+        setFieldError(
+          name,
+          ((
+            <FormattedMessage
+              id="shared.dropzone.upload.image.errors.error"
+              values={{ error: e }}
+            />
+          ) as unknown) as string,
+        );
+        return false;
       }
-    } else {
-      return null;
     }
+
+    return true;
   };
 
   private acceptImage = (file: File) => {
@@ -75,11 +121,9 @@ export class FormSingleFileUploadComponent extends React.Component<
   };
 
   private onDropFile = async (file: File) => {
-    const error: TMessage | null = await this.validateImage(file);
-    if (!error) {
+    const isValid = await this.validateImage(file);
+    if (isValid) {
       this.acceptImage(file);
-    } else {
-      this.props.showNotification(error);
     }
   };
 
@@ -114,12 +158,17 @@ export class FormSingleFileUploadComponent extends React.Component<
               this.props.fileFormatInformation ||
               generateFileInformationDescription(this.props.acceptedFiles, this.props.dimensions)
             }
+            uploadRequirements={this.props.uploadRequirements}
             label={label}
             file={field.value}
             onDropFile={this.onDropFile}
             className={className}
             style={style}
             disabled={disabled}
+            onDownload={() => downloadImage(field.value)}
+            onRemove={() => {
+              this.setValue("");
+            }}
           />
         )}
       />
@@ -137,8 +186,6 @@ export const FormSingleFileUpload = compose<
         dispatch(actions.formSingleFileUpload.uploadFileStart(file, onDone)),
       getFile: (fileUrl, onDone) =>
         dispatch(actions.formSingleFileUpload.getFileStart(fileUrl, onDone)),
-      showNotification: (message: TMessage) =>
-        dispatch(actions.notificationModal.notify({ type: ENotificationModalType.ERROR, message })),
     }),
   }),
   formikConnect,

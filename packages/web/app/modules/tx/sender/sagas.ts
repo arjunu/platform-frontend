@@ -285,7 +285,7 @@ function* watchPendingOOOTxSubSaga({ logger }: TGlobalDependencies, txHash: stri
   });
 }
 
-function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
+function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): Iterator<any> {
   logger.info(`Watching for transaction: ${txHash}`);
 
   yield createWatchTxChannel(txHash, function*(
@@ -293,26 +293,38 @@ function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): any {
   ): Iterator<any> {
     while (true) {
       const result: TEventEmitterChannelEvents = yield take(txChannel);
+
       switch (result.type) {
         case EEventEmitterChannelEvents.NEW_BLOCK:
           yield put(actions.txSender.txSenderReportBlock(result.blockId));
           break;
+
         case EEventEmitterChannelEvents.TX_MINED:
           yield neuCall(updatePendingTxs);
           return yield put(actions.txSender.txSenderTxMined());
-        // Non terminal errors - Tx Mining should continue
+
+        /**
+         * NON TERMINAL ERRORS - Tx Mining should continue
+         */
+
         case EEventEmitterChannelEvents.ERROR:
           logger.error("Error while tx watching: ", result.error, { txHash });
           break;
-        // Terminal errors - Tx Mining should exit
+
+        /**
+         * TERMINAL ERRORS - Tx Mining should exit
+         */
+
         case EEventEmitterChannelEvents.CANCELLED:
           logger.warn("Error Transaction was cancelled from transactional node: ", result.error, {
             txHash,
           });
           return yield put(actions.txSender.txSenderError(ETransactionErrorType.TX_WAS_REJECTED));
+
         case EEventEmitterChannelEvents.OUT_OF_GAS:
           logger.warn("Error Transaction out of gas: ", result.error, { txHash });
           return yield put(actions.txSender.txSenderError(ETransactionErrorType.OUT_OF_GAS));
+
         case EEventEmitterChannelEvents.REVERTED_TRANSACTION:
           logger.warn("Error Transaction Reverted: ", result.error, { txHash });
           return yield put(actions.txSender.txSenderError(ETransactionErrorType.REVERTED_TX));

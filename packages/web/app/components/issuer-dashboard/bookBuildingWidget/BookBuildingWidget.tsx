@@ -4,7 +4,7 @@ import { branch, compose, renderComponent, renderNothing, withProps } from "reco
 import { TEtoInvestmentCalculatedValues } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IBookBuildingStats } from "../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
 import { actions } from "../../../modules/actions";
-import { selectIsAuthorized } from "../../../modules/auth/selectors";
+import { selectIsAuthorized, selectIsInvestor } from "../../../modules/auth/selectors";
 import { selectBookbuildingStats } from "../../../modules/bookbuilding-flow/selectors";
 import {
   calculateWhitelistingState,
@@ -57,6 +57,7 @@ interface IStateProps {
   minOffsetPeriod: number;
   isAuthorized: boolean;
   investmentCalculatedValues: TEtoInvestmentCalculatedValues | undefined;
+  isInvestor: boolean;
 }
 
 interface IWithProps {
@@ -155,6 +156,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
         onChainState: selectIssuerEtoOnChainState(state),
         minOffsetPeriod: selectIssuerEtoDateToWhitelistMinDuration(state),
         isAuthorized: selectIsAuthorized(state),
+        isInvestor: selectIsInvestor(state),
       };
     },
     dispatchToProps: dispatch => ({
@@ -196,6 +198,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
       bookBuildingEnabled,
       isAuthorized,
       investmentCalculatedValues,
+      isInvestor,
     }) => {
       if (maxPledges === null || bookBuildingEnabled === undefined) {
         throw new InvariantError(
@@ -213,6 +216,7 @@ export const BookBuildingWidget = compose<TProps, IExternalProps>(
           investmentCalculatedValues,
           investorsCount: bookBuildingStats.investorsCount,
           isAuthorized,
+          isInvestor,
         }),
       };
     },

@@ -53,7 +53,7 @@ const CampaigningActivatedWidgetLayout: React.FunctionComponent<TComponentProps>
           maxPledge={maxPledge}
           pledge={pledge}
           isVerifiedInvestor={isVerifiedInvestor}
-          investorsCount={investorsCount}
+          investorsCount={investorsCount || 0}
           pledgedAmount={pledgedAmount}
         />
       );

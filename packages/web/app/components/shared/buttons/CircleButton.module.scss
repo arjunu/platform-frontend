@@ -1,7 +1,7 @@
 .circle-button {
   $button: &;
 
-  @include font-small-roboto;
+  @include nds-overline;
 
   color: $neu-charcoal-grey;
   border-radius: 16px;

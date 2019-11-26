@@ -6,6 +6,7 @@ import {
   TEtoSpecsData,
 } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
+import { calculateTarget } from "../../lib/api/eto/EtoUtils";
 import { DeepPartial, Overwrite } from "../../types";
 import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
 import { isPastInvestment } from "../investor-portfolio/utils";
@@ -212,4 +213,48 @@ export const isEtoSoftCapReached = (eto: TEtoWithCompanyAndContractReadonly) => 
   }
 
   return false;
+};
+
+export const getEtoEurMinTarget = (eto: TEtoWithCompanyAndContractReadonly) => {
+  if (isOnChain(eto)) {
+    const { minimumNewSharesToIssue, equityTokensPerShare } = eto;
+    const { totalTokensInt, totalEquivEurUlps } = eto.contract.totalInvestment;
+
+    return calculateTarget(
+      minimumNewSharesToIssue.toString(),
+      equityTokensPerShare.toString(),
+      totalTokensInt,
+      totalEquivEurUlps,
+    );
+  }
+
+  return undefined;
+};
+
+export const getEtoEurMaxTarget = (eto: TEtoWithCompanyAndContractReadonly) => {
+  if (isOnChain(eto)) {
+    const { newSharesToIssue, equityTokensPerShare } = eto;
+    const { totalTokensInt, totalEquivEurUlps } = eto.contract.totalInvestment;
+
+    return calculateTarget(
+      newSharesToIssue.toString(),
+      equityTokensPerShare.toString(),
+      totalTokensInt,
+      totalEquivEurUlps,
+    );
+  }
+
+  return undefined;
+};
+
+export const getEtoNextStateStartDate = (eto: TEtoWithCompanyAndContractReadonly | undefined) => {
+  if (eto && isOnChain(eto)) {
+    const nextState: EETOStateOnChain | undefined = eto.contract.timedState + 1;
+
+    if (nextState) {
+      return eto.contract.startOfStates[nextState];
+    }
+  }
+
+  return undefined;
 };

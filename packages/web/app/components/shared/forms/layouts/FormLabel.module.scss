@@ -1,5 +1,5 @@
 .form-label {
-  @include nds-label;
+  @include nds-button-label;
 
   text-transform: uppercase;
   color: $neu-charcoal-grey;

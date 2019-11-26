@@ -2,11 +2,9 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { CircleButton, ECircleButtonLayout } from "./buttons";
+import { DropzoneActionButtons } from "./DropzoneActionButtons";
 import { ELoadingIndicator, LoadingIndicator } from "./loading-indicator/LoadingIndicator";
 
-import * as remove from "../../assets/img/inline_icons/delete.svg";
-import * as download from "../../assets/img/inline_icons/download.svg";
 import * as styles from "./Document.module.scss";
 
 interface IDocumentProps {
@@ -80,67 +78,38 @@ export const DocumentTile: React.FunctionComponent<IDocumentProps & IDocumentTil
   downloadAction,
   removeAction,
   linkDisabled,
-}) => {
-  const [confirmRemove, toggleConfirmRemove] = React.useState(false);
-
-  return (
-    <div className={cn(styles.tile, className)}>
-      {busy && (
-        <div className={styles.documentBusy}>
-          <LoadingIndicator type={ELoadingIndicator.SPINNER_SMALL} />
-          {onlyDownload ? (
-            <FormattedMessage id="documents.generating" />
-          ) : (
-            <FormattedMessage id="documents.downloading" />
-          )}
-        </div>
-      )}
-      <DocumentExtension extension={extension} />
-      <p
-        className={cn(styles.title, {
-          [styles.blankTitle]: blank,
-        })}
-      >
-        {title}
-      </p>
-      {/* Show name only for uploaded files */}
-      {!onlyDownload && <p className={styles.fileName}>{fileName}</p>}
-      <div className={styles.buttons}>
-        <CircleButton
-          data-test-id="documents-download-document"
-          layout={ECircleButtonLayout.SECONDARY}
-          onClick={downloadAction}
-          svgIcon={download}
-          iconProps={{
-            alt: <FormattedMessage id="documents.download.alt" />,
-          }}
-          disabled={busy || linkDisabled}
-        />
-        {activeUpload &&
-          (confirmRemove ? (
-            <CircleButton
-              layout={ECircleButtonLayout.DANGER}
-              data-test-id="documents-remove-document-confirm"
-              onClick={removeAction}
-              disabled={busy}
-            >
-              <FormattedMessage id="documents.remove.alt" />?
-            </CircleButton>
-          ) : (
-            <CircleButton
-              layout={ECircleButtonLayout.SECONDARY}
-              data-test-id="documents-remove-document"
-              onClick={() => toggleConfirmRemove(!confirmRemove)}
-              svgIcon={remove}
-              iconProps={{
-                alt: <FormattedMessage id="documents.remove.alt" />,
-              }}
-            />
-          ))}
+}) => (
+  <div className={cn(styles.tile, className)}>
+    {busy && (
+      <div className={styles.documentBusy}>
+        <LoadingIndicator type={ELoadingIndicator.SPINNER_SMALL} />
+        {onlyDownload ? (
+          <FormattedMessage id="documents.generating" />
+        ) : (
+          <FormattedMessage id="documents.downloading" />
+        )}
       </div>
-    </div>
-  );
-};
+    )}
+    <DocumentExtension extension={extension} />
+    <p
+      className={cn(styles.title, {
+        [styles.blankTitle]: blank,
+      })}
+    >
+      {title}
+    </p>
+    {/* Show name only for uploaded files */}
+    {!onlyDownload && <p className={styles.fileName}>{fileName}</p>}
+    <DropzoneActionButtons
+      data-test-id="documents.actions"
+      className={styles.buttons}
+      onDownload={downloadAction}
+      disableDownload={busy || linkDisabled}
+      onRemove={removeAction}
+      disableRemove={!activeUpload}
+    />
+  </div>
+);
 
 DocumentTile.defaultProps = {
   busy: false,

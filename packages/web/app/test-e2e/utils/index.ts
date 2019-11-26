@@ -102,7 +102,7 @@ export const confirmAccessModalNoPW = () => {
 };
 
 export const closeModal = () => {
-  cy.get(tid("modal-close-button")).click();
+  cy.get(tid("modal-close-button")).awaitedClick();
 };
 
 export const getLatestVerifyUserEmailLink = (

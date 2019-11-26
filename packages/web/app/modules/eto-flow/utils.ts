@@ -188,6 +188,10 @@ export const bookBuildingStatsToCsvString = (stats: TBookbuildingStatsType[]) =>
 export const createCsvDataUri = (dataAsString: string) =>
   `data:text/csv,${encodeURIComponent(dataAsString)}`;
 
+/* Idea originated from https://blog.logrocket.com/programmatic-file-downloads-in-the-browser-9a5186298d5c/
+   All modern browsers are supporting this https://caniuse.com/#search=download
+   The only limitation is CSP
+ */
 export const downloadFile = (uri: string, filename: string) => {
   const link = document.createElement("a");
   link.href = uri;

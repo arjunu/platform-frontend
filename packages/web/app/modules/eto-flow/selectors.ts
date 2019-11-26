@@ -350,3 +350,17 @@ export const selectAreAgreementsSignedByNominee = createSelector(
     return undefined;
   },
 );
+
+export const selectIssuerEtoNextStateStartDate = createSelector(
+  selectIssuerEtoWithCompanyAndContract,
+  eto => {
+    if (eto && isOnChain(eto)) {
+      const nextState: EETOStateOnChain | undefined = eto.contract.timedState + 1;
+
+      if (nextState) {
+        return eto.contract.startOfStates[nextState];
+      }
+    }
+    return undefined;
+  },
+);

@@ -255,6 +255,10 @@ export const getFieldError = (formTid: string, key: string): Cypress.Chainable<s
   return cy.get(formTid).then($form => $form.find(errorMessageTid).text());
 };
 
+export const dropDocumentToFieldWithTid = (targetTid: string, fixture: string) => {
+  cy.get(`${tid(targetTid)} ${tid("eto-add-document-drop-zone")}`).dropFile(fixture);
+};
+
 /**
  * Upload ipfs document to a dropzone field
  * @param targetTid - test id of the dropzone field
@@ -265,7 +269,7 @@ export const uploadDocumentToFieldWithTid = (
   fixture: string,
   options: { acceptWallet: boolean } = { acceptWallet: true },
 ) => {
-  cy.get(`${tid(targetTid)} ${tid("eto-add-document-drop-zone")}`).dropFile(fixture);
+  dropDocumentToFieldWithTid(targetTid, fixture);
 
   cy.get(tid("documents-ipfs-modal-continue")).click();
 
@@ -273,7 +277,7 @@ export const uploadDocumentToFieldWithTid = (
     confirmAccessModal();
   }
 
-  cy.get(`${tid(targetTid)} ${tid("documents-download-document")}`).should("exist");
+  cy.get(`${tid(targetTid)} ${tid("documents.actions.download")}`).should("exist");
 };
 
 /**
@@ -283,7 +287,7 @@ export const uploadDocumentToFieldWithTid = (
  */
 export const uploadSingleFileToField = (name: string, fixture: string) => {
   cy.get(formField(name)).within(() => {
-    cy.root().dropFile(fixture);
+    cy.get(tid("dropzone")).dropFile(fixture);
     cy.get("img").should("exist");
   });
 };
