@@ -89,7 +89,7 @@ class OnfidoComponent extends React.Component<IStateProps, IState> {
 
     getRequestState() : void {
         const _this = this;
-        fetch('/api/kyc/individual/request', {
+        fetch('/api/kyc/status', {
             headers: this.headers, 
             method: "get"
         }).then(function(result){
