@@ -29,7 +29,7 @@ describe("Pending transaction network errors recovering", () => {
     });
   });
 
-  it("should open pending transaction monitor when there is a pending transaction", () => {
+  it("should still watch for a pending transaction after being offline for a while ", () => {
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
       kyc: "business",
       signTosAgreement: true,
