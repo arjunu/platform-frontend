@@ -78,38 +78,8 @@ function* loadEtoPreview(
 
   try {
     const eto: TEtoSpecsData = yield apiEtoService.getEtoPreview(previewCode);
-    const company: TCompanyEtoData = yield apiEtoService.getCompanyById(eto.companyId);
+    yield neuCall(loadEtoInternal, eto);
 
-    // Load contract data if eto is already on blockchain
-    if (eto.state === EEtoState.ON_CHAIN) {
-      // load investor tickets
-      const userType: EUserType | undefined = yield select((state: IAppState) =>
-        selectUserType(state),
-      );
-      if (userType === EUserType.INVESTOR) {
-        yield put(actions.investorEtoTicket.loadEtoInvestorTicket(eto));
-      }
-      yield neuCall(loadEtoContract, eto);
-    }
-
-    // This needs to always be after loadingEtoContract step
-    const onChainState: EETOStateOnChain | undefined = yield select((state: IAppState) =>
-      selectEtoOnChainStateById(state, eto.etoId),
-    );
-
-    if (shouldLoadPledgeData(eto.state, onChainState)) {
-      yield put(actions.bookBuilding.loadPledge(eto.etoId));
-    }
-
-    if (shouldLoadBookbuildingStats(onChainState)) {
-      eto.isBookbuilding
-        ? yield put(actions.bookBuilding.bookBuildingStartWatch(eto.etoId))
-        : yield put(actions.bookBuilding.loadBookBuildingStats(eto.etoId));
-    } else {
-      yield put(actions.bookBuilding.bookBuildingStopWatch(eto.etoId));
-    }
-
-    yield put(actions.eto.setEto({ eto, company }));
   } catch (e) {
     logger.error("Could not load eto by preview code", e);
 
@@ -128,42 +98,12 @@ function* loadEto(
   { apiEtoService, notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.eto.loadEto>,
 ): any {
+  const etoId = action.payload.etoId;
+
   try {
-    const etoId = action.payload.etoId;
     const eto: TEtoSpecsData = yield apiEtoService.getEto(etoId);
-    const company: TCompanyEtoData = yield apiEtoService.getCompanyById(eto.companyId);
+    yield neuCall(loadEtoInternal, eto);
 
-    // Load contract data if eto is already on blockchain
-    if (eto.state === EEtoState.ON_CHAIN) {
-      // load investor tickets
-      const userType: EUserType | undefined = yield select((state: IAppState) =>
-        selectUserType(state),
-      );
-      if (userType === EUserType.INVESTOR) {
-        yield put(actions.investorEtoTicket.loadEtoInvestorTicket(eto));
-      }
-
-      yield neuCall(loadEtoContract, eto);
-    }
-
-    // This needs to always be after loadingEtoContract step
-    const onChainState: EETOStateOnChain | undefined = yield select((state: IAppState) =>
-      selectEtoOnChainStateById(state, eto.etoId),
-    );
-
-    if (shouldLoadPledgeData(eto.state, onChainState)) {
-      yield put(actions.bookBuilding.loadPledge(eto.etoId));
-    }
-
-    if (shouldLoadBookbuildingStats(onChainState)) {
-      eto.isBookbuilding
-        ? yield put(actions.bookBuilding.bookBuildingStartWatch(eto.etoId))
-        : yield put(actions.bookBuilding.loadBookBuildingStats(eto.etoId));
-    } else {
-      yield put(actions.bookBuilding.bookBuildingStopWatch(eto.etoId));
-    }
-
-    yield put(actions.eto.setEto({ eto, company }));
   } catch (e) {
     logger.error("Could not load eto by id", e);
 
@@ -174,10 +114,50 @@ function* loadEto(
     }
 
     notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO));
-
     yield put(actions.routing.goToDashboard());
   }
 }
+
+
+function* loadEtoInternal(
+  { apiEtoService  }: TGlobalDependencies,
+  eto: TEtoSpecsData
+){
+  const company: TCompanyEtoData = yield apiEtoService.getCompanyById(eto.companyId);
+
+  // Load contract data if eto is already on blockchain
+  if (eto.state === EEtoState.ON_CHAIN) {
+    // load investor tickets
+    const userType: EUserType | undefined = yield select((state: IAppState) =>
+      selectUserType(state),
+    );
+    if (userType === EUserType.INVESTOR) {
+      yield put(actions.investorEtoTicket.loadEtoInvestorTicket(eto));
+    }
+
+    yield neuCall(loadEtoContract, eto);
+  }
+
+  // This needs to always be after loadingEtoContract step
+  const onChainState: EETOStateOnChain | undefined = yield select((state: IAppState) =>
+    selectEtoOnChainStateById(state, eto.etoId),
+  );
+
+  if (shouldLoadPledgeData(eto.state, onChainState)) {
+    yield put(actions.bookBuilding.loadPledge(eto.etoId));
+  }
+
+  if (shouldLoadBookbuildingStats(onChainState)) {
+    eto.isBookbuilding
+      ? yield put(actions.bookBuilding.bookBuildingStartWatch(eto.etoId))
+      : yield put(actions.bookBuilding.loadBookBuildingStats(eto.etoId));
+  } else {
+    yield put(actions.bookBuilding.bookBuildingStopWatch(eto.etoId));
+  }
+
+  yield put(actions.eto.setEto({ eto, company }));
+}
+
 
 export function* getEtoContract(
   { contractsService, logger }: TGlobalDependencies,
@@ -261,6 +241,7 @@ function* watchEtosSetAction(
 }
 
 const etoNextStateCount: Dictionary<number | undefined> = {};
+
 function* calculateNextStateDelay({ logger }: TGlobalDependencies, previewCode: string): any {
   const nextStartDate: Date | undefined = yield select((state: IAppState) =>
     selectEtoOnChainNextStateStartDate(state, previewCode),
@@ -451,10 +432,10 @@ function* downloadDocument(
   // for guest users we always require agreement acceptance
   const isAgreementAlreadyAccepted = userId
     ? yield documentsConfidentialityAgreementsStorage.isAgreementAccepted(
-        userId,
-        eto.previewCode,
-        document.documentType,
-      )
+      userId,
+      eto.previewCode,
+      document.documentType,
+    )
     : false;
 
   if (

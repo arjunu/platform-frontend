@@ -1,5 +1,6 @@
 import { LocationChangeAction } from "connected-react-router";
 import { Effect, fork, put, select } from "redux-saga/effects";
+import { matchPath } from 'react-router';
 
 import { appRoutes } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
@@ -28,18 +29,44 @@ export function* startRouteBasedSagas(
   { logger }: TGlobalDependencies,
   action: LocationChangeAction,
 ): IterableIterator<any> {
+  console.log("---startRouteBasedSagas")
   const appIsReady = yield waitForAppInit();
   const userIsAuthorized: boolean = yield select(selectIsAuthorized);
   const userType: EUserType | undefined = yield select(selectUserType);
 
+  console.log(`userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
+      action.payload.location.pathname
+    }`,
+  )
   logger.info(
     `userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
       action.payload.location.pathname
     }`,
   );
 
+  if (appIsReady && !userIsAuthorized) {
+    // yield neuCall(nomineeRouting, action);
+  }
+
+  if (appIsReady && userIsAuthorized && userType === EUserType.INVESTOR) {
+    yield neuCall(investorRouting, action);
+  }
+
+  if (appIsReady && userIsAuthorized && userType === EUserType.ISSUER) {
+    // yield neuCall(nomineeRouting, action);
+  }
+
   if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
     yield neuCall(nomineeRouting, action);
+  }
+}
+
+export function* investorRouting(
+  _: TGlobalDependencies,
+  { payload }: LocationChangeAction,
+) {
+  if (matchPath(payload.location.pathname, { path: appRoutes.etoPublicView })) {
+    yield console.log("match: ",appRoutes.etoPublicView)
   }
 }
 
