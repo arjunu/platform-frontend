@@ -54,7 +54,7 @@ export function* startRouteBasedSagas(
   }
 
   if (appIsReady && userIsAuthorized && userType === EUserType.ISSUER) {
-    // yield neuCall(issuerRouting, action);
+    yield neuCall(issuerRouting, action);
   }
 
   if (appIsReady && userIsAuthorized && userType === EUserType.NOMINEE) {
@@ -81,6 +81,20 @@ export function* investorRouting(
   if (etoViewInvestorMatch !== null) {
     const previewCode = etoViewInvestorMatch.params.previewCode;
     yield put(actions.etoView.loadInvestorEtoView(previewCode, etoViewInvestorMatch))
+  }
+}
+
+export function* issuerRouting(
+  _: TGlobalDependencies,
+  { payload }: LocationChangeAction,
+) {
+  const etoViewIssuerMatch = yield matchPath(payload.location.pathname, { path: appRoutes.etoIssuerView, exact: true });
+  const etoViewIssuerPreviewMatch = yield matchPath(payload.location.pathname, { path: appRoutes.etoPublicView });
+  if (etoViewIssuerMatch !== null) {
+    yield put(actions.etoView.loadIssuerEtoView())
+  } else if (etoViewIssuerPreviewMatch) {
+    const previewCode = etoViewIssuerPreviewMatch.params.previewCode;
+    yield put(actions.etoView.loadIssuerPreviewEtoView(previewCode))
   }
 }
 

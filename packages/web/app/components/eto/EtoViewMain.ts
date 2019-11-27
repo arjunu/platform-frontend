@@ -4,7 +4,7 @@ import { appConnect } from "../../store";
 import {
   EEtoViewType,
   TEtoViewState,
-  TInvestorEtoViewData,
+  TInvestorEtoViewData, TIssuerEtoViewData,
   TNotAuthorizedEtoViewData,
   TReadyEtoView
 } from "../../modules/eto-view/reducer";
@@ -13,6 +13,7 @@ import { EProcessState } from "../../utils/enums/processStates";
 import { LoadingIndicator } from "../shared/loading-indicator/LoadingIndicator";
 import { EtoViewNonAuthorized } from "./EtoViewNonAuthorized";
 import { EtoViewInvestor } from "./EtoViewInvestor";
+import { EtoViewIssuer } from "./EtoViewIssuer";
 
 export const EtoViewMain = compose<{},{}>(
   appConnect<TEtoViewState, {}, {}>({
@@ -26,7 +27,7 @@ export const EtoViewMain = compose<{},{}>(
   branch<TEtoViewState>(({etoViewType}) => etoViewType === EEtoViewType.ETO_VIEW_INVESTOR,
     renderComponent<TInvestorEtoViewData>(EtoViewInvestor)),
   branch<TEtoViewState>(({etoViewType}) => etoViewType === EEtoViewType.ETO_VIEW_ISSUER,
-    renderComponent<TReadyEtoView>(EtoViewInvestor)),
+    renderComponent<TIssuerEtoViewData>(EtoViewIssuer)),
   branch<TEtoViewState>(({etoViewType}) => etoViewType === EEtoViewType.ETO_VIEW_ISSUER_PREVIEW,
     renderComponent<TReadyEtoView>(EtoViewInvestor)),
   branch<TEtoViewState>(({etoViewType}) => etoViewType === EEtoViewType.ETO_VIEW_INVESTOR,

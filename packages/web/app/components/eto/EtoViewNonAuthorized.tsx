@@ -6,19 +6,19 @@ import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsaf
 import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout";
 import { withJurisdictionDisclaimer } from "./shared/routing/withJurisdictionDisclaimer";
 import { withJurisdictionRoute } from "./shared/routing/withJurisdictionRoute";
-import { TNotAuthorizedEtoViewData, TReadyEtoView } from "../../modules/eto-view/reducer";
+import { TNotAuthorizedEtoViewData } from "../../modules/eto-view/reducer";
 import { withMetaTags } from "../../utils/withMetaTags.unsafe";
 import { EtoViewNonAuthorizedLayout } from "./shared/EtoViewNonAuthorizedLayout";
 
 export const EtoViewNonAuthorized = compose<TNotAuthorizedEtoViewData, TNotAuthorizedEtoViewData>(
   createErrorBoundary(ErrorBoundaryLayout),
   withContainer(Layout),
-  withJurisdictionDisclaimer<TReadyEtoView>(props => props.eto.previewCode),
-  withJurisdictionRoute<TReadyEtoView>(props => ({
+  withJurisdictionDisclaimer<TNotAuthorizedEtoViewData>(props => props.eto.previewCode),
+  withJurisdictionRoute<TNotAuthorizedEtoViewData>(props => ({
     previewCode: props.eto.previewCode,
     jurisdiction: props.eto.product.jurisdiction,
   })),
-  withMetaTags<TReadyEtoView>(({eto}) => ({
+  withMetaTags<TNotAuthorizedEtoViewData>(({eto}) => ({
       title: `${eto.company.brandName} - ${eto.equityTokenName} (${eto.equityTokenSymbol})`
     })),
 )(EtoViewNonAuthorizedLayout);

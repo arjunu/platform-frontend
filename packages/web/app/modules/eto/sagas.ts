@@ -192,7 +192,6 @@ export function* getEtoContract(
     const etoContract: ETOCommitment = yield contractsService.getETOCommitmentContract(etoId);
     const etherTokenContract: EtherToken = contractsService.etherToken;
     const euroTokenContract: EuroToken = contractsService.euroToken;
-    console.log("etherTokenContract",etherTokenContract)
 
     yield put(actions.bookBuilding.loadPledge(etoId));
 

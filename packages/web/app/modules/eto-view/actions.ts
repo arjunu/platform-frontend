@@ -14,7 +14,10 @@ export const etoViewActions = {
   ),
   loadIssuerEtoView: createActionFactory(
     "ETO_VIEW_LOAD_ISSUER_ETO_VIEW",
-    (previewCode:string) => ({previewCode})
+  ),
+  loadIssuerPreviewEtoView: createActionFactory(
+    "ETO_VIEW_LOAD_ISSUER_ETO_PREVIEW",
+    (previewCode:string,match: match<TEtoViewByPreviewCodeMatch>) => ({previewCode,match})
   ),
   // loadNomineeEtoView: createActionFactory(
   //   "ETO_VIEW_LOAD_NOMINEE_ETO_VIEW",

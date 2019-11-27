@@ -6,19 +6,19 @@ import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsaf
 import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout";
 import { withJurisdictionDisclaimer } from "./shared/routing/withJurisdictionDisclaimer";
 import { withJurisdictionRoute } from "./shared/routing/withJurisdictionRoute";
-import { TInvestorEtoViewData, TReadyEtoView } from "../../modules/eto-view/reducer";
+import { TInvestorEtoViewData } from "../../modules/eto-view/reducer";
 import { withMetaTags } from "../../utils/withMetaTags.unsafe";
 import { EtoViewInvestorLayout } from "./shared/EtoViewInvestorLayout";
 
 export const EtoViewInvestor = compose<TInvestorEtoViewData, TInvestorEtoViewData>(
   createErrorBoundary(ErrorBoundaryLayout),
   withContainer(Layout),
-  withJurisdictionDisclaimer<TReadyEtoView>(props => props.eto.previewCode),
-  withJurisdictionRoute<TReadyEtoView>(props => ({
+  withJurisdictionDisclaimer<TInvestorEtoViewData>(props => props.eto.previewCode),
+  withJurisdictionRoute<TInvestorEtoViewData>(props => ({
     previewCode: props.eto.previewCode,
     jurisdiction: props.eto.product.jurisdiction,
   })),
-  withMetaTags<TReadyEtoView>(({eto}) => ({
+  withMetaTags<TInvestorEtoViewData>(({eto}) => ({
       title: `${eto.company.brandName} - ${eto.equityTokenName} (${eto.equityTokenSymbol})`
     })),
 )(EtoViewInvestorLayout);
