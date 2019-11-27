@@ -52,7 +52,6 @@ function* initApp({ logger }: TGlobalDependencies): any {
       yield neuCall(makeSureWalletMetaDataExists);
       if (isJwtExpiringLateEnough(jwt)) {
         try {
-          yield waitUntilSmartContractsAreInitialized();
 
           yield neuCall(setJwt, jwt);
           yield neuCall(loadUser);
@@ -69,6 +68,7 @@ function* initApp({ logger }: TGlobalDependencies): any {
       }
     }
 
+    yield waitUntilSmartContractsAreInitialized();
     yield put(actions.init.done(EInitType.APP_INIT));
   } catch (e) {
     if (e instanceof WalletMetadataNotFoundError) {

@@ -172,9 +172,8 @@ export function* loadEtoWithCompanyAndContract(
 
   const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEtoPreview(previewCode);
   eto.company = yield apiEtoService.getCompanyById(eto.companyId);
-  const etoWithCompanyAndContract = yield neuCall(loadNomineeEto, eto); //fixme loadNomineeEto
 
-  return etoWithCompanyAndContract
+  return yield neuCall(loadNomineeEto, eto); //fixme loadNomineeEto naming
 
 }
 
