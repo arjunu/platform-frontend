@@ -11,7 +11,7 @@ import { EETOStateOnChain, EEtoSubState, TEtoWithCompanyAndContractReadonly } fr
 import { EUserType } from "../../lib/api/users/interfaces";
 import { selectUserType } from "../auth/selectors";
 import { EEtoViewCampaignOverviewType, EEtoViewType, TCampaignOverviewData } from "./reducer";
-import { selectIssuerCompany, selectIssuerEto, selectIssuerEtoWithCompanyAndContract } from "../eto-flow/selectors";
+import { selectIssuerEtoWithCompanyAndContract } from "../eto-flow/selectors";
 import { loadIssuerEto } from "../eto-flow/sagas";
 
 export function* loadInvestorEtoView(
@@ -116,9 +116,8 @@ export function* loadIssuerEtoPreview(
 
 export function* loadIssuerEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>
 ) {
-  console.log("----loadIssuerEtoView")
+  console.log("----loadIssuerEtoView");
   try {
     let eto = yield select(selectIssuerEtoWithCompanyAndContract);
     if(eto === undefined){
@@ -126,27 +125,10 @@ export function* loadIssuerEtoView(
       eto = yield select(selectIssuerEtoWithCompanyAndContract);
     }
 
-    //fixme extract this to a sep. saga
-    let campaignOverviewData: TCampaignOverviewData;
-
-    const campaignOverviewType:EEtoViewCampaignOverviewType = yield call(calculateEtoViewCampaignOverviewType, eto);
-
-    if(campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS){
-      campaignOverviewData = {
-        campaignOverviewType,
-        url: payload.match.url,
-        path: payload.match.path
-      }
-    } else {
-      campaignOverviewData = {
-        campaignOverviewType,
-      }
-    }
-
-    yield put(actions.etoView.setEtoViewData({ eto, campaignOverviewData, etoViewType:EEtoViewType.ETO_VIEW_ISSUER }));
+    yield put(actions.etoView.setEtoViewData({ eto, etoViewType:EEtoViewType.ETO_VIEW_ISSUER }));
   } catch (e) {
-    logger.error("Could not load eto by preview code", e);
-    notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
+    logger.error("Could not load eto", e);
+    notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO));
     yield put(actions.routing.goToDashboard());
   }
 }

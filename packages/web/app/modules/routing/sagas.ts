@@ -94,7 +94,7 @@ export function* issuerRouting(
     yield put(actions.etoView.loadIssuerEtoView())
   } else if (etoViewIssuerPreviewMatch) {
     const previewCode = etoViewIssuerPreviewMatch.params.previewCode;
-    yield put(actions.etoView.loadIssuerPreviewEtoView(previewCode))
+    yield put(actions.etoView.loadIssuerPreviewEtoView(previewCode,etoViewIssuerPreviewMatch))
   }
 }
 

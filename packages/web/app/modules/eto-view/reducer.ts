@@ -25,7 +25,6 @@ export type TInvestorEtoViewData = {
 
 export type TIssuerEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly,
-  campaignOverviewData: TCampaignOverviewData
 }
 
 export type TIssuerPreviewEtoViewData = {
