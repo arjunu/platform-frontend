@@ -217,6 +217,8 @@ function* submitIndividualRequest({
     notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
 
     logger.error("Failed to submit KYC individual request", e);
+  } finally {
+    yield neuCall(loadKycStatus);
   }
 }
 

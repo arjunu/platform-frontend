@@ -186,12 +186,12 @@ export enum EKycRequestStatus {
 
 export interface IKycRequestState {
   status: EKycRequestStatus;
-  instantIdProvider?: EKycInstantIdProvider;
+  instantIdProvider: EKycInstantIdProvider | TInstantIdNoneProvider;
 }
 
 export const KycRequestStateSchema = Yup.object().shape({
   status: Yup.string().required(),
-  instantIdProvider: Yup.string(),
+  instantIdProvider: Yup.string().required(),
 });
 
 export enum EKycBusinessType {

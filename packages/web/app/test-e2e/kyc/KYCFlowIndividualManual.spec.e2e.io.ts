@@ -35,7 +35,7 @@ describe("KYC Personal flow with manual verification", () => {
       confirmAccessModal();
 
       // panel should now be in pending state
-      cy.get(tid("kyc-panel-pending"));
+      cy.get(tid("kyc-panel-pending")).should("exist");
       // TODO: Move to a separate test
       // Tests multi jurisdiction
       assertFilteredDeJurisdiction();
