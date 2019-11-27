@@ -616,7 +616,7 @@ export function* nomineeFlowSagas(): Iterator<any> {
   );
   yield fork(
     neuTakeLatestUntil,
-    actions.nomineeFlow.nomineeEtoView,
+    actions.nomineeFlow.loadNomineeEtoView,
     "@@router/LOCATION_CHANGE",
     nomineeEtoView,
   );

@@ -10,16 +10,16 @@ import { FieldSchemaProvider } from "../../shared/Field";
 import { EtoOverviewStatus } from "../overview/EtoOverviewStatus/EtoOverviewStatus";
 import { Cover } from "../public-view/Cover";
 import { InvestorCoverBannerLayout } from "../public-view/CoverBanner";
-import { TIssuerEtoViewData } from "../../../modules/eto-view/reducer";
+import { TIssuerPreviewEtoViewData } from "../../../modules/eto-view/reducer";
 import { EtoViewCampaignOverview } from "./eto-view-tabs/EtoViewCampaignOverview";
 
 import * as styles from "./EtoView.module.scss";
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());
 
-const EtoViewIssuerLayout: React.FunctionComponent<TIssuerEtoViewData> = ({
+const EtoViewIssuerPreviewLayout: React.FunctionComponent<TIssuerPreviewEtoViewData> = ({
   eto,
-
+  campaignOverviewData,
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
   return (
@@ -45,16 +45,16 @@ const EtoViewIssuerLayout: React.FunctionComponent<TIssuerEtoViewData> = ({
           }}
           tags={categories}
         />
-        <EtoOverviewStatus eto={eto} publicView={false} isEmbedded={false} />
+        <EtoOverviewStatus eto={eto} publicView={true} isEmbedded={false} />
         <EtoViewCampaignOverview
           eto={eto}
           isUserFullyVerified={true}
-          publicView={false}
-          data={undefined}
+          publicView={true}
+          data={campaignOverviewData}
         />
       </WidgetGrid>
     </FieldSchemaProvider>
   );
 };
 
-export { EtoViewIssuerLayout };
+export { EtoViewIssuerPreviewLayout };

@@ -10,14 +10,14 @@ import { FieldSchemaProvider } from "../../shared/Field";
 import { EtoOverviewStatus } from "../overview/EtoOverviewStatus/EtoOverviewStatus";
 import { Cover } from "../public-view/Cover";
 import { InvestorCoverBannerLayout } from "../public-view/CoverBanner";
-import { TIssuerEtoViewData } from "../../../modules/eto-view/reducer";
+import {  TNomineeEtoViewData } from "../../../modules/eto-view/reducer";
 import { EtoViewCampaignOverview } from "./eto-view-tabs/EtoViewCampaignOverview";
 
 import * as styles from "./EtoView.module.scss";
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());
 
-const EtoViewIssuerLayout: React.FunctionComponent<TIssuerEtoViewData> = ({
+const EtoViewNomineeLayout: React.FunctionComponent<TNomineeEtoViewData> = ({
   eto,
 
 }) => {
@@ -57,4 +57,4 @@ const EtoViewIssuerLayout: React.FunctionComponent<TIssuerEtoViewData> = ({
   );
 };
 
-export { EtoViewIssuerLayout };
+export { EtoViewNomineeLayout };

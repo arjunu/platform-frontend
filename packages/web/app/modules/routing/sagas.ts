@@ -106,7 +106,7 @@ export function* nomineeRouting(
     yield put(actions.nomineeFlow.nomineeDashboardView());
   }
   if (payload.location.pathname === appRoutes.etoIssuerView) {
-    yield put(actions.nomineeFlow.nomineeEtoView());
+    yield put(actions.nomineeFlow.loadNomineeEtoView());
   }
   if (payload.location.pathname === appRoutes.documents) {
     yield put(actions.nomineeFlow.nomineeDocumentsView());
