@@ -10,28 +10,78 @@ import { selectIsUserVerifiedOnBlockchain } from "../kyc/selectors";
 import { EETOStateOnChain, EEtoSubState, TEtoWithCompanyAndContractReadonly } from "../eto/types";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { selectUserType } from "../auth/selectors";
-
-export enum EEtoViewCampaignOverviewType {
-  WITH_STATS = "withStats",
-  WITHOUT_STATS = "withoutStats"
-}
+import { EEtoViewCampaignOverviewType, EEtoViewType, TCampaignOverviewData } from "./reducer";
 
 export function* loadInvestorEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>
 ) {
+  console.log("----loadInvestorEtoView")
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(loadEtoWithCompanyAndContract, payload.previewCode);
     const userIsFullyVerified = yield select(selectIsUserVerifiedOnBlockchain);
-    const campaignOverviewType = yield call(calculateEtoViewCampaignOverviewType, eto);
 
-    yield put(actions.etoView.setEtoViewData({ eto, userIsFullyVerified, match: payload.match, campaignOverviewType }));
+    //fixme extract this to a sep. saga
+    let campaignOverviewData: TCampaignOverviewData;
+
+    const campaignOverviewType:EEtoViewCampaignOverviewType = yield call(calculateEtoViewCampaignOverviewType, eto);
+
+    if(campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS){
+      campaignOverviewData = {
+        campaignOverviewType,
+        url: payload.match.url,
+        path: payload.match.path
+      }
+    } else {
+      campaignOverviewData = {
+        campaignOverviewType,
+      }
+    }
+
+    yield put(actions.etoView.setEtoViewData({ eto, userIsFullyVerified, campaignOverviewData, etoViewType:EEtoViewType.ETO_VIEW_INVESTOR }));
   } catch (e) {
     logger.error("Could not load eto by preview code", e);
     notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
     yield put(actions.routing.goToDashboard());
   }
 }
+
+export function* loadNotAuthorizedEtoView(
+  { logger, notificationCenter }: TGlobalDependencies,
+  { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>
+) {
+  console.log("----loadNotAuthorizedEtoView")
+  try {
+    const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(loadEtoWithCompanyAndContract, payload.previewCode);
+  console.log("----loadNotAuthorizedEtoView 1")
+
+    //fixme extract this to a sep. saga
+    let campaignOverviewData: TCampaignOverviewData;
+
+    const campaignOverviewType:EEtoViewCampaignOverviewType = yield call(calculateEtoViewCampaignOverviewType, eto);
+
+    if(campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS){
+      campaignOverviewData = {
+        campaignOverviewType,
+        url: payload.match.url,
+        path: payload.match.path
+      }
+    } else {
+      campaignOverviewData = {
+        campaignOverviewType,
+      }
+    }
+
+  console.log("----loadNotAuthorizedEtoView 2")
+    yield put(actions.etoView.setEtoViewData({ eto, campaignOverviewData, etoViewType:EEtoViewType.ETO_VIEW_NOT_AUTHORIZED }));
+  } catch (e) {
+    console.log(e)
+    logger.error("Could not load eto by preview code", e);
+    notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
+    yield put(actions.routing.goToDashboard());
+  }
+}
+
 
 //fixme move to utils
 export function* calculateEtoViewCampaignOverviewType(eto:TEtoWithCompanyAndContractReadonly) {
@@ -55,4 +105,5 @@ export function* calculateEtoViewCampaignOverviewType(eto:TEtoWithCompanyAndCont
 
 export function* etoViewSagas(): any {
   yield fork(neuTakeEvery, actions.etoView.loadInvestorEtoView, loadInvestorEtoView);
+  yield fork(neuTakeEvery, actions.etoView.loadNotAuthorizedEtoView, loadNotAuthorizedEtoView);
 }

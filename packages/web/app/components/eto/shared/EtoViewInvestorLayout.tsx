@@ -10,20 +10,17 @@ import { FieldSchemaProvider } from "../../shared/Field";
 import { EtoOverviewStatus } from "../overview/EtoOverviewStatus/EtoOverviewStatus";
 import { Cover } from "../public-view/Cover";
 import { InvestorCoverBannerLayout } from "../public-view/CoverBanner";
-import { TReadyEtoView } from "../../../modules/eto-view/reducer";
+import { TInvestorEtoViewData } from "../../../modules/eto-view/reducer";
+import { EtoViewCampaignOverview } from "./eto-view-tabs/EtoViewCampaignOverview";
 
 import * as styles from "./EtoView.module.scss";
-import { EtoViewTabs } from "./eto-view-tabs/EtoViewTabs";
-
-type EtoInvestorViewLayoutProps = TReadyEtoView //fixme
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());
 
-const EtoViewInvestorLayout: React.FunctionComponent<EtoInvestorViewLayoutProps> = ({
+const EtoViewInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
   eto,
   userIsFullyVerified,
-  campaignOverviewType,
-  match
+  campaignOverviewData,
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
   return (
@@ -50,12 +47,11 @@ const EtoViewInvestorLayout: React.FunctionComponent<EtoInvestorViewLayoutProps>
           tags={categories}
         />
         <EtoOverviewStatus eto={eto} publicView={true} isEmbedded={false} />
-        {campaignOverviewType === } /*fixme <============= */
-        <EtoViewTabs
-          match={match}
+        <EtoViewCampaignOverview
           eto={eto}
-          publicView={true}
           isUserFullyVerified={userIsFullyVerified}
+          publicView={true}
+          data={campaignOverviewData}
         />
       </WidgetGrid>
     </FieldSchemaProvider>

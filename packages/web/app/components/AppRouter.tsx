@@ -37,7 +37,7 @@ import { EmbeddedWidget } from "./testing/embeded-widget/TestEmbededWidget";
 import { WalletRecoverMain } from "./wallet-selector/wallet-recover/WalletRecoverMain";
 import { WalletSelector } from "./wallet-selector/WalletSelector";
 import { Wallet } from "./wallet/Wallet";
-import { EtoInvestorView } from "./eto/EtoInvestorView";
+import { EtoViewMain } from "./eto/EtoViewMain";
 
 // TEMPORARY CONSTANTS -------->
 const GREYP_URL = "/greyp";
@@ -63,10 +63,9 @@ export const AppRouter: React.FunctionComponent = () => (
     />
     {/*<------------------------------- */}
 
-    <OnlyAuthorizedRoute
-      path={appRoutes.etoInvestorView}
-      investorComponent={EtoInvestorView}
-      //todo
+    <Route
+    path={appRoutes.etoPublicView}
+    component={EtoViewMain}
     />
     {/* Redirect Legacy ETO link to current link */}
     <Route
@@ -181,10 +180,10 @@ export const AppRouter: React.FunctionComponent = () => (
       path={appRoutes.etoIssuerView}
       issuerComponent={EtoIssuerView}
       nomineeComponent={EtoNomineeView}
+      exact
     />
 
     {/* common routes for both investors and issuers and nominees */}
-
     <OnlyAuthorizedRoute
       path={appRoutes.wallet}
       investorComponent={Wallet}

@@ -46,7 +46,7 @@ export function* startRouteBasedSagas(
   );
 
   if (appIsReady && !userIsAuthorized) {
-    // yield neuCall(nonAuthorizedRouting, action);
+    yield neuCall(notAuthorizedRouting, action);
   }
 
   if (appIsReady && userIsAuthorized && userType === EUserType.INVESTOR) {
@@ -62,14 +62,25 @@ export function* startRouteBasedSagas(
   }
 }
 
+export function* notAuthorizedRouting(
+  _: TGlobalDependencies,
+  { payload }: LocationChangeAction,
+) {
+  const etoViewNotAuthorizedMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(payload.location.pathname, { path: appRoutes.etoPublicView });
+  if (etoViewNotAuthorizedMatch !== null) {
+    const previewCode = etoViewNotAuthorizedMatch.params.previewCode;
+    yield put(actions.etoView.loadNotAuthorizedEtoView(previewCode, etoViewNotAuthorizedMatch))
+  }
+}
+
 export function* investorRouting(
   _: TGlobalDependencies,
   { payload }: LocationChangeAction,
 ) {
-  const etoInvestorViewMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(payload.location.pathname, { path: appRoutes.etoInvestorView });
-  if (etoInvestorViewMatch !== null) {
-    const previewCode = etoInvestorViewMatch.params.previewCode;
-    yield put(actions.etoView.loadInvestorEtoView(previewCode, etoInvestorViewMatch))
+  const etoViewInvestorMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(payload.location.pathname, { path: appRoutes.etoPublicView });
+  if (etoViewInvestorMatch !== null) {
+    const previewCode = etoViewInvestorMatch.params.previewCode;
+    yield put(actions.etoView.loadInvestorEtoView(previewCode, etoViewInvestorMatch))
   }
 }
 

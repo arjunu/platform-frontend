@@ -7,16 +7,20 @@ import { TabContent, Tabs } from "../../../shared/Tabs";
 import { SwitchConnected } from "../../../../utils/connectedRouting";
 import { WidgetGrid } from "../../../layouts/WidgetGrid";
 import { EtoViewFundraisingStatistics } from "../EtoViewFundraisingStatistics";
-import { IEtoViewTabsExternalProps, IEtoViewTabsState } from "./EtoViewTabs";
-import { EtoViewCampaignOverview } from "./EtoViewCampaignOverview";
+import { TEtoViewCampaignOverviewProps } from "./EtoViewCampaignOverview";
+import { EtoViewCampaignOverviewLayout } from "./EtoViewCampaignOverviewLayout";
+import { TCampaignOverviewWithStatsData } from "../../../../modules/eto-view/reducer";
 
 import * as styles from "../EtoView.module.scss";
 
-export const EtoViewTabsLayout: React.FunctionComponent<IEtoViewTabsState & IEtoViewTabsExternalProps> = ({
+export const EtoViewCampaignOverviewWithStatsLayout: React.FunctionComponent<TEtoViewCampaignOverviewProps & { data: TCampaignOverviewWithStatsData }> = ({
   eto,
   publicView,
   isUserFullyVerified,
-  match,
+  data: {
+    url,
+    path
+  }
 }) => (
   <Container id="eto-view-tabs" columnSpan={EColumnSpan.THREE_COL}>
 
@@ -28,20 +32,20 @@ export const EtoViewTabsLayout: React.FunctionComponent<IEtoViewTabsState & IEto
     >
       <TabContent
         tab={<FormattedMessage id="eto.public-view.campaign-overview" />}
-        routerPath={match.url}
+        routerPath={url}
       />
       <TabContent
         tab={<FormattedMessage id="eto.public-view.fundraising-statistics" />}
         data-test-id="eto.public-view.fundraising-statistics"
-        routerPath={`${match.url}/stats`}
+        routerPath={`${url}/stats`}
       />
     </Tabs>
     <SwitchConnected>
       <Route
-        path={match.path}
+        path={path}
         render={() => (
           <WidgetGrid className={styles.etoLayout} data-test-id="eto.public-view">
-            <EtoViewCampaignOverview
+            <EtoViewCampaignOverviewLayout
               eto={eto}
               isUserFullyVerified={isUserFullyVerified}
               publicView={publicView}
@@ -51,7 +55,7 @@ export const EtoViewTabsLayout: React.FunctionComponent<IEtoViewTabsState & IEto
         exact
       />
       <Route
-        path={`${match.path}/stats`}
+        path={`${path}/stats`}
         render={() => <EtoViewFundraisingStatistics etoId={eto.etoId} />}
       />
     </SwitchConnected>

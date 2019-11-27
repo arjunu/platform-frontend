@@ -34,10 +34,12 @@ type TProps = {
 export const EtoPublicView = compose<TProps, IRouterParams>(
   createErrorBoundary(ErrorBoundaryLayout),
   appConnect<IStateProps, {}, IRouterParams>({
-    stateToProps: (state, props) => ({
+    stateToProps: (state, props) => {
+      console.log("EtoPublicView")
+      return ({
       eto: selectEtoWithCompanyAndContract(state, props.previewCode),
       isUserFullyVerified: selectIsUserFullyVerified(state),
-    }),
+    })},
   }),
   onEnterAction<IRouterParams>({
     actionCreator: (dispatch, props) => {
