@@ -101,7 +101,7 @@ const Button = React.forwardRef<HTMLButtonElement, TButtonProps>(
   ) => {
     const withIconOnly = children === undefined;
 
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development" || process.env.NF_CYPRESS_RUN === "1") {
       invariant(
         !(svgIcon === undefined && withIconOnly),
         "Either `svgIcon` or `children` should be provided to a button",
