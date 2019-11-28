@@ -8,9 +8,9 @@ import {
   IIntlProps,
   injectIntlHelpers,
 } from "../../../utils/injectIntlHelpers.unsafe";
-import { DEFAULT_CHART_COLOR } from "../../eto/shared/EtoView";
 import { OTHERS_NAME } from "../../eto/utils";
 import { ChartLegend } from "./ChartLegend";
+import { DEFAULT_CHART_COLOR } from "../../eto/constants";
 
 import * as styles from "./ChartDoughnut.module.scss";
 

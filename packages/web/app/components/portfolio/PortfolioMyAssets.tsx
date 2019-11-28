@@ -11,7 +11,7 @@ import { selectNeuBalance, selectNeumarkAddress } from "../../modules/wallet/sel
 import { appConnect } from "../../store";
 import { multiplyBigNumbers } from "../../utils/BigNumberUtils";
 import { commitmentStatusLink } from "../appRouteUtils";
-import { DashboardHeading } from "../eto/shared/DashboardHeading";
+import { DashboardHeading } from "../shared/DashboardHeading";
 import { Container } from "../layouts/Container";
 import { Button, ButtonLink, ButtonSize, EButtonLayout, EButtonTheme } from "../shared/buttons";
 import { FormatNumber } from "../shared/formatters/FormatNumber";

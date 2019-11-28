@@ -33,7 +33,7 @@ import { EmbeddedWidget } from "./testing/embeded-widget/TestEmbededWidget";
 import { WalletRecoverMain } from "./wallet-selector/wallet-recover/WalletRecoverMain";
 import { WalletSelector } from "./wallet-selector/WalletSelector";
 import { Wallet } from "./wallet/Wallet";
-import { EtoViewMain } from "./eto/eto-view/EtoViewMain";
+import { EtoViewMain } from "./eto/eto-full-view/EtoViewMain";
 
 // TEMPORARY CONSTANTS -------->
 const GREYP_URL = "/greyp";

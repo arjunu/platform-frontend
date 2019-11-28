@@ -6,7 +6,7 @@ import { branch, compose, renderComponent } from "recompose";
 import { actions } from "../../modules/actions";
 import { ITokenDisbursal } from "../../modules/investor-portfolio/types";
 import { appConnect } from "../../store";
-import { DashboardHeading } from "../eto/shared/DashboardHeading";
+import { DashboardHeading } from "../shared/DashboardHeading";
 import { Container, EColumnSpan, EContainerType } from "../layouts/Container";
 import { Button, ButtonSize, EButtonLayout, EButtonTheme } from "../shared/buttons";
 import { ETheme, Money } from "../shared/formatters/Money";

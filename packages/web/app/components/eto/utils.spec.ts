@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { TShareholder } from "./public-view/LegalInformationWidget";
+import { TShareholder } from "./eto-full-view/shared/campaign-overview/legal-information-widget/LegalInformationWidget";
 import {
   applyDefaults,
   convert,

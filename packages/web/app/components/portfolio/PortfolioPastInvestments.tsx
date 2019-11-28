@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { TETOWithInvestorTicket } from "../../modules/investor-portfolio/types";
 import { getTokenPrice } from "../../modules/investor-portfolio/utils";
 import { etoPublicViewLink } from "../appRouteUtils";
-import { DashboardHeading } from "../eto/shared/DashboardHeading";
+import { DashboardHeading } from "../shared/DashboardHeading";
 import { EProjectStatusSize, ETOInvestorState } from "../eto/shared/ETOState";
 import { Container } from "../layouts/Container";
 import { FormatNumber } from "../shared/formatters/FormatNumber";
