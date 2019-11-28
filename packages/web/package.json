@@ -42,7 +42,7 @@
     "test:browser:watch": "yarn test:browser --watch --watch-extensions ts,tsx ",
     "test:e2e": "./e2e/setup-e2e.sh",
     "test:e2e:chrome": "./e2e/setup-docker-e2e.sh",
-    "test:e2e:cypress": "CYPRESS_RETRIES=2 cypress run --config testFiles=\"**/*.spec.e2e.ts\"",
+    "test:e2e:cypress": "CYPRESS_RETRIES=2 cypress run --config testFiles=\"**/*.spec.e2e.*\"",
     "test:e2e:cypress:chrome": "CYPRESS_RETRIES=2 cypress run --config testFiles=\"**/*.spec.e2e.chrome.ts\" --browser chrome",
     "test:e2e:cypress:record": "echo build id $CIRCLE_BUILD_NUM$(echo node) && CYPRESS_RETRIES=2 cypress run --config testFiles=\"**/*.spec.e2e.ts\" --record --parallel --group nodeTests --ci-build-id $CIRCLE_BUILD_NUM$(echo node)",
     "test:e2e:cypress:record:chrome": "CYPRESS_RETRIES=2 cypress run --config testFiles=\"**/*.spec.e2e.ts\" --record --parallel --browser chrome",

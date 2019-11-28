@@ -2,7 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
+import { EKycInstantIdStatus, EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
 import { KycStatusWidgetBase } from "./KycStatusWidget";
 
 const commonProps = {
@@ -61,8 +61,19 @@ storiesOf("KYC/StatusWidget", module)
       isRestrictedCountryInvestor={true}
     />
   ))
-  .add("outsourced", () => (
-    <KycStatusWidgetBase {...commonProps} requestStatus={EKycRequestStatus.OUTSOURCED} />
+  .add("outsourced - draft", () => (
+    <KycStatusWidgetBase
+      {...commonProps}
+      requestStatus={EKycRequestStatus.OUTSOURCED}
+      instantIdStatus={EKycInstantIdStatus.DRAFT}
+    />
+  ))
+  .add("outsourced - pending", () => (
+    <KycStatusWidgetBase
+      {...commonProps}
+      requestStatus={EKycRequestStatus.OUTSOURCED}
+      instantIdStatus={EKycInstantIdStatus.PENDING}
+    />
   ))
   .add("error", () => (
     <KycStatusWidgetBase

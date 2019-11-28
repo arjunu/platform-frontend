@@ -148,14 +148,17 @@ class RequestStateInfo extends React.Component<IProps, IState> {
           title={<FormattedMessage id="kyc.request-state.outsourced.title" />}
           steps={steps}
           data-test-id="kyc-panel-outsourced"
-          description={<FormattedMessage id="kyc.request-state.outsourced.description" />}
-        >
-          <div className="p-4 text-center">
-            <a href={this.props.idNowRedirectUrl}>
-              <FormattedMessage id="kyc.request-state.click-here-to-continue" />
-            </a>
-          </div>
-        </KycPanel>
+          description={
+            <>
+              <FormattedMessage id="kyc.request-state.outsourced.description" />
+              <br />
+              <br />
+              <a href={this.props.idNowRedirectUrl}>
+                <FormattedMessage id="kyc.request-state.click-here-to-continue" />
+              </a>
+            </>
+          }
+        />
       );
     }
 
