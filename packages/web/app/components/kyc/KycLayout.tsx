@@ -50,7 +50,7 @@ export const businessSteps = [
 
 type IProps = {
   requestStatus?: EKycRequestStatus;
-  redirectUrl: string | undefined;
+  idNowRedirectUrl: string | undefined;
   requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
   goToProfile: () => void;
@@ -142,8 +142,7 @@ class RequestStateInfo extends React.Component<IProps, IState> {
       );
     }
 
-    // TODO: check what we need to modify here
-    if (this.props.requestStatus === EKycRequestStatus.OUTSOURCED && false) {
+    if (this.props.requestStatus === EKycRequestStatus.OUTSOURCED && this.props.idNowRedirectUrl) {
       return (
         <KycPanel
           title={<FormattedMessage id="kyc.request-state.outsourced.title" />}
@@ -152,7 +151,7 @@ class RequestStateInfo extends React.Component<IProps, IState> {
           description={<FormattedMessage id="kyc.request-state.outsourced.description" />}
         >
           <div className="p-4 text-center">
-            <a href={this.props.redirectUrl}>
+            <a href={this.props.idNowRedirectUrl}>
               <FormattedMessage id="kyc.request-state.click-here-to-continue" />
             </a>
           </div>
@@ -165,11 +164,7 @@ class RequestStateInfo extends React.Component<IProps, IState> {
 }
 
 const KycLayout: React.FunctionComponent<IProps> = props => {
-  const router =
-    props.requestStatus === EKycRequestStatus.DRAFT ||
-    props.requestStatus === EKycRequestStatus.OUTSOURCED ? (
-      <KycRouter />
-    ) : null;
+  const router = props.requestStatus === EKycRequestStatus.DRAFT ? <KycRouter /> : null;
   return (
     <>
       <RequestStateInfo {...props} />

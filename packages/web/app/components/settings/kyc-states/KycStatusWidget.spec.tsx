@@ -11,12 +11,12 @@ import { KycStatusWidgetBase } from "./KycStatusWidget";
 const defaultProps = {
   onGoToKycHome: () => {},
   onGoToDashboard: () => {},
+  onStartIdNow: () => {},
   step: 1,
   isUserEmailVerified: true,
   backupCodesVerified: true,
   isKycFlowBlockedByRegion: false,
   isRestrictedCountryInvestor: false,
-  externalKycUrl: undefined,
   requestStatus: undefined,
   instantIdStatus: undefined,
   error: undefined,

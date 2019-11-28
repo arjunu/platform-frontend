@@ -1,5 +1,5 @@
 import { delay } from "redux-saga";
-import { all, call, fork, put, select, take } from "redux-saga/effects";
+import { all, call, fork, put, select } from "redux-saga/effects";
 
 import { KycFlowMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
@@ -27,7 +27,7 @@ import { selectIsUserVerified, selectUser, selectUserType } from "../auth/select
 import { userHasKycAndEmailVerified } from "../eto-flow/selectors";
 import { displayErrorModalSaga } from "../generic-modal/sagas";
 import { waitUntilSmartContractsAreInitialized } from "../init/sagas";
-import { neuCall, neuTakeEvery, neuTakeOnly, neuTakeUntil } from "../sagasUtils";
+import { neuCall, neuTakeEvery, neuTakeUntil } from "../sagasUtils";
 import {
   selectCombinedBeneficialOwnerOwnership,
   selectKycRequestStatus,
@@ -35,26 +35,31 @@ import {
 } from "./selectors";
 import { deserializeClaims } from "./utils";
 
-export function* loadKycStatus({ apiKycService, logger }: TGlobalDependencies): Iterable<any> {
+export function* loadClientData({ logger, apiKycService }: TGlobalDependencies): Iterable<any> {
   try {
     yield put(actions.kyc.setStatusLoading());
 
     const kycStatus: TKycStatus = yield apiKycService.getKycStatus();
 
     yield put(actions.kyc.setStatus(kycStatus));
+
+    switch (kycStatus.type) {
+      case EKycRequestType.BUSINESS:
+        yield neuCall(loadBusinessData);
+
+        break;
+      case EKycRequestType.INDIVIDUAL:
+        yield neuCall(loadIndividualData);
+
+        break;
+      default:
+        logger.info(`Kyc type is ${kycStatus.type} therefore omitting loading kyc data`);
+    }
   } catch (e) {
     logger.error("Error while getting KYC status", e);
 
     yield put(actions.kyc.setStatusError(e.message));
   }
-}
-
-export function* loadClientData(): Iterable<any> {
-  yield neuCall(loadKycStatus);
-
-  // TODO: Check `kycStatus.type` and load only appropriate type
-  yield put(actions.kyc.kycLoadIndividualData());
-  yield put(actions.kyc.kycLoadBusinessData());
 }
 
 /**
@@ -79,7 +84,7 @@ function* kycRefreshWidgetSaga({ logger }: TGlobalDependencies): any {
     }
 
     if (status === EKycRequestStatus.PENDING || status === EKycRequestStatus.OUTSOURCED) {
-      yield neuCall(loadKycStatus);
+      yield put(actions.kyc.kycLoadStatusAndData());
 
       logger.info("KYC refreshed", status, requestType);
     }
@@ -188,7 +193,9 @@ function* loadIndividualFiles({ apiKycService, logger }: TGlobalDependencies): I
 }
 
 function* submitIndividualRequestEffect({ apiKycService }: TGlobalDependencies): Iterator<any> {
-  yield apiKycService.submitIndividualRequest();
+  const kycStatus: TKycStatus = yield apiKycService.submitIndividualRequest();
+
+  yield put(actions.kyc.setStatus(kycStatus));
 
   yield put(
     actions.genericModal.showGenericModal(
@@ -217,22 +224,21 @@ function* submitIndividualRequest({
     notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
 
     logger.error("Failed to submit KYC individual request", e);
-  } finally {
-    yield neuCall(loadKycStatus);
   }
 }
 
-function* startIndividualInstantId({
+function* startIndividualIdNow({
   apiKycService,
   notificationCenter,
   logger,
 }: TGlobalDependencies): Iterator<any> {
   try {
-    const result: IHttpResponse<TKycIdNowIdentification> = yield apiKycService.startInstantId();
+    const { redirectUrl }: TKycIdNowIdentification = yield apiKycService.startInstantId();
 
-    if (result.body.redirectUrl) {
-      yield put(actions.routing.openInNewWindow(result.body.redirectUrl));
-    }
+    yield put(actions.routing.openInNewWindow(redirectUrl));
+    yield put(actions.kyc.setIdNowRedirectUrl(redirectUrl));
+
+    yield put(actions.kyc.kycLoadStatusAndData());
   } catch (e) {
     logger.error("KYC instant id failed to start", e);
 
@@ -515,10 +521,12 @@ function* loadBeneficialOwnerFiles(
 
 // request
 function* submitBusinessRequestEffect({ apiKycService }: TGlobalDependencies): Iterator<any> {
-  const userType = yield select((s: IAppState) => selectUserType(s));
-  const kycAndEmailVerified = yield select((s: IAppState) => userHasKycAndEmailVerified(s));
+  const userType = yield select(selectUserType);
+  const kycAndEmailVerified = yield select(userHasKycAndEmailVerified);
 
-  yield apiKycService.submitBusinessRequest();
+  const kycStatus: TKycStatus = yield apiKycService.submitBusinessRequest();
+
+  yield put(actions.kyc.setStatus(kycStatus));
 
   const buttonAction =
     !kycAndEmailVerified && userType === EUserType.NOMINEE
@@ -622,28 +630,18 @@ export function* loadKycRequestData(): Iterator<any> {
   // Wait for contracts to init
   yield waitUntilSmartContractsAreInitialized();
 
-  yield put(actions.kyc.kycLoadClaims());
-
-  yield put(actions.kyc.kycLoadClientData());
-
-  yield all([
-    take(actions.kyc.kycSetClaims),
-    neuTakeOnly(actions.kyc.kycUpdateBusinessData, {
-      businessDataLoading: false,
-    }),
-    neuTakeOnly(actions.kyc.kycUpdateIndividualData, { individualDataLoading: false }),
-  ]);
+  yield all([neuCall(loadClientData), neuCall(loadIdentityClaim)]);
 }
 
 export function* kycSagas(): Iterator<any> {
-  yield fork(neuTakeEvery, actions.kyc.kycLoadClientData, loadClientData);
+  yield fork(neuTakeEvery, actions.kyc.kycLoadStatusAndData, loadClientData);
 
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualData, loadIndividualData);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitIndividualData, submitIndividualData);
   yield fork(neuTakeEvery, actions.kyc.kycUploadIndividualDocument, uploadIndividualFile);
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualDocumentList, loadIndividualFiles);
   // Outsourced
-  yield fork(neuTakeEvery, actions.kyc.kycStartInstantId, startIndividualInstantId);
+  yield fork(neuTakeEvery, actions.kyc.kycStartIndividualIdNow, startIndividualIdNow);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitIndividualRequest, submitIndividualRequest);
 
   yield fork(neuTakeEvery, actions.kyc.kycLoadLegalRepresentative, loadLegalRepresentative);

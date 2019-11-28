@@ -91,7 +91,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
 export const KycPersonalDocumentVerification = compose<React.FunctionComponent>(
   appConnect<IStateProps, IDispatchProps>({
     dispatchToProps: dispatch => ({
-      onStartInstantId: () => dispatch(actions.kyc.kycStartInstantId()),
+      onStartInstantId: () => dispatch(actions.kyc.kycStartIndividualIdNow()),
       onManualVerification: () => dispatch(actions.routing.goToKYCIndividualUpload()),
     }),
   }),

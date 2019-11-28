@@ -10,7 +10,6 @@ import {
 } from "../../../modules/auth/selectors";
 import {
   selectIsKycFlowBlockedByRegion,
-  selectKycIdNowRedirectUrl,
   selectKycInstantIdStatus,
   selectKycIsInitialLoading,
   selectKycRequestStatus,
@@ -29,12 +28,12 @@ interface IStateProps {
   isRestrictedCountryInvestor: boolean;
   backupCodesVerified: boolean;
   error: string | undefined;
-  externalKycUrl: string | undefined;
 }
 
 interface IDispatchProps {
   onGoToDashboard: () => void;
   onGoToKycHome: () => void;
+  onStartIdNow: () => void;
 }
 
 const connectKycStatusWidget = () => (
@@ -47,7 +46,6 @@ const connectKycStatusWidget = () => (
         backupCodesVerified: selectBackupCodesVerified(state),
         requestStatus: selectKycRequestStatus(state),
         instantIdStatus: selectKycInstantIdStatus(state),
-        externalKycUrl: selectKycIdNowRedirectUrl(state),
         isLoading: selectKycIsInitialLoading(state),
         isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
         isRestrictedCountryInvestor: selectIsRestrictedInvestor(state),
@@ -56,6 +54,7 @@ const connectKycStatusWidget = () => (
       dispatchToProps: dispatch => ({
         onGoToDashboard: () => dispatch(actions.routing.goToDashboard()),
         onGoToKycHome: () => dispatch(actions.routing.goToKYCHome()),
+        onStartIdNow: () => dispatch(actions.kyc.kycStartIndividualIdNow()),
       }),
     }),
     branch<IStateProps>(props => props.isLoading, renderNothing),

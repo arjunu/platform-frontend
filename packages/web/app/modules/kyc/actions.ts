@@ -20,8 +20,7 @@ export const kycActions = {
   setStatusLoading: createActionFactory("KYC_SET_STATUS_LOADING"),
   setStatusError: createActionFactory("KYC_SET_STATUS_ERROR", (error: string) => ({ error })),
 
-  kycLoadClientData: createActionFactory("KYC_LOAD_CLIENT_DATA"),
-  kycFinishedLoadingData: createActionFactory("KYC_FINISHED_LOADING_DATA"),
+  kycLoadStatusAndData: createActionFactory("KYC_LOAD_CLIENT_DATA"),
 
   /**
    * Widget watchers
@@ -88,7 +87,7 @@ export const kycActions = {
 
   kycSubmitIndividualRequest: createActionFactory("KYC_SUBMIT_INDIVIDUAL_REQUEST"),
 
-  kycStartInstantId: createActionFactory("KYC_START_INSTANT_ID"),
+  kycStartIndividualIdNow: createActionFactory("KYC_START_INSTANT_ID"),
 
   /*
     Business
@@ -257,5 +256,11 @@ export const kycActions = {
   setQuintessenceBankAccountDetails: createActionFactory(
     "KYC_SET_QUINTESSENCE_BANK_ACCOUNT_DETAILS",
     (quintessenceBankAccount: KycBankQuintessenceBankAccount) => ({ quintessenceBankAccount }),
+  ),
+
+  // id-now
+  setIdNowRedirectUrl: createActionFactory(
+    "KYC_SET_ID_NOW_REDIRECT_URL",
+    (redirectUrl: string) => ({ redirectUrl }),
   ),
 };

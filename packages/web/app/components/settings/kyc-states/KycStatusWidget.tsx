@@ -109,6 +109,7 @@ const ActionButton = ({
   backupCodesVerified,
   isKycFlowBlockedByRegion,
   instantIdStatus,
+  onStartIdNow,
 }: IKycStatusWidgetProps) => {
   if (requestStatus === EKycRequestStatus.ACCEPTED) {
     return (
@@ -160,15 +161,15 @@ const ActionButton = ({
   ) {
     return (
       <Button
-        id="start-kyc-process-again"
+        id="continue-kyc-idnow-verification"
         layout={EButtonLayout.SECONDARY}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
-        onClick={onGoToKycHome}
+        onClick={onStartIdNow}
         disabled={!isUserEmailVerified || !backupCodesVerified}
-        data-test-id="settings.kyc-status-widget.start-kyc-process-again"
+        data-test-id="settings.kyc-status-widget.continue-kyc-idnow-verification"
       >
-        <FormattedMessage id="settings.kyc-status-widget.start-kyc-process" />
+        <FormattedMessage id="settings.kyc-status-widget.continue-external-kyc" />
       </Button>
     );
   }

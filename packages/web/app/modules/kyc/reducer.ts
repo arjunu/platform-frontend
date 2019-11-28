@@ -10,7 +10,7 @@ import {
 import { AppReducer } from "../../store";
 import { DeepReadonly, Dictionary } from "../../types";
 import { actions } from "../actions";
-import { TBankAccount, TClaims } from "./types";
+import { TBankAccount, TClaims, TIdNow } from "./types";
 import { appendIfExists, omitUndefined, updateArrayItem } from "./utils";
 
 export interface IKycState {
@@ -55,7 +55,10 @@ export interface IKycState {
   // api bank details
   bankAccount: TBankAccount | undefined;
   quintessenceBankAccount: KycBankQuintessenceBankAccount | undefined;
+
   kycSaving: boolean | undefined;
+
+  idNow: TIdNow | undefined;
 }
 
 const kycInitialState: IKycState = {
@@ -95,6 +98,8 @@ const kycInitialState: IKycState = {
   bankAccount: undefined,
   quintessenceBankAccount: undefined,
   kycSaving: undefined,
+
+  idNow: undefined,
 };
 
 export const kycReducer: AppReducer<IKycState> = (
@@ -203,6 +208,10 @@ export const kycReducer: AppReducer<IKycState> = (
 
     case actions.kyc.setQuintessenceBankAccountDetails.getType(): {
       return { ...state, quintessenceBankAccount: action.payload.quintessenceBankAccount };
+    }
+
+    case actions.kyc.setIdNowRedirectUrl.getType(): {
+      return { ...state, idNow: { redirectUrl: action.payload.redirectUrl } };
     }
 
     default:

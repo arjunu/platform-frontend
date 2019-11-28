@@ -184,16 +184,6 @@ export enum EKycRequestStatus {
   IGNORED = "ignored",
 }
 
-export interface IKycRequestState {
-  status: EKycRequestStatus;
-  instantIdProvider: EKycInstantIdProvider | TInstantIdNoneProvider;
-}
-
-export const KycRequestStateSchema = Yup.object().shape({
-  status: Yup.string().required(),
-  instantIdProvider: Yup.string().required(),
-});
-
 export enum EKycBusinessType {
   CORPORATE = "corporate",
   SMALL = "small",

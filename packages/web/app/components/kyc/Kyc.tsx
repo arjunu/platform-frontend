@@ -23,7 +23,7 @@ const KycLayout = React.lazy(() => import("./KycLayout").then(imp => ({ default:
 
 interface IStateProps {
   requestStatus?: EKycRequestStatus;
-  redirectUrl: string | undefined;
+  idNowRedirectUrl: string | undefined;
   requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
   isKycFlowBlockedByRegion: boolean;
@@ -39,7 +39,7 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
       requestStatus: selectKycRequestStatus(state),
-      redirectUrl: selectKycIdNowRedirectUrl(state),
+      idNowRedirectUrl: selectKycIdNowRedirectUrl(state),
       requestType: selectKycRequestType(state),
       hasVerifiedEmail: selectIsUserEmailVerified(state.auth),
       isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
@@ -48,7 +48,6 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
       goToProfile: () => dispatch(actions.routing.goToProfile()),
       goToDashboard: () => dispatch(actions.routing.goToDashboard()),
     }),
-    options: { pure: false },
   }),
   branch(
     (props: IStateProps) => !props.hasVerifiedEmail || props.isKycFlowBlockedByRegion,
@@ -56,7 +55,7 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
   ),
   onEnterAction({
     actionCreator: dispatch => {
-      dispatch(actions.kyc.kycLoadClientData());
+      dispatch(actions.kyc.kycLoadStatusAndData());
     },
   }),
   withContainer(Layout),

@@ -12,11 +12,11 @@ const commonProps = {
   isRestrictedCountryInvestor: false,
   isLoading: false,
   error: undefined,
-  externalKycUrl: undefined,
   instantIdStatus: undefined,
   step: 1,
   onGoToKycHome: action("onGoToKycHome"),
   onGoToDashboard: action("onGoToDashboard"),
+  onStartIdNow: action("onStartIdNow"),
 };
 
 storiesOf("KYC/StatusWidget", module)

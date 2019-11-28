@@ -8,13 +8,12 @@ import {
   IKycFileInfo,
   IKycIndividualData,
   IKycLegalRepresentative,
-  IKycRequestState,
   KycFileInfoShape,
   KycIdNowIdentificationSchema,
   KycIndividualDataSchema,
   KycLegalRepresentativeSchema,
-  KycRequestStateSchema,
   KycStatusSchema,
+  TKycBankAccount,
   TKycBankTransferPurpose,
   TKycIdNowIdentification,
   TKycStatus,
@@ -26,7 +25,7 @@ const STATUS_PATH = "/status";
 
 const INDIVIDUAL_DATA_PATH = "/individual/data";
 const INDIVIDUAL_REQUEST_PATH = "/individual/request";
-const INSTANT_ID_REQUEST_PATH = "/individual/request/id-now/identification-request";
+const ID_NOW_REQUEST_PATH = "/individual/request/id-now/identification-request";
 const INDIVIDUAL_DOCUMENT_PATH = "/individual/document";
 
 const BUSINESS_REQUEST_PATH = "/business/request";
@@ -109,20 +108,22 @@ export class KycApi {
   }
 
   // request
-  public async submitIndividualRequest(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.put<IKycRequestState>({
+  public async submitIndividualRequest(): Promise<IHttpResponse<TKycStatus>> {
+    return await this.httpClient.put<TKycStatus>({
       baseUrl: BASE_PATH,
       url: INDIVIDUAL_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
+      responseSchema: KycStatusSchema,
     });
   }
 
-  public async startInstantId(): Promise<IHttpResponse<TKycIdNowIdentification>> {
-    return await this.httpClient.put<TKycIdNowIdentification>({
+  public async startInstantId(): Promise<TKycIdNowIdentification> {
+    const response = await this.httpClient.put<TKycIdNowIdentification>({
       baseUrl: BASE_PATH,
-      url: INSTANT_ID_REQUEST_PATH,
+      url: ID_NOW_REQUEST_PATH,
       responseSchema: KycIdNowIdentificationSchema,
     });
+
+    return response.body;
   }
 
   /**
@@ -261,11 +262,11 @@ export class KycApi {
   }
 
   // request
-  public async submitBusinessRequest(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.put<IKycRequestState>({
+  public async submitBusinessRequest(): Promise<IHttpResponse<TKycStatus>> {
+    return await this.httpClient.put<TKycStatus>({
       baseUrl: BASE_PATH,
       url: BUSINESS_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
+      responseSchema: KycStatusSchema,
     });
   }
 
@@ -273,8 +274,8 @@ export class KycApi {
    * Bank account
    */
 
-  public async getBankAccount(): Promise<IKycRequestState> {
-    const response = await this.httpClient.get<IKycRequestState>({
+  public async getBankAccount(): Promise<TKycBankAccount> {
+    const response = await this.httpClient.get<TKycBankAccount>({
       baseUrl: BASE_PATH,
       url: BANK_ACCOUNT_PATH,
       // TODO test why `optional` is not working
