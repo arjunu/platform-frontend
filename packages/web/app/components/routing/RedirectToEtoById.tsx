@@ -2,15 +2,15 @@ import * as React from "react";
 import { Redirect } from "react-router";
 import { branch, compose, renderComponent } from "recompose";
 
-import { actions } from "../../../../modules/actions";
-import { selectEtoWithCompanyAndContractById } from "../../../../modules/eto/selectors";
-import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
-import { appConnect } from "../../../../store";
-import { onEnterAction } from "../../../../utils/OnEnterAction";
-import { withContainer } from "../../../../utils/withContainer.unsafe";
-import { etoPublicViewByIdLink } from "../../../appRouteUtils";
-import { Layout } from "../../../layouts/Layout";
-import { LoadingIndicator } from "../../../shared/loading-indicator";
+import { actions } from "../../modules/actions";
+import { selectEtoWithCompanyAndContractById } from "../../modules/eto/selectors";
+import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
+import { appConnect } from "../../store";
+import { onEnterAction } from "../../utils/OnEnterAction";
+import { withContainer } from "../../utils/withContainer.unsafe";
+import { etoPublicViewByIdLink } from "../appRouteUtils";
+import { Layout } from "../layouts/Layout";
+import { LoadingIndicator } from "../shared/loading-indicator/index";
 
 interface IStateProps {
   eto?: TEtoWithCompanyAndContractReadonly;

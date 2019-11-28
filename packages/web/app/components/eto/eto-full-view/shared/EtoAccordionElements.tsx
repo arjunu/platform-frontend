@@ -8,7 +8,7 @@ import { ChartDoughnutLazy } from "../../../shared/charts/ChartDoughnutLazy";
 import { Field } from "../../../shared/Field";
 import { Panel } from "../../../shared/Panel";
 import { DashboardHeading } from "../../../shared/DashboardHeading";
-import { CHART_COLORS } from "../../constants";
+import { CHART_COLORS } from "../../shared/constants";
 
 import * as styles from "./PublicView.module.scss";
 

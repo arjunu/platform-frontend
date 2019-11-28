@@ -6,7 +6,7 @@ import { compose, withProps, withStateHandlers } from "recompose";
 import { EETOStateOnChain } from "../../../../modules/eto/types";
 import { TTranslatedString } from "../../../../types";
 import { Counter } from "../../../shared/Counter";
-import { generalStateToName } from "../../shared/ETOState";
+import { generalStateToName } from "../../../shared/eto-state/ETOState";
 
 import * as styles from "./CounterWidget.module.scss";
 

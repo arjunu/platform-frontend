@@ -10,7 +10,7 @@ import {
 } from "../../../utils/injectIntlHelpers.unsafe";
 import { OTHERS_NAME } from "../../eto/utils";
 import { ChartLegend } from "./ChartLegend";
-import { DEFAULT_CHART_COLOR } from "../../eto/constants";
+import { DEFAULT_CHART_COLOR } from "../../eto/shared/constants";
 
 import * as styles from "./ChartDoughnut.module.scss";
 

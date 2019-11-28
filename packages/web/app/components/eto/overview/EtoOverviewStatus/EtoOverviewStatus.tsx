@@ -8,7 +8,7 @@ import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/type
 import { CommonHtmlProps } from "../../../../types";
 import { etoPublicViewLink } from "../../../appRouteUtils";
 import { Container, EColumnSpan } from "../../../layouts/Container";
-import { ETOInvestorState, ETOIssuerState } from "../../shared/ETOState";
+import { ETOInvestorState, ETOIssuerState } from "../../../shared/eto-state/ETOState";
 import { EtoStats } from "./EtoStats";
 import { EtoStatusManager } from "./EtoStatusManager/EtoStatusManager";
 import { EtoTitle } from "./EtoTitle";

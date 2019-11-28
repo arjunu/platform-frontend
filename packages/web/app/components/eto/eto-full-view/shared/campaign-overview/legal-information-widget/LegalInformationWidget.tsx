@@ -9,7 +9,7 @@ import { FormatNumber } from "../../../../../shared/formatters/FormatNumber";
 import { Money } from "../../../../../shared/formatters/Money";
 import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../../../../../shared/formatters/utils";
 import { Panel } from "../../../../../shared/Panel";
-import { CHART_COLORS, FUNDING_ROUNDS } from "../../../../constants";
+import { CHART_COLORS, FUNDING_ROUNDS } from "../../../../shared/constants";
 import { DashboardHeading } from "../../../../../shared/DashboardHeading";
 import { generateShareholders } from "../../../../utils";
 

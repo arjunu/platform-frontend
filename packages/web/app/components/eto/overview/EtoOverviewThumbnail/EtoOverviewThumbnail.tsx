@@ -19,8 +19,8 @@ import {
 } from "../../../shared/formatters/utils";
 import { VALUES } from "../../../shared/forms/fields/FormSelectCountryField.unsafe";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
-import { FUNDING_ROUNDS } from "../../constants";
-import { ComingSoonEtoState, ETOInvestorState, SuccessEtoState } from "../../shared/ETOState";
+import { FUNDING_ROUNDS } from "../../shared/constants";
+import { ComingSoonEtoState, ETOInvestorState, SuccessEtoState } from "../../../shared/eto-state/ETOState";
 import { Cover } from "./Cover";
 import { EtoCardButton, EtoCardPanelButton } from "./EtoCardPanel";
 import { EtoCardStatusManager } from "./EtoCardStatusManager";

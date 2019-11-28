@@ -28,7 +28,7 @@ import {
 } from "../../../../../shared/formatters/utils";
 import { Panel } from "../../../../../shared/Panel";
 import { Percentage } from "../../../../../shared/Percentage";
-import { InvestmentAmount } from "../../../../shared/InvestmentAmount";
+import { InvestmentAmount } from "./InvestmentAmount";
 import { ToBeAnnounced, ToBeAnnouncedTooltip } from "../../../../shared/ToBeAnnouncedTooltip";
 
 import * as styles from "./EtoInvestmentTermsWidget.module.scss";

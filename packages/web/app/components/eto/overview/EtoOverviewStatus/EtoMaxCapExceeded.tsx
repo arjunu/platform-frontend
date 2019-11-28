@@ -18,7 +18,7 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../shared/formatters/utils";
-import { InvestmentProgress } from "../InvestmentProgress";
+import { InvestmentProgress } from "../../shared/InvestmentProgress";
 import { CounterWidget } from "./CounterWidget";
 import { SuccessMessage } from "./Message";
 

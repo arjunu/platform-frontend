@@ -1,12 +1,12 @@
 import { compose } from "recompose";
 
-import { actions } from "../../../../modules/actions";
-import { selectNomineeRequests } from "../../../../modules/eto-nominee/selectors";
-import { INomineeRequest } from "../../../../modules/nominee-flow/types";
-import { appConnect } from "../../../../store";
-import { THocProps } from "../../../../types";
-import { onEnterAction } from "../../../../utils/OnEnterAction";
-import { onLeaveAction } from "../../../../utils/OnLeaveAction";
+import { actions } from "../../../modules/actions";
+import { selectNomineeRequests } from "../../../modules/eto-nominee/selectors";
+import { INomineeRequest } from "../../../modules/nominee-flow/types";
+import { appConnect } from "../../../store";
+import { THocProps } from "../../../types";
+import { onEnterAction } from "../../../utils/OnEnterAction";
+import { onLeaveAction } from "../../../utils/OnLeaveAction";
 
 type TStateProps = {
   nomineeRequests: INomineeRequest[];

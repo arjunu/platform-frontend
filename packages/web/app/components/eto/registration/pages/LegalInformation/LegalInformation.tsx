@@ -17,7 +17,7 @@ import { FormMaskedNumberInput } from "../../../../shared/forms/fields/FormMaske
 import { FormSelectField } from "../../../../shared/forms/fields/FormSelectField";
 import { FormTextArea } from "../../../../shared/forms/fields/FormTextArea";
 import { FormHighlightGroup } from "../../../../shared/forms/FormHighlightGroup";
-import { FUNDING_ROUNDS } from "../../../constants";
+import { FUNDING_ROUNDS } from "../../../shared/constants";
 import { EtoFormBase } from "../../EtoFormBase";
 import { Section } from "../../Shared";
 import { connectEtoRegistrationLegalInformation, TComponentProps } from "./connectLegalInformation";

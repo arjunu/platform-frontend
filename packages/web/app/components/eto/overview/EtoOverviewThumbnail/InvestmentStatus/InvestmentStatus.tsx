@@ -15,7 +15,7 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { InvestmentProgress } from "../../InvestmentProgress";
+import { InvestmentProgress } from "../../../shared/InvestmentProgress";
 
 import * as styles from "./InvestmentStatus.module.scss";
 

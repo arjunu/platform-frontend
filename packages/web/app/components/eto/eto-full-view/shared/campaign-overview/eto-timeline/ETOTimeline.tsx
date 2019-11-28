@@ -6,7 +6,7 @@ import { isOnChain } from "../../../../../../modules/eto/utils";
 import { Container, EColumnSpan } from "../../../../../layouts/Container";
 import { Panel } from "../../../../../shared/Panel";
 import { DashboardHeading } from "../../../../../shared/DashboardHeading";
-import { EtoTimeline } from "../../../../shared/timeline/EtoTimeline";
+import { EtoTimeline } from "./timeline/EtoTimeline";
 
 import * as styles from "./ETOTimeline.module.scss";
 

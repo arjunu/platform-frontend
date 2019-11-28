@@ -1,4 +1,4 @@
-import { TEtoKeyIndividualType } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { TEtoKeyIndividualType } from "../../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 
 export const selectActiveCarouselTab = (elements: any[]): number => {
   for (let element in elements) {

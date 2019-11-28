@@ -1,9 +1,9 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { EEtoState } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { EETOStateOnChain, EEtoSubState } from "../../../../modules/eto/types";
-import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
+import { EEtoState } from "../../../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { EETOStateOnChain, EEtoSubState } from "../../../../../../../modules/eto/types";
+import { withMockedDate } from "../../../../../../../utils/storybookHelpers.unsafe";
 import { EtoTimeline } from "./EtoTimeline";
 
 const startOfStates = {

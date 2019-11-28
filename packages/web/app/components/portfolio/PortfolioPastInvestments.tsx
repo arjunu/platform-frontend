@@ -8,7 +8,7 @@ import { TETOWithInvestorTicket } from "../../modules/investor-portfolio/types";
 import { getTokenPrice } from "../../modules/investor-portfolio/utils";
 import { etoPublicViewLink } from "../appRouteUtils";
 import { DashboardHeading } from "../shared/DashboardHeading";
-import { EProjectStatusSize, ETOInvestorState } from "../eto/shared/ETOState";
+import { EProjectStatusSize, ETOInvestorState } from "../shared/eto-state/ETOState";
 import { Container } from "../layouts/Container";
 import { FormatNumber } from "../shared/formatters/FormatNumber";
 import { Money } from "../shared/formatters/Money";

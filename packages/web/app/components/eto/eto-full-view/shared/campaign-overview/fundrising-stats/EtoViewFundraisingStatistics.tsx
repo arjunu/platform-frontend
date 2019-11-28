@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { externalRoutes } from "../../../config/externalRoutes";
-import { withParams } from "../../../utils/withParams";
-import { LoadingIndicatorHexagon } from "../../shared/loading-indicator/LoadingIndicatorHexagon";
+import { externalRoutes } from "../../../../../../config/externalRoutes";
+import { withParams } from "../../../../../../utils/withParams";
+import { LoadingIndicatorHexagon } from "../../../../../shared/loading-indicator/LoadingIndicatorHexagon";
 
 import * as styles from "./EtoViewFundraisingStatistics.module.scss";
 

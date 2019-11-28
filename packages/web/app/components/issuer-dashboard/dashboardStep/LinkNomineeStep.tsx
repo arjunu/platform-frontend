@@ -9,7 +9,7 @@ import { appConnect } from "../../../store";
 import { nonNullable } from "../../../utils/nonNullable";
 import { etoRegisterRoutes } from "../../eto/registration/routes";
 import { DashboardHeading } from "../../shared/DashboardHeading";
-import { TWithNomineeProps, withNomineeRequests } from "../../eto/shared/hocs/withNomineeRequests";
+import { TWithNomineeProps, withNomineeRequests } from "../hocs/withNomineeRequests";
 import { AccountAddress } from "../../shared/AccountAddress";
 
 type TStateProps = {

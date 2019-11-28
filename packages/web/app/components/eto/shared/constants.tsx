@@ -1,8 +1,8 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { EFundingRound } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { Dictionary, TTranslatedString } from "../../types";
+import { EFundingRound } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { Dictionary, TTranslatedString } from "../../../types";
 
 export const FUNDING_ROUNDS: Dictionary<TTranslatedString, EFundingRound | "NONE_KEY"> = {
   NONE_KEY: <FormattedMessage id="form.select.please-select" />,

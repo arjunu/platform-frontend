@@ -1,17 +1,17 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
-import { getEtoEurMaxTarget, getEtoEurMinTarget } from "../../../modules/eto/utils";
-import { MoneyRange } from "../../shared/formatters/MoneyRange";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../../modules/eto/types";
+import { getEtoEurMaxTarget, getEtoEurMinTarget } from "../../../../../../modules/eto/utils";
+import { MoneyRange } from "../../../../../shared/formatters/MoneyRange";
 import {
   EAbbreviatedNumberOutputFormat,
   ECurrency,
   ENumberInputFormat,
-} from "../../shared/formatters/utils";
-import { Tooltip } from "../../shared/tooltips/Tooltip";
-import { ECustomTooltipTextPosition } from "../../shared/tooltips/TooltipBase";
-import { ToBeAnnounced } from "./ToBeAnnouncedTooltip";
+} from "../../../../../shared/formatters/utils";
+import { Tooltip } from "../../../../../shared/tooltips/Tooltip";
+import { ECustomTooltipTextPosition } from "../../../../../shared/tooltips/TooltipBase";
+import { ToBeAnnounced } from "../../../../shared/ToBeAnnouncedTooltip";
 
 type TExternalProps = {
   etoData: TEtoWithCompanyAndContractReadonly;

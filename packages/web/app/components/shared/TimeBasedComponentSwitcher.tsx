@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { CommonHtmlProps } from "../../../types";
+import { CommonHtmlProps } from "../../types";
 
 interface IProps {
   endDate: Date;

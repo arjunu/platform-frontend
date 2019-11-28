@@ -4,7 +4,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { CommonHtmlProps, TDataTestId } from "../../types";
-import { TimeBasedComponentSwitcher } from "../eto/shared/TimeBasedComponentSwitcher";
+import { TimeBasedComponentSwitcher } from "./TimeBasedComponentSwitcher";
 
 import * as styles from "./Counter.module.scss";
 

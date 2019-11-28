@@ -15,7 +15,7 @@ import { Video } from "../../../../shared/Video";
 import { IEtoSocialProfile, SocialProfilesList } from "../../../../shared/SocialProfilesList";
 import { MarketingDocumentsWidget } from "./MarketingDocumentsWidget";
 import { EtoInvestmentTermsWidget } from "./eto-investment-terms-widget/EtoInvestmentTermsWidget";
-import { Individuals } from "./Individuals";
+import { Individuals } from "./individuals/Individuals";
 import { EtoAccordionElements } from "../EtoAccordionElements";
 import { DocumentsWidget } from "./documents-widget/DocumentsWidget";
 import { Panel } from "../../../../shared/Panel";

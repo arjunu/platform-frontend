@@ -6,7 +6,7 @@ import { Container, EColumnSpan } from "../../../../layouts/Container";
 import { TabContent, Tabs } from "../../../../shared/Tabs";
 import { SwitchConnected } from "../../../../../utils/connectedRouting";
 import { WidgetGrid } from "../../../../layouts/WidgetGrid";
-import { EtoViewFundraisingStatistics } from "../../../shared/EtoViewFundraisingStatistics";
+import { EtoViewFundraisingStatistics } from "./fundrising-stats/EtoViewFundraisingStatistics";
 import { TEtoViewCampaignOverviewProps } from "./EtoViewCampaignOverview";
 import { EtoViewCampaignOverviewLayout } from "./EtoViewCampaignOverviewLayout";
 import { TCampaignOverviewWithStatsData } from "../../../../../modules/eto-view/reducer";

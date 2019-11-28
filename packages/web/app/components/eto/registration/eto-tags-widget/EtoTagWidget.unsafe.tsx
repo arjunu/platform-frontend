@@ -5,13 +5,13 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Creatable as ReactSelectCreatable, Option } from "react-select";
 
-import { CommonHtmlProps } from "../../../types";
-import { FormFieldError } from "../../shared/forms";
-import { FormFieldLabel } from "../../shared/forms/fields/FormFieldLabel";
-import { VirtualizedSelect } from "../../shared/forms/fields/VirtualizedSelect";
-import { ETagSize, Tag } from "../../shared/Tag";
+import { CommonHtmlProps } from "../../../../types";
+import { FormFieldError } from "../../../shared/forms/index";
+import { FormFieldLabel } from "../../../shared/forms/fields/FormFieldLabel";
+import { VirtualizedSelect } from "../../../shared/forms/fields/VirtualizedSelect";
+import { ETagSize, Tag } from "../../../shared/Tag";
 
-import * as checkIcon from "../../../assets/img/inline_icons/close_no_border.svg";
+import * as checkIcon from "../../../../assets/img/inline_icons/close_no_border.svg";
 import * as styles from "./EtoTagWidget.module.scss";
 
 type ICombinedProps = IProps & CommonHtmlProps;

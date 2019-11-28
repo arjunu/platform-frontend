@@ -8,7 +8,7 @@ import { Field } from "../../../../shared/Field";
 import { ExternalLink } from "../../../../shared/links/index";
 import { normalizedUrl } from "../../../../shared/MediaLinksWidget";
 import { Panel } from "../../../../shared/Panel";
-import { DEFAULT_PLACEHOLDER } from "../../../constants";
+import { DEFAULT_PLACEHOLDER } from "../../../shared/constants";
 import { DashboardHeading } from "../../../../shared/DashboardHeading";
 
 import * as styles from "../PublicView.module.scss";

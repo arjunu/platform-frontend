@@ -38,7 +38,7 @@ import { RequiredByKeys } from "../../types";
 import { onEnterAction } from "../../utils/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
 import { DashboardHeading } from "../shared/DashboardHeading";
-import { EProjectStatusLayout, EProjectStatusSize, ETOIssuerState } from "../eto/shared/ETOState";
+import { EProjectStatusLayout, EProjectStatusSize, ETOIssuerState } from "../shared/eto-state/ETOState";
 import { Container, EColumnSpan, EContainerType } from "../layouts/Container";
 import { Layout } from "../layouts/Layout";
 import { WidgetGrid } from "../layouts/WidgetGrid";

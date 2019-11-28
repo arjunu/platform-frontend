@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { CommonHtmlProps, TDataTestId } from "../../../../types";
 import { isLessThanNDays } from "../../../../utils/DateUtils";
-import { TimeBasedComponentSwitcher } from "../../shared/TimeBasedComponentSwitcher";
+import { TimeBasedComponentSwitcher } from "../../../shared/TimeBasedComponentSwitcher";
 
 interface IExternalProps {
   endTime: Date;

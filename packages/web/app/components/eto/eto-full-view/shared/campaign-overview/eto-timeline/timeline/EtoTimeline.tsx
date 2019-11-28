@@ -3,9 +3,9 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, pure, withHandlers, withProps } from "recompose";
 
-import { EEtoState } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { EETOStateOnChain, EEtoSubState, TEtoStartOfStates } from "../../../../modules/eto/types";
-import { isComingSoon } from "../../../../modules/eto/utils";
+import { EEtoState } from "../../../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { EETOStateOnChain, EEtoSubState, TEtoStartOfStates } from "../../../../../../../modules/eto/types";
+import { isComingSoon } from "../../../../../../../modules/eto/utils";
 import { Block, EBlockTheme, EndBlock, StartBlock } from "./Block";
 import { DatePoint, Pointer } from "./Point";
 
