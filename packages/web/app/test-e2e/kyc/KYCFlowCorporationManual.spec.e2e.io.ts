@@ -3,17 +3,17 @@ import { goThroughKycCorporateProcess } from "../utils/index";
 import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
 
-describe("KYC Small Business flow with manual verification", () => {
-  it("went through KYC Small Business flow", () => {
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      // go to corporate start page
-      cy.visit(kycRoutes.start);
-      cy.get(tid("kyc-start-go-to-company")).awaitedClick();
+describe("KYC Business flow", () => {
+  it("with manual verification should went through KYC business flow", () => {
+    createAndLoginNewUser({ type: "investor" });
 
-      goThroughKycCorporateProcess();
+    // go to corporate start page
+    cy.visit(kycRoutes.start);
+    cy.get(tid("kyc-start-go-to-company")).awaitedClick();
 
-      // panel should now be in pending state
-      cy.get(tid("kyc-panel-pending"));
-    });
+    goThroughKycCorporateProcess();
+
+    // panel should now be in pending state
+    cy.get(tid("kyc-panel-pending")).should("exist");
   });
 });

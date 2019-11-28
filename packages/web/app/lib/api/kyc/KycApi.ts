@@ -108,12 +108,14 @@ export class KycApi {
   }
 
   // request
-  public async submitIndividualRequest(): Promise<IHttpResponse<TKycStatus>> {
-    return await this.httpClient.put<TKycStatus>({
-      baseUrl: BASE_PATH,
-      url: INDIVIDUAL_REQUEST_PATH,
-      responseSchema: KycStatusSchema,
-    });
+  public async submitIndividualRequest(): Promise<TKycStatus> {
+    return await this.httpClient
+      .put<TKycStatus>({
+        baseUrl: BASE_PATH,
+        url: INDIVIDUAL_REQUEST_PATH,
+        responseSchema: KycStatusSchema,
+      })
+      .then(response => response.body);
   }
 
   public async startInstantId(): Promise<TKycIdNowIdentification> {
@@ -262,12 +264,14 @@ export class KycApi {
   }
 
   // request
-  public async submitBusinessRequest(): Promise<IHttpResponse<TKycStatus>> {
-    return await this.httpClient.put<TKycStatus>({
-      baseUrl: BASE_PATH,
-      url: BUSINESS_REQUEST_PATH,
-      responseSchema: KycStatusSchema,
-    });
+  public async submitBusinessRequest(): Promise<TKycStatus> {
+    return await this.httpClient
+      .put<TKycStatus>({
+        baseUrl: BASE_PATH,
+        url: BUSINESS_REQUEST_PATH,
+        responseSchema: KycStatusSchema,
+      })
+      .then(response => response.body);
   }
 
   /**

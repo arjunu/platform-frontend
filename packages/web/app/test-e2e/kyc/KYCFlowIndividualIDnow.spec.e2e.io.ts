@@ -34,37 +34,27 @@ const initiateIDNowKyc = (isUSInvestor: boolean) => {
 };
 
 describe("KYC Personal flow with ID Now", () => {
-  it("should go through ID Now Cancel then try ID now again", () => {
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      initiateIDNowKyc(false);
+  it("should go through ID Now", () => {
+    createAndLoginNewUser({ type: "investor" });
 
-      cy.visit(appRoutes.profile);
+    initiateIDNowKyc(false);
 
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).click();
-      cy.get(tid("settings.kyc-status-widget.start-kyc-process")).should("exist");
+    cy.visit(appRoutes.profile);
 
-      //Second Time
-      initiateIDNowKyc(false);
+    // TODO: Improve e2e tests to check redirect and link inside kyc flow
 
-      cy.visit(appRoutes.profile);
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).should("exist");
-    });
+    cy.get(tid("settings.kyc-status-widget.continue-kyc-idnow-verification")).click();
   });
 
-  it.skip("should go through ID Now for US investor", () => {
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      initiateIDNowKyc(true);
+  it("should go through ID Now for US investor", () => {
+    createAndLoginNewUser({ type: "investor" });
 
-      cy.visit(appRoutes.profile);
+    initiateIDNowKyc(true);
 
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).click();
-      cy.get(tid("settings.kyc-status-widget.start-kyc-process")).should("exist");
+    cy.visit(appRoutes.profile);
 
-      //Second Time
-      initiateIDNowKyc(true);
+    // TODO: Improve e2e tests to check redirect and link inside kyc flow
 
-      cy.visit(appRoutes.profile);
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).should("exist");
-    });
+    cy.get(tid("settings.kyc-status-widget.continue-kyc-idnow-verification")).click();
   });
 });

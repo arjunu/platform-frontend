@@ -98,10 +98,10 @@ export const createAndLoginNewUser = (
     cy.wait(3000);
 
     const userData = await getUserData(jwt);
-    const kycData = await getKycData(jwt);
+    const kycStatus = await getKycStatus(jwt);
     cy.log(userData.verified_email as string);
-    cy.log(params.kyc ? (kycData[params.kyc] as string) : "No KYC");
-    if ((params.kyc && kycData[params.kyc] !== "accepted") || !userData.verified_email) {
+    cy.log(`KYC status ${kycStatus}`);
+    if ((params.kyc && kycStatus !== "accepted") || !userData.verified_email) {
       if (attempts > NUMBER_OF_ATTEMPTS) {
         throw new Error("Cannot create user something wrong happened in the backend");
       }
@@ -277,8 +277,7 @@ const USER_PATH = "/api/user/user/me";
 const USER_TOS_PATH = USER_PATH + "/tos";
 
 const KYC_PATH = "/api/kyc";
-const KYC_INDIVIDUAL = "/individual/request";
-const KYC_COMPANY = "/business/request";
+const KYC_STATUS_PATH = "/status";
 
 export const getUserData = async (jwt: string) => {
   const headers = {
@@ -293,29 +292,20 @@ export const getUserData = async (jwt: string) => {
   ).json();
 };
 
-export const getKycData = async (jwt: string) => {
+export const getKycStatus = async (jwt: string) => {
   const headers = {
     "Content-Type": "application/json",
     authorization: `Bearer ${jwt}`,
   };
-  return {
-    individual: (
-      await (
-        await fetch(KYC_PATH + KYC_INDIVIDUAL, {
-          headers,
-          method: "GET",
-        })
-      ).json()
-    ).status,
-    business: (
-      await (
-        await fetch(KYC_PATH + KYC_COMPANY, {
-          headers,
-          method: "GET",
-        })
-      ).json()
-    ).status,
-  };
+
+  const statusResponse = await fetch(KYC_PATH + KYC_STATUS_PATH, {
+    headers,
+    method: "GET",
+  });
+
+  const { status } = await statusResponse.json();
+
+  return status;
 };
 
 export const markBackupCodesVerified = async (jwt: string) => {
