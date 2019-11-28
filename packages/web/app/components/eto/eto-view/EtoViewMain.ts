@@ -1,20 +1,20 @@
 import { branch, compose, renderComponent } from "recompose";
 
-import { appConnect } from "../../store";
+import { appConnect } from "../../../store";
 import {
   EEtoViewType,
   TEtoViewState,
   TInvestorEtoViewData, TIssuerEtoViewData, TIssuerPreviewEtoViewData, TNomineeEtoViewData,
   TNotAuthorizedEtoViewData,
-} from "../../modules/eto-view/reducer";
-import { selectEtoViewData } from "../../modules/eto-view/selectors";
-import { EProcessState } from "../../utils/enums/processStates";
-import { LoadingIndicator } from "../shared/loading-indicator/LoadingIndicator";
-import { EtoViewNonAuthorized } from "./EtoViewNonAuthorized";
-import { EtoViewInvestor } from "./EtoViewInvestor";
-import { EtoViewIssuer } from "./EtoViewIssuer";
-import { EtoViewIssuerPreview } from "./EtoViewIssuerPreview";
-import { EtoViewNominee } from "./EtoViewNominee";
+} from "../../../modules/eto-view/reducer";
+import { selectEtoViewData } from "../../../modules/eto-view/selectors";
+import { EProcessState } from "../../../utils/enums/processStates";
+import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
+import { EtoViewNonAuthorized } from "./notAuth/EtoViewNonAuthorized";
+import { EtoViewInvestor } from "./investor/EtoViewInvestor";
+import { EtoViewIssuer } from "./issuer/EtoViewIssuer";
+import { EtoViewIssuerPreview } from "./issuer/EtoViewIssuerPreview";
+import { EtoViewNominee } from "./nominee/EtoViewNominee";
 
 export const EtoViewMain = compose<{},{}>(
   appConnect<TEtoViewState, {}, {}>({

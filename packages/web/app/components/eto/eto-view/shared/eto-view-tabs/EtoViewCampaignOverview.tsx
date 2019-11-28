@@ -1,13 +1,13 @@
 import { branch, compose, renderComponent } from "recompose";
 
-import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { EtoViewCampaignOverviewWithStatsLayout } from "./EtoViewCampaignOverviewWithStatsLayout";
 import { EtoViewCampaignOverviewLayout } from "./EtoViewCampaignOverviewLayout";
 import {
   EEtoViewCampaignOverviewType,
   TCampaignOverviewData,
   TCampaignOverviewWithStatsData
-} from "../../../../modules/eto-view/reducer";
+} from "../../../../../modules/eto-view/reducer";
 
 
 export type TEtoViewCampaignOverviewProps = {

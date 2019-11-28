@@ -3,23 +3,22 @@ import * as React from "react";
 import {
   EtoCompanyInformationType,
   EtoPitchType,
-} from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { WidgetGrid } from "../../layouts/WidgetGrid";
-import { PersonProfileModal } from "../../modals/person-profile-modal/PersonProfileModal";
-import { FieldSchemaProvider } from "../../shared/Field";
-import { EtoOverviewStatus } from "../overview/EtoOverviewStatus/EtoOverviewStatus";
-import { Cover } from "../public-view/Cover";
-import { InvestorCoverBannerLayout } from "../public-view/CoverBanner";
-import { TInvestorEtoViewData } from "../../../modules/eto-view/reducer";
-import { EtoViewCampaignOverview } from "./eto-view-tabs/EtoViewCampaignOverview";
+} from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { WidgetGrid } from "../../../layouts/WidgetGrid";
+import { PersonProfileModal } from "../../../modals/person-profile-modal/PersonProfileModal";
+import { FieldSchemaProvider } from "../../../shared/Field";
+import { EtoOverviewStatus } from "../../overview/EtoOverviewStatus/EtoOverviewStatus";
+import { Cover } from "../../public-view/Cover";
+import { InvestorCoverBannerLayout } from "../../public-view/CoverBanner";
+import { TIssuerPreviewEtoViewData } from "../../../../modules/eto-view/reducer";
+import { EtoViewCampaignOverview } from "../shared/eto-view-tabs/EtoViewCampaignOverview";
 
-import * as styles from "./EtoView.module.scss";
+import * as styles from "../../shared/EtoView.module.scss";
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());
 
-const EtoViewInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
+const EtoViewIssuerPreviewLayout: React.FunctionComponent<TIssuerPreviewEtoViewData> = ({
   eto,
-  userIsFullyVerified,
   campaignOverviewData,
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
@@ -49,7 +48,7 @@ const EtoViewInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
         <EtoOverviewStatus eto={eto} publicView={true} isEmbedded={false} />
         <EtoViewCampaignOverview
           eto={eto}
-          isUserFullyVerified={userIsFullyVerified}
+          isUserFullyVerified={true}
           publicView={true}
           data={campaignOverviewData}
         />
@@ -58,4 +57,4 @@ const EtoViewInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
   );
 };
 
-export { EtoViewInvestorLayout };
+export { EtoViewIssuerPreviewLayout };

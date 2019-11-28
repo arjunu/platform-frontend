@@ -1,12 +1,12 @@
 import {  compose } from "recompose";
 
-import { withContainer } from "../../utils/withContainer.unsafe";
-import { Layout } from "../layouts/Layout";
-import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
-import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout";
-import { TIssuerEtoViewData } from "../../modules/eto-view/reducer";
-import { withMetaTags } from "../../utils/withMetaTags.unsafe";
-import { EtoViewIssuerLayout } from "./shared/EtoViewIssuerLayout";
+import { withContainer } from "../../../../utils/withContainer.unsafe";
+import { Layout } from "../../../layouts/Layout";
+import { createErrorBoundary } from "../../../shared/errorBoundary/ErrorBoundary.unsafe";
+import { ErrorBoundaryLayout } from "../../../shared/errorBoundary/ErrorBoundaryLayout";
+import { TIssuerEtoViewData } from "../../../../modules/eto-view/reducer";
+import { withMetaTags } from "../../../../utils/withMetaTags.unsafe";
+import { EtoViewIssuerLayout } from "./EtoViewIssuerLayout";
 
 export const EtoViewIssuer = compose<TIssuerEtoViewData, TIssuerEtoViewData>(
   createErrorBoundary(ErrorBoundaryLayout),

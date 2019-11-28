@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EEtoDocumentType } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { TTranslatedString } from "../../types";
-import { ETOAddDocuments } from "../eto/shared/EtoAddDocument";
+import { ETOAddDocuments } from "../documents/issuerDocuments/EtoAddDocument";
 import { Button, ButtonSize, EButtonLayout } from "./buttons/Button";
 import { DocumentTile } from "./Document";
 import { InlineIcon } from "./icons/InlineIcon";

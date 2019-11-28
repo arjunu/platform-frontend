@@ -3,7 +3,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EEtoDocumentType } from "../../../lib/api/eto/EtoFileApi.interfaces";
-import { EtoFileIpfsModal } from "../../eto/shared/EtoFileIpfsModal";
+import { EtoFileIpfsModal } from "./EtoFileIpfsModal";
 import { DocumentUploadableTile } from "../../shared/DocumentUploadable";
 import { Heading } from "../../shared/Heading";
 import { ProductTemplates } from "../../shared/SingleColDocumentWidget";

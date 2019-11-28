@@ -9,10 +9,6 @@ import { Documents } from "./documents/issuerDocuments/Documents";
 import { NomineeDocuments } from "./documents/nomineeDocuments/NomineeDocuments";
 import { MigrationFromLink } from "./edge-cases/MigrationFromLink";
 import { UnlockWalletFundsFromLink } from "./edge-cases/UnlockWalletFundsFromLink";
-import { EtoIssuerView } from "./eto/EtoIssuerView";
-import { EtoNomineeView } from "./eto/EtoNomineeView";
-import { EtoPublicView } from "./eto/EtoPublicView";
-import { EtoPublicViewByContractId } from "./eto/EtoPublicViewByContractId";
 import { EtoWidgetView } from "./eto/EtoWidgetView";
 import { EtoRegister } from "./eto/registration/Start";
 import { RedirectEtoById } from "./eto/shared/routing/RedirectToEtoById";
@@ -37,13 +33,11 @@ import { EmbeddedWidget } from "./testing/embeded-widget/TestEmbededWidget";
 import { WalletRecoverMain } from "./wallet-selector/wallet-recover/WalletRecoverMain";
 import { WalletSelector } from "./wallet-selector/WalletSelector";
 import { Wallet } from "./wallet/Wallet";
-import { EtoViewMain } from "./eto/EtoViewMain";
+import { EtoViewMain } from "./eto/eto-view/EtoViewMain";
 
 // TEMPORARY CONSTANTS -------->
 const GREYP_URL = "/greyp";
-const GREYP_WITH_JURISDICTION = "/:jurisdiction/greyp";
 const GREYP_JURISDICTION = EJurisdiction.LIECHTENSTEIN;
-const GREYP_PREVIEW_CODE = "1eb004fd-c44d-4bed-9e76-0e0858649587";
 // <---------------------------
 
 export const AppRouter: React.FunctionComponent = () => (
@@ -56,16 +50,19 @@ export const AppRouter: React.FunctionComponent = () => (
     />
 
     <Route
-      path={GREYP_WITH_JURISDICTION}
-      render={({ match }) => (
-        <EtoPublicView previewCode={GREYP_PREVIEW_CODE} jurisdiction={match.params.jurisdiction} />
-      )}
+      path={appRoutes.greypWithJurisdiction}
+      component={EtoViewMain}
     />
     {/*<------------------------------- */}
+
 
     <Route
     path={appRoutes.etoPublicView}
     component={EtoViewMain}
+    />
+    <Route
+      path={appRoutes.etoPublicViewById}
+      component={EtoViewMain}
     />
     {/* Redirect Legacy ETO link to current link */}
     <Route
@@ -78,15 +75,15 @@ export const AppRouter: React.FunctionComponent = () => (
       render={({ match }) => <RedirectEtoById etoId={match.params.etoId} />}
       exact
     />
-    <Route
-      path={appRoutes.etoPublicViewById}
-      render={({ match }) => (
-        <EtoPublicViewByContractId
-          etoId={match.params.etoId}
-          jurisdiction={match.params.jurisdiction}
-        />
-      )}
-    />
+    {/*<Route*/}
+    {/*  path={appRoutes.etoPublicViewById}*/}
+    {/*  render={({ match }) => (*/}
+    {/*    <EtoPublicViewByContractId*/}
+    {/*      etoId={match.params.etoId}*/}
+    {/*      jurisdiction={match.params.jurisdiction}*/}
+    {/*    />*/}
+    {/*  )}*/}
+    {/*/>*/}
     <Route
       path={appRoutes.etoWidgetView}
       render={({ match }) => <EtoWidgetView previewCode={match.params.previewCode} />}
@@ -107,15 +104,6 @@ export const AppRouter: React.FunctionComponent = () => (
     <OnlyPublicRoute path={appRoutes.register} component={WalletSelector} />
     <OnlyPublicRoute path={appRoutes.login} component={WalletSelector} />
     <OnlyPublicRoute path={appRoutes.restore} component={WalletRecoverMain} />
-    {/*<OnlyPublicRoute*/}
-    {/*  path={appRoutes.etoPublicView}*/}
-    {/*  render={({ match }) => (*/}
-    {/*    <EtoPublicView*/}
-    {/*      previewCode={match.params.previewCode}*/}
-    {/*      jurisdiction={match.params.jurisdiction}*/}
-    {/*    />*/}
-    {/*  )}*/}
-    {/*/>*/}
     {process.env.NF_ISSUERS_ENABLED === "1" && [
       <OnlyPublicRoute
         key={appRoutes.etoLanding}
@@ -174,12 +162,6 @@ export const AppRouter: React.FunctionComponent = () => (
       path={appRoutes.documents}
       issuerComponent={Documents}
       nomineeComponent={NomineeDocuments}
-      exact
-    />
-    <OnlyAuthorizedRoute
-      path={appRoutes.etoIssuerView}
-      issuerComponent={EtoIssuerView}
-      nomineeComponent={EtoNomineeView}
       exact
     />
 

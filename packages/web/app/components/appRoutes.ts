@@ -1,8 +1,14 @@
 import { EJurisdiction } from "../lib/api/eto/EtoProductsApi.interfaces";
 
 export type TEtoViewByPreviewCodeMatch = {jurisdiction: EJurisdiction, previewCode: string}
+export type TEtoViewByIdMatch = {jurisdiction: EJurisdiction, etoId: string}
 
 export const appRoutes = {
+  // ----- HARDCODED TEMP ROUTES ---//
+  greyp: "/greyp",
+  greypWithJurisdiction: "/:jurisdiction/greyp",
+  //--------------------------------//
+
   verify: "/email-verify",
   icbmMigration: "/migrate",
   walletUnlock: "/wallet-unlock-etherlock",

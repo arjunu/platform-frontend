@@ -56,7 +56,7 @@ import { InvalidETOStateError } from "./errors";
 import {
   selectEtoById,
   selectEtoOnChainNextStateStartDate,
-  selectEtoOnChainStateById,
+  selectEtoOnChainStateById, selectEtoSubStateEtoEtoWithContract,
   selectFilteredEtosByRestrictedJurisdictions,
   selectInvestorEtoWithCompanyAndContract,
   selectIsEtoAnOffer,
@@ -74,7 +74,6 @@ import {
   isRestrictedEto,
   isUserAssociatedWithEto,
 } from "./utils";
-import { loadNomineeEto } from "../nominee-flow/sagas";
 
 function* loadEtoPreview(
   { apiEtoService, notificationCenter, logger }: TGlobalDependencies,
@@ -173,7 +172,29 @@ export function* loadEtoWithCompanyAndContract(
   const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEtoPreview(previewCode);
   eto.company = yield apiEtoService.getCompanyById(eto.companyId);
 
-  return yield neuCall(loadNomineeEto, eto); //fixme loadNomineeEto naming
+  if (eto.state === EEtoState.ON_CHAIN) {
+    eto.contract = yield neuCall(getEtoContract, eto.etoId, eto.state);
+  }
+
+  eto.subState = yield select(selectEtoSubStateEtoEtoWithContract, eto);
+  return eto;
+
+}
+
+export function* loadEtoWithCompanyAndContractById(
+  { apiEtoService }: TGlobalDependencies,
+  etoId: string
+): Iterator<any> {
+
+  const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEto(etoId);
+  eto.company = yield apiEtoService.getCompanyById(eto.companyId);
+
+  if (eto.state === EEtoState.ON_CHAIN) {
+    eto.contract = yield neuCall(getEtoContract, eto.etoId, eto.state);
+  }
+
+  eto.subState = yield select(selectEtoSubStateEtoEtoWithContract, eto);
+  return eto;
 
 }
 

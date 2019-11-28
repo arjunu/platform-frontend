@@ -3,23 +3,23 @@ import * as React from "react";
 import {
   EtoCompanyInformationType,
   EtoPitchType,
-} from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { WidgetGrid } from "../../layouts/WidgetGrid";
-import { PersonProfileModal } from "../../modals/person-profile-modal/PersonProfileModal";
-import { FieldSchemaProvider } from "../../shared/Field";
-import { EtoOverviewStatus } from "../overview/EtoOverviewStatus/EtoOverviewStatus";
-import { Cover } from "../public-view/Cover";
-import { InvestorCoverBannerLayout } from "../public-view/CoverBanner";
-import { TIssuerPreviewEtoViewData } from "../../../modules/eto-view/reducer";
-import { EtoViewCampaignOverview } from "./eto-view-tabs/EtoViewCampaignOverview";
+} from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { WidgetGrid } from "../../../layouts/WidgetGrid";
+import { PersonProfileModal } from "../../../modals/person-profile-modal/PersonProfileModal";
+import { FieldSchemaProvider } from "../../../shared/Field";
+import { EtoOverviewStatus } from "../../overview/EtoOverviewStatus/EtoOverviewStatus";
+import { Cover } from "../../public-view/Cover";
+import { InvestorCoverBannerLayout } from "../../public-view/CoverBanner";
+import {  TNomineeEtoViewData } from "../../../../modules/eto-view/reducer";
+import { EtoViewCampaignOverview } from "../shared/eto-view-tabs/EtoViewCampaignOverview";
 
-import * as styles from "./EtoView.module.scss";
+import * as styles from "../../shared/EtoView.module.scss";
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());
 
-const EtoViewIssuerPreviewLayout: React.FunctionComponent<TIssuerPreviewEtoViewData> = ({
+const EtoViewNomineeLayout: React.FunctionComponent<TNomineeEtoViewData> = ({
   eto,
-  campaignOverviewData,
+
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
   return (
@@ -45,16 +45,16 @@ const EtoViewIssuerPreviewLayout: React.FunctionComponent<TIssuerPreviewEtoViewD
           }}
           tags={categories}
         />
-        <EtoOverviewStatus eto={eto} publicView={true} isEmbedded={false} />
+        <EtoOverviewStatus eto={eto} publicView={false} isEmbedded={false} />
         <EtoViewCampaignOverview
           eto={eto}
           isUserFullyVerified={true}
-          publicView={true}
-          data={campaignOverviewData}
+          publicView={false}
+          data={undefined}
         />
       </WidgetGrid>
     </FieldSchemaProvider>
   );
 };
 
-export { EtoViewIssuerPreviewLayout };
+export { EtoViewNomineeLayout };

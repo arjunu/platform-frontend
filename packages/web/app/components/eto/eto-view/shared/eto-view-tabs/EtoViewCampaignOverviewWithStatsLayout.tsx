@@ -2,16 +2,16 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Route } from "react-router";
 
-import { Container, EColumnSpan } from "../../../layouts/Container";
-import { TabContent, Tabs } from "../../../shared/Tabs";
-import { SwitchConnected } from "../../../../utils/connectedRouting";
-import { WidgetGrid } from "../../../layouts/WidgetGrid";
-import { EtoViewFundraisingStatistics } from "../EtoViewFundraisingStatistics";
+import { Container, EColumnSpan } from "../../../../layouts/Container";
+import { TabContent, Tabs } from "../../../../shared/Tabs";
+import { SwitchConnected } from "../../../../../utils/connectedRouting";
+import { WidgetGrid } from "../../../../layouts/WidgetGrid";
+import { EtoViewFundraisingStatistics } from "../../../shared/EtoViewFundraisingStatistics";
 import { TEtoViewCampaignOverviewProps } from "./EtoViewCampaignOverview";
 import { EtoViewCampaignOverviewLayout } from "./EtoViewCampaignOverviewLayout";
-import { TCampaignOverviewWithStatsData } from "../../../../modules/eto-view/reducer";
+import { TCampaignOverviewWithStatsData } from "../../../../../modules/eto-view/reducer";
 
-import * as styles from "../EtoView.module.scss";
+import * as styles from "../../../shared/EtoView.module.scss";
 
 export const EtoViewCampaignOverviewWithStatsLayout: React.FunctionComponent<TEtoViewCampaignOverviewProps & { data: TCampaignOverviewWithStatsData }> = ({
   eto,

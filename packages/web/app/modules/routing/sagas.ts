@@ -2,13 +2,18 @@ import { LocationChangeAction } from "connected-react-router";
 import { Effect, fork, put, select } from "redux-saga/effects";
 import { matchPath } from 'react-router';
 
-import { appRoutes, TEtoViewByPreviewCodeMatch } from "../../components/appRoutes";
+import { appRoutes, TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsAuthorized, selectUserType } from "../auth/selectors";
 import { waitForAppInit } from "../init/sagas";
 import { neuCall, neuTakeEvery } from "../sagasUtils";
+
+//---------//
+// const GREYP_PREVIEW_CODE = "1eb004fd-c44d-4bed-9e76-0e0858649587";
+const GREYP_PREVIEW_CODE = "e2b6949e-951d-4e99-ac11-534fdad86a80";
+//---------//
 
 function* openInNewWindowSaga(
   _: TGlobalDependencies,
@@ -66,10 +71,20 @@ export function* notAuthorizedRouting(
   _: TGlobalDependencies,
   { payload }: LocationChangeAction,
 ) {
+  const greypMatch = yield matchPath<any>(payload.location.pathname, {path: appRoutes.greypWithJurisdiction})
+  if(greypMatch !== null){
+    yield put(actions.etoView.loadNotAuthorizedEtoView(GREYP_PREVIEW_CODE, greypMatch))
+  }
   const etoViewNotAuthorizedMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(payload.location.pathname, { path: appRoutes.etoPublicView });
+  const etoViewByIdNotAuthorizedMatch = yield matchPath<TEtoViewByIdMatch>(payload.location.pathname, { path: appRoutes.etoPublicViewById });
+
   if (etoViewNotAuthorizedMatch !== null) {
     const previewCode = etoViewNotAuthorizedMatch.params.previewCode;
     yield put(actions.etoView.loadNotAuthorizedEtoView(previewCode, etoViewNotAuthorizedMatch))
+  }
+  if (etoViewByIdNotAuthorizedMatch !== null) {
+    const etoId = etoViewNotAuthorizedMatch.params.etoId;
+    yield put(actions.etoView.loadNotAuthorizedEtoViewById(etoId, etoViewNotAuthorizedMatch))
   }
 }
 
@@ -77,7 +92,18 @@ export function* investorRouting(
   _: TGlobalDependencies,
   { payload }: LocationChangeAction,
 ) {
+  const greypMatch = yield matchPath<any>(payload.location.pathname, {path: appRoutes.greypWithJurisdiction})
+  if(greypMatch !== null){
+    yield put(actions.etoView.loadInvestorEtoView(GREYP_PREVIEW_CODE, greypMatch))
+  }
+
   const etoViewInvestorMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(payload.location.pathname, { path: appRoutes.etoPublicView });
+  const etoViewByIdInvestorMatch = yield matchPath<TEtoViewByIdMatch>(payload.location.pathname, { path: appRoutes.etoPublicViewById });
+
+  if (etoViewByIdInvestorMatch !== null) {
+    const previewCode = etoViewByIdInvestorMatch.params.previewCode;
+    yield put(actions.etoView.loadInvestorEtoViewById(previewCode, etoViewByIdInvestorMatch))
+  }
   if (etoViewInvestorMatch !== null) {
     const previewCode = etoViewInvestorMatch.params.previewCode;
     yield put(actions.etoView.loadInvestorEtoView(previewCode, etoViewInvestorMatch))
