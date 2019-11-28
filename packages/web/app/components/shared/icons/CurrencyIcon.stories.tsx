@@ -4,10 +4,12 @@ import * as React from "react";
 import { ECurrency } from "../formatters/utils";
 import { CurrencyIcon } from "./CurrencyIcon";
 
-storiesOf("CurrencyIcon", module).add("all currencies", () =>
-  Object.values(ECurrency).map((currency, i) => (
-    <span key={i} style={{ display: "inline-block", height: "2em", width: "3em" }}>
-      <CurrencyIcon currency={currency} />
-    </span>
-  )),
-);
+storiesOf("CurrencyIcon", module).add("all currencies", () => (
+  <>
+    {Object.values(ECurrency).map((currency, i) => (
+      <span key={i} style={{ display: "inline-block", height: "2em", width: "3em" }}>
+        <CurrencyIcon currency={currency} />
+      </span>
+    ))}
+  </>
+));

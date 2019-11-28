@@ -1,12 +1,14 @@
 import "../app/polyfills.sideEffect";
 
+import "./setup-styles";
+
 import * as React from "react";
-import { configure, addDecorator } from "@storybook/react";
+import { configure, addDecorator, addParameters } from "@storybook/react";
 import { setIntlConfig, withIntl } from "storybook-addon-intl";
 import StoryRouter from "storybook-react-router";
-import { initScreenshot, withScreenshot } from "storybook-chrome-screenshot/lib";
-import { checkA11y } from "@storybook/addon-a11y";
-import { configureViewport, INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
+import { withScreenshot } from "storycap";
+import { withA11y } from "@storybook/addon-a11y";
+import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
 // Load the locale data for all your defined locales
 import { addLocaleData } from "react-intl";
@@ -32,30 +34,31 @@ setIntlConfig({
   textComponent: React.Fragment,
 });
 
-addDecorator(checkA11y);
-addDecorator(initScreenshot());
-addDecorator(
-  withScreenshot({
-    delay: 1000,
-    viewport: [
+addDecorator(withA11y);
+addDecorator(withScreenshot);
+
+addParameters({
+  screenshot: {
+    viewports: {
       // Mobile
-      {
+      "375x667": {
         width: 375,
         height: 667,
       },
       // Tablet
-      {
+      "768x800": {
         width: 768,
         height: 800,
       },
       // Desktop
-      {
+      "1200x800": {
         width: 1200,
         height: 800,
       },
-    ],
-  }),
-);
+    },
+  },
+});
+
 addDecorator(withIntl);
 addDecorator(StoryRouter());
 addDecorator(withStore());
@@ -92,12 +95,10 @@ const newViewports = {
   },
 };
 
-configureViewport({
-  viewports: {
-    ...INITIAL_VIEWPORTS,
-    ...newViewports,
+addParameters({
+  viewport: {
+    viewports: { ...INITIAL_VIEWPORTS, ...newViewports },
   },
-  defaultViewport: "responsive",
 });
 
 configure(loadStories, module);

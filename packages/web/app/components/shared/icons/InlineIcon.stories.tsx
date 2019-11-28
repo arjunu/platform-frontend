@@ -43,19 +43,21 @@ const context = require.context("../../../assets/img/inline_icons/", true, /\.(s
 const allInlineIcons: ReadonlyArray<string> = context.keys().map<string>(context);
 
 storiesOf("Icons", module)
-  .add("InlineIcon", () =>
-    allInlineIcons.map((svg, i) => (
-      <span key={i} style={{ display: "inline-block", height: "2em", width: "3em" }}>
-        <InlineIcon svgIcon={svg} />
-      </span>
-    )),
-  )
+  .add("InlineIcon", () => (
+    <>
+      {allInlineIcons.map((svg, i) => (
+        <span key={i} style={{ display: "inline-block", height: "2em", width: "3em" }}>
+          <InlineIcon svgIcon={svg} />
+        </span>
+      ))}
+    </>
+  ))
   .add("other icons", () => (
     <>
       <h3>Notification</h3>
       {[info, success, warning].map(svg => (
         <span style={{ display: "inline-block", height: "2em", width: "3em" }}>
-          <img src={svg} />
+          <img src={svg} alt="" />
         </span>
       ))}
       <br />
@@ -63,7 +65,7 @@ storiesOf("Icons", module)
       <h3>Seed backup</h3>
       {[no_computer, safe, write].map(svg => (
         <span style={{ display: "inline-block" }} className="m-1">
-          <img src={svg} />
+          <img src={svg} alt="" />
         </span>
       ))}
       <br />
@@ -88,7 +90,7 @@ storiesOf("Icons", module)
         reload,
       ].map(svg => (
         <span style={{ display: "inline-block" }} className="m-1">
-          <img src={svg} />
+          <img src={svg} alt="" />
         </span>
       ))}
       <br />
@@ -109,7 +111,7 @@ storiesOf("Icons", module)
         token_icon,
       ].map(svg => (
         <span style={{ display: "inline-block" }} className="m-1">
-          <img src={svg} />
+          <img src={svg} alt="" />
         </span>
       ))}
       <br />
