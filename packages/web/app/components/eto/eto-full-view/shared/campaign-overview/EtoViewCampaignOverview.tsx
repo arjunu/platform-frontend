@@ -16,9 +16,13 @@ export type TEtoViewCampaignOverviewProps = {
   isUserFullyVerified: boolean;
 }
 
-export const EtoViewCampaignOverview = compose<TEtoViewCampaignOverviewProps,TEtoViewCampaignOverviewProps & {data:TCampaignOverviewData}>(
+export const EtoViewCampaignOverview = compose<{},TEtoViewCampaignOverviewProps & {data:TCampaignOverviewData}>(
   branch<TEtoViewCampaignOverviewProps & {data:TCampaignOverviewData}>(
     ({data}) => data.campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS,
     renderComponent<TEtoViewCampaignOverviewProps & {data:TCampaignOverviewWithStatsData}>(EtoViewCampaignOverviewWithStatsLayout),
   ),
-)(EtoViewCampaignOverviewLayout);
+  branch<TEtoViewCampaignOverviewProps & {data:TCampaignOverviewData}>(
+    ({data}) => data.campaignOverviewType === EEtoViewCampaignOverviewType.WITHOUT_STATS,
+    renderComponent<TEtoViewCampaignOverviewProps>(EtoViewCampaignOverviewLayout),
+  ),
+)(()=>null);

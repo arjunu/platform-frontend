@@ -25,38 +25,32 @@ import { TEtoViewCampaignOverviewProps } from "./EtoViewCampaignOverview";
 
 import * as styles from "../EtoView.module.scss";
 
-export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCampaignOverviewProps> = ({ eto, isUserFullyVerified }) => {
+export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCampaignOverviewProps> = ({
+  eto,
+  isUserFullyVerified,
+  showTwitterFeed,
+  showYouTube,
+  showSlideshare,
+  showSocialChannels,
+  twitterUrl,
+  showInvestmentTerms
+
+}) => {
   const {
     socialChannels,
     companyVideo,
-    disableTwitterFeed,
     companySlideshare,
     brandName,
     companyNews,
     marketingLinks,
   } = eto.company;
 
-  const isTwitterFeedEnabled =
-    some<TSocialChannelsType[0]>(
-      socialChannels,
-      channel => channel.type === "twitter" && !!channel.url && !!channel.url.length,
-    ) && !disableTwitterFeed;
-  const isYouTubeVideoAvailable = !!(companyVideo && companyVideo.url);
-  const isSlideShareAvailable = !!(companySlideshare && companySlideshare.url);
-  const hasSocialChannelsAdded = !!(socialChannels && socialChannels.length);
-  const twitterUrl =
-    isTwitterFeedEnabled && socialChannels
-      ? socialChannels.find(c => c.type === "twitter") &&
-      socialChannels.find(c => c.type === "twitter")!.url
-      : "";
-
-  const isProductSet = eto.product.id !== ETHEREUM_ZERO_ADDRESS;
 
   const shouldSplitGrid =
-    isSlideShareAvailable ||
-    isTwitterFeedEnabled ||
-    isYouTubeVideoAvailable ||
-    hasSocialChannelsAdded
+    showSlideshare ||
+    showTwitterFeed ||
+    showYouTube ||
+    showSocialChannels
       ? EColumnSpan.TWO_COL
       : EColumnSpan.THREE_COL;
 
@@ -69,21 +63,21 @@ export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCamp
         <LegalInformationWidget companyData={eto.company} columnSpan={EColumnSpan.THREE_COL} />
       </Container>
       <Container columnSpan={EColumnSpan.ONE_COL}>
-        {isSlideShareAvailable && (
+        {showSlideshare && (
           <Container>
             <DashboardHeading title={<FormattedMessage id="eto.public-view.pitch-deck" />} />
             <Slides slideShareUrl={companySlideshare && companySlideshare.url} />
           </Container>
         )}
 
-        {isYouTubeVideoAvailable && (
+        {showYouTube && (
           <Container>
             <DashboardHeading title={<FormattedMessage id="eto.public-view.video" />} />
             <Video youTubeUrl={companyVideo && companyVideo.url} hasModal />
           </Container>
         )}
         <Container>
-          <div className={cn((isSlideShareAvailable || isYouTubeVideoAvailable) && "mt-4")}>
+          <div className={cn((showSlideshare || showYouTube) && "mt-4")}>
             <SocialProfilesList profiles={(socialChannels as IEtoSocialProfile[]) || []} />
           </div>
         </Container>
@@ -92,7 +86,7 @@ export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCamp
         columnSpan={EColumnSpan.THREE_COL}
         companyMarketingLinks={marketingLinks}
       />
-      {isProductSet && (
+      {showInvestmentTerms && (
         <Container columnSpan={EColumnSpan.THREE_COL}>
           <DashboardHeading title={<FormattedMessage id="eto.public-view.token-terms.title" />} />
           <EtoInvestmentTermsWidget eto={eto} isUserFullyVerified={isUserFullyVerified} />
@@ -108,7 +102,7 @@ export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCamp
           isUserFullyVerified={isUserFullyVerified}
         />
 
-        {isTwitterFeedEnabled && (
+        {showTwitterFeed && (
           <Container columnSpan={EColumnSpan.ONE_COL}>
             <DashboardHeading title={<FormattedMessage id={"eto.public-view.twitter-feed"} />} />
             <Panel className={styles.twitter}>

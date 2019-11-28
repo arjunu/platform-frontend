@@ -48,8 +48,16 @@ export type TCampaignOverviewWithStatsData = {
   path: string,
 }
 
-export type TCampaignOverviewData = XOR<{ campaignOverviewType: EEtoViewCampaignOverviewType.WITH_STATS } & TCampaignOverviewWithStatsData,
-  { campaignOverviewType: EEtoViewCampaignOverviewType.WITHOUT_STATS }>
+export type TCampaignOverviewData =
+  XOR<{ campaignOverviewType: EEtoViewCampaignOverviewType.WITH_STATS } & TCampaignOverviewWithStatsData,
+    { campaignOverviewType: EEtoViewCampaignOverviewType.WITHOUT_STATS }> & ({
+  showYouTube: boolean,
+  showSlideshare: boolean,
+  showSocialChannels: boolean,
+  showInvestmentTerms: boolean,
+} &
+  { showTwitterFeed: true, twitterUrl: string }
+  | { showTwitterFeed: false })
 
 export type TReadyEtoViewData =
   { etoViewType: EEtoViewType.ETO_VIEW_NOT_AUTHORIZED, } & TNotAuthorizedEtoViewData |

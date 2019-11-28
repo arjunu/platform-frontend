@@ -10,6 +10,7 @@ import { EEtoViewCampaignOverviewType, EEtoViewType, TCampaignOverviewData } fro
 import { createMessage } from "../../../components/translatedMessages/utils";
 import { EtoMessage } from "../../../components/translatedMessages/messages";
 import { calculateEtoViewCampaignOverviewType } from "../sagas";
+import { ETHEREUM_ZERO_ADDRESS } from "../../../config/constants";
 
 export function* loadInvestorEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
@@ -26,15 +27,38 @@ export function* loadInvestorEtoView(
 
     const campaignOverviewType: EEtoViewCampaignOverviewType = yield call(calculateEtoViewCampaignOverviewType, eto);
 
+    const twitterUrl = eto.company.socialChannels &&
+      eto.company.socialChannels.find(c => c.type === "twitter") &&
+      eto.company.socialChannels.find(c => c.type === "twitter").url; //fixme
+
+    const showTwitterFeed =
+      !!twitterUrl && !eto.company.disableTwitterFeed;
+    const showYouTube = !!(eto.company.companyVideo && eto.company.companyVideo.url);
+    const showSlideshare = !!(eto.company.companySlideshare && eto.company.companySlideshare.url);
+    const showSocialChannels = !!(eto.company.socialChannels && eto.company.socialChannels.length);
+    const showInvestmentTerms = eto.product.id !== ETHEREUM_ZERO_ADDRESS;
+
+
     if (campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS) {
       campaignOverviewData = {
         campaignOverviewType,
         url: payload.match.url,
-        path: payload.match.path
+        path: payload.match.path,
+        showTwitterFeed,
+        showYouTube,
+        showSlideshare,
+        showSocialChannels,
+        showInvestmentTerms,
+        //fixme add twitter url
       }
     } else {
       campaignOverviewData = {
         campaignOverviewType,
+        showTwitterFeed,
+        showYouTube,
+        showSlideshare,
+        showSocialChannels,
+        showInvestmentTerms,
       }
     }
     console.log("---loadInvestorEtoView done")
