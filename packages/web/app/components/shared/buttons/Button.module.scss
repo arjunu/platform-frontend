@@ -11,8 +11,7 @@
   border-radius: $nds-border-radius;
 
   flex-shrink: 0;
-  padding: px-to-rem(9px) px-to-rem(20px) px-to-rem(8px);
-  text-transform: capitalize;
+  padding: px-to-rem(8px) px-to-rem(20px) px-to-rem(7px);
 
   transition: background-color 200ms ease-out, box-shadow 200ms ease-out, color 200ms ease-out;
 
@@ -112,24 +111,21 @@
     width: 100%;
   }
 
-  &--no-padding {
-    padding: 0;
-  }
-
   // sizes
   &--small {
-    @include nds-overline;
+    @include media-breakpoint-up(sm) {
+      min-width: px-to-rem(110px);
+    }
 
-    text-transform: uppercase;
-    min-width: px-to-rem(110px);
-    padding: px-to-rem(7px) px-to-rem(12px) px-to-rem(5px);
+    padding: px-to-rem(4px) px-to-rem(12px) px-to-rem(3px);
   }
 
   &--huge {
-    @include font-large-roboto;
+    @include media-breakpoint-up(sm) {
+      min-width: px-to-rem(216px);
+    }
 
-    min-width: px-to-rem(216px);
-    padding: px-to-rem(10px) px-to-rem(30px) px-to-rem(9px);
+    padding: px-to-rem(12px) px-to-rem(30px) px-to-rem(11px);
   }
 
   &--only-icon {
@@ -169,5 +165,9 @@
     &--after {
       margin-left: .8em;
     }
+  }
+
+  &--no-padding {
+    padding: 0;
   }
 }
