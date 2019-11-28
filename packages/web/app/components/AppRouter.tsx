@@ -64,6 +64,10 @@ export const AppRouter: React.FunctionComponent = () => (
       path={appRoutes.etoPublicViewById}
       component={EtoViewMain}
     />
+    <Route
+      path={appRoutes.etoIssuerView}
+      component={EtoViewMain}
+    />
     {/* Redirect Legacy ETO link to current link */}
     <Route
       path={appRoutes.etoPublicViewLegacyRoute}

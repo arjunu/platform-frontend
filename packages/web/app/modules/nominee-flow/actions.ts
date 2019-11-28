@@ -28,7 +28,7 @@ export const nomineeFlowActions = {
   storeError: createActionFactory("NOMINEE_STORE_ERROR", (error: ENomineeFlowError) => ({ error })),
   nomineeDashboardView: createActionFactory("NOMINEE_DASHBOARD_VIEW"),
   getNomineeDashboardData: createActionFactory("NOMINEE_DASHBOARD_GET_DATA"),
-  loadNomineeEtoView: createActionFactory("NOMINEE_ETO_VIEW"),
+  loadNomineeEto: createActionFactory("NOMINEE_ETO_VIEW"),
   nomineeDocumentsView: createActionFactory("NOMINEE_DOCUMENTS_VIEW"),
   loadNomineeEtos: createActionFactory("NOMINEE_FLOW_LOAD_ETOS"),
   loadNomineeTaskData: createActionFactory("NOMINEE_FLOW_LOAD_NOMINEE_TASK_DATA"),

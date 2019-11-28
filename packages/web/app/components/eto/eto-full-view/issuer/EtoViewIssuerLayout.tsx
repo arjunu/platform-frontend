@@ -19,7 +19,7 @@ const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYu
 
 const EtoViewIssuerLayout: React.FunctionComponent<TIssuerEtoViewData> = ({
   eto,
-
+  campaignOverviewData
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
   return (
@@ -50,7 +50,7 @@ const EtoViewIssuerLayout: React.FunctionComponent<TIssuerEtoViewData> = ({
           eto={eto}
           isUserFullyVerified={true}
           publicView={false}
-          data={undefined}
+          data={campaignOverviewData}
         />
       </WidgetGrid>
     </FieldSchemaProvider>

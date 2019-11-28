@@ -13,7 +13,8 @@ export function* nomineeRouting(
     yield put(actions.nomineeFlow.nomineeDashboardView());
   }
   if (payload.location.pathname === appRoutes.etoIssuerView) {
-    yield put(actions.nomineeFlow.loadNomineeEtoView());
+    console.log('----nomineeRouting hit')
+    yield put(actions.etoView.loadNomineeEtoView());
   }
   if (payload.location.pathname === appRoutes.documents) {
     yield put(actions.nomineeFlow.nomineeDocumentsView());
