@@ -1,4 +1,3 @@
-import { effects } from "redux-saga";
 import { fork, put, select } from "redux-saga/effects";
 
 import { EtoDocumentsMessage, EtoFlowMessage } from "../../components/translatedMessages/messages";
@@ -127,7 +126,7 @@ export function* saveEto(
   action: TActionFromCreator<typeof etoFlowActions.saveEtoStart>,
 ): Iterator<any> {
   try {
-    const currentEto: TEtoSpecsData = yield effects.select(selectIssuerEto);
+    const currentEto: TEtoSpecsData = yield select(selectIssuerEto);
 
     // Eto is only allowed to be modified during PREVIEW state
     if (currentEto.state !== EEtoState.PREVIEW) {

@@ -1,3 +1,4 @@
+import { TGlobalDependencies } from "./../../../di/setupBindings";
 import { BigNumber } from "bignumber.js";
 import { expect } from "chai";
 import { expectSaga } from "redux-saga-test-plan";
@@ -42,9 +43,9 @@ describe("Wallet selector > Ledger wizard > actions", () => {
       });
 
       await expectSaga(tryEstablishingConnectionWithLedger, {
-        ledgerWalletConnector: ledgerWalletConnectorMock,
-        web3Manager: web3ManagerMock,
-      })
+        ledgerWalletConnector: ledgerWalletConnectorMock as any,
+        web3Manager: web3ManagerMock as any,
+      } as TGlobalDependencies)
         .put(actions.walletSelector.ledgerConnectionEstablished())
         .run();
 
@@ -64,9 +65,9 @@ describe("Wallet selector > Ledger wizard > actions", () => {
       });
 
       await expectSaga(tryEstablishingConnectionWithLedger, {
-        ledgerWalletConnector: ledgerWalletConnectorMock,
-        web3Manager: web3ManagerMock,
-      })
+        ledgerWalletConnector: ledgerWalletConnectorMock as any,
+        web3Manager: web3ManagerMock as any,
+      } as TGlobalDependencies)
         .put(
           actions.walletSelector.ledgerConnectionEstablishedError(
             createMessage(LedgerErrorMessage.GENERIC_ERROR),
@@ -124,10 +125,10 @@ describe("Wallet selector > Ledger wizard > actions", () => {
       });
 
       await expectSaga(loadLedgerAccounts, {
-        ledgerWalletConnector: ledgerWalletConnectorMock,
-        web3Manager: web3ManagerMock,
-        contractsService: contractsMock,
-      })
+        ledgerWalletConnector: ledgerWalletConnectorMock as any,
+        web3Manager: web3ManagerMock as any,
+        contractsService: contractsMock as any,
+      } as TGlobalDependencies)
         .withState(dummyState)
         .put(
           actions.walletSelector.setLedgerAccounts(
@@ -202,7 +203,7 @@ describe("Wallet selector > Ledger wizard > actions", () => {
     it("should do not fire when there is no change in derivationPathPrefix", () =>
       expectSaga(
         setDerivationPathPrefix,
-        null,
+        {} as TGlobalDependencies,
         actions.walletSelector.ledgerSetDerivationPathPrefix(DEFAULT_DERIVATION_PATH_PREFIX),
       )
         .withState(dummyState)
@@ -213,7 +214,7 @@ describe("Wallet selector > Ledger wizard > actions", () => {
     it("should fire when there is change in derivationPathPrefix", () =>
       expectSaga(
         setDerivationPathPrefix,
-        null,
+        {} as TGlobalDependencies,
         actions.walletSelector.ledgerSetDerivationPathPrefix(newDP),
       )
         .withState(dummyState)
@@ -249,9 +250,9 @@ describe("Wallet selector > Ledger wizard > actions", () => {
       await expectSaga(
         finishSettingUpLedgerConnector,
         {
-          ledgerWalletConnector: ledgerWalletConnectorMock,
-          web3Manager: web3ManagerMock,
-        },
+          ledgerWalletConnector: ledgerWalletConnectorMock as any,
+          web3Manager: web3ManagerMock as any,
+        } as TGlobalDependencies,
         actions.walletSelector.ledgerFinishSettingUpLedgerConnector(expectedDerivationPath),
       )
         .put(actions.walletSelector.connected())

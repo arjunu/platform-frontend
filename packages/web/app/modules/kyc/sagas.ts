@@ -1,4 +1,4 @@
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import { all, call, cancel, fork, put, select, take } from "redux-saga/effects";
 
 import { KycFlowMessage } from "../../components/translatedMessages/messages";
@@ -129,7 +129,7 @@ function* kycRefreshWidgetSagaWatcherStop({ logger }: TGlobalDependencies): any 
 function* loadIdentityClaim({ contractsService }: TGlobalDependencies): Iterator<any> {
   const identityRegistry: IdentityRegistry = contractsService.identityRegistry;
 
-  const loggedInUser: IUser = yield select<IAppState>(state => selectUser(state.auth));
+  const loggedInUser: IUser = yield select(state => selectUser(state.auth));
 
   const claims: string = yield identityRegistry.getClaims(loggedInUser.userId);
 

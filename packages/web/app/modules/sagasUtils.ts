@@ -1,5 +1,5 @@
 import { isMatch } from "lodash/fp";
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import {
   call,
   Effect,

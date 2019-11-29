@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import * as React from "react";
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import { spy } from "sinon";
 
 import { createMount } from "../../test/createMount";

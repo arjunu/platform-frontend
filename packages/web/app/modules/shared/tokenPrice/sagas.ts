@@ -1,4 +1,4 @@
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import { put, select, takeLatest } from "redux-saga/effects";
 
 import { Q18 } from "../../../config/constants";

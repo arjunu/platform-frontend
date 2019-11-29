@@ -38,6 +38,7 @@ import { lightWalletSagas } from "./wallet-selector/light-wizard/sagas";
 import { walletSelectorSagas } from "./wallet-selector/sagas";
 import { walletSagas } from "./wallet/sagas";
 import { web3Sagas } from "./web3/sagas";
+import { Saga } from "redux-saga";
 
 /**
  * Restart all sagas on error and report error to sentry
@@ -90,7 +91,7 @@ function* handleRootError(error: Error): Iterator<Effect> {
   logger.error(error);
 }
 
-export function* rootSaga(): Iterator<Effect> {
+export function* rootSaga(): /* Iterator<unknown, Saga<any[]>> */ any {
   while (true) {
     try {
       yield call(allSagas);

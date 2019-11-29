@@ -1,3 +1,4 @@
+import { TGlobalDependencies } from "./../../di/setupBindings";
 import { expectSaga } from "redux-saga-test-plan";
 
 import { ECurrency, ENumberInputFormat } from "../../components/shared/formatters/utils";
@@ -47,7 +48,7 @@ describe("Tx History sagas", () => {
         mapAnalyticsApiTransactionResponse,
         {
           logger: noopLogger,
-        },
+        } as TGlobalDependencies,
         transaction,
       )
         .returns({

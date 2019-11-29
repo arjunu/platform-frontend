@@ -1,7 +1,6 @@
 import BigNumber from "bignumber.js";
 import { cloneDeep, isEmpty } from "lodash/fp";
-import { delay, Effect } from "redux-saga";
-import { all, fork, put, select } from "redux-saga/effects";
+import { all, fork, put, select, delay, Effect } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { getNomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/utils";

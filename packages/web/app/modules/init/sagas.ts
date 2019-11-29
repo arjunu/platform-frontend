@@ -1,5 +1,4 @@
-import { effects } from "redux-saga";
-import { fork, put, select } from "redux-saga/effects";
+import { fork, put, select, Effect } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { IAppState } from "../../store";
@@ -133,7 +132,7 @@ export function* waitForAppInit(): Iterator<any> {
   return appIsReady;
 }
 
-export const initSagas = function*(): Iterator<effects.Effect> {
+export const initSagas = function*(): Iterator<Effect> {
   yield fork(neuTakeEvery, "INIT_START", initStartSaga);
   // Smart Contracts are only initialized once during the whole life cycle of the app
   yield fork(initSmartcontractsOnce);

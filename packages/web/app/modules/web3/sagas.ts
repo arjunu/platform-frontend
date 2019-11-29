@@ -1,5 +1,5 @@
-import { delay, END, eventChannel, Task } from "redux-saga";
-import { call, cancel, fork, put, take } from "redux-saga/effects";
+import { END, eventChannel, Task } from "redux-saga";
+import { call, cancel, fork, put, take, delay } from "redux-saga/effects";
 
 import {
   LIGHT_WALLET_PASSWORD_CACHE_TIME,
@@ -17,7 +17,7 @@ let lockWalletTask: Task | undefined;
 export function* autoLockLightWallet({ web3Manager, logger }: TGlobalDependencies): Iterator<any> {
   logger.info(`Resetting light wallet password in ${LIGHT_WALLET_PASSWORD_CACHE_TIME} ms`);
 
-  yield call(delay, LIGHT_WALLET_PASSWORD_CACHE_TIME);
+  yield delay(LIGHT_WALLET_PASSWORD_CACHE_TIME);
 
   if (web3Manager.personalWallet) {
     logger.info("Resetting light wallet password now");
@@ -29,7 +29,7 @@ export function* autoLockLightWallet({ web3Manager, logger }: TGlobalDependencie
 export function* autoClearWalletPrivateDataWatcher({ logger }: TGlobalDependencies): Iterator<any> {
   logger.info(`Clearing wallet private data in ${LIGHT_WALLET_PRIVATE_DATA_CACHE_TIME} ms`);
 
-  yield call(delay, LIGHT_WALLET_PRIVATE_DATA_CACHE_TIME);
+  yield delay(LIGHT_WALLET_PRIVATE_DATA_CACHE_TIME);
 
   logger.info("Clearing wallet private data now");
   yield put(actions.web3.clearWalletPrivateDataFromState()); //Better to clear the seed here as well

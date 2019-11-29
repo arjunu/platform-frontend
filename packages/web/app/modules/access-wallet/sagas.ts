@@ -1,5 +1,4 @@
-import { Effect } from "redux-saga";
-import { call, put, race, select, take } from "redux-saga/effects";
+import { call, put, race, select, take, Effect } from "redux-saga/effects";
 
 import { GenericErrorMessage } from "../../components/translatedMessages/messages";
 import { TMessage } from "../../components/translatedMessages/utils";

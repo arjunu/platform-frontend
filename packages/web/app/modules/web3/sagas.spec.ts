@@ -1,6 +1,7 @@
+import { TGlobalDependencies } from "./../../di/setupBindings";
 import { expect } from "chai";
 import { EventEmitter } from "events";
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
 import { call } from "redux-saga/effects";
 
@@ -42,8 +43,8 @@ describe("Web3 sagas", () => {
         isUnlocked: true,
       };
       const promise = expectSaga(initWeb3ManagerEvents, {
-        web3Manager: web3ManagerMock,
-      })
+        web3Manager: web3ManagerMock as Web3Manager,
+      } as TGlobalDependencies)
         .put(
           actions.web3.newPersonalWalletPlugged(
             eventPayload.metaData as any,

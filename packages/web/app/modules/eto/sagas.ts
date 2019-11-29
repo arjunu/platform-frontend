@@ -2,8 +2,16 @@ import BigNumber from "bignumber.js";
 import { LOCATION_CHANGE } from "connected-react-router";
 import { camelCase, isString } from "lodash";
 import { compose, keyBy, map, omit } from "lodash/fp";
-import { delay, Effect } from "redux-saga";
-import { all, fork, put, race, select, take } from "redux-saga/effects";
+import {
+  all,
+  fork,
+  put,
+  race,
+  select,
+  take,
+  delay,
+  Effect,
+} from "redux-saga/effects";
 
 import { IWindowWithData } from "../../../test/helperTypes";
 import { getInvestorDocumentTitles, hashFromIpfsLink } from "../../components/documents/utils";
@@ -308,7 +316,7 @@ export function* delayEtoRefresh(
   _: TGlobalDependencies,
   eto: TEtoWithCompanyAndContractReadonly,
 ): Iterator<any> {
-  const strategies: Dictionary<Promise<true>> = {
+  const strategies: Dictionary<any> = {
     default: delay(etoNormalPollingDelay),
   };
 

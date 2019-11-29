@@ -1,4 +1,4 @@
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 
 export const promisify = <T>(fn: Function) =>
   function(...args: any[]): Promise<T> {
@@ -22,7 +22,8 @@ interface IPromiseTimeoutConfig<T> {
 /**
  * Wait for promise to resolve for specific time or return default value
  */
-export function promiseTimeout<T>(options: IPromiseTimeoutConfig<T>): Promise<T> {
+export function promiseTimeout<T>(options: IPromiseTimeoutConfig<T>): Promise<any> {
+  // TODO:FIGURE THIS OUT
   return Promise.race([options.promise, delay(options.timeout, options.defaultValue)]);
 }
 

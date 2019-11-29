@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import { all, put, select, take, takeEvery, takeLatest } from "redux-saga/effects";
 
 import { ECurrency } from "../../components/shared/formatters/utils";

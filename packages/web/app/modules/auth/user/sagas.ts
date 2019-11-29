@@ -1,5 +1,4 @@
-import { delay } from "redux-saga";
-import { call, Effect, fork, put, race, select, take } from "redux-saga/effects";
+import { call, Effect, fork, put, race, select, take, delay } from "redux-saga/effects";
 
 import { SignInUserErrorMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";

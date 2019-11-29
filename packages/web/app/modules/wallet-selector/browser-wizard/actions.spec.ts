@@ -1,3 +1,4 @@
+import { TGlobalDependencies } from "./../../../di/setupBindings";
 import { expect } from "chai";
 import { expectSaga } from "redux-saga-test-plan";
 
@@ -48,10 +49,10 @@ describe("Wallet selector > Browser wizard > actions", () => {
       });
 
       await expectSaga(tryConnectingWithBrowserWallet, {
-        browserWalletConnector: browserWalletConnectorMock,
-        web3Manager: web3ManagerMock,
-        logger: noopLogger,
-      })
+        browserWalletConnector: browserWalletConnectorMock as any,
+        web3Manager: web3ManagerMock as any,
+        logger: noopLogger as any,
+      } as TGlobalDependencies)
         .withState(getStateMock())
         .put(actions.walletSelector.connected())
         .run();
@@ -73,10 +74,10 @@ describe("Wallet selector > Browser wizard > actions", () => {
       });
 
       await expectSaga(tryConnectingWithBrowserWallet, {
-        browserWalletConnector: browserWalletConnectorMock,
-        web3Manager: web3ManagerMock,
-        logger: noopLogger,
-      })
+        browserWalletConnector: browserWalletConnectorMock as any,
+        web3Manager: web3ManagerMock as any,
+        logger: noopLogger as any,
+      } as TGlobalDependencies)
         .withState(getStateMock())
         .put(
           actions.walletSelector.browserWalletConnectionError(

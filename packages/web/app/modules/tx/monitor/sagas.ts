@@ -1,6 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { addHexPrefix } from "ethereumjs-util";
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import { fork, put, select } from "redux-saga/effects";
 import * as Web3 from "web3";
 

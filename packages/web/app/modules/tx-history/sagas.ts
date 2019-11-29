@@ -1,4 +1,4 @@
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import { all, fork, put, select } from "redux-saga/effects";
 
 import { ECurrency } from "../../components/shared/formatters/utils";

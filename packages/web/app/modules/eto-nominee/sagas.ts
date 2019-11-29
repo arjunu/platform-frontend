@@ -1,4 +1,4 @@
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 import { fork, put, select } from "redux-saga/effects";
 
 import {

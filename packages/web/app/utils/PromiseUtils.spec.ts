@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { delay } from "redux-saga";
+import { delay } from "redux-saga/effects";
 
 import { setupFakeClock } from "../../test/integrationTestUtils.unsafe";
 import { isPromise, promiseTimeout, promisify } from "./PromiseUtils";
