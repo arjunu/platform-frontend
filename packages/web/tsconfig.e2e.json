@@ -11,6 +11,7 @@
     "../../node_modules/web3-eth-abi/node_modules/web3-utils",
     "./@types/**/*.d.ts",
     "./typings/**/*.d.ts",
+    "./cypress/typings/**/*.d.ts",
     "./app/test-e2e/**/*.spec.e2e.ts",
     "./app/test-e2e/**/*.spec.e2e.io.ts"
   ],

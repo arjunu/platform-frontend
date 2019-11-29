@@ -41,7 +41,8 @@ describe("KYC Personal flow with manual verification", () => {
     assertFilteredDeJurisdiction();
   });
 
-  it("went through KYC flow with personal data for US investor", () => {
+  it("went through KYC flow with personal data for US investor", function(): void {
+    this.retries(2);
     createAndLoginNewUser({ type: "investor" });
 
     // go to kyc select and then individual page

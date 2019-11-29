@@ -3,6 +3,7 @@ import * as moment from "moment";
 import * as React from "react";
 
 import { testEto } from "../../../../../test/fixtures";
+import { EKycRequestStatus } from "../../../../lib/api/kyc/KycApi.interfaces";
 import { EUserType } from "../../../../lib/api/users/interfaces";
 import {
   EETOStateOnChain,
@@ -36,6 +37,44 @@ const eto: TEtoWithCompanyAndContractReadonly = {
 // 2018-11-16T05:03:56.000Z
 // Fri Nov 23 2018 06:03:56 GMT+0100
 const dummyNow = new Date("2018-10-16T05:03:56+00:00");
+
+const testStore = {
+  auth: {
+    jwt: "bla",
+    user: {
+      type: EUserType.INVESTOR,
+      verifiedEmail: "asfasdf@asfa.dd",
+    },
+  },
+  kyc: {
+    individualRequestState: {
+      status: EKycRequestStatus.ACCEPTED,
+    },
+    claims: {
+      isVerified: true,
+    },
+  },
+  eto: {
+    etos: { [eto.previewCode]: eto },
+    companies: { [eto.companyId]: eto.company },
+    contracts: { [eto.previewCode]: eto.contract },
+  },
+  bookBuildingFlow: {
+    bookbuildingStats: {
+      [eto.etoId]: {
+        investorsCount: 3,
+        pledgedAmount: 500,
+      },
+    },
+    pledges: {
+      [eto.etoId]: {
+        amountEur: 100,
+        currency: ECurrency.EUR_TOKEN,
+        consentToRevealEmail: true,
+      },
+    },
+  },
+} as const;
 
 storiesOf("ETO/EtoOverviewStatus", module)
   .addDecorator(
@@ -126,74 +165,49 @@ storiesOf("ETO/EtoOverviewStatus", module)
       publicView={false}
     />
   ))
-  .addDecorator(
-    withStore({
-      auth: {
-        jwt: "bla",
-        user: {
-          type: EUserType.INVESTOR,
-          verifiedEmail: "asfasdf@asfa.dd",
-        },
-      },
-      kyc: {
-        claims: {
-          isVerified: true,
-        },
-      },
-      eto: {
-        etos: { [eto.previewCode]: eto },
-        companies: { [eto.companyId]: eto.company },
-        contracts: { [eto.previewCode]: eto.contract },
-      },
-      bookBuildingFlow: {
-        bookbuildingStats: {
-          [eto.etoId]: {
-            investorsCount: 3,
-            pledgedAmount: 500,
-          },
-        },
-        pledges: {
-          [eto.etoId]: {
-            amountEur: 100,
-            currency: ECurrency.EUR_TOKEN,
-            consentToRevealEmail: true,
-          },
-        },
-      },
-    }),
+  .add(
+    "max cap exceeded, user whitelisted",
+    () => (
+      <EtoOverviewStatus
+        eto={{
+          ...eto,
+          contract: {
+            ...eto.contract,
+            startOfStates: {
+              ...eto.contract!.startOfStates,
+              [EETOStateOnChain.Public]: moment()
+                .add(7, "days")
+                .toDate(),
+            },
+          } as TEtoContractData,
+        }}
+        isEmbedded={true}
+        publicView={false}
+      />
+    ),
+    {
+      decorators: [withStore(testStore)],
+    },
   )
-
-  .add("max cap exceeded, user whitelisted", () => (
-    <EtoOverviewStatus
-      eto={{
-        ...eto,
-        contract: {
-          ...eto.contract,
-          startOfStates: {
-            ...eto.contract!.startOfStates,
-            [EETOStateOnChain.Public]: moment()
-              .add(7, "days")
-              .toDate(),
-          },
-        } as TEtoContractData,
-      }}
-      isEmbedded={true}
-      publicView={false}
-    />
-  ))
-  .add("max cap exceeded, user not whitelisted", () => (
-    <EtoOverviewStatus
-      eto={{
-        ...eto,
-        contract: {
-          ...eto.contract,
-          timedState: EETOStateOnChain.Public,
-        } as TEtoContractData,
-      }}
-      isEmbedded={true}
-      publicView={false}
-    />
-  ));
+  .add(
+    "max cap exceeded, user not whitelisted",
+    () => (
+      <EtoOverviewStatus
+        eto={{
+          ...eto,
+          contract: {
+            ...eto.contract,
+            timedState: EETOStateOnChain.Public,
+          } as TEtoContractData,
+        }}
+        isEmbedded={true}
+        publicView={false}
+      />
+    ),
+    {
+      decorators: [withStore(testStore)],
+    },
+  );
 
 storiesOf("ETO/EtoOverviewStatus/whitelisting, investor limit reached", module)
   .addDecorator(

@@ -1,10 +1,12 @@
 import { ETxSenderState } from "../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../modules/tx/types";
-import { accountFixtureAddress } from "../utils/index";
 
-export const generalPendingTxFixture = {
+export const generalPendingTxFixture = (
+  from: string,
+  transactionStatus: ETxSenderState = ETxSenderState.MINING,
+) => ({
   transaction: {
-    from: accountFixtureAddress("INV_EUR_ICBM_HAS_KYC_SEED"),
+    from,
     gas: "0xe890",
     gasPrice: "0xd693a400",
     hash: "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -27,16 +29,16 @@ export const generalPendingTxFixture = {
     amountEur: "10000000000000000000",
     totalEur: "10000000000000000000",
   },
-  transactionStatus: ETxSenderState.MINING,
+  transactionStatus,
   transactionTimestamp: 1553762875525,
   transactionType: ETxSenderType.WITHDRAW,
   transactionError: undefined,
-};
+});
 
-export const mismatchedPendingTxFixture = {
-  ...generalPendingTxFixture,
+export const mismatchedPendingTxFixture = (from: string) => ({
+  ...generalPendingTxFixture(from),
   transactionAdditionalData: {
     to: "0x16cd5aC5A1b77FB72032E3A09E91A98bB21D8988",
     value: "10000000000000000000",
   },
-};
+});

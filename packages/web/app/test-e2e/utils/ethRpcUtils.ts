@@ -68,7 +68,9 @@ export const getTokenBalance = (
   ]).then(response => abiCoder.decodeParameter("uint256", response.body.result));
 
 export const getBalanceRpc = (address: string) =>
-  requestFromWeb3Node("eth_getBalance", [address, "latest"]);
+  requestFromWeb3Node("eth_getBalance", [address, "latest"]).then(
+    v => new BigNumber(v.body.result),
+  );
 
 export const sendRawTransactionRpc = (data: string) =>
   requestFromWeb3Node("eth_sendRawTransaction", [data]);
@@ -99,7 +101,7 @@ export const sendEth = (fixture: string, to: string, amount: BigNumber | "all") 
   const account = new Web3Accounts(NODE_ADDRESS).privateKeyToAccount(privateKey);
 
   getBalanceRpc(account.address).then(balanceResponse => {
-    const availableAmount = new BigNumber(balanceResponse.body.result).minus("21000");
+    const availableAmount = balanceResponse.minus("21000");
 
     if (availableAmount.greaterThan("0")) {
       cy.log("Sending ethereum");
