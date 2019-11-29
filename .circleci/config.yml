@@ -11,7 +11,6 @@ executors:
       - image: circleci/node:11.14.0-browsers
     working_directory: /home/circleci/app
 
-
 jobs:
   install-lint-test:
     # install and lint is taken as one job to remove required time for downloading cache
@@ -83,10 +82,12 @@ jobs:
       image: ubuntu-1604:201903-01
       docker_layer_caching: true
 
+    resource_class: large
+
     environment:
       COMPOSE_INTERACTIVE_NO_CLI: 1
 
-    parallelism: 4
+    parallelism: 8
 
     working_directory: /home/circleci/app
 
