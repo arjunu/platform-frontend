@@ -6,7 +6,7 @@ import { externalRoutes } from "../../../config/externalRoutes";
 import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { TDataTestId } from "../../../types";
 import { getHostname } from "../../../utils/StringUtils";
-import { ButtonReset } from "../buttons";
+import { ButtonBase } from "../buttons";
 import { ButtonClose } from "../buttons/CommonButtons";
 import { ExternalLink } from "../links/ExternalLink";
 
@@ -82,9 +82,9 @@ const Notification: React.FunctionComponent<INotificationProps & TDataTestId> = 
 }) => (
   <section data-test-id={dataTestId} className={cn(styles.notificationWrapper)}>
     {onClick ? (
-      <ButtonReset className="w-100" data-test-id="notification-button" onClick={onClick}>
+      <ButtonBase className="w-100" data-test-id="notification-button" onClick={onClick}>
         <NotificationContent text={text} type={type} />
-      </ButtonReset>
+      </ButtonBase>
     ) : (
       <NotificationContent text={text} type={type} />
     )}

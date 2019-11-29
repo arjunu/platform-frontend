@@ -1,5 +1,5 @@
 export * from "./Button";
-export * from "./ButtonReset";
+export * from "./ButtonBase";
 export * from "./ButtonGroup";
 export * from "./CommonButtons";
 export * from "./ButtonInline";

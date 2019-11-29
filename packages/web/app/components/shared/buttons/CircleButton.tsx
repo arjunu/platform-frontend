@@ -4,7 +4,7 @@ import * as React from "react";
 import { OmitKeys } from "../../../types";
 import { invariant } from "../../../utils/invariant";
 import { InlineIcon } from "../icons/InlineIcon";
-import { ButtonReset } from "./ButtonReset";
+import { ButtonBase } from "./ButtonBase";
 
 import * as styles from "./CircleButton.module.scss";
 
@@ -18,7 +18,7 @@ enum ECircleButtonIconPosition {
   ICON_AFTER = "icon-after",
 }
 
-type TButtonResetProps = React.ComponentProps<typeof ButtonReset>;
+type TButtonBaseProps = React.ComponentProps<typeof ButtonBase>;
 
 type TExternalProps = {
   svgIcon?: string;
@@ -27,7 +27,7 @@ type TExternalProps = {
   layout: ECircleButtonLayout;
 };
 
-const CircleButton: React.FunctionComponent<TExternalProps & TButtonResetProps> = ({
+const CircleButton: React.FunctionComponent<TExternalProps & TButtonBaseProps> = ({
   layout,
   children,
   className,
@@ -50,7 +50,7 @@ const CircleButton: React.FunctionComponent<TExternalProps & TButtonResetProps> 
   }
 
   return (
-    <ButtonReset
+    <ButtonBase
       className={cn(className, layout, styles.circleButton, {
         [styles.circleButtonOnlyIcon]: withIconOnly,
       })}
@@ -93,7 +93,7 @@ const CircleButton: React.FunctionComponent<TExternalProps & TButtonResetProps> 
           svgIcon={svgIcon}
         />
       )}
-    </ButtonReset>
+    </ButtonBase>
   );
 };
 

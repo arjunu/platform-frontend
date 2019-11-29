@@ -8,7 +8,7 @@ import { actions } from "../../../modules/actions";
 import { selectPlatformPendingTransaction } from "../../../modules/tx/monitor/selectors";
 import { ETxSenderState } from "../../../modules/tx/sender/reducer";
 import { appConnect } from "../../../store";
-import { ButtonReset } from "../../shared/buttons";
+import { ButtonBase } from "../../shared/buttons";
 import { TooltipBase } from "../../shared/tooltips";
 
 import * as txError from "../../../assets/img/icon_txn_status_error.svg";
@@ -51,36 +51,36 @@ export const PendingTransactionStatusLayout: React.FunctionComponent<IComponentP
     case ETxSenderState.MINING:
       return (
         <>
-          <ButtonReset
+          <ButtonBase
             data-test-id="pending-transactions-status.mining"
             onClick={monitorPendingTransaction}
             className={className}
           >
             <PendingTransactionImage />
-          </ButtonReset>
+          </ButtonBase>
         </>
       );
 
     case ETxSenderState.DONE:
       return (
-        <ButtonReset
+        <ButtonBase
           data-test-id="pending-transactions-status.success"
           onClick={monitorPendingTransaction}
           className={className}
         >
           <TransactionSuccessImage />
-        </ButtonReset>
+        </ButtonBase>
       );
 
     case ETxSenderState.ERROR_SIGN:
       return (
-        <ButtonReset
+        <ButtonBase
           data-test-id="pending-transactions-status.error"
           onClick={monitorPendingTransaction}
           className={className}
         >
           <TransactionErrorImage />
-        </ButtonReset>
+        </ButtonBase>
       );
 
     default:

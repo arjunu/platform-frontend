@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 
-import { ButtonGroup, ButtonReset } from "../../shared/buttons";
+import { ButtonBase, ButtonGroup } from "../../shared/buttons";
 import { Heading } from "../../shared/Heading";
 import { useCopyClipboard } from "../../shared/hooks/useCopyToClipboard";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
@@ -45,7 +45,7 @@ const PrivateKeyDisplay: React.FunctionComponent<TProps> = ({ privateKey }) => {
         />
       </p>
       <ButtonGroup>
-        <ButtonReset
+        <ButtonBase
           data-test-id="private-key-display.copy-to-clipboard"
           className={styles.button}
           onClick={copyPrivateKeyToClipboard}
@@ -53,8 +53,8 @@ const PrivateKeyDisplay: React.FunctionComponent<TProps> = ({ privateKey }) => {
         >
           <FormattedMessage id="components.settings.private-key-display.copy-private-key" />
           <InlineIcon svgIcon={clipboardIcon} />
-        </ButtonReset>
-        <ButtonReset
+        </ButtonBase>
+        <ButtonBase
           aria-live="polite"
           data-test-id="private-key-display.view-private-key"
           className={cn(styles.button, { [styles.buttonActive]: showPrivateKey })}
@@ -70,7 +70,7 @@ const PrivateKeyDisplay: React.FunctionComponent<TProps> = ({ privateKey }) => {
             <FormattedMessage id="components.settings.private-key-display.view-private-key" />
           )}
           <InlineIcon svgIcon={showPrivateKey ? blindIcon : eyeIcon} />
-        </ButtonReset>
+        </ButtonBase>
       </ButtonGroup>
     </section>
   );

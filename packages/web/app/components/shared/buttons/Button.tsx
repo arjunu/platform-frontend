@@ -5,7 +5,7 @@ import { OmitKeys, PartialByKeys, TDataTestId } from "../../../types";
 import { invariant } from "../../../utils/invariant";
 import { InlineIcon } from "../icons";
 import { LoadingIndicator } from "../loading-indicator/LoadingIndicator";
-import { ButtonReset } from "./ButtonReset";
+import { ButtonBase } from "./ButtonBase";
 
 import * as styles from "./Button.module.scss";
 
@@ -41,11 +41,11 @@ type TButtonLayout = {
   isActive?: boolean;
 };
 
-const ButtonBase = React.forwardRef<
+const ButtonLayout = React.forwardRef<
   HTMLButtonElement,
-  TButtonLayout & React.ComponentProps<typeof ButtonReset> & TDataTestId
+  TButtonLayout & React.ComponentProps<typeof ButtonBase> & TDataTestId
 >(({ children, className, layout, disabled, size, width, isLoading, isActive, ...props }, ref) => (
-  <ButtonReset
+  <ButtonBase
     ref={ref}
     className={cn(
       styles.button,
@@ -73,16 +73,16 @@ const ButtonBase = React.forwardRef<
     ) : (
       children
     )}
-  </ButtonReset>
+  </ButtonBase>
 ));
 
-type ButtonBaseProps = React.ComponentProps<typeof ButtonBase>;
+type ButtonLayoutProps = React.ComponentProps<typeof ButtonLayout>;
 
 type TButtonProps = {
   svgIcon?: string;
   iconPosition?: EIconPosition;
   iconProps?: OmitKeys<React.ComponentProps<typeof InlineIcon>, "svgIcon">;
-} & PartialByKeys<ButtonBaseProps, "layout" | "size" | "width">;
+} & PartialByKeys<ButtonLayoutProps, "layout" | "size" | "width">;
 
 const Button = React.forwardRef<HTMLButtonElement, TButtonProps>(
   (
@@ -113,7 +113,7 @@ const Button = React.forwardRef<HTMLButtonElement, TButtonProps>(
     }
 
     return (
-      <ButtonBase
+      <ButtonLayout
         ref={ref}
         layout={layout}
         size={size}
@@ -154,7 +154,7 @@ const Button = React.forwardRef<HTMLButtonElement, TButtonProps>(
             svgIcon={svgIcon}
           />
         )}
-      </ButtonBase>
+      </ButtonLayout>
     );
   },
 );
