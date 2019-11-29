@@ -57,7 +57,7 @@ describe("Eto view widget", () => {
     goToEtoViewById(etoId);
 
     cy.get(tid("eto-overview.stats.pre-money-valuation")).contains("177 878 291 EUR");
-    cy.get(tid("eto-overview.stats.target-investment-amount")).contains("11 473 145 EUR");
+    cy.get(tid("eto-overview.stats.target-investment-amount")).contains("2 966 338 EUR");
     cy.get(tid("eto-overview.stats.new-shares-generated")).contains("2.38–8.22 %");
     cy.get(tid("eto-overview.stats.equity-token-price")).contains("0.3390 EUR");
     cy.get(tid("eto-overview.stats.equity-token-price-whitelist-discount")).contains("20%");
@@ -69,7 +69,7 @@ describe("Eto view widget", () => {
     goToEtoViewById(etoId);
 
     cy.get(tid("eto-overview.stats.pre-money-valuation")).contains("30 000 000 EUR");
-    cy.get(tid("eto-overview.stats.target-investment-amount")).contains("3 529 412 EUR");
+    cy.get(tid("eto-overview.stats.target-investment-amount")).contains("1 660 227 EUR");
     cy.get(tid("eto-overview.stats.new-shares-generated")).contains("10.00–12.00 %");
     cy.get(tid("eto-overview.stats.equity-token-price")).contains("0.6000 EUR");
     cy.get(tid("eto-overview.stats.equity-token-price-public-discount")).should("not.exist");

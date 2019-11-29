@@ -2,11 +2,7 @@ const path = require("path");
 const paths = require("../webpack/paths");
 const devConfig = require("../webpack/webpack.config.dev");
 
-module.exports = (baseConfig, env, config) => {
-  const pathToStyleLoader = path.join(__dirname, "./setup-styles.ts");
-
-  config.entry.iframe.push(pathToStyleLoader);
-
+module.exports = ({ config }) => {
   config.module.rules = [
     {
       oneOf: [
