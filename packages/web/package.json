@@ -204,7 +204,6 @@
     "connected-react-router": "6.2.2",
     "copy-text-to-clipboard": "^2.1.0",
     "crypto-random-string": "^3.0.1",
-    "cypress": "^3.6.0",
     "detect-browser": "^2.0.0",
     "eth-lightwallet": "https://github.com/Neufund/eth-lightwallet#eb174e6831d3b62adfde396f26d15c1b7e1ab30f",
     "eth-sig-util": "^1.4.2",

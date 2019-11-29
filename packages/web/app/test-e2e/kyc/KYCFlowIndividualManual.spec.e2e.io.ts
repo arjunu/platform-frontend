@@ -42,7 +42,8 @@ describe("KYC Personal flow with manual verification", () => {
     });
   });
 
-  it("went through KYC flow with personal data for US investor", () => {
+  it("went through KYC flow with personal data for US investor", function(): void {
+    this.retries(2);
     createAndLoginNewUser({ type: "investor" }).then(() => {
       // go to kyc select and then individual page
       cy.visit(kycRoutes.start);
