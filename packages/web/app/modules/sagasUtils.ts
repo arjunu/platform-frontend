@@ -1,7 +1,6 @@
 import { isMatch } from "lodash/fp";
-import { delay } from "redux-saga/effects";
+import { call } from "typed-redux-saga";
 import {
-  call,
   Effect,
   fork,
   getContext,
@@ -11,6 +10,8 @@ import {
   takeEvery,
   takeLatest,
   throttle,
+  delay,
+  SagaGenerator,
 } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../di/setupBindings";
@@ -22,13 +23,18 @@ type TSagaWithDepsAndArgs<R, T extends any[]> = (deps: TGlobalDependencies, ...a
 
 type TType = TSingleOrArray<TPattern>;
 
+function* neuGetContext(): Generator<any, TGlobalDependencies, any> {
+  const deps: unknown = yield getContext("deps");
+  return deps as TGlobalDependencies;
+}
+
 export function* neuTakeLatest(type: TType, saga: TSagaWithDeps): Iterator<Effect> {
-  const deps: TGlobalDependencies = yield getContext("deps");
+  const deps = yield* neuGetContext();
   yield takeLatest(type, saga, deps);
 }
 
 export function* neuTakeEvery(type: TType, saga: TSagaWithDeps): Iterator<Effect> {
-  const deps: TGlobalDependencies = yield getContext("deps");
+  const deps = yield* neuGetContext();
   yield takeEvery(type, saga, deps);
 }
 
@@ -36,7 +42,7 @@ export function* neuFork<R, T extends any[]>(
   saga: TSagaWithDepsAndArgs<R, T>,
   ...args: T
 ): Iterator<Effect> {
-  const deps: TGlobalDependencies = yield getContext("deps");
+  const deps = yield* neuGetContext();
   return yield (fork as any)(saga, deps, ...args);
 }
 
@@ -44,16 +50,21 @@ export function* neuSpawn<R, T extends any[]>(
   saga: TSagaWithDepsAndArgs<R, T>,
   ...args: T
 ): Iterator<Effect> {
-  const deps: TGlobalDependencies = yield getContext("deps");
+  const deps = yield* neuGetContext();
   return yield (spawn as any)(saga, deps, ...args);
 }
+declare type UnwrapReturnType<R> = R extends SagaGenerator<infer RT>
+  ? RT
+  : R extends Promise<infer PromiseValue>
+  ? PromiseValue
+  : R;
 
-export function* neuCall<R, T extends any[]>(
-  saga: TSagaWithDepsAndArgs<R, T>,
-  ...args: T
-): Iterator<Effect> {
-  const deps: TGlobalDependencies = yield getContext("deps");
-  return yield (call as any)(saga, deps, ...args);
+export function* neuCall<Args extends any[], R>(
+  fn: (...args: any[]) => R,
+  ...args: Args
+): SagaGenerator<UnwrapReturnType<R>> {
+  const deps = yield* neuGetContext();
+  return call(fn, deps, ...args);
 }
 
 /**
@@ -149,7 +160,7 @@ export function* neuRestartIf<R, T extends any[]>(
  * After spawning a task, it's still accepting incoming actions into the underlying buffer, keeping at most 1.
  */
 export function* neuThrottle(ms: number, type: TType, saga: TSagaWithDeps): Iterator<Effect> {
-  const deps: TGlobalDependencies = yield getContext("deps");
+  const deps = yield* neuGetContext();
   yield throttle(ms, type, saga, deps);
 }
 

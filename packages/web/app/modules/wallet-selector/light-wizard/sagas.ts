@@ -1,4 +1,6 @@
-import { call, fork, put, select } from "redux-saga/effects";
+import { IAppState } from "./../../../store";
+import { select, call } from "typed-redux-saga";
+import { fork, put } from "redux-saga/effects";
 
 import {
   BackupRecoveryMessage,
@@ -38,6 +40,7 @@ import { selectUrlUserType } from "../selectors";
 import { mapLightWalletErrorToErrorMessage } from "./errors";
 import { getWalletMetadataByURL } from "./metadata/sagas";
 import { getVaultKey } from "./utils";
+import { any } from "prop-types";
 
 export const DEFAULT_HD_PATH = "m/44'/60'/0'";
 
@@ -110,12 +113,13 @@ export function* loadSeedFromWalletWatch({
   web3Manager,
 }: TGlobalDependencies): Iterator<any> {
   try {
-    const isUnlocked = yield select((s: IAppState) => selectIsUnlocked(s.web3));
+    const isUnlocked = yield* select((s: IAppState) => selectIsUnlocked(s.web3));
+
     if (!isUnlocked) {
       throw new LightWalletLocked();
     }
     const lightWallet = web3Manager.personalWallet as LightWallet;
-    const { seed, privateKey } = yield call(lightWallet.getWalletPrivateData);
+    const { seed, privateKey } = yield* call(lightWallet.getWalletPrivateData);
     yield put(actions.web3.loadWalletPrivateDataToState(seed, privateKey));
   } catch (e) {
     logger.error("Load seed from wallet failed", e);
@@ -130,15 +134,11 @@ export function* lightWalletRecoverWatch(
   action: TActionFromCreator<typeof actions.walletSelector.lightWalletRecover>,
 ): Iterator<any> {
   try {
-    const userType: EUserType = yield select((state: IAppState) => selectUrlUserType(state.router));
+    const userType = yield* select((state: IAppState) => selectUrlUserType(state.router));
 
     const { password, email, seed } = action.payload;
-    const walletMetadata: ILightWalletMetadata = yield neuCall(
-      setupLightWalletPromise,
-      email,
-      password,
-      seed,
-    );
+
+    const walletMetadata = yield* neuCall(setupLightWalletPromise, email, password, seed);
 
     yield neuCall(createJwt, [EJwtPermissions.CHANGE_EMAIL_PERMISSION]);
     const userUpdate: IUserInput = {
@@ -150,7 +150,8 @@ export function* lightWalletRecoverWatch(
     };
     const isEmailAvailable = yield neuCall(checkEmailPromise, email);
     try {
-      const user: IUser = yield apiUserService.me();
+      const user = yield* call(apiUserService.me);
+
       if (isEmailAvailable) {
         userUpdate.newEmail = walletMetadata.email;
         yield neuCall(updateUser, userUpdate);
@@ -223,23 +224,17 @@ function* handleLightWalletError({ logger }: TGlobalDependencies, e: Error): any
 export function* lightWalletLoginWatch(
   { web3Manager, lightWalletConnector, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.walletSelector.lightWalletLogin>,
-): Iterator<any> {
+): Generator<any, void, any> {
   const { password } = action.payload;
   try {
-    const walletMetadata: ILightWalletMetadata | undefined = yield call(
-      getWalletMetadataByURL,
-      password,
-    );
+    const walletMetadata = yield* getWalletMetadataByURL(password);
 
     if (!walletMetadata) {
-      return invariant(walletMetadata, "Missing metadata");
+      yield invariant(walletMetadata, "Missing metadata");
+      return;
     }
 
-    const wallet: LightWallet = yield connectLightWallet(
-      lightWalletConnector,
-      walletMetadata,
-      password,
-    );
+    const wallet = yield* connectLightWallet(lightWalletConnector, walletMetadata, password);
 
     yield web3Manager.plugPersonalWallet(wallet);
 

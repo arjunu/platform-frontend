@@ -1,5 +1,7 @@
 import { LocationChangeAction } from "connected-react-router";
-import { Effect, fork, put, select } from "redux-saga/effects";
+import { select } from "typed-redux-saga";
+import { fork, put } from "redux-saga/effects";
+import { SagaIterator } from "redux-saga";
 
 import { appRoutes } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
@@ -29,8 +31,8 @@ export function* startRouteBasedSagas(
   action: LocationChangeAction,
 ): IterableIterator<any> {
   const appIsReady = yield waitForAppInit();
-  const userIsAuthorized: boolean = yield select(selectIsAuthorized);
-  const userType: EUserType | undefined = yield select(selectUserType);
+  const userIsAuthorized = yield* select(selectIsAuthorized);
+  const userType = yield* select(selectUserType);
 
   logger.info(
     `userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
@@ -58,7 +60,7 @@ export function* nomineeRouting(
   }
 }
 
-export function* routingSagas(): Iterator<Effect> {
+export function* routingSagas(): SagaIterator<void> {
   yield fork(neuTakeEvery, actions.routing.openInNewWindow, openInNewWindowSaga);
   yield fork(neuTakeEvery, "@@router/LOCATION_CHANGE", startRouteBasedSagas);
 }

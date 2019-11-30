@@ -1,5 +1,6 @@
 import { toPairs, zip } from "lodash";
 import { fork, put, select } from "redux-saga/effects";
+import { call } from "typed-redux-saga";
 
 import { tripleZip } from "../../../../typings/modifications";
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -106,7 +107,8 @@ export function* finishSettingUpLedgerConnector(
   action: TActionFromCreator<typeof actions.walletSelector.ledgerFinishSettingUpLedgerConnector>,
 ): IterableIterator<any> {
   try {
-    const ledgerWallet = yield ledgerWalletConnector.finishConnecting(
+    const ledgerWallet = yield* call(
+      ledgerWalletConnector.finishConnecting,
       action.payload.derivationPath,
       web3Manager.networkId,
     );

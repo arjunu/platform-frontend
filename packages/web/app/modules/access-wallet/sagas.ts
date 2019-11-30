@@ -1,3 +1,4 @@
+import { LightWallet } from "./../../lib/web3/light-wallet/LightWallet";
 import { call, put, race, select, take, Effect } from "redux-saga/effects";
 
 import { GenericErrorMessage } from "../../components/translatedMessages/messages";
@@ -31,6 +32,7 @@ import {
 } from "../web3/types";
 import { mapSignMessageErrorToErrorMessage, MismatchedWalletAddressError } from "./errors";
 import { selectIsSigning } from "./reducer";
+import { SagaIterator } from "redux-saga";
 
 export function* ensureWalletConnection(
   {
@@ -96,7 +98,7 @@ export function* connectLightWallet(
   lightWalletConnector: LightWalletConnector,
   metadata: ILightWalletMetadata,
   password: string,
-): any {
+): Generator<any, LightWallet, any> {
   const walletVault: ILightWalletRetrieveMetadata = yield neuCall(
     retrieveMetadataFromVaultAPI,
     password,

@@ -1,5 +1,5 @@
-import BigNumber from "bignumber.js";
-import { put, select } from "redux-saga/effects";
+import { put } from "redux-saga/effects";
+import { select } from "typed-redux-saga";
 
 import { TGlobalDependencies } from "../../../../../di/setupBindings";
 import { UserHasNoFundsError } from "../../../../../lib/web3/Web3Adapter";
@@ -53,7 +53,7 @@ export function* txValidateWithdraw(userInput: IWithdrawDraftType): Iterator<any
       isValueValid && modifiedUserInput.value,
     );
 
-    const euroPrice: string = yield select(selectEtherPriceEur);
+    const euroPrice = yield* select(selectEtherPriceEur);
 
     const valueFromUserEuro = multiplyBigNumbers([euroPrice, valueUlps]);
     const transactionCost = multiplyBigNumbers([
@@ -90,7 +90,7 @@ export function* isAddressValidAcceptsEther(
   value: string,
 ): Iterator<any> {
   try {
-    const etherBalance: BigNumber = yield select(selectEtherBalanceAsBigNumber);
+    const etherBalance = yield* select(selectEtherBalanceAsBigNumber);
     if (etherBalance.isZero()) {
       throw new UserHasNoFundsError();
     }
