@@ -66,7 +66,14 @@ describe("startRouteBasedSagas", () => {
 
     return expectSaga(startRouteBasedSagas, globalDependencies, routerAction)
       .withState(state)
-      .put(actions.nomineeFlow.loadNomineeEto())
+      .put(
+        actions.etoView.loadNomineeEtoView({
+          params: {},
+          path: "/eto/view",
+          isExact: true,
+          url: "/eto/view",
+        }),
+      )
       .run();
   });
   it("runs nomineeDashboardView when going to /documents as Nominee", () => {

@@ -34,7 +34,7 @@ export type TInvestorEtoViewData = {
 
 export type TIssuerEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly;
-  campaignOverviewData: TCampaignOverviewData;
+  campaignOverviewData: TCampaignOverviewIssuerData;
 };
 
 export type TIssuerPreviewEtoViewData = {
@@ -64,7 +64,23 @@ export type TCampaignOverviewParams = {
   showInvestmentTerms: boolean;
 } & XOR<{ showTwitterFeed: true; twitterUrl: string }, { showTwitterFeed: false }>;
 
+export type TCampaignOverviewIssuerParams = {
+  url: string;
+  showYouTube: boolean;
+  showSlideshare: boolean;
+  showSocialChannels: boolean;
+  showInvestmentTerms: boolean;
+} & XOR<{ showTwitterFeed: true; twitterUrl: string }, { showTwitterFeed: false }>;
+
 export type TCampaignOverviewData = TCampaignOverviewParams &
+  XOR<
+    { campaignOverviewType: EEtoViewCampaignOverviewType.WITHOUT_STATS },
+    {
+      campaignOverviewType: EEtoViewCampaignOverviewType.WITH_STATS;
+    } & TCampaignOverviewWithStatsRouteData
+  >;
+
+export type TCampaignOverviewIssuerData = TCampaignOverviewIssuerParams &
   XOR<
     { campaignOverviewType: EEtoViewCampaignOverviewType.WITHOUT_STATS },
     {

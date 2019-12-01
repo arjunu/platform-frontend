@@ -42,7 +42,7 @@ export function* calculateEtoViewCampaignOverviewType(
 }
 
 export function* calculateCampaignOverviewData(
-  routeMatch: match<TEtoViewByPreviewCodeMatch>,
+  routeMatch: match<TEtoViewByPreviewCodeMatch | {}>,
   eto: TEtoWithCompanyAndContractReadonly,
 ): Iterator<any> {
   const campaignOverviewType: EEtoViewCampaignOverviewType = yield call(
@@ -70,43 +70,7 @@ export function* calculateCampaignOverviewData(
     };
   } else {
     return {
-      campaignOverviewType,
-      showYouTube,
-      showSlideshare,
-      showSocialChannels,
-      showInvestmentTerms,
-      ...twitterData,
-    };
-  }
-}
-
-export function* calculateCampaignOverviewDataIssuer( //fixme code duplication!!!
-  eto: TEtoWithCompanyAndContractReadonly,
-): Iterator<any> {
-  const campaignOverviewType: EEtoViewCampaignOverviewType = yield call(
-    calculateEtoViewCampaignOverviewType,
-    eto,
-  );
-
-  const showYouTube = !!(eto.company.companyVideo && eto.company.companyVideo.url);
-  const showSlideshare = !!(eto.company.companySlideshare && eto.company.companySlideshare.url);
-  const showSocialChannels = !!(eto.company.socialChannels && eto.company.socialChannels.length);
-  const showInvestmentTerms = eto.product.id !== ETHEREUM_ZERO_ADDRESS;
-  const twitterData = getTwitterData(eto.company);
-
-  if (campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS) {
-    return {
-      campaignOverviewType,
-      url: "",
-      path: "",
-      showYouTube,
-      showSlideshare,
-      showSocialChannels,
-      showInvestmentTerms,
-      ...twitterData,
-    };
-  } else {
-    return {
+      url: routeMatch.url,
       campaignOverviewType,
       showYouTube,
       showSlideshare,

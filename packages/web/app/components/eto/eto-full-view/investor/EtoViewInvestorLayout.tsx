@@ -9,7 +9,7 @@ import { WidgetGrid } from "../../../layouts/WidgetGrid";
 import { PersonProfileModal } from "../../../modals/person-profile-modal/PersonProfileModal";
 import { FieldSchemaProvider } from "../../../shared/Field";
 import { EtoOverviewStatus } from "../../overview/EtoOverviewStatus/EtoOverviewStatus";
-import { InvestorCoverBannerLayout } from "../shared/cover-banner/CoverBanner";
+import { CoverBanner } from "../shared/cover-banner/CoverBanner";
 import { Cover } from "../shared/cover/Cover";
 import { CampaignOverviewInvestor } from "./campaign-overview/CampaignOverviewInvestor";
 
@@ -27,7 +27,7 @@ const EtoViewInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
     <FieldSchemaProvider value={EtoViewSchema}>
       <PersonProfileModal />
       <WidgetGrid className={styles.etoLayout} data-test-id="eto.public-view">
-        <InvestorCoverBannerLayout jurisdiction={eto.product.jurisdiction} />
+        <CoverBanner jurisdiction={eto.product.jurisdiction} />
         <Cover
           companyName={brandName}
           companyOneliner={companyOneliner}

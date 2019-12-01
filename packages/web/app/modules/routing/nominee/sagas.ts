@@ -1,4 +1,5 @@
 import { LocationChangeAction } from "connected-react-router";
+import { matchPath } from "react-router";
 import { put } from "redux-saga/effects";
 
 import { appRoutes } from "../../../components/appRoutes";
@@ -12,9 +13,14 @@ export function* nomineeRouting(
   if (payload.location.pathname === appRoutes.dashboard) {
     yield put(actions.nomineeFlow.nomineeDashboardView());
   }
-  if (payload.location.pathname === appRoutes.etoIssuerView) {
-    yield put(actions.etoView.loadNomineeEtoView());
+
+  const etoViewNomineeMatch = yield matchPath(payload.location.pathname, {
+    path: appRoutes.etoIssuerView,
+  });
+  if (etoViewNomineeMatch) {
+    yield put(actions.etoView.loadNomineeEtoView(etoViewNomineeMatch));
   }
+
   if (payload.location.pathname === appRoutes.documents) {
     yield put(actions.nomineeFlow.nomineeDocumentsView());
   }

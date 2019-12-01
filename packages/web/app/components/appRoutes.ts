@@ -2,6 +2,7 @@ import { EJurisdiction } from "../lib/api/eto/EtoProductsApi.interfaces";
 
 export type TEtoViewByPreviewCodeMatch = { jurisdiction: EJurisdiction; previewCode: string };
 export type TEtoViewByIdMatch = { jurisdiction: EJurisdiction; etoId: string };
+export type TEtoIssuerPreviewMatch = { previewCode: string };
 
 export const appRoutes = {
   // ----- HARDCODED TEMP ROUTES ---//
@@ -25,6 +26,7 @@ export const appRoutes = {
   restore: "/restore",
 
   etoIssuerView: "/eto/view",
+  etoIssuerPreview: "/eto/view/:previewCode",
   etoIssuerViewStats: "/eto/view/stats",
 
   etoPublicView: "/eto/view/:jurisdiction/:previewCode",

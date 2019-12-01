@@ -9,8 +9,8 @@ import { selectIssuerEtoWithCompanyAndContract } from "../../eto-flow/selectors"
 import { loadEtoWithCompanyAndContract } from "../../eto/sagas";
 import { TEtoWithCompanyAndContractReadonly } from "../../eto/types";
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
-import { calculateCampaignOverviewDataIssuer } from "../shared/sagas";
-import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
+import { calculateCampaignOverviewData } from "../shared/sagas";
+import { EEtoViewType, TCampaignOverviewData, TCampaignOverviewIssuerData } from "../shared/types";
 
 export function* selectOrLoadEto(): Iterator<any> {
   let eto = yield select(selectIssuerEtoWithCompanyAndContract);
@@ -21,16 +21,17 @@ export function* selectOrLoadEto(): Iterator<any> {
   return eto;
 }
 
-export function* loadIssuerEtoView({
-  logger,
-  notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+export function* loadIssuerEtoView(
+  { logger, notificationCenter }: TGlobalDependencies,
+  { payload }: TActionFromCreator<typeof actions.etoView.loadIssuerEtoView>,
+): Iterator<any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly | undefined = yield call(selectOrLoadEto);
 
     if (eto) {
-      const campaignOverviewData: TCampaignOverviewData = yield call(
-        calculateCampaignOverviewDataIssuer,
+      const campaignOverviewData: TCampaignOverviewIssuerData = yield call(
+        calculateCampaignOverviewData,
+        payload.routeMatch,
         eto,
       );
 
@@ -53,7 +54,7 @@ export function* loadIssuerEtoView({
 
 export function* loadIssuerEtoPreview(
   { logger, notificationCenter }: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
+  { payload }: TActionFromCreator<typeof actions.etoView.loadIssuerPreviewEtoView>,
 ): Iterator<any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
@@ -63,7 +64,8 @@ export function* loadIssuerEtoPreview(
 
     if (eto) {
       const campaignOverviewData: TCampaignOverviewData = yield call(
-        calculateCampaignOverviewDataIssuer,
+        calculateCampaignOverviewData,
+        payload.routeMatch,
         eto,
       );
 

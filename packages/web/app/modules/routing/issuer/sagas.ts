@@ -14,12 +14,14 @@ export function* issuerRouting(
     path: appRoutes.etoIssuerView,
     exact: true,
   });
-  const etoViewIssuerPreviewMatch = yield matchPath(payload.location.pathname, {
-    path: appRoutes.etoPublicView,
-  });
   if (etoViewIssuerMatch !== null) {
-    yield put(actions.etoView.loadIssuerEtoView());
-  } else if (etoViewIssuerPreviewMatch) {
+    yield put(actions.etoView.loadIssuerEtoView(etoViewIssuerMatch));
+  }
+
+  const etoViewIssuerPreviewMatch = yield matchPath(payload.location.pathname, {
+    path: appRoutes.etoIssuerPreview,
+  });
+  if (etoViewIssuerPreviewMatch) {
     const previewCode = etoViewIssuerPreviewMatch.params.previewCode;
     yield put(actions.etoView.loadIssuerPreviewEtoView(previewCode, etoViewIssuerPreviewMatch));
   }
