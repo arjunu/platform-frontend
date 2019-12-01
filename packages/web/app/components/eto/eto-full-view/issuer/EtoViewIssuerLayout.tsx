@@ -26,7 +26,7 @@ const EtoViewIssuerLayout: React.FunctionComponent<TIssuerEtoViewData> = ({
     <FieldSchemaProvider value={EtoViewSchema}>
       <PersonProfileModal />
       <WidgetGrid className={styles.etoLayout} data-test-id="eto.public-view">
-        <IssuerCoverBanner previewCode={eto.previewCode} url={campaignOverviewData.url} />
+        <IssuerCoverBanner previewCode={eto.previewCode} jurisdiction={eto.product.jurisdiction} url={campaignOverviewData.url} />
         <Cover
           companyName={brandName}
           companyOneliner={companyOneliner}

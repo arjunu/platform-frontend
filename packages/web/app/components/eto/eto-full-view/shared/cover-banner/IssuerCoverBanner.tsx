@@ -3,15 +3,18 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { ExternalLink } from "../../../../shared/links/ExternalLink";
 import { CoverBannerBase } from "./CoverBannerBase";
+import { EJurisdiction } from "../../../../../lib/api/eto/EtoProductsApi.interfaces";
 
 interface IIssuerPreviewProps {
   previewCode: string;
   url: string;
+  jurisdiction: EJurisdiction
 }
 
 export const IssuerCoverBanner: React.FunctionComponent<IIssuerPreviewProps> = ({
   previewCode,
   url,
+  jurisdiction
 }) => (
   <CoverBannerBase data-test-id="eto.public-view.investor-preview-banner">
     <FormattedMessage
@@ -21,7 +24,7 @@ export const IssuerCoverBanner: React.FunctionComponent<IIssuerPreviewProps> = (
         viewAsInvestor: (
           <ExternalLink
             data-test-id="eto.public-view.investor-preview-banner.view-as-investor"
-            href={`${url}/${previewCode}`}
+            href={`${url}/${jurisdiction}/${previewCode}`}
           >
             <FormattedMessage id="eto-overview.cover-banner.view-as-investor" />
           </ExternalLink>

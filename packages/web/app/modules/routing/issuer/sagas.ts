@@ -19,7 +19,7 @@ export function* issuerRouting(
   }
 
   const etoViewIssuerPreviewMatch = yield matchPath(payload.location.pathname, {
-    path: appRoutes.etoIssuerPreview,
+    path: appRoutes.etoPublicView,
   });
   if (etoViewIssuerPreviewMatch) {
     const previewCode = etoViewIssuerPreviewMatch.params.previewCode;
