@@ -4,12 +4,12 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { Container, EColumnSpan } from "../../../../layouts/Container";
+import { DashboardHeading } from "../../../../shared/DashboardHeading";
 import { Field } from "../../../../shared/Field";
 import { ExternalLink } from "../../../../shared/links/index";
 import { normalizedUrl } from "../../../../shared/MediaLinksWidget";
 import { Panel } from "../../../../shared/Panel";
 import { DEFAULT_PLACEHOLDER } from "../../../shared/constants";
-import { DashboardHeading } from "../../../../shared/DashboardHeading";
 
 import * as styles from "../PublicView.module.scss";
 

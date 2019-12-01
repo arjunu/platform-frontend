@@ -11,6 +11,11 @@ import { appConnect } from "../../../../store";
 import { CommonHtmlProps, XOR } from "../../../../types";
 import { appRoutes } from "../../../appRoutes";
 import { etoPublicViewLink } from "../../../appRouteUtils";
+import {
+  ComingSoonEtoState,
+  ETOInvestorState,
+  SuccessEtoState,
+} from "../../../shared/eto-state/ETOState";
 import { Money } from "../../../shared/formatters/Money";
 import {
   EAbbreviatedNumberOutputFormat,
@@ -20,7 +25,6 @@ import {
 import { VALUES } from "../../../shared/forms/fields/FormSelectCountryField.unsafe";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { FUNDING_ROUNDS } from "../../shared/constants";
-import { ComingSoonEtoState, ETOInvestorState, SuccessEtoState } from "../../../shared/eto-state/ETOState";
 import { Cover } from "./Cover";
 import { EtoCardButton, EtoCardPanelButton } from "./EtoCardPanel";
 import { EtoCardStatusManager } from "./EtoCardStatusManager";

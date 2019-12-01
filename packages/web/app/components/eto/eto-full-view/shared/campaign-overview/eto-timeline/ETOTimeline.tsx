@@ -4,8 +4,8 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../../modules/eto/types";
 import { isOnChain } from "../../../../../../modules/eto/utils";
 import { Container, EColumnSpan } from "../../../../../layouts/Container";
-import { Panel } from "../../../../../shared/Panel";
 import { DashboardHeading } from "../../../../../shared/DashboardHeading";
+import { Panel } from "../../../../../shared/Panel";
 import { EtoTimeline } from "./timeline/EtoTimeline";
 
 import * as styles from "./ETOTimeline.module.scss";

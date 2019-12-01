@@ -9,9 +9,9 @@ import { selectUserType } from "../../modules/auth/selectors";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
-import { DashboardHeading } from "../shared/DashboardHeading";
 import { Layout } from "../layouts/Layout";
 import { CheckYourICBMWalletWidget } from "../settings/icbm-wallet-widget/CheckYourICBMWalletWidget";
+import { DashboardHeading } from "../shared/DashboardHeading";
 
 interface IStateProps {
   userType?: EUserType;

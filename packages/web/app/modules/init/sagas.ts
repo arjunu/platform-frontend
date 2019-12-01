@@ -52,7 +52,6 @@ function* initApp({ logger }: TGlobalDependencies): any {
       yield neuCall(makeSureWalletMetaDataExists);
       if (isJwtExpiringLateEnough(jwt)) {
         try {
-
           yield neuCall(setJwt, jwt);
           yield neuCall(loadUser);
           yield put(actions.auth.finishSigning());

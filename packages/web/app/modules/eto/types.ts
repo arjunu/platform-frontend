@@ -81,3 +81,10 @@ export type SignedISHAStatus = {
   isLoading: boolean;
   url: string | undefined;
 };
+
+export type TSocialChannel = {
+  type: string;
+  url: string;
+};
+
+export type TSocialChannels = TSocialChannel[];

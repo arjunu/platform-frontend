@@ -5,12 +5,16 @@ import { TCompanyEtoData } from "../../../../../../lib/api/eto/EtoApi.interfaces
 import { Container, EColumnSpan } from "../../../../../layouts/Container";
 import { ChartDoughnutLazy } from "../../../../../shared/charts/ChartDoughnutLazy";
 import { generateColor } from "../../../../../shared/charts/utils";
+import { DashboardHeading } from "../../../../../shared/DashboardHeading";
 import { FormatNumber } from "../../../../../shared/formatters/FormatNumber";
 import { Money } from "../../../../../shared/formatters/Money";
-import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../../../../../shared/formatters/utils";
+import {
+  ECurrency,
+  ENumberInputFormat,
+  ENumberOutputFormat,
+} from "../../../../../shared/formatters/utils";
 import { Panel } from "../../../../../shared/Panel";
 import { CHART_COLORS, FUNDING_ROUNDS } from "../../../../shared/constants";
-import { DashboardHeading } from "../../../../../shared/DashboardHeading";
 import { generateShareholders } from "../../../../utils";
 
 import * as styles from "./LegalInformationWidget.module.scss";

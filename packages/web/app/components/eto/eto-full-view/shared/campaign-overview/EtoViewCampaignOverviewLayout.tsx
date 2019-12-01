@@ -1,40 +1,38 @@
+import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import * as cn from "classnames";
-import { some } from "lodash";
 
-import { TSocialChannelsType } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { ETHEREUM_ZERO_ADDRESS } from "../../../../../config/constants";
 import { Container, EColumnSpan, EContainerType } from "../../../../layouts/Container";
-import { ETOTimeline } from "./eto-timeline/ETOTimeline";
-import { CompanyDescription } from "./CompanyDescription";
-import { LegalInformationWidget } from "./legal-information-widget/LegalInformationWidget";
 import { DashboardHeading } from "../../../../shared/DashboardHeading";
-import { Slides } from "../../../../shared/Slides";
-import { Video } from "../../../../shared/Video";
-import { IEtoSocialProfile, SocialProfilesList } from "../../../../shared/SocialProfilesList";
-import { MarketingDocumentsWidget } from "./MarketingDocumentsWidget";
-import { EtoInvestmentTermsWidget } from "./eto-investment-terms-widget/EtoInvestmentTermsWidget";
-import { Individuals } from "./individuals/Individuals";
-import { EtoAccordionElements } from "../EtoAccordionElements";
-import { DocumentsWidget } from "./documents-widget/DocumentsWidget";
-import { Panel } from "../../../../shared/Panel";
-import { TwitterTimelineEmbed } from "../../../../shared/TwitterTimeline";
 import { ILink, MediaLinksWidget } from "../../../../shared/MediaLinksWidget";
+import { Panel } from "../../../../shared/Panel";
+import { Slides } from "../../../../shared/Slides";
+import { IEtoSocialProfile, SocialProfilesList } from "../../../../shared/SocialProfilesList";
+import { TwitterTimelineEmbed } from "../../../../shared/TwitterTimeline";
+import { Video } from "../../../../shared/Video";
+import { EtoAccordionElements } from "../EtoAccordionElements";
+import { CompanyDescription } from "./CompanyDescription";
+import { DocumentsWidget } from "./documents-widget/DocumentsWidget";
+import { EtoInvestmentTermsWidget } from "./eto-investment-terms-widget/EtoInvestmentTermsWidget";
+import { ETOTimeline } from "./eto-timeline/ETOTimeline";
 import { TEtoViewCampaignOverviewProps } from "./EtoViewCampaignOverview";
+import { Individuals } from "./individuals/Individuals";
+import { LegalInformationWidget } from "./legal-information-widget/LegalInformationWidget";
+import { MarketingDocumentsWidget } from "./MarketingDocumentsWidget";
 
 import * as styles from "../EtoView.module.scss";
 
 export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCampaignOverviewProps> = ({
+  data: {
+    showTwitterFeed,
+    twitterUrl,
+    showYouTube,
+    showSlideshare,
+    showSocialChannels,
+    showInvestmentTerms,
+  },
   eto,
   isUserFullyVerified,
-  showTwitterFeed,
-  showYouTube,
-  showSlideshare,
-  showSocialChannels,
-  twitterUrl,
-  showInvestmentTerms
-
 }) => {
   const {
     socialChannels,
@@ -45,12 +43,8 @@ export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCamp
     marketingLinks,
   } = eto.company;
 
-
   const shouldSplitGrid =
-    showSlideshare ||
-    showTwitterFeed ||
-    showYouTube ||
-    showSocialChannels
+    showSlideshare || showTwitterFeed || showYouTube || showSocialChannels
       ? EColumnSpan.TWO_COL
       : EColumnSpan.THREE_COL;
 

@@ -1,8 +1,8 @@
 import { LocationChangeAction } from "connected-react-router";
 import { put } from "redux-saga/effects";
 
-import { TGlobalDependencies } from "../../../di/setupBindings";
 import { appRoutes } from "../../../components/appRoutes";
+import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions } from "../../actions";
 
 export function* nomineeRouting(
@@ -13,7 +13,6 @@ export function* nomineeRouting(
     yield put(actions.nomineeFlow.nomineeDashboardView());
   }
   if (payload.location.pathname === appRoutes.etoIssuerView) {
-    console.log('----nomineeRouting hit')
     yield put(actions.etoView.loadNomineeEtoView());
   }
   if (payload.location.pathname === appRoutes.documents) {

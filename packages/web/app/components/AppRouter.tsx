@@ -9,15 +9,16 @@ import { Documents } from "./documents/issuerDocuments/Documents";
 import { NomineeDocuments } from "./documents/nomineeDocuments/NomineeDocuments";
 import { MigrationFromLink } from "./edge-cases/MigrationFromLink";
 import { UnlockWalletFundsFromLink } from "./edge-cases/UnlockWalletFundsFromLink";
+import { EtoViewMain } from "./eto/eto-full-view/EtoViewMain";
 import { EtoWidgetView } from "./eto/EtoWidgetView";
 import { EtoRegister } from "./eto/registration/Start";
-import { RedirectEtoById } from "./routing/RedirectToEtoById";
-import { RedirectEtoPublicView } from "./routing/RedirectToEtoLink";
 import { EtoDashboard } from "./issuer-dashboard/EtoDashboard";
 import { Kyc } from "./kyc/Kyc";
 import { Landing } from "./landing/Landing";
 import { NomineeDashboard } from "./nominee-dashboard/NomineeDashboard";
 import { Portfolio } from "./portfolio/Portfolio";
+import { RedirectEtoById } from "./routing/RedirectToEtoById";
+import { RedirectEtoPublicView } from "./routing/RedirectToEtoLink";
 import { BackupSeed } from "./settings/backup-seed/BackupSeed";
 import { EmailVerify } from "./settings/EmailVerify";
 import { profileRoutes } from "./settings/routes";
@@ -33,7 +34,6 @@ import { EmbeddedWidget } from "./testing/embeded-widget/TestEmbededWidget";
 import { WalletRecoverMain } from "./wallet-selector/wallet-recover/WalletRecoverMain";
 import { WalletSelector } from "./wallet-selector/WalletSelector";
 import { Wallet } from "./wallet/Wallet";
-import { EtoViewMain } from "./eto/eto-full-view/EtoViewMain";
 
 // TEMPORARY CONSTANTS -------->
 const GREYP_URL = "/greyp";
@@ -49,25 +49,12 @@ export const AppRouter: React.FunctionComponent = () => (
       exact
     />
 
-    <Route
-      path={appRoutes.greypWithJurisdiction}
-      component={EtoViewMain}
-    />
+    <Route path={appRoutes.greypWithJurisdiction} component={EtoViewMain} />
     {/*<------------------------------- */}
 
-
-    <Route
-    path={appRoutes.etoPublicView}
-    component={EtoViewMain}
-    />
-    <Route
-      path={appRoutes.etoPublicViewById}
-      component={EtoViewMain}
-    />
-    <Route
-      path={appRoutes.etoIssuerView}
-      component={EtoViewMain}
-    />
+    <Route path={appRoutes.etoPublicView} component={EtoViewMain} />
+    <Route path={appRoutes.etoPublicViewById} component={EtoViewMain} />
+    <Route path={appRoutes.etoIssuerView} component={EtoViewMain} />
     {/* Redirect Legacy ETO link to current link */}
     <Route
       path={appRoutes.etoPublicViewLegacyRoute}

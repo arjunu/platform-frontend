@@ -18,8 +18,8 @@ import * as styles from "./EtoOverviewStatus.module.scss";
 
 type TExternalProps = {
   eto: TEtoWithCompanyAndContractReadonly;
-  publicView: boolean,
-  isEmbedded: boolean
+  publicView: boolean;
+  isEmbedded: boolean;
 };
 
 interface IStatusOfEtoProps {

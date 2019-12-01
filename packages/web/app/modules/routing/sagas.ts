@@ -7,10 +7,10 @@ import { actions, TActionFromCreator } from "../actions";
 import { selectIsAuthorized, selectUserType } from "../auth/selectors";
 import { waitForAppInit } from "../init/sagas";
 import { neuCall, neuTakeEvery } from "../sagasUtils";
-import { notAuthorizedRouting } from "./notAuth/sagas";
 import { investorRouting } from "./investor/sagas";
 import { issuerRouting } from "./issuer/sagas";
 import { nomineeRouting } from "./nominee/sagas";
+import { notAuthorizedRouting } from "./notAuth/sagas";
 
 //---------//
 // export const GREYP_PREVIEW_CODE = "1eb004fd-c44d-4bed-9e76-0e0858649587";
@@ -36,15 +36,9 @@ export function* startRouteBasedSagas(
   { logger }: TGlobalDependencies,
   action: LocationChangeAction,
 ): IterableIterator<any> {
-
   const appIsReady = yield waitForAppInit();
   const userIsAuthorized: boolean = yield select(selectIsAuthorized);
   const userType: EUserType | undefined = yield select(selectUserType);
-
-  console.log(`userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
-      action.payload.location.pathname
-    }`,
-  );
 
   logger.info(
     `userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
@@ -68,7 +62,6 @@ export function* startRouteBasedSagas(
     yield neuCall(nomineeRouting, action);
   }
 }
-
 
 export function* routingSagas(): Iterator<Effect> {
   yield fork(neuTakeEvery, actions.routing.openInNewWindow, openInNewWindowSaga);

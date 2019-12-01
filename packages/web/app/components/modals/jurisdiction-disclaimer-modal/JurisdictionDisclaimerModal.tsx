@@ -4,9 +4,9 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { ECountries } from "../../../utils/enums/countriesEnum";
-import { Message } from "../message/Message";
 import { ButtonArrowRight, EButtonLayout } from "../../shared/buttons/Button";
 import { VALUES } from "../../shared/forms/fields/FormSelectCountryField.unsafe";
+import { Message } from "../message/Message";
 
 import * as cityIcon from "../../../assets/img/eto/city.png";
 

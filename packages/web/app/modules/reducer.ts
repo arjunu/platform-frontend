@@ -8,6 +8,7 @@ import { depositEthModalReducer } from "./deposit-eth-modal/reducer";
 import { etoDocumentReducer } from "./eto-documents/reducer";
 import { etoFlowReducer } from "./eto-flow/reducer";
 import { etoNomineeReducer } from "./eto-nominee/reducer";
+import { etoViewReducer } from "./eto-view/shared/reducer";
 import { etoReducer } from "./eto/reducer";
 import { gasReducer } from "./gas/reducer";
 import { genericModalReducer } from "./generic-modal/reducer";
@@ -33,7 +34,6 @@ import { lightWalletWizardReducer } from "./wallet-selector/light-wizard/reducer
 import { walletSelectorReducer } from "./wallet-selector/reducer";
 import { walletReducer } from "./wallet/reducer";
 import { web3Reducer } from "./web3/reducer";
-import { etoViewReducer } from "./eto-view/reducer";
 
 // add new app reducers here. They must be AppReducer<T> type
 export const appReducers = {

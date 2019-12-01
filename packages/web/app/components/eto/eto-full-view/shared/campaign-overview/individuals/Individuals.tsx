@@ -3,10 +3,10 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../../modules/eto/types";
 import { Container, EColumnSpan, EContainerType } from "../../../../../layouts/Container";
+import { DashboardHeading } from "../../../../../shared/DashboardHeading";
 import { Panel } from "../../../../../shared/Panel";
 import { IPerson, PeopleSwiperWidget } from "../../../../../shared/PeopleSwiperWidget";
 import { TabContent, Tabs } from "../../../../../shared/Tabs";
-import { DashboardHeading } from "../../../../../shared/DashboardHeading";
 import { areThereIndividuals, selectActiveCarouselTab } from "./utils";
 
 const Individuals: React.FunctionComponent<{ eto: TEtoWithCompanyAndContractReadonly }> = ({

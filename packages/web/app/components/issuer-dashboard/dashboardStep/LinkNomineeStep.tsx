@@ -8,9 +8,9 @@ import { selectUserId } from "../../../modules/auth/selectors";
 import { appConnect } from "../../../store";
 import { nonNullable } from "../../../utils/nonNullable";
 import { etoRegisterRoutes } from "../../eto/registration/routes";
+import { AccountAddress } from "../../shared/AccountAddress";
 import { DashboardHeading } from "../../shared/DashboardHeading";
 import { TWithNomineeProps, withNomineeRequests } from "../hocs/withNomineeRequests";
-import { AccountAddress } from "../../shared/AccountAddress";
 
 type TStateProps = {
   issuerId: string;

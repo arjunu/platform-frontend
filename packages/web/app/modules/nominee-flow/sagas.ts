@@ -334,24 +334,6 @@ export function* getNomineeTaskLinkToIssuerData(_: TGlobalDependencies): Iterato
   };
 }
 
-// export function* nomineeEtoView({
-//   logger,
-//   notificationCenter,
-// }: TGlobalDependencies): Iterator<any> {
-//   try {
-//     const verificationIsComplete = yield select(selectIsUserFullyVerified);
-//     if (verificationIsComplete) {
-//       yield neuCall(loadActiveNomineeEto);
-//     }
-//   } catch (e) {
-//     logger.error(e);
-//     notificationCenter.error(
-//       createMessage(ENomineeRequestErrorNotifications.FETCH_NOMINEE_DATA_ERROR),
-//     );
-//     yield put(actions.nomineeFlow.storeError(ENomineeFlowError.FETCH_DATA_ERROR));
-//   }
-// }
-
 export function* nomineeDocumentsView({
   logger,
   notificationCenter,
@@ -546,7 +528,6 @@ export function* setActiveNomineeEto({
     if (etos === undefined || isEmpty(etos)) {
       yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(undefined));
     } else {
-      console.log("setActiveNomineeEto")
       const forcedActiveEtoPreviewCode: ReturnType<typeof selectActiveEtoPreviewCodeFromQueryString> = yield select(
         selectActiveEtoPreviewCodeFromQueryString,
       );
@@ -563,9 +544,8 @@ export function* setActiveNomineeEto({
         );
       } else {
         const firstEto = nonNullable(Object.values(etos)[0]);
-        console.log("setActiveNomineeEto 1")
+
         yield put(actions.nomineeFlow.setActiveNomineeEtoPreviewCode(firstEto.previewCode));
-        console.log("setActiveNomineeEto 2")
       }
     }
   } catch (e) {
@@ -617,12 +597,6 @@ export function* nomineeFlowSagas(): Iterator<any> {
     "@@router/LOCATION_CHANGE",
     nomineeDashboardView,
   );
-  // yield fork(
-  //   neuTakeLatestUntil,
-  //   actions.nomineeFlow.loadNomineeEto,
-  //   "@@router/LOCATION_CHANGE",
-  //   nomineeEtoView,
-  // );
   yield fork(
     neuTakeLatestUntil,
     actions.nomineeFlow.nomineeDocumentsView,

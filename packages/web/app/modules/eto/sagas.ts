@@ -56,7 +56,8 @@ import { InvalidETOStateError } from "./errors";
 import {
   selectEtoById,
   selectEtoOnChainNextStateStartDate,
-  selectEtoOnChainStateById, selectEtoSubStateEtoEtoWithContract,
+  selectEtoOnChainStateById,
+  selectEtoSubStateEtoEtoWithContract,
   selectFilteredEtosByRestrictedJurisdictions,
   selectInvestorEtoWithCompanyAndContract,
   selectIsEtoAnOffer,
@@ -65,7 +66,7 @@ import {
   EEtoAgreementStatus,
   EETOStateOnChain,
   TEtoWithCompanyAndContract,
-  TEtoWithCompanyAndContractReadonly
+  TEtoWithCompanyAndContractReadonly,
 } from "./types";
 import {
   convertToEtoTotalInvestment,
@@ -84,7 +85,6 @@ function* loadEtoPreview(
   try {
     const eto: TEtoSpecsData = yield apiEtoService.getEtoPreview(previewCode);
     yield neuCall(loadEtoInternal, eto);
-
   } catch (e) {
     logger.error("Could not load eto by preview code", e);
 
@@ -108,7 +108,6 @@ function* loadEto(
   try {
     const eto: TEtoSpecsData = yield apiEtoService.getEto(etoId);
     yield neuCall(loadEtoInternal, eto);
-
   } catch (e) {
     logger.error("Could not load eto by id", e);
 
@@ -123,11 +122,10 @@ function* loadEto(
   }
 }
 
-
 function* loadEtoInternal(
   { apiEtoService }: TGlobalDependencies,
-  eto: TEtoSpecsData
-) {
+  eto: TEtoSpecsData,
+): Iterator<any> {
   const company: TCompanyEtoData = yield apiEtoService.getCompanyById(eto.companyId);
 
   // Load contract data if eto is already on blockchain
@@ -163,12 +161,10 @@ function* loadEtoInternal(
   yield put(actions.eto.setEto({ eto, company }));
 }
 
-
 export function* loadEtoWithCompanyAndContract(
   { apiEtoService }: TGlobalDependencies,
-  previewCode: string
+  previewCode: string,
 ): Iterator<any> {
-
   const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEtoPreview(previewCode);
   eto.company = yield apiEtoService.getCompanyById(eto.companyId);
 
@@ -178,14 +174,12 @@ export function* loadEtoWithCompanyAndContract(
 
   eto.subState = yield select(selectEtoSubStateEtoEtoWithContract, eto);
   return eto;
-
 }
 
 export function* loadEtoWithCompanyAndContractById(
   { apiEtoService }: TGlobalDependencies,
-  etoId: string
+  etoId: string,
 ): Iterator<any> {
-
   const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEto(etoId);
   eto.company = yield apiEtoService.getCompanyById(eto.companyId);
 
@@ -195,7 +189,6 @@ export function* loadEtoWithCompanyAndContractById(
 
   eto.subState = yield select(selectEtoSubStateEtoEtoWithContract, eto);
   return eto;
-
 }
 
 export function* getEtoContract(
@@ -470,10 +463,10 @@ function* downloadDocument(
   // for guest users we always require agreement acceptance
   const isAgreementAlreadyAccepted = userId
     ? yield documentsConfidentialityAgreementsStorage.isAgreementAccepted(
-      userId,
-      eto.previewCode,
-      document.documentType,
-    )
+        userId,
+        eto.previewCode,
+        document.documentType,
+      )
     : false;
 
   if (

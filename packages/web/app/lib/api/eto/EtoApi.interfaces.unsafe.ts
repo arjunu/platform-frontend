@@ -104,7 +104,7 @@ type TEtoRiskAssessment = YupTS.TypeOf<typeof EtoRiskAssessmentType>;
 
 const socialChannelsType = YupTS.array(
   YupTS.object({
-    type: YupTS.string().optional(),
+    type: YupTS.string(),
     url: YupTS.url().optional(),
   }),
 );
@@ -212,7 +212,7 @@ export const EtoMediaType = YupTS.object({
   disableTwitterFeed: YupTS.boolean().optional(),
 });
 
-type TEtoMediaData = YupTS.TypeOf<typeof EtoMediaType>;
+export type TEtoMediaData = YupTS.TypeOf<typeof EtoMediaType>;
 
 type TEtoCompanyBase = {
   companyId: string;

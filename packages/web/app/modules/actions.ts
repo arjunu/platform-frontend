@@ -12,6 +12,7 @@ import { depositModalActions } from "./deposit-eth-modal/actions";
 import { etoDocumentsActions } from "./eto-documents/actions";
 import { etoFlowActions } from "./eto-flow/actions";
 import { etoNomineeActions } from "./eto-nominee/actions";
+import { etoViewActions } from "./eto-view/shared/actions";
 import { etoActions } from "./eto/actions";
 import { gasActions } from "./gas/actions";
 import { genericModalActions } from "./generic-modal/actions";
@@ -40,7 +41,6 @@ import { videoModalActions } from "./video-modal/actions";
 import { walletSelectorActions } from "./wallet-selector/actions";
 import { walletActions } from "./wallet/actions";
 import { web3Actions } from "./web3/actions";
-import { etoViewActions } from "./eto-view/actions";
 
 /** You should add new actions also here (with a namespace).*/
 export const actions = {

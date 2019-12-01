@@ -3,7 +3,10 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
 import { ETHEREUM_ZERO_ADDRESS } from "../../../../../../config/constants";
-import { EEtoDocumentType, IEtoDocument } from "../../../../../../lib/api/eto/EtoFileApi.interfaces";
+import {
+  EEtoDocumentType,
+  IEtoDocument,
+} from "../../../../../../lib/api/eto/EtoFileApi.interfaces";
 import { canShowDocument } from "../../../../../../lib/api/eto/EtoFileUtils";
 import { EAssetType, EJurisdiction } from "../../../../../../lib/api/eto/EtoProductsApi.interfaces";
 import { actions } from "../../../../../../modules/actions";
@@ -28,8 +31,8 @@ import {
 } from "../../../../../shared/formatters/utils";
 import { Panel } from "../../../../../shared/Panel";
 import { Percentage } from "../../../../../shared/Percentage";
-import { InvestmentAmount } from "./InvestmentAmount";
 import { ToBeAnnounced, ToBeAnnouncedTooltip } from "../../../../shared/ToBeAnnouncedTooltip";
+import { InvestmentAmount } from "./InvestmentAmount";
 
 import * as styles from "./EtoInvestmentTermsWidget.module.scss";
 

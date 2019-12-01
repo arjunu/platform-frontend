@@ -8,6 +8,7 @@ import { bookBuildingFlowSagas } from "./bookbuilding-flow/sagas";
 import { etoDocumentsSagas } from "./eto-documents/sagas";
 import { etoFlowSagas } from "./eto-flow/sagas";
 import { etoNomineeSagas } from "./eto-nominee/sagas";
+import { etoViewSagas } from "./eto-view/shared/sagas";
 import { etoSagas } from "./eto/sagas";
 import { gasApiSagas } from "./gas/sagas";
 import { icbmWalletGetDataSagas } from "./icbm-wallet-balance-modal/sagas";
@@ -38,7 +39,6 @@ import { lightWalletSagas } from "./wallet-selector/light-wizard/sagas";
 import { walletSelectorSagas } from "./wallet-selector/sagas";
 import { walletSagas } from "./wallet/sagas";
 import { web3Sagas } from "./web3/sagas";
-import { etoViewSagas } from "./eto-view/sagas";
 
 /**
  * Restart all sagas on error and report error to sentry

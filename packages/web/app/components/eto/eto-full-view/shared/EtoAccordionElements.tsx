@@ -5,9 +5,9 @@ import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/type
 import { Container, EColumnSpan, EContainerType } from "../../../layouts/Container";
 import { Accordion, AccordionElement, AccordionField } from "../../../shared/Accordion";
 import { ChartDoughnutLazy } from "../../../shared/charts/ChartDoughnutLazy";
+import { DashboardHeading } from "../../../shared/DashboardHeading";
 import { Field } from "../../../shared/Field";
 import { Panel } from "../../../shared/Panel";
-import { DashboardHeading } from "../../../shared/DashboardHeading";
 import { CHART_COLORS } from "../../shared/constants";
 
 import * as styles from "./PublicView.module.scss";

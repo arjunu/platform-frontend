@@ -1,28 +1,34 @@
 import { branch, compose, renderComponent } from "recompose";
 
-import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
-import { EtoViewCampaignOverviewWithStatsLayout } from "./EtoViewCampaignOverviewWithStatsLayout";
-import { EtoViewCampaignOverviewLayout } from "./EtoViewCampaignOverviewLayout";
 import {
   EEtoViewCampaignOverviewType,
   TCampaignOverviewData,
-  TCampaignOverviewWithStatsData
-} from "../../../../../modules/eto-view/reducer";
-
+  TCampaignOverviewParams,
+  TCampaignOverviewWithStatsData,
+} from "../../../../../modules/eto-view/shared/types";
+import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
+import { EtoViewCampaignOverviewLayout } from "./EtoViewCampaignOverviewLayout";
+import { EtoViewCampaignOverviewWithStatsLayout } from "./EtoViewCampaignOverviewWithStatsLayout";
 
 export type TEtoViewCampaignOverviewProps = {
   eto: TEtoWithCompanyAndContractReadonly;
   publicView: boolean;
   isUserFullyVerified: boolean;
-}
+  data: TCampaignOverviewParams;
+};
 
-export const EtoViewCampaignOverview = compose<{},TEtoViewCampaignOverviewProps & {data:TCampaignOverviewData}>(
-  branch<TEtoViewCampaignOverviewProps & {data:TCampaignOverviewData}>(
-    ({data}) => data.campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS,
-    renderComponent<TEtoViewCampaignOverviewProps & {data:TCampaignOverviewWithStatsData}>(EtoViewCampaignOverviewWithStatsLayout),
+export const EtoViewCampaignOverview = compose<
+  {},
+  TEtoViewCampaignOverviewProps & { data: TCampaignOverviewData }
+>(
+  branch<TEtoViewCampaignOverviewProps & { data: TCampaignOverviewData }>(
+    ({ data }) => data.campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS,
+    renderComponent<TEtoViewCampaignOverviewProps & { tabsData: TCampaignOverviewWithStatsData }>(
+      EtoViewCampaignOverviewWithStatsLayout,
+    ),
   ),
-  branch<TEtoViewCampaignOverviewProps & {data:TCampaignOverviewData}>(
-    ({data}) => data.campaignOverviewType === EEtoViewCampaignOverviewType.WITHOUT_STATS,
+  branch<TEtoViewCampaignOverviewProps & { data: TCampaignOverviewData }>(
+    ({ data }) => data.campaignOverviewType === EEtoViewCampaignOverviewType.WITHOUT_STATS,
     renderComponent<TEtoViewCampaignOverviewProps>(EtoViewCampaignOverviewLayout),
   ),
-)(()=>null);
+)(() => null);

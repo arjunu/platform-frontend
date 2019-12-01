@@ -5,9 +5,12 @@ import { branch, compose, renderComponent } from "recompose";
 import { actions } from "../../../../../modules/actions";
 import { INomineeRequest } from "../../../../../modules/nominee-flow/types";
 import { appConnect } from "../../../../../store";
+import {
+  TWithNomineeProps,
+  withNomineeRequests,
+} from "../../../../issuer-dashboard/hocs/withNomineeRequests";
 import { Button, EButtonLayout, EButtonTheme } from "../../../../shared/buttons/Button";
 import { FormHighlightGroup } from "../../../../shared/forms/FormHighlightGroup";
-import { TWithNomineeProps, withNomineeRequests } from "../../../../issuer-dashboard/hocs/withNomineeRequests";
 import { Section } from "../../Shared";
 import { CopyEtoIdComponent } from "./CopyEtoIdComponent";
 import { nomineeRequestsAreEmpty } from "./utils";

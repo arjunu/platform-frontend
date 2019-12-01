@@ -6,10 +6,10 @@ import { TCompanyEtoData } from "../../../../../lib/api/eto/EtoApi.interfaces.un
 import { CommonHtmlProps } from "../../../../../types";
 import { nonNullable } from "../../../../../utils/nonNullable";
 import { Container, EColumnSpan } from "../../../../layouts/Container";
+import { DashboardHeading } from "../../../../shared/DashboardHeading";
 import { DocumentLink } from "../../../../shared/DocumentLink";
 import { InlineIcon } from "../../../../shared/icons/index";
 import { Panel } from "../../../../shared/Panel";
-import { DashboardHeading } from "../../../../shared/DashboardHeading";
 
 import * as icon_link from "../../../../../assets/img/inline_icons/social_link.svg";
 import * as styles from "./documents-widget/DocumentsWidget.module.scss";

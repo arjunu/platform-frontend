@@ -4,14 +4,14 @@ import {
   EtoCompanyInformationType,
   EtoPitchType,
 } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { TIssuerEtoViewData } from "../../../../modules/eto-view/shared/types";
 import { WidgetGrid } from "../../../layouts/WidgetGrid";
 import { PersonProfileModal } from "../../../modals/person-profile-modal/PersonProfileModal";
 import { FieldSchemaProvider } from "../../../shared/Field";
 import { EtoOverviewStatus } from "../../overview/EtoOverviewStatus/EtoOverviewStatus";
-import { Cover } from "../shared/cover/Cover";
-import { InvestorCoverBannerLayout } from "../shared/cover-banner/CoverBanner";
-import { TIssuerEtoViewData } from "../../../../modules/eto-view/reducer";
 import { EtoViewCampaignOverview } from "../shared/campaign-overview/EtoViewCampaignOverview";
+import { InvestorCoverBannerLayout } from "../shared/cover-banner/CoverBanner";
+import { Cover } from "../shared/cover/Cover";
 
 import * as styles from "../shared/EtoView.module.scss";
 
@@ -19,7 +19,7 @@ const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYu
 
 const EtoViewIssuerLayout: React.FunctionComponent<TIssuerEtoViewData> = ({
   eto,
-  campaignOverviewData
+  campaignOverviewData,
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
   return (

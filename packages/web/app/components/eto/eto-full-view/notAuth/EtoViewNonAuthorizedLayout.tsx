@@ -4,16 +4,16 @@ import {
   EtoCompanyInformationType,
   EtoPitchType,
 } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { TNotAuthorizedEtoViewData } from "../../../../modules/eto-view/shared/types";
 import { WidgetGrid } from "../../../layouts/WidgetGrid";
 import { PersonProfileModal } from "../../../modals/person-profile-modal/PersonProfileModal";
 import { FieldSchemaProvider } from "../../../shared/Field";
 import { EtoOverviewStatus } from "../../overview/EtoOverviewStatus/EtoOverviewStatus";
-import { Cover } from "../shared/cover/Cover";
+import { EtoViewCampaignOverview } from "../shared/campaign-overview/EtoViewCampaignOverview";
 import { InvestorCoverBannerLayout } from "../shared/cover-banner/CoverBanner";
-import { TNotAuthorizedEtoViewData } from "../../../../modules/eto-view/reducer";
+import { Cover } from "../shared/cover/Cover";
 
 import * as styles from "../shared/EtoView.module.scss";
-import { EtoViewCampaignOverview } from "../shared/campaign-overview/EtoViewCampaignOverview";
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());
 
