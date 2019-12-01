@@ -2,6 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TNotAuthorizedEtoViewData } from "../../../../../modules/eto-view/shared/types";
 import { Container, EColumnSpan, EContainerType } from "../../../../layouts/Container";
 import { DashboardHeading } from "../../../../shared/DashboardHeading";
 import { ILink, MediaLinksWidget } from "../../../../shared/MediaLinksWidget";
@@ -10,20 +11,19 @@ import { Slides } from "../../../../shared/Slides";
 import { IEtoSocialProfile, SocialProfilesList } from "../../../../shared/SocialProfilesList";
 import { TwitterTimelineEmbed } from "../../../../shared/TwitterTimeline";
 import { Video } from "../../../../shared/Video";
-import { EtoAccordionElements } from "../EtoAccordionElements";
-import { CompanyDescription } from "./CompanyDescription";
-import { DocumentsWidget } from "./documents-widget/DocumentsWidget";
-import { EtoInvestmentTermsWidget } from "./eto-investment-terms-widget/EtoInvestmentTermsWidget";
-import { ETOTimeline } from "./eto-timeline/ETOTimeline";
-import { TEtoViewCampaignOverviewProps } from "./EtoViewCampaignOverview";
-import { Individuals } from "./individuals/Individuals";
-import { LegalInformationWidget } from "./legal-information-widget/LegalInformationWidget";
-import { MarketingDocumentsWidget } from "./MarketingDocumentsWidget";
+import { CompanyDescription } from "../../shared/campaign-overview/CompanyDescription";
+import { DocumentsWidget } from "../../shared/campaign-overview/documents-widget/DocumentsWidget";
+import { EtoInvestmentTermsWidget } from "../../shared/campaign-overview/eto-investment-terms-widget/EtoInvestmentTermsWidget";
+import { ETOTimeline } from "../../shared/campaign-overview/eto-timeline/ETOTimeline";
+import { Individuals } from "../../shared/campaign-overview/individuals/Individuals";
+import { LegalInformationWidget } from "../../shared/campaign-overview/legal-information-widget/LegalInformationWidget";
+import { MarketingDocumentsWidget } from "../../shared/campaign-overview/MarketingDocumentsWidget";
+import { EtoAccordionElements } from "../../shared/EtoAccordionElements";
 
-import * as styles from "../EtoView.module.scss";
+import * as styles from "../../shared/EtoView.module.scss";
 
-export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCampaignOverviewProps> = ({
-  data: {
+export const CampaignOverviewNotAuthLayout: React.FunctionComponent<TNotAuthorizedEtoViewData> = ({
+  campaignOverviewData: {
     showTwitterFeed,
     twitterUrl,
     showYouTube,
@@ -32,7 +32,6 @@ export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCamp
     showInvestmentTerms,
   },
   eto,
-  isUserFullyVerified,
 }) => {
   const {
     socialChannels,
@@ -83,18 +82,14 @@ export const EtoViewCampaignOverviewLayout: React.FunctionComponent<TEtoViewCamp
       {showInvestmentTerms && (
         <Container columnSpan={EColumnSpan.THREE_COL}>
           <DashboardHeading title={<FormattedMessage id="eto.public-view.token-terms.title" />} />
-          <EtoInvestmentTermsWidget eto={eto} isUserFullyVerified={isUserFullyVerified} />
+          <EtoInvestmentTermsWidget eto={eto} isUserFullyVerified={false} />
         </Container>
       )}
       <Individuals eto={eto} />
       <EtoAccordionElements eto={eto} />
 
       <Container columnSpan={EColumnSpan.ONE_COL} type={EContainerType.INHERIT_GRID}>
-        <DocumentsWidget
-          eto={eto}
-          columnSpan={EColumnSpan.THREE_COL}
-          isUserFullyVerified={isUserFullyVerified}
-        />
+        <DocumentsWidget eto={eto} columnSpan={EColumnSpan.THREE_COL} isUserFullyVerified={false} />
 
         {showTwitterFeed && (
           <Container columnSpan={EColumnSpan.ONE_COL}>

@@ -54,6 +54,7 @@ export function* calculateCampaignOverviewData(
   const showSlideshare = !!(eto.company.companySlideshare && eto.company.companySlideshare.url);
   const showSocialChannels = !!(eto.company.socialChannels && eto.company.socialChannels.length);
   const showInvestmentTerms = eto.product.id !== ETHEREUM_ZERO_ADDRESS;
+
   const twitterData = getTwitterData(eto.company);
 
   if (campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS) {

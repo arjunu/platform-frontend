@@ -15,23 +15,33 @@ export enum EEtoViewType {
   ETO_VIEW_NOMINEE = "etoViewNominee",
 }
 
+export type TCampaignOverviewTabsData = {
+  url: string;
+  path: string;
+  etoId: string;
+};
+
 export type TNotAuthorizedEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly;
   campaignOverviewData: TCampaignOverviewData;
 };
+
 export type TInvestorEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly;
   userIsFullyVerified: boolean;
   campaignOverviewData: TCampaignOverviewData;
 };
+
 export type TIssuerEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly;
   campaignOverviewData: TCampaignOverviewData;
 };
+
 export type TIssuerPreviewEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly;
   campaignOverviewData: TCampaignOverviewData;
 };
+
 export type TNomineeEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly;
   campaignOverviewData: TCampaignOverviewData;
@@ -42,10 +52,11 @@ export enum EEtoViewCampaignOverviewType {
   WITHOUT_STATS = "withoutStats",
 }
 
-export type TCampaignOverviewWithStatsData = {
+export type TCampaignOverviewWithStatsRouteData = {
   url: string;
   path: string;
 };
+
 export type TCampaignOverviewParams = {
   showYouTube: boolean;
   showSlideshare: boolean;
@@ -58,7 +69,7 @@ export type TCampaignOverviewData = TCampaignOverviewParams &
     { campaignOverviewType: EEtoViewCampaignOverviewType.WITHOUT_STATS },
     {
       campaignOverviewType: EEtoViewCampaignOverviewType.WITH_STATS;
-    } & TCampaignOverviewWithStatsData
+    } & TCampaignOverviewWithStatsRouteData
   >;
 
 export type TReadyEtoViewData =

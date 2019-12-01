@@ -25,6 +25,7 @@ export const appRoutes = {
   restore: "/restore",
 
   etoIssuerView: "/eto/view",
+  etoIssuerViewStats: "/eto/view/stats",
 
   etoPublicView: "/eto/view/:jurisdiction/:previewCode",
   etoPublicViewById: "/eto/by-id/:jurisdiction/:etoId",

@@ -12,29 +12,38 @@ import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import { calculateCampaignOverviewDataIssuer } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
 
+export function* selectOrLoadEto(): Iterator<any> {
+  let eto = yield select(selectIssuerEtoWithCompanyAndContract);
+  if (eto === undefined) {
+    yield neuCall(loadIssuerEto);
+    eto = yield select(selectIssuerEtoWithCompanyAndContract);
+  }
+  return eto;
+}
+
 export function* loadIssuerEtoView({
   logger,
   notificationCenter,
 }: TGlobalDependencies): Iterator<any> {
   try {
-    let eto = yield select(selectIssuerEtoWithCompanyAndContract);
-    if (eto === undefined) {
-      yield neuCall(loadIssuerEto);
-      eto = yield select(selectIssuerEtoWithCompanyAndContract);
-    }
+    const eto: TEtoWithCompanyAndContractReadonly | undefined = yield call(selectOrLoadEto);
 
-    const campaignOverviewData: TCampaignOverviewData = yield call(
-      calculateCampaignOverviewDataIssuer,
-      eto,
-    );
-
-    yield put(
-      actions.etoView.setEtoViewData({
+    if (eto) {
+      const campaignOverviewData: TCampaignOverviewData = yield call(
+        calculateCampaignOverviewDataIssuer,
         eto,
-        campaignOverviewData,
-        etoViewType: EEtoViewType.ETO_VIEW_ISSUER,
-      }),
-    );
+      );
+
+      yield put(
+        actions.etoView.setEtoViewData({
+          eto,
+          campaignOverviewData,
+          etoViewType: EEtoViewType.ETO_VIEW_ISSUER,
+        }),
+      );
+    } else {
+      throw new Error("could not load issuer eto");
+    }
   } catch (e) {
     logger.error("Could not load eto", e);
     notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO));

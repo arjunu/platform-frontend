@@ -2,20 +2,21 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Route } from "react-router";
 
-import { TCampaignOverviewWithStatsData } from "../../../../../modules/eto-view/shared/types";
+import { TCampaignOverviewTabsData } from "../../../../../modules/eto-view/shared/types";
 import { SwitchConnected } from "../../../../../utils/connectedRouting";
 import { Container, EColumnSpan } from "../../../../layouts/Container";
 import { WidgetGrid } from "../../../../layouts/WidgetGrid";
 import { TabContent, Tabs } from "../../../../shared/Tabs";
-import { TEtoViewCampaignOverviewProps } from "./EtoViewCampaignOverview";
-import { EtoViewCampaignOverviewLayout } from "./EtoViewCampaignOverviewLayout";
 import { EtoViewFundraisingStatistics } from "./fundrising-stats/EtoViewFundraisingStatistics";
 
 import * as styles from "../EtoView.module.scss";
 
-export const EtoViewCampaignOverviewWithStatsLayout: React.FunctionComponent<TEtoViewCampaignOverviewProps & {
-  tabsData: TCampaignOverviewWithStatsData;
-}> = ({ eto, publicView, isUserFullyVerified, data, tabsData: { url, path } }) => (
+export const CampaignOverviewTabsLayout: React.FunctionComponent<TCampaignOverviewTabsData> = ({
+  url,
+  path,
+  etoId,
+  children,
+}) => (
   <Container id="eto-view-tabs" columnSpan={EColumnSpan.THREE_COL}>
     <Tabs
       className="mb-3"
@@ -38,20 +39,12 @@ export const EtoViewCampaignOverviewWithStatsLayout: React.FunctionComponent<TEt
         path={path}
         render={() => (
           <WidgetGrid className={styles.etoLayout} data-test-id="eto.public-view">
-            <EtoViewCampaignOverviewLayout
-              eto={eto}
-              isUserFullyVerified={isUserFullyVerified}
-              publicView={publicView}
-              data={data}
-            />
+            {children}
           </WidgetGrid>
         )}
         exact
       />
-      <Route
-        path={`${path}/stats`}
-        render={() => <EtoViewFundraisingStatistics etoId={eto.etoId} />}
-      />
+      <Route path={`${path}/stats`} render={() => <EtoViewFundraisingStatistics etoId={etoId} />} />
     </SwitchConnected>
   </Container>
 );

@@ -9,9 +9,9 @@ import { WidgetGrid } from "../../../layouts/WidgetGrid";
 import { PersonProfileModal } from "../../../modals/person-profile-modal/PersonProfileModal";
 import { FieldSchemaProvider } from "../../../shared/Field";
 import { EtoOverviewStatus } from "../../overview/EtoOverviewStatus/EtoOverviewStatus";
-import { EtoViewCampaignOverview } from "../shared/campaign-overview/EtoViewCampaignOverview";
 import { InvestorCoverBannerLayout } from "../shared/cover-banner/CoverBanner";
 import { Cover } from "../shared/cover/Cover";
+import { CampaignOverviewNotAuth } from "./campaign-overview/CampaignOverviewNotAuth";
 
 import * as styles from "../shared/EtoView.module.scss";
 
@@ -22,6 +22,7 @@ const EtoViewNonAuthorizedLayout: React.FunctionComponent<TNotAuthorizedEtoViewD
   campaignOverviewData,
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
+
   return (
     <FieldSchemaProvider value={EtoViewSchema}>
       <PersonProfileModal />
@@ -46,12 +47,7 @@ const EtoViewNonAuthorizedLayout: React.FunctionComponent<TNotAuthorizedEtoViewD
           tags={categories}
         />
         <EtoOverviewStatus eto={eto} publicView={true} isEmbedded={false} />
-        <EtoViewCampaignOverview
-          eto={eto}
-          isUserFullyVerified={false}
-          publicView={true}
-          data={campaignOverviewData}
-        />
+        <CampaignOverviewNotAuth eto={eto} campaignOverviewData={campaignOverviewData} />
       </WidgetGrid>
     </FieldSchemaProvider>
   );

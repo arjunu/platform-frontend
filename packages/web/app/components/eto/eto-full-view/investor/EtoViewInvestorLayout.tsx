@@ -9,9 +9,9 @@ import { WidgetGrid } from "../../../layouts/WidgetGrid";
 import { PersonProfileModal } from "../../../modals/person-profile-modal/PersonProfileModal";
 import { FieldSchemaProvider } from "../../../shared/Field";
 import { EtoOverviewStatus } from "../../overview/EtoOverviewStatus/EtoOverviewStatus";
-import { EtoViewCampaignOverview } from "../shared/campaign-overview/EtoViewCampaignOverview";
 import { InvestorCoverBannerLayout } from "../shared/cover-banner/CoverBanner";
 import { Cover } from "../shared/cover/Cover";
+import { CampaignOverviewInvestor } from "./campaign-overview/CampaignOverviewInvestor";
 
 import * as styles from "../shared/EtoView.module.scss";
 
@@ -47,11 +47,10 @@ const EtoViewInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
           tags={categories}
         />
         <EtoOverviewStatus eto={eto} publicView={true} isEmbedded={false} />
-        <EtoViewCampaignOverview
+        <CampaignOverviewInvestor
           eto={eto}
-          isUserFullyVerified={userIsFullyVerified}
-          publicView={true}
-          data={campaignOverviewData}
+          userIsFullyVerified={userIsFullyVerified}
+          campaignOverviewData={campaignOverviewData}
         />
       </WidgetGrid>
     </FieldSchemaProvider>

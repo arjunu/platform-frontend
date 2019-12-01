@@ -8,7 +8,7 @@ export const etoViewNotAuthActions = {
     "ETO_VIEW_LOAD_NOT_AUTH_ETO_VIEW",
     (previewCode: string, routeMatch: match<TEtoViewByPreviewCodeMatch>) => ({
       previewCode,
-      match: routeMatch,
+      routeMatch,
     }),
   ),
   loadNotAuthorizedEtoViewById: createActionFactory(
