@@ -9,6 +9,7 @@ import * as styles from "./Content.module.scss";
 enum EContentWidth {
   FULL = "fullWidth",
   CONSTRAINED = "constrainedWidth",
+  SMALL = "smallWidth",
 }
 
 type TExternalProps = {
@@ -18,6 +19,7 @@ type TExternalProps = {
 const widthToClassName: Record<EContentWidth, string | undefined> = {
   [EContentWidth.FULL]: undefined,
   [EContentWidth.CONSTRAINED]: styles.constrainedWidth,
+  [EContentWidth.SMALL]: styles.smallWidth,
 };
 
 const Content: React.FunctionComponent<CommonHtmlProps & TExternalProps> = ({

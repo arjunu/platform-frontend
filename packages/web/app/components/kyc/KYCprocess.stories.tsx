@@ -1,3 +1,4 @@
+import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -12,7 +13,7 @@ import { KYCBeneficialOwnersComponent } from "./business/BeneficialOwners";
 import { KycBusinessDataComponent } from "./business/BusinessData.unsafe";
 import { KycLegalRepresentativeComponent } from "./business/LegalRepresentative.unsafe";
 import { KycPersonalDocumentVerificationComponent } from "./personal/DocumentVerification";
-import { KYCPersonalStartComponent } from "./personal/Start.unsafe";
+import { KYCPersonalStartComponent } from "./personal/Start";
 import { KYCUploadComponent } from "./personal/Upload";
 import { KYCStartComponent } from "./start/Start";
 
@@ -43,10 +44,11 @@ storiesOf("KYC/process", module).add("personal/start", () => {
     <KYCPersonalStartComponent
       currentValues={currentValues}
       loadingData={false}
-      submitForm={() => {}}
+      submitForm={action("SUBMIT_FORM")}
       isSavingForm={false}
       uploadedFiles={[]}
       uploadedFilesLoading={false}
+      goBack={action("GO_BACK")}
     />
   );
 });

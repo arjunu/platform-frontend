@@ -153,13 +153,13 @@ function* loadIndividualData({ apiKycService, logger }: TGlobalDependencies): It
   }
 }
 
-function* submitIndividualData(
+function* submitPersonalData(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.kyc.kycSubmitIndividualData>,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
 ): Iterator<any> {
   try {
     const { data, skipContinue } = action.payload;
-    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putIndividualData(data);
+    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalData(data);
 
     yield put(
       actions.kyc.kycUpdateIndividualData(false, {
@@ -169,8 +169,28 @@ function* submitIndividualData(
     );
 
     if (!skipContinue) {
-      yield put(actions.routing.goToKYCIndividualDocumentVerification());
+      yield put(actions.routing.goToKYCIndividualAddress());
     }
+  } catch (e) {
+    notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
+
+    logger.error("Failed to submit KYC individual data", e);
+  }
+}
+
+function* submitPersonalAddress(
+  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalAddress>,
+): Iterator<any> {
+  try {
+    const { data } = action.payload;
+    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalAddress(data);
+
+    yield put(
+      actions.kyc.kycUpdateIndividualData(false, {
+        ...result.body,
+      }),
+    );
   } catch (e) {
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
 
@@ -744,7 +764,8 @@ export function* kycSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.kyc.kycLoadClientData, loadClientData);
 
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualData, loadIndividualData);
-  yield fork(neuTakeEvery, actions.kyc.kycSubmitIndividualData, submitIndividualData);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitPersonalData, submitPersonalData);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitPersonalAddress, submitPersonalAddress);
   yield fork(neuTakeEvery, actions.kyc.kycUploadIndividualDocument, uploadIndividualFile);
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualDocumentList, loadIndividualFiles);
   // Outsourced

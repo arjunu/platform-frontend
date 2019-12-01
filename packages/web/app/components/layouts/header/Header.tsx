@@ -83,4 +83,4 @@ const HeaderAuthorized: React.FunctionComponent = () => (
   </div>
 );
 
-export { HeaderUnauthorized, HeaderAuthorized, HeaderTransitional };
+export { HeaderUnauthorized, HeaderAuthorized, HeaderTransitional, LogoAuth, LogoUnauth };

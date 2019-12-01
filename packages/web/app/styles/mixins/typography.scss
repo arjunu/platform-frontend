@@ -122,7 +122,7 @@
 }
 
 // Text
-@mixin font-small-roboto {
+@mixin nds-helper {
   font-family: $font-family-roboto;
   font-size: px-to-rem(12px);
 }
@@ -132,6 +132,28 @@
   font-size: px-to-rem(14px);
   font-weight: 500;
   line-height: 1.71;
+}
+
+@mixin nds-body {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(16px);
+  line-height: 1.5;
+}
+
+@mixin nds-headline-2 {
+  font-family: $font-family-montserrat;
+  font-size: px-to-rem(32px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: .32px;
+}
+
+@mixin nds-headline-3 {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(24px);
+  font-weight: 500;
+  line-height: 1.33;
+  letter-spacing: .24px;
 }
 
 // Typography utils

@@ -1,0 +1,26 @@
+.step {
+  @include nds-helper;
+
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 2px;
+  color: $neu-charcoal-grey;
+  text-transform: uppercase;
+}
+
+.title {
+  @include nds-headline-2;
+
+  color: $neu-charcoal-grey;
+  margin: {
+    top: px-to-rem(12px);
+    bottom: px-to-rem(20px);
+  }
+}
+
+.description {
+  @include nds-body;
+
+  color: $neu-shuttle-gray;
+  margin-bottom: px-to-rem(22px);
+}

@@ -93,7 +93,7 @@ export const kycReducer: AppReducer<IKycState> = (
       };
 
     // individual
-    case actions.kyc.kycSubmitIndividualData.getType():
+    case actions.kyc.kycSubmitPersonalData.getType():
       return { ...state, kycSaving: action.payload.skipContinue };
     case actions.kyc.kycUpdateIndividualData.getType():
       return { ...state, kycSaving: false, ...omitUndefined(action.payload) };

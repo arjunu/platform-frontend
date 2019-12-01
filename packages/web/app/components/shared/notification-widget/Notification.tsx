@@ -5,7 +5,6 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { externalRoutes } from "../../../config/externalRoutes";
 import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { TDataTestId } from "../../../types";
-import { getHostname } from "../../../utils/StringUtils";
 import { Button, ButtonClose, ButtonTextPosition, ButtonWidth, EButtonLayout } from "../buttons";
 import { ExternalLink } from "../links/ExternalLink";
 
@@ -44,16 +43,7 @@ const notificationTexts = {
     <FormattedMessage
       id="notifications.not-accredited-investor"
       values={{
-        accreditationHref: (
-          <ExternalLink href={externalRoutes.accreditationHelp}>
-            {getHostname(externalRoutes.accreditationHelp)}
-          </ExternalLink>
-        ),
-        accreditationHrefSecond: (
-          <ExternalLink href={externalRoutes.accreditationHelpSecond}>
-            {getHostname(externalRoutes.accreditationHelpSecond)}
-          </ExternalLink>
-        ),
+        link: <ExternalLink href={externalRoutes.accreditationHelp}>Save & close</ExternalLink>,
       }}
     />
   ),

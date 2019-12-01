@@ -35,6 +35,9 @@ const stateSchema = Yup.string().when("country", (country: string, schema: Yup.S
   country === ECountries.UNITED_STATES ? schema.required() : schema,
 );
 
+/*
+  TODO: This is legacy schema, remove when refactoring KYC is done
+ */
 export const KycPersonSchema = Yup.object().shape({
   firstName: Yup.string(),
   lastName: Yup.string(),
@@ -46,6 +49,26 @@ export const KycPersonSchema = Yup.object().shape({
   placeOfBirth: countryCode,
   nationality: countryCode,
   isPoliticallyExposed: Yup.bool(),
+  usState: Yup.string(),
+  id: Yup.string(),
+});
+
+export const KycPersonalDataSchema = Yup.object().shape({
+  birthDate: personBirthDate,
+  country: restrictedCountry,
+  firstName: Yup.string(),
+  lastName: Yup.string(),
+  nationality: countryCode,
+  placeOfBirth: countryCode,
+  id: Yup.string(),
+});
+
+export const KycPersonalAddressSchema = Yup.object().shape({
+  address: Yup.string(),
+  additional: Yup.string(),
+  city: Yup.string(),
+  zipCode: Yup.string(),
+  country: restrictedCountry,
   usState: stateSchema,
 });
 
@@ -65,13 +88,6 @@ export interface IKycIndividualData extends IKycPerson {
   isAccreditedUsCitizen?: string;
 }
 
-const KycIndividualDataShape =
-  process.env.NF_DISABLE_HIGH_INCOME === "1"
-    ? {}
-    : {
-        isHighIncome: Yup.bool(),
-      };
-
 export const KycStatusSchema = YupTS.object({
   inProhibitedRegion: YupTS.boolean(),
   instantIdProvider: YupTS.string(),
@@ -84,15 +100,13 @@ export const KycStatusSchema = YupTS.object({
 
 export type TKycStatus = YupTS.TypeOf<typeof KycStatusSchema>;
 
-export const KycIndividualDataSchema = KycPersonSchema.concat(
-  Yup.object().shape(KycIndividualDataShape),
-);
-
-export const KycIndividualDataSchemaRequired = makeAllRequiredExcept(KycIndividualDataSchema, [
-  "usState",
+export const KycPersonalDataSchemaRequired = makeAllRequired(KycPersonalDataSchema);
+export const KycPersonalAddressSchemaRequired = makeAllRequiredExcept(KycPersonalAddressSchema, [
+  "additional",
+  "country",
 ]);
 
-export const KycIndividualDataSchemaRequiredWithAdditionalData = KycIndividualDataSchemaRequired.concat(
+export const KycPersonalDataSchemaRequiredWithAdditionalData = KycPersonalDataSchemaRequired.concat(
   KycAdditionalDataSchema,
 );
 

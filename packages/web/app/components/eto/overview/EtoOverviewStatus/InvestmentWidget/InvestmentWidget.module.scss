@@ -6,7 +6,7 @@
     flex-grow: 1;
   }
 
-  @include font-small-roboto;
+  @include nds-helper;
 
   width: 100%;
   display: flex;
@@ -28,7 +28,7 @@
 }
 
 .end-time {
-  @include font-small-roboto;
+  @include nds-helper;
 
   color: $neu-shuttle-gray;
   margin-top: px-to-rem(10px);

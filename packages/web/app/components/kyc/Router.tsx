@@ -9,8 +9,9 @@ import { invariant } from "../../utils/invariant";
 import { KYCBeneficialOwners } from "./business/BeneficialOwners";
 import { KycBusinessData } from "./business/BusinessData.unsafe";
 import { KycLegalRepresentative } from "./business/LegalRepresentative.unsafe";
+import { KYCPersonalAddress } from "./personal/Address";
 import { KycPersonalDocumentVerification } from "./personal/DocumentVerification";
-import { KYCPersonalStart } from "./personal/Start.unsafe";
+import { KYCPersonalStart } from "./personal/Start";
 import { KYCPersonalUpload } from "./personal/Upload";
 import { kycRoutes } from "./routes";
 import { KYCStart } from "./start/Start";
@@ -25,6 +26,7 @@ export const NormalKycRouter: React.FunctionComponent = () => (
 
     {/* Personal */}
     <Route path={kycRoutes.individualStart} component={KYCPersonalStart} />
+    <Route path={kycRoutes.individualAddress} component={KYCPersonalAddress} />
     <Route
       path={kycRoutes.individualDocumentVerification}
       component={KycPersonalDocumentVerification}

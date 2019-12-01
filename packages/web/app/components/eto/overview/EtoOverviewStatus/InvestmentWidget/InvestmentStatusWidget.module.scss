@@ -13,7 +13,7 @@
 
 .stats-wrapper-small {
   .funded {
-    @include font-small-roboto;
+    @include nds-helper;
   }
 }
 
@@ -22,7 +22,7 @@
 }
 
 .row {
-  @include font-small-roboto;
+  @include nds-helper;
 
   color: $neu-charcoal-grey;
   display: flex;
