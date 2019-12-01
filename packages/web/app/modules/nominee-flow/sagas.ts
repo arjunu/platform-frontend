@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { cloneDeep, isEmpty } from "lodash/fp";
 import { delay, Effect } from "redux-saga";
-import { all, fork, put, select, take } from "redux-saga/effects";
+import { all, fork, put, select } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { getNomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/utils";
@@ -20,6 +20,7 @@ import { EEtoState, TNomineeRequestResponse } from "../../lib/api/eto/EtoApi.int
 import { IssuerIdInvalid, NomineeRequestExists } from "../../lib/api/eto/EtoNomineeApi";
 import { ETOCommitment } from "../../lib/contracts/ETOCommitment";
 import { Dictionary } from "../../types";
+import { InvariantError } from "../../utils/invariant";
 import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserFullyVerified } from "../auth/selectors";
@@ -34,7 +35,13 @@ import { selectEtoSubStateEtoEtoWithContract } from "../eto/selectors";
 import { EEtoAgreementStatus, EETOStateOnChain, TEtoWithCompanyAndContract } from "../eto/types";
 import { isOnChain } from "../eto/utils";
 import { loadBankAccountDetails } from "../kyc/sagas";
-import { neuCall, neuTakeLatest, neuTakeLatestUntil } from "../sagasUtils";
+import {
+  neuCall,
+  neuTakeEvery,
+  neuTakeLatest,
+  neuTakeLatestUntil,
+  neuTakeOnly,
+} from "../sagasUtils";
 import { EAgreementType } from "../tx/transactions/nominee/sign-agreement/types";
 import { selectLiquidEuroTokenBalance } from "../wallet/selectors";
 import {
@@ -89,9 +96,18 @@ export function* initNomineeEtoSpecificTasks(
 
     if (isOnChain(eto)) {
       yield put(actions.nomineeFlow.nomineeLoadEtoAgreementsStatus(eto));
-      yield take(actions.nomineeFlow.nomineeSetAgreementsStatus);
+      yield neuTakeOnly(actions.nomineeFlow.nomineeSetAgreementsStatus, {
+        previewCode: eto.previewCode,
+      });
 
-      const documentsStatus = yield select(selectNomineeEtoDocumentsStatus, eto.previewCode);
+      const documentsStatus: ReturnType<typeof selectNomineeEtoDocumentsStatus> = yield select(
+        selectNomineeEtoDocumentsStatus,
+        eto.previewCode,
+      );
+
+      if (!documentsStatus) {
+        throw new InvariantError("Eto documents should be defined at this point");
+      }
 
       if (documentsStatus[EAgreementType.THA] === EEtoAgreementStatus.DONE) {
         nomineeEtoSpecificTasks[ENomineeEtoSpecificTask.ACCEPT_THA] = ENomineeTaskStatus.DONE;
@@ -142,28 +158,46 @@ export function* getDataAndInitNomineeTasks(_: TGlobalDependencies): Iterator<an
 
     yield all([neuCall(loadBankAccountDetails), neuCall(loadNomineeEtos)]);
 
-    const data = yield all({
+    const {
+      bankAccountIsVerified,
+      nomineeEtos,
+    }: {
+      bankAccountIsVerified: ReturnType<typeof selectIsBankAccountVerified>;
+      nomineeEtos: ReturnType<typeof selectNomineeEtos>;
+    } = yield all({
       bankAccountIsVerified: select(selectIsBankAccountVerified),
       nomineeEtos: select(selectNomineeEtos),
     });
 
-    if (data.bankAccountIsVerified) {
+    if (bankAccountIsVerified) {
       nomineeTasksStatus[ENomineeTask.LINK_BANK_ACCOUNT] = ENomineeTaskStatus.DONE;
     }
-    if (isEmpty(data.nomineeEtos)) {
+
+    if (isEmpty(nomineeEtos)) {
       yield put(actions.nomineeFlow.storeNomineeTasksStatus(nomineeTasksStatus));
       return;
     } else {
       nomineeTasksStatus[ENomineeTask.LINK_TO_ISSUER] = ENomineeTaskStatus.DONE;
     }
 
-    let etoSpecificNomineeTaskStatusEffects: { [key: string]: Iterator<Effect> } = {};
-    Object.keys(data.nomineeEtos).forEach((key: string) => {
-      etoSpecificNomineeTaskStatusEffects[key] = neuCall(
-        initNomineeEtoSpecificTasks,
-        data.nomineeEtos[key],
-      );
-    });
+    const etoSpecificNomineeTaskStatusEffects = Object.values(nomineeEtos).reduce<{
+      [key: string]: Iterator<Effect>;
+    }>(
+      (
+        effects: { [key: string]: Iterator<Effect> },
+        eto: TEtoWithCompanyAndContract | undefined,
+      ) => {
+        if (!eto) {
+          throw new InvariantError("Eto should be defined at this point");
+        }
+
+        return {
+          ...effects,
+          [eto.previewCode]: neuCall(initNomineeEtoSpecificTasks, eto),
+        };
+      },
+      {},
+    );
 
     nomineeTasksStatus.byPreviewCode = yield all(etoSpecificNomineeTaskStatusEffects);
 
@@ -607,7 +641,7 @@ export function* nomineeFlowSagas(): Iterator<any> {
   yield fork(neuTakeLatest, actions.nomineeFlow.loadNomineeRequests, loadNomineeRequests);
   yield fork(neuTakeLatest, actions.nomineeFlow.createNomineeRequest, createNomineeRequest);
   yield fork(
-    neuTakeLatest,
+    neuTakeEvery,
     actions.nomineeFlow.nomineeLoadEtoAgreementsStatus,
     nomineeFlowLoadAgreementsStatus,
   );

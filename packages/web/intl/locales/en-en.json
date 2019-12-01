@@ -1244,7 +1244,7 @@
   "shared-component.eto-overview.investment-memorandum": "Investment memorandum",
   "shared-component.eto-overview.investment-stats.funded-percentage": "{funded} funded",
   "shared-component.eto-overview.investment-stats.target": "{amountRaised} target",
-  "shared-component.eto-overview.investment-stats.target.tooltip": "The investment amount has been reduced due to discounted presale investments. The original investment for this campaign was set at:{lineBreak}{lineBreak}{target}",
+  "shared-component.eto-overview.investment-stats.target.tooltip": "The investment target has been modified due to discounted presale investments. The original target for this campaign was set at:{lineBreak}{lineBreak}{target}",
   "shared-component.eto-overview.investment-stats.total-amount-raised": "≈ {amountRaised} raised",
   "shared-component.eto-overview.investment-stats.total-investors": "{totalInvestors} investors",
   "shared-component.eto-overview.investors": "{totalInvestorsAsString} {totalInvestors, plural, one {investor} other {investors}}",
