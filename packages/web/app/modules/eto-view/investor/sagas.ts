@@ -37,6 +37,7 @@ export function* loadInvestorEtoView(
       }),
     );
   } catch (e) {
+    console.log("loadInvestorEtoView",e)
     logger.error("Could not load eto by preview code", e);
     notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
     yield put(actions.routing.goToDashboard());
@@ -48,6 +49,7 @@ export function* loadInvestorEtoViewById(
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoViewById>,
 ): Iterator<any> {
   try {
+    console.log("loadInvestorEtoViewById", payload)
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContractById,
       payload.etoId,
@@ -69,6 +71,7 @@ export function* loadInvestorEtoViewById(
       }),
     );
   } catch (e) {
+    console.log("loadInvestorEtoViewById", e)
     logger.error("Could not load eto by preview code", e);
     notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
     yield put(actions.routing.goToDashboard());

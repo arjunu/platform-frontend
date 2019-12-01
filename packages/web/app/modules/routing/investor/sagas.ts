@@ -18,22 +18,25 @@ export function* investorRouting(
   const greypMatch = yield matchPath<any>(payload.location.pathname, {
     path: appRoutes.greypWithJurisdiction,
   });
+  console.log("greypMatch",greypMatch)
   if (greypMatch !== null) {
     yield put(actions.etoView.loadInvestorEtoView(GREYP_PREVIEW_CODE, greypMatch));
+  }
+
+  const etoViewByIdInvestorMatch = yield matchPath<TEtoViewByIdMatch>(payload.location.pathname, {
+    path: appRoutes.etoPublicViewById,
+  });
+  console.log("etoViewByIdInvestorMatch",etoViewByIdInvestorMatch)
+  if (etoViewByIdInvestorMatch !== null) {
+    const etoId = etoViewByIdInvestorMatch.params.etoId;
+    yield put(actions.etoView.loadInvestorEtoViewById(etoId, etoViewByIdInvestorMatch));
   }
 
   const etoViewInvestorMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(
     payload.location.pathname,
     { path: appRoutes.etoPublicView },
   );
-  const etoViewByIdInvestorMatch = yield matchPath<TEtoViewByIdMatch>(payload.location.pathname, {
-    path: appRoutes.etoPublicViewById,
-  });
-
-  if (etoViewByIdInvestorMatch !== null) {
-    const previewCode = etoViewByIdInvestorMatch.params.previewCode;
-    yield put(actions.etoView.loadInvestorEtoViewById(previewCode, etoViewByIdInvestorMatch));
-  }
+  console.log("etoViewInvestorMatch",etoViewInvestorMatch)
   if (etoViewInvestorMatch !== null) {
     const previewCode = etoViewInvestorMatch.params.previewCode;
     yield put(actions.etoView.loadInvestorEtoView(previewCode, etoViewInvestorMatch));

@@ -36,20 +36,21 @@ export function* calculateEtoViewCampaignOverviewType(
       //from public onwards
       return EEtoViewCampaignOverviewType.WITH_STATS;
     }
-  } else {
-    return EEtoViewCampaignOverviewType.WITHOUT_STATS;
   }
+
+  return EEtoViewCampaignOverviewType.WITHOUT_STATS;
 }
 
 export function* calculateCampaignOverviewData(
   routeMatch: match<TEtoViewByPreviewCodeMatch | {}>,
   eto: TEtoWithCompanyAndContractReadonly,
 ): Iterator<any> {
+
   const campaignOverviewType: EEtoViewCampaignOverviewType = yield call(
     calculateEtoViewCampaignOverviewType,
     eto,
   );
-
+console.log("---calculateCampaignOverviewData", campaignOverviewType)
   const showYouTube = !!(eto.company.companyVideo && eto.company.companyVideo.url);
   const showSlideshare = !!(eto.company.companySlideshare && eto.company.companySlideshare.url);
   const showSocialChannels = !!(eto.company.socialChannels && eto.company.socialChannels.length);

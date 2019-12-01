@@ -23,6 +23,7 @@ const EtoViewInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
   campaignOverviewData,
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
+  console.log("EtoViewInvestorLayout", campaignOverviewData)
   return (
     <FieldSchemaProvider value={EtoViewSchema}>
       <PersonProfileModal />

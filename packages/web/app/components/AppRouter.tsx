@@ -61,7 +61,7 @@ export const AppRouter: React.FunctionComponent = () => (
     />
     <Route
       path={appRoutes.etoPublicViewByIdLegacyRoute}
-      render={({ match }) => <RedirectEtoById etoId={match.params.etoId} />}
+      render={({ match }) => { console.log("RedirectEtoById"); return <RedirectEtoById etoId={match.params.etoId} />}}
       exact
     />
 
