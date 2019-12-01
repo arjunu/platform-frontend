@@ -1,7 +1,8 @@
 import { LocationChangeAction } from "connected-react-router";
-import { Effect, fork, select } from "redux-saga/effects";
+import { Effect, fork, put, select } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../di/setupBindings";
+import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsAuthorized, selectUserType } from "../auth/selectors";
@@ -29,6 +30,16 @@ function* openInNewWindowSaga(
   //Reset the opener link
   if (newWindow) {
     newWindow.opener = null;
+  }
+}
+
+export function* ensureEtoJurisdiction(
+  etoJurisdiction: EJurisdiction,
+  routJurisdiction: EJurisdiction,
+): Iterator<any> {
+  if (etoJurisdiction !== routJurisdiction) {
+    // TODO: Add 404 page
+    yield put(actions.routing.goTo404());
   }
 }
 

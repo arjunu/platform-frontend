@@ -52,7 +52,6 @@ export const AppRouter: React.FunctionComponent = () => (
     <Route path={appRoutes.greypWithJurisdiction} component={EtoViewMain} />
     {/*<------------------------------- */}
 
-
     {/* Redirect Legacy ETO link to current link */}
     <Route
       path={appRoutes.etoPublicViewLegacyRoute}
@@ -61,7 +60,7 @@ export const AppRouter: React.FunctionComponent = () => (
     />
     <Route
       path={appRoutes.etoPublicViewByIdLegacyRoute}
-      render={({ match }) => { console.log("RedirectEtoById"); return <RedirectEtoById etoId={match.params.etoId} />}}
+      render={({ match }) => <RedirectEtoById etoId={match.params.etoId} />}
       exact
     />
 

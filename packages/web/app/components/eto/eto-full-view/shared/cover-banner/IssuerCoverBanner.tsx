@@ -1,20 +1,20 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { EJurisdiction } from "../../../../../lib/api/eto/EtoProductsApi.interfaces";
 import { ExternalLink } from "../../../../shared/links/ExternalLink";
 import { CoverBannerBase } from "./CoverBannerBase";
-import { EJurisdiction } from "../../../../../lib/api/eto/EtoProductsApi.interfaces";
 
 interface IIssuerPreviewProps {
   previewCode: string;
   url: string;
-  jurisdiction: EJurisdiction
+  jurisdiction: EJurisdiction;
 }
 
 export const IssuerCoverBanner: React.FunctionComponent<IIssuerPreviewProps> = ({
   previewCode,
   url,
-  jurisdiction
+  jurisdiction,
 }) => (
   <CoverBannerBase data-test-id="eto.public-view.investor-preview-banner">
     <FormattedMessage

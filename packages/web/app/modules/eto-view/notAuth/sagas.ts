@@ -6,6 +6,7 @@ import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions, TActionFromCreator } from "../../actions";
 import { loadEtoWithCompanyAndContract, loadEtoWithCompanyAndContractById } from "../../eto/sagas";
 import { TEtoWithCompanyAndContractReadonly } from "../../eto/types";
+import { ensureEtoJurisdiction } from "../../routing/sagas";
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import { calculateCampaignOverviewData } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
@@ -18,6 +19,12 @@ export function* loadNotAuthorizedEtoView(
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContract,
       payload.previewCode,
+    );
+
+    yield call(
+      ensureEtoJurisdiction,
+      eto.product.jurisdiction,
+      payload.routeMatch.params.jurisdiction,
     );
 
     const campaignOverviewData: TCampaignOverviewData = yield call(
@@ -48,6 +55,12 @@ export function* loadNotAuthorizedEtoViewById(
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContractById,
       payload.etoId,
+    );
+
+    yield call(
+      ensureEtoJurisdiction,
+      eto.product.jurisdiction,
+      payload.routeMatch.params.jurisdiction,
     );
 
     const campaignOverviewData: TCampaignOverviewData = yield call(

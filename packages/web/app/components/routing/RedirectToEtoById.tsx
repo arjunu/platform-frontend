@@ -30,11 +30,9 @@ const RedirectEtoByIdComponent: React.FunctionComponent<TProps> = ({ eto }) => (
 
 export const RedirectEtoById = compose<TProps, IRouterParams>(
   appConnect<IStateProps, {}, IRouterParams>({
-    stateToProps: (state, props) => {
-      console.log("RedirectEtoById")
-      return ({
+    stateToProps: (state, props) => ({
       eto: selectEtoWithCompanyAndContractById(state, props.etoId),
-    })},
+    }),
   }),
   withContainer(Layout),
   onEnterAction<IRouterParams>({

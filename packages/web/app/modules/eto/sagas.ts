@@ -597,23 +597,6 @@ function* loadTokensData({ contractsService }: TGlobalDependencies): any {
   }
 }
 
-function* ensureEtoJurisdiction(
-  _: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.eto.ensureEtoJurisdiction>,
-): Iterable<any> {
-  const eto: ReturnType<typeof selectInvestorEtoWithCompanyAndContract> = yield select(
-    (state: IAppState) => selectInvestorEtoWithCompanyAndContract(state, payload.previewCode),
-  );
-
-  if (eto === undefined) {
-    throw new Error(`Can not find eto by preview code ${payload.previewCode}`);
-  }
-  if (eto.product.jurisdiction !== payload.jurisdiction) {
-    // TODO: Add 404 page
-    yield put(actions.routing.goTo404());
-  }
-}
-
 function* verifyEtoAccess(
   _: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.eto.verifyEtoAccess>,
@@ -855,7 +838,6 @@ export function* etoSagas(): Iterator<any> {
   );
 
   yield fork(neuTakeLatest, actions.eto.verifyEtoAccess, verifyEtoAccess);
-  yield fork(neuTakeLatest, actions.eto.ensureEtoJurisdiction, ensureEtoJurisdiction);
 
   yield fork(neuTakeUntil, actions.eto.setEto, LOCATION_CHANGE, watchEtoSetAction);
   yield fork(neuTakeUntil, actions.eto.setEtos, LOCATION_CHANGE, watchEtosSetAction);
