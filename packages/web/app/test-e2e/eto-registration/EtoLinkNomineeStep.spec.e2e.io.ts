@@ -6,30 +6,20 @@ import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
 import {
   acceptNominee,
-  assertFillEtoInformationState,
   assertLinkNomineeStep,
   assertLinkNomineeStepAwaitingApprovalState,
   assertLinkNomineeStepAwaitingRequestState,
-  assertPublishListingPage,
   assertUploadSignedTermsheetStep,
   cancelNominee,
-  fillAndAssert,
-  fillRequiredCompanyInformation,
   rejectNominee,
   submitPreview,
 } from "./EtoRegistrationUtils";
-import { etoTermsRequiredForm, investmentTermsRequiredForm, votingRights } from "./fixtures";
+import { pushEtoDataToAPI, pushEtoToAPI } from "./utils";
 
 const fillEtoToLinkNomineeStep = (issuerAddress: string) => {
-  fillRequiredCompanyInformation();
-
-  assertPublishListingPage();
-
-  // fill Eto Terms and Investment Terms
-  fillAndAssert("eto-progress-widget-investment-terms", investmentTermsRequiredForm);
-
-  fillAndAssert("eto-progress-widget-eto-terms", etoTermsRequiredForm);
-
+  pushEtoToAPI();
+  pushEtoDataToAPI();
+  goToIssuerDashboard();
   // should move to link nominee
   assertLinkNomineeStepAwaitingRequestState(issuerAddress);
 };
@@ -66,11 +56,6 @@ describe("Eto Forms link nominee", () => {
             // should move to setup eto state after nominee was accepted
             goToIssuerDashboard();
 
-            assertFillEtoInformationState();
-
-            fillAndAssert("eto-progress-widget-voting-right", votingRights);
-
-            goToIssuerDashboard();
             assertUploadSignedTermsheetStep();
 
             // get back to nominee
