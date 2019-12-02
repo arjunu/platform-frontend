@@ -38,7 +38,7 @@ import { ECountries } from "../../utils/enums/countriesEnum";
 import { invariant } from "../../utils/invariant";
 import { convertFromUlps } from "../../utils/NumberUtils";
 import { actions, TActionFromCreator } from "../actions";
-import { selectIsUserVerified, selectUserId, selectUserType } from "../auth/selectors";
+import { selectIsUserVerifiedOnBackend, selectUserId, selectUserType } from "../auth/selectors";
 import { shouldLoadBookbuildingStats, shouldLoadPledgeData } from "../bookbuilding-flow/utils";
 import { selectMyAssets } from "../investor-portfolio/selectors";
 import { waitForKycStatus } from "../kyc/sagas";
@@ -60,7 +60,6 @@ import {
   selectEtoSubStateEtoEtoWithContract,
   selectFilteredEtosByRestrictedJurisdictions,
   selectInvestorEtoWithCompanyAndContract,
-  selectIsEtoAnOffer,
 } from "./selectors";
 import {
   EEtoAgreementStatus,
@@ -71,6 +70,7 @@ import {
 import {
   convertToEtoTotalInvestment,
   convertToStateStartDate,
+  etoIsInOfferState,
   isOnChain,
   isRestrictedEto,
   isUserAssociatedWithEto,
@@ -447,8 +447,8 @@ function* downloadDocument(
 ): Iterator<any> {
   const { document, eto } = action.payload;
 
-  const isUserFullyVerified: ReturnType<typeof selectIsUserVerified> = yield select(
-    selectIsUserVerified,
+  const isUserFullyVerified: ReturnType<typeof selectIsUserVerifiedOnBackend> = yield select(
+    selectIsUserVerifiedOnBackend,
   );
 
   invariant(
@@ -601,26 +601,14 @@ function* verifyEtoAccess(
   _: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.eto.verifyEtoAccess>,
 ): Iterable<any> {
-  const eto: ReturnType<typeof selectInvestorEtoWithCompanyAndContract> = yield select(
-    (state: IAppState) => selectInvestorEtoWithCompanyAndContract(state, payload.previewCode),
-  );
-
-  if (eto === undefined) {
-    throw new Error(`Can not find eto by preview code ${payload.previewCode}`);
-  }
-
-  const isUserLoggedInAndVerified: ReturnType<typeof selectIsUserVerified> = yield select(
-    selectIsUserVerified,
-  );
+  const eto: TEtoWithCompanyAndContractReadonly = payload.eto;
 
   // Checks if ETO is an Offer based on
   // @See https://github.com/Neufund/platform-frontend/issues/2789#issuecomment-489084892
-  const isEtoAnOffer: boolean = yield select((state: IAppState) =>
-    selectIsEtoAnOffer(state, payload.previewCode, eto.state),
-  );
+  const isEtoAnOffer: boolean = yield !!eto.contract && etoIsInOfferState(eto.contract.timedState);
 
   if (isRestrictedEto(eto) && isEtoAnOffer) {
-    if (isUserLoggedInAndVerified) {
+    if (payload.userIsFullyVerified) {
       const jurisdiction: ReturnType<typeof selectClientJurisdiction> = yield select(
         selectClientJurisdiction,
       );

@@ -9,33 +9,62 @@ import {
 } from "../../../components/appRoutes";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions } from "../../actions";
-import { GREYP_PREVIEW_CODE } from "../sagas";
+import { neuCall } from "../../sagasUtils";
+import {
+  GREYP_PREVIEW_CODE,
+  redirectGreypWithoutJurisdiction,
+  redirectLegacyEtoView,
+  redirectLegacyEtoViewById,
+} from "../sagas";
 
 export function* notAuthorizedRouting(
   _: TGlobalDependencies,
   { payload }: LocationChangeAction,
 ): Iterator<any> {
+  /* --- REDIRECT LEGACY ROUTES ---*/
+  const legacyEtoViewRedirected = yield neuCall(redirectLegacyEtoView, payload.location);
+  if (legacyEtoViewRedirected) {
+    return;
+  }
+
+  const legacyEtoViewByIdRedirected = yield neuCall(redirectLegacyEtoViewById, payload.location);
+  if (legacyEtoViewByIdRedirected) {
+    return;
+  }
+
+  /* --------- TEMP HARDCODED ROUTES ---------- */
+  const greypWithoutJurisdictionRedirected = yield neuCall(
+    redirectGreypWithoutJurisdiction,
+    payload.location,
+  );
+  if (greypWithoutJurisdictionRedirected) {
+    return;
+  }
+
   const greypMatch = yield matchPath<any>(payload.location.pathname, {
     path: appRoutes.greypWithJurisdiction,
   });
   if (greypMatch !== null) {
-    yield put(actions.etoView.loadNotAuthorizedEtoView(GREYP_PREVIEW_CODE, greypMatch));
+    return yield put(actions.etoView.loadNotAuthorizedEtoView(GREYP_PREVIEW_CODE, greypMatch));
   }
-  const etoViewNotAuthorizedMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(
-    payload.location.pathname,
-    { path: appRoutes.etoPublicView },
-  );
-  const etoViewByIdNotAuthorizedMatch = yield matchPath<TEtoViewByIdMatch>(
-    payload.location.pathname,
-    { path: appRoutes.etoPublicViewById },
-  );
+  /* ----------------------------------------- */
 
-  if (etoViewNotAuthorizedMatch !== null) {
-    const previewCode = etoViewNotAuthorizedMatch.params.previewCode;
-    yield put(actions.etoView.loadNotAuthorizedEtoView(previewCode, etoViewNotAuthorizedMatch));
+  const etoViewMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(payload.location.pathname, {
+    path: appRoutes.etoPublicView,
+  });
+  if (etoViewMatch !== null) {
+    const previewCode = yield etoViewMatch.params.previewCode;
+    return yield put(actions.etoView.loadNotAuthorizedEtoView(previewCode, etoViewMatch));
   }
-  if (etoViewByIdNotAuthorizedMatch !== null) {
-    const etoId = etoViewNotAuthorizedMatch.params.etoId;
-    yield put(actions.etoView.loadNotAuthorizedEtoViewById(etoId, etoViewNotAuthorizedMatch));
+
+  const etoViewByIdMatch = yield matchPath<TEtoViewByIdMatch>(payload.location.pathname, {
+    path: appRoutes.etoPublicViewById,
+  });
+  if (etoViewByIdMatch !== null) {
+    const etoId = yield etoViewByIdMatch.params.etoId;
+    return yield put(actions.etoView.loadNotAuthorizedEtoViewById(etoId, etoViewByIdMatch));
   }
+
+  // TODO unskip this when all routes are in sagas
+  // yield neuCall(fallbackRedirect, payload.location)
 }

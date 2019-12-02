@@ -1,5 +1,7 @@
+import { match } from "react-router";
 import { call, fork, put, select } from "redux-saga/effects";
 
+import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
 import { EtoMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -12,6 +14,30 @@ import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import { calculateCampaignOverviewData } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
 
+function* loadInvestorEtoViewInternal(
+  eto: TEtoWithCompanyAndContractReadonly,
+  routeMatch: match<TEtoViewByPreviewCodeMatch | TEtoViewByIdMatch>,
+): Iterator<any> {
+  yield call(ensureEtoJurisdiction, eto.product.jurisdiction, routeMatch.params.jurisdiction);
+
+  const userIsFullyVerified = yield select(selectIsUserVerifiedOnBlockchain);
+
+  yield put(actions.eto.verifyEtoAccess(eto, true));
+
+  const campaignOverviewData: TCampaignOverviewData = yield call(
+    calculateCampaignOverviewData,
+    routeMatch,
+    eto,
+  );
+
+  return {
+    eto,
+    userIsFullyVerified,
+    campaignOverviewData,
+    etoViewType: EEtoViewType.ETO_VIEW_INVESTOR,
+  };
+}
+
 export function* loadInvestorEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
@@ -22,28 +48,8 @@ export function* loadInvestorEtoView(
       payload.previewCode,
     );
 
-    yield call(
-      ensureEtoJurisdiction,
-      eto.product.jurisdiction,
-      payload.routeMatch.params.jurisdiction,
-    );
-
-    const userIsFullyVerified = yield select(selectIsUserVerifiedOnBlockchain);
-
-    const campaignOverviewData: TCampaignOverviewData = yield call(
-      calculateCampaignOverviewData,
-      payload.routeMatch,
-      eto,
-    );
-
-    yield put(
-      actions.etoView.setEtoViewData({
-        eto,
-        userIsFullyVerified,
-        campaignOverviewData,
-        etoViewType: EEtoViewType.ETO_VIEW_INVESTOR,
-      }),
-    );
+    const etoData = yield call(loadInvestorEtoViewInternal, eto, payload.routeMatch);
+    yield put(actions.etoView.setEtoViewData(etoData));
   } catch (e) {
     logger.error("Could not load eto by preview code", e);
     notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
@@ -61,31 +67,11 @@ export function* loadInvestorEtoViewById(
       payload.etoId,
     );
 
-    yield call(
-      ensureEtoJurisdiction,
-      eto.product.jurisdiction,
-      payload.routeMatch.params.jurisdiction,
-    );
-
-    const userIsFullyVerified = yield select(selectIsUserVerifiedOnBlockchain);
-
-    const campaignOverviewData: TCampaignOverviewData = yield call(
-      calculateCampaignOverviewData,
-      payload.routeMatch,
-      eto,
-    );
-
-    yield put(
-      actions.etoView.setEtoViewData({
-        eto,
-        userIsFullyVerified,
-        campaignOverviewData,
-        etoViewType: EEtoViewType.ETO_VIEW_INVESTOR,
-      }),
-    );
+    const etoData = yield call(loadInvestorEtoViewInternal, eto, payload.routeMatch);
+    yield put(actions.etoView.setEtoViewData(etoData));
   } catch (e) {
-    logger.error("Could not load eto by preview code", e);
-    notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
+    logger.error("Could not load eto", e);
+    notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO));
     yield put(actions.routing.goToDashboard());
   }
 }

@@ -1,7 +1,7 @@
 import { match } from "react-router";
 import { call, select } from "redux-saga/effects";
 
-import { TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
+import { appRoutes, TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
 import { ETHEREUM_ZERO_ADDRESS } from "../../../config/constants";
 import { EUserType } from "../../../lib/api/users/interfaces";
 import { selectUserType } from "../../auth/selectors";
@@ -41,6 +41,43 @@ export function* calculateEtoViewCampaignOverviewType(
   return EEtoViewCampaignOverviewType.WITHOUT_STATS;
 }
 
+export function* getCampaignOverviewData(eto: TEtoWithCompanyAndContractReadonly): Iterator<any> {
+  const twitterData = getTwitterData(eto.company);
+
+  return {
+    showYouTube: !!(eto.company.companyVideo && eto.company.companyVideo.url),
+    showSlideshare: !!(eto.company.companySlideshare && eto.company.companySlideshare.url),
+    showSocialChannels: !!(eto.company.socialChannels && eto.company.socialChannels.length),
+    showInvestmentTerms: eto.product.id !== ETHEREUM_ZERO_ADDRESS,
+    ...twitterData,
+  };
+}
+
+export function* calculateCampaignOverviewDataIssuerNominee(
+  eto: TEtoWithCompanyAndContractReadonly,
+): Iterator<any> {
+  const campaignOverviewType: EEtoViewCampaignOverviewType = yield call(
+    calculateEtoViewCampaignOverviewType,
+    eto,
+  );
+  const campaignOverviewCommonData = yield call(getCampaignOverviewData, eto);
+
+  if (campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS) {
+    return {
+      campaignOverviewType,
+      ...campaignOverviewCommonData,
+      url: appRoutes.etoIssuerView,
+      path: appRoutes.etoIssuerView,
+    };
+  } else {
+    return {
+      campaignOverviewType,
+      ...campaignOverviewCommonData,
+      url: appRoutes.etoIssuerView,
+    };
+  }
+}
+
 export function* calculateCampaignOverviewData(
   routeMatch: match<TEtoViewByPreviewCodeMatch | {}>,
   eto: TEtoWithCompanyAndContractReadonly,
@@ -50,33 +87,20 @@ export function* calculateCampaignOverviewData(
     eto,
   );
 
-  const showYouTube = !!(eto.company.companyVideo && eto.company.companyVideo.url);
-  const showSlideshare = !!(eto.company.companySlideshare && eto.company.companySlideshare.url);
-  const showSocialChannels = !!(eto.company.socialChannels && eto.company.socialChannels.length);
-  const showInvestmentTerms = eto.product.id !== ETHEREUM_ZERO_ADDRESS;
-
-  const twitterData = getTwitterData(eto.company);
+  const campaignOverviewCommonData = yield call(getCampaignOverviewData, eto);
 
   if (campaignOverviewType === EEtoViewCampaignOverviewType.WITH_STATS) {
     return {
       campaignOverviewType,
+      ...campaignOverviewCommonData,
       url: routeMatch.url,
       path: routeMatch.path,
-      showYouTube,
-      showSlideshare,
-      showSocialChannels,
-      showInvestmentTerms,
-      ...twitterData,
     };
   } else {
     return {
-      url: routeMatch.url,
       campaignOverviewType,
-      showYouTube,
-      showSlideshare,
-      showSocialChannels,
-      showInvestmentTerms,
-      ...twitterData,
+      ...campaignOverviewCommonData,
+      url: routeMatch.url,
     };
   }
 }

@@ -9,7 +9,10 @@ import { selectIssuerEtoWithCompanyAndContract } from "../../eto-flow/selectors"
 import { loadEtoWithCompanyAndContract } from "../../eto/sagas";
 import { TEtoWithCompanyAndContractReadonly } from "../../eto/types";
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
-import { calculateCampaignOverviewData } from "../shared/sagas";
+import {
+  calculateCampaignOverviewData,
+  calculateCampaignOverviewDataIssuerNominee,
+} from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData, TCampaignOverviewIssuerData } from "../shared/types";
 
 export function* selectOrLoadEto(): Iterator<any> {
@@ -23,15 +26,14 @@ export function* selectOrLoadEto(): Iterator<any> {
 
 export function* loadIssuerEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.etoView.loadIssuerEtoView>,
+  _: TActionFromCreator<typeof actions.etoView.loadIssuerEtoView>,
 ): Iterator<any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly | undefined = yield call(selectOrLoadEto);
 
     if (eto) {
       const campaignOverviewData: TCampaignOverviewIssuerData = yield call(
-        calculateCampaignOverviewData,
-        payload.routeMatch,
+        calculateCampaignOverviewDataIssuerNominee,
         eto,
       );
 

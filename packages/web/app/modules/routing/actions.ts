@@ -3,13 +3,19 @@ import { goBack, push } from "connected-react-router";
 import { LocationDescriptorObject, Path } from "history";
 
 import { appRoutes } from "../../components/appRoutes";
+import { etoPublicViewByIdLink, etoPublicViewLink } from "../../components/appRouteUtils";
 import { kycRoutes } from "../../components/kyc/routes";
 import { profileRoutes } from "../../components/settings/routes";
 import { recoverRoutes } from "../../components/wallet-selector/wallet-recover/router/recoverRoutes";
 import { walletRoutes } from "../../components/wallet/routes";
+import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
 import { TLoginRouterState } from "./types";
 
 export const routingActions = {
+  /* TEMP HARDCODED ROUTE */
+  goToGreypWithJurisdiction: () => push(appRoutes.greypWithJurisdiction),
+  /* ------- */
+
   // navigation primitives
   goBack,
   push: (location: Path | LocationDescriptorObject) => push(location as any),
@@ -30,6 +36,12 @@ export const routingActions = {
   // dashboard
   goToDashboard: () => push(appRoutes.dashboard),
   goToProfile: () => push(appRoutes.profile),
+
+  // eto view
+  goToEtoViewById: (etoId: string, jurisdiction: EJurisdiction) =>
+    push(etoPublicViewByIdLink(etoId, jurisdiction)),
+  goToEtoView: (previewCode: string, jurisdiction: EJurisdiction) =>
+    push(etoPublicViewLink(previewCode, jurisdiction)),
 
   // registration
   goToRegister: () => push(appRoutes.register),

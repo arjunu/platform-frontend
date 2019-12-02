@@ -1,5 +1,7 @@
+import { match } from "react-router";
 import { call, fork, put } from "redux-saga/effects";
 
+import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
 import { EtoMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -11,6 +13,27 @@ import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import { calculateCampaignOverviewData } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
 
+function* loadNotAuthorizedEtoViewInternal(
+  eto: TEtoWithCompanyAndContractReadonly,
+  routeMatch: match<TEtoViewByPreviewCodeMatch | TEtoViewByIdMatch>,
+): Iterator<any> {
+  yield call(ensureEtoJurisdiction, eto.product.jurisdiction, routeMatch.params.jurisdiction);
+
+  yield put(actions.eto.verifyEtoAccess(eto, false));
+
+  const campaignOverviewData: TCampaignOverviewData = yield call(
+    calculateCampaignOverviewData,
+    routeMatch,
+    eto,
+  );
+
+  return {
+    eto,
+    campaignOverviewData,
+    etoViewType: EEtoViewType.ETO_VIEW_NOT_AUTHORIZED,
+  };
+}
+
 export function* loadNotAuthorizedEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
@@ -21,25 +44,8 @@ export function* loadNotAuthorizedEtoView(
       payload.previewCode,
     );
 
-    yield call(
-      ensureEtoJurisdiction,
-      eto.product.jurisdiction,
-      payload.routeMatch.params.jurisdiction,
-    );
-
-    const campaignOverviewData: TCampaignOverviewData = yield call(
-      calculateCampaignOverviewData,
-      payload.routeMatch,
-      eto,
-    );
-
-    yield put(
-      actions.etoView.setEtoViewData({
-        eto,
-        campaignOverviewData,
-        etoViewType: EEtoViewType.ETO_VIEW_NOT_AUTHORIZED,
-      }),
-    );
+    const etoData = yield call(loadNotAuthorizedEtoViewInternal, eto, payload.routeMatch);
+    yield put(actions.etoView.setEtoViewData(etoData));
   } catch (e) {
     logger.error("Could not load eto by preview code", e);
     notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
@@ -57,28 +63,11 @@ export function* loadNotAuthorizedEtoViewById(
       payload.etoId,
     );
 
-    yield call(
-      ensureEtoJurisdiction,
-      eto.product.jurisdiction,
-      payload.routeMatch.params.jurisdiction,
-    );
-
-    const campaignOverviewData: TCampaignOverviewData = yield call(
-      calculateCampaignOverviewData,
-      payload.routeMatch,
-      eto,
-    );
-
-    yield put(
-      actions.etoView.setEtoViewData({
-        eto,
-        campaignOverviewData,
-        etoViewType: EEtoViewType.ETO_VIEW_NOT_AUTHORIZED,
-      }),
-    );
+    const etoData = yield call(loadNotAuthorizedEtoViewInternal, eto, payload.routeMatch);
+    yield put(actions.etoView.setEtoViewData(etoData));
   } catch (e) {
     logger.error("Could not load eto by preview code", e);
-    notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO_PREVIEW));
+    notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO));
     yield put(actions.routing.goToDashboard());
   }
 }

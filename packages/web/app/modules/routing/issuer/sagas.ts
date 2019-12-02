@@ -5,17 +5,32 @@ import { put } from "redux-saga/effects";
 import { appRoutes } from "../../../components/appRoutes";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions } from "../../actions";
+import { neuCall } from "../../sagasUtils";
+import { fallbackRedirect, redirectLegacyEtoView } from "../sagas";
 
 export function* issuerRouting(
   _: TGlobalDependencies,
   { payload }: LocationChangeAction,
 ): Iterator<any> {
-  const etoViewIssuerMatch = yield matchPath(payload.location.pathname, {
+  const etoViewStatsMatch = yield matchPath(payload.location.pathname, {
+    path: appRoutes.etoIssuerViewStats,
+    exact: true,
+  });
+  if (etoViewStatsMatch !== null) {
+    return yield put(actions.etoView.loadIssuerEtoView());
+  }
+
+  const legacyEtoViewRedirected = yield neuCall(redirectLegacyEtoView, payload.location);
+  if (legacyEtoViewRedirected) {
+    return;
+  }
+
+  const etoViewMatch = yield matchPath(payload.location.pathname, {
     path: appRoutes.etoIssuerView,
     exact: true,
   });
-  if (etoViewIssuerMatch !== null) {
-    yield put(actions.etoView.loadIssuerEtoView(etoViewIssuerMatch));
+  if (etoViewMatch !== null) {
+    return yield put(actions.etoView.loadIssuerEtoView());
   }
 
   const etoViewIssuerPreviewMatch = yield matchPath(payload.location.pathname, {
@@ -23,6 +38,10 @@ export function* issuerRouting(
   });
   if (etoViewIssuerPreviewMatch) {
     const previewCode = etoViewIssuerPreviewMatch.params.previewCode;
-    yield put(actions.etoView.loadIssuerPreviewEtoView(previewCode, etoViewIssuerPreviewMatch));
+    return yield put(
+      actions.etoView.loadIssuerPreviewEtoView(previewCode, etoViewIssuerPreviewMatch),
+    );
   }
+
+  yield neuCall(fallbackRedirect, payload.location);
 }

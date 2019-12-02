@@ -50,9 +50,13 @@ export const etoActions = {
   ),
   confirmJurisdictionDisclaimer: createActionFactory("ETO_CONFIRM_JURISDICTION_DISCLAIMER"),
   confirmConfidentialityAgreement: createActionFactory("ETO_CONFIRM_CONFIDENTIALITY_AGREEMENT"),
-  verifyEtoAccess: createActionFactory("ETO_VERIFY_ETO_ACCESS", (previewCode: string) => ({
-    previewCode,
-  })),
+  verifyEtoAccess: createActionFactory(
+    "ETO_VERIFY_ETO_ACCESS",
+    (eto: TEtoWithCompanyAndContractReadonly, userIsFullyVerified: boolean) => ({
+      eto,
+      userIsFullyVerified,
+    }),
+  ),
 
   // state mutations
   setEtos: createActionFactory(

@@ -24,7 +24,7 @@ import { IdentityRegistry } from "../../lib/contracts/IdentityRegistry";
 import { IAppState } from "../../store";
 import { actions, TActionFromCreator } from "../actions";
 import { ensurePermissionsArePresentAndRunEffect } from "../auth/jwt/sagas";
-import { selectIsUserVerified, selectUser, selectUserType } from "../auth/selectors";
+import { selectIsUserVerifiedOnBackend, selectUser, selectUserType } from "../auth/selectors";
 import { userHasKycAndEmailVerified } from "../eto-flow/selectors";
 import { displayErrorModalSaga } from "../generic-modal/sagas";
 import { waitUntilSmartContractsAreInitialized } from "../init/sagas";
@@ -661,7 +661,7 @@ export function* loadBankAccountDetails({
     // so to have consistent ui we need to reload claims
     yield put(actions.kyc.kycLoadClaims());
 
-    const isVerified: boolean = yield select(selectIsUserVerified);
+    const isVerified: boolean = yield select(selectIsUserVerifiedOnBackend);
 
     // bank account api can only be called when account is verified
     if (isVerified) {

@@ -50,7 +50,7 @@ export const selectDoesEmailExist = (state: IAuthState): boolean =>
 /**
  * Check if user has verified email and KYC
  */
-export const selectIsUserVerified = (state: IAppState): boolean =>
+export const selectIsUserVerifiedOnBackend = (state: IAppState): boolean =>
   selectIsUserEmailVerified(state.auth) &&
   selectKycRequestStatus(state) === EKycRequestStatus.ACCEPTED;
 
@@ -58,7 +58,7 @@ export const selectIsUserVerified = (state: IAppState): boolean =>
  * Check if user is verified by API and Contract
  */
 export const selectIsUserFullyVerified = (state: IAppState): boolean =>
-  selectIsUserVerified(state) && selectIsUserVerifiedOnBlockchain(state);
+  selectIsUserVerifiedOnBackend(state) && selectIsUserVerifiedOnBlockchain(state);
 
 export const selectIsInvestor = (state: IAppState): boolean =>
   selectUserType(state) === EUserType.INVESTOR;
@@ -95,7 +95,7 @@ export const selectIsIssuer = (state: IAppState): boolean =>
 
 export const selectIsVerifiedInvestor = createSelector(
   selectIsInvestor,
-  selectIsUserVerified,
+  selectIsUserVerifiedOnBackend,
   (isInvestor, isUserVerified) => isInvestor && isUserVerified,
 );
 

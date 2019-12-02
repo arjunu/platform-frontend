@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { TIssuerPreviewEtoViewData } from "../../../../../modules/eto-view/shared/types";
 import { CampaignOverviewTabsLayout } from "../../shared/campaign-overview/CampaignOverviewTabsLayout";
-import { CampaignOverviewIssuerLayout } from "./CampaignOverviewIssuerLayout";
+import { CampaignOverviewIssuerPreviewLayout } from "./CampaignOverviewIssuerPreviewLayout";
 
 export const CampaignOverviewWithStatsIssuerPreviewLayout: React.FunctionComponent<TIssuerPreviewEtoViewData> = ({
   campaignOverviewData,
@@ -14,6 +14,6 @@ export const CampaignOverviewWithStatsIssuerPreviewLayout: React.FunctionCompone
       url={campaignOverviewData.url}
       path={campaignOverviewData.path}
     >
-      <CampaignOverviewIssuerLayout campaignOverviewData={campaignOverviewData} eto={eto} />
+      <CampaignOverviewIssuerPreviewLayout campaignOverviewData={campaignOverviewData} eto={eto} />
     </CampaignOverviewTabsLayout>
   ) : null;

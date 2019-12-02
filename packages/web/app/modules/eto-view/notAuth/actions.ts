@@ -1,7 +1,7 @@
 import { match } from "react-router";
 
 import { createActionFactory } from "../../../../../shared/dist/modules/actionsUtils";
-import { TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
+import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
 
 export const etoViewNotAuthActions = {
   loadNotAuthorizedEtoView: createActionFactory(
@@ -13,6 +13,6 @@ export const etoViewNotAuthActions = {
   ),
   loadNotAuthorizedEtoViewById: createActionFactory(
     "ETO_VIEW_LOAD_NOT_AUTH_ETO_VIEW_BY_ID",
-    (etoId: string, routeMatch: match<TEtoViewByPreviewCodeMatch>) => ({ etoId, routeMatch }),
+    (etoId: string, routeMatch: match<TEtoViewByIdMatch>) => ({ etoId, routeMatch }),
   ),
 };

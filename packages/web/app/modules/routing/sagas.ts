@@ -1,11 +1,19 @@
 import { LocationChangeAction } from "connected-react-router";
+import { Location } from "history";
+import { matchPath } from "react-router";
 import { Effect, fork, put, select } from "redux-saga/effects";
 
+import {
+  appRoutes,
+  TEtoPublicViewByIdLegacyRoute,
+  TEtoPublicViewLegacyRouteMatch,
+} from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsAuthorized, selectUserType } from "../auth/selectors";
+import { TEtoWithCompanyAndContract } from "../eto/types";
 import { waitForAppInit } from "../init/sagas";
 import { neuCall, neuTakeEvery } from "../sagasUtils";
 import { investorRouting } from "./investor/sagas";
@@ -40,6 +48,69 @@ export function* ensureEtoJurisdiction(
   if (etoJurisdiction !== routJurisdiction) {
     // TODO: Add 404 page
     yield put(actions.routing.goTo404());
+  }
+}
+
+export function* redirectLegacyEtoView(
+  { apiEtoService }: TGlobalDependencies,
+  location: Location,
+): Iterator<any> {
+  const etoPublicViewLegacyRouteMatch = yield matchPath<TEtoPublicViewLegacyRouteMatch>(
+    location.pathname,
+    {
+      path: appRoutes.etoPublicViewLegacyRoute,
+      exact: true,
+    },
+  );
+
+  if (etoPublicViewLegacyRouteMatch !== null) {
+    const previewCode = yield etoPublicViewLegacyRouteMatch.params.previewCode;
+    const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEtoPreview(previewCode);
+    yield put(actions.routing.goToEtoView(previewCode, eto.product.jurisdiction));
+    return true;
+  }
+}
+
+export function* redirectLegacyEtoViewById(
+  { apiEtoService }: TGlobalDependencies,
+  location: Location,
+): Iterator<any> {
+  const etoPublicViewByIdLegacyRouteMatch = yield matchPath<TEtoPublicViewByIdLegacyRoute>(
+    location.pathname,
+    {
+      path: appRoutes.etoPublicViewByIdLegacyRoute,
+      exact: true,
+    },
+  );
+  if (etoPublicViewByIdLegacyRouteMatch !== null) {
+    const etoId = etoPublicViewByIdLegacyRouteMatch.params.etoId;
+    const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEto(etoId);
+    yield put(actions.routing.goToEtoViewById(etoId, eto.product.jurisdiction));
+    return true;
+  }
+}
+
+export function* redirectGreypWithoutJurisdiction(
+  _: TGlobalDependencies,
+  location: Location,
+): Iterator<any> {
+  const greypWithoutJurisdictionMatch = yield matchPath<any>(location.pathname, {
+    path: appRoutes.greyp,
+  });
+  if (greypWithoutJurisdictionMatch !== null) {
+    yield put(actions.routing.goToGreypWithJurisdiction());
+  }
+}
+
+// TODO this is a workaround to have a catch-all during the time we still use react-router and saga routing together
+export function* fallbackRedirect(_: TGlobalDependencies, location: Location): Iterator<any> {
+  const fallbackMatch = yield matchPath(location.pathname, {
+    path: appRoutes.dashboard,
+    exact: true,
+  });
+  if (!fallbackMatch) {
+    yield put(actions.routing.goToDashboard());
+    return true;
   }
 }
 

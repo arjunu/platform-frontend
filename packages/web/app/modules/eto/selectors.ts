@@ -26,7 +26,7 @@ import {
   TEtoStartOfStates,
   TEtoWithCompanyAndContractReadonly,
 } from "./types";
-import { getEtoNextStateStartDate, getEtoSubState } from "./utils";
+import { etoIsInOfferState, getEtoNextStateStartDate, getEtoSubState } from "./utils";
 
 const selectEtoState = (state: IAppState) => state.eto;
 
@@ -213,12 +213,7 @@ export const selectIsEtoAnOffer = (state: IAppState, previewCode: string, etoSta
     return true;
   }
   const onChainState = selectEtoOnChainState(state, previewCode);
-  return [
-    EETOStateOnChain.Setup,
-    EETOStateOnChain.Public,
-    EETOStateOnChain.Signing,
-    EETOStateOnChain.Whitelist,
-  ].some(offerState => offerState === onChainState);
+  return etoIsInOfferState(onChainState);
 };
 
 export const selectFilteredEtosByRestrictedJurisdictions = (

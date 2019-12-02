@@ -258,3 +258,11 @@ export const getEtoNextStateStartDate = (eto: TEtoWithCompanyAndContractReadonly
 
   return undefined;
 };
+
+export const etoIsInOfferState = (onChainState: EETOStateOnChain | undefined) =>
+  [
+    EETOStateOnChain.Setup,
+    EETOStateOnChain.Public,
+    EETOStateOnChain.Signing,
+    EETOStateOnChain.Whitelist,
+  ].some(offerState => offerState === onChainState);
