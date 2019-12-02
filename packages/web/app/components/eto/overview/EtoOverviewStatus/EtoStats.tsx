@@ -5,6 +5,7 @@ import { compose } from "recompose";
 
 import { calcCapFraction } from "../../../../lib/api/eto/EtoUtils";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
+import { getEtoEurMinTarget } from "../../../../modules/eto/utils";
 import {
   selectShouldShowPublicDiscount,
   selectShouldShowWhitelistDiscount,
@@ -75,11 +76,7 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
         </span>
         <span className={styles.value}>
           <Money
-            value={
-              eto.investmentCalculatedValues && eto.investmentCalculatedValues.maxInvestmentAmount
-                ? eto.investmentCalculatedValues.maxInvestmentAmount.toString()
-                : undefined
-            }
+            value={getEtoEurMinTarget(eto)}
             inputFormat={ENumberInputFormat.FLOAT}
             valueType={ECurrency.EUR}
             outputFormat={ENumberOutputFormat.INTEGER}

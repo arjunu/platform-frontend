@@ -35,7 +35,7 @@ export const checkTransactionWithRPCNode = (
     expectedFrom?: string;
     expectedInput?: string;
     expectedGasLimit?: string;
-    writtenValue: string;
+    writtenValue?: string;
     expectedTo: string;
   },
   txHash: string,
@@ -51,24 +51,27 @@ export const checkTransactionWithRPCNode = (
       writtenValue,
       expectedTo,
     } = expectedTransaction;
-    const calculatedValue = deductTransactionCost
-      ? Q18.mul(writtenValue)
-          .minus(multiplyBigNumbers([new BigNumber(gas), new BigNumber(gasPrice)]))
-          .toString()
-      : Q18.mul(writtenValue).toString();
-
     expect(hash).to.equal(txHash);
-    expect(new BigNumber(value).toString()).to.equal(calculatedValue);
+
     expectedFrom && expect(from).to.equal(expectedFrom);
     expectedGasLimit && expect(gas).to.equal(expectedGasLimit);
     expectedInput && expect(input).to.equal(expectedInput);
 
-    getBalanceRpc(expectedTo).then((balance: { body: { result: string } }) => {
-      const receivedEtherValue = new BigNumber(balance.body.result).toString();
-      expect(receivedEtherValue).to.equal(calculatedValue);
-      cy.log(`Real sent value ${receivedEtherValue}`);
-      cy.log(`Expected sent value ${calculatedValue}`);
-    });
+    if (writtenValue) {
+      const calculatedValue = deductTransactionCost
+        ? Q18.mul(writtenValue)
+            .minus(multiplyBigNumbers([new BigNumber(gas), new BigNumber(gasPrice)]))
+            .toString()
+        : Q18.mul(writtenValue).toString();
+      expect(new BigNumber(value).toString()).to.equal(calculatedValue);
+
+      getBalanceRpc(expectedTo).then((balance: BigNumber) => {
+        const receivedEtherValue = balance.toString();
+        expect(receivedEtherValue).to.equal(calculatedValue);
+        cy.log(`Expected sent value ${calculatedValue}`);
+        cy.log(`Real sent value ${receivedEtherValue}`);
+      });
+    }
   });
 };
 export const typeWithdrawForm = (testAddress: string, testValue: string) => {
@@ -98,10 +101,9 @@ export const assertWithdrawFlow = (
   testAddress: string,
   testValue: string,
   expectedInput: string,
+  expectedValue = "0",
 ) => {
-  getBalanceRpc(testAddress)
-    .then(v => new BigNumber(v.body.result))
-    .as("previousBalance");
+  getBalanceRpc(testAddress).as("previousBalance");
 
   cy.get(tid(`etherscan-link.${testAddress}`)).should("exist");
   cy.get(tid("modals.tx-sender.withdraw-flow.summary.value.large-value"))
@@ -130,15 +132,14 @@ export const assertWithdrawFlow = (
         expect(input).to.equal(expectedInput);
         // do not check expected gas limit - any change in the solidity implementation will make test fail
         // expect(gas).to.equal(expectedGasLimit);
-        expect(ethValue).to.equal(Q18.mul("0").toString());
+        expect(ethValue).to.equal(Q18.mul(expectedValue).toString());
 
         // TODO: Connect artifacts with tests to get deterministic addresses
         // expect(etherTokenAddress).to.equal(to);
 
         cy.get<BigNumber>("@previousBalance").then(previousBalance => {
           getBalanceRpc(testAddress).then(balance => {
-            const currentBalance = new BigNumber(balance.body.result);
-            const receivedValue = currentBalance.sub(previousBalance);
+            const receivedValue = balance.sub(previousBalance);
             expect(receivedValue.toString()).to.equal(Q18.mul(testValue).toString());
           });
         });

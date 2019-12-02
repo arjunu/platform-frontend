@@ -33,7 +33,7 @@ type ILocalStateUpdater = {
   goToAgreement: StateHandler<ILocalState>;
 };
 
-type IProps = IStateProps & ILocalStateUpdater;
+type IProps = IStateProps & { goToAgreement: () => void };
 
 const BankTransferVerifyInfoLayout: React.FunctionComponent<IProps> = ({
   goToAgreement,

@@ -109,8 +109,8 @@ describe("Eto in SIGNING state: Nominee and Issuer flow", () => {
 
     assertSignISHAOnChainFlow();
   });
-
-  it("Nominee uploads and signs ISHA on-chain", () => {
+  // Unskip when the issue with lazy loading and cypress is solved.
+  it.skip("Nominee uploads and signs ISHA on-chain", () => {
     loginFixtureAccount("NOMINEE_SIGNING", {
       kyc: "business",
       signTosAgreement: true,

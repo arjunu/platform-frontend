@@ -55,25 +55,47 @@ const unauthStore: DeepPartial<IAppState> = {
 };
 
 storiesOf("Layouts", module)
-  .addDecorator(withStore(authStore))
-  .add("LayoutAuthorized", () => (
-    <LayoutComponent userIsAuthorized={true}>
-      <FakeContent />
-    </LayoutComponent>
-  ))
-  .add("LayoutAuthorized with full width content", () => (
-    <LayoutComponent userIsAuthorized={true} width={EContentWidth.FULL}>
-      <FakeContent />
-    </LayoutComponent>
-  ))
-  .addDecorator(withStore(unauthStore))
-  .add("LayoutUnauthorized", () => (
-    <LayoutComponent userIsAuthorized={false}>
-      <FakeContent />
-    </LayoutComponent>
-  ))
-  .add("TransitionalLayout", () => (
-    <TransitionalLayout>
-      <FakeContent />
-    </TransitionalLayout>
-  ));
+  .add(
+    "LayoutAuthorized",
+    () => (
+      <LayoutComponent userIsAuthorized={true}>
+        <FakeContent />
+      </LayoutComponent>
+    ),
+    {
+      decorators: [withStore(authStore)],
+    },
+  )
+  .add(
+    "LayoutAuthorized with full width content",
+    () => (
+      <LayoutComponent userIsAuthorized={true} width={EContentWidth.FULL}>
+        <FakeContent />
+      </LayoutComponent>
+    ),
+    {
+      decorators: [withStore(authStore)],
+    },
+  )
+  .add(
+    "LayoutUnauthorized",
+    () => (
+      <LayoutComponent userIsAuthorized={false}>
+        <FakeContent />
+      </LayoutComponent>
+    ),
+    {
+      decorators: [withStore(unauthStore)],
+    },
+  )
+  .add(
+    "TransitionalLayout",
+    () => (
+      <TransitionalLayout>
+        <FakeContent />
+      </TransitionalLayout>
+    ),
+    {
+      decorators: [withStore(unauthStore)],
+    },
+  );
