@@ -33,12 +33,16 @@ const EtoViewInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
           companyName={brandName}
           companyOneliner={companyOneliner}
           companyJurisdiction={eto.product.jurisdiction}
-          companyLogo={{
-            alt: brandName,
-            srcSet: {
-              "1x": companyLogo as string,
-            },
-          }}
+          companyLogo={
+            companyLogo
+              ? {
+                  alt: brandName,
+                  srcSet: {
+                    "1x": companyLogo,
+                  },
+                }
+              : undefined
+          }
           companyBanner={{
             alt: brandName,
             srcSet: {

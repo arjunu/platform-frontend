@@ -38,6 +38,14 @@ function* loadInvestorEtoViewInternal(
   };
 }
 
+export function* saveEto(eto: TEtoWithCompanyAndContractReadonly): Iterator<any> {
+  // this is for backwards compatibility with other flows, e.g. investment
+  if (eto.contract) {
+    yield put(actions.eto.setEtoDataFromContract(eto.previewCode, eto.contract));
+  }
+  yield put(actions.eto.setEto({ eto, company: eto.company }));
+}
+
 export function* loadInvestorEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
@@ -47,6 +55,7 @@ export function* loadInvestorEtoView(
       loadEtoWithCompanyAndContract,
       payload.previewCode,
     );
+    yield call(saveEto, eto);
 
     const etoData = yield call(loadInvestorEtoViewInternal, eto, payload.routeMatch);
     yield put(actions.etoView.setEtoViewData(etoData));
@@ -66,6 +75,7 @@ export function* loadInvestorEtoViewById(
       loadEtoWithCompanyAndContractById,
       payload.etoId,
     );
+    yield call(saveEto, eto);
 
     const etoData = yield call(loadInvestorEtoViewInternal, eto, payload.routeMatch);
     yield put(actions.etoView.setEtoViewData(etoData));
