@@ -1,7 +1,7 @@
 import { createActionFactory } from "@neufund/shared";
 import { match } from "react-router";
 
-import { TEtoIssuerPreviewMatch } from "../../../components/appRoutes";
+import { TEtoIssuerPreviewMatch, TEtoViewByIdMatch } from "../../../components/appRoutes";
 
 export const EtoViewIssuerActions = {
   loadIssuerEtoView: createActionFactory("ETO_VIEW_LOAD_ISSUER_ETO_VIEW"),
@@ -9,6 +9,13 @@ export const EtoViewIssuerActions = {
     "ETO_VIEW_LOAD_ISSUER_ETO_PREVIEW",
     (previewCode: string, routeMatch: match<TEtoIssuerPreviewMatch>) => ({
       previewCode,
+      routeMatch,
+    }),
+  ),
+  loadIssuerPreviewEtoViewById: createActionFactory(
+    "ETO_VIEW_LOAD_ISSUER_ETO_PREVIEW_BY_ID",
+    (etoId: string, routeMatch: match<TEtoViewByIdMatch>) => ({
+      etoId,
       routeMatch,
     }),
   ),

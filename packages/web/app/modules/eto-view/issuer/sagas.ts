@@ -6,7 +6,7 @@ import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions, TActionFromCreator } from "../../actions";
 import { loadIssuerEto } from "../../eto-flow/sagas";
 import { selectIssuerEtoWithCompanyAndContract } from "../../eto-flow/selectors";
-import { loadEtoWithCompanyAndContract } from "../../eto/sagas";
+import { loadEtoWithCompanyAndContract, loadEtoWithCompanyAndContractById } from "../../eto/sagas";
 import { TEtoWithCompanyAndContractReadonly } from "../../eto/types";
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import {
@@ -86,7 +86,45 @@ export function* loadIssuerEtoPreview(
   }
 }
 
+export function* loadIssuerPreviewByIdEtoView(
+  { logger, notificationCenter }: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.etoView.loadIssuerPreviewEtoViewById>,
+): Iterator<any> {
+  try {
+    const { payload } = action;
+    const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
+      loadEtoWithCompanyAndContractById,
+      payload.etoId,
+    );
+
+    if (eto) {
+      const campaignOverviewData: TCampaignOverviewData = yield call(
+        calculateCampaignOverviewData,
+        payload.routeMatch,
+        eto,
+      );
+
+      yield put(
+        actions.etoView.setEtoViewData({
+          eto,
+          campaignOverviewData,
+          etoViewType: EEtoViewType.ETO_VIEW_ISSUER_PREVIEW,
+        }),
+      );
+    }
+  } catch (e) {
+    logger.error("Could not load eto", e);
+    notificationCenter.error(createMessage(EtoMessage.COULD_NOT_LOAD_ETO));
+    yield put(actions.routing.goToDashboard());
+  }
+}
+
 export function* etoViewIssuerSagas(): any {
   yield fork(neuTakeEvery, actions.etoView.loadIssuerEtoView, loadIssuerEtoView);
   yield fork(neuTakeEvery, actions.etoView.loadIssuerPreviewEtoView, loadIssuerEtoPreview);
+  yield fork(
+    neuTakeEvery,
+    actions.etoView.loadIssuerPreviewEtoViewById,
+    loadIssuerPreviewByIdEtoView,
+  );
 }

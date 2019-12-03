@@ -22,7 +22,7 @@ function* loadInvestorEtoViewInternal(
 
   const userIsFullyVerified = yield select(selectIsUserVerifiedOnBlockchain);
 
-  yield put(actions.eto.verifyEtoAccess(eto, true));
+  yield put(actions.eto.verifyEtoAccess(eto, userIsFullyVerified));
 
   const campaignOverviewData: TCampaignOverviewData = yield call(
     calculateCampaignOverviewData,
