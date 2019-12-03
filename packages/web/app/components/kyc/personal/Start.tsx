@@ -5,7 +5,6 @@ import { Col, Row } from "reactstrap";
 import { compose } from "redux";
 
 import {
-  EKycRequestType,
   IKycIndividualData,
   KycPersonalDataSchemaRequiredWithAdditionalData,
 } from "../../../lib/api/kyc/KycApi.interfaces";
@@ -34,9 +33,12 @@ import {
   NONE_KEY,
   unboolify,
 } from "../../shared/forms";
+import { EKycUploadType } from "../../shared/MultiFileUpload";
 import { Notification } from "../../shared/notification-widget/Notification";
 import { KYCAddDocuments } from "../shared/AddDocuments";
 import { KycStep } from "../shared/KycStep";
+
+import * as styles from "./Start.module.scss";
 
 const GENERIC_SHORT_ANSWERS = {
   [NONE_KEY]: <FormattedMessage id="form.select.please-select" />,
@@ -132,7 +134,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
           )}
           {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
             <KYCAddDocuments
-              uploadType={EKycRequestType.US_ACCREDITATION}
+              uploadType={EKycUploadType.US_ACCREDITATION}
               /* TODO: Remove in future this is temporary solution for uploading documents
                 which is not working without saved form first */
               onEnter={actions.kyc.kycSubmitPersonalData(boolify(values), true)}
@@ -141,9 +143,10 @@ const KYCForm: React.FunctionComponent<TProps> = ({
           )}
         </>
       )}
-      <div className="my-4">
+      <div className={styles.buttons}>
         <Button
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.OUTLINE}
+          className={styles.button}
           type="button"
           data-test-id="kyc-personal-start-go-back"
           onClick={props.goBack}
@@ -152,6 +155,8 @@ const KYCForm: React.FunctionComponent<TProps> = ({
         </Button>
         <Button
           type="submit"
+          className={styles.button}
+          layout={EButtonLayout.PRIMARY}
           disabled={
             uploadedFilesLoading ||
             !props.isValid ||

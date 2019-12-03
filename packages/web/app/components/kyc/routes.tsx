@@ -4,6 +4,7 @@ const parentRoutePath = appRoutes.kyc;
 
 export const kycRoutes = {
   start: parentRoutePath + "/start",
+  success: parentRoutePath + "/success",
 
   // private
   individualStart: parentRoutePath + "/personal/start",

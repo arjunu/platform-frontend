@@ -5,6 +5,7 @@ import { compose } from "redux";
 import { EKycInstantIdProvider } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import {
+  selectKycInstantIdProvider,
   selectKycRecommendedInstantIdProvider,
   selectKycSupportedInstantIdProviders,
 } from "../../../modules/kyc/selectors";
@@ -21,12 +22,18 @@ import * as styles from "./DocumentVerification.module.scss";
 interface IStateProps {
   supportedInstantIdProviders: ReadonlyArray<EKycInstantIdProvider> | undefined;
   recommendedInstantIdProvider?: EKycInstantIdProvider;
+  currentProvider?: EKycInstantIdProvider;
 }
 
 interface IDispatchProps {
   onStartIdNow: () => void;
   onManualVerification: () => void;
   goBack: () => void;
+}
+
+interface IRecommendedProps {
+  recommendedInstantIdProvider: EKycInstantIdProvider;
+  currentProvider?: EKycInstantIdProvider;
 }
 
 const selectProviderLogo = (provider: EKycInstantIdProvider) => {
@@ -85,15 +92,18 @@ const showManualVerification = () => {
   return enabledProviders && enabledProviders.includes("manual");
 };
 
-const KycPersonalDocumentVerificationRecomended: React.FunctionComponent<Required<
-  Pick<IStateProps, "recommendedInstantIdProvider">
-> &
-  OmitKeys<IDispatchProps, "goBack">> = ({ recommendedInstantIdProvider, ...dispatchers }) => (
+const KycPersonalDocumentVerificationRecomended: React.FunctionComponent<IRecommendedProps &
+  OmitKeys<IDispatchProps, "goBack">> = ({
+  recommendedInstantIdProvider,
+  currentProvider,
+  ...dispatchers
+}) => (
   <>
     <p className={styles.label}>
       <FormattedMessage id="kyc.personal.document-verification.recommended" />
     </p>
     <VerificationMethod
+      disabled={currentProvider && currentProvider !== recommendedInstantIdProvider}
       onClick={selectProviderAction(recommendedInstantIdProvider, dispatchers)}
       logo={selectProviderLogo(recommendedInstantIdProvider)}
       text={selectProviderText(recommendedInstantIdProvider)}
@@ -110,6 +120,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
   supportedInstantIdProviders,
   recommendedInstantIdProvider,
   goBack,
+  currentProvider,
   ...dispatchers
 }) => {
   const enabledInstantIdProviders = getEnabledInstatnIdProviders(supportedInstantIdProviders);
@@ -124,6 +135,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
 
       {recommendedInstantIdProvider && (
         <KycPersonalDocumentVerificationRecomended
+          currentProvider={currentProvider}
           recommendedInstantIdProvider={recommendedInstantIdProvider}
           {...dispatchers}
         />
@@ -134,17 +146,19 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
           .map(provider => (
             <VerificationMethod
               key={provider}
+              disabled={currentProvider && provider !== currentProvider}
               onClick={selectProviderAction(provider, dispatchers)}
               logo={selectProviderLogo(provider)}
               text={selectProviderText(provider)}
               name={provider}
             />
           ))}
-      <div className="my-4">
+      <div className={styles.buttons}>
         <Button
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.OUTLINE}
+          className={styles.button}
           type="button"
-          data-test-id="kyc-personal-start-go-back"
+          data-test-id="kyc-personal-verification-go-back"
           onClick={goBack}
         >
           <FormattedMessage id="form.back" />
@@ -152,9 +166,11 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
 
         {showManualVerification && (
           <Button
-            layout={EButtonLayout.SECONDARY}
+            disabled={!!currentProvider}
+            layout={EButtonLayout.GHOST}
+            className={styles.button}
             type="button"
-            data-test-id="kyc-personal-start-manual"
+            data-test-id="kyc-personal-verification-manual"
             onClick={dispatchers.onManualVerification}
           >
             <FormattedMessage id="kyc.personal.verify.manual" />
@@ -170,6 +186,7 @@ export const KycPersonalDocumentVerification = compose<React.FunctionComponent>(
     stateToProps: state => ({
       supportedInstantIdProviders: selectKycSupportedInstantIdProviders(state),
       recommendedInstantIdProvider: selectKycRecommendedInstantIdProvider(state),
+      currentProvider: selectKycInstantIdProvider(state),
     }),
     dispatchToProps: dispatch => ({
       onStartIdNow: () => dispatch(actions.kyc.kycStartInstantId()),

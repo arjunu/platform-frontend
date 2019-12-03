@@ -5,7 +5,6 @@ import { Col, Row } from "reactstrap";
 import { compose } from "redux";
 
 import {
-  EKycRequestType,
   IKycIndividualData,
   KycPersonalAddressSchemaRequired,
 } from "../../../lib/api/kyc/KycApi.interfaces";
@@ -23,8 +22,11 @@ import { EButtonLayout } from "../../shared/buttons/Button";
 import { boolify, FormDeprecated, FormField, unboolify } from "../../shared/forms";
 import { FormSelectCountryField } from "../../shared/forms/fields/FormSelectCountryField.unsafe";
 import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
+import { EKycUploadType } from "../../shared/MultiFileUpload";
 import { KYCAddDocuments } from "../shared/AddDocuments";
 import { KycStep } from "../shared/KycStep";
+
+import * as styles from "./Start.module.scss";
 
 interface IStateProps {
   currentValues?: IKycIndividualData;
@@ -99,23 +101,26 @@ const KYCForm: React.FunctionComponent<TProps> = ({
       </Col>
     </Row>
 
-    <KYCAddDocuments uploadType={EKycRequestType.INDIVIDUAL} isLoading={props.isSavingForm} />
+    <KYCAddDocuments uploadType={EKycUploadType.PROOF_OF_ADDRESS} isLoading={props.isSavingForm} />
 
-    <div className="my-4">
+    <div className={styles.buttons}>
       <Button
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.OUTLINE}
+        className={styles.button}
         type="button"
-        data-test-id="kyc-personal-start-go-back"
+        data-test-id="kyc-personal-address-go-back"
         onClick={props.goBack}
       >
         <FormattedMessage id="form.back" />
       </Button>
       <Button
         type="submit"
+        layout={EButtonLayout.PRIMARY}
+        className={styles.button}
         disabled={
           uploadedFilesLoading || !props.isValid || props.loadingData || uploadedFiles.length === 0
         }
-        data-test-id="kyc-personal-start-submit-form"
+        data-test-id="kyc-personal-address-submit-form"
       >
         <FormattedMessage id="form.save-and-submit" />
       </Button>

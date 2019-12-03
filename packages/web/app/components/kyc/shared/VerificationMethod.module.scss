@@ -9,6 +9,11 @@
   background-color: $neu-white-two;
   margin-bottom: px-to-rem(16px);
   align-items: center;
+  text-align: left;
+
+  &:disabled {
+    opacity: .4;
+  }
 }
 
 .image {
@@ -21,6 +26,7 @@
 .icon {
   @include rect(24px);
 
+  color: transparent;
   margin-right: px-to-rem(30px);
   margin-left: px-to-rem(20px);
 }

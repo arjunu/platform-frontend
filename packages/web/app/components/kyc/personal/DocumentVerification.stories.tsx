@@ -44,4 +44,13 @@ storiesOf("organisms|KYC/DocumentVerification", module)
       onManualVerification={action("MANUAL")}
       goBack={action("GO_BACK")}
     />
+  ))
+  .add("with started verification", () => (
+    <KycPersonalDocumentVerificationComponent
+      currentProvider={EKycInstantIdProvider.ID_NOW}
+      supportedInstantIdProviders={supportedInstantIdProviders}
+      onStartIdNow={action("ID_NOW")}
+      onManualVerification={action("MANUAL")}
+      goBack={action("GO_BACK")}
+    />
   ));

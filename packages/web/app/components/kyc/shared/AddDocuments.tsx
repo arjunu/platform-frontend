@@ -8,7 +8,7 @@ import { onEnterAction } from "../../../utils/OnEnterAction";
 import { FunctionWithDeps } from "../../../utils/opaque-types/types";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
-import { MultiFileUpload } from "../../shared/MultiFileUpload";
+import { EKycUploadType, MultiFileUpload } from "../../shared/MultiFileUpload";
 
 interface IStateProps {
   fileUploading: boolean;
@@ -20,7 +20,7 @@ interface IDispatchProps {
 }
 
 interface IOwnProps {
-  uploadType: EKycRequestType;
+  uploadType: EKycRequestType | EKycUploadType;
   onEnter?: AppActionTypes | FunctionWithDeps;
   isLoading?: boolean;
 }
@@ -33,7 +33,7 @@ export const KYCAddDocumentsComponent: React.FunctionComponent<IStateProps &
   ) : (
     <MultiFileUpload
       data-test-id={
-        uploadType === EKycRequestType.US_ACCREDITATION
+        uploadType === EKycUploadType.US_ACCREDITATION
           ? "kyc-personal-accreditation-upload-dropzone"
           : undefined
       }
@@ -49,26 +49,36 @@ export const KYCAddDocumentsComponent: React.FunctionComponent<IStateProps &
 export const KYCAddDocuments = compose<React.FunctionComponent<IOwnProps>>(
   appConnect<IStateProps, IDispatchProps, IOwnProps>({
     stateToProps: (state, ownProps) => ({
-      files: [EKycRequestType.INDIVIDUAL, EKycRequestType.US_ACCREDITATION].includes(
-        ownProps.uploadType,
-      )
+      files: [
+        EKycRequestType.INDIVIDUAL,
+        EKycUploadType.US_ACCREDITATION,
+        EKycUploadType.PROOF_OF_ADDRESS,
+      ].includes(ownProps.uploadType)
         ? state.kyc.individualFiles
         : state.kyc.businessFiles,
-      filesLoading: [EKycRequestType.INDIVIDUAL, EKycRequestType.US_ACCREDITATION].includes(
-        ownProps.uploadType,
-      )
+      filesLoading: [
+        EKycRequestType.INDIVIDUAL,
+        EKycUploadType.US_ACCREDITATION,
+        EKycUploadType.PROOF_OF_ADDRESS,
+      ].includes(ownProps.uploadType)
         ? !!state.kyc.individualFilesLoading
         : !!state.kyc.businessFilesLoading,
-      fileUploading: [EKycRequestType.INDIVIDUAL, EKycRequestType.US_ACCREDITATION].includes(
-        ownProps.uploadType,
-      )
+      fileUploading: [
+        EKycRequestType.INDIVIDUAL,
+        EKycUploadType.US_ACCREDITATION,
+        EKycUploadType.PROOF_OF_ADDRESS,
+      ].includes(ownProps.uploadType)
         ? !!state.kyc.individualFileUploading
         : !!state.kyc.businessFileUploading,
       title: "",
     }),
     dispatchToProps: (dispatch, ownProps) => ({
       onDropFile: (file: File) =>
-        [EKycRequestType.INDIVIDUAL, EKycRequestType.US_ACCREDITATION].includes(ownProps.uploadType)
+        [
+          EKycRequestType.INDIVIDUAL,
+          EKycUploadType.US_ACCREDITATION,
+          EKycUploadType.PROOF_OF_ADDRESS,
+        ].includes(ownProps.uploadType)
           ? dispatch(actions.kyc.kycUploadIndividualDocument(file))
           : dispatch(actions.kyc.kycUploadBusinessDocument(file)),
     }),

@@ -15,6 +15,7 @@ import { KYCPersonalStart } from "./personal/Start";
 import { KYCPersonalUpload } from "./personal/Upload";
 import { kycRoutes } from "./routes";
 import { KYCStart } from "./start/Start";
+import { KycSuccess } from "./Success";
 
 interface IStateProps {
   userType?: EUserType;
@@ -23,6 +24,7 @@ interface IStateProps {
 export const NormalKycRouter: React.FunctionComponent = () => (
   <SwitchConnected>
     <Route path={kycRoutes.start} component={KYCStart} exact />
+    <Route path={kycRoutes.success} component={KycSuccess} exact />
 
     {/* Personal */}
     <Route path={kycRoutes.individualStart} component={KYCPersonalStart} />

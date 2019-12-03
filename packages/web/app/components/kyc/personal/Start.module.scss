@@ -1,14 +1,3 @@
-.label {
-  @include nds-button-label;
-
-  color: $neu-charcoal-grey;
-  font-size: px-to-rem(10px);
-  line-height: 1.6;
-  letter-spacing: px-to-rem(2px);
-  text-transform: uppercase;
-  margin-bottom: px-to-rem(3px);
-}
-
 .buttons {
   @include media-breakpoint-down(sm) {
     flex-direction: column;

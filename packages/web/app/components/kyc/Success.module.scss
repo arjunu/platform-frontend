@@ -1,12 +1,18 @@
-.label {
-  @include nds-button-label;
+.title {
+  @include nds-headline-2;
 
   color: $neu-charcoal-grey;
-  font-size: px-to-rem(10px);
-  line-height: 1.6;
-  letter-spacing: px-to-rem(2px);
-  text-transform: uppercase;
-  margin-bottom: px-to-rem(3px);
+  margin: {
+    top: px-to-rem(32px);
+    bottom: px-to-rem(20px);
+  }
+}
+
+.text {
+  @include nds-body;
+
+  color: $neu-shuttle-gray;
+  margin-bottom: px-to-rem(22px);
 }
 
 .buttons {

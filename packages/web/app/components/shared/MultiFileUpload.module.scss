@@ -1,6 +1,17 @@
 $_dropzone-size-xl: 200px;
 $_dropzone-size-sm: 120px;
 
+.title {
+  @include nds-body;
+  color: $neu-greyish-brown;
+}
+
+.hint {
+  @include nds-body;
+
+  color: $neu-slate-grey;
+}
+
 .upload {
   @include media-breakpoint-up(md) {
     flex-direction: row;
@@ -9,18 +20,8 @@ $_dropzone-size-sm: 120px;
   display: flex;
   flex-direction: column;
 
-  .title {
-    @include font-default;
-    color: $neu-greyish-brown;
-  }
-
-  .hint {
-    @include font-default;
-    color: $neu-slate-grey;
-  }
-
   .upload-informations-wrapper {
-    @include nds-label;
+    @include nds-button-label;
 
     @include media-breakpoint-up(md) {
       margin-left: px-to-rem(24px);
@@ -77,10 +78,6 @@ $_dropzone-size-sm: 120px;
   }
 }
 
-.title {
-  color: $neu-greyish-brown;
-}
-
 .file-info {
   color: $neu-pale-grey;
   font-size: 10px;
@@ -119,7 +116,7 @@ $_dropzone-size-sm: 120px;
 }
 
 .dropzone-wrapper {
-  display: flex;
+  width: px-to-rem(162px);
 }
 
 .requirements-title {
@@ -128,14 +125,10 @@ $_dropzone-size-sm: 120px;
 }
 
 .upload-container {
-  @include media-breakpoint-up(md) {
-    margin-bottom: px-to-rem(24px);
-  }
   display: flex;
 }
 
 .uploader-info {
-  flex-shrink: 3;
   margin-left: px-to-rem(12px);
 }
 

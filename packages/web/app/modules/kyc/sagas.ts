@@ -188,7 +188,7 @@ function* submitPersonalAddress(
       ...data,
       // TODO: Remove when not needed. This adds additional fields required by backend
       isHighIncome: false,
-      isPoliticallyExposed: false
+      isPoliticallyExposed: false,
     });
 
     yield put(
@@ -260,15 +260,8 @@ function* submitIndividualRequestEffect({ apiKycService }: TGlobalDependencies):
   yield put(actions.kyc.kycUpdateIndividualRequestState(true));
   const result: IHttpResponse<IKycRequestState> = yield apiKycService.submitIndividualRequest();
   yield put(actions.kyc.kycUpdateIndividualRequestState(false, result.body));
-  yield put(
-    actions.genericModal.showGenericModal(
-      createMessage(KycFlowMessage.KYC_VERIFICATION_TITLE),
-      createMessage(KycFlowMessage.KYC_VERIFICATION_DESCRIPTION),
-      undefined,
-      createMessage(KycFlowMessage.KYC_SETTINGS_BUTTON),
-      actions.routing.goToProfile(),
-    ),
-  );
+
+  yield put(actions.routing.goToKYCSuccess());
 }
 
 function* submitIndividualRequest({

@@ -5,7 +5,6 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { externalRoutes } from "../../../config/externalRoutes";
 import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { TDataTestId } from "../../../types";
-import { getHostname } from "../../../utils/StringUtils";
 import { ButtonBase } from "../buttons";
 import { ButtonClose } from "../buttons/CommonButtons";
 import { ExternalLink } from "../links/ExternalLink";

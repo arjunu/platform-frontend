@@ -38,10 +38,7 @@ export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus => {
         ? EKycRequestStatus.PENDING
         : state.kyc.businessRequestState!.status;
     case EKycRequestType.INDIVIDUAL:
-      return state.kyc.individualRequestState!.status === EKycRequestStatus.ACCEPTED &&
-        !selectIsClaimsVerified(state)
-        ? EKycRequestStatus.PENDING
-        : state.kyc.individualRequestState!.status;
+      return state.kyc.status!.status;
     default:
       return EKycRequestStatus.DRAFT;
   }
@@ -95,18 +92,10 @@ export const selectPendingKycRequestType = (
 };
 
 export const selectKycRequestType = (state: IAppState): EKycRequestType | undefined => {
-  if (
-    state.kyc.individualRequestState &&
-    state.kyc.individualRequestState.status !== EKycRequestStatus.DRAFT
-  ) {
-    return EKycRequestType.INDIVIDUAL;
+  if (state.kyc.status) {
+    return state.kyc.status.type;
   }
-  if (
-    state.kyc.businessRequestState &&
-    state.kyc.businessRequestState.status !== EKycRequestStatus.DRAFT
-  ) {
-    return EKycRequestType.BUSINESS;
-  }
+
   return undefined;
 };
 
@@ -215,4 +204,9 @@ export const selectKycSupportedInstantIdProviders = createSelector(
 export const selectKycRecommendedInstantIdProvider = createSelector(
   selectKycStatus,
   kycStatus => kycStatus && kycStatus.recommendedInstantIdProvider,
+);
+
+export const selectKycInstantIdProvider = createSelector(
+  selectKycStatus,
+  kycStatus => kycStatus && kycStatus.instantIdProvider,
 );

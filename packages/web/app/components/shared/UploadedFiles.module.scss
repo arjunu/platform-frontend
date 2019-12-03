@@ -1,5 +1,5 @@
 .file {
-  @include nds-label;
+  @include nds-button-label;
   font-weight: 400;
   color: $neu-charcoal-grey;
   display: flex;
@@ -11,6 +11,7 @@
 
   &:last-of-type {
     border-bottom: 0;
+    margin-bottom: px-to-rem(16px);
   }
 
   > * {

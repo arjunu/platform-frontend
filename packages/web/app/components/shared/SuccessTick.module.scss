@@ -11,7 +11,7 @@ $scale-factor: .54;
 .sa {
   @include rect($size);
 
-  background-color: #fff;
+  background-color: transparent;
   transform: scale($scale-factor);
   transform-origin: top left;
 

@@ -8,7 +8,7 @@ import { Button, EButtonLayout, EIconPosition } from "./buttons";
 import { EInlineIconFill } from "./icons/InlineIcon";
 import { ELoadingIndicator, LoadingIndicator } from "./loading-indicator/LoadingIndicator";
 
-import * as upload from "../../assets/img/inline_icons/cloud.svg";
+import * as upload from "../../assets/img/inline_icons/upload.svg";
 import * as styles from "./Dropzone.module.scss";
 
 // If we try to reexport typescript will have an error

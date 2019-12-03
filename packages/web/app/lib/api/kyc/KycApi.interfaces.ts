@@ -13,8 +13,6 @@ export enum EKycRequestType {
   NONE = "none",
   BUSINESS = "business",
   INDIVIDUAL = "individual",
-  // TODO: Check when request type is returned as `us_accreditation`
-  US_ACCREDITATION = "us_accreditation",
 }
 
 export enum EKycInstantIdProvider {
@@ -95,10 +93,10 @@ export interface IKycIndividualData extends IKycPerson {
 
 export const KycStatusSchema = YupTS.object({
   inProhibitedRegion: YupTS.boolean(),
-  instantIdProvider: YupTS.string(),
+  instantIdProvider: YupTS.string<EKycInstantIdProvider>(),
   originCountry: YupTS.string<ECountries>(),
   recommendedInstantIdProvider: YupTS.string<EKycInstantIdProvider>(),
-  status: YupTS.string(),
+  status: YupTS.string<EKycRequestStatus>(),
   supportedInstantIdProviders: YupTS.array(YupTS.string<EKycInstantIdProvider>()),
   type: YupTS.string<EKycRequestType>(),
 });

@@ -8,6 +8,7 @@ import * as onfido from "../../../assets/img/instant-id/onfido.svg";
 
 storiesOf("molecules|KYC/VerificationMethod", module).add("default", () => (
   <VerificationMethod
+    name={"onfido"}
     logo={onfido}
     onClick={action("START_ONFIDO")}
     text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem corporis debitis ea eligendi expedita temporibus?"
