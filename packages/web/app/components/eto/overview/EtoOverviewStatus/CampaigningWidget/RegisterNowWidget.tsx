@@ -56,7 +56,7 @@ const RegisterNowWidget: React.FunctionComponent<TExternalProps> = ({
       }
     >
       <ButtonLink
-        innerClassName="mt-3"
+        className="mt-3"
         to={appRoutes.register}
         data-test-id="logged-out-campaigning-register"
         target={isEmbedded ? "_blank" : ""}

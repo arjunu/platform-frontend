@@ -18,8 +18,7 @@ import { selectLiquidEuroTokenBalance } from "../../../../modules/wallet/selecto
 import { doesUserHaveEnoughNEuro, doesUserWithdrawMinimal } from "../../../../modules/web3/utils";
 import { appConnect } from "../../../../store";
 import { onEnterAction } from "../../../../utils/OnEnterAction";
-import { Button, ButtonSize, EButtonLayout } from "../../../shared/buttons/Button";
-import { ButtonArrowRight } from "../../../shared/buttons/index";
+import { ButtonArrowRight, ButtonInline } from "../../../shared/buttons";
 import { FormatNumber } from "../../../shared/formatters/FormatNumber";
 import {
   ECurrency,
@@ -79,9 +78,7 @@ const getValidators = (minAmount: string, neuroAmount: string) =>
         .moreThan(0)
         .test(
           "isEnoughNEuro",
-          ((
-            <FormattedMessage id="bank-transfer.redeem.init.errors.value-higher-than-balance" />
-          ) as unknown) as string,
+          <FormattedMessage id="bank-transfer.redeem.init.errors.value-higher-than-balance" />,
           (value: string) => doesUserHaveEnoughNEuro(value, neuroAmount),
         )
         .test(
@@ -147,18 +144,18 @@ const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
             <FormLabel for="amount" className={styles.label}>
               <FormattedMessage id="bank-transfer.redeem.init.redeem-amount" />
             </FormLabel>
-            <Button
-              data-test-id="bank-transfer.reedem-init.redeem-whole-balance"
-              className={styles.linkButton}
-              onClick={() => {
-                setFieldValue("amount", formatEuroValueToString(neuroAmount), true);
-                setFieldTouched("amount", true, true);
-              }}
-              layout={EButtonLayout.INLINE}
-              size={ButtonSize.SMALL}
-            >
-              <FormattedMessage id="bank-transfer.redeem.init.entire-wallet" />
-            </Button>
+            <small>
+              <ButtonInline
+                data-test-id="bank-transfer.reedem-init.redeem-whole-balance"
+                className={styles.linkButton}
+                onClick={() => {
+                  setFieldValue("amount", formatEuroValueToString(neuroAmount), true);
+                  setFieldTouched("amount", true, true);
+                }}
+              >
+                <FormattedMessage id="bank-transfer.redeem.init.entire-wallet" />
+              </ButtonInline>
+            </small>
           </section>
 
           <FormDeprecated>

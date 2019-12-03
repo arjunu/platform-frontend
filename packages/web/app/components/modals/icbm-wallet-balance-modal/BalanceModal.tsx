@@ -43,7 +43,7 @@ const BalanceFooter: React.FunctionComponent<{
     <Button
       onClick={startMigration}
       disabled={disabled}
-      layout={EButtonLayout.SECONDARY}
+      layout={EButtonLayout.GHOST}
       data-test-id="modals.icbm-balance-modal.balance-footer.generate-transaction"
     >
       <FormattedMessage id="settings.modal.icbm-wallet-balance.button" />

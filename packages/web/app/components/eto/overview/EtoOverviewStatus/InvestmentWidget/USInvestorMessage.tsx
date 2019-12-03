@@ -18,7 +18,7 @@ const USInvestorMessage: React.FunctionComponent = () => (
     }
   >
     <ButtonLink
-      innerClassName="mt-3"
+      className="mt-3"
       to={appRoutes.dashboard}
       data-test-id="investment-widget.us-investor-message.go-to-dashboard"
     >

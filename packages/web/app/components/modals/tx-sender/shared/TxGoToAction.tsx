@@ -5,7 +5,7 @@ import { compose } from "recompose";
 import { actions } from "../../../../modules/actions";
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
-import { ButtonArrowRight, EButtonLayout } from "../../../shared/buttons/Button";
+import { ButtonArrowRight, EButtonLayout } from "../../../shared/buttons";
 
 interface IExternalProps {
   type: ETxSenderType;
@@ -23,7 +23,7 @@ const TxGoToActionLayout: React.FunctionComponent<TComponentProps> = ({ type, go
       return (
         <ButtonArrowRight
           onClick={goToWallet}
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           data-test-id="modals.shared.tx-action.go-to-wallet"
         >
           <FormattedMessage id="modals.shared.tx-action.go-to-wallet" />

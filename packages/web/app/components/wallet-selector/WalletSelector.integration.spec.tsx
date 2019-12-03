@@ -23,10 +23,10 @@ import { Neumark } from "../../lib/contracts/Neumark";
 import { Storage } from "../../lib/persistence/Storage";
 import {
   BrowserWallet,
-  BrowserWalletConnector,
   BrowserWalletLockedError,
   BrowserWalletMissingError,
 } from "../../lib/web3/browser-wallet/BrowserWallet";
+import { BrowserWalletConnector } from "../../lib/web3/browser-wallet/BrowserWalletConnector";
 import { ContractsService } from "../../lib/web3/ContractsService";
 import { LedgerWalletConnector } from "../../lib/web3/ledger-wallet/LedgerConnector";
 import { LedgerWallet } from "../../lib/web3/ledger-wallet/LedgerWallet";

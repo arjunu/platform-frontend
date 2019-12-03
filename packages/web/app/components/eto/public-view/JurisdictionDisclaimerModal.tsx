@@ -5,7 +5,7 @@ import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { ECountries } from "../../../utils/enums/countriesEnum";
 import { Message } from "../../modals/message/Message";
-import { ButtonArrowRight, EButtonLayout } from "../../shared/buttons/Button";
+import { ButtonArrowRight, EButtonLayout } from "../../shared/buttons";
 import { VALUES } from "../../shared/forms/fields/FormSelectCountryField.unsafe";
 
 import * as cityIcon from "../../../assets/img/eto/city.png";
@@ -39,7 +39,7 @@ const JurisdicitonDisclaimerModalLayout: React.FunctionComponent<IExternalProps 
     </ButtonArrowRight>
     <ButtonArrowRight
       onClick={confirm}
-      layout={EButtonLayout.SECONDARY}
+      layout={EButtonLayout.GHOST}
       data-test-id="jurisdiction-disclaimer-modal.confirm"
     >
       <FormattedMessage id="form.select.no-i-am-not" />

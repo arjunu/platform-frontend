@@ -7,7 +7,7 @@ import { appConnect } from "../../../store";
 import { withContainer } from "../../../utils/withContainer.unsafe";
 import { EContentWidth } from "../../layouts/Content";
 import { Layout } from "../../layouts/Layout";
-import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
 import { Heading } from "../../shared/Heading";
@@ -26,7 +26,7 @@ const UnsubscriptionSuccessLayout: React.FunctionComponent<IDispatchProps> = ({ 
     <p className={styles.description}>
       <FormattedMessage id="settings.unsubscription.success.description" />
     </p>
-    <Button onClick={goToHome} layout={EButtonLayout.PRIMARY} theme={EButtonTheme.NEON}>
+    <Button onClick={goToHome} layout={EButtonLayout.PRIMARY}>
       <FormattedMessage id="settings.unsubscription.visit" />
     </Button>
   </section>

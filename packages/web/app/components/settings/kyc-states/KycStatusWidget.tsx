@@ -114,7 +114,7 @@ const ActionButton = ({
   if (requestStatus === EKycRequestStatus.ACCEPTED) {
     return (
       <Button
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         onClick={onGoToDashboard}
@@ -129,7 +129,7 @@ const ActionButton = ({
     return (
       <Button
         id="start-kyc-process"
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         onClick={onGoToKycHome}
@@ -144,7 +144,7 @@ const ActionButton = ({
   if (requestStatus === EKycRequestStatus.PENDING) {
     return (
       <Button
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         onClick={onGoToKycHome}
@@ -162,7 +162,7 @@ const ActionButton = ({
     return (
       <Button
         id="continue-kyc-idnow-verification"
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         onClick={onStartIdNow}

@@ -29,10 +29,7 @@ const DataRow: React.FunctionComponent<IDataRowProps & CommonHtmlProps & TDataTe
     <span className={cn(styles.copyToClipboard, { [styles.value]: !noOverflow })}>
       <span data-test-id={dataTestId}>{value}</span>
       {clipboardCopyValue && (
-        <CopyToClipboardButton
-          className={cn(styles.copyToClipboard, "ml-2")}
-          value={clipboardCopyValue}
-        />
+        <CopyToClipboardButton className={"ml-2"} value={clipboardCopyValue} />
       )}
     </span>
   </section>

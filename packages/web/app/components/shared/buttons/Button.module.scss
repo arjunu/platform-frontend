@@ -1,296 +1,173 @@
-// sass-lint:disable force-pseudo-nesting
-// sass-lint:disable nesting-depth
-
-$_hover-color: $neu-piss-yellow;
-$_focus-color: $neu-piss-yellow;
-$_active-color: lighten($_hover-color, 20%);
-
 .button {
   $button: &;
 
-  background: transparent;
-  border: 0;
-  margin: 0;
-  padding: 0;
+  @include nds-button-label;
 
-  color: inherit;
-  font: inherit;
-  line-height: inherit;
-
-  &:focus,
-  .content:focus {
-    outline: none;
+  @include media-breakpoint-up(sm) {
+    min-width: px-to-rem(140px);
   }
 
-  &:focus {
-    .content {
-      box-shadow: 0 0 px-to-rem(3px) px-to-rem(6px) $_focus-color;
-    }
+  color: $neu-charcoal-grey;
+  border-radius: $nds-border-radius;
+
+  flex-shrink: 0;
+  padding: px-to-rem(8px) px-to-rem(20px) px-to-rem(7px);
+
+  transition: background-color 200ms ease-out, box-shadow 200ms ease-out, color 200ms ease-out;
+
+  &:disabled {
+    color: $neu-gull-gray;
   }
 
-  > .content {
-    align-items: center;
-    display: flex;
-    flex-shrink: 0;
-    justify-content: center;
-    padding: px-to-rem(8px) px-to-rem(20px);
-    position: relative;
-    text-decoration: inherit;
-    transition: 200ms ease-out background-color, color;
-  }
+  // Layout types (eg. primary, secondary)
+  // @note If we need to add new button design please add it as a separate layout type
+  //       even if it's small change to the existing one that can be done through prop (e.g theme prop)
 
-  &:disabled,
-  &-primary:disabled, // sass-lint:disable-line force-pseudo-nesting
-  &-secondary:disabled, // sass-lint:disable-line force-pseudo-nesting
-  &-inline:disabled, // sass-lint:disable-line force-pseudo-nesting
-  &-simple:disabled { // sass-lint:disable-line force-pseudo-nesting
-    color: $neu-pale-grey;
-    cursor: not-allowed;
+  &--primary {
+    $hover-box-shadow: rgba(20, 36, 49, .2);
 
-    &:hover,
-    &.is-active {
-      .content {
-        color: $neu-pale-grey;
-        background-color: transparent;
-        border-color: currentColor;
+    background: $neu-neon-yellow;
+    border: px-to-rem(1px) solid $neu-neon-yellow;
+
+    &:not(:disabled) {
+      &:hover {
+        box-shadow: 0 5px 10px 0 $hover-box-shadow;
       }
+
+      &:active,
+      &#{$button}--is-active {
+        background: $neu-bitter-lemon;
+        border-color: $neu-bitter-lemon;
+      }
+    }
+
+    &:disabled {
+      background: $neu-light-blue-grey-two;
+      border-color: $neu-light-blue-grey-two;
     }
   }
 
-  // types
-  &-primary {
-    @include font-button-default;
+  &--outline {
+    border: px-to-rem(1px) solid $neu-light-blue-grey-two;
 
-    font-weight: $font-weight-bold;
-    text-transform: uppercase;
-
-    .content {
-      @include media-breakpoint-up(sm) {
-        min-width: px-to-rem(138px);
+    &:not(:disabled) {
+      &:hover {
+        border-color: $neu-bitter-lemon;
       }
 
-      border: px-to-rem(2px) solid currentColor;
-      border-radius: inherit;
-    }
-
-    &:hover,
-    &.is-active {
-      .content {
-        background-color: $_hover-color;
-        border-color: $_hover-color;
-        color: $neu-white-two;
+      &:active,
+      &#{$button}--is-active {
+        background: $neu-bitter-lemon;
+        border-color: $neu-bitter-lemon;
       }
     }
 
-    &:active {
-      .content {
-        background-color: $_active-color;
-        border-color: $_active-color;
-        color: $neu-white-two;
-      }
-    }
-
-    &#{$button}-small {
-      @include font-button-small;
-
-      .content {
-        border: px-to-rem(1px) solid currentColor;
-      }
-    }
-
-    &#{$button}-huge {
-      border: px-to-rem(1px) solid currentColor;
-    }
-
-    &:global(.block) {
-      .content {
-        min-width: auto;
-      }
+    &:disabled {
+      background-color: $neu-light-blue-grey-two;
+      border-color: $neu-light-blue-grey-two;
     }
   }
 
-  &-secondary {
-    @include font-tab;
+  &--secondary {
+    border: px-to-rem(1px) solid $neu-very-light-blue;
+    background: $neu-very-light-blue;
 
-    font-weight: $font-weight-bold;
-    text-transform: uppercase;
-
-    &#{$button}-small {
-      @include font-label;
-      font-weight: $font-weight-bold;
-    }
-
-    &:hover,
-    &.is-active {
-      color: $_hover-color;
-    }
-
-    &:active {
-      color: $_active-color;
-    }
-
-    &#{$button}-neon {
-      &:disabled {
-        &,
-        &:hover,
-        & > .content {
-          color: $neu-gull-gray;
-          background-color: $neu-pale-grey;
-          border-radius: inherit;
-        }
+    &:not(:disabled) {
+      &:hover {
+        background: transparent;
+        border-color: $neu-bitter-lemon;
       }
-    }
-  }
 
-  &-simple {
-    @include font-label;
-
-    font-weight: normal;
-    text-align: inherit;
-    text-transform: inherit;
-
-    .content {
-      padding: 0;
-    }
-  }
-
-  &-inline {
-    &:hover,
-    &.is-active,
-    &:focus {
-      .content {
-        text-decoration: none;
+      &:active,
+      &#{$button}--is-active {
+        border-color: $neu-bitter-lemon;
+        background: $neu-bitter-lemon;
       }
     }
 
-    > .content {
-      padding: 0;
-      margin-top: 0;
-      justify-content: initial;
-      text-decoration: underline;
+    &:disabled {
+      background: $neu-light-blue-grey-two;
+    }
+  }
+
+  &--ghost {
+    border: px-to-rem(1px) solid transparent;
+
+    &:not(:disabled) {
+      &:hover {
+        background: $neu-very-light-blue;
+      }
+
+      &:active,
+      &#{$button}--is-active {
+        background: transparent;
+        color: $neu-bitter-lemon;
+      }
     }
   }
 
   // widths
-  &:global(.block) {
-    display: block;
+  &--block {
     width: 100%;
   }
 
-  &:global(.wide) {
-    min-width: px-to-rem(220px);
-  }
-
-  &:global(.no-padding) {
-    .content {
-      padding: 0;
-    }
-  }
-
   // sizes
-  &-small {
-    font-size: 80%;
-    font-weight: $font-weight-medium;
-
-    &:not(#{$button}-inline) > .content {
-      padding: px-to-rem(3px) px-to-rem(8px);
-    }
-  }
-
-  &-huge {
-    @include font-headline-medium;
-
-    min-width: px-to-rem(216px);
-
-    .content {
-      padding: px-to-rem(12px) px-to-rem(60px);
-      border: 0;
-    }
-  }
-
-  // themes
-  &-white {
-    color: $neu-white-two;
-  }
-
-  &-dark {
-    color: $neu-greyish-brown;
-  }
-
-  &-graphite {
-    color: $neu-slate-grey;
-  }
-
-  &-brand {
-    background-color: $neu-piss-yellow;
-    color: $neu-greyish-brown;
-
-    :local(.content) {
-      border-color: $neu-piss-yellow;
-    }
-  }
-
-  &-dark-no-border {
-    color: $neu-greyish-brown;
-
-    :local(.content) {
-      border-color: transparent;
-    }
-  }
-
-  &-neon {
-    background-color: $neu-neon-yellow;
-    color: $neu-greyish-brown;
-
-    :local(.content) {
-      border-color: $neu-neon-yellow;
+  &--small {
+    @include media-breakpoint-up(sm) {
+      min-width: px-to-rem(110px);
     }
 
-    &:hover {
-      color: $neu-greyish-brown;
-      background-color: $neu-bitter-lemon;
+    padding: px-to-rem(4px) px-to-rem(12px) px-to-rem(3px);
+  }
+
+  &--huge {
+    @include media-breakpoint-up(sm) {
+      min-width: px-to-rem(216px);
     }
 
-    &:disabled {
-      color: $neu-pale-grey;
-      background-color: transparent;
-
-      :local(.content) {
-        border-color: currentColor;
-      }
-    }
+    padding: px-to-rem(12px) px-to-rem(30px) px-to-rem(11px);
   }
 
-  &-silver {
-    color: $neu-slate-grey;
-  }
+  &--only-icon {
+    padding-left: px-to-rem(14px);
+    padding-right: px-to-rem(14px);
+    min-width: auto;
 
-  &-green {
-    color: $neu-seaweed;
-  }
-
-  &-blue {
-    color: $neu-blue;
-  }
-
-  // elements
-  &:global {
-    &.icon-before {
-      :global(.inline-icon) {
-        margin-right: 10px;
+    &#{$button}--ghost {
+      &:hover {
+        &:not(:disabled) {
+          background: transparent;
+          border-color: transparent;
+          color: $neu-bitter-lemon;
+        }
       }
     }
 
-    &.icon-after {
-      :global(.inline-icon) {
-        margin-left: 10px;
-      }
+    &#{$button}--small {
+      padding-left: px-to-rem(6px);
+      padding-right: px-to-rem(6px);
+    }
+
+    &#{$button}--huge {
+      padding-left: px-to-rem(14px);
+      padding-right: px-to-rem(14px);
     }
   }
 
-  :global(.inline-icon) {
-    color: currentColor;
-    height: px-to-rem(20px);
-    width: px-to-rem(20px);
+  &-icon {
+    height: 1.2em;
+    width: 1.2em;
+
+    &--before {
+      margin-right: .8em;
+    }
+
+    &--after {
+      margin-left: .8em;
+    }
+  }
+
+  &--no-padding {
+    padding: 0;
   }
 }

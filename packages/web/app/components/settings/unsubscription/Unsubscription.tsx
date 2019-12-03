@@ -11,7 +11,7 @@ import { isEmail } from "../../../utils/StringUtils";
 import { withContainer } from "../../../utils/withContainer.unsafe";
 import { EContentWidth } from "../../layouts/Content";
 import { Layout } from "../../layouts/Layout";
-import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
 import { Heading } from "../../shared/Heading";
@@ -47,7 +47,7 @@ const UnsubscriptionLayout: React.FunctionComponent<TComponentProps> = ({ email,
         tagName="span"
       />
     </p>
-    <Button layout={EButtonLayout.PRIMARY} theme={EButtonTheme.NEON} onClick={unsubscribe}>
+    <Button layout={EButtonLayout.PRIMARY} onClick={unsubscribe}>
       <FormattedMessage id="settings.unsubscription.button" />
     </Button>
   </section>
@@ -70,7 +70,7 @@ const UnsubscriptionInvalidLayout: React.FunctionComponent<TComponentProps> = ({
         }}
       />
     </p>
-    <Button onClick={goToHome} layout={EButtonLayout.PRIMARY} theme={EButtonTheme.NEON}>
+    <Button onClick={goToHome} layout={EButtonLayout.PRIMARY}>
       <FormattedMessage id="settings.unsubscription.visit" />
     </Button>
   </section>

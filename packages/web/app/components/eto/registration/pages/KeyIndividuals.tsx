@@ -20,7 +20,7 @@ import { EEtoFormTypes } from "../../../../modules/eto-flow/types";
 import { appConnect } from "../../../../store";
 import { TFormikConnect, TTranslatedString } from "../../../../types";
 import { getSchemaField, getValidationSchema, isRequired } from "../../../../utils/yupUtils";
-import { Button, ButtonIcon, EButtonLayout, EIconPosition } from "../../../shared/buttons";
+import { Button, EButtonLayout, EIconPosition } from "../../../shared/buttons";
 import { FormField, FormTextArea } from "../../../shared/forms";
 import { FormSingleFileUpload } from "../../../shared/forms/fields/FormSingleFileUpload";
 import { EMimeType } from "../../../shared/forms/fields/utils.unsafe";
@@ -93,11 +93,14 @@ const Individual: React.FunctionComponent<IIndividual> = ({
     <div className={localStyles.wrapper}>
       <FormHighlightGroup>
         {canRemove && (
-          <ButtonIcon
+          <Button
+            layout={EButtonLayout.GHOST}
+            iconProps={{
+              alt: <FormattedMessage id="common.remove" />,
+            }}
             svgIcon={closeIcon}
             onClick={onRemoveClick}
             className={localStyles.removeButton}
-            type="button"
           />
         )}
         <FormField
@@ -137,19 +140,23 @@ const Individual: React.FunctionComponent<IIndividual> = ({
         </fieldset>
       </FormHighlightGroup>
       <div>
-        <ButtonIcon
+        <Button
+          layout={EButtonLayout.GHOST}
+          iconProps={{
+            alt: <FormattedMessage id="button-icon.up" />,
+          }}
           onClick={() => swap(index, index - 1)}
-          type="button"
           disabled={index === 0}
           svgIcon={upIcon}
-          alt={<FormattedMessage id="button-icon.up" />}
         />
-        <ButtonIcon
+        <Button
+          layout={EButtonLayout.GHOST}
           onClick={() => swap(index, index + 1)}
-          type="button"
           disabled={index === length - 1}
           svgIcon={downIcon}
-          alt={<FormattedMessage id="button-icon.down" />}
+          iconProps={{
+            alt: <FormattedMessage id="button-icon.down" />,
+          }}
         />
       </div>
     </div>
@@ -212,10 +219,9 @@ class KeyIndividualsGroupLayout extends React.Component<IKeyIndividualsGroup & T
               <Button
                 data-test-id={`key-individuals-group-button-${name}`}
                 iconPosition={EIconPosition.ICON_BEFORE}
-                layout={EButtonLayout.SECONDARY}
+                layout={EButtonLayout.GHOST}
                 svgIcon={plusIcon}
                 onClick={() => arrayHelpers.push(getBlankMember())}
-                innerClassName={localStyles.addButton}
               >
                 <FormattedMessage id="eto.form.key-individuals.add" />
               </Button>
@@ -270,7 +276,7 @@ const EtoRegistrationKeyIndividualsComponent = (props: IProps) => (
     </Section>
     <Section className={styles.buttonSection}>
       <Button
-        layout={EButtonLayout.PRIMARY}
+        layout={EButtonLayout.OUTLINE}
         type="submit"
         isLoading={props.savingData}
         data-test-id="eto-registration-key-individuals-submit"
