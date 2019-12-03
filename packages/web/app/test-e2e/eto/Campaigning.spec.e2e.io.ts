@@ -1,12 +1,7 @@
 import { etoPublicViewByIdLinkLegacy, etoPublicViewLink } from "../../components/appRouteUtils";
 import { formatThousands } from "../../components/shared/formatters/utils";
 import { fillForm } from "../utils/forms";
-import {
-  assertRegister,
-  confirmAccessModal,
-  etoFixtureAddressByName,
-  goToIssuerDashboard,
-} from "../utils/index";
+import { assertRegister, confirmAccessModal, etoFixtureAddressByName } from "../utils/index";
 import { tid } from "../utils/selectors";
 import {
   createAndLoginNewUser,
@@ -73,19 +68,9 @@ describe("Eto campaigning state", () => {
       makeAuthenticatedCall("/api/eto-listing/etos/me/bookbuilding", {
         method: "PUT",
         body: JSON.stringify({
-          is_bookbuilding: false,
+          is_bookbuilding: true,
         }),
       }).then(() => {
-        goToIssuerDashboard();
-
-        cy.get(tid("eto-state-countdown_to_public_sale")).should("exist");
-
-        cy.get(tid("eto-flow-start-bookbuilding")).awaitedClick();
-
-        cy.get(tid("eto-state-whitelisting")).should("exist");
-
-        logout();
-
         createAndLoginNewUser({
           type: "investor",
           kyc: "business",
