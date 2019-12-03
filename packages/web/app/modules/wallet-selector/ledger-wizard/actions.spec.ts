@@ -13,7 +13,6 @@ import { LedgerNotAvailableError } from "../../../lib/web3/ledger-wallet/errors"
 import { LedgerWalletConnector } from "../../../lib/web3/ledger-wallet/LedgerConnector";
 import { LedgerWallet } from "../../../lib/web3/ledger-wallet/LedgerWallet";
 import { IDerivationPathToAddress } from "../../../lib/web3/ledger-wallet/types";
-import { Web3Adapter } from "../../../lib/web3/Web3Adapter";
 import { Web3Manager } from "../../../lib/web3/Web3Manager/Web3Manager";
 import { IAppState } from "../../../store";
 import { Dictionary } from "../../../types";
@@ -110,10 +109,8 @@ describe("Wallet selector > Ledger wizard > actions", () => {
         getMultipleAccountsFromDerivationPrefix: spy(() => expectedAccounts),
       });
       const web3ManagerMock = createMock(Web3Manager, {
-        internalWeb3Adapter: createMock(Web3Adapter, {
-          getBalance: (address: string) =>
-            Promise.resolve(new BigNumber(expectedAccountsToBalancesETH[address].toString())),
-        }),
+        getBalance: (address: string) =>
+          Promise.resolve(new BigNumber(expectedAccountsToBalancesETH[address].toString())),
       });
 
       const contractsMock = createMock(ContractsService, {

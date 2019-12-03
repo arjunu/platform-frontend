@@ -7,7 +7,7 @@ import { routingActions } from "../../../modules/routing/actions";
 import { appConnect } from "../../../store";
 import { OmitKeys } from "../../../types";
 import { isExternalUrl } from "../../../utils/StringUtils";
-import { Button, IButtonProps } from "./Button";
+import { Button } from "./Button";
 
 type TButtonLinkToProps = {
   to: LocationDescriptor;
@@ -15,8 +15,10 @@ type TButtonLinkToProps = {
   isActive?: boolean;
 };
 
+type TButtonProps = React.ComponentProps<typeof Button>;
+
 type TButtonLinkComponentProps = {
-  component?: React.ComponentType<IButtonProps>;
+  component?: React.ComponentType<TButtonProps>;
 };
 
 type TButtonWithProps = {
@@ -31,7 +33,7 @@ type TButtonDispatchProps = {
   navigate: () => void;
 };
 
-type TButtonWithoutOnClick = OmitKeys<IButtonProps, "onClick">;
+type TButtonWithoutOnClick = OmitKeys<TButtonProps, "onClick">;
 
 type TProps = TButtonLinkComponentProps & TButtonDispatchProps & TButtonWithoutOnClick;
 

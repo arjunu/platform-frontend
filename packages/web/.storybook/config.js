@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import "../app/polyfills.sideEffect";
 
 import "./setup-styles";
 

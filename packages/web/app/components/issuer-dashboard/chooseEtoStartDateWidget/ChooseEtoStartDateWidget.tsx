@@ -20,7 +20,7 @@ import { ETxSenderState } from "../../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../../modules/tx/types";
 import { appConnect } from "../../../store";
 import { EColumnSpan } from "../../layouts/Container";
-import { Button, ButtonWidth, EButtonLayout } from "../../shared/buttons/index";
+import { Button, EButtonLayout, EButtonWidth } from "../../shared/buttons/index";
 import {
   DashboardLoadingWidget,
   DashboardWidget,
@@ -158,7 +158,7 @@ const DateChooserOpen = ({
       <div className={styles.widgetButton}>
         <Button
           layout={EButtonLayout.SECONDARY}
-          width={ButtonWidth.NO_PADDING}
+          width={EButtonWidth.NO_PADDING}
           onClick={closeDatePicker}
           data-test-id="eto-settings-start-date-cancel"
         >
@@ -166,7 +166,7 @@ const DateChooserOpen = ({
         </Button>
         <Button
           layout={EButtonLayout.SECONDARY}
-          width={ButtonWidth.NO_PADDING}
+          width={EButtonWidth.NO_PADDING}
           onClick={uploadDate}
           disabled={!(newDateIsSet && newDateIsValid(newEtoDate))}
           data-test-id="eto-settings-start-date-confirm"

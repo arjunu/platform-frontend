@@ -1,172 +1,162 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { CommonHtmlProps, TDataTestId } from "../../../types";
+import { OmitKeys, PartialByKeys, TDataTestId } from "../../../types";
+import { invariant } from "../../../utils/invariant";
 import { InlineIcon } from "../icons";
-import { LoadingIndicator } from "../loading-indicator";
+import { LoadingIndicator } from "../loading-indicator/LoadingIndicator";
+import { ButtonBase } from "./ButtonBase";
 
-import * as arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
-import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./Button.module.scss";
 
-export enum EButtonTheme {
-  DARK_NO_BORDER = styles.buttonDarkNoBorder,
-  DARK = styles.buttonDark,
-  WHITE = styles.buttonWhite,
-  BRAND = styles.buttonBrand,
-  SILVER = styles.buttonSilver,
-  GRAPHITE = styles.buttonGraphite,
-  NEON = styles.buttonNeon,
-  GREEN = styles.buttonGreen,
-  BLUE = styles.buttonBlue,
-}
-
-export enum EIconPosition {
+enum EIconPosition {
   ICON_BEFORE = "icon-before",
   ICON_AFTER = "icon-after",
 }
 
-export enum EButtonLayout {
+enum EButtonLayout {
   PRIMARY = styles.buttonPrimary,
+  OUTLINE = styles.buttonOutline,
   SECONDARY = styles.buttonSecondary,
-  INLINE = styles.buttonInline,
-  SIMPLE = styles.buttonSimple,
+  GHOST = styles.buttonGhost,
 }
 
-export enum ButtonSize {
+enum EButtonSize {
   NORMAL,
   SMALL = styles.buttonSmall,
   HUGE = styles.buttonHuge,
 }
 
-export enum ButtonWidth {
-  NORMAL = "",
-  WIDE = "wide",
-  BLOCK = "block",
-  NO_PADDING = "no-padding",
+enum EButtonWidth {
+  NORMAL,
+  BLOCK = styles.buttonBlock,
+  NO_PADDING = styles.buttonNoPadding,
 }
 
-export enum ButtonTextPosition {
-  LEFT = "text-left",
-  RIGHT = "text-right",
-}
-
-export type TGeneralButton = React.ButtonHTMLAttributes<HTMLButtonElement>;
-
-export interface IButtonProps extends TGeneralButton, CommonHtmlProps {
-  layout?: EButtonLayout;
-  theme?: EButtonTheme;
-  svgIcon?: string;
-  iconPosition?: EIconPosition;
-  size?: ButtonSize;
-  width?: ButtonWidth;
+type TButtonLayout = {
+  layout: EButtonLayout;
+  size: EButtonSize;
+  width: EButtonWidth;
   isLoading?: boolean;
   isActive?: boolean;
-  innerClassName?: string;
-  textPosition?: ButtonTextPosition;
-  iconStyle?: string;
-}
+};
 
-const Button: React.ForwardRefExoticComponent<{ children?: React.ReactNode } & IButtonProps &
-  React.RefAttributes<HTMLButtonElement>> = React.forwardRef<
+const ButtonLayout = React.forwardRef<
   HTMLButtonElement,
-  IButtonProps & TDataTestId
->(
-  (
-    {
-      children,
+  TButtonLayout & React.ComponentProps<typeof ButtonBase> & TDataTestId
+>(({ children, className, layout, disabled, size, width, isLoading, isActive, ...props }, ref) => (
+  <ButtonBase
+    ref={ref}
+    className={cn(
+      styles.button,
       className,
       layout,
-      theme,
-      disabled,
-      svgIcon,
-      innerClassName,
-      iconPosition,
+      {
+        [styles.buttonIsActive]: isActive,
+      },
       size,
       width,
-      isLoading,
-      type,
-      textPosition,
-      isActive,
-      onClick,
-      "data-test-id": dataTestId,
-      iconStyle,
+    )}
+    disabled={disabled || isLoading}
+    {...props}
+  >
+    {isLoading ? (
+      <>
+        {/*
+                &nbsp; makes button the same in height as normal button
+                (avoids height jumping after switching to loading state)
+              */}
+        &nbsp;
+        <LoadingIndicator light />
+        &nbsp;
+      </>
+    ) : (
+      children
+    )}
+  </ButtonBase>
+));
+
+type ButtonLayoutProps = React.ComponentProps<typeof ButtonLayout>;
+
+type TButtonProps = {
+  svgIcon?: string;
+  iconPosition?: EIconPosition;
+  iconProps?: OmitKeys<React.ComponentProps<typeof InlineIcon>, "svgIcon">;
+} & PartialByKeys<ButtonLayoutProps, "layout" | "size" | "width">;
+
+const Button = React.forwardRef<HTMLButtonElement, TButtonProps>(
+  (
+    {
+      layout = EButtonLayout.OUTLINE,
+      size = EButtonSize.NORMAL,
+      width = EButtonWidth.NORMAL,
+      className,
+      children,
+      svgIcon,
+      iconPosition,
+      iconProps = {},
       ...props
     },
     ref,
-  ) => (
-    <button
-      ref={ref}
-      data-test-id={dataTestId}
-      className={cn(
-        styles.button,
-        className,
-        layout,
-        iconPosition,
-        {
-          [theme!]: layout !== EButtonLayout.INLINE,
-          [styles.isActive]: isActive,
-        },
-        size,
-        width,
-      )}
-      disabled={disabled || isLoading}
-      type={type}
-      onClick={onClick}
-      {...props}
-    >
-      <div className={cn(styles.content, innerClassName, textPosition)} tabIndex={-1}>
-        {isLoading ? (
+  ) => {
+    const withIconOnly = children === undefined;
+
+    if (process.env.NODE_ENV === "development" || process.env.NF_CYPRESS_RUN === "1") {
+      invariant(
+        !(svgIcon === undefined && withIconOnly),
+        "Either `svgIcon` or `children` should be provided to a button",
+      );
+      invariant(
+        !(withIconOnly && iconProps.alt === undefined),
+        "For proper accessibility in case button contains only icon `iconProps.alt` should be provided",
+      );
+    }
+
+    return (
+      <ButtonLayout
+        ref={ref}
+        layout={layout}
+        size={size}
+        width={width}
+        className={cn(className, { [styles.buttonOnlyIcon]: withIconOnly })}
+        {...props}
+      >
+        {!withIconOnly && svgIcon && iconPosition === EIconPosition.ICON_BEFORE && (
+          <InlineIcon
+            {...iconProps}
+            className={cn(styles.buttonIcon, styles.buttonIconBefore, iconProps.className)}
+            svgIcon={svgIcon}
+          />
+        )}
+
+        {withIconOnly && svgIcon ? (
           <>
             {/*
-              &nbsp; makes button the same in height as normal button
-              (avoids height dumping after switching to loading state)
-            */}
+                &nbsp; makes button the same in height as normal button
+                (avoids height jumping after switching to loading state)
+              */}
             &nbsp;
-            <LoadingIndicator light />
+            <InlineIcon
+              {...iconProps}
+              className={cn(styles.buttonIcon, iconProps.className)}
+              svgIcon={svgIcon}
+            />
             &nbsp;
           </>
         ) : (
-          <>
-            {iconPosition === EIconPosition.ICON_BEFORE && (
-              <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
-            )}
-            {children}
-            {iconPosition === EIconPosition.ICON_AFTER && (
-              <InlineIcon className={iconStyle} svgIcon={svgIcon || ""} />
-            )}
-          </>
+          children
         )}
-      </div>
-    </button>
-  ),
+
+        {!withIconOnly && svgIcon && iconPosition === EIconPosition.ICON_AFTER && (
+          <InlineIcon
+            {...iconProps}
+            className={cn(styles.buttonIcon, styles.buttonIconAfter, iconProps.className)}
+            svgIcon={svgIcon}
+          />
+        )}
+      </ButtonLayout>
+    );
+  },
 );
 
-Button.defaultProps = {
-  layout: EButtonLayout.PRIMARY,
-  theme: EButtonTheme.DARK,
-  type: "button",
-  disabled: false,
-  size: ButtonSize.NORMAL,
-  width: ButtonWidth.NORMAL,
-};
-
-const ButtonArrowRight: React.FunctionComponent<IButtonProps> = props => (
-  <Button
-    {...props}
-    layout={EButtonLayout.SECONDARY}
-    iconPosition={EIconPosition.ICON_AFTER}
-    svgIcon={arrowRight}
-  />
-);
-
-const ButtonArrowLeft: React.FunctionComponent<IButtonProps> = props => (
-  <Button
-    {...props}
-    layout={EButtonLayout.SECONDARY}
-    iconPosition={EIconPosition.ICON_BEFORE}
-    svgIcon={arrowLeft}
-  />
-);
-
-export { ButtonArrowRight, ButtonArrowLeft, Button };
+export { Button, EButtonLayout, EButtonSize, EButtonWidth, EIconPosition };

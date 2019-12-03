@@ -139,7 +139,7 @@ const EtoRegistrationCompanyInformationComponent = ({
     </Section>
     <Section className={styles.buttonSection}>
       <Button
-        layout={EButtonLayout.PRIMARY}
+        layout={EButtonLayout.OUTLINE}
         type="submit"
         isLoading={savingData}
         data-test-id="eto-registration-company-information-submit"

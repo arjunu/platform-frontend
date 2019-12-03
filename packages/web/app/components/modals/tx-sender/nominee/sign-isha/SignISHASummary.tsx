@@ -12,7 +12,7 @@ import {
 import { appConnect } from "../../../../../store";
 import { EProcessState } from "../../../../../utils/enums/processStates";
 import { nonNullable } from "../../../../../utils/nonNullable";
-import { Button, EButtonLayout, EButtonTheme } from "../../../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../../../shared/buttons/Button";
 import { DocumentUploadableTile } from "../../../../shared/DocumentUploadable";
 import { EHeadingSize, Heading } from "../../../../shared/Heading";
 
@@ -80,7 +80,6 @@ const SignNomineeISHASummaryLayout: React.FunctionComponent<TComponentProps> = (
         type="submit"
         layout={EButtonLayout.PRIMARY}
         data-test-id="nominee-sign-agreement-sign"
-        theme={EButtonTheme.NEON}
         onClick={onAccept}
       >
         <FormattedMessage id="nominee.sign-agreement.sign" />

@@ -122,16 +122,32 @@
 }
 
 // Text
-@mixin font-small-roboto {
+@mixin nds-overline {
   font-family: $font-family-roboto;
   font-size: px-to-rem(12px);
+  font-weight: $font-weight-medium;
+  line-height: 1.33;
+  letter-spacing: 1.2px;
 }
 
-@mixin nds-label {
+@mixin nds-helper-text {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(12px);
+  line-height: 1.33;
+}
+
+@mixin nds-button-label {
   font-family: $font-family-roboto;
   font-size: px-to-rem(14px);
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   line-height: 1.71;
+}
+
+// TODO: Add this one to the design typography
+@mixin font-large-roboto {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(18px);
+  font-weight: $font-weight-medium;
 }
 
 // Typography utils

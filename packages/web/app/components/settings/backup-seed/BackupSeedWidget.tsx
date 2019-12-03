@@ -48,7 +48,7 @@ const BackupSeedWidgetBase: React.FunctionComponent<IProps & IExternalProps> = (
         </p>
         <ButtonLink
           to={profileRoutes.seedBackup}
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           iconPosition={EIconPosition.ICON_AFTER}
           svgIcon={arrowRight}
           data-test-id="backup-seed-verified-section.view-again"
@@ -67,7 +67,7 @@ const BackupSeedWidgetBase: React.FunctionComponent<IProps & IExternalProps> = (
         <ButtonLink
           to={profileRoutes.seedBackup}
           data-test-id="backup-seed-widget-link-button"
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           iconPosition={EIconPosition.ICON_AFTER}
           svgIcon={arrowRight}
         >

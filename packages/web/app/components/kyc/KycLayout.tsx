@@ -74,7 +74,7 @@ class RequestStateInfo extends React.Component<IProps, IState> {
     const settingsButton = (
       <div className="p-4 text-center">
         <Button
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           iconPosition={EIconPosition.ICON_BEFORE}
           svgIcon={arrowLeft}
           onClick={this.props.goToProfile}
@@ -103,7 +103,7 @@ class RequestStateInfo extends React.Component<IProps, IState> {
         >
           {!this.state.showAdditionalFileUpload && (
             <Button
-              layout={EButtonLayout.SECONDARY}
+              layout={EButtonLayout.GHOST}
               iconPosition={EIconPosition.ICON_BEFORE}
               svgIcon={addFile}
               onClick={() => this.setState({ showAdditionalFileUpload: true })}

@@ -10,7 +10,7 @@ import { TRefundAdditionalData } from "../../../../modules/tx/transactions/refun
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { RequiredByKeys } from "../../../../types";
-import { ButtonArrowRight } from "../../../shared/buttons/Button";
+import { ButtonArrowRight } from "../../../shared/buttons";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { RefundTransactionDetails } from "./RefundDetails";
 
@@ -49,7 +49,7 @@ export const RefundSummaryLayout: React.FunctionComponent<TComponentProps> = ({
       <Col className="text-center">
         <ButtonArrowRight
           onClick={onAccept}
-          innerClassName="mt-4"
+          className="mt-4"
           data-test-id="modals.tx-sender.user-refund-flow.summary.accept"
         >
           <FormattedMessage id="user-refund-flow.confirm" />

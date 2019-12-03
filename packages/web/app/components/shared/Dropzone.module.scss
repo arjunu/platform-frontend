@@ -1,5 +1,5 @@
 $loading-background: rgba($neu-charcoal-grey, .8);
-$border-radius: px-to-rem(4px);
+$border-radius: $nds-border-radius;
 
 .dropzone {
   position: relative;

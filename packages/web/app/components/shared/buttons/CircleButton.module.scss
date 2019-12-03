@@ -1,0 +1,74 @@
+.circle-button {
+  $button: &;
+
+  @include nds-button-label;
+
+  color: $neu-charcoal-grey;
+  border-radius: 16px;
+  flex-shrink: 0;
+  padding: px-to-rem(4px) px-to-rem(12px) px-to-rem(3px);
+  transition: background-color 200ms ease-out, box-shadow 200ms ease-out, color 200ms ease-out;
+
+  &:disabled {
+    background: $neu-light-blue-grey-two;
+    border-color: $neu-light-blue-grey-two;
+    color: $neu-gull-gray;
+  }
+
+  &--secondary {
+    border: px-to-rem(1px) solid $neu-very-light-blue;
+    background: $neu-very-light-blue;
+
+    &:not(:disabled) {
+      &:hover {
+        border-color: $neu-bitter-lemon;
+        background: $neu-bitter-lemon;
+      }
+
+      &:active {
+        background: transparent;
+        border-color: $neu-bitter-lemon;
+      }
+    }
+  }
+
+  &--danger {
+    border: px-to-rem(1px) solid $neu-flamingo-red;
+    background: $neu-flamingo-red;
+    color: $neu-white;
+
+    &:not(:disabled) {
+      &:hover {
+        color: $neu-white;
+
+        &:not(#{$button}--only-icon) {
+          text-decoration: underline;
+        }
+      }
+
+      &:active {
+        background: transparent;
+        color: $neu-flamingo-red;
+        border-color: $neu-flamingo-red;
+      }
+    }
+  }
+
+  &--only-icon {
+    padding-left: px-to-rem(4px);
+    padding-right: px-to-rem(4px);
+  }
+
+  &-icon {
+    height: 1.2em;
+    width: 1.2em;
+
+    &--before {
+      margin-right: .8em;
+    }
+
+    &--after {
+      margin-left: .8em;
+    }
+  }
+}

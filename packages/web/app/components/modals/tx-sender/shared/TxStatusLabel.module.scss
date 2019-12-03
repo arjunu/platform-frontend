@@ -9,7 +9,7 @@
 }
 
 .tx-status-label {
-  border-radius: 4px;
+  border-radius: $nds-border-radius;
   padding: .3em .4em;
   line-height: 1.5em;
   text-transform: uppercase;
@@ -42,4 +42,3 @@
   }
 }
 
- 

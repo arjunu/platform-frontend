@@ -11,7 +11,7 @@ import { ELogoutReason } from "../../modules/auth/types";
 import { ENotificationText, ENotificationType } from "../../modules/notifications/types";
 import { TLoginRouterState } from "../../modules/routing/types";
 import { appRoutes } from "../appRoutes";
-import { Button, ButtonLink, EButtonLayout } from "../shared/buttons";
+import { ButtonInline, ButtonLink } from "../shared/buttons";
 import { ExternalLink } from "../shared/links";
 import { Notification } from "../shared/notification-widget/Notification";
 import { WalletRouter } from "./WalletRouter";
@@ -125,11 +125,11 @@ export const WalletSelectorLayout: React.FunctionComponent<IExternalProps & TRou
                 id="wallet-selector.tabs.icbm-help-text"
                 values={{
                   here: (
-                    <Button onClick={openICBMModal} layout={EButtonLayout.INLINE}>
+                    <ButtonInline onClick={openICBMModal}>
                       <strong>
                         <FormattedMessage id="wallet-selector.tabs.icbm-help-text.here" />
                       </strong>
-                    </Button>
+                    </ButtonInline>
                   ),
                 }}
               />

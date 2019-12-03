@@ -147,7 +147,7 @@ describe("<VerifyEmailWidgetBase />", () => {
           .find(tid("verify-email-widget-form-submit"))
           .first()
           .prop("disabled"),
-      ).to.be.false;
+      ).to.be.undefined;
 
       verifyEmailWidget.find("form").simulate("submit");
 

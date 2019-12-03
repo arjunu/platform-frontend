@@ -58,7 +58,7 @@ export class ContractsService {
   public async init(): Promise<void> {
     this.logger.info("Initializing contracts...");
 
-    this.web3 = this.web3Manager.internalWeb3Adapter.web3;
+    this.web3 = this.web3Manager.getFullWeb3Object();
 
     if (!this.web3) {
       throw new Error("Could not initialize web3");

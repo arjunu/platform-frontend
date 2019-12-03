@@ -58,7 +58,7 @@ export const MyNeuWidgetLayout: React.FunctionComponent<IComponentProps> = props
       <ButtonLink
         to={externalRoutes.neufundSupportWhatIsNeu}
         target="_blank"
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         data-test-id="my-neu-widget-support-link"

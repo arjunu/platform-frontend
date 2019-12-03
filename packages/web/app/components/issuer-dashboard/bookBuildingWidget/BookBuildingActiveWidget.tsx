@@ -4,13 +4,7 @@ import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { DAY } from "../../../config/constants";
 import { IBookBuildingStats } from "../../../lib/api/eto/EtoPledgeApi.interfaces.unsafe";
 import { EColumnSpan } from "../../layouts/Container";
-import {
-  Button,
-  ButtonSize,
-  ButtonWidth,
-  EButtonLayout,
-  EButtonTheme,
-} from "../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../shared/buttons";
 import { DashboardWidget } from "../../shared/dashboard-widget/DashboardWidget";
 import { BookBuildingStats } from "./BookBuildingStats";
 
@@ -53,10 +47,7 @@ const BookBuildingActiveWidget: React.FunctionComponent<TExternalProps> = ({
     <div className="m-auto">
       <Button
         layout={EButtonLayout.SECONDARY}
-        theme={EButtonTheme.DARK}
         type="button"
-        size={ButtonSize.NORMAL}
-        width={ButtonWidth.NORMAL}
         onClick={() => stopBookBuilding(etoId)}
         data-test-id="eto-flow-start-bookbuilding"
       >

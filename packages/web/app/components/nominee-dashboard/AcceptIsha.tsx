@@ -10,7 +10,7 @@ import {
 } from "../../modules/nominee-flow/selectors";
 import { appConnect } from "../../store";
 import { nonNullable } from "../../utils/nonNullable";
-import { Button, EButtonLayout, EButtonTheme } from "../shared/buttons/Button";
+import { Button, EButtonLayout } from "../shared/buttons/Button";
 
 import * as styles from "./NomineeDashboard.module.scss";
 
@@ -39,12 +39,7 @@ export const AcceptISHALayout: React.FunctionComponent<TStateProps & TDispatchPr
       <FormattedMessage id="nominee-flow.redeem-share-capital.text-note" />
       <FormattedRelative value={deadlineTimestamp} initialNow={new Date()} style={"numeric"} />
     </p>
-    <Button
-      layout={EButtonLayout.PRIMARY}
-      theme={EButtonTheme.BRAND}
-      data-test-id="nominee-sign-isha-button"
-      onClick={sign}
-    >
+    <Button layout={EButtonLayout.PRIMARY} data-test-id="nominee-sign-isha-button" onClick={sign}>
       <FormattedMessage id="nominee-flow.sign-agreement.sign-button" />
     </Button>
   </section>

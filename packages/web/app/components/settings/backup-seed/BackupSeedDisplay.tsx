@@ -53,7 +53,7 @@ const BackupSeedDisplay: React.FunctionComponent<IBackupSeedDisplayProps> = ({
       <Row className="justify-content-around">
         <Col className="mt-2" xs="auto">
           <Button
-            layout={EButtonLayout.SECONDARY}
+            layout={EButtonLayout.GHOST}
             iconPosition={EIconPosition.ICON_BEFORE}
             svgIcon={arrowLeft}
             onClick={onBack}
@@ -63,7 +63,7 @@ const BackupSeedDisplay: React.FunctionComponent<IBackupSeedDisplayProps> = ({
         </Col>
         <Col className="mt-2" xs="auto">
           <Button
-            layout={EButtonLayout.SECONDARY}
+            layout={EButtonLayout.GHOST}
             iconPosition={EIconPosition.ICON_BEFORE}
             onClick={onNext}
             data-test-id="seed-display-next-link"
