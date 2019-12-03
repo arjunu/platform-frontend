@@ -4,8 +4,8 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
-import { Message } from "../message/Message";
 import { Button, EButtonLayout } from "../../shared/buttons";
+import { Message } from "../message/Message";
 
 import * as tosImg from "../../../assets/img/tos.jpg";
 import * as styles from "./DocumentConfidentialityAgreementModal.module.scss";
