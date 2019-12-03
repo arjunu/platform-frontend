@@ -78,14 +78,12 @@ export function* runInitialValidations(
 ): Iterator<any> {
   yield neuCall(validateGas, generatedTxDetails);
 
-  const addressNotifications: EAdditionalValidationDataNotifications[] =
+  const addressNotifications =
     address && !shouldPassSmartContractAcceptEtherTest
-      ? yield neuCall(txProcessAddressValidations, address, registeredChecks)
+      ? yield* neuCall(txProcessAddressValidations, address, registeredChecks)
       : [];
 
-  const walletNotifications: EAdditionalValidationDataNotifications[] = value
-    ? yield validateWalletAlmostEmpty(generatedTxDetails)
-    : [];
+  const walletNotifications = value ? yield validateWalletAlmostEmpty(generatedTxDetails) : [];
 
   yield put(
     actions.txValidator.setValidationNotifications([

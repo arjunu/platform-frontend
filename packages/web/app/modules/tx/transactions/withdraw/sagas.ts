@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { fork, put, select, take } from "redux-saga/effects";
+import { fork, put, take } from "redux-saga/effects";
 
 import { IWindowWithData } from "../../../../../test/helperTypes";
 import { ECurrency } from "../../../../components/shared/formatters/utils";
@@ -24,6 +24,7 @@ import { TxUserFlowInputData, TxUserFlowTransferDetails } from "./../../user-flo
 import { TWithdrawAdditionalData } from "./types";
 
 import * as ethImage from "../../../../assets/img/eth_icon.svg";
+import { SagaGenerator, select } from "typed-redux-saga";
 
 export interface IWithdrawTxGenerator {
   to: string;
@@ -33,7 +34,7 @@ export interface IWithdrawTxGenerator {
 export function* generateEthWithdrawTransaction(
   { contractsService, web3Manager }: TGlobalDependencies,
   { to, valueUlps }: IWithdrawTxGenerator,
-): Iterator<any> {
+): SagaGenerator<ITxData> {
   // Sanity checks
   if (!to || !isAddressValid(to)) throw new WrongValuesError();
   if (
@@ -44,9 +45,9 @@ export function* generateEthWithdrawTransaction(
   }
   const valueUlpsAsBigN = new BigNumber(valueUlps);
 
-  const etherTokenBalance: BigNumber = yield select(selectEtherTokenBalanceAsBigNumber);
-  const from: string = yield select(selectEthereumAddressWithChecksum);
-  const gasPriceWithOverhead = yield select(selectStandardGasPriceWithOverHead);
+  const etherTokenBalance = yield* select(selectEtherTokenBalanceAsBigNumber);
+  const from = yield* select(selectEthereumAddressWithChecksum);
+  const gasPriceWithOverhead = yield* select(selectStandardGasPriceWithOverHead);
 
   let txDetails: Partial<ITxData> = {};
 

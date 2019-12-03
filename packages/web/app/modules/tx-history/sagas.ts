@@ -1,5 +1,5 @@
-import { delay } from "redux-saga/effects";
-import { all, fork, put, select } from "redux-saga/effects";
+import { all, fork, put, select, delay } from "redux-saga/effects";
+import { call } from "typed-redux-saga";
 
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { ETxHistoryMessage } from "../../components/translatedMessages/messages";
@@ -308,10 +308,8 @@ export function* loadTransactionsHistoryNext({
   try {
     const lastTransactionId: string | undefined = yield select(selectLastTransactionId);
 
-    const {
-      transactions,
-      beforeTransaction: newLastTransactionId,
-    }: TAnalyticsTransactionsResponse = yield analyticsApi.getTransactionsList(
+    const { transactions, beforeTransaction: newLastTransactionId } = yield* call(
+      analyticsApi.getTransactionsList,
       TX_LIMIT,
       lastTransactionId,
     );
@@ -339,7 +337,7 @@ export function* loadTransactionsHistory({
       transactions,
       beforeTransaction: lastTransactionId,
       version: newTimestampOfLastChange,
-    }: TAnalyticsTransactionsResponse = yield analyticsApi.getTransactionsList(TX_LIMIT);
+    } = yield* call(analyticsApi.getTransactionsList, TX_LIMIT);
 
     const processedTransactions = yield neuCall(mapAnalyticsApiTransactionsResponse, transactions);
 
@@ -379,9 +377,7 @@ export function* watchTransactions({ analyticsApi, logger }: TGlobalDependencies
         version: newTimestampOfLastChange,
         transactions,
         beforeTransaction: lastTransactionId,
-      }: TAnalyticsTransactionsResponse = yield analyticsApi.getUpdatedTransactions(
-        timestampOfLastChange,
-      );
+      } = yield* call(analyticsApi.getUpdatedTransactions, timestampOfLastChange);
 
       // check if version is higher than existing and of we have new transactions
       if (

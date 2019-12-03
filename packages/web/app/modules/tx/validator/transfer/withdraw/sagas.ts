@@ -35,7 +35,7 @@ export function* txValidateWithdraw(userInput: IWithdrawDraftType): Iterator<any
     }
     const valueUlps = convertToUlps(modifiedUserInput.value);
 
-    const generatedTxDetails: ITxData = yield neuCall(generateEthWithdrawTransaction, {
+    const generatedTxDetails = yield* neuCall(generateEthWithdrawTransaction, {
       to: modifiedUserInput.to,
       valueUlps,
     });

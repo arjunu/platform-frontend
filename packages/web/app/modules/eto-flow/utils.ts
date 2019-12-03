@@ -18,7 +18,7 @@ import {
 import { EProductName, TEtoProduct } from "../../lib/api/eto/EtoProductsApi.interfaces";
 
 function getErrorsNumber(validator: Yup.Schema<any>, data?: any): number {
-  try {
+  let {
     validator.validateSync(data, { abortEarly: false });
     return 0;
   } catch (e) {

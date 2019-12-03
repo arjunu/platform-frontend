@@ -36,7 +36,7 @@ export class AsyncIntervalScheduler {
     }
 
     this.cancelId = window.setTimeout(async () => {
-      try {
+      let {
         const response = this.callback();
         if (isPromise(response)) {
           await response;

@@ -11,7 +11,7 @@ import {
 import { createMessage } from "../../../components/translatedMessages/utils";
 import { EJwtPermissions } from "../../../config/constants";
 import { TGlobalDependencies } from "../../../di/setupBindings";
-import { EUserType, IUser, IUserInput } from "../../../lib/api/users/interfaces";
+import { EUserType, IUserInput } from "../../../lib/api/users/interfaces";
 import { EmailAlreadyExists, UserNotExisting } from "../../../lib/api/users/UsersApi";
 import {
   LightError,
@@ -22,8 +22,6 @@ import {
   createLightWalletVault,
   deserializeLightWalletVault,
 } from "../../../lib/web3/light-wallet/LightWalletUtils";
-import { IPersonalWallet } from "../../../lib/web3/PersonalWeb3";
-import { IAppState } from "../../../store";
 import { invariant } from "../../../utils/invariant";
 import { connectLightWallet } from "../../access-wallet/sagas";
 import { actions, TActionFromCreator } from "../../actions";
@@ -40,7 +38,6 @@ import { selectUrlUserType } from "../selectors";
 import { mapLightWalletErrorToErrorMessage } from "./errors";
 import { getWalletMetadataByURL } from "./metadata/sagas";
 import { getVaultKey } from "./utils";
-import { any } from "prop-types";
 
 export const DEFAULT_HD_PATH = "m/44'/60'/0'";
 
@@ -83,7 +80,8 @@ export async function setupLightWalletPromise(
 
 export function* lightWalletBackupWatch({ logger }: TGlobalDependencies): Iterator<any> {
   try {
-    const user: IUser = yield select((state: IAppState) => state.auth.user);
+    const user = yield* select((state: IAppState) => state.auth.user);
+    invariant(user, "User must be defined at this state");
     yield neuCall(updateUser, { ...user, backupCodesVerified: true });
     yield call(
       displayInfoModalSaga,
@@ -171,11 +169,7 @@ export function* lightWalletRecoverWatch(
       } else throw e;
     }
 
-    const wallet: IPersonalWallet = yield connectLightWallet(
-      lightWalletConnector,
-      walletMetadata,
-      password,
-    );
+    const wallet = yield* connectLightWallet(lightWalletConnector, walletMetadata, password);
     yield web3Manager.plugPersonalWallet(wallet);
     yield neuCall(logoutUser);
 

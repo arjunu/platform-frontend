@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js";
-import { put, select } from "redux-saga/effects";
+import { put } from "redux-saga/effects";
+import { select, call, SagaGenerator } from "typed-redux-saga";
 
 import { TGlobalDependencies } from "../../../../../di/setupBindings";
 import { IERC223Token } from "../../../../../lib/contracts/IERC223Token";
@@ -28,9 +29,9 @@ function* validateUserHasEnoughTokens(
   tokenAddress: EthereumAddress,
   value: string,
 ): Iterator<any> {
-  const from: string = yield select(selectEthereumAddressWithChecksum);
-  const contractInstance: IERC223Token = yield contractsService.getERC223(tokenAddress);
-  const userTokenBalance: BigNumber = yield contractInstance.balanceOf(from);
+  const from = yield* select(selectEthereumAddressWithChecksum);
+  const contractInstance = yield* call(contractsService.getERC223, tokenAddress);
+  const userTokenBalance = yield* call(contractInstance.balanceOf, from);
 
   if (userTokenBalance.isZero() || compareBigNumbers(value, userTokenBalance) > 0) {
     throw new UserHasNotEnoughTokensError();
@@ -41,17 +42,15 @@ function* transferTokenValueToUlps(
   { contractsService }: TGlobalDependencies,
   tokenAddress: EthereumAddress,
   value: string,
-): Iterator<any> {
-  const contractInstance: IERC223Token = yield contractsService.getERC223(tokenAddress);
-  const tokenDecimals: BigNumber = yield contractInstance.decimals;
+): SagaGenerator<string> {
+  const contractInstance = yield* call(contractsService.getERC223, tokenAddress);
+  const tokenDecimals = yield* call(() => contractInstance.decimals);
   return convertToUlps(value, tokenDecimals.toNumber());
 }
 
 export function* txValidateTokenTransfer(userInput: ITokenTransferDraftType): Iterator<any> {
   try {
-    const tokenAddress: ReturnType<typeof selectUserFlowTokenAddress> = yield select(
-      selectUserFlowTokenAddress,
-    );
+    const tokenAddress = yield* select(selectUserFlowTokenAddress);
     if (tokenAddress === "") throw new WrongValuesError();
     const {
       modifiedUserInput,
@@ -59,7 +58,7 @@ export function* txValidateTokenTransfer(userInput: ITokenTransferDraftType): It
       isValueValid,
     }: any = yield prepareTransferValidation(userInput);
 
-    const valueUlps: string = yield neuCall(
+    const valueUlps = yield* neuCall(
       transferTokenValueToUlps,
       tokenAddress,
       modifiedUserInput.value,
@@ -67,7 +66,7 @@ export function* txValidateTokenTransfer(userInput: ITokenTransferDraftType): It
 
     yield neuCall(validateUserHasEnoughTokens, tokenAddress, valueUlps);
 
-    const generatedTxDetails: ITxData = yield neuCall(generateTokenWithdrawTransaction, {
+    const generatedTxDetails = yield* neuCall(generateTokenWithdrawTransaction, {
       tokenAddress,
       to: modifiedUserInput.to,
       valueUlps,
@@ -89,7 +88,7 @@ export function* txValidateTokenTransfer(userInput: ITokenTransferDraftType): It
       generatedTxDetails.gas,
     ]);
 
-    const euroPrice: string = yield select(selectEtherPriceEur);
+    const euroPrice = yield* select(selectEtherPriceEur);
 
     yield put(
       actions.txUserFlowTransfer.setTxUserFlowData({

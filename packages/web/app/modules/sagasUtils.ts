@@ -1,6 +1,8 @@
+import { Dictionary } from "lodash";
 import { isMatch } from "lodash/fp";
-import { call } from "typed-redux-saga";
+import { call, SagaGenerator, UnwrapReturnType } from "typed-redux-saga";
 import {
+  all,
   Effect,
   fork,
   getContext,
@@ -11,7 +13,6 @@ import {
   takeLatest,
   throttle,
   delay,
-  SagaGenerator,
 } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../di/setupBindings";
@@ -53,18 +54,13 @@ export function* neuSpawn<R, T extends any[]>(
   const deps = yield* neuGetContext();
   return yield (spawn as any)(saga, deps, ...args);
 }
-declare type UnwrapReturnType<R> = R extends SagaGenerator<infer RT>
-  ? RT
-  : R extends Promise<infer PromiseValue>
-  ? PromiseValue
-  : R;
 
 export function* neuCall<Args extends any[], R>(
-  fn: (...args: any[]) => R,
+  fn: (deps: TGlobalDependencies, ...args: Args) => R,
   ...args: Args
 ): SagaGenerator<UnwrapReturnType<R>> {
   const deps = yield* neuGetContext();
-  return call(fn, deps, ...args);
+  return yield* call(fn as (...args: any) => R, deps, ...args);
 }
 
 /**
