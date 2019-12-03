@@ -52,7 +52,7 @@ export const UpgradeSummaryComponent: React.FunctionComponent<TComponentProps> =
       <Col className="text-center">
         <Button
           onClick={onAccept}
-          innerClassName="mt-4"
+          className="mt-4"
           data-test-id="modals.tx-sender.upgrade-flow.summery.upgradeSummary.accept"
         >
           <FormattedMessage id="general-flow.confirm" />

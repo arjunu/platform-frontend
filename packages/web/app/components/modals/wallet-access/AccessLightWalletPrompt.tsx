@@ -35,7 +35,7 @@ const AccessLightWalletForm = (formikBag: FormikProps<IFormValues> & IProps) => 
     <div className="mt-3">
       <Button
         type="submit"
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         disabled={!formikBag.values.password}
         data-test-id="access-light-wallet-confirm"
       >
@@ -54,7 +54,7 @@ export const AccessLightWalletPrompt: React.FunctionComponent<IProps> = props =>
     <div className="mt-3">
       <Button
         onClick={() => props.onAccept()}
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         data-test-id="access-light-wallet-prompt-accept-button"
       >
         <FormattedMessage id="modal.light-wallet.button.accept" />

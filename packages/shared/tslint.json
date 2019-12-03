@@ -30,7 +30,7 @@
       true,
       {
         "include": [".*.tsx"],
-        "exclude": [".*.spec.tsx", ".*.util.tsx", ".*.sideEffect.tsx", ".*.unsafe.tsx"]
+        "exclude": [".*.spec.tsx", ".*.util.tsx", ".*.unsafe.tsx"]
       }
     ],
     "no-regex-spaces": true,

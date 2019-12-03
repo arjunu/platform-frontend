@@ -120,7 +120,7 @@ const SetEtoDateSummaryComponent: React.FunctionComponent<IProps> = ({
 
     <div className="text-center">
       <Button
-        layout={EButtonLayout.PRIMARY}
+        layout={EButtonLayout.OUTLINE}
         type="button"
         onClick={onAccept}
         data-test-id="set-eto-date-summary-confirm-button"

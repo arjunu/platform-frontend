@@ -48,7 +48,10 @@ module.exports = merge.smart(configCommon, {
           {
             test: /\.module.scss$/,
             use: [
-              MiniCssExtractPlugin.loader,
+              // TODO: Remove when we know the reason of invalid import order
+              {
+                loader: "style-loader",
+              },
               {
                 loader: "css-loader",
                 options: {

@@ -21,12 +21,10 @@ describe("Download documents from portfolio", () => {
           cy.clock().then(clock => {
             cy.get(downloadSelector)
               .first()
-              .parent()
               .click()
               .then(() => {
                 cy.get(downloadSelector)
                   .first()
-                  .parent()
                   .should("be.disabled");
               });
 
@@ -35,7 +33,6 @@ describe("Download documents from portfolio", () => {
 
             cy.get(downloadSelector)
               .first()
-              .parent()
               .should("not.be.disabled");
           });
         });

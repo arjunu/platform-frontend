@@ -13,16 +13,16 @@
 
 .stats-wrapper-small {
   .funded {
-    @include nds-helper;
+    @include nds-helper-text;
   }
 }
 
 .funded {
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 }
 
 .row {
-  @include nds-helper;
+  @include nds-helper-text;
 
   color: $neu-charcoal-grey;
   display: flex;

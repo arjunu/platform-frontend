@@ -20,6 +20,8 @@ $extra-bigger-font-size: px-to-rem(23px);
 $bigger-font-size: px-to-rem(16px);
 $smaller-font-size: px-to-rem(13px);
 
+$nds-border-radius: 4px;
+
 $neu-font-size-lg: px-to-rem(20px);
 
 $shadow: 0 px-to-rem(2px) px-to-rem(4px) 0 rgba(0, 0, 0, .1);
@@ -36,10 +38,10 @@ $dark: $neu-charcoal-grey;
 $font-family-base: "Lato", sans-serif;
 $font-family-roboto: Roboto, sans-serif;
 $font-family-montserrat: Montserrat, sans-serif;
+$headings-font-family: "Lato", sans-serif;
 $font-size-base: .875rem;
 $font-size-medium-small: px-to-rem(14px);
 $font-weight-bold: 600;
-$headings-font-family: "Lato", sans-serif;
 $font-weight-medium: 500;
 $font-weight-light: 300;
 $headings-color: $neu-black;

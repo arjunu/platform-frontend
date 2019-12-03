@@ -20,7 +20,8 @@ import {
   selectDownloadAgreementModalEtoId,
   selectDownloadAgrementModalIsOpen,
 } from "../../portfolio/selectors";
-import { ButtonIcon } from "../../shared/buttons";
+import { Button } from "../../shared/buttons";
+import { EButtonLayout, EButtonWidth } from "../../shared/buttons/Button";
 import { DocumentLabel } from "../../shared/DocumentLink";
 import { EHeadingSize, Heading } from "../../shared/Heading";
 import { Modal } from "../Modal";
@@ -44,6 +45,7 @@ interface IDispatchProps {
 
 type IComponentProps = IStateProps & IDispatchProps;
 
+// TODO: Add storybook
 const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentProps> = ({
   isOpen,
   onClose,
@@ -82,9 +84,14 @@ const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentPr
                       />
                     }
                     value={
-                      <ButtonIcon
+                      <Button
                         className={styles.icon}
+                        layout={EButtonLayout.GHOST}
                         svgIcon={iconDownload}
+                        width={EButtonWidth.NO_PADDING}
+                        iconProps={{
+                          alt: <FormattedMessage id="common.download" />,
+                        }}
                         disabled={pendingDownloads[document.ipfsHash]}
                         data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${eto.etoId}.download`}
                         onClick={() =>
@@ -121,9 +128,14 @@ const DownloadTokenAgreementModalComponent: React.FunctionComponent<IComponentPr
                       />
                     }
                     value={
-                      <ButtonIcon
+                      <Button
                         className={styles.icon}
                         svgIcon={iconDownload}
+                        layout={EButtonLayout.GHOST}
+                        width={EButtonWidth.NO_PADDING}
+                        iconProps={{
+                          alt: <FormattedMessage id="common.download" />,
+                        }}
                         disabled={pendingDownloads[template.ipfsHash]}
                         data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${eto.etoId}.download`}
                         onClick={() =>

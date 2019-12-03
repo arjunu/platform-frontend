@@ -1,10 +1,10 @@
-import "reflect-metadata";
+import "./polyfills.sideEffect";
 
+// tslint:disable-next-line:ordered-imports
 import "./components/translatedMessages/yupLocales.sideEffect";
 
 import "./index.scss";
 
-// tslint:disable-next-line:ordered-imports
 import { ConnectedRouter, routerMiddleware } from "connected-react-router";
 import { createBrowserHistory, History } from "history";
 import { Container } from "inversify";

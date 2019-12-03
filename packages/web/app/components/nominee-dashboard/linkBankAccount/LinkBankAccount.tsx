@@ -7,7 +7,7 @@ import { actions } from "../../../modules/actions";
 import { THocProps } from "../../../types";
 import { withActionWatcher } from "../../../utils/withActionWatcher.unsafe";
 import { connectLinkBankAccountComponent } from "../../settings/linked-bank-account/ConnectLinkBankAccount";
-import { Button, EButtonLayout, EButtonTheme, EIconPosition } from "../../shared/buttons/Button";
+import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons/Button";
 
 import * as link from "../../../assets/img/inline_icons/social_link.svg";
 
@@ -23,7 +23,6 @@ const NomineeLinkBankAccountLayout: React.FunctionComponent<TProps> = ({ verifyB
     </p>
     <Button
       layout={EButtonLayout.PRIMARY}
-      theme={EButtonTheme.BRAND}
       onClick={verifyBankAccount}
       data-test-id="eto-nominee-accept"
       svgIcon={link}

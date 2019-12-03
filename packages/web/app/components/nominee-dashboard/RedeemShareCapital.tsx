@@ -14,7 +14,7 @@ import {
 import { ERedeemShareCapitalTaskSubstate } from "../../modules/nominee-flow/types";
 import { appConnect } from "../../store";
 import { DataUnavailableError } from "../../utils/errors";
-import { Button, EButtonLayout, EButtonTheme } from "../shared/buttons/Button";
+import { Button, EButtonLayout } from "../shared/buttons/Button";
 import { Money } from "../shared/formatters/Money";
 import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../shared/formatters/utils";
 
@@ -73,7 +73,6 @@ const RedeemShareCapitalLayout: React.FunctionComponent<TComponentProps> = ({
     <Button
       className={styles.nomineeStepWidgetButton}
       layout={EButtonLayout.PRIMARY}
-      theme={EButtonTheme.BRAND}
       data-test-id="nominee-redeem-share-capital-button"
       onClick={() => redeemFunds(amount)}
     >

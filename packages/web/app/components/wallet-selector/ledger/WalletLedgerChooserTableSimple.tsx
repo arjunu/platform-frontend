@@ -43,7 +43,7 @@ export class AccountRow extends React.Component<IAccountRow> {
         </td>
         <td className={styles.select}>
           <Button
-            layout={EButtonLayout.SECONDARY}
+            layout={EButtonLayout.GHOST}
             data-test-id="button-select"
             onClick={this.handleClick}
           >

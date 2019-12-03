@@ -4,12 +4,10 @@ import { call, put, race, select, take } from "redux-saga/effects";
 import { GenericErrorMessage } from "../../components/translatedMessages/messages";
 import { TMessage } from "../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../di/setupBindings";
-import { BrowserWalletConnector } from "../../lib/web3/browser-wallet/BrowserWallet";
+import { BrowserWalletConnector } from "../../lib/web3/browser-wallet/BrowserWalletConnector";
 import { LedgerWalletConnector } from "../../lib/web3/ledger-wallet/LedgerConnector";
-import {
-  LightWalletConnector,
-  LightWalletWrongPassword,
-} from "../../lib/web3/light-wallet/LightWallet";
+import { LightWalletWrongPassword } from "../../lib/web3/light-wallet/LightWallet";
+import { LightWalletConnector } from "../../lib/web3/light-wallet/LightWalletConnector";
 import {
   deserializeLightWalletVault,
   ILightWalletInstance,

@@ -30,7 +30,6 @@ $_dropzone-size-sm: 120px;
     color: $neu-shuttle-gray;
     display: flex;
     flex-direction: column;
-
   }
 
   .images-wrapper {
@@ -141,7 +140,7 @@ $_dropzone-size-sm: 120px;
 }
 
 .file-types {
-  @include nds-helper;
+  @include nds-overline;
 
   margin-top: px-to-rem(8px);
   line-height: 1.33;
@@ -149,9 +148,8 @@ $_dropzone-size-sm: 120px;
 }
 
 .upload-title {
-  @include nds-label;
+  @include nds-button-label;
 
-  line-height: 1.43;
   color: $neu-charcoal-grey;
   text-transform: uppercase;
 }

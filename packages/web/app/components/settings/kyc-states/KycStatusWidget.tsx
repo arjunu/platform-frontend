@@ -147,7 +147,7 @@ const ActionButton = ({
   if (requestStatus === EKycRequestStatus.ACCEPTED && userType === EUserType.INVESTOR) {
     return (
       <Button
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         onClick={onGoToDashboard}
@@ -162,7 +162,7 @@ const ActionButton = ({
     return (
       <Button
         id="start-kyc-process"
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         onClick={onGoToKycHome}
@@ -177,7 +177,7 @@ const ActionButton = ({
   if (requestStatus === EKycRequestStatus.PENDING) {
     return (
       <Button
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         onClick={onGoToKycHome}
@@ -199,14 +199,14 @@ const ActionButton = ({
       <>
         <ButtonLink
           to={externalKycUrl}
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           iconPosition={EIconPosition.ICON_AFTER}
           svgIcon={arrowRight}
         >
           <FormattedMessage id="settings.kyc-status-widget.continue-external-kyc" />
         </ButtonLink>
         <Button
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           iconPosition={EIconPosition.ICON_AFTER}
           svgIcon={arrowRight}
           onClick={cancelInstantId}

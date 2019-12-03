@@ -1,0 +1,38 @@
+.button-base {
+  align-items: center;
+  background: transparent;
+  border-radius: 0;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  justify-content: center;
+  line-height: inherit;
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+
+  -webkit-tap-highlight-color: transparent; // sass-lint:disable-line no-vendor-prefixes
+
+  &::-moz-focus-inner { // sass-lint:disable-line no-vendor-prefixes
+    border-style: none;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &:global(.focus-visible) {
+    $button-focus-shadow-color: rgba($neu-base-blue, .3);
+
+    box-shadow: 0 0 0 .2rem $button-focus-shadow-color;
+    border-color: $neu-base-blue;
+  }
+}

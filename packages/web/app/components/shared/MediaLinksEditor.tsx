@@ -1,8 +1,11 @@
+import * as cn from "classnames";
 import { connect, FieldArray } from "formik";
 import * as React from "react";
+import { FormattedMessage } from "react-intl-phraseapp";
 
 import { CommonHtmlProps, TFormikConnect } from "../../types";
-import { ButtonIcon, ButtonIconPlaceholder } from "./buttons";
+import { Button } from "./buttons";
+import { EButtonLayout } from "./buttons/Button";
 import { FormField } from "./forms";
 
 import * as closeIcon from "../../assets/img/inline_icons/round_close.svg";
@@ -18,7 +21,7 @@ interface ISingleMediaLinkFieldInternalProps {
   name: string;
   url?: string;
   placeholder: string;
-  blankField: any;
+  blankField: object;
 }
 
 const SingleMediaLinkField: React.FunctionComponent<ISingleMediaLinkFieldInternalProps &
@@ -33,13 +36,20 @@ const SingleMediaLinkField: React.FunctionComponent<ISingleMediaLinkFieldInterna
   } = props;
 
   return (
-    <div className={styles.singleMediaLinkFieldWrapper}>
-      {isLastElement ? (
-        <ButtonIcon className="mt-2" svgIcon={plusIcon} onClick={onAddClick} />
-      ) : (
-        <ButtonIconPlaceholder />
-      )}
-      <div className={isFirstElement ? styles.singleMediaLinkFieldLong : null}>
+    <div className={styles.fieldRow}>
+      <div className={styles.fieldCell}>
+        {isLastElement && (
+          <Button
+            layout={EButtonLayout.GHOST}
+            className="mt-2"
+            svgIcon={plusIcon}
+            iconProps={{ alt: <FormattedMessage id="common.add" /> }}
+            onClick={onAddClick}
+          />
+        )}
+      </div>
+
+      <div className={cn(styles.fieldCell, "w-100")}>
         {blankField &&
           Object.keys(blankField).map(fieldName => {
             const isFieldWithCharactersLimit = fieldName === "title";
@@ -60,9 +70,18 @@ const SingleMediaLinkField: React.FunctionComponent<ISingleMediaLinkFieldInterna
             );
           })}
       </div>
-      {!isFirstElement && (
-        <ButtonIcon className="mt-2" svgIcon={closeIcon} onClick={onRemoveClick} />
-      )}
+
+      <div className={styles.fieldCell}>
+        {!isFirstElement && (
+          <Button
+            layout={EButtonLayout.GHOST}
+            className="mt-2"
+            svgIcon={closeIcon}
+            onClick={onRemoveClick}
+            iconProps={{ alt: <FormattedMessage id="common.remove" /> }}
+          />
+        )}
+      </div>
     </div>
   );
 };
@@ -89,34 +108,36 @@ class MediaLinksEditorLayout extends React.Component<IProps & TFormikConnect> {
     return (
       <FieldArray
         name={name}
-        render={arrayHelpers =>
-          mediaLinks
-            .map((_: object, index: number) => {
-              const isLastElement = !(index < mediaLinks.length - 1);
-              const isFirstElement = index === 0;
-              return (
-                <SingleMediaLinkField
-                  blankField={blankField}
-                  name={`${name}.${index}`}
-                  formFieldKey={"url"}
-                  onRemoveClick={() => {
-                    arrayHelpers.remove(index);
-                  }}
-                  onAddClick={() => {
-                    setFieldValue(`${name}.${index + 1}`, blankField);
-                  }}
-                  placeholder={placeholder}
-                  isFirstElement={isFirstElement}
-                  isLastElement={isLastElement}
-                  key={`${name}.${index}`}
-                />
-              );
-            })
-            .reverse()
-        }
+        render={arrayHelpers => (
+          <div className={styles.fieldTable}>
+            {mediaLinks
+              .map((_: object, index: number) => {
+                const isLastElement = !(index < mediaLinks.length - 1);
+                const isFirstElement = index === 0;
+                return (
+                  <SingleMediaLinkField
+                    blankField={blankField}
+                    name={`${name}.${index}`}
+                    formFieldKey={"url"}
+                    onRemoveClick={() => {
+                      arrayHelpers.remove(index);
+                    }}
+                    onAddClick={() => {
+                      setFieldValue(`${name}.${index + 1}`, blankField);
+                    }}
+                    placeholder={placeholder}
+                    isFirstElement={isFirstElement}
+                    isLastElement={isLastElement}
+                    key={`${name}.${index}`}
+                  />
+                );
+              })
+              .reverse()}
+          </div>
+        )}
       />
     );
   }
 }
 
-export const MediaLinksEditor = connect<IProps, any>(MediaLinksEditorLayout);
+export const MediaLinksEditor = connect<IProps, unknown>(MediaLinksEditorLayout);

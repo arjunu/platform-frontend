@@ -8,7 +8,7 @@ import { ITokenDisbursal } from "../../modules/investor-portfolio/types";
 import { appConnect } from "../../store";
 import { DashboardHeading } from "../eto/shared/DashboardHeading";
 import { Container, EColumnSpan, EContainerType } from "../layouts/Container";
-import { Button, ButtonSize, EButtonLayout, EButtonTheme } from "../shared/buttons";
+import { Button, EButtonLayout, EButtonSize } from "../shared/buttons";
 import { ETheme, Money } from "../shared/formatters/Money";
 import { ENumberInputFormat, ENumberOutputFormat, selectUnits } from "../shared/formatters/utils";
 import { Heading } from "../shared/Heading";
@@ -133,19 +133,18 @@ const AssetPortfolioLayout: React.FunctionComponent<ILayoutProps & IDispatchToPr
             <Button
               disabled={!isVerifiedInvestor}
               data-test-id="asset-portfolio.payout.redistribute-payout"
-              size={ButtonSize.SMALL}
+              size={EButtonSize.SMALL}
               onClick={() => redistributePayout(tokenDisbursal)}
-              layout={EButtonLayout.SECONDARY}
+              layout={EButtonLayout.GHOST}
             >
               <FormattedMessage id="portfolio.asset.payouts-from-neu.redistribute-payout" />
             </Button>
             <Button
               disabled={!isVerifiedInvestor}
               data-test-id="asset-portfolio.payout.accept-payout"
-              theme={EButtonTheme.GREEN}
-              size={ButtonSize.SMALL}
+              size={EButtonSize.SMALL}
               onClick={() => acceptPayout(tokenDisbursal)}
-              layout={EButtonLayout.SECONDARY}
+              layout={EButtonLayout.PRIMARY}
             >
               <FormattedMessage id="portfolio.asset.payouts-from-neu.accept-payout" />
             </Button>
@@ -160,10 +159,9 @@ const AssetPortfolioLayout: React.FunctionComponent<ILayoutProps & IDispatchToPr
           <Button
             disabled={!isVerifiedInvestor}
             data-test-id="asset-portfolio.payout.accept-all-payouts"
-            theme={EButtonTheme.GREEN}
-            size={ButtonSize.SMALL}
+            size={EButtonSize.SMALL}
             onClick={() => acceptCombinedPayout(tokensDisbursal)}
-            layout={EButtonLayout.SECONDARY}
+            layout={EButtonLayout.PRIMARY}
           >
             <FormattedMessage id="portfolio.asset.payouts-from-neu.accept-all-payout" />
           </Button>

@@ -23,7 +23,7 @@ import { noopLogger } from "../app/lib/dependencies/logger";
 import { IntlWrapper } from "../app/lib/intl/IntlWrapper";
 import { Storage } from "../app/lib/persistence/Storage";
 import { createMockStorage } from "../app/lib/persistence/Storage.mock";
-import { BrowserWalletConnector } from "../app/lib/web3/browser-wallet/BrowserWallet";
+import { BrowserWalletConnector } from "../app/lib/web3/browser-wallet/BrowserWalletConnector";
 import { ContractsService } from "../app/lib/web3/ContractsService";
 import { LedgerWalletConnector } from "../app/lib/web3/ledger-wallet/LedgerConnector";
 import { Web3ManagerMock } from "../app/lib/web3/Web3Manager/Web3Manager.mock";

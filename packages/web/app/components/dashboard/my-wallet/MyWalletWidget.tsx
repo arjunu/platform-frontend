@@ -19,7 +19,7 @@ import { CommonHtmlProps } from "../../../types";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { appRoutes } from "../../appRoutes";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonLink, EButtonLayout, EButtonTheme, EIconPosition } from "../../shared/buttons";
+import { ButtonLink, EButtonLayout, EIconPosition } from "../../shared/buttons";
 import { Money } from "../../shared/formatters/Money";
 import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../../shared/formatters/utils";
 import { LoadingIndicator } from "../../shared/loading-indicator";
@@ -141,11 +141,10 @@ export const MyWalletWidgetComponent: React.FunctionComponent<CommonHtmlProps & 
     rightComponent={
       <ButtonLink
         to={appRoutes.wallet}
-        layout={EButtonLayout.SECONDARY}
+        layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
-        theme={EButtonTheme.DARK}
         svgIcon={arrowRight}
-        innerClassName={cn(styles.link, "pr-0")}
+        className={cn(styles.link, "pr-0")}
       >
         <FormattedMessage id="dashboard.my-wallet-widget.main-wallet-redirect-button" />
       </ButtonLink>

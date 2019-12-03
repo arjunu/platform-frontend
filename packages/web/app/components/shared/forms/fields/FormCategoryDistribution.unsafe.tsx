@@ -1,8 +1,11 @@
+import * as cn from "classnames";
 import { ArrayHelpers, connect, FieldArray, getIn } from "formik";
 import * as React from "react";
+import { FormattedMessage } from "react-intl-phraseapp";
 
 import { CommonHtmlProps, TFormikConnect, TTranslatedString } from "../../../../types";
-import { ButtonIcon, ButtonIconPlaceholder } from "../../buttons";
+import { Button } from "../../buttons";
+import { EButtonLayout } from "../../buttons/Button";
 import { FormInput } from "./FormInput";
 import { NumberTransformingField } from "./NumberTransformingField";
 
@@ -61,47 +64,60 @@ class KeyValueCompoundFieldBase extends React.Component<IProps & IInternalProps 
       name,
     } = this.props;
     return (
-      <div className={styles.fieldWrapper}>
-        {isLastElement && !disabled ? (
-          <ButtonIcon svgIcon={plusIcon} onClick={addField} />
-        ) : (
-          <ButtonIconPlaceholder />
-        )}
-        <div className={styles.field}>
-          <FormInput
-            disabled={disabled}
-            name={`${name}.${formFieldKeys[0]}`}
-            placeholder={keyPlaceholder}
-            onBlur={this.setAllFieldsTouched}
-          />
-          {transformRatio ? (
-            <NumberTransformingField
-              disabled={disabled}
-              min="0"
-              prefix={prefix}
-              name={`${name}.${formFieldKeys[1]}`}
-              ratio={transformRatio}
-              customOnBlur={this.setAllFieldsTouched}
-              placeholder={valuePlaceholder}
-            />
-          ) : (
-            <FormInput
-              disabled={disabled}
-              min="0"
-              prefix={prefix}
-              suffix={suffix}
-              name={`${name}.${formFieldKeys[1]}`}
-              onBlur={this.setAllFieldsTouched}
-              placeholder={valuePlaceholder}
+      <div className={styles.fieldRow}>
+        <div className={styles.fieldCell}>
+          {isLastElement && !disabled && (
+            <Button
+              layout={EButtonLayout.GHOST}
+              svgIcon={plusIcon}
+              onClick={addField}
+              iconProps={{ alt: <FormattedMessage id="common.add" /> }}
             />
           )}
         </div>
 
-        {!isFirstElement && !disabled ? (
-          <ButtonIcon svgIcon={closeIcon} onClick={removeField} />
-        ) : (
-          <ButtonIconPlaceholder />
-        )}
+        <div className={cn(styles.fieldCell, "w-100")}>
+          <div className={styles.field}>
+            <FormInput
+              disabled={disabled}
+              name={`${name}.${formFieldKeys[0]}`}
+              placeholder={keyPlaceholder}
+              onBlur={this.setAllFieldsTouched}
+            />
+            {transformRatio ? (
+              <NumberTransformingField
+                disabled={disabled}
+                min="0"
+                prefix={prefix}
+                name={`${name}.${formFieldKeys[1]}`}
+                ratio={transformRatio}
+                customOnBlur={this.setAllFieldsTouched}
+                placeholder={valuePlaceholder}
+              />
+            ) : (
+              <FormInput
+                disabled={disabled}
+                min="0"
+                prefix={prefix}
+                suffix={suffix}
+                name={`${name}.${formFieldKeys[1]}`}
+                onBlur={this.setAllFieldsTouched}
+                placeholder={valuePlaceholder}
+              />
+            )}
+          </div>
+        </div>
+
+        <div className={styles.fieldCell}>
+          {!isFirstElement && !disabled && (
+            <Button
+              layout={EButtonLayout.GHOST}
+              svgIcon={closeIcon}
+              onClick={removeField}
+              iconProps={{ alt: <FormattedMessage id="common.remove" /> }}
+            />
+          )}
+        </div>
       </div>
     );
   };
@@ -153,7 +169,7 @@ class ArrayOfKeyValueFieldsBase extends React.Component<
       <FieldArray
         name={name}
         render={arrayHelpers => (
-          <div className={styles.fieldArray}>
+          <div className={styles.fieldTable}>
             {categoryDistribution.map(
               (_: { description: string; percent: number }, index: number) => {
                 const isLastElement = index === categoryDistribution.length - 1;
