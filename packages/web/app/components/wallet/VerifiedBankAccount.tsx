@@ -9,7 +9,7 @@ import { selectBankAccount, selectIsBankAccountLoading } from "../../modules/kyc
 import { TBankAccount } from "../../modules/kyc/types";
 import { appConnect } from "../../store";
 import { CommonHtmlProps, DeepReadonly, OmitKeys } from "../../types";
-import { Button, ButtonSize, EButtonLayout } from "../shared/buttons";
+import { ButtonInline } from "../shared/buttons";
 import { LoadingIndicator } from "../shared/loading-indicator/LoadingIndicator";
 import { BankAccount } from "./BankAccount";
 
@@ -44,16 +44,16 @@ const VerifiedBankAccountComponent: React.FunctionComponent<IComponentProps> = (
       <h4 className={cn(styles.title, { [styles.framed]: withBorder })}>
         <FormattedMessage id="shared-component.wallet-verified-bank-account.title" />
       </h4>
-      <Button
-        className={styles.linkButton}
-        onClick={onVerify}
-        data-test-id="locked-wallet.neur.bank-account.link-account"
-        layout={EButtonLayout.INLINE}
-        size={ButtonSize.SMALL}
-        disabled={!isUserFullyVerified}
-      >
-        <FormattedMessage id="shared-component.wallet-verified-bank-account.link-account" />
-      </Button>
+      <small>
+        <ButtonInline
+          className={styles.linkButton}
+          onClick={onVerify}
+          data-test-id="locked-wallet.neur.bank-account.link-account"
+          disabled={!isUserFullyVerified}
+        >
+          <FormattedMessage id="shared-component.wallet-verified-bank-account.link-account" />
+        </ButtonInline>
+      </small>
     </div>
 
     {isVerified && bankAccount && bankAccount.hasBankAccount ? (

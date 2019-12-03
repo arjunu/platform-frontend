@@ -18,7 +18,7 @@ import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { investmentAgreementNotSigned } from "../../documents/utils";
 import { EColumnSpan } from "../../layouts/Container";
-import { ButtonArrowRight } from "../../shared/buttons/Button";
+import { ButtonArrowRight } from "../../shared/buttons";
 import {
   DashboardCenteredWidget,
   DashboardWidget,

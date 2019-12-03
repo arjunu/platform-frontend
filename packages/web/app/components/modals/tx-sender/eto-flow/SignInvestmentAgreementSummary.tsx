@@ -30,7 +30,7 @@ const SignInvestmentAgreementComponent: React.FunctionComponent<IDispatchProps> 
       <FormattedMessage id="download-agreement-widget.sign-on-ethereum-text-modal" />
     </p>
     <Button
-      layout={EButtonLayout.PRIMARY}
+      layout={EButtonLayout.OUTLINE}
       type="button"
       onClick={onAccept}
       data-test-id="eto-flow.sign-isha-summary.continue"

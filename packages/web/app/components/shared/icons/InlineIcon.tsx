@@ -5,8 +5,14 @@ import { TTranslatedString } from "../../../types";
 
 import * as styles from "./InlineIcon.module.scss";
 
+export enum EInlineIconFill {
+  FILL_OUTLINE = styles.inlineIconFillOutline,
+  FILL_SHAPE = styles.inlineIconFillShape,
+}
+
 interface IProps {
   svgIcon: string;
+  fill?: EInlineIconFill;
   width?: string;
   height?: string;
   className?: string;
@@ -15,7 +21,8 @@ interface IProps {
 }
 
 export const InlineIcon: React.FunctionComponent<IProps> = ({
-  className = cn("inline-icon", styles.inlineIcon),
+  fill = EInlineIconFill.FILL_SHAPE,
+  className,
   svgIcon,
   width,
   height,
@@ -24,7 +31,7 @@ export const InlineIcon: React.FunctionComponent<IProps> = ({
 }) => (
   <>
     <span
-      className={className}
+      className={cn("inline-icon", styles.inlineIcon, fill, className)}
       style={{ width, height }}
       dangerouslySetInnerHTML={{ __html: svgIcon }}
       {...props}

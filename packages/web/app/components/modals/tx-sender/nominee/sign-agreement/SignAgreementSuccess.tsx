@@ -6,7 +6,7 @@ import { actions } from "../../../../../modules/actions";
 import { selectTxType } from "../../../../../modules/tx/sender/selectors";
 import { ETxSenderType } from "../../../../../modules/tx/types";
 import { appConnect } from "../../../../../store";
-import { Button, EButtonLayout, EButtonTheme } from "../../../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../../../shared/buttons/Button";
 import { EHeadingSize, Heading } from "../../../../shared/Heading";
 import { isRAASign } from "./utils";
 
@@ -44,7 +44,6 @@ const SignNomineeAgreementSuccessLayout: React.FunctionComponent<TComponentProps
     <Button
       layout={EButtonLayout.PRIMARY}
       data-test-id="nominee-sign-agreement-success-close"
-      theme={EButtonTheme.NEON}
       onClick={onClose}
     >
       <FormattedMessage id="nominee.sign-agreement.success.close" />

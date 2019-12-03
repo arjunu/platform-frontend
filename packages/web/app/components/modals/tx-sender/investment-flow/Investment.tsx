@@ -1,4 +1,5 @@
 import { BigNumber } from "bignumber.js";
+import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Link } from "react-router-dom";
@@ -54,8 +55,7 @@ import { IIntlProps, injectIntlHelpers } from "../../../../utils/injectIntlHelpe
 import { nonNullable } from "../../../../utils/nonNullable";
 import { appRoutes } from "../../../appRoutes";
 import { InfoAlert } from "../../../shared/Alerts";
-import { Button, EButtonLayout } from "../../../shared/buttons";
-import { ButtonSize, ButtonTextPosition } from "../../../shared/buttons/Button";
+import { Button, ButtonInline, EButtonLayout } from "../../../shared/buttons";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,
@@ -286,16 +286,15 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
                   </div>
                 </>
               )}
-              <Button
-                className={styles.investAll}
-                data-test-id="invest-modal-full-balance-btn"
-                onClick={this.investEntireBalance}
-                layout={EButtonLayout.INLINE}
-                textPosition={ButtonTextPosition.RIGHT}
-                size={ButtonSize.SMALL}
-              >
-                <FormattedMessage id="investment-flow.invest-entire-balance" />
-              </Button>
+              <small>
+                <ButtonInline
+                  className={cn(styles.investAll, "text-right")}
+                  data-test-id="invest-modal-full-balance-btn"
+                  onClick={this.investEntireBalance}
+                >
+                  <FormattedMessage id="investment-flow.invest-entire-balance" />
+                </ButtonInline>
+              </small>
             </Col>
           </Row>
         </Container>
@@ -424,7 +423,7 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
           <Row className="justify-content-center mb-0">
             <Button
               onClick={sendTransaction}
-              layout={EButtonLayout.PRIMARY}
+              layout={EButtonLayout.OUTLINE}
               type="submit"
               disabled={!readyToInvest}
               data-test-id="invest-modal-invest-now-button"

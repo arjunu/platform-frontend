@@ -11,15 +11,21 @@
     height: 100%;
   }
 
-  svg {
-    color: inherit;
-    fill: currentColor;
+  &--fill-outline {
+    svg {
+      > g {
+        color: inherit;
+        stroke: currentColor;
+      }
+    }
+  }
 
-    // temporary solution
-    path,
-    polygon,
-    g {
-      fill: currentColor;
+  &--fill-shape {
+    svg {
+      > g {
+        color: inherit;
+        fill: currentColor;
+      }
     }
   }
 }

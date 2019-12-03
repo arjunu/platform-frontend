@@ -12,7 +12,7 @@ import { appConnect } from "../../store";
 import { multiplyBigNumbers } from "../../utils/BigNumberUtils";
 import { commitmentStatusLink } from "../appRouteUtils";
 import { Container } from "../layouts/Container";
-import { Button, ButtonLink, ButtonSize, EButtonLayout, EButtonTheme } from "../shared/buttons";
+import { Button, ButtonLink, EButtonLayout, EButtonSize } from "../shared/buttons";
 import { DashboardHeading } from "../shared/DashboardHeading";
 import { FormatNumber } from "../shared/formatters/FormatNumber";
 import { Money } from "../shared/formatters/Money";
@@ -105,9 +105,8 @@ const PortfolioMyAssetsComponent: React.FunctionComponent<TComponentProps> = ({
             outputFormat={ENumberOutputFormat.FULL}
           />
           <Button
-            theme={EButtonTheme.GREEN}
-            size={ButtonSize.SMALL}
-            layout={EButtonLayout.SECONDARY}
+            size={EButtonSize.SMALL}
+            layout={EButtonLayout.PRIMARY}
             onClick={() => startTokenTransfer(neumarkAddress, neuIcon)}
             data-test-id="portfolio-my-assets-neu-agreements"
           >
@@ -115,8 +114,8 @@ const PortfolioMyAssetsComponent: React.FunctionComponent<TComponentProps> = ({
           </Button>
           <ButtonLink
             to={commitmentStatusLink(walletAddress)}
-            layout={EButtonLayout.SECONDARY}
-            size={ButtonSize.SMALL}
+            layout={EButtonLayout.GHOST}
+            size={EButtonSize.SMALL}
             data-test-id="portfolio-my-assets-neu-agreements"
           >
             <FormattedMessage id="portfolio.section.my-assets.download-agreements" />
@@ -174,19 +173,18 @@ const PortfolioMyAssetsComponent: React.FunctionComponent<TComponentProps> = ({
                 <Button
                   disabled={!tokenData.canTransferToken}
                   data-test-id={`modals.portfolio.portfolio-assets.send-token-${etoId}`}
-                  theme={EButtonTheme.GREEN}
                   className="text-center"
-                  size={ButtonSize.SMALL}
+                  size={EButtonSize.SMALL}
                   onClick={() => startTokenTransfer(contract!.equityTokenAddress, equityTokenImage)}
-                  layout={EButtonLayout.SECONDARY}
+                  layout={EButtonLayout.PRIMARY}
                 >
                   <FormattedMessage id="portfolio.section.my-assets.send" />
                 </Button>
 
                 <Button
                   onClick={() => showDownloadAgreementModal(etoId, isRetailEto)}
-                  layout={EButtonLayout.SECONDARY}
-                  size={ButtonSize.SMALL}
+                  layout={EButtonLayout.GHOST}
+                  size={EButtonSize.SMALL}
                   data-test-id={`modals.portfolio.portfolio-assets.download-agreements-${etoId}`}
                 >
                   <FormattedMessage id="portfolio.section.my-assets.download-agreements" />

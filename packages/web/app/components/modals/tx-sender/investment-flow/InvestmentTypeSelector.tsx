@@ -6,7 +6,8 @@ import { Col, FormGroup } from "reactstrap";
 import { EInvestmentType } from "../../../../modules/investment-flow/reducer";
 import { getCurrencyByInvestmentType } from "../../../../modules/investment-flow/utils";
 import { ETokenType } from "../../../../modules/tx/types";
-import { Button, ButtonWidth, EButtonLayout, EButtonTheme } from "../../../shared/buttons";
+import { Button, EButtonLayout, EButtonWidth } from "../../../shared/buttons";
+import { EButtonSize } from "../../../shared/buttons/Button";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,
@@ -136,11 +137,9 @@ export const InvestmentTypeSelector: React.FunctionComponent<IProps> = ({
                   {wallet.name}
                   {!wallet.enabled && (
                     <Button
-                      layout={EButtonLayout.SIMPLE}
-                      theme={EButtonTheme.GREEN}
-                      className={styles.enableIcbm}
-                      width={ButtonWidth.BLOCK}
-                      innerClassName="justify-content-end"
+                      layout={EButtonLayout.PRIMARY}
+                      size={EButtonSize.SMALL}
+                      width={EButtonWidth.BLOCK}
                       onClick={() => startUpgradeFlow(token)}
                       data-test-id={`investment-type.selector.${wallet.type}.enable-wallet`}
                     >
