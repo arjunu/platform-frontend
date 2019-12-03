@@ -184,13 +184,20 @@ function* submitPersonalAddress(
 ): Iterator<any> {
   try {
     const { data } = action.payload;
-    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalAddress(data);
+    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalAddress({
+      ...data,
+      // TODO: Remove when not needed. This adds additional fields required by backend
+      isHighIncome: false,
+      isPoliticallyExposed: false
+    });
 
     yield put(
       actions.kyc.kycUpdateIndividualData(false, {
         ...result.body,
       }),
     );
+
+    yield put(actions.routing.goToKYCIndividualDocumentVerification());
   } catch (e) {
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
 

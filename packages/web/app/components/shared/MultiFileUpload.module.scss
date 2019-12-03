@@ -22,11 +22,15 @@ $_dropzone-size-sm: 120px;
   .upload-informations-wrapper {
     @include nds-label;
 
+    @include media-breakpoint-up(md) {
+      margin-left: px-to-rem(24px);
+    }
+
     font-weight: 400;
     color: $neu-shuttle-gray;
-    margin-left: 24px;
     display: flex;
     flex-direction: column;
+
   }
 
   .images-wrapper {
@@ -125,8 +129,10 @@ $_dropzone-size-sm: 120px;
 }
 
 .upload-container {
+  @include media-breakpoint-up(md) {
+    margin-bottom: px-to-rem(24px);
+  }
   display: flex;
-  margin-bottom: px-to-rem(22px);
 }
 
 .uploader-info {

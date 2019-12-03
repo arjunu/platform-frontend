@@ -17,6 +17,11 @@ export enum EKycRequestType {
   US_ACCREDITATION = "us_accreditation",
 }
 
+export enum EKycInstantIdProvider {
+  ID_NOW = "id_now",
+  ONFIDO = "onfido",
+}
+
 export interface IKycPerson {
   firstName?: string;
   lastName?: string;
@@ -65,7 +70,7 @@ export const KycPersonalDataSchema = Yup.object().shape({
 
 export const KycPersonalAddressSchema = Yup.object().shape({
   address: Yup.string(),
-  additional: Yup.string(),
+  additionalInformation: Yup.string(),
   city: Yup.string(),
   zipCode: Yup.string(),
   country: restrictedCountry,
@@ -92,18 +97,18 @@ export const KycStatusSchema = YupTS.object({
   inProhibitedRegion: YupTS.boolean(),
   instantIdProvider: YupTS.string(),
   originCountry: YupTS.string<ECountries>(),
-  recommendedInstantIdProvider: YupTS.string(),
+  recommendedInstantIdProvider: YupTS.string<EKycInstantIdProvider>(),
   status: YupTS.string(),
-  supportedInstantIdProviders: YupTS.array(YupTS.string()),
+  supportedInstantIdProviders: YupTS.array(YupTS.string<EKycInstantIdProvider>()),
   type: YupTS.string<EKycRequestType>(),
 });
 
 export type TKycStatus = YupTS.TypeOf<typeof KycStatusSchema>;
 
-export const KycPersonalDataSchemaRequired = makeAllRequired(KycPersonalDataSchema);
+export const KycPersonalDataSchemaRequired = makeAllRequiredExcept(KycPersonalDataSchema, ["id"]);
 export const KycPersonalAddressSchemaRequired = makeAllRequiredExcept(KycPersonalAddressSchema, [
-  "additional",
-  "country",
+  "additionalInformation",
+  "usState",
 ]);
 
 export const KycPersonalDataSchemaRequiredWithAdditionalData = KycPersonalDataSchemaRequired.concat(

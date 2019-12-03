@@ -13,9 +13,11 @@ import { TBankAccount } from "./types";
 
 export const selectKyc = (state: IAppState) => state.kyc;
 
+export const selectKycStatus = createSelector(selectKyc, kyc => kyc && kyc.status);
+
 export const selectIsKycProhibitedRegion = createSelector(
-  selectKyc,
-  kyc => !!kyc.status && kyc.status.inProhibitedRegion,
+  selectKycStatus,
+  kycStatus => !!kycStatus && kycStatus.inProhibitedRegion,
 );
 
 export const selectIndividualFiles = (state: IAppState) => state.kyc.individualFiles;
@@ -205,3 +207,12 @@ export const selectIsBankAccountLoading = (state: IAppState): boolean =>
 export const selectQuintessenceBankAccount = (
   state: IAppState,
 ): DeepReadonly<KycBankQuintessenceBankAccount> | undefined => state.kyc.quintessenceBankAccount;
+
+export const selectKycSupportedInstantIdProviders = createSelector(
+  selectKycStatus,
+  kycStatus => kycStatus && kycStatus.supportedInstantIdProviders,
+);
+export const selectKycRecommendedInstantIdProvider = createSelector(
+  selectKycStatus,
+  kycStatus => kycStatus && kycStatus.recommendedInstantIdProvider,
+);

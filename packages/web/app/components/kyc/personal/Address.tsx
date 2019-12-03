@@ -55,7 +55,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
     />
     <FormField
       label={<FormattedMessage id="form.label.additional-information" />}
-      name="additional"
+      name="additionalInformation"
       data-test-id="kyc-personal-address-additional"
     />
     <span>
@@ -101,7 +101,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
 
     <KYCAddDocuments uploadType={EKycRequestType.INDIVIDUAL} isLoading={props.isSavingForm} />
 
-    <div className="mt-4">
+    <div className="my-4">
       <Button
         layout={EButtonLayout.SECONDARY}
         type="button"
@@ -152,7 +152,6 @@ export const KYCPersonalAddress = compose<React.FunctionComponent>(
     stateToProps: state => ({
       currentValues: state.kyc.individualData,
       loadingData: !!state.kyc.individualDataLoading,
-      // TODO: Remove after getting rid of upload document hack
       isSavingForm: !!state.kyc.kycSaving,
       uploadedFiles: selectIndividualFiles(state),
       uploadedFilesLoading: selectIndividualFilesLoading(state),

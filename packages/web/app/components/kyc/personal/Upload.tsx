@@ -5,33 +5,11 @@ import { compose } from "redux";
 import { EKycRequestType, IKycFileInfo } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
-import { IIntlProps, injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
-import { HorizontalLine } from "../../shared/HorizontalLine";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
-import { KycPanel } from "../KycPanel";
-import { kycRoutes } from "../routes";
-
-export const personalSteps = [
-  {
-    label: <FormattedMessage id="kyc.steps.representation" />,
-    isChecked: true,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.personal-details" />,
-    isChecked: true,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.documents-verification" />,
-    isChecked: true,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.review" />,
-    isChecked: false,
-  },
-];
+import { KycStep } from "../shared/KycStep";
 
 interface IStateProps {
   fileUploading: boolean;
@@ -48,16 +26,15 @@ interface IProps {
   layout: EKycRequestType;
 }
 
-export const KYCUploadComponent = ({
-  intl: { formatIntlMessage },
-  ...props
-}: IProps & IStateProps & IDispatchProps & IIntlProps) => (
-  <KycPanel
-    title={<FormattedMessage id="kyc.panel.individual-verification" />}
-    steps={personalSteps}
-    description={formatIntlMessage("kyc.personal.uploadId.description")}
-    backLink={kycRoutes.individualStart}
-  >
+export const KYCUploadComponent = ({ ...props }: IProps & IStateProps & IDispatchProps) => (
+  <>
+    <KycStep
+      step={4}
+      allSteps={5}
+      title={<FormattedMessage id="kyc.personal.manual-verification.title" />}
+      description={<FormattedMessage id="kyc.personal.manual-verification.description" />}
+    />
+
     <MultiFileUpload
       acceptedFiles={[EMimeType.ANY_IMAGE_TYPE, EMimeType.PDF]}
       uploadType={EKycRequestType.INDIVIDUAL}
@@ -68,7 +45,6 @@ export const KYCUploadComponent = ({
       layout="vertical"
     />
 
-    <HorizontalLine className="my-5" />
     <div className="p-4 text-center">
       <Button
         onClick={props.onDone}
@@ -78,7 +54,7 @@ export const KYCUploadComponent = ({
         <FormattedMessage id="form.button.submit-request" />
       </Button>
     </div>
-  </KycPanel>
+  </>
 );
 
 export const KYCPersonalUpload = compose<React.FunctionComponent>(
@@ -96,5 +72,4 @@ export const KYCPersonalUpload = compose<React.FunctionComponent>(
   onEnterAction({
     actionCreator: dispatch => dispatch(actions.kyc.kycLoadIndividualDocumentList()),
   }),
-  injectIntlHelpers,
 )(KYCUploadComponent);

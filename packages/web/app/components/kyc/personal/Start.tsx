@@ -141,7 +141,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
           )}
         </>
       )}
-      <div className="mt-4">
+      <div className="my-4">
         <Button
           layout={EButtonLayout.SECONDARY}
           type="button"
