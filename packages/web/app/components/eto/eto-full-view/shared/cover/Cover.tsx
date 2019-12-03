@@ -15,7 +15,7 @@ interface IProps {
   companyBanner: IResponsiveImage;
   companyName: TTranslatedString;
   companyOneliner: TTranslatedString;
-  companyLogo: IResponsiveImage;
+  companyLogo: IResponsiveImage | undefined;
   companyJurisdiction: EJurisdiction;
   tags: ReadonlyArray<TTranslatedString> | undefined;
 }
@@ -37,9 +37,11 @@ export const Cover: React.FunctionComponent<IProps> = ({
       alt={companyBanner.alt}
     />
     <div className={styles.companyDetails}>
-      <div className={styles.logoWrapper}>
-        <img src={companyLogo.srcSet["1x"]} alt={companyLogo.alt} />
-      </div>
+      {companyLogo && (
+        <div className={styles.logoWrapper}>
+          <img src={companyLogo.srcSet["1x"]} alt={companyLogo.alt} />
+        </div>
+      )}
       <div className={styles.details}>
         <h1 className={styles.name}>{companyName}</h1>
       </div>
