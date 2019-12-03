@@ -5,7 +5,7 @@ import { compose } from "recompose";
 import { actions } from "../../modules/actions";
 import { appConnect } from "../../store";
 import { EColumnSpan } from "../layouts/Container";
-import { ButtonArrowRight } from "../shared/buttons/Button";
+import { ButtonArrowRight } from "../shared/buttons";
 import { DashboardCenteredWidget } from "../shared/dashboard-widget/DashboardWidget";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryPanel } from "../shared/errorBoundary/ErrorBoundaryPanel";

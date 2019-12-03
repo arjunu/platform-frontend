@@ -43,7 +43,7 @@ export const UnlockFundsSummaryComponent: React.FunctionComponent<TComponentProp
       <Col className="text-center">
         <Button
           onClick={onAccept}
-          innerClassName="mt-4"
+          className="mt-4"
           data-test-id="modals.tx-sender.withdraw-flow.summery.unlock-funds-summary.accept"
         >
           <FormattedMessage id="general-flow.confirm" />

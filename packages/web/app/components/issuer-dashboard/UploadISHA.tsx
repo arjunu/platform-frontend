@@ -3,8 +3,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { appRoutes } from "../appRoutes";
 import { EColumnSpan } from "../layouts/Container";
-import { ButtonGroup, ButtonLink } from "../shared/buttons";
-import { ButtonArrowRight } from "../shared/buttons/Button";
+import { ButtonArrowRight, ButtonGroup, ButtonLink } from "../shared/buttons";
 import { DashboardCenteredWidget } from "../shared/dashboard-widget/DashboardWidget";
 
 interface IExternalProps {

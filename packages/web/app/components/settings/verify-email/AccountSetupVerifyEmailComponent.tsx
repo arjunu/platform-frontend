@@ -5,7 +5,7 @@ import * as Yup from "yup";
 
 import { TDataTestId } from "../../../types";
 import { injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
-import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/index";
+import { Button, ButtonInline, EButtonLayout } from "../../shared/buttons";
 import { FormField } from "../../shared/forms/fields/FormField";
 import { FormDeprecated } from "../../shared/forms/FormDeprecated";
 import { connectVerifyEmailComponent } from "./ConnectVerifyEmail";
@@ -81,14 +81,14 @@ const SetEmailFormLayout = injectIntlHelpers<IEnhancedFormProps & FormikProps<IF
       <div className={styles.buttonWrapper}>
         <Button
           data-test-id="verify-email-widget-form-cancel"
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           onClick={props.revertCancelEmail}
         >
           <FormattedMessage id="form.button.cancel" />
         </Button>
         <Button
           type="submit"
-          layout={EButtonLayout.SECONDARY}
+          layout={EButtonLayout.GHOST}
           disabled={!isValid(props) || props.isLocked}
           data-test-id="verify-email-widget-form-submit"
         >
@@ -140,15 +140,14 @@ const UnverifiedEmail: React.FunctionComponent<IUnverifiedEmailWidgetProps & TDa
     </p>
     <Button
       layout={EButtonLayout.PRIMARY}
-      theme={EButtonTheme.BRAND}
       onClick={cancelEmail}
       data-test-id="verify-email-widget.change-email.button"
     >
       <FormattedMessage id="account-setup.verify-email-widget.change-email" />
     </Button>
-    <Button layout={EButtonLayout.INLINE} onClick={resendEmail} data-test-id="resend-link">
+    <ButtonInline onClick={resendEmail} data-test-id="resend-link">
       <FormattedMessage id="account-setup.verify-email-widget.resend-link" />
-    </Button>
+    </ButtonInline>
   </section>
 );
 

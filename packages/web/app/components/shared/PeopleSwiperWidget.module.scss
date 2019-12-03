@@ -35,21 +35,6 @@
 .prev {
   position: absolute;
   z-index: 2;
-  color: $neu-white-two;
-  width: 35px;
-  height: 35px;
-
-  &:disabled {
-    color: transparent;
-
-    svg * {
-      stroke: $neu-silver;
-    }
-  }
-
-  svg {
-    transform: scaleX(.7);
-  }
 }
 
 .prev {
@@ -69,13 +54,6 @@
 }
 
 @include media-breakpoint-up(sm) {
-  .prev,
-  .next {
-    svg {
-      transform: scaleX(1);
-    }
-  }
-
   .prev {
     margin-right: .3rem;
     left: -1.2rem;

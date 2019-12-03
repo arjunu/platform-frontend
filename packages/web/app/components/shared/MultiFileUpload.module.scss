@@ -132,16 +132,14 @@ $_dropzone-size-sm: 120px;
 }
 
 .file-types {
-  @include font-small-roboto;
+  @include nds-overline;
 
-  line-height: 1.33;
   color: $neu-shuttle-gray;
 }
 
 .upload-title {
-  @include nds-label;
+  @include nds-button-label;
 
-  line-height: 1.43;
   color: $neu-charcoal-grey;
   text-transform: uppercase;
 }

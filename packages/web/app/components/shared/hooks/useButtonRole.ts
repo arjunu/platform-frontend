@@ -5,7 +5,7 @@ import { EKeys } from "../../../utils/enums/keysEnum";
 /**
  * Returns props that should be applied to element that needs to be focusable/clickable.
  * Always prefer to use normal buttons over this hook when possible.
- * Use this as a last resort (for e.g. when you need to have clickable table rows.
+ * Use this as a last resort (for e.g. when you need to have clickable table rows)
  *
  * @return Object with `role` set to button and `tabIndex`, `onClick`, `onKeyDown` to make it accessible.
  *  If `onClick` param is undefined returns empty object

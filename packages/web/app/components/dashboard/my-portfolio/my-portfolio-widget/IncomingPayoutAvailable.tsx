@@ -58,7 +58,7 @@ export const IncomingPayoutAvailableBase: React.FunctionComponent<TIncomingPayou
     <ButtonLink
       data-test-id="incoming-payout-go-to-portfolio"
       to={appRoutes.portfolio}
-      layout={EButtonLayout.SECONDARY}
+      layout={EButtonLayout.GHOST}
       iconPosition={EIconPosition.ICON_AFTER}
       svgIcon={arrowRight}
     >

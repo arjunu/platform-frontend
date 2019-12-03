@@ -1,10 +1,9 @@
-import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Link } from "react-router-dom";
 
 import { appRoutes } from "../../appRoutes";
-import { ButtonLink, EButtonTheme } from "../../shared/buttons/index";
+import { ButtonLink, EButtonLayout } from "../../shared/buttons/index";
 import { walletLoginRoutes, walletRegisterRoutes } from "../../wallet-selector/walletRoutes";
 import { Menu } from "../menus/menu/Menu";
 import { MobileMenu } from "../menus/mobileMenu/MobileMenu";
@@ -14,10 +13,6 @@ import { PendingTransactionStatus } from "./PendingTransactionStatus";
 import * as logoNew from "../../../assets/img/logo_neufund_on_white.svg";
 import * as logoNewTitle from "../../../assets/img/logo_neufund_on_white_title.svg";
 import * as styles from "./Header.module.scss";
-
-interface IHeaderButton {
-  className: string;
-}
 
 const LogoUnauth = () => (
   <Link to={appRoutes.root} className={styles.logoUnauth}>
@@ -33,26 +28,22 @@ const LogoAuth = () => (
   </Link>
 );
 
-const LoginButton: React.FunctionComponent<IHeaderButton> = ({ className }) => (
+const LoginButton: React.FunctionComponent = () => (
   <ButtonLink
-    className={className}
-    theme={EButtonTheme.DARK_NO_BORDER}
-    innerClassName={cn(styles.buttonInner)}
+    className={styles.button}
+    layout={EButtonLayout.GHOST}
     data-test-id="Header-login"
-    isActive={false}
     to={walletLoginRoutes.light}
   >
     <FormattedMessage id="header.login-button" />
   </ButtonLink>
 );
 
-const GetStartedButton: React.FunctionComponent<IHeaderButton> = ({ className }) => (
+const GetStartedButton: React.FunctionComponent = () => (
   <ButtonLink
-    className={className}
-    theme={EButtonTheme.BRAND}
-    innerClassName={styles.buttonInner}
+    className={styles.button}
+    layout={EButtonLayout.PRIMARY}
     data-test-id="Header-register"
-    isActive={false}
     to={walletRegisterRoutes.light}
   >
     <FormattedMessage id="header.get-started-button" />
@@ -62,8 +53,8 @@ const GetStartedButton: React.FunctionComponent<IHeaderButton> = ({ className })
 const HeaderUnauthorized: React.FunctionComponent = () => (
   <div className={styles.headerUnauth}>
     <LogoUnauth />
-    <LoginButton className={styles.button} />
-    <GetStartedButton className={styles.button} />
+    <LoginButton />
+    <GetStartedButton />
   </div>
 );
 

@@ -50,7 +50,7 @@ export const UserClaimSuccessComponent: React.FunctionComponent<IProps> = ({
 
     <Button
       onClick={goToPortfolio}
-      layout={EButtonLayout.SECONDARY}
+      layout={EButtonLayout.GHOST}
       data-test-id="modals.tx-sender.user-claim-flow.success.go-to-portfolio"
     >
       <FormattedMessage id="menu.portfolio.view" />s

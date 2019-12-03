@@ -2,13 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EColumnSpan } from "../../layouts/Container";
-import {
-  Button,
-  ButtonSize,
-  ButtonWidth,
-  EButtonLayout,
-  EButtonTheme,
-} from "../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../shared/buttons";
 import { DashboardWidget } from "../../shared/dashboard-widget/DashboardWidget";
 
 type TExternalProps = {
@@ -30,10 +24,7 @@ const BookBuildingNotActiveWidget: React.FunctionComponent<TExternalProps> = ({
     <div className="m-auto">
       <Button
         layout={EButtonLayout.SECONDARY}
-        theme={EButtonTheme.DARK}
         type="button"
-        size={ButtonSize.NORMAL}
-        width={ButtonWidth.NORMAL}
         onClick={() => startBookBuilding(etoId)}
         data-test-id="eto-flow-start-bookbuilding"
       >

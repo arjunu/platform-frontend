@@ -2,6 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
+import { EButtonLayout } from "./buttons";
 import { DocumentButton, DocumentLabel, DocumentLink } from "./DocumentLink";
 import { InlineIcon } from "./icons";
 
@@ -17,6 +18,9 @@ storiesOf("Document/DocumentLink", module)
 
 storiesOf("Document/DocumentButton", module)
   .add("default", () => <DocumentButton title="my document template" onClick={action("onClick")} />)
+  .add("with layout", () => (
+    <DocumentButton layout={EButtonLayout.OUTLINE} title="my document template" />
+  ))
   .add("custom icon", () => (
     <DocumentButton
       title="my custom template"

@@ -97,7 +97,8 @@ describe("Redeem NEUR", function(): void {
     });
 
     // close bank account link modal
-    cy.get(tid("bank-transfer.summary.transfer-completed"));
+    cy.get(tid("bank-transfer.summary.transfer-completed")).click();
+
     cy.get(tid("modal-close-button"))
       .last()
       .click();

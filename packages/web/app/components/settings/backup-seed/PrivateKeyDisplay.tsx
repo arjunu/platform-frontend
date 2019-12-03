@@ -2,9 +2,10 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 
-import { Button, ButtonGroup, EButtonLayout, EIconPosition } from "../../shared/buttons";
+import { ButtonBase, ButtonGroup } from "../../shared/buttons";
 import { Heading } from "../../shared/Heading";
 import { useCopyClipboard } from "../../shared/hooks/useCopyToClipboard";
+import { InlineIcon } from "../../shared/icons/InlineIcon";
 
 import * as blindIcon from "../../../assets/img/inline_icons/blind.svg";
 import * as eyeIcon from "../../../assets/img/inline_icons/eye.svg";
@@ -44,27 +45,20 @@ const PrivateKeyDisplay: React.FunctionComponent<TProps> = ({ privateKey }) => {
         />
       </p>
       <ButtonGroup>
-        <Button
+        <ButtonBase
           data-test-id="private-key-display.copy-to-clipboard"
           className={styles.button}
-          innerClassName={styles.content}
-          layout={EButtonLayout.SIMPLE}
           onClick={copyPrivateKeyToClipboard}
           type="button"
-          svgIcon={clipboardIcon}
-          iconPosition={EIconPosition.ICON_AFTER}
         >
           <FormattedMessage id="components.settings.private-key-display.copy-private-key" />
-        </Button>
-        <Button
+          <InlineIcon svgIcon={clipboardIcon} />
+        </ButtonBase>
+        <ButtonBase
           aria-live="polite"
           data-test-id="private-key-display.view-private-key"
-          className={styles.button}
-          innerClassName={cn(styles.content, { [styles.contentActive]: showPrivateKey })}
-          layout={EButtonLayout.SIMPLE}
+          className={cn(styles.button, { [styles.buttonActive]: showPrivateKey })}
           onClick={togglePrivateKeyVisibility}
-          svgIcon={showPrivateKey ? blindIcon : eyeIcon}
-          iconPosition={EIconPosition.ICON_AFTER}
         >
           {showPrivateKey ? (
             process.env.NF_CYPRESS_RUN === "1" ? (
@@ -75,7 +69,8 @@ const PrivateKeyDisplay: React.FunctionComponent<TProps> = ({ privateKey }) => {
           ) : (
             <FormattedMessage id="components.settings.private-key-display.view-private-key" />
           )}
-        </Button>
+          <InlineIcon svgIcon={showPrivateKey ? blindIcon : eyeIcon} />
+        </ButtonBase>
       </ButtonGroup>
     </section>
   );
