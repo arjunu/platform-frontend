@@ -1,5 +1,6 @@
 import { appRoutes } from "../../components/appRoutes";
 import { kycRoutes } from "../../components/kyc/routes";
+import { ID_NOW_EXTERNAL_MOCK } from "../config";
 import { fillForm, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
 import { stubWindow } from "../utils/index";
 import { tid } from "../utils/selectors";
@@ -19,11 +20,7 @@ const assertOutsourcedVerification = () => {
 
   cy.get(tid("kyc-go-to-outsourced-verification")).click();
 
-  cy.get("@windowOpen").should(
-    "be.calledWithMatch",
-    "http://dev_external_services_mock_api:1337/",
-    "_blank",
-  );
+  cy.get("@windowOpen").should("be.calledWithMatch", ID_NOW_EXTERNAL_MOCK, "_blank");
 
   cy.get(tid("kyc-panel-outsourced")).should("exist");
 };
@@ -35,11 +32,7 @@ const assertOutsourcedKycWidgetStatus = () => {
 
   cy.get(tid("settings.kyc-status-widget.continue-kyc-idnow-verification")).click();
 
-  cy.get("@windowOpen").should(
-    "be.calledWithMatch",
-    "http://dev_external_services_mock_api:1337/",
-    "_blank",
-  );
+  cy.get("@windowOpen").should("be.calledWithMatch", ID_NOW_EXTERNAL_MOCK, "_blank");
 };
 
 describe("KYC Personal flow with ID Now", () => {

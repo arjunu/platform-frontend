@@ -118,14 +118,14 @@ export class KycApi {
       .then(response => response.body);
   }
 
-  public async startInstantId(): Promise<TKycIdNowIdentification> {
-    const response = await this.httpClient.put<TKycIdNowIdentification>({
-      baseUrl: BASE_PATH,
-      url: ID_NOW_REQUEST_PATH,
-      responseSchema: KycIdNowIdentificationSchema,
-    });
-
-    return response.body;
+  public startInstantId(): Promise<TKycIdNowIdentification> {
+    return this.httpClient
+      .put<TKycIdNowIdentification>({
+        baseUrl: BASE_PATH,
+        url: ID_NOW_REQUEST_PATH,
+        responseSchema: KycIdNowIdentificationSchema,
+      })
+      .then(response => response.body);
   }
 
   /**
