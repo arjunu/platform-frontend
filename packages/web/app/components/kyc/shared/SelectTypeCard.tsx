@@ -5,7 +5,8 @@ import { EKycRequestType } from "../../../lib/api/kyc/KycApi.interfaces";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 
-import * as icon from "../../../assets/img/inline_icons/eye.svg";
+import * as company from "../../../assets/img/inline_icons/company.svg";
+import * as individual from "../../../assets/img/inline_icons/individual.svg";
 import * as styles from "./SelectTypeCard.module.scss";
 
 type TProps = {
@@ -17,7 +18,7 @@ type TProps = {
 const SelectTypeCardPersonal: React.FunctionComponent = () => (
   <>
     <div className={styles.iconContainer}>
-      <InlineIcon svgIcon={icon} width="64" height="64" />
+      <InlineIcon svgIcon={individual} width="64" height="64" />
     </div>
     <h3 className={styles.title}>
       <FormattedMessage id="shared.kyc.select-type.personal.title" />
@@ -31,7 +32,7 @@ const SelectTypeCardPersonal: React.FunctionComponent = () => (
 const SelectTypeCardCompany: React.FunctionComponent = () => (
   <>
     <div className={styles.iconContainer}>
-      <InlineIcon svgIcon={icon} width="64" height="64" />
+      <InlineIcon svgIcon={company} width="64" height="64" />
     </div>
     <h3 className={styles.title}>
       <FormattedMessage id="shared.kyc.select-type.company.title" />

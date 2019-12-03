@@ -19,12 +19,12 @@ $icon-dimensions: px-to-rem(64px);
 }
 
 .icon-container {
-  width: $icon-dimensions;
-  height: $icon-dimensions;
+  @include rect($icon-dimensions);
+
+  color: transparent;
   background-color: $neu-pale-grey-three;
   padding: 16px;
   border-radius: 50%;
-  color: $black;
   margin-bottom: px-to-rem(16px);
 }
 
