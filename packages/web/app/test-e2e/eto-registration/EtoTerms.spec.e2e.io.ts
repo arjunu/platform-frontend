@@ -1,30 +1,32 @@
 import { fillForm } from "../utils/forms";
 import { goToIssuerDashboard } from "../utils/navigation";
 import { formField, tid } from "../utils/selectors";
-import { loginFixtureAccount } from "../utils/userHelpers";
+import { createAndLoginNewUser } from "../utils/userHelpers";
+import { pushEtoDataToAPI, pushEtoToAPI } from "./utils";
 
 describe("Eto Terms", () => {
-  it("should show 6 available products", () => {
-    loginFixtureAccount("ISSUER_PREVIEW", {
+  before(() => {
+    createAndLoginNewUser({
       signTosAgreement: true,
       kyc: "business",
+      type: "issuer",
+    }).then(() => {
+      pushEtoToAPI();
+      pushEtoDataToAPI();
+      cy.saveLocalStorage();
     });
-
+  });
+  beforeEach(() => {
+    cy.restoreLocalStorage();
     goToIssuerDashboard();
-
+  });
+  it("should show 6 available products", () => {
     cy.get(`${tid("eto-progress-widget-eto-terms")} button`).click();
 
     cy.get(formField("productId")).should("have.length", 6);
   });
 
   it("should show product details on hover", () => {
-    loginFixtureAccount("ISSUER_PREVIEW", {
-      signTosAgreement: true,
-      kyc: "business",
-    });
-
-    goToIssuerDashboard();
-
     cy.get(`${tid("eto-progress-widget-eto-terms")} button`).click();
 
     cy.get(tid("eto-terms.product.hnwi-eto-de-vma.tooltip.trigger")).trigger("mouseover");
@@ -33,13 +35,6 @@ describe("Eto Terms", () => {
   });
 
   it("should hide and show transferable toggle", () => {
-    loginFixtureAccount("ISSUER_PREVIEW", {
-      signTosAgreement: true,
-      kyc: "business",
-    });
-
-    goToIssuerDashboard();
-
     cy.get(`${tid("eto-progress-widget-eto-terms")} button`).click();
 
     // should not show transferable toggle
