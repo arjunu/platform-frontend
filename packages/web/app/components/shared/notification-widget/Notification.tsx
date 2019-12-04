@@ -1,13 +1,10 @@
 import * as cn from "classnames";
 import * as React from "react";
-import { FormattedMessage } from "react-intl-phraseapp";
 
-import { externalRoutes } from "../../../config/externalRoutes";
-import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
-import { TDataTestId } from "../../../types";
+import { ENotificationType } from "../../../modules/notifications/types";
+import { CommonHtmlProps, OmitKeys, TDataTestId, TTranslatedString } from "../../../types";
 import { ButtonBase } from "../buttons";
 import { ButtonClose } from "../buttons/CommonButtons";
-import { ExternalLink } from "../links/ExternalLink";
 
 import * as infoIcon from "../../../assets/img/notifications/info.svg";
 import * as warningIcon from "../../../assets/img/notifications/warning.svg";
@@ -15,13 +12,8 @@ import * as styles from "./Notification.module.scss";
 
 export interface INotificationProps {
   type: ENotificationType;
-  text: ENotificationText;
+  text: TTranslatedString;
   onClick?: () => void;
-}
-
-export interface INotificationContentProps {
-  type: ENotificationType;
-  text: ENotificationText;
 }
 
 const icons = {
@@ -29,28 +21,7 @@ const icons = {
   [ENotificationType.WARNING]: warningIcon,
 };
 
-// TODO: This should not be here. Shared components should not be coupled with business logic
-const notificationTexts = {
-  [ENotificationText.COMPLETE_REQUEST_NOTIFICATION]: (
-    <FormattedMessage id="notifications.complete-request" />
-  ),
-  [ENotificationText.COMPLETE_UPDATE_ACCOUNT]: (
-    <FormattedMessage id="notifications.update-account" />
-  ),
-  [ENotificationText.AUTH_SESSION_TIMEOUT]: (
-    <FormattedMessage id="notifications.auth-session-timeout" />
-  ),
-  [ENotificationText.NOT_ACCREDITED_INVESTOR]: (
-    <FormattedMessage
-      id="notifications.not-accredited-investor"
-      values={{
-        link: <ExternalLink href={externalRoutes.accreditationHelp}>Save & close</ExternalLink>,
-      }}
-    />
-  ),
-};
-
-const NotificationContent: React.FunctionComponent<INotificationContentProps> = ({
+const NotificationContent: React.FunctionComponent<OmitKeys<INotificationProps, "onClick">> = ({
   text,
   type,
 }) => (
@@ -59,18 +30,19 @@ const NotificationContent: React.FunctionComponent<INotificationContentProps> = 
       <img src={icons[type]} alt="" />
     </i>
     <span data-test-id="notification-text" className={styles.text}>
-      {notificationTexts[text]}
+      {text}
     </span>
   </div>
 );
 
-const Notification: React.FunctionComponent<INotificationProps & TDataTestId> = ({
+const Notification: React.FunctionComponent<INotificationProps & TDataTestId & CommonHtmlProps> = ({
   type,
   text,
   onClick,
+  className,
   "data-test-id": dataTestId,
 }) => (
-  <section data-test-id={dataTestId} className={cn(styles.notificationWrapper)}>
+  <section data-test-id={dataTestId} className={cn(styles.notificationWrapper, className)}>
     {onClick ? (
       <ButtonBase className="w-100" data-test-id="notification-button" onClick={onClick}>
         <NotificationContent text={text} type={type} />

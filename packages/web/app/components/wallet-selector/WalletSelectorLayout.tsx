@@ -8,12 +8,13 @@ import { Col, Row } from "reactstrap";
 import { externalRoutes } from "../../config/externalRoutes";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { ELogoutReason } from "../../modules/auth/types";
-import { ENotificationText, ENotificationType } from "../../modules/notifications/types";
+import { ENotificationType } from "../../modules/notifications/types";
 import { TLoginRouterState } from "../../modules/routing/types";
 import { appRoutes } from "../appRoutes";
 import { ButtonInline, ButtonLink } from "../shared/buttons";
 import { ExternalLink } from "../shared/links";
 import { Notification } from "../shared/notification-widget/Notification";
+import { ENotificationText } from "../translatedMessages/messages";
 import { WalletRouter } from "./WalletRouter";
 import { WalletSelectorContainer } from "./WalletSelectorContainer";
 
@@ -75,7 +76,6 @@ export const WalletSelectorLayout: React.FunctionComponent<IExternalProps & TRou
           onClick={hideLogoutReason}
         />
       )}
-
       <Row>
         <Col tag="section" md={{ size: 10, offset: 1 }} lg={{ size: 8, offset: 2 }}>
           <h1 className={cn(styles.walletChooserTitle, "my-4", "text-center")}>

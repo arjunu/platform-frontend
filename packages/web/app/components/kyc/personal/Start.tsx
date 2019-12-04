@@ -14,12 +14,13 @@ import {
   selectIndividualFilesLoading,
   selectKycUploadedFiles,
 } from "../../../modules/kyc/selectors";
-import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
+import { ENotificationType } from "../../../modules/notifications/types";
 import { appConnect } from "../../../store";
 import { ECountries } from "../../../utils/enums/countriesEnum";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { EButtonLayout } from "../../shared/buttons/Button";
+import { ButtonInline } from "../../shared/buttons/ButtonInline";
 import {
   BOOL_FALSE_KEY,
   BOOL_TRUE_KEY,
@@ -137,7 +138,18 @@ const KYCForm: React.FunctionComponent<TProps> = ({
 
             {values.isAccreditedUsCitizen === BOOL_FALSE_KEY && (
               <Notification
-                text={ENotificationText.NOT_ACCREDITED_INVESTOR}
+                text={
+                  <FormattedMessage
+                    id="notifications.not-accredited-investor"
+                    values={{
+                      link: (
+                        <ButtonInline onClick={() => props.submitAndClose(values)}>
+                          <FormattedMessage id="form.save-and-close" />
+                        </ButtonInline>
+                      ),
+                    }}
+                  />
+                }
                 type={ENotificationType.WARNING}
               />
             )}

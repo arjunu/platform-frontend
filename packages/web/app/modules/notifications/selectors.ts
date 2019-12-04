@@ -2,6 +2,7 @@ import { includes, some } from "lodash";
 import { createSelector } from "reselect";
 
 import { appRoutes } from "../../components/appRoutes";
+import { EKycRequestStatus } from "../../lib/api/kyc/KycApi.interfaces";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { IAppState } from "../../store";
 import {
@@ -11,7 +12,6 @@ import {
   selectUserType,
 } from "../auth/selectors";
 import { selectKycLoading, selectKycRequestStatus } from "../kyc/selectors";
-import { EKycRequestStatus } from "./../../lib/api/kyc/KycApi.interfaces";
 import { settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
 import { INotification } from "./types";
 
