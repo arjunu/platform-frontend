@@ -5,7 +5,7 @@ import { EUserType } from "../../lib/api/users/interfaces";
 import { selectUserType } from "../../modules/auth/selectors";
 import { appConnect } from "../../store";
 import { SwitchConnected } from "../../utils/connectedRouting";
-import { KYCPersonalUpload } from "./personal/Upload";
+import { KYCAdditionalUpload } from "./personal/AdditionalUpload";
 import { kycRoutes } from "./routes";
 import { KycSuccess } from "./Success";
 
@@ -20,7 +20,7 @@ export const KycSubmitedRouterComponent: React.FunctionComponent<IStateProps> = 
   return (
     <SwitchConnected>
       <Route path={kycRoutes.success} component={KycSuccess} exact />
-      <Route path={kycRoutes.individualUpload} component={KYCPersonalUpload} />
+      <Route path={kycRoutes.individualUpload} component={KYCAdditionalUpload} />
 
       <Redirect to={kycRoutes.success} />
     </SwitchConnected>

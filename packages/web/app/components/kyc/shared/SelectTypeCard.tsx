@@ -2,6 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EKycRequestType } from "../../../lib/api/kyc/KycApi.interfaces";
+import { TDataTestId } from "../../../types";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 
@@ -46,10 +47,20 @@ const SelectTypeCardCompany: React.FunctionComponent = () => (
 /*
   TODO: Replace with new buttons
  */
-const SelectTypeCard: React.FunctionComponent<TProps> = ({ kycType, onClick, isStarted }) => (
+const SelectTypeCard: React.FunctionComponent<TProps & TDataTestId> = ({
+  kycType,
+  onClick,
+  isStarted,
+  "data-test-id": dataTestId,
+}) => (
   <section className={styles.card}>
     {kycType === EKycRequestType.BUSINESS ? <SelectTypeCardCompany /> : <SelectTypeCardPersonal />}
-    <Button className="mt-auto" onClick={onClick} layout={EButtonLayout.PRIMARY}>
+    <Button
+      className="mt-auto"
+      onClick={onClick}
+      layout={EButtonLayout.PRIMARY}
+      data-test-id={dataTestId}
+    >
       {isStarted ? (
         <FormattedMessage id="shared.kyc.select-type.continue" />
       ) : (

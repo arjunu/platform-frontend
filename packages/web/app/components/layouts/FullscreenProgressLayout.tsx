@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { TDataTestId } from "../../types";
+import { TDataTestId, TTranslatedString } from "../../types";
 import { ProgressBarSimple } from "../shared/ProgressBarSimple";
 import { Content } from "./Content";
 import { HeaderFullscreen, THeaderFullscreenProps } from "./header/HeaderFullscreen";
@@ -9,13 +9,27 @@ import { LayoutWrapper } from "./LayoutWrapper";
 
 import * as styles from "./FullscreenProgressLayout.module.scss";
 
-type TProgressProps = {
+type TInitialProps = {
   progress?: number;
+  buttonProps?: TButtonProps;
+};
+
+type TButtonProps = {
+  buttonText: TTranslatedString | undefined;
+  buttonAction: (() => void) | undefined;
 };
 
 type TProgressContext = {
   progress: number;
   setCurrentProgress: (value: number) => void;
+};
+
+type TButtonContext = {
+  buttonProps: TButtonProps | undefined;
+  setCurrentButtonProps: (
+    text: TTranslatedString | undefined,
+    action: (() => void) | undefined,
+  ) => void;
 };
 
 const calculateStepProgress = (step: number, allSteps: number) =>
@@ -24,6 +38,11 @@ const calculateStepProgress = (step: number, allSteps: number) =>
 const FullscreenProgressContext = React.createContext<TProgressContext>({
   progress: 0,
   setCurrentProgress: () => {},
+});
+
+const FullscreenButtonContext = React.createContext<TButtonContext>({
+  buttonProps: undefined,
+  setCurrentButtonProps: () => {},
 });
 
 const useProgress = (initialValue = 0): TProgressContext => {
@@ -36,28 +55,51 @@ const useProgress = (initialValue = 0): TProgressContext => {
   return { progress, setCurrentProgress };
 };
 
+const useActionButton = (initialProps?: TButtonProps): TButtonContext => {
+  const [buttonProps, setButtonProps] = React.useState<TButtonProps | undefined>(initialProps);
+
+  const setCurrentButtonProps = React.useCallback(
+    (buttonText: TTranslatedString | undefined, buttonAction: (() => void) | undefined) => {
+      setButtonProps({ buttonText, buttonAction });
+    },
+    [],
+  );
+
+  return { buttonProps, setCurrentButtonProps };
+};
+
 const FullscreenProgressLayout: React.FunctionComponent<TDataTestId &
   TContentExternalProps &
   THeaderFullscreenProps &
-  TProgressProps> = ({
+  TInitialProps> = ({
   children,
   "data-test-id": dataTestId,
-  title,
-  action,
   progress = 0,
+  buttonProps,
   ...contentProps
 }) => {
-  const progressVal = useProgress(progress);
+  const progressCtx = useProgress(progress);
+  const buttonCtx = useActionButton(buttonProps);
 
   return (
     <LayoutWrapper data-test-id={dataTestId}>
-      <FullscreenProgressContext.Provider value={progressVal}>
-        <HeaderFullscreen action={action} title={title} />
-        <ProgressBarSimple className={styles.progress} progress={progressVal.progress} />
-        <Content {...contentProps}>{children}</Content>
+      <FullscreenProgressContext.Provider value={progressCtx}>
+        <FullscreenButtonContext.Provider value={buttonCtx}>
+          <HeaderFullscreen
+            buttonAction={buttonCtx.buttonProps && buttonCtx.buttonProps.buttonAction}
+            buttonText={buttonCtx.buttonProps && buttonCtx.buttonProps.buttonText}
+          />
+          <ProgressBarSimple className={styles.progress} progress={progressCtx.progress} />
+          <Content {...contentProps}>{children}</Content>
+        </FullscreenButtonContext.Provider>
       </FullscreenProgressContext.Provider>
     </LayoutWrapper>
   );
 };
 
-export { FullscreenProgressLayout, useProgress, FullscreenProgressContext, calculateStepProgress };
+export {
+  FullscreenProgressLayout,
+  FullscreenProgressContext,
+  calculateStepProgress,
+  FullscreenButtonContext,
+};

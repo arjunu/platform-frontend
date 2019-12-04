@@ -4,6 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { TTranslatedString } from "../../../types";
 import {
   calculateStepProgress,
+  FullscreenButtonContext,
   FullscreenProgressContext,
 } from "../../layouts/FullscreenProgressLayout";
 
@@ -14,14 +15,27 @@ type TProps = {
   allSteps: number;
   title: TTranslatedString;
   description: TTranslatedString;
+  buttonAction?: () => void;
 };
 
-const KycStep: React.FunctionComponent<TProps> = ({ step, allSteps, title, description }) => {
+const KycStep: React.FunctionComponent<TProps> = ({
+  step,
+  allSteps,
+  title,
+  description,
+  buttonAction,
+}) => {
   const { setCurrentProgress } = React.useContext(FullscreenProgressContext);
 
   React.useMemo(() => {
     setCurrentProgress(calculateStepProgress(step, allSteps));
   }, [setCurrentProgress]);
+
+  const { setCurrentButtonProps } = React.useContext(FullscreenButtonContext);
+
+  React.useMemo(() => {
+    setCurrentButtonProps(<FormattedMessage id="form.save-and-close" />, buttonAction);
+  }, [setCurrentButtonProps, buttonAction]);
 
   return (
     <>

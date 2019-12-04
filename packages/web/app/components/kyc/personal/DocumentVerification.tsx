@@ -10,7 +10,6 @@ import {
   selectKycSupportedInstantIdProviders,
 } from "../../../modules/kyc/selectors";
 import { appConnect } from "../../../store";
-import { OmitKeys } from "../../../types";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { KycStep } from "../shared/KycStep";
 import { VerificationMethod } from "../shared/VerificationMethod";
@@ -25,10 +24,14 @@ interface IStateProps {
   currentProvider?: EKycInstantIdProvider;
 }
 
-interface IDispatchProps {
+interface IStartInstantIdProps {
   onStartIdNow: () => void;
   onManualVerification: () => void;
+}
+
+interface IDispatchProps extends IStartInstantIdProps {
   goBack: () => void;
+  goToDashboard: () => void;
 }
 
 interface IRecommendedProps {
@@ -60,7 +63,7 @@ const selectProviderText = (provider: EKycInstantIdProvider) => {
 
 const selectProviderAction = (
   provider: EKycInstantIdProvider,
-  dispatchers: OmitKeys<IDispatchProps, "goBack">,
+  dispatchers: IStartInstantIdProps,
 ) => {
   switch (provider) {
     case EKycInstantIdProvider.ID_NOW:
@@ -92,12 +95,8 @@ const showManualVerification = () => {
   return enabledProviders && enabledProviders.includes("manual");
 };
 
-const KycPersonalDocumentVerificationRecomended: React.FunctionComponent<IRecommendedProps &
-  OmitKeys<IDispatchProps, "goBack">> = ({
-  recommendedInstantIdProvider,
-  currentProvider,
-  ...dispatchers
-}) => (
+const KycPersonalDocumentVerificationRecommended: React.FunctionComponent<IRecommendedProps &
+  IStartInstantIdProps> = ({ recommendedInstantIdProvider, currentProvider, ...dispatchers }) => (
   <>
     <p className={styles.label}>
       <FormattedMessage id="kyc.personal.document-verification.recommended" />
@@ -121,6 +120,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
   recommendedInstantIdProvider,
   goBack,
   currentProvider,
+  goToDashboard,
   ...dispatchers
 }) => {
   const enabledInstantIdProviders = getEnabledInstatnIdProviders(supportedInstantIdProviders);
@@ -131,10 +131,11 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
         allSteps={5}
         title={<FormattedMessage id="kyc.personal.verify.title" />}
         description={<FormattedMessage id="kyc.personal.verify.description" />}
+        buttonAction={() => goToDashboard()}
       />
 
       {recommendedInstantIdProvider && (
-        <KycPersonalDocumentVerificationRecomended
+        <KycPersonalDocumentVerificationRecommended
           currentProvider={currentProvider}
           recommendedInstantIdProvider={recommendedInstantIdProvider}
           {...dispatchers}
@@ -170,7 +171,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
             layout={EButtonLayout.GHOST}
             className={styles.button}
             type="button"
-            data-test-id="kyc-personal-verification-manual"
+            data-test-id="kyc-go-to-manual-verification"
             onClick={dispatchers.onManualVerification}
           >
             <FormattedMessage id="kyc.personal.verify.manual" />
@@ -192,6 +193,7 @@ export const KycPersonalDocumentVerification = compose<React.FunctionComponent>(
       onStartIdNow: () => dispatch(actions.kyc.kycStartInstantId()),
       onManualVerification: () => dispatch(actions.routing.goToKYCIndividualUpload()),
       goBack: () => dispatch(actions.routing.goToKYCIndividualAddress()),
+      goToDashboard: () => dispatch(actions.routing.goToDashboard()),
     }),
   }),
 )(KycPersonalDocumentVerificationComponent);

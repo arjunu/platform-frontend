@@ -32,11 +32,7 @@ export const KYCAddDocumentsComponent: React.FunctionComponent<IStateProps &
     <LoadingIndicator />
   ) : (
     <MultiFileUpload
-      data-test-id={
-        uploadType === EKycUploadType.US_ACCREDITATION
-          ? "kyc-personal-accreditation-upload-dropzone"
-          : undefined
-      }
+      data-test-id="kyc-upload-documents-dropzone"
       acceptedFiles={[EMimeType.ANY_IMAGE_TYPE, EMimeType.PDF]}
       onDropFile={onDropFile}
       files={files}

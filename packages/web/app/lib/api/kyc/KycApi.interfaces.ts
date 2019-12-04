@@ -18,6 +18,7 @@ export enum EKycRequestType {
 export enum EKycInstantIdProvider {
   ID_NOW = "id_now",
   ONFIDO = "onfido",
+  NONE = "none",
 }
 
 export interface IKycPerson {
@@ -67,7 +68,7 @@ export const KycPersonalDataSchema = Yup.object().shape({
 });
 
 export const KycPersonalAddressSchema = Yup.object().shape({
-  address: Yup.string(),
+  street: Yup.string(),
   additionalInformation: Yup.string(),
   city: Yup.string(),
   zipCode: Yup.string(),

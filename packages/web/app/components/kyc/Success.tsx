@@ -6,6 +6,7 @@ import { actions } from "../../modules/actions";
 import { appConnect } from "../../store";
 import {
   calculateStepProgress,
+  FullscreenButtonContext,
   FullscreenProgressContext,
 } from "../layouts/FullscreenProgressLayout";
 import { Button, EButtonLayout } from "../shared/buttons/Button";
@@ -28,6 +29,12 @@ const KycSuccessLayout: React.FunctionComponent<TDispatchProps> = ({
     setCurrentProgress(calculateStepProgress(5, 5));
   }, [setCurrentProgress]);
 
+  const { setCurrentButtonProps } = React.useContext(FullscreenButtonContext);
+
+  React.useMemo(() => {
+    setCurrentButtonProps(undefined, undefined);
+  }, [setCurrentButtonProps]);
+
   return (
     <>
       <SuccessTick />
@@ -38,7 +45,7 @@ const KycSuccessLayout: React.FunctionComponent<TDispatchProps> = ({
         <FormattedMessage id="kyc.success.text" />
       </p>
 
-      <div className={styles.buttons}>
+      <div className={styles.buttons} data-test-id="kyc-success">
         <Button
           layout={EButtonLayout.PRIMARY}
           className={styles.button}

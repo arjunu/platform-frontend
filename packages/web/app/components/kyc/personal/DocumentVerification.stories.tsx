@@ -18,6 +18,7 @@ storiesOf("organisms|KYC/DocumentVerification", module)
       onStartIdNow={action("ID_NOW")}
       onManualVerification={action("MANUAL")}
       goBack={action("GO_BACK")}
+      goToDashboard={action("GO_TO_DASHBOARD")}
     />
   ))
   .add("with recommended IDnow", () => (
@@ -27,6 +28,7 @@ storiesOf("organisms|KYC/DocumentVerification", module)
       onStartIdNow={action("ID_NOW")}
       onManualVerification={action("MANUAL")}
       goBack={action("GO_BACK")}
+      goToDashboard={action("GO_TO_DASHBOARD")}
     />
   ))
   .add("without recommended", () => (
@@ -35,6 +37,7 @@ storiesOf("organisms|KYC/DocumentVerification", module)
       onStartIdNow={action("ID_NOW")}
       onManualVerification={action("MANUAL")}
       goBack={action("GO_BACK")}
+      goToDashboard={action("GO_TO_DASHBOARD")}
     />
   ))
   .add("with no providers", () => (
@@ -43,6 +46,7 @@ storiesOf("organisms|KYC/DocumentVerification", module)
       onStartIdNow={action("ID_NOW")}
       onManualVerification={action("MANUAL")}
       goBack={action("GO_BACK")}
+      goToDashboard={action("GO_TO_DASHBOARD")}
     />
   ))
   .add("with started verification", () => (
@@ -52,5 +56,6 @@ storiesOf("organisms|KYC/DocumentVerification", module)
       onStartIdNow={action("ID_NOW")}
       onManualVerification={action("MANUAL")}
       goBack={action("GO_BACK")}
+      goToDashboard={action("GO_TO_DASHBOARD")}
     />
   ));

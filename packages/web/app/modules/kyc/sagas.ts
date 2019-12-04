@@ -153,12 +153,11 @@ function* loadIndividualData({ apiKycService, logger }: TGlobalDependencies): It
   }
 }
 
-function* submitPersonalData(
+function* submitPersonalDataSaga(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
+  data: IKycIndividualData,
 ): Iterator<any> {
   try {
-    const { data, skipContinue } = action.payload;
     const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalData(data);
 
     yield put(
@@ -168,9 +167,7 @@ function* submitPersonalData(
       }),
     );
 
-    if (!skipContinue) {
-      yield put(actions.routing.goToKYCIndividualAddress());
-    }
+    return true;
   } catch (e) {
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
 
@@ -178,12 +175,35 @@ function* submitPersonalData(
   }
 }
 
-function* submitPersonalAddress(
+function* submitPersonalData(
+  _: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
+): Iterator<any> {
+  const { data, skipContinue } = action.payload;
+  const success = yield neuCall(submitPersonalDataSaga, data);
+
+  if (!skipContinue && success) {
+    yield put(actions.routing.goToKYCIndividualAddress());
+  }
+}
+
+function* submitPersonalDataAndClose(
+  _: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalDataAndClose>,
+): Iterator<any> {
+  const { data } = action.payload;
+  const success = yield neuCall(submitPersonalDataSaga, data);
+
+  if (success) {
+    yield put(actions.routing.goToDashboard());
+  }
+}
+
+function* submitPersonalAddressSaga(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalAddress>,
+  data: IKycIndividualData,
 ): Iterator<any> {
   try {
-    const { data } = action.payload;
     const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalAddress({
       ...data,
       // TODO: Remove when not needed. This adds additional fields required by backend
@@ -197,11 +217,35 @@ function* submitPersonalAddress(
       }),
     );
 
-    yield put(actions.routing.goToKYCIndividualDocumentVerification());
+    return true;
   } catch (e) {
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
 
     logger.error("Failed to submit KYC individual data", e);
+  }
+}
+
+function* submitPersonalAddress(
+  _: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalAddress>,
+): Iterator<any> {
+  const { data } = action.payload;
+  const success = yield neuCall(submitPersonalAddressSaga, data);
+
+  if (success) {
+    yield put(actions.routing.goToKYCIndividualDocumentVerification());
+  }
+}
+
+function* submitPersonalAddressAndClose(
+  _: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalAddress>,
+): Iterator<any> {
+  const { data } = action.payload;
+  const success = yield neuCall(submitPersonalAddressSaga, data);
+
+  if (success) {
+    yield put(actions.routing.goToDashboard());
   }
 }
 
@@ -765,7 +809,13 @@ export function* kycSagas(): Iterator<any> {
 
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualData, loadIndividualData);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitPersonalData, submitPersonalData);
+  yield fork(neuTakeEvery, actions.kyc.kycSubmitPersonalDataAndClose, submitPersonalDataAndClose);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitPersonalAddress, submitPersonalAddress);
+  yield fork(
+    neuTakeEvery,
+    actions.kyc.kycSubmitPersonalAddressAndClose,
+    submitPersonalAddressAndClose,
+  );
   yield fork(neuTakeEvery, actions.kyc.kycUploadIndividualDocument, uploadIndividualFile);
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualDocumentList, loadIndividualFiles);
   // Outsourced

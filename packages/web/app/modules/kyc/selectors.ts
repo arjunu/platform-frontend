@@ -1,6 +1,7 @@
 import { createSelector } from "reselect";
 
 import {
+  EKycInstantIdProvider,
   EKycRequestStatus,
   EKycRequestType,
   ERequestOutsourcedStatus,
@@ -206,7 +207,8 @@ export const selectKycRecommendedInstantIdProvider = createSelector(
   kycStatus => kycStatus && kycStatus.recommendedInstantIdProvider,
 );
 
-export const selectKycInstantIdProvider = createSelector(
-  selectKycStatus,
-  kycStatus => kycStatus && kycStatus.instantIdProvider,
+export const selectKycInstantIdProvider = createSelector(selectKycStatus, kycStatus =>
+  kycStatus && kycStatus.instantIdProvider !== EKycInstantIdProvider.NONE
+    ? kycStatus.instantIdProvider
+    : undefined,
 );

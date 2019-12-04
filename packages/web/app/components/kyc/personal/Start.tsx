@@ -55,7 +55,8 @@ interface IStateProps {
 }
 
 interface IDispatchProps {
-  submitForm: (values: IKycIndividualData, skipContinue?: boolean) => void;
+  submitForm: (values: IKycIndividualData, skipContinue?: boolean, exit?: boolean) => void;
+  submitAndClose: (values: IKycIndividualData) => void;
   goBack: () => void;
 }
 
@@ -74,101 +75,110 @@ const KYCForm: React.FunctionComponent<TProps> = ({
     shouldAddAccreditedInvestorFlow && uploadedFiles.length === 0;
 
   return (
-    <FormDeprecated>
-      <Row>
-        <Col xs={12} md={6} lg={6}>
-          <FormField
-            label={<FormattedMessage id="form.label.first-name" />}
-            name="firstName"
-            data-test-id="kyc-personal-start-first-name"
-          />
-        </Col>
-        <Col xs={12} md={6} lg={6}>
-          <FormField
-            label={<FormattedMessage id="form.label.last-name" />}
-            name="lastName"
-            data-test-id="kyc-personal-start-last-name"
-          />
-        </Col>
-      </Row>
-      <FormFieldDate
-        label={<FormattedMessage id="form.label.birth-date" />}
-        name="birthDate"
-        data-test-id="kyc-personal-start-birth-date"
+    <>
+      <KycStep
+        step={2}
+        allSteps={5}
+        title={<FormattedMessage id="kyc.personal.details.title" />}
+        description={<FormattedMessage id="shared.kyc.select-type.company.description" />}
+        buttonAction={() => props.submitAndClose(boolify(values))}
       />
-      <Row>
-        <Col xs={12} md={6} lg={6}>
-          <FormSelectCountryField
-            label={<FormattedMessage id="form.label.place-of-birth" />}
-            name="placeOfBirth"
-            data-test-id="kyc-personal-start-place-of-birth"
-          />
-        </Col>
-        <Col xs={12} md={6} lg={6}>
-          <FormSelectNationalityField
-            label={<FormattedMessage id="form.label.nationality" />}
-            name="nationality"
-            data-test-id="kyc-personal-start-nationality"
-          />
-        </Col>
-      </Row>
-      <FormSelectCountryField
-        label={<FormattedMessage id="form.label.country" />}
-        name="country"
-        data-test-id="kyc-personal-start-country"
-      />
-      {shouldAddAccreditedInvestorFlow && (
-        <>
-          <FormSelectField
-            values={GENERIC_SHORT_ANSWERS}
-            label={<FormattedMessage id={"kyc.personal.accredited-us-citizen.question"} />}
-            name="isAccreditedUsCitizen"
-            data-test-id="kyc-personal-start-is-accredited-us-citizen"
-          />
+      <FormDeprecated>
+        <Row>
+          <Col xs={12} md={6} lg={6}>
+            <FormField
+              label={<FormattedMessage id="form.label.first-name" />}
+              name="firstName"
+              data-test-id="kyc-personal-start-first-name"
+            />
+          </Col>
+          <Col xs={12} md={6} lg={6}>
+            <FormField
+              label={<FormattedMessage id="form.label.last-name" />}
+              name="lastName"
+              data-test-id="kyc-personal-start-last-name"
+            />
+          </Col>
+        </Row>
+        <FormFieldDate
+          label={<FormattedMessage id="form.label.birth-date" />}
+          name="birthDate"
+          data-test-id="kyc-personal-start-birth-date"
+        />
+        <Row>
+          <Col xs={12} md={6} lg={6}>
+            <FormSelectCountryField
+              label={<FormattedMessage id="form.label.place-of-birth" />}
+              name="placeOfBirth"
+              data-test-id="kyc-personal-start-place-of-birth"
+            />
+          </Col>
+          <Col xs={12} md={6} lg={6}>
+            <FormSelectNationalityField
+              label={<FormattedMessage id="form.label.nationality" />}
+              name="nationality"
+              data-test-id="kyc-personal-start-nationality"
+            />
+          </Col>
+        </Row>
+        <FormSelectCountryField
+          label={<FormattedMessage id="form.label.country" />}
+          name="country"
+          data-test-id="kyc-personal-start-country"
+        />
+        {shouldAddAccreditedInvestorFlow && (
+          <>
+            <FormSelectField
+              values={GENERIC_SHORT_ANSWERS}
+              label={<FormattedMessage id={"kyc.personal.accredited-us-citizen.question"} />}
+              name="isAccreditedUsCitizen"
+              data-test-id="kyc-personal-start-is-accredited-us-citizen"
+            />
 
-          {values.isAccreditedUsCitizen === BOOL_FALSE_KEY && (
-            <Notification
-              text={ENotificationText.NOT_ACCREDITED_INVESTOR}
-              type={ENotificationType.WARNING}
-            />
-          )}
-          {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
-            <KYCAddDocuments
-              uploadType={EKycUploadType.US_ACCREDITATION}
-              /* TODO: Remove in future this is temporary solution for uploading documents
+            {values.isAccreditedUsCitizen === BOOL_FALSE_KEY && (
+              <Notification
+                text={ENotificationText.NOT_ACCREDITED_INVESTOR}
+                type={ENotificationType.WARNING}
+              />
+            )}
+            {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
+              <KYCAddDocuments
+                uploadType={EKycUploadType.US_ACCREDITATION}
+                /* TODO: Remove in future this is temporary solution for uploading documents
                 which is not working without saved form first */
-              onEnter={actions.kyc.kycSubmitPersonalData(boolify(values), true)}
-              isLoading={props.isSavingForm}
-            />
-          )}
-        </>
-      )}
-      <div className={styles.buttons}>
-        <Button
-          layout={EButtonLayout.OUTLINE}
-          className={styles.button}
-          type="button"
-          data-test-id="kyc-personal-start-go-back"
-          onClick={props.goBack}
-        >
-          <FormattedMessage id="form.back" />
-        </Button>
-        <Button
-          type="submit"
-          className={styles.button}
-          layout={EButtonLayout.PRIMARY}
-          disabled={
-            uploadedFilesLoading ||
-            !props.isValid ||
-            props.loadingData ||
-            shouldDisableUntilAccreditationIsUploaded
-          }
-          data-test-id="kyc-personal-start-submit-form"
-        >
-          <FormattedMessage id="form.save-and-submit" />
-        </Button>
-      </div>
-    </FormDeprecated>
+                onEnter={actions.kyc.kycSubmitPersonalData(boolify(values), true)}
+                isLoading={props.isSavingForm}
+              />
+            )}
+          </>
+        )}
+        <div className={styles.buttons}>
+          <Button
+            layout={EButtonLayout.OUTLINE}
+            className={styles.button}
+            type="button"
+            data-test-id="kyc-personal-start-go-back"
+            onClick={props.goBack}
+          >
+            <FormattedMessage id="form.back" />
+          </Button>
+          <Button
+            type="submit"
+            className={styles.button}
+            layout={EButtonLayout.PRIMARY}
+            disabled={
+              uploadedFilesLoading ||
+              !props.isValid ||
+              props.loadingData ||
+              shouldDisableUntilAccreditationIsUploaded
+            }
+            data-test-id="kyc-personal-start-submit-form"
+          >
+            <FormattedMessage id="form.save-and-submit" />
+          </Button>
+        </div>
+      </FormDeprecated>
+    </>
   );
 };
 
@@ -185,19 +195,6 @@ const KYCEnhancedForm = withFormik<IStateProps & IDispatchProps, IKycIndividualD
   },
 })(KYCForm);
 
-export const KYCPersonalStartComponent: React.FunctionComponent<IStateProps &
-  IDispatchProps> = props => (
-  <>
-    <KycStep
-      step={2}
-      allSteps={5}
-      title={<FormattedMessage id="kyc.personal.details.title" />}
-      description={<FormattedMessage id="shared.kyc.select-type.company.description" />}
-    />
-    <KYCEnhancedForm {...props} />
-  </>
-);
-
 export const KYCPersonalStart = compose<React.FunctionComponent>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
@@ -212,9 +209,11 @@ export const KYCPersonalStart = compose<React.FunctionComponent>(
       goBack: () => dispatch(actions.routing.goToKYCHome()),
       submitForm: (values: IKycIndividualData, skipContinue = false) =>
         dispatch(actions.kyc.kycSubmitPersonalData(values, skipContinue)),
+      submitAndClose: (values: IKycIndividualData) =>
+        dispatch(actions.kyc.kycSubmitPersonalDataAndClose(values)),
     }),
   }),
   onEnterAction({
     actionCreator: dispatch => dispatch(actions.kyc.kycLoadIndividualData()),
   }),
-)(KYCPersonalStartComponent);
+)(KYCEnhancedForm);
