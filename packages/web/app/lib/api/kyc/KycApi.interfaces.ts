@@ -15,10 +15,16 @@ export enum EKycRequestType {
   INDIVIDUAL = "individual",
 }
 
+export type TInstantIdNoneProvider = "none";
+
 export enum EKycInstantIdProvider {
   ID_NOW = "id_now",
   ONFIDO = "onfido",
-  NONE = "none",
+}
+
+export enum EKycInstantIdStatus {
+  DRAFT = "draft",
+  PENDING = "pending",
 }
 
 export interface IKycPerson {
@@ -94,11 +100,12 @@ export interface IKycIndividualData extends IKycPerson {
 
 export const KycStatusSchema = YupTS.object({
   inProhibitedRegion: YupTS.boolean(),
-  instantIdProvider: YupTS.string<EKycInstantIdProvider>(),
+  instantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
+  instantIdStatus: YupTS.string<EKycInstantIdStatus>().optional(),
   originCountry: YupTS.string<ECountries>(),
-  recommendedInstantIdProvider: YupTS.string<EKycInstantIdProvider>(),
-  status: YupTS.string<EKycRequestStatus>(),
   supportedInstantIdProviders: YupTS.array(YupTS.string<EKycInstantIdProvider>()),
+  recommendedInstantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
+  status: YupTS.string<EKycRequestStatus>(),
   type: YupTS.string<EKycRequestType>(),
 });
 
@@ -109,6 +116,12 @@ export const KycPersonalAddressSchemaRequired = makeAllRequiredExcept(KycPersona
   "additionalInformation",
   "usState",
 ]);
+
+export const KycIdNowIdentificationSchema = YupTS.object({
+  redirectUrl: YupTS.string(),
+});
+
+export type TKycIdNowIdentification = YupTS.TypeOf<typeof KycIdNowIdentificationSchema>;
 
 export const KycPersonalDataSchemaRequiredWithAdditionalData = KycPersonalDataSchemaRequired.concat(
   KycAdditionalDataSchema,
@@ -182,29 +195,6 @@ export enum EKycRequestStatus {
   ACCEPTED = "accepted",
   IGNORED = "ignored",
 }
-
-export enum ERequestOutsourcedStatus {
-  STARTED = "started",
-  SUCCESS = "success",
-  SUCCESS_DATA_CHANGED = "success_data_changed",
-  REVIEW_PENDING = "review_pending",
-  ABORTED = "aborted",
-  CANCELED = "canceled",
-  OTHER = "other",
-}
-
-export interface IKycRequestState {
-  status: EKycRequestStatus;
-  outsourcedStatus?: ERequestOutsourcedStatus;
-  redirectUrl?: string;
-}
-
-export const KycRequestStateSchema = Yup.object().shape({
-  status: Yup.string().required("Request state is required"),
-  outsourcedStatus: Yup.string(),
-  redirectUrl: Yup.string(),
-  type: Yup.string(),
-});
 
 export enum EKycBusinessType {
   CORPORATE = "corporate",

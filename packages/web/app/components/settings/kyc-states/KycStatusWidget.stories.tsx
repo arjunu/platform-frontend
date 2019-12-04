@@ -1,11 +1,8 @@
+import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import {
-  EKycRequestStatus,
-  ERequestOutsourcedStatus,
-} from "../../../lib/api/kyc/KycApi.interfaces";
-import { EUserType } from "../../../lib/api/users/interfaces";
+import { EKycInstantIdStatus, EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
 import { KycStatusWidgetBase } from "./KycStatusWidget";
 
 const commonProps = {
@@ -15,13 +12,11 @@ const commonProps = {
   isRestrictedCountryInvestor: false,
   isLoading: false,
   error: undefined,
-  externalKycUrl: undefined,
-  requestOutsourcedStatus: undefined,
+  instantIdStatus: undefined,
   step: 1,
-  userType: EUserType.INVESTOR,
-  onGoToKycHome: () => {},
-  onGoToDashboard: () => {},
-  cancelInstantId: () => {},
+  onGoToKycHome: action("onGoToKycHome"),
+  onGoToDashboard: action("onGoToDashboard"),
+  onStartIdNow: action("onStartIdNow"),
 };
 
 storiesOf("KYC/StatusWidget", module)
@@ -66,78 +61,31 @@ storiesOf("KYC/StatusWidget", module)
       isRestrictedCountryInvestor={true}
     />
   ))
-  .add("outsourced-started", () => (
+  .add("outsourced - draft", () => (
     <KycStatusWidgetBase
       {...commonProps}
-      userType={EUserType.INVESTOR}
       requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.STARTED}
-      externalKycUrl={"https://neufund.org"}
+      instantIdStatus={EKycInstantIdStatus.DRAFT}
     />
   ))
-  .add("outsourced-aborted", () => (
+  .add("outsourced - pending", () => (
     <KycStatusWidgetBase
       {...commonProps}
-      userType={EUserType.INVESTOR}
       requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.ABORTED}
-    />
-  ))
-  .add("outsourced-canceled", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.CANCELED}
-    />
-  ))
-  .add("outsourced-other", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.OTHER}
-    />
-  ))
-  .add("outsourced-review_pending", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.REVIEW_PENDING}
-    />
-  ))
-  .add("outsourced-success", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.SUCCESS}
-    />
-  ))
-  .add("outsourced-success-data-changed", () => (
-    <KycStatusWidgetBase
-      {...commonProps}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.SUCCESS_DATA_CHANGED}
+      instantIdStatus={EKycInstantIdStatus.PENDING}
     />
   ))
   .add("error", () => (
     <KycStatusWidgetBase
       {...commonProps}
       error="bla bla error"
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.REVIEW_PENDING}
+      requestStatus={EKycRequestStatus.PENDING}
     />
   ))
   .add("loading", () => (
     <KycStatusWidgetBase
       {...commonProps}
       isLoading={true}
-      userType={EUserType.INVESTOR}
-      requestStatus={EKycRequestStatus.OUTSOURCED}
-      requestOutsourcedStatus={ERequestOutsourcedStatus.REVIEW_PENDING}
+      requestStatus={EKycRequestStatus.PENDING}
     />
   ));

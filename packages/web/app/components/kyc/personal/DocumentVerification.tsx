@@ -190,7 +190,7 @@ export const KycPersonalDocumentVerification = compose<React.FunctionComponent>(
       currentProvider: selectKycInstantIdProvider(state),
     }),
     dispatchToProps: dispatch => ({
-      onStartIdNow: () => dispatch(actions.kyc.kycStartInstantId()),
+      onStartIdNow: () => dispatch(actions.kyc.kycStartIndividualIdNow()),
       onManualVerification: () => dispatch(actions.routing.goToKYCIndividualUpload()),
       goBack: () => dispatch(actions.routing.goToKYCIndividualAddress()),
       goToDashboard: () => dispatch(actions.routing.goToDashboard()),

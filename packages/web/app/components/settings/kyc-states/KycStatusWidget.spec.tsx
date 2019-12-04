@@ -5,23 +5,20 @@ import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 
 import { externalRoutes } from "../../../config/externalRoutes";
 import { EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
-import { EUserType } from "../../../lib/api/users/interfaces";
 import { LoadingIndicator } from "../../shared/loading-indicator";
 import { KycStatusWidgetBase } from "./KycStatusWidget";
 
 const defaultProps = {
   onGoToKycHome: () => {},
   onGoToDashboard: () => {},
-  cancelInstantId: () => {},
+  onStartIdNow: () => {},
   step: 1,
-  userType: EUserType.INVESTOR,
   isUserEmailVerified: true,
   backupCodesVerified: true,
   isKycFlowBlockedByRegion: false,
   isRestrictedCountryInvestor: false,
-  externalKycUrl: undefined,
-  requestOutsourcedStatus: undefined,
   requestStatus: undefined,
+  instantIdStatus: undefined,
   error: undefined,
 };
 

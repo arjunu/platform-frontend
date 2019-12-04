@@ -41,7 +41,6 @@ import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserVerified, selectUserId, selectUserType } from "../auth/selectors";
 import { shouldLoadBookbuildingStats, shouldLoadPledgeData } from "../bookbuilding-flow/utils";
 import { selectMyAssets } from "../investor-portfolio/selectors";
-import { waitForKycStatus } from "../kyc/sagas";
 import { selectClientJurisdiction } from "../kyc/selectors";
 import { neuCall, neuFork, neuTakeEvery, neuTakeLatest, neuTakeUntil } from "../sagasUtils";
 import { getAgreementContractAndHash } from "../tx/transactions/nominee/sign-agreement/sagas";
@@ -50,7 +49,7 @@ import {
   IAgreementContractAndHash,
 } from "../tx/transactions/nominee/sign-agreement/types";
 import { selectEthereumAddressWithChecksum } from "../web3/selectors";
-import { generateRandomEthereumAddress } from "./../web3/utils";
+import { generateRandomEthereumAddress } from "../web3/utils";
 import { etoInProgressPollingDelay, etoNormalPollingDelay } from "./constants";
 import { InvalidETOStateError } from "./errors";
 import {
@@ -342,7 +341,6 @@ export function* watchEto(_: TGlobalDependencies, previewCode: string): any {
 
 function* loadEtos({ apiEtoService, logger, notificationCenter }: TGlobalDependencies): any {
   try {
-    yield waitForKycStatus();
     const etos: TEtoDataWithCompany[] = yield apiEtoService.getEtos();
 
     const jurisdiction: string | undefined = yield select(selectClientJurisdiction);

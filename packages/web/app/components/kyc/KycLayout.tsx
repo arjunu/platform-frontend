@@ -48,12 +48,10 @@ export const businessSteps = [
 ];
 
 type IProps = {
-  requestLoading?: boolean;
   requestStatus?: EKycRequestStatus;
-  redirectUrl: string;
-  pendingRequestType: EKycRequestType | undefined;
+  idNowRedirectUrl: string | undefined;
+  requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
-  reopenRequest: () => void;
   goToProfile: () => void;
   goToDashboard: () => void;
 };
@@ -69,7 +67,8 @@ class RequestStateInfo extends React.Component<IProps, IState> {
 
   render(): React.ReactNode {
     const steps =
-      this.props.pendingRequestType === EKycRequestType.BUSINESS ? businessSteps : personalSteps;
+      this.props.requestType === EKycRequestType.BUSINESS ? businessSteps : personalSteps;
+
     const settingsButton = (
       <div className="p-4 text-center">
         <Button
@@ -82,6 +81,7 @@ class RequestStateInfo extends React.Component<IProps, IState> {
         </Button>
       </div>
     );
+
     if (!this.props.requestStatus) {
       return (
         <KycPanel
@@ -117,22 +117,27 @@ class RequestStateInfo extends React.Component<IProps, IState> {
         </KycPanel>
       );
     }
-    if (this.props.requestStatus === EKycRequestStatus.OUTSOURCED) {
+
+    if (this.props.requestStatus === EKycRequestStatus.OUTSOURCED && this.props.idNowRedirectUrl) {
       return (
         <KycPanel
           title={<FormattedMessage id="kyc.request-state.outsourced.title" />}
           steps={steps}
           data-test-id="kyc-panel-outsourced"
-          description={<FormattedMessage id="kyc.request-state.outsourced.description" />}
-        >
-          <div className="p-4 text-center">
-            <a href={this.props.redirectUrl}>
-              <FormattedMessage id="kyc.request-state.click-here-to-continue" />
-            </a>
-          </div>
-        </KycPanel>
+          description={
+            <>
+              <FormattedMessage id="kyc.request-state.outsourced.description" />
+              <br />
+              <br />
+              <a href={this.props.idNowRedirectUrl}>
+                <FormattedMessage id="kyc.request-state.click-here-to-continue" />
+              </a>
+            </>
+          }
+        />
       );
     }
+
     return <div />;
   }
 }

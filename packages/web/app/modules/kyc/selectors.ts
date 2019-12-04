@@ -3,8 +3,6 @@ import { createSelector } from "reselect";
 import {
   EKycInstantIdProvider,
   EKycRequestStatus,
-  EKycRequestType,
-  ERequestOutsourcedStatus,
   KycBankQuintessenceBankAccount,
 } from "../../lib/api/kyc/KycApi.interfaces";
 import { IAppState } from "../../store";
@@ -14,11 +12,16 @@ import { TBankAccount } from "./types";
 
 export const selectKyc = (state: IAppState) => state.kyc;
 
-export const selectKycStatus = createSelector(selectKyc, kyc => kyc && kyc.status);
+export const selectKycStatus = createSelector(selectKyc, kyc => kyc.status);
 
 export const selectIsKycProhibitedRegion = createSelector(
   selectKycStatus,
-  kycStatus => !!kycStatus && kycStatus.inProhibitedRegion,
+  status => !!status && status.inProhibitedRegion,
+);
+
+export const selectKycRequestType = createSelector(
+  selectKycStatus,
+  status => status && status.type,
 );
 
 export const selectIndividualFiles = (state: IAppState) => state.kyc.individualFiles;
@@ -30,20 +33,22 @@ export const selectLegalRepFiles = (state: IAppState) => state.kyc.legalRepresen
 export const selectKycUploadedFiles = (state: IAppState) =>
   selectIndividualFiles(state) || selectBusinessFiles(state) || selectLegalRepFiles(state);
 
-export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus => {
-  const userKycType = selectKycRequestType(state);
-  switch (userKycType) {
-    case EKycRequestType.BUSINESS:
-      return state.kyc.businessRequestState!.status === EKycRequestStatus.ACCEPTED &&
-        !selectIsClaimsVerified(state)
-        ? EKycRequestStatus.PENDING
-        : state.kyc.businessRequestState!.status;
-    case EKycRequestType.INDIVIDUAL:
-      return state.kyc.status!.status;
-    default:
-      return EKycRequestStatus.DRAFT;
+export const selectKycRequestStatus = (state: IAppState): EKycRequestStatus | undefined => {
+  const kycStatus = selectKycStatus(state);
+
+  if (kycStatus) {
+    return kycStatus.status === EKycRequestStatus.ACCEPTED && !selectIsClaimsVerified(state)
+      ? EKycRequestStatus.PENDING
+      : kycStatus.status;
   }
+
+  return undefined;
 };
+
+export const selectKycInstantIdStatus = createSelector(
+  selectKycStatus,
+  status => status && status.instantIdStatus,
+);
 
 /**
  * In case it's a prohibited region by ip and kyc process was not yet started (DRAFT) returns true.
@@ -54,58 +59,10 @@ export const selectIsKycFlowBlockedByRegion = createSelector(
   (isProhibited, status) => isProhibited && status === EKycRequestStatus.DRAFT,
 );
 
-export const selectKycRequestOutsourcedStatus = (
-  state: DeepReadonly<IKycState>,
-): ERequestOutsourcedStatus | undefined => {
-  const requestState =
-    state.individualRequestState && state.individualRequestState.status === EKycRequestStatus.DRAFT
-      ? state.businessRequestState
-      : state.individualRequestState;
-  if (requestState) return requestState.outsourcedStatus;
-  return undefined;
-};
-
-export const selectExternalKycUrl = (state: DeepReadonly<IKycState>): string | undefined => {
-  const requestState =
-    state.individualRequestState && state.individualRequestState.status === EKycRequestStatus.DRAFT
-      ? state.businessRequestState
-      : state.individualRequestState;
-  if (requestState) return requestState.redirectUrl;
-  return undefined;
-};
-
-export const selectPendingKycRequestType = (
-  state: DeepReadonly<IKycState>,
-): EKycRequestType | undefined => {
-  if (
-    state.individualRequestState &&
-    state.individualRequestState.status === EKycRequestStatus.PENDING
-  ) {
-    return EKycRequestType.INDIVIDUAL;
-  }
-  if (
-    state.businessRequestState &&
-    state.businessRequestState.status === EKycRequestStatus.PENDING
-  ) {
-    return EKycRequestType.BUSINESS;
-  }
-  return undefined;
-};
-
-export const selectKycRequestType = (state: IAppState): EKycRequestType | undefined => {
-  if (state.kyc.status) {
-    return state.kyc.status.type;
-  }
-
-  return undefined;
-};
-
-export const selectKycOutSourcedURL = (state: DeepReadonly<IKycState>): string => {
-  if (state.individualRequestState && state.individualRequestState.redirectUrl) {
-    return state.individualRequestState.redirectUrl;
-  }
-  return "";
-};
+export const selectKycIdNowRedirectUrl = createSelector(
+  selectKyc,
+  kyc => kyc.idNow && kyc.idNow.redirectUrl,
+);
 
 export const selectCombinedBeneficialOwnerOwnership = (state: DeepReadonly<IKycState>): number => {
   if (state.beneficialOwners.length === 0) return 0;
@@ -115,11 +72,16 @@ export const selectCombinedBeneficialOwnerOwnership = (state: DeepReadonly<IKycS
   );
 };
 
-export const selectKycLoading = (state: IAppState): boolean =>
-  !!state.kyc.individualRequestStateLoading || !!state.kyc.businessRequestStateLoading;
+export const selectKycIsLoading = (state: IAppState): boolean => state.kyc.statusLoading;
+
+export const selectKycIsInitialLoading = createSelector(
+  selectKycStatus,
+  selectKycIsLoading,
+  (status, isLoading) => status === undefined && isLoading,
+);
 
 export const selectWidgetError = (state: DeepReadonly<IKycState>): string | undefined =>
-  state.individualRequestError || state.businessRequestError;
+  state.statusError;
 
 export const selectIndividualClientName = (state: IAppState) => {
   const data = state.kyc.individualData;

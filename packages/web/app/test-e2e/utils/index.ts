@@ -298,7 +298,10 @@ export const accountFixturePrivateKey = (name: string) => {
   return fixture.definition.privateKey as string;
 };
 
-export const stubWindow = (hookName: string) => (window.open = cy.stub().as(hookName));
+export const stubWindow = (hookName: string) =>
+  cy.window().then(win => {
+    cy.stub(win, "open").as(hookName);
+  });
 
 export const stubAlert = (hookName: string) => cy.on("window:alert", cy.stub().as(hookName));
 

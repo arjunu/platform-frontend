@@ -7,7 +7,6 @@ import {
   IKycFileInfo,
   IKycIndividualData,
   IKycLegalRepresentative,
-  IKycRequestState,
   KycBankQuintessenceBankAccount,
   TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
@@ -18,8 +17,10 @@ export const kycActions = {
    * General
    */
   setStatus: createActionFactory("KYC_SET_STATUS", (status: TKycStatus) => ({ status })),
-  kycLoadClientData: createActionFactory("KYC_LOAD_CLIENT_DATA"),
-  kycFinishedLoadingData: createActionFactory("KYC_FINISHED_LOADING_DATA"),
+  setStatusLoading: createActionFactory("KYC_SET_STATUS_LOADING"),
+  setStatusError: createActionFactory("KYC_SET_STATUS_ERROR", (error: string) => ({ error })),
+
+  kycLoadStatusAndData: createActionFactory("KYC_LOAD_CLIENT_DATA"),
 
   /**
    * Widget watchers
@@ -96,23 +97,9 @@ export const kycActions = {
     }),
   ),
 
-  kycUpdateIndividualRequestState: createActionFactory(
-    "KYC_UPDATE_INDIVIDUAL_REQUEST_STATE",
-    (
-      individualRequestStateLoading?: boolean,
-      individualRequestState?: IKycRequestState,
-      individualRequestError?: string,
-    ) => ({
-      individualRequestState,
-      individualRequestStateLoading,
-      individualRequestError,
-    }),
-  ),
-
   kycSubmitIndividualRequest: createActionFactory("KYC_SUBMIT_INDIVIDUAL_REQUEST"),
 
-  kycStartInstantId: createActionFactory("KYC_START_INSTANT_ID"),
-  kycCancelInstantId: createActionFactory("KYC_CANCEL_INSTANT_ID"),
+  kycStartIndividualIdNow: createActionFactory("KYC_START_INSTANT_ID"),
 
   /*
     Business
@@ -263,19 +250,6 @@ export const kycActions = {
     (inBackground: boolean = false) => ({ inBackground }),
   ),
 
-  kycUpdateBusinessRequestState: createActionFactory(
-    "KYC_UPDATE_BUSINESS_REQUEST_STATE",
-    (
-      businessRequestStateLoading?: boolean,
-      businessRequestState?: IKycRequestState,
-      businessRequestError?: string,
-    ) => ({
-      businessRequestState,
-      businessRequestStateLoading,
-      businessRequestError,
-    }),
-  ),
-
   kycSubmitBusinessRequest: createActionFactory("KYC_SUBMIT_BUSINESS_REQUEST"),
 
   /**
@@ -294,5 +268,11 @@ export const kycActions = {
   setQuintessenceBankAccountDetails: createActionFactory(
     "KYC_SET_QUINTESSENCE_BANK_ACCOUNT_DETAILS",
     (quintessenceBankAccount: KycBankQuintessenceBankAccount) => ({ quintessenceBankAccount }),
+  ),
+
+  // id-now
+  setIdNowRedirectUrl: createActionFactory(
+    "KYC_SET_ID_NOW_REDIRECT_URL",
+    (redirectUrl: string) => ({ redirectUrl }),
   ),
 };
