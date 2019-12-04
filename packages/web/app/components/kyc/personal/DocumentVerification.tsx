@@ -2,7 +2,10 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "redux";
 
-import { EKycInstantIdProvider } from "../../../lib/api/kyc/KycApi.interfaces";
+import {
+  EKycInstantIdProvider,
+  TInstantIdNoneProvider,
+} from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import {
   selectKycInstantIdProvider,
@@ -19,9 +22,9 @@ import * as onfido from "../../../assets/img/instant-id/onfido.svg";
 import * as styles from "./DocumentVerification.module.scss";
 
 interface IStateProps {
-  supportedInstantIdProviders: ReadonlyArray<EKycInstantIdProvider> | undefined;
-  recommendedInstantIdProvider?: EKycInstantIdProvider;
-  currentProvider?: EKycInstantIdProvider;
+  supportedInstantIdProviders?: ReadonlyArray<EKycInstantIdProvider> | TInstantIdNoneProvider;
+  recommendedInstantIdProvider?: EKycInstantIdProvider | TInstantIdNoneProvider;
+  currentProvider?: EKycInstantIdProvider | TInstantIdNoneProvider;
 }
 
 interface IStartInstantIdProps {
@@ -35,11 +38,11 @@ interface IDispatchProps extends IStartInstantIdProps {
 }
 
 interface IRecommendedProps {
-  recommendedInstantIdProvider: EKycInstantIdProvider;
-  currentProvider?: EKycInstantIdProvider;
+  recommendedInstantIdProvider: EKycInstantIdProvider | TInstantIdNoneProvider;
+  currentProvider?: EKycInstantIdProvider | TInstantIdNoneProvider;
 }
 
-const selectProviderLogo = (provider: EKycInstantIdProvider) => {
+const selectProviderLogo = (provider: EKycInstantIdProvider | TInstantIdNoneProvider) => {
   switch (provider) {
     case EKycInstantIdProvider.ID_NOW:
       return id_now;
@@ -50,7 +53,7 @@ const selectProviderLogo = (provider: EKycInstantIdProvider) => {
   }
 };
 
-const selectProviderText = (provider: EKycInstantIdProvider) => {
+const selectProviderText = (provider: EKycInstantIdProvider | TInstantIdNoneProvider) => {
   switch (provider) {
     case EKycInstantIdProvider.ID_NOW:
       return <FormattedMessage id="kyc.document-verification.provider.id-now.text" />;
@@ -62,7 +65,7 @@ const selectProviderText = (provider: EKycInstantIdProvider) => {
 };
 
 const selectProviderAction = (
-  provider: EKycInstantIdProvider,
+  provider: EKycInstantIdProvider | TInstantIdNoneProvider,
   dispatchers: IStartInstantIdProps,
 ) => {
   switch (provider) {
@@ -80,7 +83,10 @@ const getEnabledProviders = () =>
   process.env.NF_ENABLED_VERIFICATION_PROVIDERS.split(",");
 
 const getEnabledInstatnIdProviders = (
-  supportedInstantIdProviders: ReadonlyArray<EKycInstantIdProvider> | undefined,
+  supportedInstantIdProviders:
+    | ReadonlyArray<EKycInstantIdProvider>
+    | TInstantIdNoneProvider
+    | undefined,
 ) => {
   const enabledProviders = getEnabledProviders() as EKycInstantIdProvider[];
   return enabledProviders
@@ -102,7 +108,8 @@ const KycPersonalDocumentVerificationRecommended: React.FunctionComponent<IRecom
       <FormattedMessage id="kyc.personal.document-verification.recommended" />
     </p>
     <VerificationMethod
-      disabled={currentProvider && currentProvider !== recommendedInstantIdProvider}
+      data-test-id={`kyc-go-to-outsourced-verification-${recommendedInstantIdProvider}`}
+      disabled={currentProvider !== "none" && currentProvider !== recommendedInstantIdProvider}
       onClick={selectProviderAction(recommendedInstantIdProvider, dispatchers)}
       logo={selectProviderLogo(recommendedInstantIdProvider)}
       text={selectProviderText(recommendedInstantIdProvider)}
@@ -142,17 +149,21 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
         />
       )}
       {enabledInstantIdProviders &&
-        enabledInstantIdProviders
+        enabledInstantIdProviders.length > 0 &&
+        (enabledInstantIdProviders as EKycInstantIdProvider[])
           .filter(provider => provider !== recommendedInstantIdProvider)
           .map(provider => (
-            <VerificationMethod
-              key={provider}
-              disabled={currentProvider && provider !== currentProvider}
-              onClick={selectProviderAction(provider, dispatchers)}
-              logo={selectProviderLogo(provider)}
-              text={selectProviderText(provider)}
-              name={provider}
-            />
+            <>
+              <VerificationMethod
+                key={provider}
+                data-test-id={`kyc-go-to-outsourced-verification-${provider}`}
+                disabled={currentProvider !== "none" && provider !== currentProvider}
+                onClick={selectProviderAction(provider, dispatchers)}
+                logo={selectProviderLogo(provider)}
+                text={selectProviderText(provider)}
+                name={provider}
+              />
+            </>
           ))}
       <div className={styles.buttons}>
         <Button
@@ -167,7 +178,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
 
         {showManualVerification && (
           <Button
-            disabled={!!currentProvider}
+            disabled={currentProvider !== "none"}
             layout={EButtonLayout.GHOST}
             className={styles.button}
             type="button"

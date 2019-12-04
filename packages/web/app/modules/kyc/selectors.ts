@@ -1,7 +1,6 @@
 import { createSelector } from "reselect";
 
 import {
-  EKycInstantIdProvider,
   EKycRequestStatus,
   KycBankQuintessenceBankAccount,
 } from "../../lib/api/kyc/KycApi.interfaces";
@@ -169,8 +168,7 @@ export const selectKycRecommendedInstantIdProvider = createSelector(
   kycStatus => kycStatus && kycStatus.recommendedInstantIdProvider,
 );
 
-export const selectKycInstantIdProvider = createSelector(selectKycStatus, kycStatus =>
-  kycStatus && kycStatus.instantIdProvider !== EKycInstantIdProvider.NONE
-    ? kycStatus.instantIdProvider
-    : undefined,
+export const selectKycInstantIdProvider = createSelector(
+  selectKycStatus,
+  kycStatus => kycStatus && kycStatus.instantIdProvider,
 );

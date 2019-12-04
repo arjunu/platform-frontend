@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { TTranslatedString } from "../../../types";
+import { TDataTestId, TTranslatedString } from "../../../types";
 import { ButtonBase } from "../../shared/buttons/ButtonBase";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 
@@ -15,14 +15,20 @@ type TProps = {
   disabled?: boolean;
 };
 
-export const VerificationMethod: React.FunctionComponent<TProps> = ({
+export const VerificationMethod: React.FunctionComponent<TProps & TDataTestId> = ({
   logo,
   name,
   onClick,
   text,
   disabled,
+  "data-test-id": dataTestId,
 }) => (
-  <ButtonBase className={styles.card} onClick={onClick} disabled={disabled}>
+  <ButtonBase
+    className={styles.card}
+    onClick={onClick}
+    disabled={disabled}
+    data-test-id={dataTestId}
+  >
     <img className={styles.image} src={logo} alt={name} />
     <span className="py-2">{text}</span>
     <InlineIcon className={styles.icon} svgIcon={arrow} />

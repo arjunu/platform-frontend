@@ -45,7 +45,11 @@ export const kycActions = {
   ),
   kycSubmitPersonalDataAndClose: createActionFactory(
     "KYC_SUBMIT_PERSONAL_DATA_AND_CLOSE",
-    (data: IKycIndividualData, skipContinue = false) => ({ data, skipContinue }),
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalDataNoRedirect: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_DATA_NO_REDIRECT",
+    (data: IKycIndividualData) => ({ data }),
   ),
   kycSubmitPersonalAddress: createActionFactory(
     "KYC_SUBMIT_PERSONAL_ADDRESS",

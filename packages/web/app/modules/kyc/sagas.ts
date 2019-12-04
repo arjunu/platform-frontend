@@ -156,6 +156,14 @@ function* submitPersonalDataSaga(
   }
 }
 
+function* submitPersonalDataNoRedirect(
+  _: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
+): Iterator<any> {
+  const { data } = action.payload;
+  yield neuCall(submitPersonalDataSaga, data);
+}
+
 function* submitPersonalData(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
@@ -701,6 +709,11 @@ export function* kycSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualData, loadIndividualData);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitPersonalData, submitPersonalData);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitPersonalDataAndClose, submitPersonalDataAndClose);
+  yield fork(
+    neuTakeEvery,
+    actions.kyc.kycSubmitPersonalDataNoRedirect,
+    submitPersonalDataNoRedirect,
+  );
   yield fork(neuTakeEvery, actions.kyc.kycSubmitPersonalAddress, submitPersonalAddress);
   yield fork(
     neuTakeEvery,

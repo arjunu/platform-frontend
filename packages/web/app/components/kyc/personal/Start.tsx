@@ -155,6 +155,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
             )}
             {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
               <KYCAddDocuments
+                onEnter={actions.kyc.kycSubmitPersonalDataNoRedirect(values)}
                 uploadType={EKycUploadType.US_ACCREDITATION}
                 isLoading={props.isSavingForm}
               />
