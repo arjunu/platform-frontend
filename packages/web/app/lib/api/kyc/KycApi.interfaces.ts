@@ -88,7 +88,7 @@ export const KycStatusSchema = YupTS.object({
   inProhibitedRegion: YupTS.boolean(),
   instantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
   instantIdStatus: YupTS.string<EKycInstantIdStatus>().optional(),
-  originCountry: YupTS.string<ECountries>(),
+  originCountry: YupTS.string<ECountries>().optional(),
   recommendedInstantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
   status: YupTS.string<EKycRequestStatus>(),
   supportedInstantIdProviders: YupTS.array(YupTS.string<EKycInstantIdProvider>()),
