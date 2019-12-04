@@ -179,10 +179,10 @@ function* submitPersonalData(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
 ): Iterator<any> {
-  const { data, skipContinue } = action.payload;
+  const { data } = action.payload;
   const success = yield neuCall(submitPersonalDataSaga, data);
 
-  if (!skipContinue && success) {
+  if (success) {
     yield put(actions.routing.goToKYCIndividualAddress());
   }
 }

@@ -40,7 +40,7 @@ export const kycActions = {
   // data
   kycSubmitPersonalData: createActionFactory(
     "KYC_SUBMIT_PERSONAL_DATA",
-    (data: IKycIndividualData, skipContinue = false) => ({ data, skipContinue }),
+    (data: IKycIndividualData) => ({ data }),
   ),
   kycSubmitPersonalDataAndClose: createActionFactory(
     "KYC_SUBMIT_PERSONAL_DATA_AND_CLOSE",

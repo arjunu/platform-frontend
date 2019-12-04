@@ -55,7 +55,7 @@ interface IStateProps {
 }
 
 interface IDispatchProps {
-  submitForm: (values: IKycIndividualData, skipContinue?: boolean, exit?: boolean) => void;
+  submitForm: (values: IKycIndividualData) => void;
   submitAndClose: (values: IKycIndividualData) => void;
   goBack: () => void;
 }
@@ -144,9 +144,6 @@ const KYCForm: React.FunctionComponent<TProps> = ({
             {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
               <KYCAddDocuments
                 uploadType={EKycUploadType.US_ACCREDITATION}
-                /* TODO: Remove in future this is temporary solution for uploading documents
-                which is not working without saved form first */
-                onEnter={actions.kyc.kycSubmitPersonalData(boolify(values), true)}
                 isLoading={props.isSavingForm}
               />
             )}
@@ -200,15 +197,14 @@ export const KYCPersonalStart = compose<React.FunctionComponent>(
     stateToProps: state => ({
       currentValues: state.kyc.individualData,
       loadingData: !!state.kyc.individualDataLoading,
-      // TODO: Remove after getting rid of upload document hack
       isSavingForm: !!state.kyc.kycSaving,
       uploadedFiles: selectIndividualFiles(state),
       uploadedFilesLoading: selectIndividualFilesLoading(state),
     }),
     dispatchToProps: dispatch => ({
       goBack: () => dispatch(actions.routing.goToKYCHome()),
-      submitForm: (values: IKycIndividualData, skipContinue = false) =>
-        dispatch(actions.kyc.kycSubmitPersonalData(values, skipContinue)),
+      submitForm: (values: IKycIndividualData) =>
+        dispatch(actions.kyc.kycSubmitPersonalData(values)),
       submitAndClose: (values: IKycIndividualData) =>
         dispatch(actions.kyc.kycSubmitPersonalDataAndClose(values)),
     }),
