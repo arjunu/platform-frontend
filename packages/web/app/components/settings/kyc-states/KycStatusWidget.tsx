@@ -109,7 +109,6 @@ const ActionButton = ({
   backupCodesVerified,
   isKycFlowBlockedByRegion,
   instantIdStatus,
-  onStartIdNow,
 }: IKycStatusWidgetProps) => {
   if (requestStatus === EKycRequestStatus.ACCEPTED) {
     return (
@@ -161,7 +160,7 @@ const ActionButton = ({
   ) {
     return (
       <Button
-        id="continue-kyc-idnow-verification"
+        id="continue-kyc-continue-verification"
         layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}

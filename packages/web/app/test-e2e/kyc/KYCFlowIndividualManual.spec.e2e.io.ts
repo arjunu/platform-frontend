@@ -22,7 +22,7 @@ describe("KYC Personal flow with manual verification", () => {
 
     // fill and submit the form
     fillForm(kycInvidualForm);
-      fillForm(kycInvidualAddressForm);
+    fillForm(kycInvidualAddressForm);
 
     // go to the manual verification with file upload
     cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
@@ -35,15 +35,15 @@ describe("KYC Personal flow with manual verification", () => {
     cy.get(tid("kyc-personal-upload-submit")).awaitedClick();
     confirmAccessModal();
 
-      // panel should now be in pending state
-      cy.get(tid("kyc-success"));
-      // Tests multi jurisdiction
-      assertFilteredDeJurisdiction();
-    });
+    // panel should now be in pending state
+    cy.get(tid("kyc-success"));
+    // Tests multi jurisdiction
+    assertFilteredDeJurisdiction();
   });
 
   it("went through KYC flow with personal data for US investor", function(): void {
     this.retries(2);
+
     createAndLoginNewUser({ type: "investor" });
 
     // go to kyc select and then individual page
@@ -64,11 +64,11 @@ describe("KYC Personal flow with manual verification", () => {
 
     fillForm(kycInvidualAddressForm);
 
-      // go to the manual verification with file upload
-      cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
-      cy.url().should("contain", kycRoutes.individualUpload);
-      // upload file
-      uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
+    // go to the manual verification with file upload
+    cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
+    cy.url().should("contain", kycRoutes.individualUpload);
+    // upload file
+    uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
 
     // submit request and accept with the wallet
     cy.get(tid("kyc-personal-upload-submit")).awaitedClick();

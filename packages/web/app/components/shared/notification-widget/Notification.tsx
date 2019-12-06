@@ -1,10 +1,6 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { externalRoutes } from "../../../config/externalRoutes";
-import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
-import { CommonHtmlProps, TDataTestId } from "../../../types";
-import { getHostname } from "../../../utils/StringUtils";
 import { ENotificationType } from "../../../modules/notifications/types";
 import { CommonHtmlProps, OmitKeys, TDataTestId, TTranslatedString } from "../../../types";
 import { ButtonBase, ButtonClose } from "../buttons";

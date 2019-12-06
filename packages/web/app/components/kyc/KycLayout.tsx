@@ -73,7 +73,7 @@ class RequestStateInfo extends React.Component<TExternalProps, TLocalState> {
   render(): React.ReactNode {
     const steps =
       this.props.requestType === EKycRequestType.BUSINESS ? businessSteps : personalSteps;
-// Kyc is pending when either status `Pending` or
+    // Kyc is pending when either status `Pending` or
     // status is `Outsourced` with outsourced verification status set to `Pending`
     const isKycPending =
       this.props.requestStatus === EKycRequestStatus.PENDING ||

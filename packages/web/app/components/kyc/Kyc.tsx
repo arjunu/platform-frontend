@@ -13,7 +13,6 @@ import { selectKycIdNowRedirectUrl } from "../../modules/kyc/instant-id/id-now/s
 import {
   selectIsKycFlowBlockedByRegion,
   selectKycInstantIdStatus,
-  selectKycIdNowRedirectUrl,
   selectKycRequestStatus,
   selectKycRequestType,
 } from "../../modules/kyc/selectors";

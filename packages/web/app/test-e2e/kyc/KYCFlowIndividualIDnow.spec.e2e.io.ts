@@ -30,9 +30,9 @@ const assertOutsourcedKycWidgetStatus = () => {
 
   stubWindow("windowOpen");
 
-  cy.get(tid("settings.kyc-status-widget.continue-kyc-idnow-verification")).click();
+  cy.get(tid("settings.kyc-status-widget.continue-kyc-verification")).click();
 
-  cy.get("@windowOpen").should("be.calledWithMatch", ID_NOW_EXTERNAL_MOCK, "_blank");
+  cy.url().should("contain", kycRoutes.start);
 };
 
 describe("KYC Personal flow with ID Now", () => {

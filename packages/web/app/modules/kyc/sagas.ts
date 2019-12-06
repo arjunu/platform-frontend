@@ -15,7 +15,6 @@ import {
   IKycIndividualData,
   IKycLegalRepresentative,
   TKycBankAccount,
-  TKycIdNowIdentification,
   TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
 import { EUserType, IUser } from "../../lib/api/users/interfaces";

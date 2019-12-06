@@ -276,10 +276,4 @@ export const kycActions = {
     "KYC_SET_QUINTESSENCE_BANK_ACCOUNT_DETAILS",
     (quintessenceBankAccount: KycBankQuintessenceBankAccount) => ({ quintessenceBankAccount }),
   ),
-
-  // id-now
-  setIdNowRedirectUrl: createActionFactory(
-    "KYC_SET_ID_NOW_REDIRECT_URL",
-    (redirectUrl: string) => ({ redirectUrl }),
-  ),
 };

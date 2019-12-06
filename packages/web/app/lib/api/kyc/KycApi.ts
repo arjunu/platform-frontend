@@ -10,8 +10,6 @@ import {
   IKycLegalRepresentative,
   KycFileInfoShape,
   KycIdNowIdentificationSchema,
-  KycIndividualDataSchema,
-  KycIdNowIdentificationSchema,
   KycLegalRepresentativeSchema,
   KycOnfidoCheckRequestSchema,
   KycOnfidoUploadRequestSchema,
@@ -24,7 +22,6 @@ import {
   TKycIdNowIdentification,
   TKycOnfidoCheckRequest,
   TKycOnfidoUploadRequest,
-  TKycIdNowIdentification,
   TKycStatus,
 } from "./KycApi.interfaces";
 

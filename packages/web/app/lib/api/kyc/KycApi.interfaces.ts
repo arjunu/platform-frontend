@@ -27,18 +27,6 @@ export enum EKycInstantIdStatus {
   PENDING = "pending",
 }
 
-export type TInstantIdNoneProvider = "none";
-
-export enum EKycInstantIdProvider {
-  ID_NOW = "id_now",
-  ONFIDO = "onfido",
-}
-
-export enum EKycInstantIdStatus {
-  DRAFT = "draft",
-  PENDING = "pending",
-}
-
 export interface IKycPerson {
   firstName?: string;
   lastName?: string;
@@ -122,12 +110,6 @@ export const KycStatusSchema = YupTS.object({
 });
 
 export type TKycStatus = YupTS.TypeOf<typeof KycStatusSchema>;
-
-export const KycIdNowIdentificationSchema = YupTS.object({
-  redirectUrl: YupTS.string(),
-});
-
-export type TKycIdNowIdentification = YupTS.TypeOf<typeof KycIdNowIdentificationSchema>;
 
 export const KycPersonalDataSchemaRequired = makeAllRequiredExcept(KycPersonalDataSchema, ["id"]);
 export const KycPersonalAddressSchemaRequired = makeAllRequiredExcept(KycPersonalAddressSchema, [
