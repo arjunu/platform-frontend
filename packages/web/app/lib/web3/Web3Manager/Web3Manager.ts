@@ -5,13 +5,12 @@ import * as Web3 from "web3";
 
 import { symbols } from "../../../di/symbols";
 import { calculateGasLimitWithOverhead, encodeTransaction } from "../../../modules/tx/utils";
-import { EthereumNetworkId } from "../../../utils/opaque-types/types";
+import { EthereumAddress, EthereumNetworkId } from "../../../utils/opaque-types/types";
 import { ILogger } from "../../dependencies/logger";
 import { IPersonalWallet } from "../PersonalWeb3";
 import { IEthereumNetworkConfig } from "../types";
 import { Web3Adapter } from "../Web3Adapter";
 import { Web3FactoryType } from "../Web3Batch/Web3Batch";
-import { EthereumAddress } from "./../../../utils/opaque-types/types";
 
 export const DEFAULT_UPPER_GAS_LIMIT = 2000000;
 export const DEFAULT_LOWER_GAS_LIMIT = 21000;

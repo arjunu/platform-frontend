@@ -11,7 +11,7 @@ type TProps = {
 
 // TODO: Refactor to general list component as now it only supports success mark
 export const List: React.FunctionComponent<TProps & CommonHtmlProps> = ({ items, className }) => (
-  <ul className={cn(styles.list, className, "pure")}>
+  <ul className={cn(styles.list, className)}>
     {items.map((item, i) => (
       <li key={i} className={cn(styles.item, styles.itemSuccess)}>
         {item}

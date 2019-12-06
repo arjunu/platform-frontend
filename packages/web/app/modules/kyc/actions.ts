@@ -10,9 +10,14 @@ import {
   KycBankQuintessenceBankAccount,
   TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
+import { kycInstantIdIdNowActions } from "./instant-id/id-now/actions";
+import { kycInstantIdOnfidoActions } from "./instant-id/onfido/actions";
 import { TBankAccount, TClaims } from "./types";
 
 export const kycActions = {
+  ...kycInstantIdOnfidoActions,
+  ...kycInstantIdIdNowActions,
+
   /**
    * General
    */
@@ -102,8 +107,6 @@ export const kycActions = {
   ),
 
   kycSubmitIndividualRequest: createActionFactory("KYC_SUBMIT_INDIVIDUAL_REQUEST"),
-
-  kycStartIndividualIdNow: createActionFactory("KYC_START_INSTANT_ID"),
 
   /*
     Business

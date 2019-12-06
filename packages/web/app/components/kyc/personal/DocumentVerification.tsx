@@ -1,19 +1,25 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { compose } from "redux";
+import { compose } from "recompose";
 
+import { symbols } from "../../../di/symbols";
 import {
   EKycInstantIdProvider,
   TInstantIdNoneProvider,
 } from "../../../lib/api/kyc/KycApi.interfaces";
+import { OnfidoSDK } from "../../../lib/dependencies/onfido/OnfidoSDK";
 import { actions } from "../../../modules/actions";
+import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import {
   selectKycInstantIdProvider,
   selectKycRecommendedInstantIdProvider,
   selectKycSupportedInstantIdProviders,
 } from "../../../modules/kyc/selectors";
 import { appConnect } from "../../../store";
+import { onLeaveAction } from "../../../utils/OnLeaveAction";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";
+import { withDependencies } from "../../shared/hocs/withDependencies";
+import { Notification } from "../../shared/notification-widget/Notification";
 import { KycStep } from "../shared/KycStep";
 import { VerificationMethod } from "../shared/VerificationMethod";
 
@@ -78,48 +84,24 @@ const selectProviderAction = (
   }
 };
 
-const getEnabledProviders = () =>
-  process.env.NF_ENABLED_VERIFICATION_PROVIDERS &&
-  process.env.NF_ENABLED_VERIFICATION_PROVIDERS.split(",");
+type TRenderPropsProp = { onfidoSdk: OnfidoSDK };
 
-const getEnabledInstatnIdProviders = (
-  supportedInstantIdProviders:
-    | ReadonlyArray<EKycInstantIdProvider>
-    | TInstantIdNoneProvider
-    | undefined,
-) => {
-  const enabledProviders = getEnabledProviders() as EKycInstantIdProvider[];
-  return enabledProviders
-    ? enabledProviders.filter(
-        v => supportedInstantIdProviders && supportedInstantIdProviders.includes(v),
-      )
-    : supportedInstantIdProviders && [...supportedInstantIdProviders];
-};
-
-const showManualVerification = () => {
-  const enabledProviders = getEnabledProviders();
-  return enabledProviders && enabledProviders.includes("manual");
-};
-
-const KycPersonalDocumentVerificationRecommended: React.FunctionComponent<IRecommendedProps &
-  IStartInstantIdProps> = ({ recommendedInstantIdProvider, currentProvider, ...dispatchers }) => (
-  <>
-    <p className={styles.label}>
-      <FormattedMessage id="kyc.personal.document-verification.recommended" />
-    </p>
-    <VerificationMethod
-      data-test-id={`kyc-go-to-outsourced-verification-${recommendedInstantIdProvider}`}
-      disabled={currentProvider !== "none" && currentProvider !== recommendedInstantIdProvider}
-      onClick={selectProviderAction(recommendedInstantIdProvider, dispatchers)}
-      logo={selectProviderLogo(recommendedInstantIdProvider)}
-      text={selectProviderText(recommendedInstantIdProvider)}
-      name={recommendedInstantIdProvider}
-    />
-    <p className={styles.label}>
-      <FormattedMessage id="kyc.personal.document-verification.other" />
-    </p>
-  </>
-);
+export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<IProps &
+  IStateProps &
+  IDispatchProps> = ({ ...props }) => (
+  <KycPanel
+    title={<FormattedMessage id="kyc.panel.individual-verification" />}
+    steps={personalSteps}
+    backLink={kycRoutes.individualStart}
+    isMaxWidth={false}
+    fullHeightContent={true}
+  >
+    <div className={styles.description} data-test-id="kyc-panel-description">
+      <FormattedHTMLMessage
+        tagName="span"
+        id="kyc.personal.instant-id.manual-verification-description"
+      />
+    </div>
 
 export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<IStateProps &
   IDispatchProps> = ({
@@ -193,7 +175,10 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
   );
 };
 
-export const KycPersonalDocumentVerification = compose<React.FunctionComponent>(
+export const KycPersonalDocumentVerification = compose<
+  IProps & IStateProps & IDispatchProps & TRenderPropsProp,
+  {}
+>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
       supportedInstantIdProviders: selectKycSupportedInstantIdProviders(state),
@@ -201,10 +186,17 @@ export const KycPersonalDocumentVerification = compose<React.FunctionComponent>(
       currentProvider: selectKycInstantIdProvider(state),
     }),
     dispatchToProps: dispatch => ({
-      onStartIdNow: () => dispatch(actions.kyc.kycStartIndividualIdNow()),
+      onStartIdNow: () => dispatch(actions.kyc.startIdNowRequest()),
+      onStartOnfido: () => dispatch(actions.kyc.startOnfidoRequest()),
       onManualVerification: () => dispatch(actions.routing.goToKYCIndividualUpload()),
       goBack: () => dispatch(actions.routing.goToKYCIndividualAddress()),
       goToDashboard: () => dispatch(actions.routing.goToDashboard()),
     }),
+  }),
+  withDependencies<TRenderPropsProp>({ onfidoSdk: symbols.onfidoSdk }),
+  onLeaveAction({
+    actionCreator: d => {
+      d(actions.kyc.stopOnfidoRequest());
+    },
   }),
 )(KycPersonalDocumentVerificationComponent);

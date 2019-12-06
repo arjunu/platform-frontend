@@ -58,11 +58,6 @@ export const selectIsKycFlowBlockedByRegion = createSelector(
   (isProhibited, status) => isProhibited && status === EKycRequestStatus.DRAFT,
 );
 
-export const selectKycIdNowRedirectUrl = createSelector(
-  selectKyc,
-  kyc => kyc.idNow && kyc.idNow.redirectUrl,
-);
-
 export const selectCombinedBeneficialOwnerOwnership = (state: DeepReadonly<IKycState>): number => {
   if (state.beneficialOwners.length === 0) return 0;
   return state.beneficialOwners.reduce(

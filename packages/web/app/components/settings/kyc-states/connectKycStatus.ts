@@ -54,7 +54,7 @@ const connectKycStatusWidget = () => (
       dispatchToProps: dispatch => ({
         onGoToDashboard: () => dispatch(actions.routing.goToDashboard()),
         onGoToKycHome: () => dispatch(actions.routing.goToKYCHome()),
-        onStartIdNow: () => dispatch(actions.kyc.kycStartIndividualIdNow()),
+        onStartIdNow: () => dispatch(actions.kyc.startIdNowRequest()),
       }),
     }),
     branch<IStateProps>(props => props.isLoading, renderNothing),

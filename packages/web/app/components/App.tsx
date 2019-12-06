@@ -17,6 +17,7 @@ import { ScrollToTop } from "../utils/ScrollToTop";
 import { withRootMetaTag } from "../utils/withMetaTags.unsafe";
 import { AppRouter } from "./AppRouter";
 import { CriticalError } from "./layouts/CriticalError";
+import { FullPageLoading } from "./modals/full-page-loading/FullPageLoading";
 import { GenericModal } from "./modals/generic-modal/GenericModal";
 import { VideoModal } from "./modals/video-modal/VideoModal";
 import { AccessWalletModal } from "./modals/wallet-access/AccessWalletModal";
@@ -77,6 +78,7 @@ class AppComponent extends React.Component<IStateProps & IDispatchProps, IState>
         <AccessWalletModal />
         <ToastContainer />
         <GenericModal />
+        <FullPageLoading />
         <VideoModal />
       </>
     );

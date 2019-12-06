@@ -35,6 +35,16 @@ $loading-indicator-color: #333;
   animation: sk-scaleout 1s infinite ease-in-out;
   background-color: $loading-indicator-color;
   margin: 6.25rem auto;
+
+  &--light {
+    margin: 0;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &--white {
+    background-color: $neu-white-two;
+  }
 }
 
 .blocks {
@@ -54,13 +64,7 @@ $loading-indicator-color: #333;
 
       $i: $i + 1;
     }
-   }
-}
-
-.light {
-  margin: 0;
-  width: 1rem;
-  height: 1rem;
+  }
 }
 
 @keyframes rotate {

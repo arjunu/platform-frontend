@@ -1,7 +1,11 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { EKycRequestStatus, EKycRequestType } from "../../lib/api/kyc/KycApi.interfaces";
+import {
+  EKycInstantIdStatus,
+  EKycRequestStatus,
+  EKycRequestType,
+} from "../../lib/api/kyc/KycApi.interfaces";
 import { Button, EButtonLayout, EIconPosition } from "../shared/buttons";
 import { KycPanel } from "./KycPanel";
 import { KycSubmitedRouter } from "./KycSubmitedRouter";
@@ -47,8 +51,9 @@ export const businessSteps = [
   },
 ];
 
-type IProps = {
+type TExternalProps = {
   requestStatus?: EKycRequestStatus;
+  instantIdStatus: EKycInstantIdStatus | undefined;
   idNowRedirectUrl: string | undefined;
   requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
@@ -56,11 +61,11 @@ type IProps = {
   goToDashboard: () => void;
 };
 
-interface IState {
+type TLocalState = {
   showAdditionalFileUpload: boolean;
-}
+};
 
-class RequestStateInfo extends React.Component<IProps, IState> {
+class RequestStateInfo extends React.Component<TExternalProps, TLocalState> {
   state = {
     showAdditionalFileUpload: false,
   };
@@ -68,7 +73,12 @@ class RequestStateInfo extends React.Component<IProps, IState> {
   render(): React.ReactNode {
     const steps =
       this.props.requestType === EKycRequestType.BUSINESS ? businessSteps : personalSteps;
-
+// Kyc is pending when either status `Pending` or
+    // status is `Outsourced` with outsourced verification status set to `Pending`
+    const isKycPending =
+      this.props.requestStatus === EKycRequestStatus.PENDING ||
+      (this.props.requestStatus === EKycRequestStatus.OUTSOURCED &&
+        this.props.instantIdStatus === EKycInstantIdStatus.PENDING);
     const settingsButton = (
       <div className="p-4 text-center">
         <Button
@@ -92,9 +102,10 @@ class RequestStateInfo extends React.Component<IProps, IState> {
         </KycPanel>
       );
     }
-    if (this.props.requestStatus === EKycRequestStatus.PENDING) {
+    if (isKycPending) {
       return <KycSubmitedRouter />;
     }
+
     if (this.props.requestStatus === EKycRequestStatus.ACCEPTED) {
       return (
         <KycPanel
@@ -106,6 +117,7 @@ class RequestStateInfo extends React.Component<IProps, IState> {
         </KycPanel>
       );
     }
+
     if (this.props.requestStatus === EKycRequestStatus.REJECTED) {
       return (
         <KycPanel
@@ -138,12 +150,19 @@ class RequestStateInfo extends React.Component<IProps, IState> {
       );
     }
 
-    return <div />;
+    return null;
   }
 }
 
-const KycLayout: React.FunctionComponent<IProps> = props => {
-  const router = props.requestStatus === EKycRequestStatus.DRAFT ? <KycRouter /> : null;
+const KycLayout: React.FunctionComponent<TExternalProps> = props => {
+  // Kyc is draft when either status `Draft` or
+  // status is `Outsourced` with outsourced verification status set to `Draft`
+  const isKycInDraft =
+    props.requestStatus === EKycRequestStatus.DRAFT ||
+    (props.requestStatus === EKycRequestStatus.OUTSOURCED &&
+      props.instantIdStatus === EKycInstantIdStatus.DRAFT);
+
+  const router = isKycInDraft ? <KycRouter /> : null;
   return (
     <>
       <RequestStateInfo {...props} />

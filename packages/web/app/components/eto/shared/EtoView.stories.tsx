@@ -1,4 +1,5 @@
 import { storiesOf } from "@storybook/react";
+import { cloneDeep } from "lodash";
 import * as React from "react";
 import { Container } from "reactstrap";
 
@@ -27,6 +28,16 @@ storiesOf("ETO/EtoView", module)
       <EtoView eto={testEto} publicView={true} isUserFullyVerified={true} />
     </Container>
   ))
+  .add("investor view without the logo", () => {
+    const testData = cloneDeep(testEto);
+    // @ts-ignore /*companyLogo is a readonly property*/
+    testData.company.companyLogo = undefined;
+    return (
+      <Container>
+        <EtoView eto={testData} publicView={true} isUserFullyVerified={true} />
+      </Container>
+    );
+  })
   .add("issuer view", () => (
     <Container>
       <EtoView eto={testEto} publicView={false} isUserFullyVerified={true} />

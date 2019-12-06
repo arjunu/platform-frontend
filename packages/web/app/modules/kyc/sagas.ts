@@ -28,6 +28,8 @@ import { userHasKycAndEmailVerified } from "../eto-flow/selectors";
 import { displayErrorModalSaga } from "../generic-modal/sagas";
 import { waitUntilSmartContractsAreInitialized } from "../init/sagas";
 import { neuCall, neuTakeEvery, neuTakeUntil } from "../sagasUtils";
+import { kycIdNowSagas } from "./instant-id/id-now/sagas";
+import { kycOnfidoSagas } from "./instant-id/onfido/sagas";
 import {
   selectCombinedBeneficialOwnerOwnership,
   selectKycRequestStatus,
@@ -294,25 +296,6 @@ function* submitIndividualRequest({
     notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
 
     logger.error("Failed to submit KYC individual request", e);
-  }
-}
-
-function* startIndividualIdNow({
-  apiKycService,
-  notificationCenter,
-  logger,
-}: TGlobalDependencies): Iterator<any> {
-  try {
-    const { redirectUrl }: TKycIdNowIdentification = yield apiKycService.startInstantId();
-
-    yield put(actions.routing.openInNewWindow(redirectUrl));
-    yield put(actions.kyc.setIdNowRedirectUrl(redirectUrl));
-
-    yield put(actions.kyc.kycLoadStatusAndData());
-  } catch (e) {
-    logger.error("KYC instant id failed to start", e);
-
-    notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
   }
 }
 
@@ -723,7 +706,6 @@ export function* kycSagas(): Iterator<any> {
   yield fork(neuTakeEvery, actions.kyc.kycUploadIndividualDocument, uploadIndividualFile);
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualDocumentList, loadIndividualFiles);
   // Outsourced
-  yield fork(neuTakeEvery, actions.kyc.kycStartIndividualIdNow, startIndividualIdNow);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitIndividualRequest, submitIndividualRequest);
 
   yield fork(neuTakeEvery, actions.kyc.kycLoadLegalRepresentative, loadLegalRepresentative);
@@ -768,4 +750,8 @@ export function* kycSagas(): Iterator<any> {
     actions.kyc.kycStopWatching,
     kycRefreshWidgetSaga,
   );
+
+  // sub-sagas
+  yield fork(kycOnfidoSagas);
+  yield fork(kycIdNowSagas);
 }

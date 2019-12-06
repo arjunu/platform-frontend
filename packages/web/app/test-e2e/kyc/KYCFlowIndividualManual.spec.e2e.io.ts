@@ -11,29 +11,29 @@ import { kycInvidualAddressForm, kycInvidualForm, kycInvidualFormUS } from "./fi
 
 describe("KYC Personal flow with manual verification", () => {
   it("went through KYC flow with personal data", () => {
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      // TODO: Move to a separate test
-      // Tests multi jurisdiction
-      assertAllJurisdictionEtosExist();
-      // go to kyc select and then individual page
-      cy.visit(kycRoutes.start);
-      cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
-      cy.url().should("contain", kycRoutes.individualStart);
+    createAndLoginNewUser({ type: "investor" });
+    // TODO: Move to a separate test
+    // Tests multi jurisdiction
+    assertAllJurisdictionEtosExist();
+    // go to kyc select and then individual page
+    cy.visit(kycRoutes.start);
+    cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
+    cy.url().should("contain", kycRoutes.individualStart);
 
-      // fill and submit the form
-      fillForm(kycInvidualForm);
+    // fill and submit the form
+    fillForm(kycInvidualForm);
       fillForm(kycInvidualAddressForm);
 
-      // go to the manual verification with file upload
-      cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
-      cy.url().should("contain", kycRoutes.individualUpload);
+    // go to the manual verification with file upload
+    cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
+    cy.url().should("contain", kycRoutes.individualUpload);
 
-      // upload file
-      uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
+    // upload file
+    uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
 
-      // submt request and accept with the wallet
-      cy.get(tid("kyc-personal-upload-submit")).awaitedClick();
-      confirmAccessModal();
+    // submt request and accept with the wallet
+    cy.get(tid("kyc-personal-upload-submit")).awaitedClick();
+    confirmAccessModal();
 
       // panel should now be in pending state
       cy.get(tid("kyc-success"));
@@ -44,24 +44,25 @@ describe("KYC Personal flow with manual verification", () => {
 
   it("went through KYC flow with personal data for US investor", function(): void {
     this.retries(2);
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      // go to kyc select and then individual page
-      cy.visit(kycRoutes.start);
-      cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
-      cy.url().should("contain", kycRoutes.individualStart);
+    createAndLoginNewUser({ type: "investor" });
 
-      // fill the form
-      fillForm(kycInvidualFormUS, { submit: false });
+    // go to kyc select and then individual page
+    cy.visit(kycRoutes.start);
+    cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
+    cy.url().should("contain", kycRoutes.individualStart);
 
-      // form should be disabled before the accreditation file is uploaded
-      cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
+    // fill the form
+    fillForm(kycInvidualFormUS, { submit: false });
 
-      // Upload accreditation documents
-      uploadMultipleFilesToFieldWithTid("kyc-upload-documents-dropzone", ["example.jpg"]);
+    // form should be disabled before the accreditation file is uploaded
+    cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
 
-      cy.get(tid("kyc-personal-start-submit-form")).click();
+    // Upload accreditation documents
+    uploadMultipleFilesToFieldWithTid("kyc-upload-documents-dropzone", ["example.jpg"]);
 
-      fillForm(kycInvidualAddressForm);
+    cy.get(tid("kyc-personal-start-submit-form")).click();
+
+    fillForm(kycInvidualAddressForm);
 
       // go to the manual verification with file upload
       cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
@@ -69,12 +70,11 @@ describe("KYC Personal flow with manual verification", () => {
       // upload file
       uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
 
-      // submit request and accept with the wallet
-      cy.get(tid("kyc-personal-upload-submit")).awaitedClick();
-      confirmAccessModal();
+    // submit request and accept with the wallet
+    cy.get(tid("kyc-personal-upload-submit")).awaitedClick();
+    confirmAccessModal();
 
-      // panel should now be in pending state
-      cy.get(tid("kyc-success")).should("exist");
-    });
+    // panel should now be in pending state
+    cy.get(tid("kyc-success")).should("exist");
   });
 });

@@ -46,7 +46,7 @@ const LandingLayout: React.FunctionComponent = () => (
             columnSpan={EColumnSpan.ONE_AND_HALF_COL}
             type={EContainerType.GRID}
           >
-            <ul className={cn(styles.features, "pure")}>
+            <ul className={cn(styles.features)}>
               <li className={cn(styles.featuresItem, styles.featuresItemInvest)}>
                 <FormattedMessage id="platform.landing.list.first" />
               </li>

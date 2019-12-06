@@ -10,13 +10,20 @@ import {
   IKycLegalRepresentative,
   KycFileInfoShape,
   KycIdNowIdentificationSchema,
+  KycIndividualDataSchema,
+  KycIdNowIdentificationSchema,
   KycLegalRepresentativeSchema,
+  KycOnfidoCheckRequestSchema,
+  KycOnfidoUploadRequestSchema,
   KycPersonalAddressSchema,
   KycPersonalDataSchema,
   KycPersonSchema,
   KycStatusSchema,
   TKycBankAccount,
   TKycBankTransferPurpose,
+  TKycIdNowIdentification,
+  TKycOnfidoCheckRequest,
+  TKycOnfidoUploadRequest,
   TKycIdNowIdentification,
   TKycStatus,
 } from "./KycApi.interfaces";
@@ -43,6 +50,9 @@ const BENEFICIAL_OWNER_DOCUMENT_PATH = "/beneficial-owner/{boid}/document";
 const BANK_ACCOUNT_PATH = "/bank-account";
 const NEUR_PURCHASE_REQUEST_PREPARATION_PATH = "/neur-purchase-request-preparation";
 const NEUR_PURCHASE_REQUEST_PATH = "/neur-purchase-requests";
+
+const ONFIDO_UPLOAD_REQUEST_PATH = "/individual/request/onfido/upload-request";
+const ONFIDO_CHECK_REQUEST_PATH = "/individual/request/onfido/check-request";
 
 export class KycApiError extends Error {}
 export class BankAccountNotFound extends KycApiError {}
@@ -330,6 +340,36 @@ export class KycApi {
         amount,
         purpose,
       },
+    });
+
+    return response.body;
+  }
+
+  /*
+   * Onfido
+   */
+
+  public async putOnfidoUploadRequest(): Promise<TKycOnfidoUploadRequest> {
+    // Trailing slash is required by the backend
+    const referrer = `${window.location.origin}/`;
+
+    const response = await this.httpClient.put<TKycOnfidoUploadRequest>({
+      baseUrl: BASE_PATH,
+      url: ONFIDO_UPLOAD_REQUEST_PATH,
+      body: {
+        referrer,
+      },
+      responseSchema: KycOnfidoUploadRequestSchema,
+    });
+
+    return response.body;
+  }
+
+  public async putOnfidoCheckRequest(): Promise<TKycOnfidoCheckRequest> {
+    const response = await this.httpClient.put<TKycOnfidoCheckRequest>({
+      baseUrl: BASE_PATH,
+      url: ONFIDO_CHECK_REQUEST_PATH,
+      responseSchema: KycOnfidoCheckRequestSchema,
     });
 
     return response.body;

@@ -2,11 +2,17 @@ import * as React from "react";
 import { Redirect } from "react-router";
 import { branch, compose, renderComponent, withProps } from "recompose";
 
-import { EKycRequestStatus, EKycRequestType } from "../../lib/api/kyc/KycApi.interfaces";
+import {
+  EKycInstantIdStatus,
+  EKycRequestStatus,
+  EKycRequestType,
+} from "../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../modules/actions";
 import { selectIsUserEmailVerified } from "../../modules/auth/selectors";
+import { selectKycIdNowRedirectUrl } from "../../modules/kyc/instant-id/id-now/selectors";
 import {
   selectIsKycFlowBlockedByRegion,
+  selectKycInstantIdStatus,
   selectKycIdNowRedirectUrl,
   selectKycRequestStatus,
   selectKycRequestType,
@@ -25,6 +31,7 @@ const KycLayout = React.lazy(() => import("./KycLayout").then(imp => ({ default:
 
 interface IStateProps {
   requestStatus?: EKycRequestStatus;
+  instantIdStatus: EKycInstantIdStatus | undefined;
   idNowRedirectUrl: string | undefined;
   requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
@@ -41,6 +48,7 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
       requestStatus: selectKycRequestStatus(state),
+      instantIdStatus: selectKycInstantIdStatus(state),
       idNowRedirectUrl: selectKycIdNowRedirectUrl(state),
       requestType: selectKycRequestType(state),
       hasVerifiedEmail: selectIsUserEmailVerified(state.auth),

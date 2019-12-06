@@ -1,10 +1,13 @@
 import * as cn from "classnames";
 import * as React from "react";
 
+import { externalRoutes } from "../../../config/externalRoutes";
+import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
+import { CommonHtmlProps, TDataTestId } from "../../../types";
+import { getHostname } from "../../../utils/StringUtils";
 import { ENotificationType } from "../../../modules/notifications/types";
 import { CommonHtmlProps, OmitKeys, TDataTestId, TTranslatedString } from "../../../types";
-import { ButtonBase } from "../buttons";
-import { ButtonClose } from "../buttons/CommonButtons";
+import { ButtonBase, ButtonClose } from "../buttons";
 
 import * as infoIcon from "../../../assets/img/notifications/info.svg";
 import * as warningIcon from "../../../assets/img/notifications/warning.svg";
