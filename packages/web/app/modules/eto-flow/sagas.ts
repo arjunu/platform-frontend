@@ -32,7 +32,7 @@ export function* loadIssuerEto({
   apiEtoService,
   notificationCenter,
   logger,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const company: TCompanyEtoData = yield apiEtoService.getCompany();
     const eto: TEtoSpecsData = yield apiEtoService.getMyEto();
@@ -52,14 +52,14 @@ export function* loadIssuerEto({
 function* changeBookBuildingStatusEffect(
   { apiEtoService }: TGlobalDependencies,
   status: boolean,
-): Iterator<any> {
+): Generator<any, any, any> {
   yield apiEtoService.changeBookBuildingState(status);
 }
 
 export function* changeBookBuildingStatus(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof etoFlowActions.changeBookBuildingStatus>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { status } = action.payload;
 
   try {
@@ -88,7 +88,7 @@ export function* downloadBookBuildingStats({
   apiEtoService,
   notificationCenter,
   logger,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const detailedStatsResponse: IHttpResponse<any> = yield apiEtoService.getDetailedBookBuildingStats();
 
@@ -106,7 +106,7 @@ export function* downloadBookBuildingStats({
 export function* saveCompany(
   { apiEtoService, notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof etoFlowActions.saveCompanyStart>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     yield apiEtoService.patchCompany(action.payload.company);
 
@@ -124,7 +124,7 @@ export function* saveCompany(
 export function* saveEto(
   { apiEtoService, notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof etoFlowActions.saveEtoStart>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const currentEto: TEtoSpecsData = yield select(selectIssuerEto);
 
@@ -159,7 +159,7 @@ export function* saveEto(
 export function* submitEtoDataEffect({
   apiEtoService,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   yield apiEtoService.submitCompanyAndEto();
 
   notificationCenter.info(createMessage(EtoDocumentsMessage.ETO_SUBMIT_SUCCESS));
@@ -168,7 +168,10 @@ export function* submitEtoDataEffect({
   yield put(actions.routing.goToDashboard());
 }
 
-export function* submitEtoData({ notificationCenter, logger }: TGlobalDependencies): Iterator<any> {
+export function* submitEtoData({
+  notificationCenter,
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield neuCall(
       ensurePermissionsArePresentAndRunEffect,
@@ -185,7 +188,7 @@ export function* submitEtoData({ notificationCenter, logger }: TGlobalDependenci
   }
 }
 
-function* startSetDateTX(_: TGlobalDependencies): Iterator<any> {
+function* startSetDateTX(_: TGlobalDependencies): Generator<any, any, any> {
   const state: IAppState = yield select();
   if (selectIsNewPreEtoStartDateValid(state)) {
     yield put(actions.txTransactions.startEtoSetDate());
@@ -206,7 +209,7 @@ export function* loadProducts({
   apiEtoProductService,
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const products: TEtoProducts = yield apiEtoProductService.getProducts();
 
@@ -221,7 +224,7 @@ export function* loadProducts({
 export function* changeProductType(
   { apiEtoProductService, logger, notificationCenter }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.etoFlow.changeProductType>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const eto: TEtoSpecsData = yield apiEtoProductService.changeProductType(
       action.payload.productId,
@@ -243,7 +246,7 @@ export function* changeProductType(
 export function* publishEtoDataEffect({
   apiEtoService,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   yield apiEtoService.publishCompanyAndEto();
 
   notificationCenter.info(createMessage(EtoDocumentsMessage.ETO_SUBMIT_SUCCESS));
@@ -255,7 +258,7 @@ export function* publishEtoDataEffect({
 export function* publishEtoData({
   notificationCenter,
   logger,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield neuCall(
       ensurePermissionsArePresentAndRunEffect,
@@ -272,7 +275,7 @@ export function* publishEtoData({
   }
 }
 
-export function* loadIssuerStep(): Iterator<any> {
+export function* loadIssuerStep(): Generator<any, any, any> {
   yield neuCall(loadIssuerEto);
 
   const issuerEto: ReturnType<typeof selectActiveNomineeEto> = yield select(

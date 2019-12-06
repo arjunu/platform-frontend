@@ -1,6 +1,5 @@
 import * as promiseAll from "promise-all";
-import { delay } from "redux-saga/effects";
-import { fork, put, select, take } from "redux-saga/effects";
+import { delay, fork, put, select, take } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { ICBMLockedAccount } from "../../lib/contracts/ICBMLockedAccount";

@@ -1,4 +1,3 @@
-import { ILightWalletMetadata } from "./../../../web3/types";
 import { select } from "typed-redux-saga";
 
 import { TGlobalDependencies } from "../../../../di/setupBindings";
@@ -11,6 +10,7 @@ import {
 } from "../../../web3/selectors";
 import { EWalletType, ILightWalletRetrieveMetadata } from "../../../web3/types";
 import { getVaultKey } from "../utils";
+import { ILightWalletMetadata } from "./../../../web3/types";
 
 export async function retrieveMetadataFromVaultAPI(
   { vaultApi }: TGlobalDependencies,

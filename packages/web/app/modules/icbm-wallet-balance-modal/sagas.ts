@@ -1,7 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { toChecksumAddress } from "ethereumjs-util";
-import { delay } from "redux-saga/effects";
-import { call, fork, put, select } from "redux-saga/effects";
+import { call, delay, fork, put, select } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { IcbmWalletMessage } from "../../components/translatedMessages/messages";

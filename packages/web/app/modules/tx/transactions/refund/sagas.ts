@@ -21,7 +21,7 @@ import { ETxSenderType } from "../../types";
 function* generateGetRefundTransaction(
   { contractsService, web3Manager }: TGlobalDependencies,
   etoId: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const userAddress: EthereumAddressWithChecksum = yield select(selectEthereumAddressWithChecksum);
   const gasPriceWithOverhead: string = yield select(selectStandardGasPriceWithOverHead);
 
@@ -48,7 +48,7 @@ function* generateGetRefundTransaction(
   return txDetails;
 }
 
-function* startRefundGenerator(_: TGlobalDependencies, etoId: string): Iterator<any> {
+function* startRefundGenerator(_: TGlobalDependencies, etoId: string): Generator<any, any, any> {
   const generatedTxDetails: ITxData = yield neuCall(generateGetRefundTransaction, etoId);
   yield put(actions.txSender.setTransactionData(generatedTxDetails));
 
@@ -79,7 +79,7 @@ function* startRefundGenerator(_: TGlobalDependencies, etoId: string): Iterator<
 function* etoRefundSaga(
   { logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.txTransactions.startInvestorRefund>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const etoId = action.payload.etoId;
   try {
     yield txSendSaga({
@@ -95,6 +95,6 @@ function* etoRefundSaga(
   }
 }
 
-export const txRefundSagas = function*(): Iterator<any> {
+export const txRefundSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeLatest, actions.txTransactions.startInvestorRefund, etoRefundSaga);
 };

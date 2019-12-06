@@ -1,4 +1,4 @@
-import { fork, put, select, Effect } from "redux-saga/effects";
+import { fork, put, select } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { IAppState } from "../../store";
@@ -34,7 +34,7 @@ function* initSmartcontracts({ web3Manager, logger }: TGlobalDependencies): any 
   }
 }
 
-function* makeSureWalletMetaDataExists({ walletStorage }: TGlobalDependencies): Iterator<any> {
+function* makeSureWalletMetaDataExists({ walletStorage }: TGlobalDependencies): Generator<any,any,any> {
   const metadata = walletStorage.get();
   if (metadata === undefined) {
     throw new WalletMetadataNotFoundError();
@@ -83,7 +83,7 @@ function* initApp({ logger }: TGlobalDependencies): any {
 export function* initStartSaga(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.init.start>,
-): Iterator<any> {
+): Generator<any,any,any> {
   const { initType } = action.payload;
 
   switch (initType) {
@@ -113,7 +113,7 @@ export function* initSmartcontractsOnce(): any {
   yield put(actions.init.start(EInitType.SMART_CONTRACTS_INIT));
 }
 
-export function* waitUntilSmartContractsAreInitialized(): Iterator<any> {
+export function* waitUntilSmartContractsAreInitialized(): Generator<any,any,any> {
   const isSmartContractsInitialized = yield select(selectIsSmartContractInitDone);
 
   if (!isSmartContractsInitialized) {
@@ -122,7 +122,7 @@ export function* waitUntilSmartContractsAreInitialized(): Iterator<any> {
   return;
 }
 
-export function* waitForAppInit(): Iterator<any> {
+export function* waitForAppInit(): Generator<any,any,any> {
   let appIsReady: boolean = yield select(selectIsAppReady);
 
   if (!appIsReady) {
@@ -132,7 +132,7 @@ export function* waitForAppInit(): Iterator<any> {
   return appIsReady;
 }
 
-export const initSagas = function*(): Iterator<Effect> {
+export const initSagas = function*(): Generator<any,any,any> {
   yield fork(neuTakeEvery, "INIT_START", initStartSaga);
   // Smart Contracts are only initialized once during the whole life cycle of the app
   yield fork(initSmartcontractsOnce);

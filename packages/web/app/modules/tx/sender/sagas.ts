@@ -1,5 +1,5 @@
 import { Channel } from "redux-saga";
-import { call, Effect, put, race, select, take, takeLatest } from "redux-saga/effects";
+import { call, put, race, select, take, takeLatest } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import {
@@ -57,7 +57,7 @@ export function* txMonitorSaga(): any {
   yield call(txControllerSaga, txMonitorEffect);
 }
 
-function* txMonitor(_: TGlobalDependencies): Iterable<any> {
+function* txMonitor(_: TGlobalDependencies): Generator<any, any, any> {
   const txs: TPendingTxs = yield select((s: IAppState) => s.txMonitor.txs);
 
   if (txs.pendingTransaction) {
@@ -84,7 +84,7 @@ function* txMonitor(_: TGlobalDependencies): Iterable<any> {
   }
 }
 
-function* txControllerSaga(controlledEffect: Iterator<Effect>): any {
+function* txControllerSaga(controlledEffect: Generator<any, any, any>): any {
   const gasPrice: IGasState = yield select(selectGasPrice);
 
   if (!gasPrice) {
@@ -270,7 +270,7 @@ function* watchPendingOOOTxSubSaga({ logger }: TGlobalDependencies, txHash: stri
 
   yield createWatchTxChannel(txHash, function*(
     txChannel: Channel<TEventEmitterChannelEvents>,
-  ): Iterator<any> {
+  ): Generator<any, any, any> {
     while (true) {
       const result: TEventEmitterChannelEvents = yield take(txChannel);
       if (result.type === EEventEmitterChannelEvents.NEW_BLOCK) {
@@ -285,12 +285,15 @@ function* watchPendingOOOTxSubSaga({ logger }: TGlobalDependencies, txHash: stri
   });
 }
 
-function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): Iterator<any> {
+function* watchTxSubSaga(
+  { logger }: TGlobalDependencies,
+  txHash: string,
+): Generator<any, any, any> {
   logger.info(`Watching for transaction: ${txHash}`);
 
   yield createWatchTxChannel(txHash, function*(
     txChannel: Channel<TEventEmitterChannelEvents>,
-  ): Iterator<any> {
+  ): Generator<any, any, any> {
     while (true) {
       const result: TEventEmitterChannelEvents = yield take(txChannel);
 
@@ -333,18 +336,18 @@ function* watchTxSubSaga({ logger }: TGlobalDependencies, txHash: string): Itera
   });
 }
 
-function* cleanUpTxSender(): Iterator<any> {
+function* cleanUpTxSender(): Generator<any, any, any> {
   // Conduct any general cleanup operations
   yield put(actions.txValidator.clearValidationState());
   yield put(actions.txUserFlowTransfer.clearDraftTx());
 }
 
-function* updateRelatedValues(): Iterator<any> {
+function* updateRelatedValues(): Generator<any, any, any> {
   yield put(actions.eto.loadTokensData());
   yield put(actions.wallet.loadWalletData());
 }
 
-export const txSenderSagasWatcher = function*(): Iterator<any> {
+export const txSenderSagasWatcher = function*(): Generator<any, any, any> {
   yield takeLatest("TX_SENDER_HIDE_MODAL", cleanUpTxSender);
   yield takeLatest(["TX_SENDER_TX_MINED", "TX_SENDER_ERROR"], updateRelatedValues);
 };

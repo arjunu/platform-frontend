@@ -22,7 +22,7 @@ import {
 import { ITxData } from "./../../../../../lib/web3/types";
 import { SmartContractDoesNotAcceptEtherError } from "./errors";
 
-export function* txValidateWithdraw(userInput: IWithdrawDraftType): Iterator<any> {
+export function* txValidateWithdraw(userInput: IWithdrawDraftType): Generator<any, any, any> {
   try {
     const {
       modifiedUserInput,
@@ -88,7 +88,7 @@ export function* isAddressValidAcceptsEther(
   { web3Manager }: TGlobalDependencies,
   to: string,
   value: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const etherBalance = yield* select(selectEtherBalanceAsBigNumber);
     if (etherBalance.isZero()) {

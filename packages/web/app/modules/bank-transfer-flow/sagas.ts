@@ -16,7 +16,7 @@ import {
   selectIsBankTransferModalOpened,
 } from "./selectors";
 
-function* generateReference({ apiKycService }: TGlobalDependencies): Iterable<any> {
+function* generateReference({ apiKycService }: TGlobalDependencies): Generator<any, any, any> {
   const { purpose }: TKycBankTransferPurpose = yield apiKycService.nEurPurchaseRequestPreparation();
 
   return purpose;

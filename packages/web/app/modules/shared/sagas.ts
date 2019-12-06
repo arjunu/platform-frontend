@@ -4,7 +4,7 @@ import { TGlobalDependencies } from "../../di/setupBindings";
 export function* getTokenAddress(
   { contractsService }: TGlobalDependencies,
   token: ECurrency,
-): IterableIterator<string> {
+): Generator<any, any, any> {
   switch (token) {
     case ECurrency.ETH:
       return contractsService.etherToken.address;

@@ -35,7 +35,7 @@ import {
 export function* loadInvestorTickets(
   { logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.investorEtoTicket.loadInvestorTickets>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     yield all(
       map(
@@ -53,7 +53,7 @@ export function* loadInvestorTickets(
 export function* loadInvestorTicket(
   { contractsService }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.investorEtoTicket.loadEtoInvestorTicket>,
-): Iterator<any> {
+): Generator<any, any, any> {
   if (action.payload.eto.state !== EEtoState.ON_CHAIN) {
     throw new Error("Should be called only when eto is on chain");
   }
@@ -189,7 +189,7 @@ export function* getIncomingPayouts({
 export function* loadPersonalTokenDiscount(
   { contractsService }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.eto.loadTokenTerms>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { eto } = action.payload;
 
   if (!isOnChain(eto)) {

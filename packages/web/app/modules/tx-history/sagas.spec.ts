@@ -1,4 +1,3 @@
-import { TGlobalDependencies } from "./../../di/setupBindings";
 import { expectSaga } from "redux-saga-test-plan";
 
 import { ECurrency, ENumberInputFormat } from "../../components/shared/formatters/utils";
@@ -9,6 +8,7 @@ import {
 } from "../../lib/api/analytics-api/interfaces";
 import { noopLogger } from "../../lib/dependencies/logger";
 import { EthereumAddressWithChecksum, EthereumTxHash } from "../../utils/opaque-types/types";
+import { TGlobalDependencies } from "./../../di/setupBindings";
 import { mapAnalyticsApiTransactionResponse } from "./sagas";
 import { ETransactionStatus } from "./types";
 

@@ -93,7 +93,7 @@ function* upgradeTransactionFlow(_: TGlobalDependencies, tokenType: ETokenType):
   );
 }
 
-function* upgradeSaga({ logger }: TGlobalDependencies, action: TAction): Iterator<any> {
+function* upgradeSaga({ logger }: TGlobalDependencies, action: TAction): Generator<any, any, any> {
   try {
     if (action.type !== "TRANSACTIONS_START_UPGRADE") return;
 
@@ -111,6 +111,6 @@ function* upgradeSaga({ logger }: TGlobalDependencies, action: TAction): Iterato
   }
 }
 
-export const txUpgradeSagas = function*(): Iterator<any> {
+export const txUpgradeSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeLatest, "TRANSACTIONS_START_UPGRADE", upgradeSaga);
 };

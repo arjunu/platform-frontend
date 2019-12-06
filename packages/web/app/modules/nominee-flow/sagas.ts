@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { cloneDeep, isEmpty } from "lodash/fp";
-import { all, fork, put, select, delay, Effect } from "redux-saga/effects";
+import { all, delay, fork, put, select } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { getNomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/utils";
@@ -84,7 +84,7 @@ import {
 export function* initNomineeEtoSpecificTasks(
   { logger, notificationCenter }: TGlobalDependencies,
   eto: TEtoWithCompanyAndContract,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const nomineeEtoSpecificTasks = {
       [ENomineeEtoSpecificTask.ACCEPT_THA]: ENomineeTaskStatus.NOT_DONE,
@@ -97,7 +97,7 @@ export function* initNomineeEtoSpecificTasks(
       yield put(actions.nomineeFlow.nomineeLoadEtoAgreementsStatus(eto));
       yield neuTakeOnly(actions.nomineeFlow.nomineeSetAgreementsStatus, {
         previewCode: eto.previewCode,
-      });
+      } as any);
 
       const documentsStatus: ReturnType<typeof selectNomineeEtoDocumentsStatus> = yield select(
         selectNomineeEtoDocumentsStatus,
@@ -143,7 +143,7 @@ export function* initNomineeEtoSpecificTasks(
   }
 }
 
-export function* getDataAndInitNomineeTasks(_: TGlobalDependencies): Iterator<any> {
+export function* getDataAndInitNomineeTasks(_: TGlobalDependencies): Generator<any, any, any> {
   const nomineeTasksStatus = cloneDeep(initalNomineeTaskStatus);
 
   const userIsVerified: ReturnType<typeof selectIsUserFullyVerified> = yield select(
@@ -180,10 +180,10 @@ export function* getDataAndInitNomineeTasks(_: TGlobalDependencies): Iterator<an
     }
 
     const etoSpecificNomineeTaskStatusEffects = Object.values(nomineeEtos).reduce<{
-      [key: string]: Iterator<Effect>;
+      [key: string]: Generator<any, any, any>;
     }>(
       (
-        effects: { [key: string]: Iterator<Effect> },
+        effects: { [key: string]: Generator<any, any, any> },
         eto: TEtoWithCompanyAndContract | undefined,
       ) => {
         if (!eto) {
@@ -204,7 +204,7 @@ export function* getDataAndInitNomineeTasks(_: TGlobalDependencies): Iterator<an
   }
 }
 
-export function* initNomineeDashboardView(): Iterator<any> {
+export function* initNomineeDashboardView(): Generator<any, any, any> {
   yield neuCall(getDataAndInitNomineeTasks);
 
   const nomineeTasksStatus = yield select(selectNomineeTasksStatus);
@@ -236,7 +236,7 @@ export function* initNomineeDashboardView(): Iterator<any> {
 export function* nomineeDashboardView({
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield neuCall(nomineeViewDataWatcher);
   } catch (e) {
@@ -254,7 +254,7 @@ export function* nomineeFlowLoadInvestmentAgreement(
   {
     payload: { etoId, previewCode },
   }: TActionFromCreator<typeof actions.nomineeFlow.nomineeLoadSignedInvestmentAgreement>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const url = yield neuCall(loadInvestmentAgreement, etoId);
   yield put(actions.nomineeFlow.nomineeSetInvestmentAgreementHash(previewCode, url));
 }
@@ -262,7 +262,7 @@ export function* nomineeFlowLoadInvestmentAgreement(
 export function* nomineeFlowLoadAgreementsStatus(
   _: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.nomineeFlow.nomineeLoadEtoAgreementsStatus>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const statuses: Dictionary<EEtoAgreementStatus, EAgreementType> = yield neuCall(
     loadAgreementsStatus,
     payload.eto,
@@ -271,7 +271,7 @@ export function* nomineeFlowLoadAgreementsStatus(
   yield put(actions.nomineeFlow.nomineeSetAgreementsStatus(payload.eto.previewCode, statuses));
 }
 
-export function* nomineeViewDataWatcher({ logger }: TGlobalDependencies): Iterator<any> {
+export function* nomineeViewDataWatcher({ logger }: TGlobalDependencies): Generator<any, any, any> {
   while (true) {
     logger.info("Getting nominee data and tasks");
     yield neuCall(initNomineeDashboardView);
@@ -287,7 +287,7 @@ export type TGetRedeemShareCapitalTaskStateParams = {
 export function* getRedeemShareCapitalTaskState(
   _: TGlobalDependencies,
   { capitalIncrease, walletBalance }: TGetRedeemShareCapitalTaskStateParams,
-): Iterator<any> {
+): Generator<any, any, any> {
   // capital increase is transferred to Nominee's wallet automatically when eto enters signing state.
   // if wallet balance is less than capital increase, we ASSUME here that capital increase already
   // has been transferred to the issuer's bank account and nominee now has to wait until issuer signs the ISHA.
@@ -304,7 +304,7 @@ export function* getRedeemShareCapitalTaskState(
 export function* getTaskSpecificData(
   _: TGlobalDependencies,
   activeNomineeTask: ENomineeTask | ENomineeEtoSpecificTask,
-): Iterator<any> {
+): Generator<any, any, any> {
   const taskSpecificData = cloneDeep(yield select(selectNomineeTasksData));
 
   if (activeNomineeTask === ENomineeTask.LINK_TO_ISSUER) {
@@ -328,7 +328,7 @@ export function* getNomineeTaskRedeemShareCapitalData(
   _: TGlobalDependencies,
   etoId: string,
   previewCode: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const capitalIncrease: string = yield neuCall(
     loadCapitalIncrease,
     actions.eto.loadCapitalIncrease(etoId, previewCode),
@@ -348,7 +348,7 @@ export function* getNomineeTaskRedeemShareCapitalData(
   };
 }
 
-export function* getNomineeTaskLinkToIssuerData(_: TGlobalDependencies): Iterator<any> {
+export function* getNomineeTaskLinkToIssuerData(_: TGlobalDependencies): Generator<any, any, any> {
   yield neuCall(loadNomineeRequests); //nomineeRequestsWatcher fires every 10 seconds but we need this data right now
 
   const data = yield all({
@@ -370,7 +370,7 @@ export function* getNomineeTaskLinkToIssuerData(_: TGlobalDependencies): Iterato
 export function* nomineeEtoView({
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const verificationIsComplete = yield select(selectIsUserFullyVerified);
     if (verificationIsComplete) {
@@ -388,7 +388,7 @@ export function* nomineeEtoView({
 export function* nomineeDocumentsView({
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const verificationIsComplete = yield select(selectIsUserFullyVerified);
     if (verificationIsComplete) {
@@ -403,12 +403,12 @@ export function* nomineeDocumentsView({
   }
 }
 
-export function* loadActiveNomineeEto(): IterableIterator<any> {
+export function* loadActiveNomineeEto(): Generator<any, any, any> {
   yield neuCall(loadNomineeEtos);
   yield neuCall(setActiveNomineeEto);
 }
 
-export function* nomineeRequestsWatcher({ logger }: TGlobalDependencies): Iterator<any> {
+export function* nomineeRequestsWatcher({ logger }: TGlobalDependencies): Generator<any, any, any> {
   while (true) {
     logger.info("Getting nominee requests");
     yield put(actions.nomineeFlow.loadNomineeRequests());
@@ -420,7 +420,7 @@ export function* loadNomineeRequests({
   apiEtoNomineeService,
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const nomineeRequests = yield apiEtoNomineeService.getNomineeRequests();
     const nomineeRequestsConverted: TNomineeRequestStorage = yield nomineeApiDataToNomineeRequests(
@@ -439,7 +439,7 @@ export function* loadNomineeRequests({
 export function* createNomineeRequest(
   { apiEtoNomineeService, logger, notificationCenter }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.nomineeFlow.createNomineeRequest>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const nomineeRequest: TNomineeRequestResponse = yield apiEtoNomineeService.createNomineeRequest(
       action.payload.issuerId,
@@ -486,7 +486,7 @@ export function* createNomineeRequest(
   }
 }
 
-export function* loadNomineeAgreements(): Iterator<any> {
+export function* loadNomineeAgreements(): Generator<any, any, any> {
   const nomineeEto: ReturnType<typeof selectActiveNomineeEto> = yield select(
     selectActiveNomineeEto,
   );
@@ -499,7 +499,7 @@ export function* loadNomineeAgreements(): Iterator<any> {
 export function* loadNomineeEto(
   _: TGlobalDependencies,
   eto: TEtoWithCompanyAndContract,
-): Iterator<any> {
+): Generator<any, any, any> {
   if (eto.state === EEtoState.ON_CHAIN) {
     eto.contract = yield neuCall(getEtoContract, eto.etoId, eto.state);
   }
@@ -512,13 +512,13 @@ export function* loadNomineeEtos({
   apiEtoService,
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterable<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const etos: TEtoWithCompanyAndContract[] = yield apiEtoService.loadNomineeEtos();
 
-    let getEtoDataEffects: Dictionary<Iterator<Effect>, string> = {};
-    let getEtoSpecificTaskStatusEffects: Dictionary<Iterator<Effect>, string> = {};
-    let getEtoSpecificTaskDataEffects: Dictionary<Iterator<Effect>, string> = {};
+    let getEtoDataEffects: Dictionary<Generator<any, any, any>, string> = {};
+    let getEtoSpecificTaskStatusEffects: Dictionary<Generator<any, any, any>, string> = {};
+    let getEtoSpecificTaskDataEffects: Dictionary<Generator<any, any, any>, string> = {};
 
     etos.forEach((eto: TEtoWithCompanyAndContract) => {
       getEtoDataEffects[eto.previewCode] = neuCall(loadNomineeEto, eto);
@@ -553,7 +553,7 @@ export function* loadNomineeEtos({
 export function* initEtoSpecificTaskStatus(
   _: TGlobalDependencies,
   previewCode: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const taskStatus: TNomineeEtoSpecificTasksStatus = yield select(
     selectEtoSpecificTasksStatus,
     previewCode,
@@ -564,7 +564,7 @@ export function* initEtoSpecificTaskStatus(
 export function* initEtoSpecificTaskData(
   _: TGlobalDependencies,
   preivewCode: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const taskData = yield select(selectEtoSpecificTaskData, preivewCode);
   return taskData === undefined ? cloneDeep(initialEtoSpecificTaskData) : taskData;
 }
@@ -572,7 +572,7 @@ export function* initEtoSpecificTaskData(
 export function* setActiveNomineeEto({
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterable<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const etos: ReturnType<typeof selectNomineeEtos> = yield select(selectNomineeEtos);
 
@@ -609,7 +609,7 @@ export function* setActiveNomineeEto({
 export function* uploadAndCheckIsha(
   _: TGlobalDependencies,
   { payload: { file } }: TActionFromCreator<typeof actions.nomineeFlow.nomineeUploadIsha>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const nomineeEto = yield select(selectActiveNomineeEto);
   yield put(actions.nomineeFlow.nomineeIshaUploadInProgress(nomineeEto.etoId));
 
@@ -628,7 +628,7 @@ export function* uploadAndCheckIsha(
 export function* loadIshaHash(
   { contractsService }: TGlobalDependencies,
   etoId: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const etoCommitmentContract: ETOCommitment = yield contractsService.getETOCommitmentContract(
     etoId,
   );
@@ -640,7 +640,7 @@ export function* loadIshaHash(
   }
 }
 
-export function* nomineeFlowSagas(): Iterator<any> {
+export function* nomineeFlowSagas(): Generator<any, any, any> {
   yield fork(
     neuTakeLatestUntil,
     actions.nomineeFlow.nomineeDashboardView,

@@ -1,15 +1,14 @@
-import { TGlobalDependencies } from "./../../di/setupBindings";
 import { expect } from "chai";
 import { EventEmitter } from "events";
-import { delay } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
-import { call } from "redux-saga/effects";
+import { call, delay } from "redux-saga/effects";
 
 import { createMock } from "../../../test/testUtils";
 import { LIGHT_WALLET_PASSWORD_CACHE_TIME } from "../../config/constants";
 import { noopLogger } from "../../lib/dependencies/logger";
 import { EWeb3ManagerEvents, Web3Manager } from "../../lib/web3/Web3Manager/Web3Manager";
 import { actions } from "../actions";
+import { TGlobalDependencies } from "./../../di/setupBindings";
 import { autoLockLightWallet, initWeb3ManagerEvents } from "./sagas";
 
 describe("Web3 sagas", () => {

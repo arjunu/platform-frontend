@@ -1,4 +1,3 @@
-import { TGlobalDependencies } from "./../../../di/setupBindings";
 import { BigNumber } from "bignumber.js";
 import { expect } from "chai";
 import { expectSaga } from "redux-saga-test-plan";
@@ -20,6 +19,7 @@ import { IAppState } from "../../../store";
 import { Dictionary } from "../../../types";
 import { actions } from "../../actions";
 import { EWalletSubType, EWalletType, ILedgerWalletMetadata } from "../../web3/types";
+import { TGlobalDependencies } from "./../../../di/setupBindings";
 import { DEFAULT_DERIVATION_PATH_PREFIX } from "./reducer";
 import {
   finishSettingUpLedgerConnector,

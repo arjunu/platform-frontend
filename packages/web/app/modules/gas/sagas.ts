@@ -6,7 +6,7 @@ import { GasModelShape } from "../../lib/api/gas/GasApi";
 import { actions } from "../actions";
 import { neuTakeEvery } from "../sagasUtils";
 
-function* ensureGasApiDataSaga({ gasApi, logger }: TGlobalDependencies): Iterator<any> {
+function* ensureGasApiDataSaga({ gasApi, logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     const gasValue: IHttpResponse<GasModelShape> = yield gasApi.getGas();
 

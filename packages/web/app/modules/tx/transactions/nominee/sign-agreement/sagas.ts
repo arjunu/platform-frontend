@@ -30,7 +30,7 @@ export function* getAgreementContractAndHash(
   { contractsService }: TGlobalDependencies,
   agreementType: EAgreementType,
   eto: TEtoWithCompanyAndContractReadonly,
-): Iterator<any> {
+): Generator<any, any, any> {
   if (!isOnChain(eto)) {
     throw new InvalidETOStateError(eto.state, EEtoState.ON_CHAIN);
   }
@@ -66,7 +66,7 @@ export function* getAgreementContractAndHash(
 function* generateNomineeSignAgreementTx(
   { web3Manager }: TGlobalDependencies,
   transactionType: ETxSenderType.NOMINEE_RAAA_SIGN | ETxSenderType.NOMINEE_THA_SIGN,
-): Iterator<any> {
+): Generator<any, any, any> {
   const agreementType =
     transactionType === ETxSenderType.NOMINEE_RAAA_SIGN ? EAgreementType.RAAA : EAgreementType.THA;
   const nomineeEto: TEtoWithCompanyAndContractReadonly = yield select(selectActiveNomineeEto);
@@ -104,7 +104,7 @@ function* generateNomineeSignAgreementTx(
   return txDetails;
 }
 
-function* startNomineeAgreementSign(_: TGlobalDependencies): Iterator<any> {
+function* startNomineeAgreementSign(_: TGlobalDependencies): Generator<any, any, any> {
   const transactionType: ReturnType<typeof selectTxType> = yield select(selectTxType);
 
   if (
@@ -127,7 +127,7 @@ function* startNomineeAgreementSign(_: TGlobalDependencies): Iterator<any> {
 function* generateSignNomineeInvestmentAgreementTx({
   contractsService,
   web3Manager,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   const nomineeEto: TEtoWithCompanyAndContractReadonly = yield nonNullable(
     select(selectActiveNomineeEto),
   );
@@ -174,14 +174,16 @@ function* generateSignNomineeInvestmentAgreementTx({
   return txDetails;
 }
 
-function* nomineeSignInvestmentAgreementGenerator(_: TGlobalDependencies): Iterator<any> {
+function* nomineeSignInvestmentAgreementGenerator(
+  _: TGlobalDependencies,
+): Generator<any, any, any> {
   const generatedTxDetails = yield neuCall(generateSignNomineeInvestmentAgreementTx);
   yield put(actions.txSender.setTransactionData(generatedTxDetails));
 
   yield put(actions.txSender.txSenderContinueToSummary<ETxSenderType.NOMINEE_ISHA_SIGN>(undefined));
 }
 
-function* startNomineeTHASignSaga({ logger }: TGlobalDependencies): Iterator<any> {
+function* startNomineeTHASignSaga({ logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield txSendSaga({
       type: ETxSenderType.NOMINEE_THA_SIGN,
@@ -195,7 +197,7 @@ function* startNomineeTHASignSaga({ logger }: TGlobalDependencies): Iterator<any
   }
 }
 
-function* startNomineeRAAASignSaga({ logger }: TGlobalDependencies): Iterator<any> {
+function* startNomineeRAAASignSaga({ logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield txSendSaga({
       type: ETxSenderType.NOMINEE_RAAA_SIGN,
@@ -209,7 +211,7 @@ function* startNomineeRAAASignSaga({ logger }: TGlobalDependencies): Iterator<an
   }
 }
 
-function* startNomineeISHASignSaga({ logger }: TGlobalDependencies): Iterator<any> {
+function* startNomineeISHASignSaga({ logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield txSendSaga({
       type: ETxSenderType.NOMINEE_ISHA_SIGN,
@@ -225,7 +227,7 @@ function* startNomineeISHASignSaga({ logger }: TGlobalDependencies): Iterator<an
   }
 }
 
-export const txSignAgreementSagas = function*(): Iterator<any> {
+export const txSignAgreementSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeLatest, actions.txTransactions.startNomineeTHASign, startNomineeTHASignSaga);
   yield fork(neuTakeLatest, actions.txTransactions.startNomineeRAAASign, startNomineeRAAASignSaga);
   yield fork(neuTakeLatest, actions.txTransactions.startNomineeISHASign, startNomineeISHASignSaga);

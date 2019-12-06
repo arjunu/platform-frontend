@@ -57,7 +57,7 @@ function* resendEmailEffect({ notificationCenter, logger }: TGlobalDependencies)
 export function* addNewEmail(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.profile.addNewEmail>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const email = action.payload.email;
 
   const isEmailAvailable = yield select((s: IAppState) => selectDoesEmailExist(s.auth));
@@ -106,7 +106,10 @@ export function* addNewEmail(
   }
 }
 
-export function* resendEmail({ notificationCenter, logger }: TGlobalDependencies): Iterator<any> {
+export function* resendEmail({
+  notificationCenter,
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield neuCall(
       ensurePermissionsArePresentAndRunEffect,
@@ -124,7 +127,9 @@ export function* resendEmail({ notificationCenter, logger }: TGlobalDependencies
   }
 }
 
-export function* loadSeedOrReturnToSettings({ logger }: TGlobalDependencies): Iterator<any> {
+export function* loadSeedOrReturnToSettings({
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   // unlock wallet
   try {
     const signEffect = put(actions.web3.fetchWalletPrivateDataFromWallet());
@@ -147,7 +152,7 @@ export function* loadSeedOrReturnToSettings({ logger }: TGlobalDependencies): It
 export function* abortEmailUpdate({
   notificationCenter,
   logger,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield put(actions.verifyEmail.lockVerifyEmailButton());
     yield neuCall(

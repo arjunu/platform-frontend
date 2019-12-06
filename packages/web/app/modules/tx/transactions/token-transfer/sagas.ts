@@ -27,7 +27,7 @@ export function* isERC223TransferSupported(
   { contractsService, web3Manager }: TGlobalDependencies,
   to: EthereumAddress,
   value: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const isSmartcontract = yield web3Manager.internalWeb3Adapter.isSmartContract(to);
     if (!isSmartcontract) return false;
@@ -45,7 +45,7 @@ export function* isERC223TransferSupported(
 export function* generateTokenWithdrawTransaction(
   { contractsService, web3Manager }: TGlobalDependencies,
   { tokenAddress, to, valueUlps }: ITransferTokenTxGenerator,
-): Iterator<any> {
+): Generator<any, any, any> {
   const from: ReturnType<typeof selectEthereumAddressWithChecksum> = yield select(
     selectEthereumAddressWithChecksum,
   );
@@ -86,7 +86,7 @@ export function* generateTokenWithdrawTransaction(
   };
 }
 
-function* tokenTransferFlowGenerator(_: TGlobalDependencies): Iterator<any> {
+function* tokenTransferFlowGenerator(_: TGlobalDependencies): Generator<any, any, any> {
   yield take(actions.txSender.txSenderAcceptDraft);
   // ADD SOME LOGIC HERE IN THE MIDDLE
   const txUserFlowData: TxUserFlowTransferDetails = yield select(selectUserFlowTxDetails);
@@ -107,7 +107,7 @@ function* tokenTransferFlowGenerator(_: TGlobalDependencies): Iterator<any> {
 function* startTokenTransfer(
   { logger, contractsService }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.txTransactions.startTokenTransfer>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const { tokenAddress, tokenImage } = action.payload;
 
@@ -148,6 +148,6 @@ function* startTokenTransfer(
   }
 }
 
-export const txTokenTransferSagas = function*(): Iterator<any> {
+export const txTokenTransferSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeLatest, actions.txTransactions.startTokenTransfer, startTokenTransfer);
 };

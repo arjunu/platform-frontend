@@ -4,7 +4,7 @@ import { actions } from "../../../actions";
 import { selectTxValidationState } from "../../validator/selectors";
 import { EValidationState } from "./../../validator/reducer";
 
-export function* userFlowAcceptForm(): Iterator<any> {
+export function* userFlowAcceptForm(): Generator<any, any, any> {
   // This assumes that the user clicked submit
   let validationState;
   yield take(actions.txValidator.setValidationState);
@@ -19,6 +19,6 @@ export function* userFlowAcceptForm(): Iterator<any> {
   }
 }
 
-export const txTransferUserFlowSagasWatcher = function*(): Iterator<any> {
+export const txTransferUserFlowSagasWatcher = function*(): Generator<any, any, any> {
   yield takeLatest(actions.txUserFlowTransfer.userFlowAcceptForm, userFlowAcceptForm);
 };

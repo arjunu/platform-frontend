@@ -1,18 +1,15 @@
 import { isMatch } from "lodash/fp";
-import { call } from "typed-redux-saga";
 import {
-  Effect,
+  delay,
   fork,
   getContext,
   race,
   spawn,
-  take,
   takeEvery,
   takeLatest,
   throttle,
-  delay,
-  SagaGenerator,
 } from "redux-saga/effects";
+import { call, SagaGenerator, take } from "typed-redux-saga";
 
 import { TGlobalDependencies } from "../di/setupBindings";
 import { TSingleOrArray } from "../types";
@@ -28,12 +25,12 @@ function* neuGetContext(): Generator<any, TGlobalDependencies, any> {
   return deps as TGlobalDependencies;
 }
 
-export function* neuTakeLatest(type: TType, saga: TSagaWithDeps): Iterator<Effect> {
+export function* neuTakeLatest(type: TType, saga: TSagaWithDeps): Generator<any, any, any> {
   const deps = yield* neuGetContext();
   yield takeLatest(type, saga, deps);
 }
 
-export function* neuTakeEvery(type: TType, saga: TSagaWithDeps): Iterator<Effect> {
+export function* neuTakeEvery(type: TType, saga: TSagaWithDeps): Generator<any, any, any> {
   const deps = yield* neuGetContext();
   yield takeEvery(type, saga, deps);
 }
@@ -41,7 +38,7 @@ export function* neuTakeEvery(type: TType, saga: TSagaWithDeps): Iterator<Effect
 export function* neuFork<R, T extends any[]>(
   saga: TSagaWithDepsAndArgs<R, T>,
   ...args: T
-): Iterator<Effect> {
+): Generator<any, any, any> {
   const deps = yield* neuGetContext();
   return yield (fork as any)(saga, deps, ...args);
 }
@@ -49,7 +46,7 @@ export function* neuFork<R, T extends any[]>(
 export function* neuSpawn<R, T extends any[]>(
   saga: TSagaWithDepsAndArgs<R, T>,
   ...args: T
-): Iterator<Effect> {
+): Generator<any, any, any> {
   const deps = yield* neuGetContext();
   return yield (spawn as any)(saga, deps, ...args);
 }
@@ -60,11 +57,11 @@ declare type UnwrapReturnType<R> = R extends SagaGenerator<infer RT>
   : R;
 
 export function* neuCall<Args extends any[], R>(
-  fn: (...args: any[]) => R,
+  fn: (deps: TGlobalDependencies, ...args: Args) => R,
   ...args: Args
 ): SagaGenerator<UnwrapReturnType<R>> {
   const deps = yield* neuGetContext();
-  return call(fn, deps, ...args);
+  return yield* call(fn as (...args: any) => R, deps, ...args);
 }
 
 /**
@@ -89,7 +86,7 @@ export function* neuTakeLatestUntil(
   stopAction: TType,
   saga: TSagaWithDeps,
 ): any {
-  yield takeLatest(startAction, function*(payload): Iterator<any> {
+  yield takeLatest(startAction, function*(payload): Generator<any, any, any> {
     yield race({
       task: neuCall(saga, payload),
       cancel: take(stopAction),
@@ -106,8 +103,11 @@ export function* neuTakeOnly<T extends TPattern>(
   payload: Partial<TActionPayload<T>>,
 ): any {
   while (true) {
-    const takenAction = yield take(type);
-    if (isMatch(payload, takenAction.payload)) {
+    const takenAction: any = yield* take(type);
+    if (
+      takenAction?.payload === undefined ||
+      isMatch(payload as object, takenAction.payload as object)
+    ) {
       return takenAction;
     }
   }
@@ -159,7 +159,11 @@ export function* neuRestartIf<R, T extends any[]>(
  * Ignore incoming actions for a given period of time while processing a task.
  * After spawning a task, it's still accepting incoming actions into the underlying buffer, keeping at most 1.
  */
-export function* neuThrottle(ms: number, type: TType, saga: TSagaWithDeps): Iterator<Effect> {
+export function* neuThrottle(
+  ms: number,
+  type: TType,
+  saga: TSagaWithDeps,
+): Generator<any, any, any> {
   const deps = yield* neuGetContext();
   yield throttle(ms, type, saga, deps);
 }
@@ -168,7 +172,7 @@ function* next<R, T extends any[]>(
   ms: number,
   task: TSagaWithDepsAndArgs<R, T>,
   ...args: T
-): Iterator<any> {
+): Generator<any, any, any> {
   yield delay(ms);
   yield neuCall(task, ...args);
 }
@@ -179,6 +183,6 @@ export function* neuDebounce<R, T extends any[]>(
   pattern: TType,
   saga: TSagaWithDepsAndArgs<R, T>,
   ...args: T
-): Iterator<Effect> {
+): Generator<any, any, any> {
   yield (takeLatest as any)(pattern, next, ms, saga, ...args);
 }

@@ -1,8 +1,8 @@
-import { TPattern } from "./actions";
-import { delay } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
+import { delay } from "redux-saga/effects";
 import { cancelled, put } from "redux-saga/effects";
 
+import { TPattern } from "./actions";
 import { neuRepeatIf, neuRestartIf, neuTakeOnly, neuTakeUntil } from "./sagasUtils";
 
 describe("sagasUtils", () => {

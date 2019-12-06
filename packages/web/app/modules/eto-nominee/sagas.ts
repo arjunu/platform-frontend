@@ -1,5 +1,4 @@
-import { delay } from "redux-saga/effects";
-import { fork, put, select } from "redux-saga/effects";
+import { delay, fork, put, select } from "redux-saga/effects";
 
 import {
   EEtoNomineeRequestMessages,
@@ -20,7 +19,7 @@ export function* etoGetNomineeRequests({
   apiEtoNomineeService,
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const nomineeRequests: TNomineeRequestResponse[] = yield apiEtoNomineeService.etoGetNomineeRequest();
     const nomineeRequestsConverted: TNomineeRequestStorage = etoApiDataToNomineeRequests(
@@ -35,7 +34,9 @@ export function* etoGetNomineeRequests({
   }
 }
 
-export function* etoNomineeRequestsWatcher({ logger }: TGlobalDependencies): Iterator<any> {
+export function* etoNomineeRequestsWatcher({
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   while (true) {
     logger.info("Getting nominee requests");
     try {
@@ -53,7 +54,7 @@ export function* etoUpdateNomineeRequest(
   action:
     | TActionFromCreator<typeof actions.etoNominee.acceptNomineeRequest>
     | TActionFromCreator<typeof actions.etoNominee.rejectNomineeRequest>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const options =
     action.type === actions.etoNominee.acceptNomineeRequest.getType()
       ? {
@@ -85,7 +86,7 @@ export function* etoUpdateNomineeRequestEffect(
   { apiEtoNomineeService, notificationCenter, logger }: TGlobalDependencies,
   nomineeId: string,
   newStatus: ENomineeUpdateRequestStatus,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     yield apiEtoNomineeService.etoUpdateNomineeRequest(nomineeId, newStatus);
 
@@ -102,7 +103,7 @@ export function* etoUpdateNomineeRequestEffect(
 
 export function* etoRejectNomineeRequest({
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield neuCall(
       ensurePermissionsArePresentAndRunEffect,
@@ -121,7 +122,7 @@ export function* etoDeleteNomineeRequestEffect({
   apiEtoNomineeService,
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   const nomineeId = yield select(selectEtoNominee);
 
   try {
@@ -135,7 +136,7 @@ export function* etoDeleteNomineeRequestEffect({
   }
 }
 
-export function* etoNomineeSagas(): Iterator<any> {
+export function* etoNomineeSagas(): Generator<any, any, any> {
   yield fork(neuTakeLatest, actions.etoNominee.getNomineeRequests, etoGetNomineeRequests);
   yield fork(neuTakeLatest, actions.etoNominee.acceptNomineeRequest, etoUpdateNomineeRequest);
   yield fork(neuTakeLatest, actions.etoNominee.rejectNomineeRequest, etoUpdateNomineeRequest);

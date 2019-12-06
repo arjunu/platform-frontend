@@ -1,4 +1,4 @@
-import { Effect, fork, put, select } from "redux-saga/effects";
+import { fork, put, select } from "redux-saga/effects";
 
 import { AuthMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
@@ -25,7 +25,7 @@ import { loadUser } from "../user/external/sagas";
 export function* verifyUserEmail({
   notificationCenter,
   walletStorage,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   const userCode = yield select(selectActivationCodeFromQueryString);
   const urlEmail = yield select(selectEmailFromQueryString);
   const userEmail = yield select((s: IAppState) => selectUserEmail(s.auth));
@@ -95,6 +95,6 @@ export async function checkEmailPromise(
   return emailStatus.isAvailable;
 }
 
-export function* authEmailSagas(): Iterator<Effect> {
+export function* authEmailSagas(): Generator<any, any, any> {
   yield fork(neuTakeEvery, actions.auth.verifyEmail, verifyUserEmail);
 }

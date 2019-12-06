@@ -1,4 +1,3 @@
-import { TGlobalDependencies } from "./../../../di/setupBindings";
 import { expect } from "chai";
 import { expectSaga } from "redux-saga-test-plan";
 
@@ -16,6 +15,7 @@ import { Web3Manager } from "../../../lib/web3/Web3Manager/Web3Manager";
 import { IAppState } from "../../../store";
 import { actions } from "../../actions";
 import { EWalletSubType, EWalletType, IBrowserWalletMetadata } from "../../web3/types";
+import { TGlobalDependencies } from "./../../../di/setupBindings";
 import { tryConnectingWithBrowserWallet } from "./sagas";
 
 // tslint:disable: no-object-literal-type-assertion

@@ -1,4 +1,4 @@
-import { call, Effect, fork, put, race, select, take, delay } from "redux-saga/effects";
+import { call, delay, fork, put, race, select, take } from "redux-saga/effects";
 
 import { SignInUserErrorMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
@@ -48,7 +48,7 @@ import { loadUser, logoutUser } from "./external/sagas";
 export function* waitForUserActiveOrLogout({
   logger,
   userActivityChannel,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   while (true) {
     const { logout, active } = yield race({
       logout: safeDelay(AUTH_INACTIVITY_THRESHOLD),
@@ -73,7 +73,7 @@ export function* signInUser({
   walletStorage,
   web3Manager,
   userStorage,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     // we will try to create with user type from URL but it could happen that account already exists and has different user type
     const probableUserType: EUserType = yield select((s: IAppState) => selectUrlUserType(s.router));
@@ -110,7 +110,7 @@ export function* signInUser({
   }
 }
 
-export function* loadOrCreateUser(userType: EUserType): Iterator<any> {
+export function* loadOrCreateUser(userType: EUserType): Generator<any, any, any> {
   const user: IUser = yield neuCall(loadOrCreateUserPromise, userType);
 
   yield put(actions.auth.setUser(user));
@@ -170,7 +170,7 @@ export async function loadOrCreateUserPromise(
 export function* setUser(
   { logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.auth.setUser>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const user = action.payload.user;
   logger.setUser({ id: user.userId, type: user.type, walletType: user.walletType });
 }
@@ -178,7 +178,7 @@ export function* setUser(
 function* handleLogOutUser(
   { logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.auth.logout>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { logoutType = ELogoutReason.USER_REQUESTED } = action.payload;
 
   yield neuCall(logoutUser);
@@ -209,7 +209,7 @@ function* handleLogOutUser(
   logger.setUser(null);
 }
 
-export function* handleSignInUser({ logger }: TGlobalDependencies): Iterator<any> {
+export function* handleSignInUser({ logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield neuCall(signInUser);
   } catch (e) {
@@ -240,7 +240,7 @@ export function* handleSignInUser({ logger }: TGlobalDependencies): Iterator<any
 const UNVERIFIED_EMAIL_REFRESH_DELAY = secondsToMs(5);
 const NO_UNVERIFIED_EMAIL_REFRESH_DELAY = minutesToMs(5);
 
-function* profileMonitor({ logger }: TGlobalDependencies): Iterator<any> {
+function* profileMonitor({ logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     const isThereUnverifiedEmail = yield select((state: IAppState) =>
       selectIsThereUnverifiedEmail(state.auth),
@@ -258,7 +258,7 @@ function* profileMonitor({ logger }: TGlobalDependencies): Iterator<any> {
   }
 }
 
-export function* authUserSagas(): Iterator<Effect> {
+export function* authUserSagas(): Generator<any, any, any> {
   yield fork(neuTakeLatest, actions.auth.logout, handleLogOutUser);
   yield fork(neuTakeEvery, actions.auth.setUser, setUser);
   yield fork(neuTakeUntil, actions.auth.setUser, actions.auth.logout, waitForUserActiveOrLogout);

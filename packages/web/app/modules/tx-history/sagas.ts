@@ -1,5 +1,4 @@
-import { delay } from "redux-saga/effects";
-import { all, fork, put, select } from "redux-saga/effects";
+import { all, delay, fork, put, select } from "redux-saga/effects";
 
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { ETxHistoryMessage } from "../../components/translatedMessages/messages";
@@ -40,7 +39,7 @@ function getTransactionCommon(transaction: TAnalyticsTransaction): TTxHistoryCom
 export function* mapAnalyticsApiTransactionResponse(
   { logger }: TGlobalDependencies,
   transaction: TAnalyticsTransaction,
-): IterableIterator<any> {
+): Generator<any, any, any> {
   // we can return tx in each case but then we will loose type safety
   let tx: TTxHistory | undefined = undefined;
 
@@ -292,7 +291,7 @@ export function* mapAnalyticsApiTransactionResponse(
 export function* mapAnalyticsApiTransactionsResponse(
   _: TGlobalDependencies,
   transactions: readonly TAnalyticsTransaction[],
-): Iterator<any> {
+): Generator<any, any, any> {
   const txHistoryTransactions: ReadonlyArray<TTxHistory | undefined> = yield all(
     transactions.map(tx => neuCall(mapAnalyticsApiTransactionResponse, tx)),
   );
@@ -304,7 +303,7 @@ export function* loadTransactionsHistoryNext({
   notificationCenter,
   logger,
   analyticsApi,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const lastTransactionId: string | undefined = yield select(selectLastTransactionId);
 
@@ -333,7 +332,7 @@ export function* loadTransactionsHistory({
   notificationCenter,
   logger,
   analyticsApi,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const {
       transactions,
@@ -361,7 +360,10 @@ export function* loadTransactionsHistory({
   }
 }
 
-export function* watchTransactions({ analyticsApi, logger }: TGlobalDependencies): Iterator<any> {
+export function* watchTransactions({
+  analyticsApi,
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   while (true) {
     try {
       yield delay(TX_POLLING_INTERVAL);
@@ -412,7 +414,7 @@ export function* watchTransactions({ analyticsApi, logger }: TGlobalDependencies
 function* showTransactionDetails(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.txHistory.showTransactionDetails>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const transaction = yield select((state: IAppState) => selectTXById(action.payload.id, state));
 
   if (!transaction) {
@@ -426,7 +428,7 @@ function* showTransactionDetails(
   );
 }
 
-export function* txHistorySaga(): Iterator<any> {
+export function* txHistorySaga(): Generator<any, any, any> {
   yield fork(neuTakeLatest, actions.txHistory.loadTransactions, loadTransactionsHistory);
   yield fork(neuTakeLatest, actions.txHistory.loadNextTransactions, loadTransactionsHistoryNext);
   yield fork(neuTakeLatest, actions.txHistory.showTransactionDetails, showTransactionDetails);
