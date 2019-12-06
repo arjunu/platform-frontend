@@ -1,11 +1,8 @@
 .label {
-  @include nds-button-label;
+  @include nds-label;
 
-  color: $neu-charcoal-grey;
-  font-size: px-to-rem(10px);
-  line-height: 1.6;
-  letter-spacing: px-to-rem(2px);
   text-transform: uppercase;
+  color: $neu-charcoal-grey;
   margin-bottom: px-to-rem(3px);
 }
 

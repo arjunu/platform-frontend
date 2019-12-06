@@ -38,9 +38,9 @@ export const VerificationMethod: React.FunctionComponent<TProps & TDataTestId> =
       disabled={disabled}
       data-test-id={dataTestId}
     >
-      <img className={styles.image} src={logo} alt={name} />
+      <img height="94" width="94" className={styles.image} src={logo} alt={name} />
       <span className="py-2">{text}</span>
-      <InlineIcon className={styles.icon} svgIcon={arrow} />
+      <InlineIcon width="24" height="24" className={styles.icon} svgIcon={arrow} />
     </ButtonBase>
   </>
 );

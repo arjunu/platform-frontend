@@ -10,7 +10,9 @@ import { Button, EButtonLayout, EIconPosition } from "../shared/buttons";
 import { KycPanel } from "./KycPanel";
 import { KycSubmitedRouter } from "./KycSubmitedRouter";
 import { KycRouter } from "./Router";
+import { KYCAddDocuments } from "./shared/AddDocuments";
 
+import * as addFile from "../../assets/img/inline_icons/add_file.svg";
 import * as arrowLeft from "../../assets/img/inline_icons/arrow_left.svg";
 
 export const personalSteps = [
@@ -103,7 +105,36 @@ class RequestStateInfo extends React.Component<TExternalProps, TLocalState> {
       );
     }
     if (isKycPending) {
-      return <KycSubmitedRouter />;
+      // TODO: Rework for Business flow
+      if (this.props.requestType === EKycRequestType.INDIVIDUAL) {
+        return <KycSubmitedRouter />;
+      } else {
+        // Fallback for non individual user
+        return (
+          <KycPanel
+            title={<FormattedMessage id="kyc.request-state.pending.title" />}
+            steps={steps}
+            description={<FormattedMessage id="kyc.request-state.pending.description" />}
+            data-test-id="kyc-panel-pending"
+          >
+            {!this.state.showAdditionalFileUpload && (
+              <Button
+                layout={EButtonLayout.GHOST}
+                iconPosition={EIconPosition.ICON_BEFORE}
+                svgIcon={addFile}
+                onClick={() => this.setState({ showAdditionalFileUpload: true })}
+              >
+                <FormattedMessage id="kyc.request-state.pending.add-files-button" />
+              </Button>
+            )}
+            {this.props.requestType && this.state.showAdditionalFileUpload && (
+              <KYCAddDocuments uploadType={this.props.requestType} />
+            )}
+            <br /> <br />
+            {settingsButton}
+          </KycPanel>
+        );
+      }
     }
 
     if (this.props.requestStatus === EKycRequestStatus.ACCEPTED) {

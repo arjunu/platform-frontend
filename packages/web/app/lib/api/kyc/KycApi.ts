@@ -9,12 +9,11 @@ import {
   IKycIndividualData,
   IKycLegalRepresentative,
   KycFileInfoShape,
+  KycFullIndividualSchema,
   KycIdNowIdentificationSchema,
-  KycLegalRepresentativeSchema,
+  KycLegalRepresentativeSchemaRequired,
   KycOnfidoCheckRequestSchema,
   KycOnfidoUploadRequestSchema,
-  KycPersonalAddressSchema,
-  KycPersonalDataSchema,
   KycPersonSchema,
   KycStatusSchema,
   TKycBankAccount,
@@ -103,18 +102,7 @@ export class KycApi {
       baseUrl: BASE_PATH,
       url: INDIVIDUAL_DATA_PATH,
       body: data,
-      responseSchema: KycPersonalDataSchema,
-    });
-  }
-
-  public async putPersonalAddress(
-    data: IKycIndividualData,
-  ): Promise<IHttpResponse<IKycIndividualData>> {
-    return await this.httpClient.put<IKycIndividualData>({
-      baseUrl: BASE_PATH,
-      url: INDIVIDUAL_DATA_PATH,
-      body: data,
-      responseSchema: KycPersonalAddressSchema,
+      responseSchema: KycFullIndividualSchema,
     });
   }
 
@@ -168,7 +156,7 @@ export class KycApi {
     return await this.httpClient.get<IKycLegalRepresentative>({
       baseUrl: BASE_PATH,
       url: LEGAL_REPRESENTATIVE_PATH,
-      responseSchema: KycLegalRepresentativeSchema,
+      responseSchema: KycLegalRepresentativeSchemaRequired,
     });
   }
 
@@ -179,7 +167,7 @@ export class KycApi {
       baseUrl: BASE_PATH,
       url: LEGAL_REPRESENTATIVE_PATH,
       body: data,
-      responseSchema: KycLegalRepresentativeSchema,
+      responseSchema: KycLegalRepresentativeSchemaRequired,
     });
   }
 

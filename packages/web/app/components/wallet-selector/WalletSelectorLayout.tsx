@@ -14,7 +14,6 @@ import { appRoutes } from "../appRoutes";
 import { ButtonInline, ButtonLink } from "../shared/buttons";
 import { ExternalLink } from "../shared/links";
 import { Notification } from "../shared/notification-widget/Notification";
-import { ENotificationText } from "../translatedMessages/messages";
 import { WalletRouter } from "./WalletRouter";
 import { WalletSelectorContainer } from "./WalletSelectorContainer";
 
@@ -71,7 +70,7 @@ export const WalletSelectorLayout: React.FunctionComponent<IExternalProps & TRou
       {logoutReason === ELogoutReason.SESSION_TIMEOUT && (
         <Notification
           data-test-id="wallet-selector-session-timeout-notification"
-          text={ENotificationText.AUTH_SESSION_TIMEOUT}
+          text={<FormattedMessage id="notifications.auth-session-timeout" />}
           type={ENotificationType.WARNING}
           onClick={hideLogoutReason}
         />

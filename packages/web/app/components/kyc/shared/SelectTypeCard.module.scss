@@ -12,7 +12,7 @@ $icon-dimensions: px-to-rem(64px);
   flex-direction: column;
   width: px-to-rem(264px);
   height: px-to-rem(364px);
-  border-radius: 4px;
+  border-radius: $nds-border-radius;
   border: solid 1px $neu-light-blue-grey-two;
   background-color: $neu-white-two;
   padding: px-to-rem(64px) px-to-rem(24px) px-to-rem(24px);

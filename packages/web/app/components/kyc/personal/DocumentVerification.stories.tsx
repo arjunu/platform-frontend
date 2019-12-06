@@ -4,6 +4,7 @@ import * as React from "react";
 
 import { EKycInstantIdProvider } from "../../../lib/api/kyc/KycApi.interfaces";
 import { OnfidoSDK } from "../../../lib/dependencies/onfido/OnfidoSDK";
+import { NONE_KYC_INSTANTID_PROVIDER } from "../utils";
 import { KycPersonalDocumentVerificationComponent } from "./DocumentVerification";
 
 const supportedInstantIdProviders: ReadonlyArray<EKycInstantIdProvider> = [
@@ -18,6 +19,7 @@ const commonProps = {
   goBack: action("goBack"),
   goToDashboard: action("goToDashboard"),
   onfidoSdk: { isSupported: () => true } as OnfidoSDK,
+  currentProvider: NONE_KYC_INSTANTID_PROVIDER,
 };
 
 storiesOf("organisms|KYC/DocumentVerification", module)
@@ -37,18 +39,24 @@ storiesOf("organisms|KYC/DocumentVerification", module)
   ))
   .add("without recommended", () => (
     <KycPersonalDocumentVerificationComponent
+      recommendedInstantIdProvider={NONE_KYC_INSTANTID_PROVIDER}
       supportedInstantIdProviders={supportedInstantIdProviders}
       {...commonProps}
     />
   ))
   .add("with no providers", () => (
-    <KycPersonalDocumentVerificationComponent supportedInstantIdProviders={[]} {...commonProps} />
+    <KycPersonalDocumentVerificationComponent
+      recommendedInstantIdProvider={NONE_KYC_INSTANTID_PROVIDER}
+      supportedInstantIdProviders={[]}
+      {...commonProps}
+    />
   ))
   .add("with started verification", () => (
     <KycPersonalDocumentVerificationComponent
+      {...commonProps}
+      recommendedInstantIdProvider={NONE_KYC_INSTANTID_PROVIDER}
       currentProvider={EKycInstantIdProvider.ID_NOW}
       supportedInstantIdProviders={supportedInstantIdProviders}
-      {...commonProps}
     />
   ))
   .add("with Onfido recommended but not supported by browser", () => (

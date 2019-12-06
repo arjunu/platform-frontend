@@ -2,7 +2,7 @@ import { FormikProps, withFormik } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
-import { compose } from "redux";
+import { compose } from "recompose";
 
 import {
   IKycIndividualData,
@@ -10,8 +10,11 @@ import {
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import {
+  selectIndividualData,
+  selectIndividualDataLoading,
   selectIndividualFiles,
   selectIndividualFilesLoading,
+  selectIsSavingKycForm,
   selectKycUploadedFiles,
 } from "../../../modules/kyc/selectors";
 import { ENotificationType } from "../../../modules/notifications/types";
@@ -20,6 +23,7 @@ import { ECountries } from "../../../utils/enums/countriesEnum";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { EButtonLayout } from "../../shared/buttons/Button";
+import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import { ButtonInline } from "../../shared/buttons/ButtonInline";
 import {
   BOOL_FALSE_KEY,
@@ -48,7 +52,7 @@ const GENERIC_SHORT_ANSWERS = {
 };
 
 interface IStateProps {
-  currentValues?: IKycIndividualData;
+  currentValues: IKycIndividualData | undefined;
   loadingData: boolean;
   isSavingForm: boolean;
   uploadedFiles: ReturnType<typeof selectKycUploadedFiles>;
@@ -74,6 +78,12 @@ const KYCForm: React.FunctionComponent<TProps> = ({
   );
   const shouldDisableUntilAccreditationIsUploaded =
     shouldAddAccreditedInvestorFlow && uploadedFiles.length === 0;
+
+  const shouldDisableSubmit =
+    uploadedFilesLoading ||
+    !props.isValid ||
+    props.loadingData ||
+    shouldDisableUntilAccreditationIsUploaded;
 
   return (
     <>
@@ -153,20 +163,20 @@ const KYCForm: React.FunctionComponent<TProps> = ({
                 type={ENotificationType.WARNING}
               />
             )}
+            <p>{JSON.stringify({ isSaving: props.isSavingForm })}</p>
             {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
               <KYCAddDocuments
-                onEnter={actions.kyc.kycSubmitPersonalDataNoRedirect(values)}
+                onEnter={actions.kyc.kycSubmitPersonalDataNoRedirect(boolify(values))}
                 uploadType={EKycUploadType.US_ACCREDITATION}
                 isLoading={props.isSavingForm}
               />
             )}
           </>
         )}
-        <div className={styles.buttons}>
+        <ButtonGroup className={styles.buttons}>
           <Button
             layout={EButtonLayout.OUTLINE}
             className={styles.button}
-            type="button"
             data-test-id="kyc-personal-start-go-back"
             onClick={props.goBack}
           >
@@ -176,17 +186,12 @@ const KYCForm: React.FunctionComponent<TProps> = ({
             type="submit"
             className={styles.button}
             layout={EButtonLayout.PRIMARY}
-            disabled={
-              uploadedFilesLoading ||
-              !props.isValid ||
-              props.loadingData ||
-              shouldDisableUntilAccreditationIsUploaded
-            }
+            disabled={shouldDisableSubmit}
             data-test-id="kyc-personal-start-submit-form"
           >
             <FormattedMessage id="form.save-and-submit" />
           </Button>
-        </div>
+        </ButtonGroup>
       </FormDeprecated>
     </>
   );
@@ -205,12 +210,12 @@ const KYCEnhancedForm = withFormik<IStateProps & IDispatchProps, IKycIndividualD
   },
 })(KYCForm);
 
-export const KYCPersonalStart = compose<React.FunctionComponent>(
+export const KYCPersonalStart = compose<IStateProps & IDispatchProps, {}>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
-      currentValues: state.kyc.individualData,
-      loadingData: !!state.kyc.individualDataLoading,
-      isSavingForm: !!state.kyc.kycSaving,
+      currentValues: selectIndividualData(state),
+      loadingData: selectIndividualDataLoading(state),
+      isSavingForm: selectIsSavingKycForm(state),
       uploadedFiles: selectIndividualFiles(state),
       uploadedFilesLoading: selectIndividualFilesLoading(state),
     }),

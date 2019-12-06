@@ -136,20 +136,26 @@ function* loadIndividualData({ apiKycService, logger }: TGlobalDependencies): It
 }
 
 function* submitPersonalDataSaga(
-  { apiKycService, notificationCenter, logger }: TGlobalDependencies,
+  { apiKycService }: TGlobalDependencies,
   data: IKycIndividualData,
 ): Iterator<any> {
+  const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalData(data);
+
+  yield put(
+    actions.kyc.kycUpdateIndividualData(false, {
+      ...result.body,
+      isAccreditedUsCitizen: data.isAccreditedUsCitizen,
+    }),
+  );
+}
+
+function* submitPersonalDataNoRedirect(
+  { notificationCenter, logger }: TGlobalDependencies,
+  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
+): Iterator<any> {
   try {
-    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalData(data);
-
-    yield put(
-      actions.kyc.kycUpdateIndividualData(false, {
-        ...result.body,
-        isAccreditedUsCitizen: data.isAccreditedUsCitizen,
-      }),
-    );
-
-    return true;
+    const { data } = action.payload;
+    yield neuCall(submitPersonalDataSaga, data);
   } catch (e) {
     notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
 
@@ -157,35 +163,35 @@ function* submitPersonalDataSaga(
   }
 }
 
-function* submitPersonalDataNoRedirect(
-  _: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
-): Iterator<any> {
-  const { data } = action.payload;
-  yield neuCall(submitPersonalDataSaga, data);
-}
-
 function* submitPersonalData(
-  _: TGlobalDependencies,
+  { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
 ): Iterator<any> {
-  const { data } = action.payload;
-  const success = yield neuCall(submitPersonalDataSaga, data);
+  try {
+    const { data } = action.payload;
+    yield neuCall(submitPersonalDataSaga, data);
 
-  if (success) {
     yield put(actions.routing.goToKYCIndividualAddress());
+  } catch (e) {
+    notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
+
+    logger.error("Failed to submit KYC individual data", e);
   }
 }
 
 function* submitPersonalDataAndClose(
-  _: TGlobalDependencies,
+  { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalDataAndClose>,
 ): Iterator<any> {
-  const { data } = action.payload;
-  const success = yield neuCall(submitPersonalDataSaga, data);
+  try {
+    const { data } = action.payload;
+    yield neuCall(submitPersonalDataSaga, data);
 
-  if (success) {
     yield put(actions.routing.goToDashboard());
+  } catch (e) {
+    notificationCenter.error(createMessage(KycFlowMessage.KYC_PROBLEM_SENDING_DATA));
+
+    logger.error("Failed to submit KYC individual data", e);
   }
 }
 
@@ -194,18 +200,14 @@ function* submitPersonalAddressSaga(
   data: IKycIndividualData,
 ): Iterator<any> {
   try {
-    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalAddress({
+    const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalData({
       ...data,
       // TODO: Remove when not needed. This adds additional fields required by backend
       isHighIncome: false,
       isPoliticallyExposed: false,
     });
 
-    yield put(
-      actions.kyc.kycUpdateIndividualData(false, {
-        ...result.body,
-      }),
-    );
+    yield put(actions.kyc.kycUpdateIndividualData(false, result.body));
 
     return true;
   } catch (e) {
@@ -324,7 +326,11 @@ function* submitLegalRepresentative(
   try {
     yield put(actions.kyc.kycUpdateLegalRepresentative(true));
     const result: IHttpResponse<IKycLegalRepresentative> = yield apiKycService.putLegalRepresentative(
-      action.payload.data,
+      {
+        ...action.payload.data,
+        // TODO: Remove when not needed. This adds additional fields required by backend
+        isHighIncome: false,
+      },
     );
     yield put(actions.kyc.kycUpdateLegalRepresentative(false, result.body));
   } catch (e) {
@@ -501,9 +507,11 @@ function* submitBeneficialOwner(
 ): Iterator<any> {
   try {
     yield put(actions.kyc.kycUpdateBeneficialOwner(true));
-    const result: IHttpResponse<IKycBeneficialOwner> = yield apiKycService.putBeneficialOwner(
-      action.payload.owner,
-    );
+    const result: IHttpResponse<IKycBeneficialOwner> = yield apiKycService.putBeneficialOwner({
+      ...action.payload.owner,
+      // TODO: Remove when not needed. This adds additional fields required by backend
+      isHighIncome: false,
+    });
     yield put(actions.kyc.kycUpdateBeneficialOwner(false, result.body.id, result.body));
   } catch (e) {
     yield put(actions.kyc.kycUpdateBeneficialOwner(false));

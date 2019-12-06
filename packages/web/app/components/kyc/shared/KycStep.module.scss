@@ -1,9 +1,6 @@
 .step {
-  @include nds-helper-text;
+  @include nds-helper-text-bold;
 
-  font-weight: 500;
-  line-height: 1.6;
-  letter-spacing: 2px;
   color: $neu-charcoal-grey;
   text-transform: uppercase;
 }

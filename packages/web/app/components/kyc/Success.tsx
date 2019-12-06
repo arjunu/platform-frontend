@@ -4,12 +4,10 @@ import { compose } from "recompose";
 
 import { actions } from "../../modules/actions";
 import { appConnect } from "../../store";
-import {
-  calculateStepProgress,
-  FullscreenButtonContext,
-  FullscreenProgressContext,
-} from "../layouts/FullscreenProgressLayout";
+import { withHeaderButton } from "../../utils/withHeaderButton";
+import { withProgress } from "../../utils/withProgress";
 import { Button, EButtonLayout } from "../shared/buttons/Button";
+import { ButtonGroup } from "../shared/buttons/ButtonGroup";
 import { SuccessTick } from "../shared/SuccessTick";
 
 import * as styles from "./Success.module.scss";
@@ -22,51 +20,36 @@ type TDispatchProps = {
 const KycSuccessLayout: React.FunctionComponent<TDispatchProps> = ({
   goToDashboard,
   goToAddAdditional,
-}) => {
-  const { setCurrentProgress } = React.useContext(FullscreenProgressContext);
+}) => (
+  <>
+    <SuccessTick />
+    <h1 className={styles.title} data-test-id="kyc-success">
+      <FormattedMessage id="kyc.success.title" />
+    </h1>
+    <p className={styles.text}>
+      <FormattedMessage id="kyc.success.text" />
+    </p>
 
-  React.useMemo(() => {
-    setCurrentProgress(calculateStepProgress(5, 5));
-  }, [setCurrentProgress]);
-
-  const { setCurrentButtonProps } = React.useContext(FullscreenButtonContext);
-
-  React.useMemo(() => {
-    setCurrentButtonProps(undefined, undefined);
-  }, [setCurrentButtonProps]);
-
-  return (
-    <>
-      <SuccessTick />
-      <h2 className={styles.title}>
-        <FormattedMessage id="kyc.success.title" />
-      </h2>
-      <p className={styles.text}>
-        <FormattedMessage id="kyc.success.text" />
-      </p>
-
-      <div className={styles.buttons} data-test-id="kyc-success">
-        <Button
-          layout={EButtonLayout.PRIMARY}
-          className={styles.button}
-          data-test-id="kyc-success-go-to-dashboard"
-          onClick={goToDashboard}
-        >
-          <FormattedMessage id="kyc.success.go-to-dashboard" />
-        </Button>
-        <Button
-          layout={EButtonLayout.GHOST}
-          className={styles.button}
-          type="button"
-          data-test-id="kyc-success-go-to-additional-documents"
-          onClick={goToAddAdditional}
-        >
-          <FormattedMessage id="kyc.success.go-to-additional-documents" />
-        </Button>
-      </div>
-    </>
-  );
-};
+    <ButtonGroup className={styles.buttons} data-test-id="kyc-success">
+      <Button
+        layout={EButtonLayout.PRIMARY}
+        className={styles.button}
+        data-test-id="kyc-success-go-to-dashboard"
+        onClick={goToDashboard}
+      >
+        <FormattedMessage id="kyc.success.go-to-dashboard" />
+      </Button>
+      <Button
+        layout={EButtonLayout.GHOST}
+        className={styles.button}
+        data-test-id="kyc-success-go-to-additional-documents"
+        onClick={goToAddAdditional}
+      >
+        <FormattedMessage id="kyc.success.go-to-additional-documents" />
+      </Button>
+    </ButtonGroup>
+  </>
+);
 
 const KycSuccess = compose<TDispatchProps, {}>(
   appConnect<{}, TDispatchProps, {}>({
@@ -75,6 +58,11 @@ const KycSuccess = compose<TDispatchProps, {}>(
       goToDashboard: () => dispatch(actions.routing.goToDashboard()),
     }),
   }),
+  withProgress(() => ({ step: 5, allSteps: 5 })),
+  withHeaderButton(() => ({
+    buttonText: undefined,
+    buttonAction: undefined,
+  })),
 )(KycSuccessLayout);
 
 export { KycSuccessLayout, KycSuccess };

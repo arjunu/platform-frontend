@@ -4,10 +4,15 @@ import { compose } from "redux";
 
 import { EKycRequestType, IKycFileInfo } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
+import {
+  selectIndividualFiles,
+  selectIndividualFilesLoading,
+  selectIndividualFileUploading,
+} from "../../../modules/kyc/selectors";
 import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { EButtonLayout } from "../../shared/buttons/Button";
-import { Button } from "../../shared/buttons/index";
+import { Button, ButtonGroup } from "../../shared/buttons/index";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
 
@@ -24,7 +29,8 @@ interface IDispatchProps {
   goBack: () => void;
 }
 
-export const KYCAdditionalUploadComponent = ({ ...props }: IStateProps & IDispatchProps) => (
+export const KYCAdditionalUploadLayout: React.FunctionComponent<IStateProps &
+  IDispatchProps> = props => (
   <>
     <MultiFileUpload
       acceptedFiles={[EMimeType.ANY_IMAGE_TYPE, EMimeType.PDF]}
@@ -36,7 +42,7 @@ export const KYCAdditionalUploadComponent = ({ ...props }: IStateProps & IDispat
       layout="vertical"
     />
 
-    <div className={styles.buttons}>
+    <ButtonGroup className={styles.buttons}>
       <Button
         layout={EButtonLayout.OUTLINE}
         className={styles.button}
@@ -45,16 +51,16 @@ export const KYCAdditionalUploadComponent = ({ ...props }: IStateProps & IDispat
       >
         <FormattedMessage id="form.back" />
       </Button>
-    </div>
+    </ButtonGroup>
   </>
 );
 
 export const KYCAdditionalUpload = compose<React.FunctionComponent>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
-      files: state.kyc.individualFiles,
-      filesLoading: !!state.kyc.individualFilesLoading,
-      fileUploading: !!state.kyc.individualFileUploading,
+      files: selectIndividualFiles(state),
+      filesLoading: selectIndividualFilesLoading(state),
+      fileUploading: selectIndividualFileUploading(state),
     }),
     dispatchToProps: dispatch => ({
       onDropFile: (file: File) => dispatch(actions.kyc.kycUploadIndividualDocument(file)),
@@ -64,4 +70,4 @@ export const KYCAdditionalUpload = compose<React.FunctionComponent>(
   onEnterAction({
     actionCreator: dispatch => dispatch(actions.kyc.kycLoadIndividualDocumentList()),
   }),
-)(KYCAdditionalUploadComponent);
+)(KYCAdditionalUploadLayout);

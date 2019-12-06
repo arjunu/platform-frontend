@@ -162,6 +162,7 @@ export const MultiFileUploadGuide: React.FunctionComponent<{
   }
 };
 
+// TODO: MultiFileUpload should not contain any information about upload type
 export const MultiFileUpload: React.FunctionComponent<IProps> = ({
   acceptedFiles,
   fileUploading,

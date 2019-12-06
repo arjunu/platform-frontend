@@ -136,11 +136,26 @@
   line-height: 1.33;
 }
 
+@mixin nds-helper-text-bold {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(12px);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 2px;
+}
+
 @mixin nds-button-label {
   font-family: $font-family-roboto;
   font-size: px-to-rem(14px);
   font-weight: $font-weight-medium;
   line-height: 1.71;
+}
+
+@mixin nds-label {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(10px);
+  line-height: 1.6;
+  letter-spacing: px-to-rem(2px);
 }
 
 // TODO: Add this one to the design typography

@@ -140,6 +140,9 @@ export const kycReducer: AppReducer<IKycState> = (
 
     // individual
     case actions.kyc.kycSubmitPersonalData.getType():
+    case actions.kyc.kycSubmitPersonalDataAndClose.getType():
+    case actions.kyc.kycSubmitPersonalDataNoRedirect.getType():
+      return { ...state, ...omitUndefined(action.payload), kycSaving: true };
     case actions.kyc.kycUpdateIndividualData.getType():
       return { ...state, kycSaving: false, ...omitUndefined(action.payload) };
     case actions.kyc.kycUpdateIndividualDocuments.getType():

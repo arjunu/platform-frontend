@@ -326,7 +326,6 @@ export enum EEtoNomineeActiveEtoNotifications {
 export enum ENotificationText {
   COMPLETE_REQUEST_NOTIFICATION = "completeRequestNotification",
   COMPLETE_UPDATE_ACCOUNT = "completeUpdateAccount",
-  AUTH_SESSION_TIMEOUT = "authSessionTimeout",
 }
 
 export enum TestMessage {
@@ -790,8 +789,6 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
       return <FormattedMessage id="notifications.complete-request" />;
     case ENotificationText.COMPLETE_UPDATE_ACCOUNT:
       return <FormattedMessage id="notifications.update-account" />;
-    case ENotificationText.AUTH_SESSION_TIMEOUT:
-      return <FormattedMessage id="notifications.auth-session-timeout" />;
     // NEVER DO THIS! This is only for tests, so that we don't bloat locales.json with test strings!
     case TestMessage.TEST_MESSAGE:
       return messageData!.message as TTranslatedString;

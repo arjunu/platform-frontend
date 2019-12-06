@@ -8,6 +8,7 @@ import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { EButtonLayout } from "../../shared/buttons/Button";
+import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
 import { KycStep } from "../shared/KycStep";
@@ -31,7 +32,9 @@ interface IProps {
   layout: EKycRequestType;
 }
 
-export const KYCUploadComponent = ({ ...props }: IProps & IStateProps & IDispatchProps) => (
+type TComponentProps = IProps & IStateProps & IDispatchProps;
+
+export const KYCUploadComponent: React.FunctionComponent<TComponentProps> = props => (
   <>
     <KycStep
       step={4}
@@ -51,7 +54,7 @@ export const KYCUploadComponent = ({ ...props }: IProps & IStateProps & IDispatc
       layout="vertical"
     />
 
-    <div className={styles.buttons}>
+    <ButtonGroup className={styles.buttons}>
       <Button
         layout={EButtonLayout.OUTLINE}
         className={styles.button}
@@ -69,7 +72,7 @@ export const KYCUploadComponent = ({ ...props }: IProps & IStateProps & IDispatc
       >
         <FormattedMessage id="form.button.submit-request" />
       </Button>
-    </div>
+    </ButtonGroup>
   </>
 );
 

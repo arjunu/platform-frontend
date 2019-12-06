@@ -23,8 +23,14 @@ export const selectKycRequestType = createSelector(
   status => status && status.type,
 );
 
+export const selectIndividualData = (state: IAppState) => state.kyc.individualData;
+export const selectIndividualDataLoading = (state: IAppState) => !!state.kyc.individualDataLoading;
+export const selectIsSavingKycForm = (state: IAppState) => !!state.kyc.kycSaving;
+
 export const selectIndividualFiles = (state: IAppState) => state.kyc.individualFiles;
 export const selectIndividualFilesLoading = (state: IAppState) => state.kyc.individualFilesLoading;
+export const selectIndividualFileUploading = (state: IAppState) =>
+  state.kyc.individualFileUploading;
 
 export const selectBusinessFiles = (state: IAppState) => state.kyc.businessFiles;
 export const selectLegalRepFiles = (state: IAppState) => state.kyc.legalRepresentativeFiles;

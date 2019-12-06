@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 import { ECountries } from "../../../utils/enums/countriesEnum";
 import { EUSState } from "../../../utils/enums/usStatesEnum";
-import { makeAllRequired, makeAllRequiredExcept } from "../../../utils/yupUtils";
+import { makeAllRequiredExcept } from "../../../utils/yupUtils";
 import * as YupTS from "../../yup-ts.unsafe";
 import { countryCode, percentage, personBirthDate, restrictedCountry } from "../util/customSchemas";
 
@@ -16,6 +16,7 @@ export enum EKycRequestType {
 }
 
 export type TInstantIdNoneProvider = "none";
+export type TManualIdProvider = "manual";
 
 export enum EKycInstantIdProvider {
   ID_NOW = "id_now",
@@ -39,6 +40,8 @@ export interface IKycPerson {
   placeOfBirth?: string;
   nationality?: string;
   isPoliticallyExposed?: boolean;
+  // TODO: Remove when not needed. This adds additional fields required by backend
+  isHighIncome?: boolean;
 }
 
 const stateSchema = Yup.string().when("country", (country: string, schema: Yup.Schema<string>) =>
@@ -81,6 +84,8 @@ export const KycPersonalAddressSchema = Yup.object().shape({
   country: restrictedCountry,
   usState: stateSchema,
 });
+
+export const KycFullIndividualSchema = KycPersonalDataSchema.concat(KycPersonalAddressSchema);
 
 export const KycAdditionalDataSchema = Yup.object().shape({
   // Allow only true value to be saved, do not display any additional message
@@ -155,9 +160,10 @@ export const KycBusinessDataSchema = Yup.object<any>().shape({
 
 // legal representative (same as base person)
 export interface IKycLegalRepresentative extends IKycPerson {}
-export const KycLegalRepresentativeSchema = KycPersonSchema;
+export const KycLegalRepresentativeSchema = makeAllRequiredExcept(KycPersonSchema, ["id"]);
 export const KycLegalRepresentativeSchemaRequired = makeAllRequiredExcept(KycPersonSchema, [
   "usState",
+  "id",
 ]);
 
 // beneficial owner
@@ -172,7 +178,9 @@ export const KycBeneficialOwnerSchema = KycPersonSchema.concat(
     id: Yup.string(),
   }),
 );
-export const KycBeneficialOwnerSchemaRequired = makeAllRequired(KycBeneficialOwnerSchema);
+export const KycBeneficialOwnerSchemaRequired = makeAllRequiredExcept(KycBeneficialOwnerSchema, [
+  "usState",
+]);
 
 // file
 export interface IKycFileInfo {

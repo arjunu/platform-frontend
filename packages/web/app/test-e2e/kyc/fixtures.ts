@@ -31,6 +31,34 @@ const kycPersonAddressForm: TFormFixture = {
   },
 };
 
+const kycCorporateBaseForm: TFormFixture = {
+  firstName: "John",
+  lastName: "Doe",
+  birthDate: {
+    value: "20/01/1980",
+    type: "date",
+  },
+  street: "Cuvrystr. 6",
+  city: "Berlin",
+  zipCode: "10247",
+  country: {
+    value: "LI",
+    type: "select",
+  },
+  placeOfBirth: {
+    value: "AT",
+    type: "select",
+  },
+  nationality: {
+    value: "DE",
+    type: "select",
+  },
+  isPoliticallyExposed: {
+    value: "false",
+    type: "select",
+  },
+};
+
 export const kycInvidualForm: TFormFixture = {
   ...kycPersonBaseForm,
   "kyc-personal-start-submit-form": {
@@ -58,7 +86,7 @@ export const kycInvidualFormUS: TFormFixture = {
 };
 
 export const kycLegalRepForm: TFormFixture = {
-  ...kycPersonBaseForm,
+  ...kycCorporateBaseForm,
   "kyc-company-legal-representative-save": {
     type: "submit",
   },

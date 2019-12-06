@@ -2,7 +2,7 @@ import { FormikProps, withFormik } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
-import { compose } from "redux";
+import { compose } from "recompose";
 
 import {
   IKycIndividualData,
@@ -10,8 +10,11 @@ import {
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import {
+  selectIndividualData,
+  selectIndividualDataLoading,
   selectIndividualFiles,
   selectIndividualFilesLoading,
+  selectIsSavingKycForm,
   selectKycUploadedFiles,
 } from "../../../modules/kyc/selectors";
 import { appConnect } from "../../../store";
@@ -19,6 +22,7 @@ import { ECountries } from "../../../utils/enums/countriesEnum";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { EButtonLayout } from "../../shared/buttons/Button";
+import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import { boolify, FormDeprecated, FormField, unboolify } from "../../shared/forms";
 import { FormSelectCountryField } from "../../shared/forms/fields/FormSelectCountryField.unsafe";
 import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
@@ -49,100 +53,100 @@ const KYCForm: React.FunctionComponent<TProps> = ({
   values,
   uploadedFilesLoading,
   ...props
-}) => (
-  <>
-    <KycStep
-      step={3}
-      allSteps={5}
-      title={<FormattedMessage id="kyc.personal.address.title" />}
-      description={<FormattedMessage id="kyc.personal.address.description" />}
-      buttonAction={() => props.submitAndClose(values)}
-    />
-    <FormDeprecated>
-      <FormField
-        label={<FormattedMessage id="form.label.street-and-number" />}
-        name="street"
-        data-test-id="kyc-personal-address-street"
-      />
-      <FormField
-        label={<FormattedMessage id="form.label.additional-information" />}
-        name="additionalInformation"
-        data-test-id="kyc-personal-address-additional"
-      />
-      <span>
-        <FormattedMessage id="form.label.additional-information.description" />
-      </span>
-      <Row>
-        <Col xs={12} md={6} lg={8}>
-          <FormField
-            label={<FormattedMessage id="form.label.city" />}
-            name="city"
-            data-test-id="kyc-personal-start-city"
-          />
-        </Col>
-        <Col xs={12} md={6} lg={4}>
-          <FormField
-            label={<FormattedMessage id="form.label.zip-code" />}
-            name="zipCode"
-            data-test-id="kyc-personal-start-zip-code"
-          />
-        </Col>
-      </Row>
+}) => {
+  const shouldDisableSubmit =
+    uploadedFilesLoading || !props.isValid || props.loadingData || uploadedFiles.length === 0;
 
-      <Row>
-        {values.country === ECountries.UNITED_STATES && (
-          <Col xs={12} md={6} lg={6}>
-            <FormSelectStateField
-              label={<FormattedMessage id="form.label.us-state" />}
-              name="usState"
-              data-test-id="kyc-personal-start-us-state"
+  return (
+    <>
+      <KycStep
+        step={3}
+        allSteps={5}
+        title={<FormattedMessage id="kyc.personal.address.title" />}
+        description={<FormattedMessage id="kyc.personal.address.description" />}
+        buttonAction={() => props.submitAndClose(values)}
+      />
+      <FormDeprecated>
+        <FormField
+          label={<FormattedMessage id="form.label.street-and-number" />}
+          name="street"
+          data-test-id="kyc-personal-address-street"
+        />
+        <FormField
+          label={<FormattedMessage id="form.label.additional-information" />}
+          name="additionalInformation"
+          data-test-id="kyc-personal-address-additional"
+        />
+        {/*TODO: Remove while reworking inputs*/}
+        <span>
+          <FormattedMessage id="form.label.additional-information.description" />
+        </span>
+        <Row>
+          <Col xs={12} md={6} lg={8}>
+            <FormField
+              label={<FormattedMessage id="form.label.city" />}
+              name="city"
+              data-test-id="kyc-personal-start-city"
             />
           </Col>
-        )}
+          <Col xs={12} md={6} lg={4}>
+            <FormField
+              label={<FormattedMessage id="form.label.zip-code" />}
+              name="zipCode"
+              data-test-id="kyc-personal-start-zip-code"
+            />
+          </Col>
+        </Row>
 
-        <Col>
-          <FormSelectCountryField
-            label={<FormattedMessage id="form.label.country-address" />}
-            name="country"
-            data-test-id="kyc-personal-start-country"
-            disabled={true}
-          />
-        </Col>
-      </Row>
+        <Row>
+          {values.country === ECountries.UNITED_STATES && (
+            <Col xs={12} md={6} lg={6}>
+              <FormSelectStateField
+                label={<FormattedMessage id="form.label.us-state" />}
+                name="usState"
+                data-test-id="kyc-personal-start-us-state"
+              />
+            </Col>
+          )}
 
-      <KYCAddDocuments
-        uploadType={EKycUploadType.PROOF_OF_ADDRESS}
-        isLoading={props.isSavingForm}
-      />
+          <Col>
+            <FormSelectCountryField
+              label={<FormattedMessage id="form.label.country-address" />}
+              name="country"
+              data-test-id="kyc-personal-start-country"
+              disabled={true}
+            />
+          </Col>
+        </Row>
 
-      <div className={styles.buttons}>
-        <Button
-          layout={EButtonLayout.OUTLINE}
-          className={styles.button}
-          type="button"
-          data-test-id="kyc-personal-address-go-back"
-          onClick={props.goBack}
-        >
-          <FormattedMessage id="form.back" />
-        </Button>
-        <Button
-          type="submit"
-          layout={EButtonLayout.PRIMARY}
-          className={styles.button}
-          disabled={
-            uploadedFilesLoading ||
-            !props.isValid ||
-            props.loadingData ||
-            uploadedFiles.length === 0
-          }
-          data-test-id="kyc-personal-address-submit-form"
-        >
-          <FormattedMessage id="form.save-and-submit" />
-        </Button>
-      </div>
-    </FormDeprecated>
-  </>
-);
+        <KYCAddDocuments
+          uploadType={EKycUploadType.PROOF_OF_ADDRESS}
+          isLoading={props.isSavingForm}
+        />
+
+        <ButtonGroup className={styles.buttons}>
+          <Button
+            layout={EButtonLayout.OUTLINE}
+            className={styles.button}
+            data-test-id="kyc-personal-address-go-back"
+            onClick={props.goBack}
+          >
+            <FormattedMessage id="form.back" />
+          </Button>
+          <Button
+            type="submit"
+            layout={EButtonLayout.PRIMARY}
+            className={styles.button}
+            disabled={shouldDisableSubmit}
+            data-test-id="kyc-personal-address-submit-form"
+          >
+            <FormattedMessage id="form.save-and-submit" />
+          </Button>
+        </ButtonGroup>
+      </FormDeprecated>
+    </>
+  );
+};
 
 const KYCEnhancedForm = withFormik<IStateProps & IDispatchProps, IKycIndividualData>({
   validationSchema: KycPersonalAddressSchemaRequired,
@@ -150,17 +154,17 @@ const KYCEnhancedForm = withFormik<IStateProps & IDispatchProps, IKycIndividualD
     KycPersonalAddressSchemaRequired.isValidSync((props as IStateProps).currentValues),
   mapPropsToValues: props => unboolify(props.currentValues as IKycIndividualData),
   enableReinitialize: true,
-  handleSubmit: (values, props) => {
-    props.props.submitForm(boolify(values));
+  handleSubmit: (values, { props }) => {
+    props.submitForm(boolify(values));
   },
 })(KYCForm);
 
-export const KYCPersonalAddress = compose<React.FunctionComponent>(
+export const KYCPersonalAddress = compose<IStateProps & IDispatchProps, {}>(
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
-      currentValues: state.kyc.individualData,
-      loadingData: !!state.kyc.individualDataLoading,
-      isSavingForm: !!state.kyc.kycSaving,
+      currentValues: selectIndividualData(state),
+      loadingData: selectIndividualDataLoading(state),
+      isSavingForm: selectIsSavingKycForm(state),
       uploadedFiles: selectIndividualFiles(state),
       uploadedFilesLoading: selectIndividualFilesLoading(state),
     }),
