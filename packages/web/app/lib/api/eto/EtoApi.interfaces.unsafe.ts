@@ -102,12 +102,30 @@ export const EtoRiskAssessmentType = YupTS.object({
 
 type TEtoRiskAssessment = YupTS.TypeOf<typeof EtoRiskAssessmentType>;
 
-const socialChannelsType = YupTS.array(
-  YupTS.object({
-    type: YupTS.string().optional(),
-    url: YupTS.url().optional(),
-  }),
-);
+export enum ESocialChannelType {
+  FACEBOOK = "facebook",
+  GITHUB = "github",
+  G_PLUS = "gplus",
+  INSTAGRAM = "instagram",
+  LINKEDIN = "linkedin",
+  MEDIUM = "medium",
+  REDDIT = "reddit",
+  SLACK = "slack",
+  TELEGRAM = "telegram",
+  TWITTER = "twitter",
+  XING = "xing",
+  BITCOINTALK = "bitcointalk",
+  YOUTUBE = "youtube",
+}
+
+const socialChannelType = YupTS.object({
+  type: YupTS.string<ESocialChannelType>().optional(),
+  url: YupTS.url().optional(),
+});
+
+export type TSocialChannelType = YupTS.TypeOf<typeof socialChannelType>;
+
+const socialChannelsType = YupTS.array(socialChannelType);
 
 export type TSocialChannelsType = YupTS.TypeOf<typeof socialChannelsType>;
 
