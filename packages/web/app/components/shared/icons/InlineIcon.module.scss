@@ -13,7 +13,7 @@
 
   &--fill-outline {
     svg {
-      > g {
+      > * {
         color: inherit;
         stroke: currentColor;
       }
@@ -22,7 +22,7 @@
 
   &--fill-shape {
     svg {
-      > g {
+      > * {
         color: inherit;
         fill: currentColor;
       }

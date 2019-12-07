@@ -4,6 +4,7 @@ import { match, NavLink } from "react-router-dom";
 
 import { TDataTestId, TTranslatedString } from "../../../types";
 import { invariant } from "../../../utils/invariant";
+import { ButtonBase } from "../../shared/buttons/ButtonBase";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 import { ExternalLink } from "../../shared/links/index";
 
@@ -84,7 +85,7 @@ export const MenuEntryContent: React.FunctionComponent<IMenuEntryContent & IMenu
     {svgString && (
       <InlineIcon
         svgIcon={svgString}
-        alt="logout"
+        alt=""
         className={cn(styles.icon, { [styles.disabledItemContent]: disabled })}
       />
     )}
@@ -103,9 +104,9 @@ export const MenuEntrySeparator: React.FunctionComponent<IMenuInternal> = ({
   />
 );
 
-export const MenuEntryDisabled: React.FunctionComponent<IMenuEntryDisabled &
-  IMenuInternal &
-  TDataTestId> = ({ svgString, menuName, menuRenderingType, ["data-test-id"]: dataTestId }) => (
+export const MenuEntryDisabled: React.FunctionComponent<
+  IMenuEntryDisabled & IMenuInternal & TDataTestId
+> = ({ svgString, menuName, menuRenderingType, ["data-test-id"]: dataTestId }) => (
   <div
     className={
       menuRenderingType === EMenuEntryRenderingType.MENU
@@ -123,11 +124,10 @@ export const MenuEntryDisabled: React.FunctionComponent<IMenuEntryDisabled &
   </div>
 );
 
-const MenuEntryAction: React.FunctionComponent<IMenuAction &
-  IMenuEntryContent &
-  IMenuInternal &
-  TDataTestId> = ({ onClick, menuRenderingType, ["data-test-id"]: dataTestId, ...props }) => (
-  <button
+const MenuEntryAction: React.FunctionComponent<
+  IMenuAction & IMenuEntryContent & IMenuInternal & TDataTestId
+> = ({ onClick, menuRenderingType, ["data-test-id"]: dataTestId, ...props }) => (
+  <ButtonBase
     className={
       menuRenderingType === EMenuEntryRenderingType.MENU ? styles.menuItem : styles.dropdownMenuItem
     }
@@ -135,13 +135,12 @@ const MenuEntryAction: React.FunctionComponent<IMenuAction &
     data-test-id={dataTestId}
   >
     <MenuEntryContent {...props} menuRenderingType={menuRenderingType} />
-  </button>
+  </ButtonBase>
 );
 
-const MenuEntryLink: React.FunctionComponent<IMenuEntryContent &
-  IMenuLink &
-  IMenuInternal &
-  TDataTestId> = ({ to, menuRenderingType, isActive, ["data-test-id"]: dataTestId, ...props }) => (
+const MenuEntryLink: React.FunctionComponent<
+  IMenuEntryContent & IMenuLink & IMenuInternal & TDataTestId
+> = ({ to, menuRenderingType, isActive, ["data-test-id"]: dataTestId, ...props }) => (
   <NavLink
     to={to}
     data-test-id={dataTestId}
@@ -159,10 +158,9 @@ const MenuEntryLink: React.FunctionComponent<IMenuEntryContent &
   </NavLink>
 );
 
-const MenuEntryExternalLink: React.FunctionComponent<IMenuEntryContent &
-  IMenuLink &
-  IMenuInternal &
-  TDataTestId> = ({ to, menuRenderingType, isActive, ["data-test-id"]: dataTestId, ...props }) => (
+const MenuEntryExternalLink: React.FunctionComponent<
+  IMenuEntryContent & IMenuLink & IMenuInternal & TDataTestId
+> = ({ to, menuRenderingType, isActive, ["data-test-id"]: dataTestId, ...props }) => (
   <ExternalLink
     href={to}
     className={
@@ -180,19 +178,17 @@ const MenuEntryInternal: React.FunctionComponent<TMenuEntry & IMenuInternal> = (
   ...rest
 }) => {
   if (disabled) {
-    return <MenuEntryDisabled {...(rest as IMenuEntryDisabled & IMenuInternal)} />;
+    return <MenuEntryDisabled {...rest as IMenuEntryDisabled & IMenuInternal} />;
   } else {
     switch (type) {
       case EMenuEntryType.SEPARATOR:
-        return <MenuEntrySeparator {...(rest as IMenuInternal)} />;
+        return <MenuEntrySeparator {...rest as IMenuInternal} />;
       case EMenuEntryType.ACTION:
-        return <MenuEntryAction {...(rest as IMenuEntryContent & IMenuAction & IMenuInternal)} />;
+        return <MenuEntryAction {...rest as IMenuEntryContent & IMenuAction & IMenuInternal} />;
       case EMenuEntryType.LINK:
-        return <MenuEntryLink {...(rest as IMenuEntryContent & IMenuLink & IMenuInternal)} />;
+        return <MenuEntryLink {...rest as IMenuEntryContent & IMenuLink & IMenuInternal} />;
       case EMenuEntryType.EXTERNAL_LINK:
-        return (
-          <MenuEntryExternalLink {...(rest as IMenuEntryContent & IMenuLink & IMenuInternal)} />
-        );
+        return <MenuEntryExternalLink {...rest as IMenuEntryContent & IMenuLink & IMenuInternal} />;
       default:
         return invariant(false, "unknown menu entry type");
     }
