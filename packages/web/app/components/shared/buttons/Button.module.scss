@@ -49,6 +49,7 @@
 
   &--outline {
     border: px-to-rem(1px) solid $neu-light-blue-grey-two;
+    background: $neu-white-two;
 
     &:not(:disabled) {
       &:hover {
