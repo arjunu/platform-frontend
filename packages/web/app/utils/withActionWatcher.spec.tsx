@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import * as React from "react";
-import { delay } from "redux-saga/effects";
 import { spy } from "sinon";
 
 import { createMount } from "../../test/createMount";
 import { setupFakeClock, wrapWithProviders } from "../../test/integrationTestUtils.unsafe";
 import { withActionWatcher } from "./withActionWatcher.unsafe";
+import { safeDelay } from "./safeTimers";
 
 describe("withActionWatcher", () => {
   const SomeComponent = () => <h1>SOME COMPONENT</h1>;
@@ -51,7 +51,7 @@ describe("withActionWatcher", () => {
   });
 
   it("should not call action again before it finished", async () => {
-    const asyncActionCreator = spy(() => delay(2000));
+    const asyncActionCreator = spy(() => safeDelay(1000));
     const WatchComponent = withActionWatcher({
       actionCreator: asyncActionCreator,
       interval: 1000,

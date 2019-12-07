@@ -26,8 +26,8 @@ describe("Web3 sagas", () => {
         logger: noopLogger,
       })
         .put(actions.web3.walletLocked())
-        .call(delay, LIGHT_WALLET_PASSWORD_CACHE_TIME)
-        .provide([[call(delay, LIGHT_WALLET_PASSWORD_CACHE_TIME), undefined]])
+        .delay(LIGHT_WALLET_PASSWORD_CACHE_TIME)
+        .provide([[delay(LIGHT_WALLET_PASSWORD_CACHE_TIME), undefined]])
         .run();
 
       expect(personalWalletMock.password).to.be.undefined;
