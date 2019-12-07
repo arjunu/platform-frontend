@@ -1,5 +1,5 @@
 .group-wrapper {
-  @include nds-label;
+  @include nds-button-label;
 
   color: $neu-charcoal-grey;
   display: grid;

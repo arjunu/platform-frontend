@@ -25,9 +25,7 @@ export function* getTransactionOrThrow(
   txHash: string,
 ): Generator<any, any, any> {
   const tx: Web3.Transaction = yield web3Manager.getTransactionByHash(txHash);
-  const txReceipt: Web3.TransactionReceipt | null = yield web3Manager.internalWeb3Adapter.getTransactionReceipt(
-    txHash,
-  );
+  const txReceipt: Web3.TransactionReceipt | null = yield web3Manager.getTransactionReceipt(txHash);
 
   // If the proxy transactional node fails to post the transaction
   const pendingTx: TPendingTxs = yield apiUserService.pendingTxs();
@@ -72,7 +70,7 @@ export function* watchForTx(
   let lastBlockId = -1;
   while (true) {
     try {
-      const currentBlockNo: number = yield web3Manager.internalWeb3Adapter.getBlockNumber();
+      const currentBlockNo: number = yield web3Manager.getBlockNumber();
 
       if (lastBlockId !== currentBlockNo) {
         lastBlockId = currentBlockNo;

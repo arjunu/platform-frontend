@@ -115,7 +115,7 @@ class PersonalAccountDetailsLayout extends React.Component<
             <Button
               iconPosition={EIconPosition.ICON_AFTER}
               svgIcon={arrowRight}
-              layout={EButtonLayout.SECONDARY}
+              layout={EButtonLayout.GHOST}
               onClick={this.toggleDataVisibility}
             >
               {isDataHidden ? (

@@ -18,7 +18,8 @@ import { TClaimAdditionalData } from "../../../../modules/tx/transactions/claim/
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { getInvestorDocumentTitles } from "../../../documents/utils";
-import { ButtonIcon } from "../../../shared/buttons";
+import { Button, EButtonLayout } from "../../../shared/buttons";
+import { EButtonWidth } from "../../../shared/buttons/Button";
 import { DocumentLabel } from "../../../shared/DocumentLink";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { InfoRow } from "../shared/InfoRow";
@@ -78,9 +79,14 @@ export const UserClaimSummaryComponent: React.FunctionComponent<TComponentProps>
                 />
               }
               value={
-                <ButtonIcon
+                <Button
                   className={styles.icon}
                   svgIcon={iconDownload}
+                  layout={EButtonLayout.GHOST}
+                  iconProps={{
+                    alt: <FormattedMessage id="common.download" />,
+                  }}
+                  width={EButtonWidth.NO_PADDING}
                   disabled={pendingDownloads[document.ipfsHash]}
                   data-test-id="token-claim-agreements"
                   onClick={() =>
@@ -117,7 +123,12 @@ export const UserClaimSummaryComponent: React.FunctionComponent<TComponentProps>
                 />
               }
               value={
-                <ButtonIcon
+                <Button
+                  layout={EButtonLayout.GHOST}
+                  width={EButtonWidth.NO_PADDING}
+                  iconProps={{
+                    alt: <FormattedMessage id="common.download" />,
+                  }}
                   className={styles.icon}
                   svgIcon={iconDownload}
                   data-test-id="token-claim-agreements"

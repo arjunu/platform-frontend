@@ -61,7 +61,7 @@ describe("<ButtonLink />", () => {
       router: {
         location: {},
       },
-    })(<ButtonLink to={"/login"} disabled={true} layout={EButtonLayout.INLINE} />);
+    })(<ButtonLink to={"/login"} disabled={true} layout={EButtonLayout.PRIMARY} />);
 
     const layout = mount(node);
     const button = layout.find(Button);
@@ -70,7 +70,7 @@ describe("<ButtonLink />", () => {
     // as it can generate DOM errors
     expect(button.prop("to")).to.be.undefined;
     expect(button.prop("disabled")).to.be.true;
-    expect(button.prop("layout")).to.equal(EButtonLayout.INLINE);
+    expect(button.prop("layout")).to.equal(EButtonLayout.PRIMARY);
   });
 
   it("should open external url in new tab", () => {

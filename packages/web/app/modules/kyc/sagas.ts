@@ -8,13 +8,11 @@ import { IHttpResponse } from "../../lib/api/client/IHttpClient";
 import {
   EKycRequestStatus,
   EKycRequestType,
-  ERequestOutsourcedStatus,
   IKycBeneficialOwner,
   IKycBusinessData,
   IKycFileInfo,
   IKycIndividualData,
   IKycLegalRepresentative,
-  IKycRequestState,
   TKycBankAccount,
   TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
@@ -27,11 +25,11 @@ import { selectIsUserVerified, selectUser, selectUserType } from "../auth/select
 import { userHasKycAndEmailVerified } from "../eto-flow/selectors";
 import { displayErrorModalSaga } from "../generic-modal/sagas";
 import { waitUntilSmartContractsAreInitialized } from "../init/sagas";
-import { neuCall, neuFork, neuTakeEvery, neuTakeOnly } from "../sagasUtils";
+import { neuCall, neuTakeEvery, neuTakeUntil } from "../sagasUtils";
+import { kycIdNowSagas } from "./instant-id/id-now/sagas";
+import { kycOnfidoSagas } from "./instant-id/onfido/sagas";
 import {
   selectCombinedBeneficialOwnerOwnership,
-  selectKycLoading,
-  selectKycRequestOutsourcedStatus,
   selectKycRequestStatus,
   selectKycRequestType,
 } from "./selectors";
@@ -40,11 +38,27 @@ import { deserializeClaims } from "./utils";
 export function* loadClientData({ apiKycService }: TGlobalDependencies): Generator<any, any, any> {
   const kycStatus: TKycStatus = yield apiKycService.getKycStatus();
 
-  yield put(actions.kyc.setStatus(kycStatus));
+    const kycStatus: TKycStatus = yield apiKycService.getKycStatus();
 
-  // TODO: Check `kycStatus.type` and load only appropriate type
-  yield put(actions.kyc.kycLoadIndividualData());
-  yield put(actions.kyc.kycLoadBusinessData());
+    yield put(actions.kyc.setStatus(kycStatus));
+
+    switch (kycStatus.type) {
+      case EKycRequestType.BUSINESS:
+        yield neuCall(loadBusinessData);
+
+        break;
+      case EKycRequestType.INDIVIDUAL:
+        yield neuCall(loadIndividualData);
+
+        break;
+      default:
+        logger.info(`Kyc type is ${kycStatus.type} therefore omitting loading kyc data`);
+    }
+  } catch (e) {
+    logger.error("Error while getting KYC status", e);
+
+    yield put(actions.kyc.setStatusError(e.message));
+  }
 }
 
 /**
@@ -68,22 +82,9 @@ function* kycRefreshWidgetSaga({ logger }: TGlobalDependencies): any {
       return;
     }
 
-    const outsourcedStatus: ERequestOutsourcedStatus | undefined = yield select((s: IAppState) =>
-      selectKycRequestOutsourcedStatus(s.kyc),
-    );
+    if (status === EKycRequestStatus.PENDING || status === EKycRequestStatus.OUTSOURCED) {
+      yield put(actions.kyc.kycLoadStatusAndData());
 
-    if (
-      status === EKycRequestStatus.PENDING ||
-      (status === EKycRequestStatus.OUTSOURCED &&
-        outsourcedStatus &&
-        (outsourcedStatus === ERequestOutsourcedStatus.STARTED ||
-          outsourcedStatus === ERequestOutsourcedStatus.CANCELED ||
-          outsourcedStatus === ERequestOutsourcedStatus.ABORTED ||
-          outsourcedStatus === ERequestOutsourcedStatus.REVIEW_PENDING))
-    ) {
-      requestType === EKycRequestType.INDIVIDUAL
-        ? yield put(actions.kyc.kycLoadIndividualRequest(true))
-        : yield put(actions.kyc.kycLoadBusinessRequest(true));
       logger.info("KYC refreshed", status, requestType);
     }
 
@@ -99,26 +100,6 @@ function expandWatchTimeout(): void {
     kycWidgetWatchDelay = 3000;
   } else {
     kycWidgetWatchDelay = 10000;
-  }
-}
-
-let watchTask: any;
-
-function* kycRefreshWidgetSagaWatcher({ logger }: TGlobalDependencies): any {
-  while (true) {
-    yield take(actions.kyc.kycStartWatching);
-    logger.info("started KYC watcher");
-    watchTask = yield fork(neuCall, kycRefreshWidgetSaga);
-  }
-}
-
-function* kycRefreshWidgetSagaWatcherStop({ logger }: TGlobalDependencies): any {
-  while (true) {
-    yield take(actions.kyc.kycStopWatching);
-    if (watchTask) {
-      logger.info("stopped KYC watcher");
-      yield cancel(watchTask);
-    }
   }
 }
 
@@ -222,17 +203,7 @@ function* loadIndividualRequest(
 ): Generator<any, any, any> {
   yield put(actions.kyc.kycLoadClaims());
 
-  try {
-    if (!action.payload.inBackground) {
-      yield put(actions.kyc.kycUpdateIndividualRequestState(true));
-    }
-    const result: IHttpResponse<IKycRequestState> = yield apiKycService.getIndividualRequest();
-    yield put(actions.kyc.kycUpdateIndividualRequestState(false, result.body));
-  } catch (e) {
-    logger.error("Error while getting business KYC data", e);
-    yield put(actions.kyc.kycUpdateIndividualRequestState(false, undefined, e.message));
-  }
-}
+  yield put(actions.kyc.setStatus(kycStatus));
 
 function* submitIndividualRequestEffect({
   apiKycService,
@@ -264,8 +235,6 @@ function* submitIndividualRequest({
       createMessage(KycFlowMessage.KYC_SUBMIT_DESCRIPTION),
     );
   } catch (e) {
-    yield put(actions.kyc.kycUpdateIndividualRequestState(false));
-
     notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
 
     logger.error("Failed to submit KYC individual request", e);
@@ -620,9 +589,9 @@ function* submitBusinessRequestEffect({
   const userType = yield select((s: IAppState) => selectUserType(s));
   const kycAndEmailVerified = yield select((s: IAppState) => userHasKycAndEmailVerified(s));
 
-  yield put(actions.kyc.kycUpdateBusinessRequestState(true));
-  const result: IHttpResponse<IKycRequestState> = yield apiKycService.submitBusinessRequest();
-  yield put(actions.kyc.kycUpdateBusinessRequestState(false, result.body));
+  const kycStatus: TKycStatus = yield apiKycService.submitBusinessRequest();
+
+  yield put(actions.kyc.setStatus(kycStatus));
 
   const buttonAction =
     !kycAndEmailVerified && userType === EUserType.NOMINEE
@@ -664,8 +633,6 @@ function* submitBusinessRequest({
       createMessage(KycFlowMessage.KYC_SUBMIT_DESCRIPTION),
     );
   } catch (e) {
-    yield put(actions.kyc.kycUpdateBusinessRequestState(false));
-
     notificationCenter.error(createMessage(KycFlowMessage.KYC_SUBMIT_FAILED));
 
     logger.error("Failed to submit KYC business request", e);
@@ -771,9 +738,6 @@ export function* kycSagas(): Generator<any, any, any> {
   yield fork(neuTakeEvery, actions.kyc.kycUploadIndividualDocument, uploadIndividualFile);
   yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualDocumentList, loadIndividualFiles);
   // Outsourced
-  yield fork(neuTakeEvery, actions.kyc.kycStartInstantId, startIndividualInstantId);
-  yield fork(neuTakeEvery, actions.kyc.kycCancelInstantId, cancelIndividualInstantId);
-  yield fork(neuTakeEvery, actions.kyc.kycLoadIndividualRequest, loadIndividualRequest);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitIndividualRequest, submitIndividualRequest);
 
   yield fork(neuTakeEvery, actions.kyc.kycLoadLegalRepresentative, loadLegalRepresentative);
@@ -806,14 +770,20 @@ export function* kycSagas(): Generator<any, any, any> {
     loadBeneficialOwnerFiles,
   );
 
-  yield fork(neuTakeEvery, actions.kyc.kycLoadBusinessRequest, loadBusinessRequest);
   yield fork(neuTakeEvery, actions.kyc.kycSubmitBusinessRequest, submitBusinessRequest);
 
   yield fork(neuTakeEvery, actions.kyc.loadBankAccountDetails, loadBankAccountDetails);
 
   yield fork(neuTakeEvery, actions.kyc.kycLoadClaims, loadIdentityClaim);
 
-  yield fork(waitForKycStatusLoad);
-  yield neuFork(kycRefreshWidgetSagaWatcher);
-  yield neuFork(kycRefreshWidgetSagaWatcherStop);
+  yield fork(
+    neuTakeUntil,
+    actions.kyc.kycStartWatching,
+    actions.kyc.kycStopWatching,
+    kycRefreshWidgetSaga,
+  );
+
+  // sub-sagas
+  yield fork(kycOnfidoSagas);
+  yield fork(kycIdNowSagas);
 }

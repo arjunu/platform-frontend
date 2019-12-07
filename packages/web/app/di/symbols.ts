@@ -59,4 +59,5 @@ export const symbols = makeDebugSymbols({
 
   // others
   richTextEditorUploadAdapter: Symbol(),
+  onfidoSdk: Symbol(),
 });

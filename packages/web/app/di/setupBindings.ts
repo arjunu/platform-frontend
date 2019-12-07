@@ -33,6 +33,7 @@ import { UserActivityChannelMessage } from "../lib/dependencies/broadcast-channe
 import { detectBrowser, TDetectBrowser } from "../lib/dependencies/detectBrowser";
 import { ILogger, Logger } from "../lib/dependencies/logger";
 import { NotificationCenter } from "../lib/dependencies/NotificationCenter";
+import { OnfidoSDK } from "../lib/dependencies/onfido/OnfidoSDK";
 import { IntlWrapper } from "../lib/intl/IntlWrapper";
 import { DocumentsConfidentialityAgreementsStorage } from "../lib/persistence/DocumentsConfidentialityAgreementsStorage";
 import { STORAGE_JWT_KEY } from "../lib/persistence/JwtObjectStorage";
@@ -40,10 +41,10 @@ import { ObjectStorage } from "../lib/persistence/ObjectStorage";
 import { Storage } from "../lib/persistence/Storage";
 import { USER_JWT_KEY } from "../lib/persistence/UserStorage";
 import { WalletStorage } from "../lib/persistence/WalletStorage";
-import { BrowserWalletConnector } from "../lib/web3/browser-wallet/BrowserWallet";
+import { BrowserWalletConnector } from "../lib/web3/browser-wallet/BrowserWalletConnector";
 import { ContractsService } from "../lib/web3/ContractsService";
 import { LedgerWalletConnector } from "../lib/web3/ledger-wallet/LedgerConnector";
-import { LightWalletConnector } from "../lib/web3/light-wallet/LightWallet";
+import { LightWalletConnector } from "../lib/web3/light-wallet/LightWalletConnector";
 import { IEthereumNetworkConfig } from "../lib/web3/types";
 import {
   web3BatchFactory,
@@ -122,6 +123,11 @@ export function setupBindings(config: IConfig): Container {
   container
     .bind<NotificationCenter>(symbols.notificationCenter)
     .to(NotificationCenter)
+    .inSingletonScope();
+
+  container
+    .bind<OnfidoSDK>(symbols.onfidoSdk)
+    .to(OnfidoSDK)
     .inSingletonScope();
 
   container
@@ -260,6 +266,7 @@ export const createGlobalDependencies = (container: Container) => ({
 
   cryptoRandomString: container.get<typeof cryptoRandomString>(symbols.cryptoRandomString),
   detectBrowser: container.get<TDetectBrowser>(symbols.detectBrowser),
+  onfidoSDK: container.get<OnfidoSDK>(symbols.onfidoSdk),
 
   // blockchain & wallets
   contractsService: container.get<ContractsService>(symbols.contractsService),

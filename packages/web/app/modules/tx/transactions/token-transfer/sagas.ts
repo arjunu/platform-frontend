@@ -29,7 +29,7 @@ export function* isERC223TransferSupported(
   value: string,
 ): Generator<any, any, any> {
   try {
-    const isSmartcontract = yield web3Manager.internalWeb3Adapter.isSmartContract(to);
+    const isSmartcontract = yield web3Manager.isSmartContract(to);
     if (!isSmartcontract) return false;
 
     const data = contractsService.etherToken.rawWeb3Contract.transfer[

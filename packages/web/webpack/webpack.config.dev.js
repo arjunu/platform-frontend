@@ -27,7 +27,8 @@ module.exports = merge.smart(configCommon, {
   mode: "development",
   devServer: {
     contentBase: paths.dist,
-    host: "localhost",
+    // provide `NF_SERVE_ON_NETWORK` to expose app to the local network (useful for cross device testing)
+    host: process.env.NF_SERVE_ON_NETWORK || "localhost",
     port: 9090,
     https: true,
     hot: true,
@@ -36,15 +37,17 @@ module.exports = merge.smart(configCommon, {
       disableDotRule: true,
     },
     headers: {
+      "Referrer-Policy": "strict-origin-when-cross-origin",
       "Content-Security-Policy":
         "default-src 'self'; script-src 'self' 'unsafe-eval' www.google-analytics.com/analytics.js " +
         "'unsafe-inline' *; frame-src *; " + // this should be only enabled for twitter-iframe.html
         "style-src blob: fonts.googleapis.com 'self' 'unsafe-inline' " +
         "*; " + // this should be only enabled for twitter-iframe.html
         "font-src 'self' fonts.gstatic.com; " +
+        "media-src 'self' blob:; " +
         "img-src 'self' blob: data: documents.neufund.io documents.neufund.net www.google-analytics.com stats.g.doubleclick.net " +
         "*; " + // this should be only enabled for twitter-iframe.html
-        "connect-src 'self' https://*.neufund.io wss://localhost:9090", // needed for hot reload
+        "connect-src 'self' https://*.neufund.io https://*.onfido.com wss://*.onfido.com wss://localhost:9090", // needed for hot reload
     },
     proxy: generateProxyConfig(
       `http://${targetAddress}`,

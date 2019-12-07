@@ -156,7 +156,7 @@ class BackupSeedVerify extends React.Component<IBackupSeedVerifyProps, IBackupSe
         )}
         <div className={cn(styles.row)}>
           <Button
-            layout={EButtonLayout.SECONDARY}
+            layout={EButtonLayout.GHOST}
             iconPosition={EIconPosition.ICON_BEFORE}
             svgIcon={arrowLeft}
             onClick={this.props.onBack}

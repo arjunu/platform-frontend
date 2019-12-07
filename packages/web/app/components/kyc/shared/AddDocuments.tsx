@@ -5,7 +5,6 @@ import { EKycRequestType, IKycFileInfo } from "../../../lib/api/kyc/KycApi.inter
 import { actions } from "../../../modules/actions";
 import { AppActionTypes, appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
-import { FunctionWithDeps } from "../../../utils/opaque-types/types";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
@@ -21,7 +20,7 @@ interface IDispatchProps {
 
 interface IOwnProps {
   uploadType: EKycRequestType;
-  onEnter?: AppActionTypes | FunctionWithDeps;
+  onEnter?: AppActionTypes;
   isLoading?: boolean;
 }
 

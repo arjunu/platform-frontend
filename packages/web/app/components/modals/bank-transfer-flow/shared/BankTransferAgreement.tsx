@@ -7,7 +7,7 @@ import { externalRoutes } from "../../../../config/externalRoutes";
 import * as YupTS from "../../../../lib/yup-ts.unsafe";
 import { actions } from "../../../../modules/actions";
 import { appConnect } from "../../../../store";
-import { Button, ButtonArrowRight, EButtonLayout } from "../../../shared/buttons";
+import { ButtonArrowRight, ButtonInline } from "../../../shared/buttons";
 import { ECheckboxLayout, FormDeprecated, FormFieldBoolean } from "../../../shared/forms";
 import { Heading } from "../../../shared/Heading";
 import { ExternalLink } from "../../../shared/links";
@@ -85,8 +85,7 @@ const BankTransferVerifyAgreementLayout: React.FunctionComponent<IProps> = ({
                 <FormattedMessage id="bank-verification.agreement.neur-purchase-agreement.label" />
                 <br />
                 <small>
-                  <Button
-                    layout={EButtonLayout.INLINE}
+                  <ButtonInline
                     onClick={e => {
                       // Stop propagation, otherwise checkbox is going to be automatically checked
                       e.stopPropagation();
@@ -94,7 +93,7 @@ const BankTransferVerifyAgreementLayout: React.FunctionComponent<IProps> = ({
                     }}
                   >
                     <FormattedMessage id="bank-verification.agreement.neur-purchase-agreement.download" />
-                  </Button>
+                  </ButtonInline>
                 </small>
               </>
             }

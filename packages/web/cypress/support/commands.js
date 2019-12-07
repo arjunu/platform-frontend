@@ -24,8 +24,6 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-import { tid } from "../../test/testUtils";
-
 Cypress.Commands.add("awaitedClick", { prevSubject: "element" }, (subject, waitDuration = 500) =>
   cy
     .get(subject.selector)
@@ -114,8 +112,6 @@ Cypress.Commands.add("dropFile", { prevSubject: "element" }, (subject, file) => 
     .then(file => createCustomEvent("drop", {}, [file]))
     .then(event => subject[0].dispatchEvent(event));
 });
-
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 // based on https://github.com/cypress-io/cypress/issues/136#issuecomment-342391119
 Cypress.Commands.add("iframe", selector => {

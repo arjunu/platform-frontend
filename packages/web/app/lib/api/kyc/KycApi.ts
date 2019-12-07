@@ -8,13 +8,18 @@ import {
   IKycFileInfo,
   IKycIndividualData,
   IKycLegalRepresentative,
-  IKycRequestState,
   KycFileInfoShape,
+  KycIdNowIdentificationSchema,
   KycIndividualDataSchema,
   KycLegalRepresentativeSchema,
-  KycRequestStateSchema,
+  KycOnfidoCheckRequestSchema,
+  KycOnfidoUploadRequestSchema,
   KycStatusSchema,
+  TKycBankAccount,
   TKycBankTransferPurpose,
+  TKycIdNowIdentification,
+  TKycOnfidoCheckRequest,
+  TKycOnfidoUploadRequest,
   TKycStatus,
 } from "./KycApi.interfaces";
 
@@ -24,7 +29,7 @@ const STATUS_PATH = "/status";
 
 const INDIVIDUAL_DATA_PATH = "/individual/data";
 const INDIVIDUAL_REQUEST_PATH = "/individual/request";
-const INSTANT_ID_REQUEST_PATH = "/individual/request/instant-id";
+const ID_NOW_REQUEST_PATH = "/individual/request/id-now/identification-request";
 const INDIVIDUAL_DOCUMENT_PATH = "/individual/document";
 
 const BUSINESS_REQUEST_PATH = "/business/request";
@@ -40,6 +45,9 @@ const BENEFICIAL_OWNER_DOCUMENT_PATH = "/beneficial-owner/{boid}/document";
 const BANK_ACCOUNT_PATH = "/bank-account";
 const NEUR_PURCHASE_REQUEST_PREPARATION_PATH = "/neur-purchase-request-preparation";
 const NEUR_PURCHASE_REQUEST_PATH = "/neur-purchase-requests";
+
+const ONFIDO_UPLOAD_REQUEST_PATH = "/individual/request/onfido/upload-request";
+const ONFIDO_CHECK_REQUEST_PATH = "/individual/request/onfido/check-request";
 
 export class KycApiError extends Error {}
 export class BankAccountNotFound extends KycApiError {}
@@ -107,35 +115,24 @@ export class KycApi {
   }
 
   // request
-  public async getIndividualRequest(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.get<IKycRequestState>({
-      baseUrl: BASE_PATH,
-      url: INDIVIDUAL_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
-    });
+  public async submitIndividualRequest(): Promise<TKycStatus> {
+    return await this.httpClient
+      .put<TKycStatus>({
+        baseUrl: BASE_PATH,
+        url: INDIVIDUAL_REQUEST_PATH,
+        responseSchema: KycStatusSchema,
+      })
+      .then(response => response.body);
   }
 
-  public async submitIndividualRequest(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.put<IKycRequestState>({
-      baseUrl: BASE_PATH,
-      url: INDIVIDUAL_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
-    });
-  }
-
-  public async startInstantId(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.put<IKycRequestState>({
-      baseUrl: BASE_PATH,
-      url: INSTANT_ID_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
-    });
-  }
-
-  public async cancelInstantId(): Promise<IHttpResponse<void>> {
-    return await this.httpClient.delete<void>({
-      baseUrl: BASE_PATH,
-      url: INSTANT_ID_REQUEST_PATH,
-    });
+  public startInstantId(): Promise<TKycIdNowIdentification> {
+    return this.httpClient
+      .put<TKycIdNowIdentification>({
+        baseUrl: BASE_PATH,
+        url: ID_NOW_REQUEST_PATH,
+        responseSchema: KycIdNowIdentificationSchema,
+      })
+      .then(response => response.body);
   }
 
   /**
@@ -274,28 +271,22 @@ export class KycApi {
   }
 
   // request
-  public async getBusinessRequest(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.get<IKycRequestState>({
-      baseUrl: BASE_PATH,
-      url: BUSINESS_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
-    });
-  }
-
-  public async submitBusinessRequest(): Promise<IHttpResponse<IKycRequestState>> {
-    return await this.httpClient.put<IKycRequestState>({
-      baseUrl: BASE_PATH,
-      url: BUSINESS_REQUEST_PATH,
-      responseSchema: KycRequestStateSchema,
-    });
+  public async submitBusinessRequest(): Promise<TKycStatus> {
+    return await this.httpClient
+      .put<TKycStatus>({
+        baseUrl: BASE_PATH,
+        url: BUSINESS_REQUEST_PATH,
+        responseSchema: KycStatusSchema,
+      })
+      .then(response => response.body);
   }
 
   /**
    * Bank account
    */
 
-  public async getBankAccount(): Promise<IKycRequestState> {
-    const response = await this.httpClient.get<IKycRequestState>({
+  public async getBankAccount(): Promise<TKycBankAccount> {
+    const response = await this.httpClient.get<TKycBankAccount>({
       baseUrl: BASE_PATH,
       url: BANK_ACCOUNT_PATH,
       // TODO test why `optional` is not working
@@ -322,6 +313,36 @@ export class KycApi {
         amount,
         purpose,
       },
+    });
+
+    return response.body;
+  }
+
+  /*
+   * Onfido
+   */
+
+  public async putOnfidoUploadRequest(): Promise<TKycOnfidoUploadRequest> {
+    // Trailing slash is required by the backend
+    const referrer = `${window.location.origin}/`;
+
+    const response = await this.httpClient.put<TKycOnfidoUploadRequest>({
+      baseUrl: BASE_PATH,
+      url: ONFIDO_UPLOAD_REQUEST_PATH,
+      body: {
+        referrer,
+      },
+      responseSchema: KycOnfidoUploadRequestSchema,
+    });
+
+    return response.body;
+  }
+
+  public async putOnfidoCheckRequest(): Promise<TKycOnfidoCheckRequest> {
+    const response = await this.httpClient.put<TKycOnfidoCheckRequest>({
+      baseUrl: BASE_PATH,
+      url: ONFIDO_CHECK_REQUEST_PATH,
+      responseSchema: KycOnfidoCheckRequestSchema,
     });
 
     return response.body;

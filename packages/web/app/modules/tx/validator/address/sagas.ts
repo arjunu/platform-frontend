@@ -19,9 +19,9 @@ export function* txProcessAddressValidations(
 
   const { claims, transactionsCount, addressBalance, isSmartContract } = yield all({
     claims: yield identityRegistry.getClaims(address),
-    transactionsCount: yield web3Manager.internalWeb3Adapter.getTransactionCount(address),
-    addressBalance: yield web3Manager.internalWeb3Adapter.getBalance(address),
-    isSmartContract: yield web3Manager.internalWeb3Adapter.isSmartContract(address),
+    transactionsCount: yield web3Manager.getTransactionCount(address),
+    addressBalance: yield web3Manager.getBalance(address),
+    isSmartContract: yield web3Manager.isSmartContract(address),
   });
 
   const deserializedClaims = deserializeClaims(claims);

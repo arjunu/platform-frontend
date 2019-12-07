@@ -5,7 +5,13 @@ import { branch, compose, renderNothing } from "recompose";
 import { ENEURWalletStatus } from "../../../modules/wallet/types";
 import { THocProps } from "../../../types";
 import { EColumnSpan } from "../../layouts/Container";
-import { Button, ButtonSize, EButtonLayout, EIconPosition } from "../../shared/buttons";
+import {
+  Button,
+  ButtonInline,
+  EButtonLayout,
+  EButtonSize,
+  EIconPosition,
+} from "../../shared/buttons";
 import { Panel } from "../../shared/Panel";
 import { BankAccount } from "../../wallet/BankAccount";
 import { connectLinkBankAccountComponent } from "./ConnectLinkBankAccount";
@@ -30,8 +36,8 @@ const LinkAccount: React.FunctionComponent<IComponentProps> = ({
       onClick={verifyBankAccount}
       disabled={neurStatus !== ENEURWalletStatus.ENABLED}
       data-test-id="linked-bank-account-widget.link-account"
-      layout={EButtonLayout.SECONDARY}
-      size={ButtonSize.SMALL}
+      layout={EButtonLayout.GHOST}
+      size={EButtonSize.SMALL}
       iconPosition={EIconPosition.ICON_AFTER}
       svgIcon={arrowRight}
     >
@@ -57,16 +63,16 @@ const LinkedBankAccountLayout: React.FunctionComponent<IComponentProps &
       </section>
     </div>
     {props.isBankAccountVerified && (
-      <Button
-        className={styles.linkButton}
-        onClick={props.verifyBankAccount}
-        disabled={props.neurStatus !== ENEURWalletStatus.ENABLED}
-        data-test-id="linked-bank-account-widget.link-different-account"
-        layout={EButtonLayout.INLINE}
-        size={ButtonSize.SMALL}
-      >
-        <FormattedMessage id="linked-bank-account-widget.link-different" />
-      </Button>
+      <small>
+        <ButtonInline
+          className={styles.linkButton}
+          onClick={props.verifyBankAccount}
+          disabled={props.neurStatus !== ENEURWalletStatus.ENABLED}
+          data-test-id="linked-bank-account-widget.link-different-account"
+        >
+          <FormattedMessage id="linked-bank-account-widget.link-different" />
+        </ButtonInline>
+      </small>
     )}
   </Panel>
 );

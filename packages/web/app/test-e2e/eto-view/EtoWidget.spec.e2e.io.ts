@@ -3,7 +3,7 @@ import { etherscanAddressLink } from "../../components/appRouteUtils";
 import { e2eRoutes } from "../../components/testing/e2eRoutes";
 import { TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { withParams } from "../../utils/withParams";
-import { etoFixtureAddressByName, stubWindow, tid } from "../utils";
+import { etoFixtureAddressByName, tid } from "../utils";
 import { assertIsExternalLink } from "../utils/assertions";
 import { getEto } from "../utils/userHelpers";
 
@@ -20,8 +20,6 @@ describe("Eto widget page", () => {
   it("Basic widget", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInSetupState");
     getEto(ETO_ID).then((eto: TEtoSpecsData) => {
-      stubWindow("windowOpen");
-
       cy.visit(withParams(e2eRoutes.embeddedWidget, { previewCode: eto.previewCode }));
 
       cy.iframe("iframe").within($iframe => {

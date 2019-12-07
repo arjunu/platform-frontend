@@ -115,6 +115,13 @@ export type RequiredNonNullable<T> = { [P in keyof T]-?: NonNullable<T[P]> };
 export type RequiredByKeys<T, K extends keyof T> = RequiredNonNullable<Pick<T, K>> & OmitKeys<T, K>;
 
 /**
+ * In T, mark as partial properties from K
+ * @example
+ * PartialByKeys<{ foo: boolean, bar: string }, "foo"> // { foo?: boolean, bar: string }
+ */
+export type PartialByKeys<T, K extends keyof T> = Partial<Pick<T, K>> & OmitKeys<T, K>;
+
+/**
  * Overwrites properties from T1 with one from T2
  * @example
  * Overwrite<{ foo: boolean, bar: string }, { foo: number }> // { foo: number, bar: string }
@@ -134,6 +141,13 @@ export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
  * XOR<{ foo: boolean}, { bar: number }> // { foo: boolean, bar?: never } | { foo?: never, bar: number }
  */
 export type XOR<T extends object, U extends object> = (Without<T, U> & U) | (Without<U, T> & T);
+
+/**
+ * Get object value types
+ * @example
+ * ValueOf<{ foo: boolean, bar: string }> // boolean | string
+ */
+export type Values<T> = T[keyof T];
 
 // TODO: Remove `any` and provide correct types everywhere
 export type TFormikConnect<Values = any> = {

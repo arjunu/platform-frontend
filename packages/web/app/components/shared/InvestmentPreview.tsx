@@ -149,14 +149,14 @@ export const InvestmentPreview: React.FunctionComponent<IProps> = ({
                 }}
               />
             </span>
-            <Button layout={EButtonLayout.SECONDARY} onClick={() => handleEmailSend}>
+            <Button layout={EButtonLayout.GHOST} onClick={() => handleEmailSend}>
               <FormattedMessage id="shared-component.investment-preview.get-notification" />
             </Button>
           </>
         )}
       </div>
     </div>
-    <ButtonLink to={linkToDetails} layout={EButtonLayout.SECONDARY}>
+    <ButtonLink to={linkToDetails} layout={EButtonLayout.GHOST}>
       <FormattedMessage id="shared-component.investment-preview.details" />
     </ButtonLink>
   </article>

@@ -1,11 +1,17 @@
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
-import { compose } from "redux";
+import { compose } from "recompose";
 
+import { symbols } from "../../../di/symbols";
 import { EKycRequestType } from "../../../lib/api/kyc/KycApi.interfaces";
+import { OnfidoSDK } from "../../../lib/dependencies/onfido/OnfidoSDK";
 import { actions } from "../../../modules/actions";
+import { ENotificationText, ENotificationType } from "../../../modules/notifications/types";
 import { appConnect } from "../../../store";
+import { onLeaveAction } from "../../../utils/OnLeaveAction";
 import { Button, EIconPosition } from "../../shared/buttons";
+import { withDependencies } from "../../shared/hocs/withDependencies";
+import { Notification } from "../../shared/notification-widget/Notification";
 import { KycPanel } from "../KycPanel";
 import { kycRoutes } from "../routes";
 
@@ -36,7 +42,8 @@ export const personalSteps = [
 interface IStateProps {}
 
 interface IDispatchProps {
-  onStartInstantId: () => void;
+  onStartIdNow: () => void;
+  onStartOnfido: () => void;
   onManualVerification: () => void;
 }
 
@@ -44,9 +51,12 @@ interface IProps {
   layout: EKycRequestType;
 }
 
+type TRenderPropsProp = { onfidoSdk: OnfidoSDK };
+
 export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<IProps &
   IStateProps &
-  IDispatchProps> = ({ ...props }) => (
+  IDispatchProps &
+  TRenderPropsProp> = ({ onfidoSdk, ...props }) => (
   <KycPanel
     title={<FormattedMessage id="kyc.panel.individual-verification" />}
     steps={personalSteps}
@@ -71,28 +81,59 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
         <FormattedMessage id="kyc.personal.instant-id.go-to-manual-verification" />
       </Button>
     </div>
+
     <div className={styles.description} data-test-id="kyc-panel-description">
       <FormattedHTMLMessage tagName="span" id="kyc.personal.instant-id.description" />
     </div>
     <img className={styles.image} src={idImage} alt="id now" />
     <div className="mb-5 text-center">
       <Button
-        onClick={props.onStartInstantId}
+        onClick={props.onStartIdNow}
         svgIcon={linkOutIcon}
         iconPosition={EIconPosition.ICON_AFTER}
-        data-test-id="kyc-go-to-outsourced-verification"
+        data-test-id="kyc-go-to-id-now-verification"
       >
-        <FormattedMessage id="kyc.personal.instant-id.go-to-video-verification" />
+        <FormattedMessage id="kyc.personal.instant-id.go-to-id-now-verification" />
+      </Button>
+    </div>
+
+    {!onfidoSdk.isSupported() && (
+      <Notification
+        text={ENotificationText.NOT_SUPPORTED_ONFIDO_BROWSER}
+        type={ENotificationType.WARNING}
+        className="mb-4"
+      />
+    )}
+
+    <div className="mb-5 text-center">
+      <Button
+        disabled={!onfidoSdk.isSupported()}
+        onClick={props.onStartOnfido}
+        svgIcon={linkOutIcon}
+        iconPosition={EIconPosition.ICON_AFTER}
+        data-test-id="kyc-go-to-onfido-verification"
+      >
+        <FormattedMessage id="kyc.personal.instant-id.go-to-onfido-verification" />
       </Button>
     </div>
   </KycPanel>
 );
 
-export const KycPersonalDocumentVerification = compose<React.FunctionComponent>(
+export const KycPersonalDocumentVerification = compose<
+  IProps & IStateProps & IDispatchProps & TRenderPropsProp,
+  {}
+>(
   appConnect<IStateProps, IDispatchProps>({
     dispatchToProps: dispatch => ({
-      onStartInstantId: () => dispatch(actions.kyc.kycStartInstantId()),
+      onStartIdNow: () => dispatch(actions.kyc.startIdNowRequest()),
+      onStartOnfido: () => dispatch(actions.kyc.startOnfidoRequest()),
       onManualVerification: () => dispatch(actions.routing.goToKYCIndividualUpload()),
     }),
+  }),
+  withDependencies<TRenderPropsProp>({ onfidoSdk: symbols.onfidoSdk }),
+  onLeaveAction({
+    actionCreator: d => {
+      d(actions.kyc.stopOnfidoRequest());
+    },
   }),
 )(KycPersonalDocumentVerificationComponent);

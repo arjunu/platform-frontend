@@ -237,7 +237,7 @@ function* start(
 
   yield put(actions.investmentFlow.resetInvestment());
   yield put(actions.investmentFlow.setEtoId(etoId));
-  yield put(actions.kyc.kycLoadClientData());
+  yield put(actions.kyc.kycLoadStatusAndData());
   yield put(actions.investorEtoTicket.loadEtoInvestorTicket(eto));
 
   yield put(actions.investorEtoTicket.loadTokenPersonalDiscount(eto));

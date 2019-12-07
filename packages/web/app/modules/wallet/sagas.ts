@@ -68,7 +68,7 @@ export async function loadWalletDataAsync(
       await promiseAll({
         etherTokenBalance: contractsService.etherToken.balanceOf(ethAddress),
         euroTokenBalance: contractsService.euroToken.balanceOf(ethAddress),
-        etherBalance: web3Manager.internalWeb3Adapter.getBalance(ethAddress),
+        etherBalance: web3Manager.getBalance(ethAddress),
         neuBalance: contractsService.neumark.balanceOf(ethAddress),
       }),
     ),

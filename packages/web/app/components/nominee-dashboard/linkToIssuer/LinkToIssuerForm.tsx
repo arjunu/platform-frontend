@@ -8,7 +8,7 @@ import { appConnect } from "../../../store";
 import { TDataTestId } from "../../../types";
 import { EKeys } from "../../../utils/enums/keysEnum";
 import { IIntlProps, injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
-import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { FormError } from "../../shared/forms/fields/FormFieldError";
 import { EMaskedFormError, getMessageTranslation } from "../../translatedMessages/messages";
 import { createMessage } from "../../translatedMessages/utils";
@@ -118,7 +118,6 @@ export class NomineeLinkRequestFormBase extends React.Component<
         )}
         <Button
           layout={EButtonLayout.PRIMARY}
-          theme={EButtonTheme.BRAND}
           onClick={this.onSubmit}
           disabled={!this.state.isValid || this.props.isLoading}
           data-test-id="nominee-flow.link-with-issuer-submit"

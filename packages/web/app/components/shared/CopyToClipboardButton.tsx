@@ -1,8 +1,9 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { TTranslatedString } from "../../types";
-import { ButtonIcon } from "./buttons";
+import { CommonHtmlProps, TDataTestId, TTranslatedString } from "../../types";
+import { Button } from "./buttons";
+import { EButtonLayout, EButtonSize, EButtonWidth } from "./buttons/Button";
 import { useCopyClipboard } from "./hooks/useCopyToClipboard";
 
 import * as clipboardIcon from "../../assets/img/inline_icons/icon-clipboard.svg";
@@ -11,11 +12,10 @@ interface IProps {
   value: string;
   alt?: TTranslatedString;
   message?: TTranslatedString;
-  className?: string;
-  "data-test-id"?: string;
+  size?: EButtonSize;
 }
 
-const CopyToClipboardButton: React.FunctionComponent<IProps> = ({
+const CopyToClipboardButton: React.FunctionComponent<IProps & TDataTestId & CommonHtmlProps> = ({
   className,
   alt,
   value,
@@ -24,10 +24,14 @@ const CopyToClipboardButton: React.FunctionComponent<IProps> = ({
   const [, copyToClipboard] = useCopyClipboard();
 
   return (
-    <ButtonIcon
+    <Button
       className={className}
+      layout={EButtonLayout.GHOST}
       svgIcon={clipboardIcon}
-      alt={alt || <FormattedMessage id="shared-component.copy-to-clipboard.alt" />}
+      width={EButtonWidth.NO_PADDING}
+      iconProps={{
+        alt: alt || <FormattedMessage id="shared-component.copy-to-clipboard.alt" />,
+      }}
       onClick={() => copyToClipboard(value, { message })}
     />
   );

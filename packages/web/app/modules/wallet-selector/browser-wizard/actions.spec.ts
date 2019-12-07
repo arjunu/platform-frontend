@@ -8,9 +8,9 @@ import { createMessage } from "../../../components/translatedMessages/utils";
 import { noopLogger } from "../../../lib/dependencies/logger";
 import {
   BrowserWallet,
-  BrowserWalletConnector,
   BrowserWalletLockedError,
 } from "../../../lib/web3/browser-wallet/BrowserWallet";
+import { BrowserWalletConnector } from "../../../lib/web3/browser-wallet/BrowserWalletConnector";
 import { Web3Manager } from "../../../lib/web3/Web3Manager/Web3Manager";
 import { IAppState } from "../../../store";
 import { actions } from "../../actions";

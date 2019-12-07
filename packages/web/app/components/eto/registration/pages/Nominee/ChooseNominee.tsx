@@ -5,7 +5,7 @@ import { branch, compose, renderComponent } from "recompose";
 import { actions } from "../../../../../modules/actions";
 import { INomineeRequest } from "../../../../../modules/nominee-flow/types";
 import { appConnect } from "../../../../../store";
-import { Button, EButtonLayout, EButtonTheme } from "../../../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../../../shared/buttons/Button";
 import { FormHighlightGroup } from "../../../../shared/forms/FormHighlightGroup";
 import { TWithNomineeProps, withNomineeRequests } from "../../../shared/hocs/withNomineeRequests";
 import { Section } from "../../Shared";
@@ -41,14 +41,13 @@ const FullButtonBlock: React.FunctionComponent<IFullButtonBlockProps & IDispatch
   <div className={styles.buttonBlock}>
     <Button
       layout={EButtonLayout.PRIMARY}
-      theme={EButtonTheme.BRAND}
       onClick={() => acceptNominee(nomineeId)}
       data-test-id="eto-nominee-accept"
     >
       <FormattedMessage id="eto.form.section.eto-nominee.nominee-request.accept" />
     </Button>
     <Button
-      layout={EButtonLayout.PRIMARY}
+      layout={EButtonLayout.OUTLINE}
       onClick={() => rejectNominee(nomineeId)}
       data-test-id="eto-nominee-reject"
     >
@@ -65,7 +64,6 @@ const OneButtonBlock: React.FunctionComponent<IOneButtonBlockProps> = ({
     <Button
       layout={EButtonLayout.PRIMARY}
       onClick={() => acceptNominee(nomineeId)}
-      theme={EButtonTheme.BRAND}
       data-test-id="eto-nominee-choose"
     >
       <FormattedMessage id="eto.form.section.eto-nominee.nominee-request.choose" />

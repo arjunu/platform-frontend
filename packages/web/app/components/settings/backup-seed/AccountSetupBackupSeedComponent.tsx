@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { Button, EButtonLayout, EButtonTheme } from "../../shared/buttons/Button";
+import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { connectBackupSeedWidget } from "./ConnectSetupWidget";
 
 import * as styles from "./AccountSetupBackupSeedComponent.module.scss";
@@ -29,7 +29,6 @@ export const AccountSetupBackupWidgetLayout: React.FunctionComponent<IStateProps
 
     <Button
       onClick={startBackupProcess}
-      theme={EButtonTheme.BRAND}
       layout={EButtonLayout.PRIMARY}
       data-test-id="backup-seed-widget-link-button"
     >

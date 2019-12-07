@@ -17,6 +17,7 @@ import { invariant } from "../../../../../utils/invariant";
 import { appRoutes } from "../../../../appRoutes";
 import { etoPublicViewLink } from "../../../../appRouteUtils";
 import { Button, ButtonLink } from "../../../../shared/buttons";
+import { EButtonLayout } from "../../../../shared/buttons/Button";
 import { EndTimeWidget } from "../../shared/EndTimeWidget";
 import { InvestmentStatusWidget } from "./InvestmentStatusWidget";
 import { USInvestorMessage } from "./USInvestorMessage";
@@ -77,7 +78,11 @@ const InvestNowButton: React.FunctionComponent<TInvestWidgetProps> = ({
     // investor can either be allowed or not allowed to invest
     if (isInvestor) {
       return isAllowedToInvest ? (
-        <Button onClick={startInvestmentFlow} data-test-id={`eto-invest-now-button-${eto.etoId}`}>
+        <Button
+          layout={EButtonLayout.PRIMARY}
+          onClick={startInvestmentFlow}
+          data-test-id={`eto-invest-now-button-${eto.etoId}`}
+        >
           <FormattedMessage id="shared-component.eto-overview.invest-now" />
         </Button>
       ) : (

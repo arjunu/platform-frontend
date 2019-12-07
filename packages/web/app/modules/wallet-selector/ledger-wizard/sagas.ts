@@ -6,6 +6,7 @@ import { tripleZip } from "../../../../typings/modifications";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { LedgerNotAvailableError } from "../../../lib/web3/ledger-wallet/errors";
 import { IAppState } from "../../../store";
+import { toEthereumAddress } from "../../../utils/opaque-types/utils";
 import { actions, TAction, TActionFromCreator } from "../../actions";
 import { neuTakeEvery, neuTakeLatestUntil } from "../../sagasUtils";
 import { mapLedgerErrorToErrorMessage } from "./errors";
@@ -50,13 +51,11 @@ export function* loadLedgerAccounts({
 
     const derivationPathsArray = toPairs<string>(derivationPathToAddressMap).map(pair => ({
       derivationPath: pair[0],
-      address: pair[1],
+      address: toEthereumAddress(pair[1]),
     }));
 
     const balancesETH: string[] = yield Promise.all(
-      derivationPathsArray.map(dp =>
-        web3Manager.internalWeb3Adapter.getBalance(dp.address).then(bn => bn.toString()),
-      ),
+      derivationPathsArray.map(dp => web3Manager.getBalance(dp.address).then(bn => bn.toString())),
     );
 
     const balancesNEU: string[] = yield Promise.all(

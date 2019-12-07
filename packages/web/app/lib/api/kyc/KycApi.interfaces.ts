@@ -17,6 +17,18 @@ export enum EKycRequestType {
   US_ACCREDITATION = "us_accreditation",
 }
 
+export type TInstantIdNoneProvider = "none";
+
+export enum EKycInstantIdProvider {
+  ID_NOW = "id_now",
+  ONFIDO = "onfido",
+}
+
+export enum EKycInstantIdStatus {
+  DRAFT = "draft",
+  PENDING = "pending",
+}
+
 export interface IKycPerson {
   firstName?: string;
   lastName?: string;
@@ -74,15 +86,22 @@ const KycIndividualDataShape =
 
 export const KycStatusSchema = YupTS.object({
   inProhibitedRegion: YupTS.boolean(),
-  instantIdProvider: YupTS.string(),
-  originCountry: YupTS.string<ECountries>(),
-  recommendedInstantIdProvider: YupTS.string(),
-  status: YupTS.string(),
-  supportedInstantIdProviders: YupTS.array(YupTS.string()),
+  instantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
+  instantIdStatus: YupTS.string<EKycInstantIdStatus>().optional(),
+  originCountry: YupTS.string<ECountries>().optional(),
+  recommendedInstantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
+  status: YupTS.string<EKycRequestStatus>(),
+  supportedInstantIdProviders: YupTS.array(YupTS.string<EKycInstantIdProvider>()),
   type: YupTS.string<EKycRequestType>(),
 });
 
 export type TKycStatus = YupTS.TypeOf<typeof KycStatusSchema>;
+
+export const KycIdNowIdentificationSchema = YupTS.object({
+  redirectUrl: YupTS.string(),
+});
+
+export type TKycIdNowIdentification = YupTS.TypeOf<typeof KycIdNowIdentificationSchema>;
 
 export const KycIndividualDataSchema = KycPersonSchema.concat(
   Yup.object().shape(KycIndividualDataShape),
@@ -165,29 +184,6 @@ export enum EKycRequestStatus {
   IGNORED = "ignored",
 }
 
-export enum ERequestOutsourcedStatus {
-  STARTED = "started",
-  SUCCESS = "success",
-  SUCCESS_DATA_CHANGED = "success_data_changed",
-  REVIEW_PENDING = "review_pending",
-  ABORTED = "aborted",
-  CANCELED = "canceled",
-  OTHER = "other",
-}
-
-export interface IKycRequestState {
-  status: EKycRequestStatus;
-  outsourcedStatus?: ERequestOutsourcedStatus;
-  redirectUrl?: string;
-}
-
-export const KycRequestStateSchema = Yup.object().shape({
-  status: Yup.string().required("Request state is required"),
-  outsourcedStatus: Yup.string(),
-  redirectUrl: Yup.string(),
-  type: Yup.string(),
-});
-
 export enum EKycBusinessType {
   CORPORATE = "corporate",
   SMALL = "small",
@@ -225,3 +221,16 @@ export type KycBankQuintessenceBankAccount = YupTS.TypeOf<
 >;
 export type TKycBankAccount = YupTS.TypeOf<typeof KycBankAccountSchema>;
 export type TKycBankTransferPurpose = YupTS.TypeOf<typeof KycBankTransferPurposeSchema>;
+
+export const KycOnfidoUploadRequestSchema = YupTS.object({
+  webtoken: YupTS.string(),
+});
+
+export type TKycOnfidoUploadRequest = YupTS.TypeOf<typeof KycOnfidoUploadRequestSchema>;
+
+export const KycOnfidoCheckRequestSchema = YupTS.object({
+  result: YupTS.string().optional(),
+  status: YupTS.string(),
+});
+
+export type TKycOnfidoCheckRequest = YupTS.TypeOf<typeof KycOnfidoCheckRequestSchema>;

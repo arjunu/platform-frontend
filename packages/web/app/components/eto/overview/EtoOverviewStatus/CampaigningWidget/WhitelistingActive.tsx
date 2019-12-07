@@ -105,7 +105,7 @@ export const WhitelistingActive: React.FunctionComponent<TWhitelistingActiveProp
     </div>
     {isInvestor && !isVerifiedInvestor && (
       <ButtonLink
-        innerClassName={styles.etoOverviewStatusButton}
+        className={styles.etoOverviewStatusButton}
         to={appRoutes.profile}
         data-test-id="eto-overview-settings-update-required-to-invest"
       >

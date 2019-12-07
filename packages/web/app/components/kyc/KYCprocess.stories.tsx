@@ -1,3 +1,4 @@
+import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -6,6 +7,7 @@ import {
   EKycRequestType,
   IKycIndividualData,
 } from "../../lib/api/kyc/KycApi.interfaces";
+import { OnfidoSDK } from "../../lib/dependencies/onfido/OnfidoSDK";
 import { dummyIntl } from "../../utils/injectIntlHelpers.fixtures";
 import { KYCBeneficialOwnerComponent } from "./business/BeneficialOwner.unsafe";
 import { KYCBeneficialOwnersComponent } from "./business/BeneficialOwners";
@@ -51,14 +53,27 @@ storiesOf("KYC/process", module).add("personal/start", () => {
   );
 });
 
-storiesOf("KYC/process", module).add("personal/documentVerification", () => {
-  const props = {
-    onStartInstantId: () => {},
-    onManualVerification: () => {},
-    layout: EKycRequestType.INDIVIDUAL,
-  };
-  return <KycPersonalDocumentVerificationComponent {...props} />;
-});
+storiesOf("KYC/process", module)
+  .add("personal/documentVerification onfido supported", () => {
+    const props = {
+      onStartIdNow: action("onStartIdNow"),
+      onStartOnfido: action("onStartOnfido"),
+      onManualVerification: action("onManualVerification"),
+      layout: EKycRequestType.INDIVIDUAL,
+      onfidoSdk: { isSupported: () => true } as OnfidoSDK,
+    };
+    return <KycPersonalDocumentVerificationComponent {...props} />;
+  })
+  .add("personal/documentVerification onfido not supported", () => {
+    const props = {
+      onStartIdNow: action("onStartIdNow"),
+      onStartOnfido: action("onStartOnfido"),
+      onManualVerification: action("onManualVerification"),
+      layout: EKycRequestType.INDIVIDUAL,
+      onfidoSdk: { isSupported: () => false } as OnfidoSDK,
+    };
+    return <KycPersonalDocumentVerificationComponent {...props} />;
+  });
 
 storiesOf("KYC/process", module).add("personal/uploads", () => {
   const props = {

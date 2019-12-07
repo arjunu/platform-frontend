@@ -1,7 +1,8 @@
 import * as React from "react";
 
 import { TDataTestId, TTranslatedString } from "../../types";
-import { Button, ButtonTextPosition, EButtonLayout } from "./buttons";
+import { Button, EButtonLayout } from "./buttons";
+import { ButtonInline } from "./buttons/ButtonInline";
 import { Document } from "./Document";
 import { ExternalLink } from "./links";
 
@@ -47,17 +48,22 @@ const DocumentButton: React.FunctionComponent<IDocumentButtonExternalProps & TDa
   onClick,
   title,
   altIcon,
-  layout = EButtonLayout.INLINE,
+  layout,
   ["data-test-id"]: dataTestId,
-}) => (
-  <Button
-    layout={layout}
-    onClick={onClick}
-    textPosition={ButtonTextPosition.LEFT}
-    data-test-id={dataTestId}
-  >
-    <DocumentLabel title={title} altIcon={altIcon} />
-  </Button>
-);
+}) => {
+  if (layout) {
+    return (
+      <Button layout={layout} onClick={onClick} data-test-id={dataTestId}>
+        <DocumentLabel title={title} altIcon={altIcon} />
+      </Button>
+    );
+  } else {
+    return (
+      <ButtonInline onClick={onClick} data-test-id={dataTestId}>
+        <DocumentLabel title={title} altIcon={altIcon} />
+      </ButtonInline>
+    );
+  }
+};
 
 export { DocumentLink, DocumentButton, DocumentLabel };

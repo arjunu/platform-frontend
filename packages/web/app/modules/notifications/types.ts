@@ -10,6 +10,7 @@ export enum ENotificationText {
   COMPLETE_UPDATE_ACCOUNT = "completeUpdateAccount",
   AUTH_SESSION_TIMEOUT = "authSessionTimeout",
   NOT_ACCREDITED_INVESTOR = "notAccreditedInvestor",
+  NOT_SUPPORTED_ONFIDO_BROWSER = "notSupportedOnfidoBrowser",
 }
 
 export interface INotification {
