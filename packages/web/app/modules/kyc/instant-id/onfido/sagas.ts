@@ -12,7 +12,10 @@ type TChannelTypes = {
   type: EOnfidoSDKEvents;
 };
 
-function* initOnfidoSdk({ onfidoSDK, apiKycService }: TGlobalDependencies): Iterator<any> {
+function* initOnfidoSdk({
+  onfidoSDK,
+  apiKycService,
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield put(actions.fullPageLoading.showFullPageLoading());
 
@@ -34,7 +37,7 @@ function* initOnfidoSdk({ onfidoSDK, apiKycService }: TGlobalDependencies): Iter
   }
 }
 
-function* checkOnfidoRequest({ apiKycService }: TGlobalDependencies): Iterator<any> {
+function* checkOnfidoRequest({ apiKycService }: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield put(actions.fullPageLoading.showFullPageLoading());
 
@@ -47,7 +50,7 @@ function* checkOnfidoRequest({ apiKycService }: TGlobalDependencies): Iterator<a
   }
 }
 
-function* handleOnfidoSdkEvents({ onfidoSDK }: TGlobalDependencies): Iterator<any> {
+function* handleOnfidoSdkEvents({ onfidoSDK }: TGlobalDependencies): Generator<any, any, any> {
   const channel = eventChannel<TChannelTypes>(emit => {
     onfidoSDK.on(EOnfidoSDKEvents.DISCARDED, () => {
       emit({ type: EOnfidoSDKEvents.DISCARDED });
@@ -89,7 +92,7 @@ function* handleOnfidoSdkEvents({ onfidoSDK }: TGlobalDependencies): Iterator<an
   }
 }
 
-function* startOnfidoRequest({ logger }: TGlobalDependencies): Iterator<any> {
+function* startOnfidoRequest({ logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield neuCall(initOnfidoSdk);
 
@@ -101,7 +104,7 @@ function* startOnfidoRequest({ logger }: TGlobalDependencies): Iterator<any> {
   }
 }
 
-export function* kycOnfidoSagas(): Iterator<any> {
+export function* kycOnfidoSagas(): Generator<any, any, any> {
   yield fork(
     neuTakeUntil,
     actions.kyc.startOnfidoRequest,
