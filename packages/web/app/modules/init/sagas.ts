@@ -34,7 +34,9 @@ function* initSmartcontracts({ web3Manager, logger }: TGlobalDependencies): any 
   }
 }
 
-function* makeSureWalletMetaDataExists({ walletStorage }: TGlobalDependencies): Generator<any,any,any> {
+function* makeSureWalletMetaDataExists({
+  walletStorage,
+}: TGlobalDependencies): Generator<any, any, any> {
   const metadata = walletStorage.get();
   if (metadata === undefined) {
     throw new WalletMetadataNotFoundError();
@@ -83,7 +85,7 @@ function* initApp({ logger }: TGlobalDependencies): any {
 export function* initStartSaga(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.init.start>,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   const { initType } = action.payload;
 
   switch (initType) {
@@ -113,26 +115,26 @@ export function* initSmartcontractsOnce(): any {
   yield put(actions.init.start(EInitType.SMART_CONTRACTS_INIT));
 }
 
-export function* waitUntilSmartContractsAreInitialized(): Generator<any,any,any> {
+export function* waitUntilSmartContractsAreInitialized(): Generator<any, any, any> {
   const isSmartContractsInitialized = yield select(selectIsSmartContractInitDone);
 
   if (!isSmartContractsInitialized) {
-    yield neuTakeOnly(actions.init.done, { initType: EInitType.SMART_CONTRACTS_INIT });
+    yield neuTakeOnly(actions.init.done, { initType: EInitType.SMART_CONTRACTS_INIT as any });
   }
   return;
 }
 
-export function* waitForAppInit(): Generator<any,any,any> {
+export function* waitForAppInit(): Generator<any, any, any> {
   let appIsReady: boolean = yield select(selectIsAppReady);
 
   if (!appIsReady) {
-    yield neuTakeOnly(actions.init.done, { initType: EInitType.APP_INIT });
+    yield neuTakeOnly(actions.init.done, { initType: EInitType.APP_INIT as any });
     appIsReady = true;
   }
   return appIsReady;
 }
 
-export const initSagas = function*(): Generator<any,any,any> {
+export const initSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeEvery, "INIT_START", initStartSaga);
   // Smart Contracts are only initialized once during the whole life cycle of the app
   yield fork(initSmartcontractsOnce);

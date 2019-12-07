@@ -1,6 +1,5 @@
 import { expectSaga } from "redux-saga-test-plan";
-import { delay } from "redux-saga/effects";
-import { cancelled, put } from "redux-saga/effects";
+import { cancelled, delay, put } from "redux-saga/effects";
 
 import { TPattern } from "./actions";
 import { neuRepeatIf, neuRestartIf, neuTakeOnly, neuTakeUntil } from "./sagasUtils";
@@ -49,7 +48,7 @@ describe("sagasUtils", () => {
     it("should return action on payload match", () => {
       const action = { type: "INIT_START", payload: { init: "app", foo: "bar" } };
 
-      return expectSaga(neuTakeOnly, "INIT_START", { init: "app" } as any)
+      return (expectSaga(neuTakeOnly as any, "INIT_START", { init: "app" } as any) as any)
         .dispatch(action)
         .returns(action)
         .silentRun();
@@ -58,7 +57,7 @@ describe("sagasUtils", () => {
     it("should try to take action again when payload doesn't match", () => {
       const action = { type: "INIT_START", payload: { init: "smartcontracts" } };
 
-      return expectSaga(neuTakeOnly, "INIT_START", { init: "app" } as any)
+      return (expectSaga(neuTakeOnly as any, "INIT_START", { init: "app" } as any) as any)
         .dispatch(action)
         .take("INIT_START")
         .take("INIT_START")

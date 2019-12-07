@@ -56,7 +56,7 @@ export class WalletLightSeedRecoveryComponent extends React.Component<
         clearable={true}
         matchPos="start"
         matchProp="value"
-        ref={(ref: VirtualizedSelect | null) => (this.verificationSelectRefs[index] = ref)}
+        ref={((ref: VirtualizedSelect | null) => (this.verificationSelectRefs[index] = ref)) as any}
         value={this.state.words[wordNumber]}
         onChange={this.updateValueFactory(wordNumber, index)}
         placeholder={(wordNumber + 1).toString(10) + ". Word"}
