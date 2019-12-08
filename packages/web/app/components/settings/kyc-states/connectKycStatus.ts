@@ -5,7 +5,6 @@ import { EKycInstantIdStatus, EKycRequestStatus } from "../../../lib/api/kyc/Kyc
 import { actions } from "../../../modules/actions";
 import {
   selectBackupCodesVerified,
-  selectIsRestrictedInvestor,
   selectIsUserEmailVerified,
 } from "../../../modules/auth/selectors";
 import {
@@ -25,7 +24,6 @@ interface IStateProps {
   isUserEmailVerified: boolean;
   isLoading: boolean;
   isKycFlowBlockedByRegion: boolean;
-  isRestrictedCountryInvestor: boolean;
   backupCodesVerified: boolean;
   error: string | undefined;
 }
@@ -48,7 +46,6 @@ const connectKycStatusWidget = () => (
         instantIdStatus: selectKycInstantIdStatus(state),
         isLoading: selectKycIsInitialLoading(state),
         isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
-        isRestrictedCountryInvestor: selectIsRestrictedInvestor(state),
         error: selectWidgetError(state.kyc),
       }),
       dispatchToProps: dispatch => ({
