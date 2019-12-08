@@ -163,7 +163,6 @@ const KYCForm: React.FunctionComponent<TProps> = ({
                 type={ENotificationType.WARNING}
               />
             )}
-            <p>{JSON.stringify({ isSaving: props.isSavingForm })}</p>
             {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
               <KYCAddDocuments
                 onEnter={actions.kyc.kycSubmitPersonalDataNoRedirect(boolify(values))}
