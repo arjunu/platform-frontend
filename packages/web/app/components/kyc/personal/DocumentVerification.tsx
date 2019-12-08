@@ -121,7 +121,7 @@ const selectProviderInfoText = (
           id="notifications.id-now-started"
           values={{
             link: (
-              <ExternalLink href={idNowRedirectUrl}>
+              <ExternalLink data-test-id="kyc-id-now-started" href={idNowRedirectUrl}>
                 <FormattedMessage id="kyc.request-state.click-here-to-continue" />
               </ExternalLink>
             ),

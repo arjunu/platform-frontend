@@ -22,7 +22,7 @@ const assertOutsourcedVerification = () => {
 
   cy.get("@windowOpen").should("be.calledWithMatch", ID_NOW_EXTERNAL_MOCK, "_blank");
 
-  cy.get(tid("kyc-panel-outsourced")).should("exist");
+  cy.get(tid("kyc-id-now-started")).should("exist");
 };
 
 const assertOutsourcedKycWidgetStatus = () => {
