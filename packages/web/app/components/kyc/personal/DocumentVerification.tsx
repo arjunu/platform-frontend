@@ -24,6 +24,7 @@ import { onLeaveAction } from "../../../utils/OnLeaveAction";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import { withDependencies } from "../../shared/hocs/withDependencies";
+import { ExternalLink } from "../../shared/links/ExternalLink";
 import { KycStep } from "../shared/KycStep";
 import { VerificationMethod } from "../shared/VerificationMethod";
 import {
@@ -120,9 +121,9 @@ const selectProviderInfoText = (
           id="notifications.id-now-started"
           values={{
             link: (
-              <a href={idNowRedirectUrl}>
+              <ExternalLink href={idNowRedirectUrl}>
                 <FormattedMessage id="kyc.request-state.click-here-to-continue" />
-              </a>
+              </ExternalLink>
             ),
           }}
         />
