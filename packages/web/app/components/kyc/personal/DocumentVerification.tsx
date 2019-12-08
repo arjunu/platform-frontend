@@ -21,7 +21,7 @@ import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
 import { assertNever } from "../../../utils/assertNever";
 import { onLeaveAction } from "../../../utils/OnLeaveAction";
-import { Button, EButtonLayout } from "../../shared/buttons/Button";
+import { Button, EButtonLayout, EButtonSize } from "../../shared/buttons/Button";
 import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import { withDependencies } from "../../shared/hocs/withDependencies";
 import { ExternalLink } from "../../shared/links/ExternalLink";
@@ -226,6 +226,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
       <ButtonGroup className={styles.buttons}>
         <Button
           layout={EButtonLayout.OUTLINE}
+          size={EButtonSize.HUGE}
           className={styles.button}
           data-test-id="kyc-personal-verification-go-back"
           onClick={goBack}
@@ -237,6 +238,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
           <Button
             disabled={currentProvider !== NONE_KYC_INSTANTID_PROVIDER}
             layout={EButtonLayout.GHOST}
+            size={EButtonSize.HUGE}
             className={styles.button}
             data-test-id="kyc-go-to-manual-verification"
             onClick={dispatchers.onManualVerification}

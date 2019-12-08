@@ -22,10 +22,10 @@ $scale-factor: .54;
     height: 80px;
     padding: 0;
     position: relative;
-    background-color: #fff;
+    background-color: transparent;
     width: 80px;
     &:after, &:before {
-      background: #fff;
+      background-color: transparent;
       content: '';
       height: 120px;
       position: absolute;
@@ -61,7 +61,7 @@ $scale-factor: .54;
       z-index: 2;
     }
     &-fix {
-      background-color: #fff;
+      background-color: transparent;
       height: 90px;
       left: 28px;
       position: absolute;

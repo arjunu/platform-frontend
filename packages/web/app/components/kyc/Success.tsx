@@ -6,7 +6,7 @@ import { actions } from "../../modules/actions";
 import { appConnect } from "../../store";
 import { withHeaderButton } from "../../utils/withHeaderButton";
 import { withProgress } from "../../utils/withProgress";
-import { Button, EButtonLayout } from "../shared/buttons/Button";
+import { Button, EButtonLayout, EButtonSize } from "../shared/buttons/Button";
 import { ButtonGroup } from "../shared/buttons/ButtonGroup";
 import { SuccessTick } from "../shared/SuccessTick";
 
@@ -33,6 +33,7 @@ const KycSuccessLayout: React.FunctionComponent<TDispatchProps> = ({
     <ButtonGroup className={styles.buttons} data-test-id="kyc-success">
       <Button
         layout={EButtonLayout.PRIMARY}
+        size={EButtonSize.HUGE}
         className={styles.button}
         data-test-id="kyc-success-go-to-dashboard"
         onClick={goToDashboard}
@@ -41,6 +42,7 @@ const KycSuccessLayout: React.FunctionComponent<TDispatchProps> = ({
       </Button>
       <Button
         layout={EButtonLayout.GHOST}
+        size={EButtonSize.HUGE}
         className={styles.button}
         data-test-id="kyc-success-go-to-additional-documents"
         onClick={goToAddAdditional}

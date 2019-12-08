@@ -22,7 +22,7 @@ import { appConnect } from "../../../store";
 import { ECountries } from "../../../utils/enums/countriesEnum";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
-import { EButtonLayout } from "../../shared/buttons/Button";
+import { EButtonLayout, EButtonSize } from "../../shared/buttons/Button";
 import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import { ButtonInline } from "../../shared/buttons/ButtonInline";
 import {
@@ -180,6 +180,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
         <ButtonGroup className={styles.buttons}>
           <Button
             layout={EButtonLayout.OUTLINE}
+            size={EButtonSize.HUGE}
             className={styles.button}
             data-test-id="kyc-personal-start-go-back"
             onClick={props.goBack}
@@ -190,6 +191,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
             type="submit"
             className={styles.button}
             layout={EButtonLayout.PRIMARY}
+            size={EButtonSize.HUGE}
             disabled={shouldDisableSubmit}
             data-test-id="kyc-personal-start-submit-form"
           >
