@@ -1038,7 +1038,7 @@
   "nominee.upload-isha.title": "Upload and Sign the Investor Shareholder Agreement",
   "notifications.auth-session-timeout": "You have been logged out due to inactivity. Please login again.",
   "notifications.complete-request": "Please complete your profile in order to begin investing. By clicking anywhere within this banner, you’ll be redirected to your Profile.",
-  "notifications.id-now-started": "If you're not automatically forwarded to idNow, please {link}.",
+  "notifications.id-now-started": "If you're not automatically forwarded to IDnow, please {link}.",
   "notifications.not-accredited-investor": "Due to U.S. investing regulations, before you can invest on Neufund you’ll need to upload proof of your investor accreditation status. You can continue with verifying your Neufund account now or you can {link} and continue later, once you’ve received accreditation.",
   "notifications.not-supported-onfido-browser": "Your browser is not supported. Please use latest Google Chrome on your laptop or computer with a working camera.",
   "notifications.update-account": "Please update your profile before proceeding. After you have successfully verified your identity, you will be able to fundraise.",

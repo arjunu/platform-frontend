@@ -158,9 +158,11 @@ const KYCForm: React.FunctionComponent<TProps> = ({
                     id="notifications.not-accredited-investor"
                     values={{
                       link: (
-                        <ButtonInline onClick={() => props.submitAndClose(values)}>
-                          <FormattedMessage id="form.save-and-close" />
-                        </ButtonInline>
+                        <strong>
+                          <ButtonInline onClick={() => props.submitAndClose(boolify(values))}>
+                            <FormattedMessage id="form.save-and-close" />
+                          </ButtonInline>
+                        </strong>
                       ),
                     }}
                   />
