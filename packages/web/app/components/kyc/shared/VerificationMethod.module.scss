@@ -1,6 +1,7 @@
 .card {
   @include nds-body;
 
+  font-weight: normal;
   color: $neu-shuttle-gray;
   display: flex;
   min-height: px-to-rem(114px);
@@ -10,8 +11,10 @@
   margin-bottom: px-to-rem(16px);
   align-items: center;
   text-align: left;
+  padding: 0;
 
   &:disabled {
+    color: $neu-shuttle-gray;
     opacity: .4;
   }
 }

@@ -161,26 +161,6 @@ class RequestStateInfo extends React.Component<TExternalProps, TLocalState> {
       );
     }
 
-    if (this.props.requestStatus === EKycRequestStatus.OUTSOURCED && this.props.idNowRedirectUrl) {
-      return (
-        <KycPanel
-          title={<FormattedMessage id="kyc.request-state.outsourced.title" />}
-          steps={steps}
-          data-test-id="kyc-panel-outsourced"
-          description={
-            <>
-              <FormattedMessage id="kyc.request-state.outsourced.description" />
-              <br />
-              <br />
-              <a href={this.props.idNowRedirectUrl}>
-                <FormattedMessage id="kyc.request-state.click-here-to-continue" />
-              </a>
-            </>
-          }
-        />
-      );
-    }
-
     return null;
   }
 }

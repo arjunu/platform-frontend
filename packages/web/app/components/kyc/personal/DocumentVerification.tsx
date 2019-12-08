@@ -5,16 +5,20 @@ import { compose } from "recompose";
 import { symbols } from "../../../di/symbols";
 import {
   EKycInstantIdProvider,
+  EKycRequestStatus,
   TInstantIdNoneProvider,
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { OnfidoSDK } from "../../../lib/dependencies/onfido/OnfidoSDK";
 import { actions } from "../../../modules/actions";
+import { selectKycIdNowRedirectUrl } from "../../../modules/kyc/instant-id/id-now/selectors";
 import {
   selectKycInstantIdProvider,
   selectKycRecommendedInstantIdProvider,
+  selectKycRequestStatus,
   selectKycSupportedInstantIdProviders,
 } from "../../../modules/kyc/selectors";
 import { appConnect } from "../../../store";
+import { TTranslatedString } from "../../../types";
 import { assertNever } from "../../../utils/assertNever";
 import { onLeaveAction } from "../../../utils/OnLeaveAction";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";
@@ -39,6 +43,8 @@ interface IStateProps {
     | undefined;
   recommendedInstantIdProvider: EKycInstantIdProvider | TInstantIdNoneProvider | undefined;
   currentProvider: EKycInstantIdProvider | TInstantIdNoneProvider | undefined;
+  requestStatus: EKycRequestStatus | undefined;
+  idNowRedirectUrl: string | undefined;
 }
 
 interface IStartInstantIdProps {
@@ -55,6 +61,8 @@ interface IDispatchProps extends IStartInstantIdProps {
 interface IRecommendedProps {
   recommendedInstantIdProvider: EKycInstantIdProvider;
   currentProvider?: EKycInstantIdProvider | TInstantIdNoneProvider;
+  requestStatus: EKycRequestStatus | undefined;
+  idNowRedirectUrl: string | undefined;
 }
 
 type TDependenciesProps = { onfidoSdk: OnfidoSDK };
@@ -100,12 +108,40 @@ const selectProviderErrorText = (
   }
 };
 
+const selectProviderInfoText = (
+  provider: EKycInstantIdProvider | TInstantIdNoneProvider,
+  requestStatus: EKycRequestStatus | undefined,
+  idNowRedirectUrl: string | undefined,
+): TTranslatedString | undefined => {
+  switch (provider) {
+    case EKycInstantIdProvider.ID_NOW:
+      return requestStatus === EKycRequestStatus.OUTSOURCED && idNowRedirectUrl !== undefined ? (
+        <FormattedMessage
+          id="notifications.id-now-started"
+          values={{
+            link: (
+              <a href={idNowRedirectUrl}>
+                <FormattedMessage id="kyc.request-state.click-here-to-continue" />
+              </a>
+            ),
+          }}
+        />
+      ) : (
+        undefined
+      );
+    default:
+      return undefined;
+  }
+};
+
 const KycPersonalDocumentVerificationRecommended: React.FunctionComponent<IRecommendedProps &
   IStartInstantIdProps &
   TDependenciesProps> = ({
   recommendedInstantIdProvider,
   currentProvider,
+  idNowRedirectUrl,
   onfidoSdk,
+  requestStatus,
   ...dispatchers
 }) => (
   <>
@@ -116,6 +152,11 @@ const KycPersonalDocumentVerificationRecommended: React.FunctionComponent<IRecom
       data-test-id={`kyc-go-to-outsourced-verification-${recommendedInstantIdProvider}`}
       disabled={selectIsDisabled(currentProvider, recommendedInstantIdProvider, onfidoSdk)}
       errorText={selectProviderErrorText(recommendedInstantIdProvider, onfidoSdk)}
+      infoText={selectProviderInfoText(
+        recommendedInstantIdProvider,
+        requestStatus,
+        idNowRedirectUrl,
+      )}
       onClick={selectProviderAction(recommendedInstantIdProvider, dispatchers)}
       logo={selectProviderLogo(recommendedInstantIdProvider)}
       text={selectProviderText(recommendedInstantIdProvider)}
@@ -133,6 +174,8 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
   currentProvider,
   goToDashboard,
   onfidoSdk,
+  requestStatus,
+  idNowRedirectUrl,
   ...dispatchers
 }) => {
   const enabledInstantIdProviders = getEnabledInstantIdProviders(supportedInstantIdProviders);
@@ -153,6 +196,8 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
               currentProvider={currentProvider}
               recommendedInstantIdProvider={recommendedInstantIdProvider}
               onfidoSdk={onfidoSdk}
+              requestStatus={requestStatus}
+              idNowRedirectUrl={idNowRedirectUrl}
               {...dispatchers}
             />
             <p className={styles.label}>
@@ -170,6 +215,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
               data-test-id={`kyc-go-to-outsourced-verification-${provider}`}
               disabled={selectIsDisabled(currentProvider, provider, onfidoSdk)}
               errorText={selectProviderErrorText(provider, onfidoSdk)}
+              infoText={selectProviderInfoText(provider, requestStatus, idNowRedirectUrl)}
               onClick={selectProviderAction(provider, dispatchers)}
               logo={selectProviderLogo(provider)}
               text={selectProviderText(provider)}
@@ -211,6 +257,8 @@ export const KycPersonalDocumentVerification = compose<
       supportedInstantIdProviders: selectKycSupportedInstantIdProviders(state),
       recommendedInstantIdProvider: selectKycRecommendedInstantIdProvider(state),
       currentProvider: selectKycInstantIdProvider(state),
+      requestStatus: selectKycRequestStatus(state),
+      idNowRedirectUrl: selectKycIdNowRedirectUrl(state),
     }),
     dispatchToProps: dispatch => ({
       onStartIdNow: () => dispatch(actions.kyc.startIdNowRequest()),

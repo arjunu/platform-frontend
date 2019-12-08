@@ -148,6 +148,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
 
             {values.isAccreditedUsCitizen === BOOL_FALSE_KEY && (
               <Notification
+                className="mb-4"
                 text={
                   <FormattedMessage
                     id="notifications.not-accredited-investor"

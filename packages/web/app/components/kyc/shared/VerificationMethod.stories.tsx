@@ -13,6 +13,7 @@ storiesOf("molecules|KYC/VerificationMethod", module)
       logo={onfido}
       onClick={action("START_ONFIDO")}
       errorText={undefined}
+      infoText={undefined}
       text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem corporis debitis ea eligendi expedita temporibus?"
     />
   ))
@@ -22,6 +23,17 @@ storiesOf("molecules|KYC/VerificationMethod", module)
       logo={onfido}
       onClick={action("START_ONFIDO")}
       errorText={"Not supported browser"}
+      infoText={undefined}
+      text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem corporis debitis ea eligendi expedita temporibus?"
+    />
+  ))
+  .add("with info message", () => (
+    <VerificationMethod
+      name={"onfido"}
+      logo={onfido}
+      onClick={action("START_ONFIDO")}
+      errorText={undefined}
+      infoText={"Lorem ipsum dolor sit amet"}
       text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem corporis debitis ea eligendi expedita temporibus?"
     />
   ));

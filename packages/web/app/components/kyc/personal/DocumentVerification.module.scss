@@ -1,6 +1,7 @@
 .label {
   @include nds-label;
 
+  font-weight: 700;
   text-transform: uppercase;
   color: $neu-charcoal-grey;
   margin-bottom: px-to-rem(3px);
