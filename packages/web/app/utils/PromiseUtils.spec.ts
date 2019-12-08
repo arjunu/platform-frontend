@@ -1,8 +1,6 @@
 import { expect } from "chai";
 
-import { setupFakeClock } from "../../test/integrationTestUtils.unsafe";
-import { isPromise, promiseTimeout, promisify } from "./PromiseUtils";
-import { safeDelay } from "./safeTimers";
+import { isPromise, promisify } from "./PromiseUtils";
 
 describe("promisify", () => {
   const fn = (a: number, b: number, cb: Function) => {

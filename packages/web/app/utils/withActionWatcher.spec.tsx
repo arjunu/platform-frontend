@@ -4,8 +4,8 @@ import { spy } from "sinon";
 
 import { createMount } from "../../test/createMount";
 import { setupFakeClock, wrapWithProviders } from "../../test/integrationTestUtils.unsafe";
-import { withActionWatcher } from "./withActionWatcher.unsafe";
 import { safeDelay } from "./safeTimers";
+import { withActionWatcher } from "./withActionWatcher.unsafe";
 
 describe("withActionWatcher", () => {
   const SomeComponent = () => <h1>SOME COMPONENT</h1>;
