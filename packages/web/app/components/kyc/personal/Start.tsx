@@ -111,11 +111,15 @@ const KYCForm: React.FunctionComponent<TProps> = ({
             />
           </Col>
         </Row>
-        <FormFieldDate
-          label={<FormattedMessage id="form.label.birth-date" />}
-          name="birthDate"
-          data-test-id="kyc-personal-start-birth-date"
-        />
+        <Row>
+          <Col xs={12} md={6} lg={6}>
+            <FormFieldDate
+              label={<FormattedMessage id="form.label.birth-date" />}
+              name="birthDate"
+              data-test-id="kyc-personal-start-birth-date"
+            />
+          </Col>
+        </Row>
         <Row>
           <Col xs={12} md={6} lg={6}>
             <FormSelectCountryField
