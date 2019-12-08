@@ -23,7 +23,7 @@ import { withDependencies } from "../../shared/hocs/withDependencies";
 import { KycStep } from "../shared/KycStep";
 import { VerificationMethod } from "../shared/VerificationMethod";
 import {
-  getEnabledInstatnIdProviders,
+  getEnabledInstantIdProviders,
   isManualVerificationEnabled,
   NONE_KYC_INSTANTID_PROVIDER,
   selectIsDisabled,
@@ -135,7 +135,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
   onfidoSdk,
   ...dispatchers
 }) => {
-  const enabledInstantIdProviders = getEnabledInstatnIdProviders(supportedInstantIdProviders);
+  const enabledInstantIdProviders = getEnabledInstantIdProviders(supportedInstantIdProviders);
   return (
     <>
       <KycStep

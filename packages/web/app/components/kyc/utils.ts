@@ -47,14 +47,14 @@ export const getEnabledProviders = () =>
       >)
     : [];
 
-export const getEnabledInstatnIdProviders = (
+export const getEnabledInstantIdProviders = (
   supportedInstantIdProviders:
     | ReadonlyArray<EKycInstantIdProvider>
     | TInstantIdNoneProvider
     | undefined,
 ) => {
   const enabledProviders = getEnabledProviders();
-  return enabledProviders
+  return enabledProviders.length > 0
     ? enabledProviders.filter(
         v =>
           supportedInstantIdProviders &&
