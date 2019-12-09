@@ -90,7 +90,7 @@ function* handleRootError(error: Error): Generator<any, any, any> {
   logger.error(error);
 }
 
-export function* rootSaga(): /* Iterator<unknown, Saga<any[]>> */ any {
+export function* rootSaga(): Generator<any, any, any> {
   while (true) {
     try {
       yield call(allSagas);
