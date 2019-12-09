@@ -143,7 +143,7 @@ function* loadIndividualData({
 function* submitPersonalDataSaga(
   { apiKycService }: TGlobalDependencies,
   data: IKycIndividualData,
-): Iterator<any> {
+): Generator<any, any, any> {
   const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalData(data);
 
   yield put(
@@ -157,7 +157,7 @@ function* submitPersonalDataSaga(
 function* submitPersonalDataNoRedirect(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const { data } = action.payload;
     yield neuCall(submitPersonalDataSaga, data);
@@ -171,7 +171,7 @@ function* submitPersonalDataNoRedirect(
 function* submitPersonalData(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalData>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const { data } = action.payload;
     yield neuCall(submitPersonalDataSaga, data);
@@ -187,7 +187,7 @@ function* submitPersonalData(
 function* submitPersonalDataAndClose(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalDataAndClose>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const { data } = action.payload;
     yield neuCall(submitPersonalDataSaga, data);
@@ -203,7 +203,7 @@ function* submitPersonalDataAndClose(
 function* submitPersonalAddressSaga(
   { apiKycService, notificationCenter, logger }: TGlobalDependencies,
   data: IKycIndividualData,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalData({
       ...data,
@@ -225,7 +225,7 @@ function* submitPersonalAddressSaga(
 function* submitPersonalAddress(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalAddress>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { data } = action.payload;
   const success = yield neuCall(submitPersonalAddressSaga, data);
 
@@ -237,7 +237,7 @@ function* submitPersonalAddress(
 function* submitPersonalAddressAndClose(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.kyc.kycSubmitPersonalAddress>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { data } = action.payload;
   const success = yield neuCall(submitPersonalAddressSaga, data);
 
