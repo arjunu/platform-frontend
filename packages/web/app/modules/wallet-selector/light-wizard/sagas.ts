@@ -148,7 +148,7 @@ export function* lightWalletRecoverWatch(
     };
     const isEmailAvailable = yield neuCall(checkEmailPromise, email);
     try {
-      const user = yield* call(apiUserService.me);
+      const user = yield* call(() => apiUserService.me());
 
       if (isEmailAvailable) {
         userUpdate.newEmail = walletMetadata.email;
@@ -203,7 +203,6 @@ export function* lightWalletRegisterWatch(
 
 function* handleLightWalletError({ logger }: TGlobalDependencies, e: Error): any {
   yield put(actions.walletSelector.reset());
-
   let error;
   if (e instanceof EmailAlreadyExists) {
     error = createMessage(GenericErrorMessage.USER_ALREADY_EXISTS);
