@@ -5,33 +5,15 @@ import { compose } from "redux";
 import { EKycRequestType, IKycFileInfo } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
-import { IIntlProps, injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
+import { EButtonLayout } from "../../shared/buttons/Button";
+import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
-import { HorizontalLine } from "../../shared/HorizontalLine";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
-import { KycPanel } from "../KycPanel";
-import { kycRoutes } from "../routes";
+import { KycStep } from "../shared/KycStep";
 
-export const personalSteps = [
-  {
-    label: <FormattedMessage id="kyc.steps.representation" />,
-    isChecked: true,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.personal-details" />,
-    isChecked: true,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.documents-verification" />,
-    isChecked: true,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.review" />,
-    isChecked: false,
-  },
-];
+import * as styles from "./Start.module.scss";
 
 interface IStateProps {
   fileUploading: boolean;
@@ -42,43 +24,56 @@ interface IStateProps {
 interface IDispatchProps {
   onDone: () => void;
   onDropFile: (file: File) => void;
+  goBack: () => void;
+  goToDashboard: () => void;
 }
 
 interface IProps {
   layout: EKycRequestType;
 }
 
-export const KYCUploadComponent = ({
-  intl: { formatIntlMessage },
-  ...props
-}: IProps & IStateProps & IDispatchProps & IIntlProps) => (
-  <KycPanel
-    title={<FormattedMessage id="kyc.panel.individual-verification" />}
-    steps={personalSteps}
-    description={formatIntlMessage("kyc.personal.uploadId.description")}
-    backLink={kycRoutes.individualStart}
-  >
+type TComponentProps = IProps & IStateProps & IDispatchProps;
+
+export const KYCUploadComponent: React.FunctionComponent<TComponentProps> = props => (
+  <>
+    <KycStep
+      step={4}
+      allSteps={5}
+      title={<FormattedMessage id="kyc.personal.manual-verification.title" />}
+      description={<FormattedMessage id="kyc.personal.manual-verification.description" />}
+      buttonAction={() => props.goToDashboard()}
+    />
+
     <MultiFileUpload
       acceptedFiles={[EMimeType.ANY_IMAGE_TYPE, EMimeType.PDF]}
-      uploadType={EKycRequestType.INDIVIDUAL}
       onDropFile={props.onDropFile}
+      uploadType={EKycRequestType.INDIVIDUAL}
       files={props.files}
       fileUploading={props.fileUploading}
       data-test-id="kyc-personal-upload-dropzone"
       layout="vertical"
     />
 
-    <HorizontalLine className="my-5" />
-    <div className="p-4 text-center">
+    <ButtonGroup className={styles.buttons}>
       <Button
+        layout={EButtonLayout.OUTLINE}
+        className={styles.button}
+        data-test-id="kyc-personal-start-go-back"
+        onClick={props.goBack}
+      >
+        <FormattedMessage id="form.back" />
+      </Button>
+      <Button
+        layout={EButtonLayout.PRIMARY}
+        className={styles.button}
         onClick={props.onDone}
         disabled={!props.files || props.files.length === 0}
         data-test-id="kyc-personal-upload-submit"
       >
         <FormattedMessage id="form.button.submit-request" />
       </Button>
-    </div>
-  </KycPanel>
+    </ButtonGroup>
+  </>
 );
 
 export const KYCPersonalUpload = compose<React.FunctionComponent>(
@@ -91,10 +86,11 @@ export const KYCPersonalUpload = compose<React.FunctionComponent>(
     dispatchToProps: dispatch => ({
       onDone: () => dispatch(actions.kyc.kycSubmitIndividualRequest()),
       onDropFile: (file: File) => dispatch(actions.kyc.kycUploadIndividualDocument(file)),
+      goBack: () => dispatch(actions.routing.goToKYCIndividualDocumentVerification()),
+      goToDashboard: () => dispatch(actions.routing.goToDashboard()),
     }),
   }),
   onEnterAction({
     actionCreator: dispatch => dispatch(actions.kyc.kycLoadIndividualDocumentList()),
   }),
-  injectIntlHelpers,
 )(KYCUploadComponent);

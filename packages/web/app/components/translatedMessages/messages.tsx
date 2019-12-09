@@ -49,7 +49,8 @@ export type TranslatedMessageType =
   | EEtoNomineeRequestNotifications
   | EEtoNomineeRequestMessages
   | ETxValidationMessages
-  | EEtoNomineeActiveEtoNotifications;
+  | EEtoNomineeActiveEtoNotifications
+  | ENotificationText;
 
 export enum GenericErrorMessage {
   GENERIC_ERROR = "genericError",
@@ -320,6 +321,11 @@ export enum EEtoNomineeRequestMessages {
 export enum EEtoNomineeActiveEtoNotifications {
   ACTIVE_ETO_SET_SUCCESS = "activeEtoSetSuccess",
   ACTIVE_ETO_SET_ERROR = "activeEtoSetError",
+}
+
+export enum ENotificationText {
+  COMPLETE_REQUEST_NOTIFICATION = "completeRequestNotification",
+  COMPLETE_UPDATE_ACCOUNT = "completeUpdateAccount",
 }
 
 export enum TestMessage {
@@ -779,6 +785,10 @@ const getMessageTranslation = ({ messageType, messageData }: TMessage): TTransla
     case EEtoNomineeActiveEtoNotifications.ACTIVE_ETO_SET_ERROR:
       return <FormattedMessage id="eto-nominee.active-eto.set-error" />;
 
+    case ENotificationText.COMPLETE_REQUEST_NOTIFICATION:
+      return <FormattedMessage id="notifications.complete-request" />;
+    case ENotificationText.COMPLETE_UPDATE_ACCOUNT:
+      return <FormattedMessage id="notifications.update-account" />;
     // NEVER DO THIS! This is only for tests, so that we don't bloat locales.json with test strings!
     case TestMessage.TEST_MESSAGE:
       return messageData!.message as TTranslatedString;

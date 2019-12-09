@@ -5,7 +5,7 @@ import { InlineIcon } from "./InlineIcon";
 
 import * as eth_icon from "../../../assets/img/eth_icon.svg";
 import * as euro_icon from "../../../assets/img/euro_icon.svg";
-import * as link_arrow from "../../../assets/img/link_arrow.svg";
+import * as link_arrow from "../../../assets/img/inline_icons/link_arrow.svg";
 import * as logo_square_white from "../../../assets/img/logo-square-white.svg";
 import * as logo_capitalized from "../../../assets/img/logo_capitalized.svg";
 import * as logo_small_black from "../../../assets/img/logo_small_black.svg";

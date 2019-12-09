@@ -32,7 +32,7 @@ const NotificationWidgetComponent: React.FunctionComponent<IProps & IExternalPro
   <div className={cn(styles.widget, className)}>
     {notifications.map((notification, index) => (
       <Notification
-        key={notification.text + index.toString(10)}
+        key={`${notification.type}${index.toString(10)}`}
         type={notification.type}
         text={notification.text}
         onClick={() => dispatch(notification.onClickAction)}

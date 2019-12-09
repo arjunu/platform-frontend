@@ -5,7 +5,7 @@ import { fillForm, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
 import { stubWindow } from "../utils/index";
 import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
-import { kycInvidualForm, kycInvidualFormUS } from "./fixtures";
+import { kycInvidualAddressForm, kycInvidualForm, kycInvidualFormUS } from "./fixtures";
 
 const goToKycIndividualFlow = () => {
   // go to kyc select and then individual page
@@ -18,11 +18,11 @@ const goToKycIndividualFlow = () => {
 const assertOutsourcedVerification = () => {
   stubWindow("windowOpen");
 
-  cy.get(tid("kyc-go-to-id-now-verification")).click();
+  cy.get(tid("kyc-go-to-outsourced-verification-id_now")).click();
 
   cy.get("@windowOpen").should("be.calledWithMatch", ID_NOW_EXTERNAL_MOCK, "_blank");
 
-  cy.get(tid("kyc-panel-outsourced")).should("exist");
+  cy.get(tid("kyc-id-now-started")).should("exist");
 };
 
 const assertOutsourcedKycWidgetStatus = () => {
@@ -43,6 +43,7 @@ describe("KYC Personal flow with ID Now", () => {
 
     // fill and submit the form
     fillForm(kycInvidualForm);
+    fillForm(kycInvidualAddressForm);
 
     assertOutsourcedVerification();
 
@@ -54,14 +55,18 @@ describe("KYC Personal flow with ID Now", () => {
 
     goToKycIndividualFlow();
 
+    // fill the form
     fillForm(kycInvidualFormUS, { submit: false });
 
+    // form should be disabled before the accreditation file is uploaded
+    cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
+
     // Upload accreditation documents
-    uploadMultipleFilesToFieldWithTid("kyc-personal-accreditation-upload-dropzone", [
-      "example.jpg",
-    ]);
+    uploadMultipleFilesToFieldWithTid("kyc-upload-documents-dropzone", ["example.jpg"]);
 
     cy.get(tid("kyc-personal-start-submit-form")).click();
+
+    fillForm(kycInvidualAddressForm);
 
     assertOutsourcedVerification();
 

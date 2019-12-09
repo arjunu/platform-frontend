@@ -9,14 +9,18 @@ import { TAcceptedFileType } from "./forms/fields/utils.unsafe";
 import { ResponsiveImage } from "./ResponsiveImage";
 import { UploadedFiles } from "./UploadedFiles";
 
-import * as bankStatementTemplate from "../../assets/img/bank-statement-template.svg";
 import * as documentBothSidesImage from "../../assets/img/document-both-side.jpg";
 import * as documentBothSidesImage2x from "../../assets/img/document-both-side@2x.jpg";
 import * as documentBothSidesImage3x from "../../assets/img/document-both-side@3x.jpg";
 import * as styles from "./MultiFileUpload.module.scss";
 
+export enum EKycUploadType {
+  US_ACCREDITATION = "us_accreditation",
+  PROOF_OF_ADDRESS = "proof_of_address",
+}
+
 interface IProps {
-  uploadType: EKycRequestType;
+  uploadType: EKycRequestType | EKycUploadType;
   acceptedFiles: ArrayWithAtLeastOneMember<TAcceptedFileType>;
   fileUploading: boolean;
   onDropFile: (file: File) => void;
@@ -24,6 +28,17 @@ interface IProps {
   files?: ReadonlyArray<IKycFileInfo>;
   "data-test-id"?: string;
 }
+
+const selectTitle = (uploadType: EKycRequestType | EKycUploadType) => {
+  switch (uploadType) {
+    case EKycUploadType.US_ACCREDITATION:
+      return <FormattedMessage id="shared-component.multi-file-upload-accreditation.title" />;
+    case EKycUploadType.PROOF_OF_ADDRESS:
+      return <FormattedMessage id="shared-component.multi-file-upload-proof-of-address.title" />;
+    default:
+      return <FormattedMessage id="shared-component.multi-file-upload.title" />;
+  }
+};
 
 const MultiFileUploadComponent: React.FunctionComponent<IProps> = ({
   acceptedFiles,
@@ -39,42 +54,28 @@ const MultiFileUploadComponent: React.FunctionComponent<IProps> = ({
 
   return (
     <div className={cn(styles.multiFileUpload, layout)} data-test-id={dataTestId}>
+      <p className={styles.uploadTitle}>{selectTitle(uploadType)}</p>
       <div className={styles.uploadContainer}>
-        <Dropzone
-          data-test-id="multi-file-upload-dropzone"
-          accept={acceptedFiles}
-          onDrop={onDrop}
-          disabled={fileUploading}
-          isUploading={fileUploading}
-          name={uploadType}
-          {...props}
-        />
-        <section className={styles.uploaderInfo}>
-          <p className={styles.uploadTitle}>
-            {uploadType === EKycRequestType.US_ACCREDITATION ? (
-              <FormattedMessage id="shared-component.multi-file-upload-accreditation.title" />
-            ) : (
-              <FormattedMessage id="shared-component.multi-file-upload.title" />
-            )}
-          </p>
+        <div className={styles.dropzoneWrapper}>
+          <Dropzone
+            data-test-id="multi-file-upload-dropzone"
+            accept={acceptedFiles}
+            onDrop={onDrop}
+            disabled={fileUploading}
+            isUploading={fileUploading}
+            name={uploadType}
+            {...props}
+          />
           <p className={styles.fileTypes}>
             <FormattedMessage id="shared-component.multi-file-upload.accepted-types" />
           </p>
+        </div>
+        <section className={styles.uploaderInfo}>
+          <MultiFileUploadInfo uploadType={uploadType} />
         </section>
       </div>
 
       {files && files.length > 0 && <UploadedFiles files={files} />}
-
-      {uploadType !== EKycRequestType.US_ACCREDITATION && (
-        <div className={styles.requirements}>
-          <p className={styles.requirementsTitle}>
-            <FormattedHTMLMessage
-              tagName="span"
-              id="shared-component.multi-file-upload.requirements.file-requirements"
-            />
-          </p>
-        </div>
-      )}
     </div>
   );
 };
@@ -84,7 +85,7 @@ MultiFileUploadComponent.defaultProps = {
 };
 
 const MultiFileUploadInfo: React.FunctionComponent<{
-  uploadType: EKycRequestType | EKycRequestType[];
+  uploadType: EKycRequestType | EKycUploadType;
 }> = ({ uploadType }) => {
   switch (uploadType) {
     case EKycRequestType.BUSINESS:
@@ -104,15 +105,46 @@ const MultiFileUploadInfo: React.FunctionComponent<{
     case EKycRequestType.INDIVIDUAL:
       return (
         <div className={styles.uploadInformationsWrapper}>
-          <div className={styles.title}>
-            <FormattedHTMLMessage
-              tagName="span"
-              id="shared-component.multi-file-upload.requirements.individual.proof-of-identity"
-            />
-          </div>
-          <h4 className={cn(styles.hint, "mb-3")}>
+          <FormattedHTMLMessage
+            tagName="span"
+            id="shared-component.multi-file-upload.individual.info"
+          />
+        </div>
+      );
+    case EKycUploadType.PROOF_OF_ADDRESS:
+      return (
+        <div className={styles.uploadInformationsWrapper}>
+          <FormattedHTMLMessage
+            tagName="span"
+            id="shared-component.multi-file-upload.proof-of-address.info"
+          />
+        </div>
+      );
+    /* Preparation for Accreditation documents upload */
+    case EKycUploadType.US_ACCREDITATION:
+      return (
+        <div className={styles.uploadInformationsWrapper}>
+          <FormattedHTMLMessage
+            tagName="span"
+            id="shared-component.multi-file-upload.us-accreditation.info"
+          />
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
+export const MultiFileUploadGuide: React.FunctionComponent<{
+  uploadType: EKycRequestType | EKycUploadType;
+}> = ({ uploadType }) => {
+  switch (uploadType) {
+    case EKycRequestType.INDIVIDUAL:
+      return (
+        <section className="mb-4">
+          <span className={cn(styles.hint, "mb-4")}>
             <FormattedMessage id="shared-component.multi-file-upload.requirements.individual.proof-of-identity-note" />
-          </h4>
+          </span>
           <ResponsiveImage
             srcSet={{
               "1x": documentBothSidesImage,
@@ -123,30 +155,14 @@ const MultiFileUploadInfo: React.FunctionComponent<{
             width={344}
             height={111}
           />
-          <div className={cn(styles.title, "mt-4")}>
-            <FormattedHTMLMessage
-              tagName="span"
-              id="shared-component.multi-file-upload.requirements.individual.proof-of-address"
-            />
-          </div>
-          <h4 className={cn(styles.hint, "mb-3")}>
-            <FormattedMessage id="shared-component.multi-file-upload.requirements.individual.proof-of-address-note" />
-          </h4>
-          <div className={styles.imagesWrapper}>
-            <div className={styles.bankStatementWrapper}>
-              <img src={bankStatementTemplate} alt="bank statement" />
-            </div>
-            <div className={styles.idWrapper} />
-          </div>
-        </div>
+        </section>
       );
-    /* Preparation for Accreditation documents upload */
-    case EKycRequestType.US_ACCREDITATION:
     default:
       return null;
   }
 };
 
+// TODO: MultiFileUpload should not contain any information about upload type
 export const MultiFileUpload: React.FunctionComponent<IProps> = ({
   acceptedFiles,
   fileUploading,
@@ -156,17 +172,18 @@ export const MultiFileUpload: React.FunctionComponent<IProps> = ({
   layout,
   "data-test-id": dataTestId,
 }) => (
-  <div className={styles.upload}>
-    <MultiFileUploadInfo uploadType={uploadType} />
-
-    <MultiFileUploadComponent
-      acceptedFiles={acceptedFiles}
-      onDropFile={onDropFile}
-      files={files}
-      fileUploading={fileUploading}
-      uploadType={uploadType}
-      layout={layout}
-      data-test-id={dataTestId}
-    />
-  </div>
+  <>
+    <MultiFileUploadGuide uploadType={uploadType} />
+    <div className={styles.upload}>
+      <MultiFileUploadComponent
+        acceptedFiles={acceptedFiles}
+        onDropFile={onDropFile}
+        files={files}
+        fileUploading={fileUploading}
+        uploadType={uploadType}
+        layout={layout}
+        data-test-id={dataTestId}
+      />
+    </div>
+  </>
 );

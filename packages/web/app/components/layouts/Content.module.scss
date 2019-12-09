@@ -17,4 +17,14 @@
     margin: $layout-content-padding-sm auto;
     padding: 0 $layout-content-padding-sm;
   }
+
+  &.small-width {
+    @include media-breakpoint-down (sm) {
+      width: auto;
+      margin: px-to-rem(24px);
+    }
+
+    width: px-to-rem(560px);
+    margin: px-to-rem(72px) auto;
+  }
 }

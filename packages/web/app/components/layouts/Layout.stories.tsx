@@ -54,7 +54,7 @@ const unauthStore: DeepPartial<IAppState> = {
   },
 };
 
-storiesOf("Layouts", module)
+storiesOf("Templates|Layouts/Layout", module)
   .add(
     "LayoutAuthorized",
     () => (

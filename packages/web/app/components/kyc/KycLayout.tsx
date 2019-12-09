@@ -8,6 +8,7 @@ import {
 } from "../../lib/api/kyc/KycApi.interfaces";
 import { Button, EButtonLayout, EIconPosition } from "../shared/buttons";
 import { KycPanel } from "./KycPanel";
+import { KycSubmitedRouter } from "./KycSubmitedRouter";
 import { KycRouter } from "./Router";
 import { KYCAddDocuments } from "./shared/AddDocuments";
 
@@ -74,14 +75,12 @@ class RequestStateInfo extends React.Component<TExternalProps, TLocalState> {
   render(): React.ReactNode {
     const steps =
       this.props.requestType === EKycRequestType.BUSINESS ? businessSteps : personalSteps;
-
     // Kyc is pending when either status `Pending` or
     // status is `Outsourced` with outsourced verification status set to `Pending`
     const isKycPending =
       this.props.requestStatus === EKycRequestStatus.PENDING ||
       (this.props.requestStatus === EKycRequestStatus.OUTSOURCED &&
         this.props.instantIdStatus === EKycInstantIdStatus.PENDING);
-
     const settingsButton = (
       <div className="p-4 text-center">
         <Button
@@ -105,32 +104,37 @@ class RequestStateInfo extends React.Component<TExternalProps, TLocalState> {
         </KycPanel>
       );
     }
-
     if (isKycPending) {
-      return (
-        <KycPanel
-          title={<FormattedMessage id="kyc.request-state.pending.title" />}
-          steps={steps}
-          description={<FormattedMessage id="kyc.request-state.pending.description" />}
-          data-test-id="kyc-panel-pending"
-        >
-          {!this.state.showAdditionalFileUpload && (
-            <Button
-              layout={EButtonLayout.GHOST}
-              iconPosition={EIconPosition.ICON_BEFORE}
-              svgIcon={addFile}
-              onClick={() => this.setState({ showAdditionalFileUpload: true })}
-            >
-              <FormattedMessage id="kyc.request-state.pending.add-files-button" />
-            </Button>
-          )}
-          {this.props.requestType && this.state.showAdditionalFileUpload && (
-            <KYCAddDocuments uploadType={this.props.requestType} />
-          )}
-          <br /> <br />
-          {settingsButton}
-        </KycPanel>
-      );
+      // TODO: Rework for Business flow
+      if (this.props.requestType === EKycRequestType.INDIVIDUAL) {
+        return <KycSubmitedRouter />;
+      } else {
+        // Fallback for non individual user
+        return (
+          <KycPanel
+            title={<FormattedMessage id="kyc.request-state.pending.title" />}
+            steps={steps}
+            description={<FormattedMessage id="kyc.request-state.pending.description" />}
+            data-test-id="kyc-panel-pending"
+          >
+            {!this.state.showAdditionalFileUpload && (
+              <Button
+                layout={EButtonLayout.GHOST}
+                iconPosition={EIconPosition.ICON_BEFORE}
+                svgIcon={addFile}
+                onClick={() => this.setState({ showAdditionalFileUpload: true })}
+              >
+                <FormattedMessage id="kyc.request-state.pending.add-files-button" />
+              </Button>
+            )}
+            {this.props.requestType && this.state.showAdditionalFileUpload && (
+              <KYCAddDocuments uploadType={this.props.requestType} />
+            )}
+            <br /> <br />
+            {settingsButton}
+          </KycPanel>
+        );
+      }
     }
 
     if (this.props.requestStatus === EKycRequestStatus.ACCEPTED) {
@@ -154,26 +158,6 @@ class RequestStateInfo extends React.Component<TExternalProps, TLocalState> {
         >
           {settingsButton}
         </KycPanel>
-      );
-    }
-
-    if (this.props.requestStatus === EKycRequestStatus.OUTSOURCED && this.props.idNowRedirectUrl) {
-      return (
-        <KycPanel
-          title={<FormattedMessage id="kyc.request-state.outsourced.title" />}
-          steps={steps}
-          data-test-id="kyc-panel-outsourced"
-          description={
-            <>
-              <FormattedMessage id="kyc.request-state.outsourced.description" />
-              <br />
-              <br />
-              <a href={this.props.idNowRedirectUrl}>
-                <FormattedMessage id="kyc.request-state.click-here-to-continue" />
-              </a>
-            </>
-          }
-        />
       );
     }
 

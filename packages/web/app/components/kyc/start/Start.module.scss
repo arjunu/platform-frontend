@@ -1,0 +1,8 @@
+.cards-container {
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+  }
+
+  display: flex;
+  justify-content: space-between;
+}

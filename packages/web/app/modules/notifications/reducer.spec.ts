@@ -1,9 +1,10 @@
 import { expect } from "chai";
 
+import { ENotificationText } from "../../components/translatedMessages/messages";
 import { actions } from "../actions";
 import { INewNotification } from "./actions";
 import { notificationsInitState, notificationsReducer } from "./reducer";
-import { ENotificationText, ENotificationType } from "./types";
+import { ENotificationType } from "./types";
 
 describe("notifications > reducer", () => {
   it("should act on NOTIFICATIONS_ADD", () => {

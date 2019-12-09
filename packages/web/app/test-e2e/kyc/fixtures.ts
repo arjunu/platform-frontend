@@ -7,6 +7,37 @@ const kycPersonBaseForm: TFormFixture = {
     value: "20/01/1980",
     type: "date",
   },
+  country: {
+    value: "LI",
+    type: "select",
+  },
+  placeOfBirth: {
+    value: "AT",
+    type: "select",
+  },
+  nationality: {
+    value: "DE",
+    type: "select",
+  },
+};
+
+const kycPersonAddressForm: TFormFixture = {
+  street: "Cuvrystr. 6",
+  city: "Berlin",
+  zipCode: "10247",
+  "kyc-upload-documents-dropzone": {
+    values: ["example.jpg"],
+    type: "multiple-files",
+  },
+};
+
+const kycCorporateBaseForm: TFormFixture = {
+  firstName: "John",
+  lastName: "Doe",
+  birthDate: {
+    value: "20/01/1980",
+    type: "date",
+  },
   street: "Cuvrystr. 6",
   city: "Berlin",
   zipCode: "10247",
@@ -28,27 +59,22 @@ const kycPersonBaseForm: TFormFixture = {
   },
 };
 
-const highIncome: TFormFixture =
-  process.env.NF_DISABLE_HIGH_INCOME === "1"
-    ? {}
-    : {
-        isHighIncome: {
-          value: "true",
-          type: "select",
-        },
-      };
-
 export const kycInvidualForm: TFormFixture = {
   ...kycPersonBaseForm,
-  ...highIncome,
   "kyc-personal-start-submit-form": {
+    type: "submit",
+  },
+};
+
+export const kycInvidualAddressForm: TFormFixture = {
+  ...kycPersonAddressForm,
+  "kyc-personal-address-submit-form": {
     type: "submit",
   },
 };
 
 export const kycInvidualFormUS: TFormFixture = {
   ...kycPersonBaseForm,
-  ...highIncome,
   nationality: {
     value: "US",
     type: "select",
@@ -60,7 +86,7 @@ export const kycInvidualFormUS: TFormFixture = {
 };
 
 export const kycLegalRepForm: TFormFixture = {
-  ...kycPersonBaseForm,
+  ...kycCorporateBaseForm,
   "kyc-company-legal-representative-save": {
     type: "submit",
   },

@@ -62,7 +62,6 @@ const statusTextMap: Record<EKycRequestStatus, React.ReactNode> = {
 const getStatus = ({
   isUserEmailVerified,
   isKycFlowBlockedByRegion,
-  isRestrictedCountryInvestor,
   requestStatus,
   instantIdStatus,
 }: IKycStatusWidgetProps): React.ReactNode => {
@@ -81,14 +80,6 @@ const getStatus = ({
 
   if (!isUserEmailVerified) {
     return <FormattedMessage id="settings.kyc-status-widget.status.error-verification-email" />;
-  }
-
-  if (requestStatus === EKycRequestStatus.ACCEPTED && isRestrictedCountryInvestor) {
-    return (
-      <span data-test-id="settings.kyc-status-widget.restricted-country-investor">
-        <FormattedMessage id="settings.kyc-status-widget.status.error-restricted-country-investor" />
-      </span>
-    );
   }
 
   if (
@@ -160,7 +151,7 @@ const ActionButton = ({
   ) {
     return (
       <Button
-        id="continue-kyc-idnow-verification"
+        id="continue-kyc-continue-verification"
         layout={EButtonLayout.GHOST}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
@@ -176,16 +167,12 @@ const ActionButton = ({
   return null;
 };
 
-const StatusIcon = ({
-  requestStatus,
-  isLoading,
-  isRestrictedCountryInvestor,
-}: IKycStatusWidgetProps) => {
+const StatusIcon = ({ requestStatus, isLoading }: IKycStatusWidgetProps) => {
   if (isLoading) {
     return null;
   }
 
-  if (!isRestrictedCountryInvestor && requestStatus === EKycRequestStatus.ACCEPTED) {
+  if (requestStatus === EKycRequestStatus.ACCEPTED) {
     return <img src={successIcon} className={styles.icon} alt="" />;
   }
 

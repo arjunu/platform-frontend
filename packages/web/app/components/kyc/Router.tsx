@@ -9,11 +9,13 @@ import { invariant } from "../../utils/invariant";
 import { KYCBeneficialOwners } from "./business/BeneficialOwners";
 import { KycBusinessData } from "./business/BusinessData.unsafe";
 import { KycLegalRepresentative } from "./business/LegalRepresentative.unsafe";
+import { KYCPersonalAddress } from "./personal/Address";
 import { KycPersonalDocumentVerification } from "./personal/DocumentVerification";
-import { KYCPersonalStart } from "./personal/Start.unsafe";
+import { KYCPersonalStart } from "./personal/Start";
 import { KYCPersonalUpload } from "./personal/Upload";
 import { kycRoutes } from "./routes";
 import { KYCStart } from "./start/Start";
+import { KycSuccess } from "./Success";
 
 interface IStateProps {
   userType?: EUserType;
@@ -22,9 +24,11 @@ interface IStateProps {
 export const NormalKycRouter: React.FunctionComponent = () => (
   <SwitchConnected>
     <Route path={kycRoutes.start} component={KYCStart} exact />
+    <Route path={kycRoutes.success} component={KycSuccess} exact />
 
     {/* Personal */}
     <Route path={kycRoutes.individualStart} component={KYCPersonalStart} />
+    <Route path={kycRoutes.individualAddress} component={KYCPersonalAddress} />
     <Route
       path={kycRoutes.individualDocumentVerification}
       component={KycPersonalDocumentVerification}

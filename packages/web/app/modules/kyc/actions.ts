@@ -44,9 +44,25 @@ export const kycActions = {
    */
 
   // data
-  kycSubmitIndividualData: createActionFactory(
-    "KYC_SUBMIT_INDIVIDUAL_FORM",
-    (data: IKycIndividualData, skipContinue = false) => ({ data, skipContinue }),
+  kycSubmitPersonalData: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_DATA",
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalDataAndClose: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_DATA_AND_CLOSE",
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalDataNoRedirect: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_DATA_NO_REDIRECT",
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalAddress: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_ADDRESS",
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalAddressAndClose: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_ADDRESS_AND_CLOSE",
+    (data: IKycIndividualData) => ({ data }),
   ),
 
   kycLoadIndividualData: createActionFactory("KYC_LOAD_INDIVIDUAL_DATA"),

@@ -7,7 +7,7 @@ import { confirmAccessModal } from "../utils";
 import { fillForm, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
 import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
-import { kycInvidualForm, kycInvidualFormUS } from "./fixtures";
+import { kycInvidualAddressForm, kycInvidualForm, kycInvidualFormUS } from "./fixtures";
 
 describe("KYC Personal flow with manual verification", () => {
   it("went through KYC flow with personal data", () => {
@@ -22,6 +22,7 @@ describe("KYC Personal flow with manual verification", () => {
 
     // fill and submit the form
     fillForm(kycInvidualForm);
+    fillForm(kycInvidualAddressForm);
 
     // go to the manual verification with file upload
     cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
@@ -35,14 +36,14 @@ describe("KYC Personal flow with manual verification", () => {
     confirmAccessModal();
 
     // panel should now be in pending state
-    cy.get(tid("kyc-panel-pending")).should("exist");
-    // TODO: Move to a separate test
+    cy.get(tid("kyc-success"));
     // Tests multi jurisdiction
     assertFilteredDeJurisdiction();
   });
 
   it("went through KYC flow with personal data for US investor", function(): void {
     this.retries(2);
+
     createAndLoginNewUser({ type: "investor" });
 
     // go to kyc select and then individual page
@@ -57,11 +58,11 @@ describe("KYC Personal flow with manual verification", () => {
     cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
 
     // Upload accreditation documents
-    uploadMultipleFilesToFieldWithTid("kyc-personal-accreditation-upload-dropzone", [
-      "example.jpg",
-    ]);
+    uploadMultipleFilesToFieldWithTid("kyc-upload-documents-dropzone", ["example.jpg"]);
 
     cy.get(tid("kyc-personal-start-submit-form")).click();
+
+    fillForm(kycInvidualAddressForm);
 
     // go to the manual verification with file upload
     cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
@@ -74,6 +75,6 @@ describe("KYC Personal flow with manual verification", () => {
     confirmAccessModal();
 
     // panel should now be in pending state
-    cy.get(tid("kyc-panel-pending")).should("exist");
+    cy.get(tid("kyc-success")).should("exist");
   });
 });

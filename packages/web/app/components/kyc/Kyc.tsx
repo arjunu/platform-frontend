@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Redirect } from "react-router";
-import { branch, compose, renderComponent } from "recompose";
+import { branch, compose, renderComponent, withProps } from "recompose";
 
 import {
   EKycInstantIdStatus,
@@ -20,7 +20,9 @@ import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
 import { appRoutes } from "../appRoutes";
-import { Layout } from "../layouts/Layout";
+import { EContentWidth } from "../layouts/Content";
+import { FullscreenProgressLayout } from "../layouts/FullscreenProgressLayout";
+import { TContentExternalProps } from "../layouts/Layout";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout";
 
@@ -65,7 +67,9 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
       dispatch(actions.kyc.kycLoadStatusAndData());
     },
   }),
-  withContainer(Layout),
+  withContainer(
+    withProps<TContentExternalProps, {}>({ width: EContentWidth.SMALL })(FullscreenProgressLayout),
+  ),
 )(KycLayout);
 
 export { Kyc };
