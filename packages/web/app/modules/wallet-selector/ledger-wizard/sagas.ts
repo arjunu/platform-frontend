@@ -1,6 +1,5 @@
+import { call, fork, put, select } from "@neufund/sagas";
 import { toPairs, zip } from "lodash";
-import { fork, put, select } from "redux-saga/effects";
-import { call } from "typed-redux-saga";
 
 import { tripleZip } from "../../../../typings/modifications";
 import { TGlobalDependencies } from "../../../di/setupBindings";

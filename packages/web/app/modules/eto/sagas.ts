@@ -1,8 +1,8 @@
+import { all, delay, fork, put, race, select, take } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
 import { LOCATION_CHANGE } from "connected-react-router";
 import { camelCase, isString } from "lodash";
 import { compose, keyBy, map, omit } from "lodash/fp";
-import { all, delay, fork, put, race, select, take } from "redux-saga/effects";
 
 import { IWindowWithData } from "../../../test/helperTypes";
 import { getInvestorDocumentTitles, hashFromIpfsLink } from "../../components/documents/utils";

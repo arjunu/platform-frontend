@@ -1,5 +1,5 @@
+import { cancelled, delay, put } from "@neufund/sagas";
 import { expectSaga } from "redux-saga-test-plan";
-import { cancelled, delay, put } from "redux-saga/effects";
 
 import { TPattern } from "./actions";
 import { neuRepeatIf, neuRestartIf, neuTakeOnly, neuTakeUntil } from "./sagasUtils";

@@ -1,4 +1,4 @@
-import { call, fork, put, select } from "redux-saga/effects";
+import { call, fork, put, select } from "@neufund/sagas";
 
 import { ProfileMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";

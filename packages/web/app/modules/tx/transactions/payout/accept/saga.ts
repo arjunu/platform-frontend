@@ -1,5 +1,5 @@
+import { all, put, select } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
-import { all, put, select } from "redux-saga/effects";
 
 import { ECurrency } from "../../../../../components/shared/formatters/utils";
 import { TGlobalDependencies } from "../../../../../di/setupBindings";

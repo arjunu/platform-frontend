@@ -1,4 +1,4 @@
-import { all, call, fork, put, select } from "redux-saga/effects";
+import { all, call, fork, put, select } from "@neufund/sagas";
 
 import { EtoDocumentsMessage, IpfsMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";

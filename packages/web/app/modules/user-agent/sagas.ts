@@ -1,4 +1,4 @@
-import { put } from "redux-saga/effects";
+import { put } from "@neufund/sagas";
 
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { actions } from "../actions";

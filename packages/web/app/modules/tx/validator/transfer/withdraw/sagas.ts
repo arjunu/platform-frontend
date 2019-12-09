@@ -1,5 +1,4 @@
-import { put } from "redux-saga/effects";
-import { select } from "typed-redux-saga";
+import { put, select } from "@neufund/sagas";
 
 import { TGlobalDependencies } from "../../../../../di/setupBindings";
 import { UserHasNoFundsError } from "../../../../../lib/web3/Web3Adapter";

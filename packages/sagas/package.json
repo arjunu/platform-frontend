@@ -1,0 +1,51 @@
+{
+  "name": "@neufund/sagas",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --list-different '**/*.{ts,tsx,js,json,md,gql}'",
+    "format:fix": "prettier --write '**/*.{ts,tsx,js,json,md,gql}'",
+    "lint": "concurrently -p \"[{name}]\" -n \"TSLINT/PRETTIER,TSC\" -c \"bgYellow.bold,bgMagenta.bold\" \"yarn tslint && yarn format\" \"yarn tsc\"",
+    "lint:fix": "concurrently -p \"[{name}]\" -n \"TSLINT/PRETTIER,TSC\" -c \"bgYellow.bold,bgMagenta.bold\" \"yarn tslint:fix && yarn format:fix\" \"yarn tsc\"",
+    "prepare": "yarn build",
+    "start": "tsc --watch",
+    "test": "TS_NODE_PROJECT=tsconfig.spec.json mocha --require ts-node/register/transpile-only --require './config/setupTests.ts' './src/**/*.spec.ts?(x)'",
+    "test:watch": "yarn test --watch --watch-extensions ts,tsx",
+    "tsc": "tsc --noEmit",
+    "tslint": "tslint --project ./tsconfig.json --format stylish",
+    "tslint:fix": "yarn tslint --fix"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^5.2.6",
+    "@types/sinon": "^5.0.5",
+    "@types/sinon-chai": "^3.2.0",
+    "bignumber.js": "^5.0.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "mocha": "^6.0.2",
+    "prettier": "^1.16.4",
+    "sinon": "^7.3.1",
+    "sinon-chai": "^3.2.0",
+    "ts-node": "6.2.0",
+    "tslib": "^1.10.0",
+    "tslint": "^5.14.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.7.3",
+    "typestrict": "^1.0.2"
+  },
+  "peerDependencies": {
+    "bignumber.js": "^5.0.0",
+    "redux-saga": "^1.1.3",
+    "tslib": "^1.10.0"
+  },
+  "dependencies": {
+    "typed-redux-saga": "^0.4.0"
+  }
+}

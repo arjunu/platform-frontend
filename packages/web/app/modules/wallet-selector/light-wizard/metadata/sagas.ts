@@ -1,4 +1,4 @@
-import { select } from "typed-redux-saga";
+import { select } from "@neufund/sagas";
 
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { LightWalletWrongPassword } from "../../../../lib/web3/light-wallet/LightWallet";

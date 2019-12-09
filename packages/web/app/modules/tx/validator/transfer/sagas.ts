@@ -1,5 +1,5 @@
+import { put, select } from "@neufund/sagas";
 import { cloneDeep } from "lodash";
-import { put, select } from "redux-saga/effects";
 
 import { UserHasNoFundsError } from "../../../../lib/web3/Web3Adapter";
 import { actions } from "../../../actions";

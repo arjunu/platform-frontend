@@ -1,6 +1,6 @@
+import { call, delay, fork, put, select } from "@neufund/sagas";
 import { BigNumber } from "bignumber.js";
 import { toChecksumAddress } from "ethereumjs-util";
-import { call, delay, fork, put, select } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { IcbmWalletMessage } from "../../components/translatedMessages/messages";

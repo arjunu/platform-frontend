@@ -1,4 +1,4 @@
-import { fork } from "redux-saga/effects";
+import { fork } from "@neufund/sagas";
 
 import { RemoteFileMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";

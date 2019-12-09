@@ -1,4 +1,4 @@
-import { fork } from "redux-saga/effects";
+import { fork } from "@neufund/sagas";
 
 import { txUserClaimSagas } from "./claim/sagas";
 import { txEtoSetDateSagas } from "./eto-flow/sagas";

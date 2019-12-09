@@ -1,4 +1,4 @@
-import { all } from "redux-saga/effects";
+import { all } from "@neufund/sagas";
 
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { IdentityRegistry } from "../../../../lib/contracts/IdentityRegistry";

@@ -1,15 +1,17 @@
-import { isMatch } from "lodash/fp";
 import {
+  call,
   delay,
   fork,
   getContext,
   race,
+  SagaGenerator,
   spawn,
+  take,
   takeEvery,
   takeLatest,
   throttle,
-} from "redux-saga/effects";
-import { call, SagaGenerator, take } from "typed-redux-saga";
+} from "@neufund/sagas";
+import { isMatch } from "lodash/fp";
 
 import { TGlobalDependencies } from "../di/setupBindings";
 import { TSingleOrArray } from "../types";
@@ -103,7 +105,7 @@ export function* neuTakeOnly<T extends TPattern>(
   payload: Partial<TActionPayload<T>>,
 ): any {
   while (true) {
-    const takenAction: any = yield* take(type);
+    const takenAction: any = yield take(type);
     if (
       takenAction?.payload === undefined ||
       isMatch(payload as object, takenAction.payload as object)

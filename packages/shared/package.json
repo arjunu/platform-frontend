@@ -43,5 +43,6 @@
   "peerDependencies": {
     "bignumber.js": "^5.0.0",
     "tslib": "^1.10.0"
-  }
+  },
+  "dependencies": {}
 }

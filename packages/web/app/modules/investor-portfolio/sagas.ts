@@ -1,6 +1,6 @@
+import { all, fork, put, select } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
 import { filter, map } from "lodash/fp";
-import { all, fork, put, select } from "redux-saga/effects";
 
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { InvestorPortfolioMessage } from "../../components/translatedMessages/messages";

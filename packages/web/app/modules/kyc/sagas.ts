@@ -1,4 +1,4 @@
-import { all, call, delay, fork, put, select } from "redux-saga/effects";
+import { all, call, delay, fork, put, select } from "@neufund/sagas";
 
 import { KycFlowMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";

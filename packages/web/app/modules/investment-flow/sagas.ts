@@ -1,5 +1,5 @@
+import { all, delay, put, select, take, takeEvery, takeLatest } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
-import { all, delay, put, select, take, takeEvery, takeLatest } from "redux-saga/effects";
 
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { TGlobalDependencies } from "../../di/setupBindings";

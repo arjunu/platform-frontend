@@ -1,5 +1,5 @@
+import { fork, put, select, take } from "@neufund/sagas";
 import { BigNumber } from "bignumber.js";
-import { fork, put, select, take } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { ITxData } from "../../../../lib/web3/types";

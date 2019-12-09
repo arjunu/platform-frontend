@@ -1,4 +1,4 @@
-import { fork, put } from "redux-saga/effects";
+import { fork, put } from "@neufund/sagas";
 
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { actions, TActionFromCreator } from "../../../actions";

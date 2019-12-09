@@ -1,4 +1,4 @@
-import { delay, put, select, takeLatest } from "redux-saga/effects";
+import { delay, put, select, takeLatest } from "@neufund/sagas";
 
 import { Q18 } from "../../../config/constants";
 import { TGlobalDependencies } from "../../../di/setupBindings";

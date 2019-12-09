@@ -1,5 +1,5 @@
+import { fork, put, select, take } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
-import { fork, put, select, take } from "redux-saga/effects";
 
 import { IWindowWithData } from "../../../../../test/helperTypes";
 import { ECurrency } from "../../../../components/shared/formatters/utils";

@@ -1,6 +1,6 @@
+import { all, delay, fork, put, select } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
 import { cloneDeep, isEmpty } from "lodash/fp";
-import { all, delay, fork, put, select } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { getNomineeRequestComponentState } from "../../components/nominee-dashboard/linkToIssuer/utils";

@@ -1,4 +1,4 @@
-import { all, call, fork, getContext } from "redux-saga/effects";
+import { all, call, fork, getContext } from "@neufund/sagas";
 
 import { TGlobalDependencies } from "../di/setupBindings";
 import { actions } from "./actions";

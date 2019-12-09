@@ -1,5 +1,5 @@
+import { all, fork, put, select, take } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
-import { all, fork, put, select, take } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { BankTransferFlowMessage } from "../../components/translatedMessages/messages";

@@ -1,5 +1,5 @@
+import { put, select } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
-import { put, select } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../../../di/setupBindings";
 import { IERC223Token } from "../../../../../lib/contracts/IERC223Token";

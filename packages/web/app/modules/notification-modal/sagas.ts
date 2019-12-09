@@ -1,4 +1,4 @@
-import { fork } from "redux-saga/effects";
+import { fork } from "@neufund/sagas";
 
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { assertNever } from "../../utils/assertNever";

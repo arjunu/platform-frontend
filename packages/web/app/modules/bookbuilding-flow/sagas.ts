@@ -1,4 +1,4 @@
-import { delay, fork, put, select } from "redux-saga/effects";
+import { delay, fork, put, select } from "@neufund/sagas";
 
 import { BookbuildingFlowMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";

@@ -1,4 +1,4 @@
-import { all, delay, fork, put, select } from "redux-saga/effects";
+import { all, delay, fork, put, select } from "@neufund/sagas";
 
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { ETxHistoryMessage } from "../../components/translatedMessages/messages";

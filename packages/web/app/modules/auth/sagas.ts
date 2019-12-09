@@ -1,4 +1,4 @@
-import { fork } from "redux-saga/effects";
+import { fork } from "@neufund/sagas";
 
 import { authEmailSagas } from "./email/sagas";
 import { authJwtSagas } from "./jwt/sagas";

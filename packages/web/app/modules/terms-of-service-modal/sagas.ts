@@ -1,4 +1,4 @@
-import { fork, put } from "redux-saga/effects";
+import { fork, put } from "@neufund/sagas";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { AuthMessage, ToSMessage } from "../../components/translatedMessages/messages";

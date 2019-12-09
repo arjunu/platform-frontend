@@ -1,5 +1,5 @@
+import { fork, put, select } from "@neufund/sagas";
 import BigNumber from "bignumber.js";
-import { fork, put, select } from "redux-saga/effects";
 
 import { Q18 } from "../../../../../config/constants";
 import { TGlobalDependencies } from "../../../../../di/setupBindings";

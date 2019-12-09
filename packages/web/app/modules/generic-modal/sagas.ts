@@ -1,4 +1,4 @@
-import { put, take } from "redux-saga/effects";
+import { put, take } from "@neufund/sagas";
 
 import { TMessage } from "../../components/translatedMessages/utils";
 import { actions } from "../actions";

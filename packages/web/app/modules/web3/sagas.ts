@@ -1,5 +1,5 @@
+import { cancel, delay, fork, put, take } from "@neufund/sagas";
 import { END, eventChannel, Task } from "redux-saga";
-import { cancel, delay, fork, put, take } from "redux-saga/effects";
 
 import {
   LIGHT_WALLET_PASSWORD_CACHE_TIME,

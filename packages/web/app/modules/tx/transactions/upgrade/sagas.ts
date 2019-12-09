@@ -1,5 +1,5 @@
+import { fork, put, select } from "@neufund/sagas";
 import { addHexPrefix } from "ethereumjs-util";
-import { fork, put, select } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { ITxData } from "../../../../lib/web3/types";

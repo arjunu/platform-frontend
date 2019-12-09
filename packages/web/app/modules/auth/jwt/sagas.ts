@@ -1,4 +1,4 @@
-import { call, fork, put, select } from "redux-saga/effects";
+import { call, fork, put, select } from "@neufund/sagas";
 
 import { calculateTimeLeft } from "../../../components/shared/utils";
 import { TMessage } from "../../../components/translatedMessages/utils";

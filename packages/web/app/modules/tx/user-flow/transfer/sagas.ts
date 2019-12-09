@@ -1,4 +1,4 @@
-import { put, select, take, takeLatest } from "redux-saga/effects";
+import { put, select, take, takeLatest } from "@neufund/sagas";
 
 import { actions } from "../../../actions";
 import { selectTxValidationState } from "../../validator/selectors";
