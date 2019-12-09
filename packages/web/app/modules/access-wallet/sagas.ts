@@ -30,6 +30,7 @@ import {
 import { LightWallet } from "./../../lib/web3/light-wallet/LightWallet";
 import { mapSignMessageErrorToErrorMessage, MismatchedWalletAddressError } from "./errors";
 import { selectIsSigning } from "./reducer";
+import { SagaIterator } from "redux-saga";
 
 export function* ensureWalletConnection(
   {

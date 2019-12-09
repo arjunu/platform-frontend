@@ -39,6 +39,7 @@ import { selectUrlUserType } from "../selectors";
 import { mapLightWalletErrorToErrorMessage } from "./errors";
 import { getWalletMetadataByURL } from "./metadata/sagas";
 import { getVaultKey } from "./utils";
+import { any } from "prop-types";
 
 export const DEFAULT_HD_PATH = "m/44'/60'/0'";
 
