@@ -5,12 +5,13 @@ import { IdentityRegistry } from "../../../../lib/contracts/IdentityRegistry";
 import { deserializeClaims } from "../../../kyc/utils";
 import { isAddressValid } from "../../../web3/utils";
 import { EAdditionalValidationDataNotifications } from "./../reducer";
+import { SagaGenerator } from "typed-redux-saga";
 
 export function* txProcessAddressValidations(
   { web3Manager, contractsService }: TGlobalDependencies,
   address: string,
   registeredChecks: EAdditionalValidationDataNotifications[],
-): Generator<any, any, any> {
+): SagaGenerator<EAdditionalValidationDataNotifications[]> {
   if (!isAddressValid(address)) {
     throw new Error(`Invalid ethereum address passed: ${address}`);
   }

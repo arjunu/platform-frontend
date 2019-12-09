@@ -154,7 +154,7 @@ export function* updatePendingTxs({
     }
 
     try {
-      const transaction: Web3.Transaction | null = yield neuCall(getTransactionOrThrow, txHash);
+      const transaction = yield* neuCall(getTransactionOrThrow, txHash);
 
       if (transaction) {
         apiPendingTx = {

@@ -23,7 +23,7 @@ enum TRANSACTION_STATUS {
 export function* getTransactionOrThrow(
   { web3Manager, apiUserService }: TGlobalDependencies,
   txHash: string,
-): Generator<any, any, any> {
+): Generator<any, Web3.Transaction | null, any> {
   const tx: Web3.Transaction = yield web3Manager.getTransactionByHash(txHash);
   const txReceipt: Web3.TransactionReceipt | null = yield web3Manager.getTransactionReceipt(txHash);
 

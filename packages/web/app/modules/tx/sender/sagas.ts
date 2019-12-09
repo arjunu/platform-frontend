@@ -1,5 +1,6 @@
 import { Channel } from "redux-saga";
-import { call, put, race, select, take, takeLatest } from "redux-saga/effects";
+import { Effect, put, race, select, takeLatest } from "redux-saga/effects";
+import { take, call } from "typed-redux-saga";
 
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import {
@@ -272,7 +273,7 @@ function* watchPendingOOOTxSubSaga({ logger }: TGlobalDependencies, txHash: stri
     txChannel: Channel<TEventEmitterChannelEvents>,
   ): Generator<any, any, any> {
     while (true) {
-      const result: TEventEmitterChannelEvents = yield take(txChannel);
+      const result: TEventEmitterChannelEvents = yield* take(txChannel);
       if (result.type === EEventEmitterChannelEvents.NEW_BLOCK) {
         yield put(actions.txSender.txSenderReportBlock(result.blockId));
       } else {

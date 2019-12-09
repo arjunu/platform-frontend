@@ -94,7 +94,7 @@ async function connectBrowser(
 
 export function* connectLightWallet(
   lightWalletConnector: LightWalletConnector,
-  metadata: ILightWalletMetadata,
+  metadata: ILightWalletMetadata | ILightWalletRetrieveMetadata,
   password: string,
 ): Generator<any, LightWallet, any> {
   const walletVault: ILightWalletRetrieveMetadata = yield neuCall(

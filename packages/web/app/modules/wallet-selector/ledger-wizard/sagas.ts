@@ -1,6 +1,6 @@
 import { toPairs, zip } from "lodash";
-import { fork, put, select } from "redux-saga/effects";
-import { call } from "typed-redux-saga";
+import { fork, put } from "redux-saga/effects";
+import { call, select } from "typed-redux-saga";
 
 import { tripleZip } from "../../../../typings/modifications";
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -32,7 +32,7 @@ export function* loadLedgerAccounts({
   web3Manager,
   contractsService,
 }: TGlobalDependencies): Generator<any, any, any> {
-  const state: IAppState = yield select();
+  const state = yield* select();
   const {
     advanced,
     index,
@@ -54,11 +54,13 @@ export function* loadLedgerAccounts({
       address: toEthereumAddress(pair[1]),
     }));
 
-    const balancesETH: string[] = yield Promise.all(
-      derivationPathsArray.map(dp => web3Manager.getBalance(dp.address).then(bn => bn.toString())),
+    const balancesETH: any = yield Promise.all(
+      derivationPathsArray.map(dp =>
+        web3Manager.internalWeb3Adapter.getBalance(dp.address).then(bn => bn.toString()),
+      ),
     );
 
-    const balancesNEU: string[] = yield Promise.all(
+    const balancesNEU: any = yield Promise.all(
       derivationPathsArray.map(dp =>
         contractsService.neumark.balanceOf(dp.address).then(bn => bn.toString()),
       ),
