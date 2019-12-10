@@ -80,10 +80,10 @@ export const KYCAddDocuments = compose<React.FunctionComponent<IOwnProps>>(
   }),
   onEnterAction<IOwnProps>({
     actionCreator: (dispatch, props) => {
-      dispatch(actions.kyc.kycLoadIndividualDocumentList());
       if (props.onEnter) {
         dispatch(props.onEnter);
       }
+      dispatch(actions.kyc.kycLoadIndividualDocumentList());
     },
   }),
 )(KYCAddDocumentsComponent);

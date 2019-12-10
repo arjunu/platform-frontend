@@ -2,7 +2,7 @@ import { FormikProps, withFormik } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
-import { compose } from "recompose";
+import { branch, compose, renderComponent } from "recompose";
 
 import {
   IKycIndividualData,
@@ -14,6 +14,7 @@ import {
   selectIndividualDataLoading,
   selectIndividualFiles,
   selectIndividualFilesLoading,
+  selectIndividualFileUploading,
   selectIsSavingKycForm,
   selectKycUploadedFiles,
 } from "../../../modules/kyc/selectors";
@@ -38,6 +39,7 @@ import {
   NONE_KEY,
   unboolify,
 } from "../../shared/forms";
+import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { EKycUploadType } from "../../shared/MultiFileUpload";
 import { Notification } from "../../shared/notification-widget/Notification";
 import { KYCAddDocuments } from "../shared/AddDocuments";
@@ -57,6 +59,7 @@ interface IStateProps {
   isSavingForm: boolean;
   uploadedFiles: ReturnType<typeof selectKycUploadedFiles>;
   uploadedFilesLoading: ReturnType<typeof selectIndividualFilesLoading>;
+  individualFileUploading: ReturnType<typeof selectIndividualFileUploading>;
 }
 
 interface IDispatchProps {
@@ -71,6 +74,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
   uploadedFiles,
   values,
   uploadedFilesLoading,
+  individualFileUploading,
   ...props
 }) => {
   const shouldAddAccreditedInvestorFlow = [values.country, values.nationality].includes(
@@ -227,6 +231,7 @@ export const KYCPersonalStart = compose<IStateProps & IDispatchProps, {}>(
       isSavingForm: selectIsSavingKycForm(state),
       uploadedFiles: selectIndividualFiles(state),
       uploadedFilesLoading: selectIndividualFilesLoading(state),
+      individualFileUploading: selectIndividualFileUploading(state),
     }),
     dispatchToProps: dispatch => ({
       goBack: () => dispatch(actions.routing.goToKYCHome()),
@@ -239,4 +244,5 @@ export const KYCPersonalStart = compose<IStateProps & IDispatchProps, {}>(
   onEnterAction({
     actionCreator: dispatch => dispatch(actions.kyc.kycLoadIndividualData()),
   }),
+  branch<IStateProps>(props => props.loadingData, renderComponent(LoadingIndicator)),
 )(KYCEnhancedForm);
