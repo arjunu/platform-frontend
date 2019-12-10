@@ -1,3 +1,4 @@
+import { EUSState } from "../../utils/enums/usStatesEnum";
 import { TFormFixture } from "../utils/forms";
 
 const kycPersonBaseForm: TFormFixture = {
@@ -73,9 +74,29 @@ export const kycInvidualAddressForm: TFormFixture = {
   },
 };
 
+export const kycInvidualAddressFormUSResident: TFormFixture = {
+  ...kycInvidualAddressForm,
+  usState: {
+    value: EUSState.WEST_VIRGINIA,
+    type: "select",
+  },
+};
+
 export const kycInvidualFormUS: TFormFixture = {
   ...kycPersonBaseForm,
   nationality: {
+    value: "US",
+    type: "select",
+  },
+  isAccreditedUsCitizen: {
+    value: "true",
+    type: "select",
+  },
+};
+
+export const kycInvidualFormUSResident: TFormFixture = {
+  ...kycPersonBaseForm,
+  country: {
     value: "US",
     type: "select",
   },

@@ -174,7 +174,8 @@ const KYCForm: React.FunctionComponent<TProps> = ({
               <KYCAddDocuments
                 onEnter={actions.kyc.kycSubmitPersonalDataNoRedirect(boolify(values))}
                 uploadType={EKycUploadType.US_ACCREDITATION}
-                isLoading={props.isSavingForm}
+                // We can skip showing loader if there is a file already uploaded
+                isLoading={props.isSavingForm && uploadedFiles.length === 0}
               />
             )}
           </>

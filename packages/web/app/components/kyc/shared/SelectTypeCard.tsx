@@ -20,7 +20,7 @@ type TProps = {
 const SelectTypeCardPersonal: React.FunctionComponent = () => (
   <>
     <div className={styles.iconContainer}>
-      <InlineIcon svgIcon={individual} width="64" height="64" />
+      <InlineIcon svgIcon={individual} width="32px" height="32px" />
     </div>
     <h3 className={styles.title}>
       <FormattedMessage id="shared.kyc.select-type.personal.title" />
@@ -34,7 +34,7 @@ const SelectTypeCardPersonal: React.FunctionComponent = () => (
 const SelectTypeCardCompany: React.FunctionComponent = () => (
   <>
     <div className={styles.iconContainer}>
-      <InlineIcon svgIcon={company} width="64" height="64" />
+      <InlineIcon svgIcon={company} width="32px" height="32px" />
     </div>
     <h3 className={styles.title}>
       <FormattedMessage id="shared.kyc.select-type.company.title" />

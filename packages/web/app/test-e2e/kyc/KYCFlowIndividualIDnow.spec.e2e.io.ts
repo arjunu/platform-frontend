@@ -1,11 +1,17 @@
 import { appRoutes } from "../../components/appRoutes";
 import { kycRoutes } from "../../components/kyc/routes";
 import { ID_NOW_EXTERNAL_MOCK } from "../config";
-import { fillForm, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
+import { fillForm, TFormFixture, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
 import { stubWindow } from "../utils/index";
 import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
-import { kycInvidualAddressForm, kycInvidualForm, kycInvidualFormUS } from "./fixtures";
+import {
+  kycInvidualAddressForm,
+  kycInvidualAddressFormUSResident,
+  kycInvidualForm,
+  kycInvidualFormUS,
+  kycInvidualFormUSResident,
+} from "./fixtures";
 
 const goToKycIndividualFlow = () => {
   // go to kyc select and then individual page
@@ -35,29 +41,15 @@ const assertOutsourcedKycWidgetStatus = () => {
   cy.url().should("contain", kycRoutes.start);
 };
 
-describe("KYC Personal flow with ID Now", () => {
-  it("should go through ID Now", () => {
-    createAndLoginNewUser({ type: "investor" });
+const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, isUS: boolean) => {
+  createAndLoginNewUser({ type: "investor" });
 
-    goToKycIndividualFlow();
+  goToKycIndividualFlow();
 
-    // fill and submit the form
-    fillForm(kycInvidualForm);
-    fillForm(kycInvidualAddressForm);
+  // fill the form
+  fillForm(personalData, isUS ? { submit: false } : undefined);
 
-    assertOutsourcedVerification();
-
-    assertOutsourcedKycWidgetStatus();
-  });
-
-  it("should go through ID Now for US investor", () => {
-    createAndLoginNewUser({ type: "investor" });
-
-    goToKycIndividualFlow();
-
-    // fill the form
-    fillForm(kycInvidualFormUS, { submit: false });
-
+  if (isUS) {
     // form should be disabled before the accreditation file is uploaded
     cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
 
@@ -65,11 +57,31 @@ describe("KYC Personal flow with ID Now", () => {
     uploadMultipleFilesToFieldWithTid("kyc-upload-documents-dropzone", ["example.jpg"]);
 
     cy.get(tid("kyc-personal-start-submit-form")).click();
+  }
 
-    fillForm(kycInvidualAddressForm);
+  fillForm(addressData);
 
-    assertOutsourcedVerification();
+  assertOutsourcedVerification();
 
-    assertOutsourcedKycWidgetStatus();
+  assertOutsourcedKycWidgetStatus();
+};
+
+describe("KYC Personal flow with ID Now", () => {
+  it("should go through ID Now", function(): void {
+    this.retries(2);
+
+    fillAndAssert(kycInvidualForm, kycInvidualAddressForm, false);
+  });
+
+  it("should go through ID Now for US investor", function(): void {
+    this.retries(2);
+
+    fillAndAssert(kycInvidualFormUS, kycInvidualAddressForm, true);
+  });
+
+  it("should go through ID Now for US resident", function(): void {
+    this.retries(2);
+
+    fillAndAssert(kycInvidualFormUSResident, kycInvidualAddressFormUSResident, true);
   });
 });

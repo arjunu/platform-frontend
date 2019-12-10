@@ -66,6 +66,7 @@ export const KycPersonSchema = Yup.object().shape({
   id: Yup.string(),
 });
 
+// Base schema for personal details
 export const KycPersonalDataSchema = Yup.object().shape({
   birthDate: personBirthDate,
   country: restrictedCountry,
@@ -76,16 +77,28 @@ export const KycPersonalDataSchema = Yup.object().shape({
   id: Yup.string(),
 });
 
-export const KycPersonalAddressSchema = Yup.object().shape({
+// Base schema for address
+const KycBaseAddressSchema = Yup.object().shape({
   street: Yup.string(),
   additionalInformation: Yup.string(),
   city: Yup.string(),
   zipCode: Yup.string(),
   country: restrictedCountry,
-  usState: stateSchema,
 });
 
-export const KycFullIndividualSchema = KycPersonalDataSchema.concat(KycPersonalAddressSchema);
+// Address schema with required usState when country is set to US
+export const KycPersonalAddressSchema = KycBaseAddressSchema.concat(
+  Yup.object().shape({
+    usState: stateSchema,
+  }),
+);
+
+// Schema used for checking responses from API with all fields optional
+export const KycFullIndividualSchema = KycPersonalDataSchema.concat(KycBaseAddressSchema).concat(
+  Yup.object().shape({
+    usState: Yup.string(),
+  }),
+);
 
 export const KycAdditionalDataSchema = Yup.object().shape({
   // Allow only true value to be saved, do not display any additional message

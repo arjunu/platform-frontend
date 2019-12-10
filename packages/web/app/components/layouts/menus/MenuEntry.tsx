@@ -4,6 +4,7 @@ import { match, NavLink } from "react-router-dom";
 
 import { TDataTestId, TTranslatedString } from "../../../types";
 import { invariant } from "../../../utils/invariant";
+import { ButtonBase } from "../../shared/buttons/ButtonBase";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 import { ExternalLink } from "../../shared/links/index";
 
@@ -84,7 +85,7 @@ export const MenuEntryContent: React.FunctionComponent<IMenuEntryContent & IMenu
     {svgString && (
       <InlineIcon
         svgIcon={svgString}
-        alt="logout"
+        alt=""
         className={cn(styles.icon, { [styles.disabledItemContent]: disabled })}
       />
     )}
@@ -127,7 +128,7 @@ const MenuEntryAction: React.FunctionComponent<IMenuAction &
   IMenuEntryContent &
   IMenuInternal &
   TDataTestId> = ({ onClick, menuRenderingType, ["data-test-id"]: dataTestId, ...props }) => (
-  <button
+  <ButtonBase
     className={
       menuRenderingType === EMenuEntryRenderingType.MENU ? styles.menuItem : styles.dropdownMenuItem
     }
@@ -135,7 +136,7 @@ const MenuEntryAction: React.FunctionComponent<IMenuAction &
     data-test-id={dataTestId}
   >
     <MenuEntryContent {...props} menuRenderingType={menuRenderingType} />
-  </button>
+  </ButtonBase>
 );
 
 const MenuEntryLink: React.FunctionComponent<IMenuEntryContent &

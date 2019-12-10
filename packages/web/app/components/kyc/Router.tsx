@@ -16,6 +16,7 @@ import { KYCPersonalUpload } from "./personal/Upload";
 import { kycRoutes } from "./routes";
 import { KYCStart } from "./start/Start";
 import { KycSuccess } from "./Success";
+import { isManualVerificationEnabled } from "./utils";
 
 interface IStateProps {
   userType?: EUserType;
@@ -33,7 +34,9 @@ export const NormalKycRouter: React.FunctionComponent = () => (
       path={kycRoutes.individualDocumentVerification}
       component={KycPersonalDocumentVerification}
     />
-    <Route path={kycRoutes.individualUpload} component={KYCPersonalUpload} />
+    {isManualVerificationEnabled() && (
+      <Route path={kycRoutes.individualUpload} component={KYCPersonalUpload} />
+    )}
 
     {/* Business */}
     <Route path={kycRoutes.legalRepresentative} component={KycLegalRepresentative} />

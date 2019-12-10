@@ -48,23 +48,21 @@ export const getEnabledProviders = () =>
     : [];
 
 export const getEnabledInstantIdProviders = (
-  supportedInstantIdProviders:
-    | ReadonlyArray<EKycInstantIdProvider>
-    | TInstantIdNoneProvider
-    | undefined,
+  supportedInstantIdProviders: ReadonlyArray<EKycInstantIdProvider>,
 ) => {
   const enabledProviders = getEnabledProviders();
-  return enabledProviders.length > 0
-    ? enabledProviders.filter(
-        v =>
-          supportedInstantIdProviders &&
-          v !== MANUAL_KYC_PROVIDER &&
-          supportedInstantIdProviders.includes(v),
-      )
-    : supportedInstantIdProviders && [...supportedInstantIdProviders];
+
+  const enabledInstantIdProviders = enabledProviders.filter(p => p !== MANUAL_KYC_PROVIDER);
+
+  // in case we don't have the enabled providers flag set default to all supported providers
+  if (enabledInstantIdProviders.length === 0) {
+    return supportedInstantIdProviders;
+  }
+
+  return supportedInstantIdProviders.filter(p => enabledInstantIdProviders.includes(p));
 };
 
 export const isManualVerificationEnabled = () => {
   const enabledProviders = getEnabledProviders();
-  return enabledProviders && enabledProviders.includes(MANUAL_KYC_PROVIDER);
+  return enabledProviders.includes(MANUAL_KYC_PROVIDER);
 };

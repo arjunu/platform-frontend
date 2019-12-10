@@ -84,17 +84,6 @@ export class KycApi {
     });
   }
 
-  public async putIndividualData(
-    data: IKycIndividualData,
-  ): Promise<IHttpResponse<IKycIndividualData>> {
-    return await this.httpClient.put<IKycIndividualData>({
-      baseUrl: BASE_PATH,
-      url: INDIVIDUAL_DATA_PATH,
-      body: data,
-      responseSchema: KycPersonSchema,
-    });
-  }
-
   public async putPersonalData(
     data: IKycIndividualData,
   ): Promise<IHttpResponse<IKycIndividualData>> {

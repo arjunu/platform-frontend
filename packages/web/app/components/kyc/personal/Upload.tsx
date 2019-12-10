@@ -7,7 +7,7 @@ import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
-import { EButtonLayout } from "../../shared/buttons/Button";
+import { EButtonLayout, EButtonSize } from "../../shared/buttons/Button";
 import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
@@ -57,6 +57,7 @@ export const KYCUploadComponent: React.FunctionComponent<TComponentProps> = prop
     <ButtonGroup className={styles.buttons}>
       <Button
         layout={EButtonLayout.OUTLINE}
+        size={EButtonSize.HUGE}
         className={styles.button}
         data-test-id="kyc-personal-start-go-back"
         onClick={props.goBack}
@@ -65,6 +66,7 @@ export const KYCUploadComponent: React.FunctionComponent<TComponentProps> = prop
       </Button>
       <Button
         layout={EButtonLayout.PRIMARY}
+        size={EButtonSize.HUGE}
         className={styles.button}
         onClick={props.onDone}
         disabled={!props.files || props.files.length === 0}

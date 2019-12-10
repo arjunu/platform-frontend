@@ -28,7 +28,7 @@ import { FieldSchemaProvider } from "../../shared/Field";
 import { ILink, MediaLinksWidget } from "../../shared/MediaLinksWidget";
 import { Panel } from "../../shared/Panel";
 import { Slides } from "../../shared/Slides";
-import { IEtoSocialProfile, SocialProfilesList } from "../../shared/SocialProfilesList";
+import { SocialProfilesList } from "../../shared/SocialProfilesList";
 import { TabContent, Tabs } from "../../shared/Tabs";
 import { TwitterTimelineEmbed } from "../../shared/TwitterTimeline";
 import { Video } from "../../shared/Video";
@@ -127,11 +127,14 @@ const EtoViewCampaignOverview: React.FunctionComponent<IProps> = ({ eto, isUserF
             <Video youTubeUrl={companyVideo && companyVideo.url} hasModal />
           </Container>
         )}
-        <Container>
-          <div className={cn((isSlideShareAvailable || isYouTubeVideoAvailable) && "mt-4")}>
-            <SocialProfilesList profiles={(socialChannels as IEtoSocialProfile[]) || []} />
-          </div>
-        </Container>
+
+        {socialChannels && socialChannels.length > 0 && (
+          <Container>
+            <div className={cn((isSlideShareAvailable || isYouTubeVideoAvailable) && "mt-4")}>
+              <SocialProfilesList profiles={socialChannels} />
+            </div>
+          </Container>
+        )}
       </Container>
       <MarketingDocumentsWidget
         columnSpan={EColumnSpan.THREE_COL}

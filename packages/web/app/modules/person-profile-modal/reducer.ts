@@ -1,4 +1,4 @@
-import { IEtoSocialProfile } from "../../components/shared/SocialProfilesList";
+import { TSocialChannelsType } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 
@@ -12,7 +12,7 @@ export interface IPersonProfileModal {
   name: string;
   role: string;
   description: string | React.ReactNode;
-  socialChannels: IEtoSocialProfile[];
+  socialChannels: TSocialChannelsType;
   website?: string;
 }
 

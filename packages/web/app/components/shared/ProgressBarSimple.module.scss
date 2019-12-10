@@ -7,6 +7,7 @@
   display: flex;
 
   &-value {
+    transition: width linear .3s;
     background-color: $neu-bitter-lemon;
   }
 }

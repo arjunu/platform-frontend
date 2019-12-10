@@ -152,7 +152,7 @@ const ActionButton = ({
     return (
       <Button
         id="continue-kyc-continue-verification"
-        layout={EButtonLayout.GHOST}
+        layout={EButtonLayout.PRIMARY}
         iconPosition={EIconPosition.ICON_AFTER}
         svgIcon={arrowRight}
         onClick={onGoToKycHome}

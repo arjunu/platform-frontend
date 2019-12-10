@@ -11,7 +11,7 @@ import {
 } from "../../../modules/kyc/selectors";
 import { appConnect } from "../../../store";
 import { onEnterAction } from "../../../utils/OnEnterAction";
-import { EButtonLayout } from "../../shared/buttons/Button";
+import { EButtonLayout, EButtonSize } from "../../shared/buttons/Button";
 import { Button, ButtonGroup } from "../../shared/buttons/index";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
@@ -45,6 +45,7 @@ export const KYCAdditionalUploadLayout: React.FunctionComponent<IStateProps &
     <ButtonGroup className={styles.buttons}>
       <Button
         layout={EButtonLayout.OUTLINE}
+        size={EButtonSize.HUGE}
         className={styles.button}
         data-test-id="kyc-personal-start-go-back"
         onClick={props.goBack}

@@ -22,6 +22,7 @@ const commonProps = {
   currentProvider: NONE_KYC_INSTANTID_PROVIDER,
   idNowRedirectUrl: undefined,
   requestStatus: EKycRequestStatus.DRAFT,
+  onfidoRequestStartError: undefined,
 };
 
 storiesOf("organisms|KYC/DocumentVerification", module)
@@ -67,5 +68,13 @@ storiesOf("organisms|KYC/DocumentVerification", module)
       recommendedInstantIdProvider={EKycInstantIdProvider.ONFIDO}
       supportedInstantIdProviders={supportedInstantIdProviders}
       onfidoSdk={{ isSupported: () => false } as OnfidoSDK}
+    />
+  ))
+  .add("with Onfido request start error", () => (
+    <KycPersonalDocumentVerificationComponent
+      {...commonProps}
+      recommendedInstantIdProvider={EKycInstantIdProvider.ONFIDO}
+      supportedInstantIdProviders={supportedInstantIdProviders}
+      onfidoRequestStartError={new Error("Failed to start onfido")}
     />
   ));

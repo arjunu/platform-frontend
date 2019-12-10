@@ -1,47 +1,48 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
+import { ESocialChannelType } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { SocialProfilesList } from "./SocialProfilesList";
 
 const socialProfiles = [
   {
-    type: "slack",
+    type: ESocialChannelType.SLACK,
     url: "www.neufund.org",
   },
   {
-    type: "twitter",
+    type: ESocialChannelType.TWITTER,
     url: "www.neufund.org",
   },
   {
-    type: "medium",
+    type: ESocialChannelType.MEDIUM,
     url: "www.neufund.org",
   },
   {
-    type: "reddit",
+    type: ESocialChannelType.REDDIT,
     url: "www.neufund.org",
   },
   {
-    type: "telegram",
+    type: ESocialChannelType.TELEGRAM,
     url: "www.neufund.org",
   },
   {
-    type: "github",
+    type: ESocialChannelType.GITHUB,
     url: "www.neufund.org",
   },
   {
-    type: "instagram",
+    type: ESocialChannelType.INSTAGRAM,
     url: "www.neufund.org",
   },
   {
-    type: "gplus",
+    type: ESocialChannelType.G_PLUS,
     url: "www.neufund.org",
   },
   {
-    type: "youtube",
+    type: ESocialChannelType.YOUTUBE,
     url: "www.neufund.org",
   },
   {
-    type: "xing",
+    type: ESocialChannelType.XING,
     url: "www.neufund.org ",
   },
 ];
