@@ -86,8 +86,14 @@ $dropdown-entry-height: px-to-rem(48px);
 .icon {
   color: $neu-charcoal-grey;
   margin-left: px-to-rem(8);
-  height: auto;
-  width: auto;
+
+  // we need to also reset `svg` size to auto
+  // otherwise logout buttons is not properly positioned
+  &,
+  svg {
+    height: auto;
+    width: auto;
+  }
 }
 
 .disabled-item-content {
