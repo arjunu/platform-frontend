@@ -7,6 +7,7 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "module": "esnext",
+    "jsx": "react",
     "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
