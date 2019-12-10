@@ -6,6 +6,7 @@ import {
   race,
   SagaGenerator,
   spawn,
+  take,
   takeEvery,
   takeLatest,
   throttle,
