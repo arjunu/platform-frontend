@@ -24,7 +24,7 @@ import { TEtoSetDateAdditionalData } from "../../../../modules/tx/transactions/e
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
 import { nonNullable } from "../../../../utils/nonNullable";
-import { withParams } from "../../../../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { EtherscanAddressLink, ExternalLink } from "../../../shared/links";

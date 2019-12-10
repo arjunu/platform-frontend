@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { CommonHtmlProps } from "../../../types";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { ECurrency, selectUnits } from "../formatters/utils";
 import { TokenIcon } from "./TokenIcon";
 

@@ -7,7 +7,7 @@ import {
   IIntlHelpers,
   IIntlProps,
   injectIntlHelpers,
-} from "../../../utils/injectIntlHelpers.unsafe";
+} from "@neufund/shared"
 import { DEFAULT_CHART_COLOR } from "../../eto/shared/EtoView";
 import { OTHERS_NAME } from "../../eto/utils";
 import { ChartLegend } from "./ChartLegend";

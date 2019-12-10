@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EOfferingDocumentType } from "../../../lib/api/eto/EtoProductsApi.interfaces";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { DashboardHeading } from "../../eto/shared/DashboardHeading";
 import { Container, EColumnSpan } from "../../layouts/Container";
 import { EEtoStep } from "../utils";

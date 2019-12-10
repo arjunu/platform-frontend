@@ -1,4 +1,4 @@
-import { IIntlHelpers } from "../../utils/injectIntlHelpers.unsafe";
+import { IIntlHelpers } from "@neufund/shared"
 
 export class IntlWrapper {
   public intl!: IIntlHelpers;

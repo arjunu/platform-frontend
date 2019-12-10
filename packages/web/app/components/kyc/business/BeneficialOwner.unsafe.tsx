@@ -13,7 +13,7 @@ import {
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { ECountries } from "../../../utils/enums/countriesEnum";
-import { injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
+import { injectIntlHelpers } from "@neufund/shared"
 import { AccordionElement } from "../../shared/Accordion";
 import { Button, EButtonLayout } from "../../shared/buttons";
 import {

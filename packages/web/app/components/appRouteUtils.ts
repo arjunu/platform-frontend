@@ -1,5 +1,5 @@
 import { externalRoutes } from "../config/externalRoutes";
-import { withParams } from "../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { appRoutes } from "./appRoutes";
 
 export const etoPublicViewLink = (previewCode: string, jurisdiction: string) =>

@@ -9,7 +9,7 @@ import {
   ETransactionSubType,
   TExtractTxHistoryFromType,
 } from "../../../../modules/tx-history/types";
-import { assertNever } from "../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { etoPublicViewByIdLinkLegacy } from "../../../appRouteUtils";
 import { DataRow, DataRowSeparator } from "../../../modals/tx-sender/shared/DataRow";
 import { ECurrency } from "../../../shared/formatters/utils";

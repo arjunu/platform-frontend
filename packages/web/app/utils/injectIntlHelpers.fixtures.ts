@@ -1,4 +1,4 @@
-import { IIntlHelpers } from "./injectIntlHelpers.unsafe";
+import { IIntlHelpers } from "@neufund/shared"
 
 /**
  * This dummy wrapper should be extended when we use more fields

@@ -3,7 +3,7 @@ import { isFunction } from "lodash/fp";
 import { etoRegisterRoutes } from "../../components/eto/registration/routes";
 import { TPartialCompanyEtoData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { toCamelCase, toSnakeCase } from "../../utils/transformObjectKeys";
-import { withParams } from "../../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { confirmAccessModal } from "../utils";
 import { assertIssuerDashboard } from "../utils/assertions";
 import { cyPromise } from "../utils/cyPromise";

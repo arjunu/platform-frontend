@@ -51,7 +51,7 @@ import { selectTxValidationState } from "../../../../modules/tx/validator/select
 import { isValidFormNumber } from "../../../../modules/tx/validator/transfer/utils";
 import { appConnect } from "../../../../store";
 import { addBigNumbers, multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
-import { IIntlProps, injectIntlHelpers } from "../../../../utils/injectIntlHelpers.unsafe";
+import { IIntlProps, injectIntlHelpers } from "@neufund/shared"
 import { nonNullable } from "../../../../utils/nonNullable";
 import { appRoutes } from "../../../appRoutes";
 import { InfoAlert } from "../../../shared/Alerts";

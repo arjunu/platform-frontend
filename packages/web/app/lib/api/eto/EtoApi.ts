@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { symbols } from "../../../di/symbols";
 import { amendEtoToCompatibleFormat } from "../../../modules/eto/utils";
-import { withParams } from "../../../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { IHttpClient, IHttpResponse } from "../client/IHttpClient";
 import {
   TEtoDataWithCompany,

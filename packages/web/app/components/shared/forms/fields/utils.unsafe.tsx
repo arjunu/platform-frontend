@@ -11,7 +11,7 @@ import {
   getSchemaMeta,
   getValidationSchema,
   isRequired,
-} from "../../../../utils/yupUtils";
+} from "@neufund/shared"
 import { ECurrency } from "../../formatters/utils";
 import { selectDecimalPlaces } from "../../Money.unsafe";
 import { FormFieldLabel } from "./FormFieldLabel";

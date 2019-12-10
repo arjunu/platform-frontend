@@ -6,7 +6,7 @@ import { EEtoState } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { ETOCommitment } from "../../../../../lib/contracts/ETOCommitment";
 import { ITxData } from "../../../../../lib/web3/types";
 import { IAppState } from "../../../../../store";
-import { assertNever } from "../../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { nonNullable } from "../../../../../utils/nonNullable";
 import { EthereumAddressWithChecksum } from "../../../../../utils/opaque-types/types";
 import { actions } from "../../../../actions";

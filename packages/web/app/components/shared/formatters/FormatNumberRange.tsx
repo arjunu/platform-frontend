@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TBigNumberVariants } from "../../../lib/web3/types";
 import { TTranslatedString } from "../../../types";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import {
   ENumberInputFormat,
   ENumberOutputFormat,

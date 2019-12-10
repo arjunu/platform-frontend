@@ -5,7 +5,7 @@ import { compose } from "redux";
 
 import { actions } from "../../../../modules/actions";
 import { appConnect } from "../../../../store";
-import { injectIntlHelpers } from "../../../../utils/injectIntlHelpers.unsafe";
+import { injectIntlHelpers } from "@neufund/shared"
 import { BreadCrumb } from "../../../shared/BreadCrumb";
 import { Button } from "../../../shared/buttons";
 import { Panel } from "../../../shared/Panel";

@@ -1,7 +1,7 @@
+import { assertNever } from "@neufund/shared";
 import * as React from "react";
 
 import { EWhitelistingState } from "../../../../../modules/bookbuilding-flow/utils";
-import { assertNever } from "../../../../../utils/assertNever";
 import { LoadingIndicator } from "../../../../shared/loading-indicator/LoadingIndicator";
 import { CounterWidget } from "../CounterWidget";
 import {

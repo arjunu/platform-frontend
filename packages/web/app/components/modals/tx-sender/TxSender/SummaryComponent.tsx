@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { ETxSenderType } from "../../../../modules/tx/types";
-import { assertNever } from "../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { SetEtoDateSummary } from "../eto-flow/SetDateSummary";
 import { SignInvestmentAgreementSummary } from "../eto-flow/SignInvestmentAgreementSummary";
 import { InvestmentSummary } from "../investment-flow/Summary";

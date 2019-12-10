@@ -11,7 +11,7 @@ import {
 } from "../../../../../modules/bookbuilding-flow/utils";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { appConnect } from "../../../../../store";
-import { assertNever } from "../../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { onEnterAction } from "../../../../../utils/OnEnterAction";
 import { Money } from "../../../../shared/formatters/Money";
 import {

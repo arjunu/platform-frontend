@@ -2,7 +2,7 @@ import {
   AUTH_JWT_TIMING_THRESHOLD,
   AUTH_TOKEN_REFRESH_THRESHOLD,
 } from "../../modules/auth/constants";
-import { getJwtExpiryDate } from "../../utils/JWTUtils";
+import { getJwtExpiryDate } from "@neufund/shared"
 import {
   assertEmailChangeFlow,
   assertLanding,

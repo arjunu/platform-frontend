@@ -5,7 +5,7 @@ import { EUserType } from "../../../../lib/api/users/interfaces";
 import { selectUserType } from "../../../../modules/auth/selectors";
 import { selectIsActionRequiredSettings } from "../../../../modules/notifications/selectors";
 import { appConnect } from "../../../../store";
-import { assertNever } from "../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { InvestorMenu } from "./InvestorMenu";
 import { IssuerMenu } from "./IssuerMenu";
 import { NomineeMenu } from "./NomineeMenu";

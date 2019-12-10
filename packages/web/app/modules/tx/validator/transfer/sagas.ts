@@ -16,7 +16,7 @@ import {
   compareBigNumbers,
   multiplyBigNumbers,
   subtractBigNumbers,
-} from "./../../../../utils/BigNumberUtils";
+} from "@neufund/shared"
 import { selectEtherBalance } from "./../../../wallet/selectors";
 import { generateRandomEthereumAddress } from "./../../../web3/utils";
 import { ITokenTransferDraftType, IWithdrawDraftType } from "./../../types";

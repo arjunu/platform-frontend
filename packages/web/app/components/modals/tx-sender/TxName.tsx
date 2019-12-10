@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { ETxSenderType } from "../../../modules/tx/types";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 
 interface IProps {
   type: ETxSenderType;

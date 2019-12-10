@@ -1,5 +1,5 @@
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
-import { minutesToMs } from "../../utils/DateUtils";
+import { minutesToMs } from "@neufund/shared"
 import { ECountries } from "../../utils/enums/countriesEnum";
 
 export const etoInProgressPollingDelay = minutesToMs(1);

@@ -9,7 +9,7 @@ import {
   isRequired,
   makeAllRequired,
   pickSchemaValues,
-} from "./yupUtils";
+} from "@neufund/shared"
 
 describe("yupUtils", () => {
   describe("isRequired", () => {

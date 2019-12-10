@@ -22,7 +22,7 @@ import { selectIssuerEtoInvestmentCalculatedValues } from "../../../modules/eto/
 import { EETOStateOnChain } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { OmitKeys, TTranslatedString } from "../../../types";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { InvariantError } from "../../../utils/invariant";
 import { nonNullable } from "../../../utils/nonNullable";
 import { onEnterAction } from "../../../utils/OnEnterAction";

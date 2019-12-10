@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 
 import { symbols } from "../../../di/symbols";
-import { withParams } from "../../../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { IHttpClient, IHttpResponse } from "../client/IHttpClient";
 import { IPledge } from "./EtoPledgeApi.interfaces.unsafe";
 

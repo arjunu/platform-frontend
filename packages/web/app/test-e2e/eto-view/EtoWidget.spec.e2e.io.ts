@@ -2,7 +2,7 @@ import { appRoutes } from "../../components/appRoutes";
 import { etherscanAddressLink } from "../../components/appRouteUtils";
 import { e2eRoutes } from "../../components/testing/e2eRoutes";
 import { TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { withParams } from "../../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { etoFixtureAddressByName, tid } from "../utils";
 import { assertIsExternalLink } from "../utils/assertions";
 import { getEto } from "../utils/userHelpers";

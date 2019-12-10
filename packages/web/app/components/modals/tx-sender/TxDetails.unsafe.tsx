@@ -3,7 +3,7 @@ import * as React from "react";
 import { ITxData } from "../../../lib/web3/types";
 import { ETxSenderType, TSpecificTransactionState } from "../../../modules/tx/types";
 import { CommonHtmlProps } from "../../../types";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { SetDateDetails } from "./eto-flow/SetDateDetails";
 import { InvestmentTransactionDetails } from "./investment-flow/InvestmentTransactionDetails";
 import { AcceptTransactionDetails } from "./investor-payout/AcceptTransactionDetails";

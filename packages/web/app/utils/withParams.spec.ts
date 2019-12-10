@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
-import { withParams } from "./withParams";
+import { withParams } from "@neufund/shared";
 
-describe("withParams", () => {
+describe("@neufund/shared", () => {
   it("replace params with correct value", () => {
     const paramName = "etoId";
     const route = `eto-listing/:${paramName}`;

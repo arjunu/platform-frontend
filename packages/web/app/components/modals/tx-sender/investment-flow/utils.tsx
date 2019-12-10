@@ -23,7 +23,7 @@ import {
 } from "../../../../modules/wallet/selectors";
 import { IAppState } from "../../../../store";
 import { Dictionary, TTranslatedString } from "../../../../types";
-import { assertNever } from "../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { divideBigNumbers } from "../../../../utils/BigNumberUtils";
 import { Money } from "../../../shared/formatters/Money";
 import {

@@ -3,7 +3,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TFormikConnect } from "../../../../types";
-import { findMax, findMin, getSchemaField, getValidationSchema } from "../../../../utils/yupUtils";
+import { findMax, findMin, getSchemaField, getValidationSchema } from "@neufund/shared"
 
 import * as styles from "./FormRange.module.scss";
 

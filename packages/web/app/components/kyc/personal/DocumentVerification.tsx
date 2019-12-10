@@ -21,7 +21,7 @@ import {
 import { ENotificationType } from "../../../modules/notifications/types";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { nonNullable } from "../../../utils/nonNullable";
 import { onLeaveAction } from "../../../utils/OnLeaveAction";
 import { Button, EButtonLayout, EButtonSize } from "../../shared/buttons/Button";

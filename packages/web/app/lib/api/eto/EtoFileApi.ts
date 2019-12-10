@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { Dictionary } from "lodash";
 
 import { symbols } from "../../../di/symbols";
-import { withParams } from "../../../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { IHttpClient } from "../client/IHttpClient";
 import { EEtoDocumentType, IEtoDocument, TStateInfo } from "./EtoFileApi.interfaces";
 

@@ -1,6 +1,6 @@
 export * from "./modules/actionsUtils";
 export * from "./modules/assertNever";
-export * from "./modules/BigNumberUtils";
+export * from "@neufund/shared"
 export * from "./modules/DateUtils";
 export * from "./modules/NumberUtils";
 export * from "./modules/PromiseUtils";

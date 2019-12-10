@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { assertNever } from "../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { ETxStatus } from "../types";
 
 import * as txError from "../../../../assets/img/icon_txn_status_error.svg";

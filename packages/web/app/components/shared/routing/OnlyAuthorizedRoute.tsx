@@ -9,7 +9,7 @@ import { selectIsAuthorized, selectUserType } from "../../../modules/auth/select
 import { selectWalletTypeFromQueryString } from "../../../modules/routing/selectors";
 import { EWalletType } from "../../../modules/web3/types";
 import { appConnect } from "../../../store";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { appRoutes } from "../../appRoutes";
 import { walletLoginRoutes } from "../../wallet-selector/walletRoutes";
 

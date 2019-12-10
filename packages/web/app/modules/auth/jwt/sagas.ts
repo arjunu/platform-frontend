@@ -4,7 +4,7 @@ import { calculateTimeLeft } from "../../../components/shared/utils";
 import { TMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { ICreateJwtEndpointResponse } from "../../../lib/api/auth/SignatureAuthApi";
-import { getJwtExpiryDate, hasValidPermissions } from "../../../utils/JWTUtils";
+import { getJwtExpiryDate, hasValidPermissions } from "@neufund/shared"
 import { EthereumAddressWithChecksum } from "../../../utils/opaque-types/types";
 import { EDelayTiming, safeDelay } from "../../../utils/safeTimers";
 import { accessWalletAndRunEffect } from "../../access-wallet/sagas";

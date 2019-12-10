@@ -19,7 +19,7 @@ import {
 import { EEtoFormTypes } from "../../../../modules/eto-flow/types";
 import { appConnect } from "../../../../store";
 import { TFormikConnect, TTranslatedString } from "../../../../types";
-import { getSchemaField, getValidationSchema, isRequired } from "../../../../utils/yupUtils";
+import { getSchemaField, getValidationSchema, isRequired } from "@neufund/shared"
 import { Button, EButtonLayout, EIconPosition } from "../../../shared/buttons";
 import { FormField, FormTextArea } from "../../../shared/forms";
 import { FormSingleFileUpload } from "../../../shared/forms/fields/FormSingleFileUpload";

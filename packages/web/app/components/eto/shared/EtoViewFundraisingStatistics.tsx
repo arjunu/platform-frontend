@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { externalRoutes } from "../../../config/externalRoutes";
-import { withParams } from "../../../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { LoadingIndicatorHexagon } from "../../shared/loading-indicator/LoadingIndicatorHexagon";
 
 import * as styles from "./EtoViewFundraisingStatistics.module.scss";

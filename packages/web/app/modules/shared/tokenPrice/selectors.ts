@@ -1,6 +1,6 @@
 import { ECurrency } from "../../../components/shared/formatters/utils";
 import { IAppState } from "../../../store";
-import { assertNever } from "../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { multiplyBigNumbers } from "../../../utils/BigNumberUtils";
 import { ITokenPriceStateData } from "./reducer";
 

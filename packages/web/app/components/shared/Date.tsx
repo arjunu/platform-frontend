@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { formatDate } from "../../utils/DateUtils";
+import { formatDate } from "@neufund/shared"
 
 import * as styles from "./Date.module.scss";
 

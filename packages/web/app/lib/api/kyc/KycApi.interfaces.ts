@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 import { ECountries } from "../../../utils/enums/countriesEnum";
 import { EUSState } from "../../../utils/enums/usStatesEnum";
-import { makeAllRequiredExcept } from "../../../utils/yupUtils";
+import { makeAllRequiredExcept } from "@neufund/shared"
 import * as YupTS from "../../yup-ts.unsafe";
 import { countryCode, percentage, personBirthDate, restrictedCountry } from "../util/customSchemas";
 

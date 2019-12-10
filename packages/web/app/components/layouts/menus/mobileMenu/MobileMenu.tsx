@@ -6,7 +6,7 @@ import { actions } from "../../../../modules/actions";
 import { selectUserType } from "../../../../modules/auth/selectors";
 import { selectIsActionRequiredSettings } from "../../../../modules/notifications/selectors";
 import { appConnect } from "../../../../store";
-import { assertNever } from "../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { MenuBase } from "../MenuBase";
 import { TMenuEntry } from "../MenuEntry";
 import { InvestorMobileMenu } from "./InvestorMobileMenu";

@@ -8,7 +8,7 @@ import { EOfferingDocumentType } from "../../../../lib/api/eto/EtoProductsApi.in
 import { actions } from "../../../../modules/actions";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { appConnect } from "../../../../store";
-import { assertNever } from "../../../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 import { etherscanAddressLink, etoPublicViewLink } from "../../../appRouteUtils";
 import { TagWithFallback } from "../../../shared/Tag";
 

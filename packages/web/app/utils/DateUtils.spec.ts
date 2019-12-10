@@ -7,7 +7,7 @@ import {
   isLessThanNMinutes,
   minutesToMs,
   secondsToMs,
-} from "./DateUtils";
+} from "@neufund/shared"
 
 describe("date utils", () => {
   describe("formatDate", () => {

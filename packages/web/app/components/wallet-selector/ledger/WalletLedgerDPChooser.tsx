@@ -3,7 +3,7 @@ import * as React from "react";
 import { Col, FormFeedback, FormGroup, Input, Row } from "reactstrap";
 
 import { DEFAULT_DERIVATION_PATH_PREFIX } from "../../../modules/wallet-selector/ledger-wizard/reducer";
-import { IIntlProps, injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
+import { IIntlProps, injectIntlHelpers } from "@neufund/shared"
 import { derivationPathPrefixValidator } from "../../../utils/Validators";
 
 const DEBOUNCE_DELAY = 200;

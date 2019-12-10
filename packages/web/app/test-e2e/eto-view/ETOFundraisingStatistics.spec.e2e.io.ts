@@ -1,5 +1,5 @@
 import { externalRoutes } from "../../config/externalRoutes";
-import { withParams } from "../../utils/withParams";
+import { withParams } from "@neufund/shared";
 import { etoFixtureAddressByName, tid } from "../utils";
 import { loginFixtureAccount } from "../utils/userHelpers";
 import { goToEtoViewById } from "./EtoViewUtils";

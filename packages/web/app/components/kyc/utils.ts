@@ -4,7 +4,7 @@ import {
   TManualIdProvider,
 } from "../../lib/api/kyc/KycApi.interfaces";
 import { OnfidoSDK } from "../../lib/dependencies/onfido/OnfidoSDK";
-import { assertNever } from "../../utils/assertNever";
+import { assertNever } from "@neufund/shared";
 
 import * as id_now from "../../assets/img/instant-id/id_now.svg";
 import * as onfido from "../../assets/img/instant-id/onfido.svg";

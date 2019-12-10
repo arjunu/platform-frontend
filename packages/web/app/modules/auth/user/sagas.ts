@@ -15,8 +15,8 @@ import {
   SignerUnknownError,
 } from "../../../lib/web3/Web3Manager/Web3Manager";
 import { IAppState } from "../../../store";
-import { assertNever } from "../../../utils/assertNever";
-import { minutesToMs, secondsToMs } from "../../../utils/DateUtils";
+import { assertNever } from "@neufund/shared";
+import { minutesToMs, secondsToMs } from "@neufund/shared"
 import { safeDelay } from "../../../utils/safeTimers";
 import { actions, TActionFromCreator } from "../../actions";
 import { EInitType } from "../../init/reducer";

@@ -9,7 +9,7 @@ import {
   ProgressCalculator,
 } from "../../../modules/eto-flow/utils";
 import { TDataTestId, TFormikConnect, TTranslatedString } from "../../../types";
-import { pickSchemaValues } from "../../../utils/yupUtils";
+import { pickSchemaValues } from "@neufund/shared"
 import { Form, TFormProps } from "../../shared/forms/index";
 import { PercentageIndicatorBar } from "../../shared/PercentageIndicatorBar";
 import { Section } from "./Shared";

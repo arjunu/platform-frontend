@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import * as Yup from "yup";
 
 import { TDataTestId } from "../../../types";
-import { injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
+import { injectIntlHelpers } from "@neufund/shared"
 import { Button, ButtonInline, EButtonLayout } from "../../shared/buttons";
 import { FormField } from "../../shared/forms/fields/FormField";
 import { FormDeprecated } from "../../shared/forms/FormDeprecated";
