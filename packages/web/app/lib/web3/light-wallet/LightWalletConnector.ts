@@ -14,6 +14,7 @@ import { EthereumAddress } from "../../../utils/opaque-types/types";
 import { ILogger } from "../../dependencies/logger";
 import { IPersonalWallet } from "../PersonalWeb3";
 import { STIPEND_ELIGIBLE_WALLETS } from "./../constants";
+import { DummyBlockTracker } from "./../DummyBlockTracker";
 import { IEthereumNetworkConfig } from "./../types";
 import { Web3Adapter } from "./../Web3Adapter";
 import {
@@ -79,7 +80,7 @@ export class LightWalletConnector {
           return;
         },
       });
-      engine = new Web3ProviderEngine();
+      engine = new Web3ProviderEngine({ blockTracker: new DummyBlockTracker() });
       engine.addProvider(web3Provider);
       engine.addProvider(
         new RpcSubprovider({

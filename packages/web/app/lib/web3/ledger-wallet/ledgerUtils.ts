@@ -8,6 +8,7 @@ import * as Web3ProviderEngine from "web3-provider-engine";
 import * as RpcSubprovider from "web3-provider-engine/subproviders/rpc";
 
 import { promisify } from "../../../utils/PromiseUtils";
+import { DummyBlockTracker } from "./../DummyBlockTracker";
 import {
   LedgerContractsDisabledError,
   LedgerNotAvailableError,
@@ -73,7 +74,7 @@ export const createWeb3WithLedgerProvider = async (
   getTransport: () => any,
   derivationPath: string,
 ): Promise<ILedgerOutput> => {
-  const engine = new Web3ProviderEngine();
+  const engine = new Web3ProviderEngine({ blockTracker: new DummyBlockTracker() });
 
   const ledgerProvider = createLedgerSubprovider(getTransport, {
     networkId,
