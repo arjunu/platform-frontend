@@ -46,7 +46,7 @@ export const VerificationMethod: React.FunctionComponent<TProps & TDataTestId> =
       data-test-id={dataTestId}
     >
       <img className={styles.image} src={logo} alt={name} />
-      <span className="py-2">{text}</span>
+      <span className={styles.text}>{text}</span>
       <InlineIcon width="24px" height="24px" className={styles.icon} svgIcon={arrow} />
     </Button>
   </>
