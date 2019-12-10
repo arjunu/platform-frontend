@@ -1,3 +1,4 @@
+import { invariant } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
@@ -12,7 +13,6 @@ import {
 import { EOfferingDocumentType } from "../../lib/api/eto/EtoProductsApi.interfaces";
 import { EETOStateOnChain } from "../../modules/eto/types";
 import { DeepReadonly } from "../../types";
-import { invariant } from "../../utils/invariant";
 
 const documentsOrder = [
   "termsheetTemplate",

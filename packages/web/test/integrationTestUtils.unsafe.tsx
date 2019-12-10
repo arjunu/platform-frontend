@@ -1,3 +1,4 @@
+import { InversifyProvider } from "@neufund/shared"
 import { ConnectedRouter, routerMiddleware } from "connected-react-router";
 import { ReactWrapper } from "enzyme";
 import { createMemoryHistory, History } from "history";
@@ -31,7 +32,6 @@ import { rootSaga } from "../app/modules/sagas";
 import { generateRootReducer, IAppState } from "../app/store";
 import { DeepPartial } from "../app/types";
 import { dummyIntl } from "../app/utils/injectIntlHelpers.fixtures";
-import { InversifyProvider } from "../app/utils/InversifyProvider";
 import { LolexClockAsync } from "../typings/lolex";
 import { dummyConfig } from "./fixtures";
 import { createSpyMiddleware } from "./reduxSpyMiddleware";

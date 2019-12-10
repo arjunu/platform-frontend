@@ -1,8 +1,8 @@
+import { ContainerContext } from "@neufund/shared"
 import * as React from "react";
 
 import { symbols } from "../../../di/symbols";
 import { ILogger, noopLogger } from "../../../lib/dependencies/logger";
-import { ContainerContext } from "../../../utils/InversifyProvider";
 
 const useLogger = () => {
   const container = React.useContext(ContainerContext);

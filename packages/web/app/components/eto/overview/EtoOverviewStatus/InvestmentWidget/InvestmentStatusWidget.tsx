@@ -1,3 +1,4 @@
+import { nonNullable } from "@neufund/shared"
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
@@ -11,7 +12,6 @@ import {
   isEtoSoftCapReached,
   isOnChain,
 } from "../../../../../modules/eto/utils";
-import { nonNullable } from "../../../../../utils/nonNullable";
 import { FormatNumber } from "../../../../shared/formatters/FormatNumber";
 import { Money } from "../../../../shared/formatters/Money";
 import {

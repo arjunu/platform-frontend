@@ -1,9 +1,9 @@
+import { multiplyBigNumbers } from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { addHexPrefix } from "ethereumjs-util";
 import { TxData } from "web3";
 
 import { TBigNumberVariants } from "../../lib/web3/types";
-import { multiplyBigNumbers } from "../../utils/BigNumberUtils";
 
 export const GAS_PRICE_MULTIPLIER = 1 + parseFloat(process.env.NF_GAS_PRICE_OVERHEAD || "0");
 

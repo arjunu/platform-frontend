@@ -1,3 +1,4 @@
+import { nonNullable } from "@neufund/shared"
 import { all, call, fork, put, select } from "redux-saga/effects";
 
 import { EtoDocumentsMessage, IpfsMessage } from "../../components/translatedMessages/messages";
@@ -11,7 +12,6 @@ import {
   TEtoDocumentTemplates,
   TStateInfo,
 } from "../../lib/api/eto/EtoFileApi.interfaces";
-import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { ensurePermissionsArePresentAndRunEffect } from "../auth/jwt/sagas";
 import { loadIssuerEto } from "../eto-flow/sagas";

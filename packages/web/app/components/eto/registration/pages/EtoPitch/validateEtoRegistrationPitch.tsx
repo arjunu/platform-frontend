@@ -1,3 +1,4 @@
+import { addBigNumbers } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import * as Yup from "yup";
@@ -7,7 +8,6 @@ import {
   TPartialCompanyEtoData,
 } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { percentage } from "../../../../../lib/api/util/customSchemas";
-import { addBigNumbers } from "../../../../../utils/BigNumberUtils";
 import {
   convertAndValidatePipeline,
   replaceValidatorWith,

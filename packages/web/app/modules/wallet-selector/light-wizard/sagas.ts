@@ -1,3 +1,4 @@
+import { invariant } from "@neufund/shared"
 import { fork, put } from "redux-saga/effects";
 import { call, select } from "typed-redux-saga";
 
@@ -23,7 +24,6 @@ import {
 } from "../../../lib/web3/light-wallet/LightWalletUtils";
 import { IPersonalWallet } from "../../../lib/web3/PersonalWeb3";
 import { IAppState } from "../../../store";
-import { invariant } from "../../../utils/invariant";
 import { connectLightWallet } from "../../access-wallet/sagas";
 import { actions, TActionFromCreator } from "../../actions";
 import { checkEmailPromise } from "../../auth/email/sagas";

@@ -1,3 +1,4 @@
+import { getCurrentUTCTimestamp, multiplyBigNumbers } from "@neufund/shared";
 import BigNumber from "bignumber.js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
@@ -6,8 +7,6 @@ import { compose, lifecycle, withState } from "recompose";
 import { PLATFORM_UNLOCK_FEE, PLATFORM_ZERO_FEE } from "../../../../config/constants";
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { getUnlockedWalletEtherAmountAfterFee } from "../../../../modules/wallet/utils";
-import { multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
-import { getCurrentUTCTimestamp } from "@neufund/shared"
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,

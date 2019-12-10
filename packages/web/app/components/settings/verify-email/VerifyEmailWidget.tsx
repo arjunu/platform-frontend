@@ -1,10 +1,10 @@
+import { injectIntlHelpers } from "@neufund/shared"
 import * as cn from "classnames";
 import { FormikProps, withFormik } from "formik";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import * as Yup from "yup";
 
-import { injectIntlHelpers } from "@neufund/shared"
 import { EColumnSpan } from "../../layouts/Container";
 import { Button, ButtonArrowRight, EButtonLayout } from "../../shared/buttons";
 import { FormDeprecated, FormField } from "../../shared/forms";

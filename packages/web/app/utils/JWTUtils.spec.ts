@@ -1,15 +1,16 @@
-import { expect } from "chai";
-
-import { setupFakeClock } from "../../test/integrationTestUtils.unsafe";
-import { AUTH_TOKEN_REFRESH_THRESHOLD } from "../modules/auth/constants";
-import { minutesToMs, secondsToMs } from "@neufund/shared"
 import {
   getJwtExpiryDate,
   hasValidPermissions,
   isJwtExpiringLateEnough,
   isValid,
+  minutesToMs,
   parseJwt,
-} from "@neufund/shared"
+  secondsToMs,
+} from "@neufund/shared";
+import { expect } from "chai";
+
+import { setupFakeClock } from "../../test/integrationTestUtils.unsafe";
+import { AUTH_TOKEN_REFRESH_THRESHOLD } from "../modules/auth/constants";
 
 const tokenWithPermissions = {
   parsed: {

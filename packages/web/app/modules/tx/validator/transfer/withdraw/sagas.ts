@@ -1,10 +1,9 @@
+import { addBigNumbers, convertToUlps, multiplyBigNumbers } from "@neufund/shared";
 import { put } from "redux-saga/effects";
 import { select } from "typed-redux-saga";
 
 import { TGlobalDependencies } from "../../../../../di/setupBindings";
 import { UserHasNoFundsError } from "../../../../../lib/web3/Web3Adapter";
-import { addBigNumbers, multiplyBigNumbers } from "../../../../../utils/BigNumberUtils";
-import { convertToUlps } from "../../../../../utils/NumberUtils";
 import { actions } from "../../../../actions";
 import { neuCall } from "../../../../sagasUtils";
 import { selectEtherPriceEur } from "../../../../shared/tokenPrice/selectors";

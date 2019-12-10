@@ -1,3 +1,4 @@
+import { InvariantError } from "@neufund/shared"
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
@@ -7,7 +8,6 @@ import { compose } from "recompose";
 import { externalRoutes } from "../../../config/externalRoutes";
 import { EKycInstantIdStatus, EKycRequestStatus } from "../../../lib/api/kyc/KycApi.interfaces";
 import { THocProps } from "../../../types";
-import { InvariantError } from "../../../utils/invariant";
 import { EColumnSpan } from "../../layouts/Container";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons/index";
 import { LoadingIndicator } from "../../shared/loading-indicator";

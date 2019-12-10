@@ -1,3 +1,4 @@
+import { nonNullable } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Container } from "reactstrap";
@@ -10,7 +11,6 @@ import { selectTxAdditionalData } from "../../../../modules/tx/sender/selectors"
 import { TInvestmentAdditionalData } from "../../../../modules/tx/transactions/investment/types";
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
-import { nonNullable } from "../../../../utils/nonNullable";
 import { ErrorAlert } from "../../../shared/Alerts";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import { DocumentButton } from "../../../shared/DocumentLink";

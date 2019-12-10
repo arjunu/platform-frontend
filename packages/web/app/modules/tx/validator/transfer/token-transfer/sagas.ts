@@ -1,10 +1,9 @@
+import { compareBigNumbers, convertToUlps, multiplyBigNumbers } from "@neufund/shared";
 import BigNumber from "bignumber.js";
 import { put, select } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../../../di/setupBindings";
 import { IERC223Token } from "../../../../../lib/contracts/IERC223Token";
-import { compareBigNumbers, multiplyBigNumbers } from "../../../../../utils/BigNumberUtils";
-import { convertToUlps } from "../../../../../utils/NumberUtils";
 import { actions } from "../../../../actions";
 import { neuCall } from "../../../../sagasUtils";
 import { selectEtherPriceEur } from "../../../../shared/tokenPrice/selectors";

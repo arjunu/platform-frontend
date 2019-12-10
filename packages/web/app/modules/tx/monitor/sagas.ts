@@ -1,3 +1,4 @@
+import { invariant } from "@neufund/shared"
 import { BigNumber } from "bignumber.js";
 import { addHexPrefix } from "ethereumjs-util";
 import { delay, fork, put, select } from "redux-saga/effects";
@@ -7,7 +8,6 @@ import { TGlobalDependencies } from "../../../di/setupBindings";
 import { TPendingTxs, TxPendingWithMetadata } from "../../../lib/api/users/interfaces";
 import { ITxData } from "../../../lib/web3/types";
 import { OutOfGasError, RevertedTransactionError } from "../../../lib/web3/Web3Adapter";
-import { invariant } from "../../../utils/invariant";
 import { actions } from "../../actions";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../../sagasUtils";
 import { getTransactionOrThrow } from "../event-channel/sagas";

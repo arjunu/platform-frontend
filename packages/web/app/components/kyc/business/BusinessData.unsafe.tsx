@@ -1,3 +1,4 @@
+import { IIntlProps, injectIntlHelpers } from "@neufund/shared"
 import { FormikProps, withFormik } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
@@ -13,7 +14,6 @@ import {
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { ECountries } from "../../../utils/enums/countriesEnum";
-import { IIntlProps, injectIntlHelpers } from "@neufund/shared"
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { FormDeprecated, FormField, FormSelectCountryField } from "../../shared/forms";

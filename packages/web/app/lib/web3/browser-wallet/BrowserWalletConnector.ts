@@ -1,9 +1,9 @@
+import { promisify } from "@neufund/shared"
 import { injectable } from "inversify";
 import * as Web3 from "web3";
 
 import { EWalletSubType } from "../../../modules/web3/types";
 import { EthereumNetworkId } from "../../../utils/opaque-types/types";
-import { promisify } from "../../../utils/PromiseUtils";
 import { Web3Adapter } from "../Web3Adapter";
 import {
   BrowserWallet,

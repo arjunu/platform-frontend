@@ -1,3 +1,4 @@
+import { objectToFilteredArray } from "@neufund/shared"
 import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -7,7 +8,6 @@ import { EEtoState } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { ignoredTemplates, nomineeIgnoredTemplates } from "../../lib/api/eto/EtoFileUtils";
 import { EOfferingDocumentType } from "../../lib/api/eto/EtoProductsApi.interfaces";
 import { EETOStateOnChain } from "../../modules/eto/types";
-import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
 import { DocumentsLayout } from "./issuerDocuments/DocumentsLayout";
 import { NomineeDocumentsLayout } from "./nomineeDocuments/NomineeDocumentsLayout";
 

@@ -1,6 +1,5 @@
+import { invariant, InvariantError } from "@neufund/shared"
 import { expect } from "chai";
-
-import { invariant, InvariantError } from "./invariant";
 
 describe("invariant", () => {
   it("should throw on falsy value", () => {

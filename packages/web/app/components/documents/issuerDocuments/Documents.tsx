@@ -1,3 +1,4 @@
+import { nonNullable } from "@neufund/shared"
 import { isEmpty } from "lodash";
 import * as React from "react";
 import { Redirect } from "react-router";
@@ -31,7 +32,6 @@ import { selectPendingDownloads } from "../../../modules/immutable-file/selector
 import { selectAreTherePendingTxs } from "../../../modules/tx/monitor/selectors";
 import { appConnect } from "../../../store";
 import { DeepReadonly } from "../../../types";
-import { nonNullable } from "../../../utils/nonNullable";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { withContainer } from "../../../utils/withContainer.unsafe";
 import { withMetaTags } from "../../../utils/withMetaTags.unsafe";

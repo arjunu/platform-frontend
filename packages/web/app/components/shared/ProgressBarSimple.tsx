@@ -1,8 +1,8 @@
+import { invariant } from "@neufund/shared"
 import * as cn from "classnames";
 import * as React from "react";
 
 import { CommonHtmlProps } from "../../types";
-import { invariant } from "../../utils/invariant";
 
 import * as styles from "./ProgressBarSimple.module.scss";
 

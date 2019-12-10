@@ -1,3 +1,4 @@
+import { convertToUlps } from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { includes } from "lodash/fp";
 
@@ -5,7 +6,6 @@ import { IWindowWithData } from "../../../test/helperTypes";
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { Q18 } from "../../config/constants";
 import { EUserType } from "../../lib/api/users/interfaces";
-import { convertToUlps } from "../../utils/NumberUtils";
 import { EETOStateOnChain } from "../eto/types";
 import {
   EUserRefundStatus,

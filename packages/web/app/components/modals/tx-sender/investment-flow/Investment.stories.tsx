@@ -1,3 +1,4 @@
+import { injectIntlHelpers } from "@neufund/shared"
 import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import { Formik } from "formik";
@@ -12,7 +13,6 @@ import {
   EInvestmentErrorState,
   EInvestmentType,
 } from "../../../../modules/investment-flow/reducer";
-import { injectIntlHelpers } from "@neufund/shared"
 import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { InvestmentSelectionComponent } from "./Investment";
 import { wallets } from "./InvestmentTypeSelector.stories";

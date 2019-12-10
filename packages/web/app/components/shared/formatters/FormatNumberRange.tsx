@@ -1,10 +1,10 @@
+import { assertNever } from "@neufund/shared";
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TBigNumberVariants } from "../../../lib/web3/types";
 import { TTranslatedString } from "../../../types";
-import { assertNever } from "@neufund/shared";
 import {
   ENumberInputFormat,
   ENumberOutputFormat,

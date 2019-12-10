@@ -1,3 +1,4 @@
+import { convertFromUlps, divideBigNumbers, invariant, multiplyBigNumbers } from "@neufund/shared";
 import BigNumber from "bignumber.js";
 import { LOCATION_CHANGE } from "connected-react-router";
 import { camelCase, isString } from "lodash";
@@ -32,10 +33,7 @@ import { EuroToken } from "../../lib/contracts/EuroToken";
 import { ITokenController } from "../../lib/contracts/ITokenController";
 import { IAppState } from "../../store";
 import { Dictionary } from "../../types";
-import { divideBigNumbers, multiplyBigNumbers } from "../../utils/BigNumberUtils";
 import { ECountries } from "../../utils/enums/countriesEnum";
-import { invariant } from "../../utils/invariant";
-import { convertFromUlps } from "../../utils/NumberUtils";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserVerified, selectUserId, selectUserType } from "../auth/selectors";
 import { shouldLoadBookbuildingStats, shouldLoadPledgeData } from "../bookbuilding-flow/utils";

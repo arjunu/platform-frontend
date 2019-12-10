@@ -1,3 +1,5 @@
+import { addBigNumbers, IIntlProps, injectIntlHelpers, multiplyBigNumbers } from "@neufund/shared";
+import { nonNullable } from "@neufund/shared"
 import { BigNumber } from "bignumber.js";
 import * as cn from "classnames";
 import * as React from "react";
@@ -50,9 +52,6 @@ import { EValidationState } from "../../../../modules/tx/validator/reducer";
 import { selectTxValidationState } from "../../../../modules/tx/validator/selectors";
 import { isValidFormNumber } from "../../../../modules/tx/validator/transfer/utils";
 import { appConnect } from "../../../../store";
-import { addBigNumbers, multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
-import { IIntlProps, injectIntlHelpers } from "@neufund/shared"
-import { nonNullable } from "../../../../utils/nonNullable";
 import { appRoutes } from "../../../appRoutes";
 import { InfoAlert } from "../../../shared/Alerts";
 import { Button, ButtonInline, EButtonLayout } from "../../../shared/buttons";

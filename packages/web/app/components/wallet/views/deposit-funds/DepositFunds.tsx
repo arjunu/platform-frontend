@@ -1,3 +1,4 @@
+import { injectIntlHelpers } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
@@ -5,7 +6,6 @@ import { compose } from "redux";
 
 import { actions } from "../../../../modules/actions";
 import { appConnect } from "../../../../store";
-import { injectIntlHelpers } from "@neufund/shared"
 import { BreadCrumb } from "../../../shared/BreadCrumb";
 import { Button } from "../../../shared/buttons";
 import { Panel } from "../../../shared/Panel";

@@ -1,8 +1,8 @@
+import { ContainerContext, TContainerContext } from "@neufund/shared"
 import { mapValues } from "lodash";
 import { fromRenderProps } from "recompose";
 
 import { Values } from "../../../types";
-import { ContainerContext, TContainerContext } from "../../../utils/InversifyProvider";
 
 /**
  * Injects into a component dependencies from DI container (inversify container)

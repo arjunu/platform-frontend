@@ -1,3 +1,4 @@
+import { invariant } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { branch, compose, renderComponent } from "recompose";
@@ -13,7 +14,6 @@ import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/t
 import { selectIsUserVerifiedOnBlockchain } from "../../../../../modules/kyc/selectors";
 import { appConnect } from "../../../../../store";
 import { OmitKeys } from "../../../../../types";
-import { invariant } from "../../../../../utils/invariant";
 import { appRoutes } from "../../../../appRoutes";
 import { etoPublicViewLink } from "../../../../appRouteUtils";
 import { Button, ButtonLink } from "../../../../shared/buttons";

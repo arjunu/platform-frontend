@@ -1,3 +1,9 @@
+import {
+  getSchemaField,
+  getSchemaMeta,
+  getValidationSchema,
+  isRequired,
+} from "@neufund/shared"
 import { FormikContext, FormikErrors, FormikTouched } from "formik";
 import { get } from "lodash";
 import * as React from "react";
@@ -6,12 +12,6 @@ import { createNumberMask } from "text-mask-addons/dist/textMaskAddons";
 import { Schema } from "yup";
 
 import { ArrayWithAtLeastOneMember, Dictionary, TTranslatedString } from "../../../../types";
-import {
-  getSchemaField,
-  getSchemaMeta,
-  getValidationSchema,
-  isRequired,
-} from "@neufund/shared"
 import { ECurrency } from "../../formatters/utils";
 import { selectDecimalPlaces } from "../../Money.unsafe";
 import { FormFieldLabel } from "./FormFieldLabel";

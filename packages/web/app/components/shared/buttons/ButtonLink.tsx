@@ -1,3 +1,4 @@
+import { isExternalUrl } from "@neufund/shared"
 import { LocationDescriptor } from "history";
 import * as React from "react";
 import { matchPath } from "react-router";
@@ -6,7 +7,6 @@ import { compose, mapProps, setDisplayName } from "recompose";
 import { routingActions } from "../../../modules/routing/actions";
 import { appConnect } from "../../../store";
 import { OmitKeys } from "../../../types";
-import { isExternalUrl } from "../../../utils/StringUtils";
 import { Button } from "./Button";
 
 type TButtonLinkToProps = {

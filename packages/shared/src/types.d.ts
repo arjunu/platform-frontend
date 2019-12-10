@@ -17,10 +17,6 @@ export type PartialDictionary<T, R extends string | number | symbol = string> = 
   Dictionary<T, R>
 >;
 
-// opaque types can provide semantic information to simpler types like strings etc
-// read: https://codemix.com/opaque-types-in-javascript/
-export type Opaque<K, T> = T & { __TYPE__: K };
-
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
     ? Array<DeepPartial<U>>

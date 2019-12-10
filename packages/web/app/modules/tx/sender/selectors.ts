@@ -1,5 +1,6 @@
+import { multiplyBigNumbers } from "@neufund/shared"
+
 import { IAppState } from "../../../store";
-import { multiplyBigNumbers } from "../../../utils/BigNumberUtils";
 import { selectEtherPriceEur } from "../../shared/tokenPrice/selectors";
 import { ETxSenderType, TAdditionalDataByType } from "../types";
 import { ETxSenderState } from "./reducer";

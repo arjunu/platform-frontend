@@ -7,8 +7,8 @@ import { accountFixtureByName, removePendingExternalTransaction } from ".";
 import { TEtoDataWithCompany } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IUser, OOO_TRANSACTION_TYPE, TxPendingWithMetadata } from "../../lib/api/users/interfaces";
 import { getVaultKey } from "../../modules/wallet-selector/light-wizard/utils";
-import { promisify } from "../../utils/PromiseUtils";
-import { toCamelCase } from "../../utils/transformObjectKeys";
+import { promisify } from "@neufund/shared"
+import { toCamelCase } from "@neufund/shared"
 import { assertLanding } from "./assertions";
 import { getAgreementHash } from "./getAgreementHash";
 import { tid } from "./selectors";

@@ -6,7 +6,7 @@ import { compose } from "recompose";
 
 import { selectUserId } from "../../../modules/auth/selectors";
 import { appConnect } from "../../../store";
-import { nonNullable } from "../../../utils/nonNullable";
+import { nonNullable } from "@neufund/shared"
 import { etoRegisterRoutes } from "../../eto/registration/routes";
 import { DashboardHeading } from "../../eto/shared/DashboardHeading";
 import { TWithNomineeProps, withNomineeRequests } from "../../eto/shared/hocs/withNomineeRequests";

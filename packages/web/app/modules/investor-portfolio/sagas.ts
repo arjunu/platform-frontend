@@ -1,3 +1,5 @@
+import { addBigNumbers, convertFromUlps, convertToUlps } from "@neufund/shared";
+import { nonNullable } from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { filter, map } from "lodash/fp";
 import { all, fork, put, select } from "redux-saga/effects";
@@ -13,9 +15,6 @@ import { ETOCommitment } from "../../lib/contracts/ETOCommitment";
 import { ETOTerms } from "../../lib/contracts/ETOTerms";
 import { promisify } from "../../lib/contracts/typechain-runtime";
 import { IAppState } from "../../store";
-import { addBigNumbers } from "../../utils/BigNumberUtils";
-import { nonNullable } from "../../utils/nonNullable";
-import { convertFromUlps, convertToUlps } from "../../utils/NumberUtils";
 import { EthereumAddress } from "../../utils/opaque-types/types";
 import { actions, TActionFromCreator } from "../actions";
 import { selectUser, selectUserId } from "../auth/selectors";

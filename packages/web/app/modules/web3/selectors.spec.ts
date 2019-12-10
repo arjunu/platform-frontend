@@ -1,8 +1,8 @@
+import { nonNullable } from "@neufund/shared"
 import { expect } from "chai";
 
 import { dummyEthereumAddress } from "../../../test/fixtures";
 import { IAppState } from "../../store";
-import { nonNullable } from "../../utils/nonNullable";
 import {
   getDummyBrowserWalletMetadata,
   getDummyLedgerWalletMetadata,

@@ -1,3 +1,4 @@
+import { addBigNumbers, multiplyBigNumbers, subtractBigNumbers } from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { createSelector } from "reselect";
 import * as Web3Utils from "web3-utils";
@@ -5,7 +6,6 @@ import * as Web3Utils from "web3-utils";
 import { ETHEREUM_ZERO_ADDRESS, NEUR_ALLOWED_US_STATES } from "../../config/constants";
 import { EKycRequestType } from "../../lib/api/kyc/KycApi.interfaces";
 import { IAppState } from "../../store";
-import { addBigNumbers, multiplyBigNumbers, subtractBigNumbers } from "../../utils/BigNumberUtils";
 import { ECountries } from "../../utils/enums/countriesEnum";
 import { selectIsUserFullyVerified } from "../auth/selectors";
 import { selectIndividualAddress, selectKycRequestType } from "../kyc/selectors";

@@ -1,7 +1,7 @@
+import { nonNullable } from "@neufund/shared"
 import { expect } from "chai";
 
 import { AssertEqual, assertType } from "../../test/testUtils";
-import { nonNullable } from "./nonNullable";
 
 describe("nonNullable", () => {
   it("should exclude null and undefined from `value` type definition", () => {

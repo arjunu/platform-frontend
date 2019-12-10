@@ -1,10 +1,10 @@
+import { invariant } from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { all, put, select } from "redux-saga/effects";
 
 import { ECurrency } from "../../../../../components/shared/formatters/utils";
 import { TGlobalDependencies } from "../../../../../di/setupBindings";
 import { ITxData } from "../../../../../lib/web3/types";
-import { invariant } from "../../../../../utils/invariant";
 import { actions } from "../../../../actions";
 import { selectIsVerifiedInvestor } from "../../../../auth/selectors";
 import { selectStandardGasPriceWithOverHead } from "../../../../gas/selectors";

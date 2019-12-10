@@ -1,3 +1,4 @@
+import { invariant } from "@neufund/shared"
 import * as React from "react";
 
 import { actions } from "../../../modules/actions";
@@ -11,7 +12,6 @@ import {
   selectIsBankTransferModalOpened,
 } from "../../../modules/bank-transfer-flow/selectors";
 import { appConnect } from "../../../store";
-import { invariant } from "../../../utils/invariant";
 import { LoadingIndicator } from "../../shared/loading-indicator";
 import { BankTransferPurchaseSuccess } from "./purchase/BankTransferPurchaseSuccess";
 import { BankTransferPurchaseSummary } from "./purchase/BankTransferPurchaseSummary";

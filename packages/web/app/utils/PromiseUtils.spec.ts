@@ -1,6 +1,5 @@
+import { isPromise, promisify } from "@neufund/shared"
 import { expect } from "chai";
-
-import { isPromise, promisify } from "./PromiseUtils";
 
 describe("promisify", () => {
   const fn = (a: number, b: number, cb: Function) => {

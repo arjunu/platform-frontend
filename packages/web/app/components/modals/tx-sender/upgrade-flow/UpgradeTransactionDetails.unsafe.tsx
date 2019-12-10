@@ -1,8 +1,8 @@
+import { multiplyBigNumbers } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { ETxSenderType } from "../../../../modules/tx/types";
-import { multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,

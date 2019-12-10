@@ -1,9 +1,9 @@
+import { assertNever } from "@neufund/shared";
 import * as React from "react";
 import { FormattedDate, FormattedRelative } from "react-intl";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { ETransactionStatus } from "../../../../modules/tx-history/types";
-import { assertNever } from "@neufund/shared";
 import { DataRow, DataRowSeparator } from "../../../modals/tx-sender/shared/DataRow";
 import { ESize, TransactionData } from "../../../shared/TransactionData";
 

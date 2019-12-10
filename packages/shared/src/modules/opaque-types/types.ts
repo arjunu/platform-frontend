@@ -1,4 +1,6 @@
-import { Opaque } from "../../types";
+// opaque types can provide semantic information to simpler types like strings etc
+// read: https://codemix.com/opaque-types-in-javascript/
+export type Opaque<K, T> = T & { __TYPE__: K };
 
 export type EthereumNetworkId = Opaque<"EthereumNetworkId", string>;
 export type EthereumTxHash = Opaque<"EthereumTxHash", string>;

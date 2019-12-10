@@ -1,10 +1,10 @@
+import { objectToFilteredArray } from "@neufund/shared"
 import { createSelector } from "reselect";
 
 import { IEtoDocument } from "../../lib/api/eto/EtoFileApi.interfaces";
 import { nomineeIgnoredTemplates } from "../../lib/api/eto/EtoFileUtils";
 import { IAppState } from "../../store";
 import { DataUnavailableError } from "../../utils/errors";
-import { objectToFilteredArray } from "../../utils/objectToFilteredArray";
 import { selectStartOfOnchainState } from "../eto/selectors";
 import {
   EETOStateOnChain,

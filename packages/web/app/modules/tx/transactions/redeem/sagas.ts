@@ -1,3 +1,4 @@
+import { compareBigNumbers, convertToUlps } from "@neufund/shared";
 import BigNumber from "bignumber.js";
 import { fork, put, select, take } from "redux-saga/effects";
 
@@ -5,7 +6,6 @@ import { ETH_DECIMALS } from "../../../../config/constants";
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { ITxData } from "../../../../lib/web3/types";
 import { DeepReadonly } from "../../../../types";
-import { compareBigNumbers } from "../../../../utils/BigNumberUtils";
 import { actions } from "../../../actions";
 import { EBankTransferType } from "../../../bank-transfer-flow/reducer";
 import {
@@ -20,7 +20,6 @@ import { selectLiquidEuroTokenBalance } from "../../../wallet/selectors";
 import { selectEthereumAddressWithChecksum } from "../../../web3/selectors";
 import { txSendSaga } from "../../sender/sagas";
 import { ETxSenderType } from "../../types";
-import { convertToUlps } from "./../../../../utils/NumberUtils";
 
 function* generateNeuWithdrawTransaction(
   { contractsService, web3Manager }: TGlobalDependencies,

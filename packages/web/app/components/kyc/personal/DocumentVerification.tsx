@@ -1,3 +1,4 @@
+import { assertNever } from "@neufund/shared";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
@@ -21,8 +22,7 @@ import {
 import { ENotificationType } from "../../../modules/notifications/types";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
-import { assertNever } from "@neufund/shared";
-import { nonNullable } from "../../../utils/nonNullable";
+import { nonNullable } from "@neufund/shared"
 import { onLeaveAction } from "../../../utils/OnLeaveAction";
 import { Button, EButtonLayout, EButtonSize } from "../../shared/buttons/Button";
 import { ButtonGroup } from "../../shared/buttons/ButtonGroup";

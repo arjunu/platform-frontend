@@ -1,3 +1,4 @@
+import { assertNever } from "@neufund/shared";
 import { channel } from "redux-saga";
 import { fork, put, race, take } from "redux-saga/effects";
 
@@ -6,7 +7,6 @@ import { EUserActivityMessage } from "../../../lib/dependencies/broadcast-channe
 import { STORAGE_JWT_KEY } from "../../../lib/persistence/JwtObjectStorage";
 import { USER_JWT_KEY as USER_KEY } from "../../../lib/persistence/UserStorage";
 import { STORAGE_WALLET_METADATA_KEY } from "../../../lib/persistence/WalletStorage";
-import { assertNever } from "@neufund/shared";
 import { actions } from "../../actions";
 import { EInitType } from "../../init/reducer";
 import { neuCall, neuTakeUntil } from "../../sagasUtils";

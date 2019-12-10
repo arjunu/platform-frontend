@@ -1,3 +1,9 @@
+import {
+  addBigNumbers,
+  compareBigNumbers,
+  multiplyBigNumbers,
+  subtractBigNumbers,
+} from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { fork, put, select } from "redux-saga/effects";
 
@@ -7,12 +13,6 @@ import { TGlobalDependencies } from "../../../di/setupBindings";
 import { ITxData } from "../../../lib/web3/types";
 import { NotEnoughEtherForGasError } from "../../../lib/web3/Web3Adapter";
 import { IAppState } from "../../../store";
-import {
-  addBigNumbers,
-  compareBigNumbers,
-  multiplyBigNumbers,
-  subtractBigNumbers,
-} from "../../../utils/BigNumberUtils";
 import { actions, TAction } from "../../actions";
 import { neuCall, neuTakeLatestUntil } from "../../sagasUtils";
 import { selectEtherBalance } from "../../wallet/selectors";

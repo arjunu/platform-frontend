@@ -1,3 +1,4 @@
+import { multiplyBigNumbers } from "@neufund/shared"
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
@@ -9,7 +10,6 @@ import { TETOWithTokenData } from "../../modules/investor-portfolio/types";
 import { selectNeuPriceEur } from "../../modules/shared/tokenPrice/selectors";
 import { selectNeuBalance, selectNeumarkAddress } from "../../modules/wallet/selectors";
 import { appConnect } from "../../store";
-import { multiplyBigNumbers } from "../../utils/BigNumberUtils";
 import { commitmentStatusLink } from "../appRouteUtils";
 import { DashboardHeading } from "../eto/shared/DashboardHeading";
 import { Container } from "../layouts/Container";

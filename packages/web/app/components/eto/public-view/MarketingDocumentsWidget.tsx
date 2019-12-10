@@ -1,10 +1,10 @@
+import { nonNullable } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
 
 import { TCompanyEtoData } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { CommonHtmlProps } from "../../../types";
-import { nonNullable } from "../../../utils/nonNullable";
 import { Container, EColumnSpan } from "../../layouts/Container";
 import { DocumentLink } from "../../shared/DocumentLink";
 import { InlineIcon } from "../../shared/icons";

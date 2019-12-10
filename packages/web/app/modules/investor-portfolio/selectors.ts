@@ -1,3 +1,4 @@
+import { compareBigNumbers, isZero, subtractBigNumbers } from "@neufund/shared";
 import BigNumber from "bignumber.js";
 import { isArray } from "lodash/fp";
 import { createSelector } from "reselect";
@@ -7,8 +8,6 @@ import { ECurrency } from "../../components/shared/formatters/utils";
 import { Q18 } from "../../config/constants";
 import { TEtoSpecsData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IAppState } from "../../store";
-import { compareBigNumbers, subtractBigNumbers } from "../../utils/BigNumberUtils";
-import { isZero } from "../../utils/NumberUtils";
 import { selectMyPledge } from "../bookbuilding-flow/selectors";
 import {
   selectEtoById,

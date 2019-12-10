@@ -1,3 +1,4 @@
+import { ContainerContext } from "@neufund/shared"
 import * as cn from "classnames";
 import * as React from "react";
 import { Tooltip, TooltipProps } from "reactstrap";
@@ -5,7 +6,6 @@ import { Tooltip, TooltipProps } from "reactstrap";
 import { symbols } from "../../../di/symbols";
 import { ILogger } from "../../../lib/dependencies/logger";
 import { noopLogger } from "../../../lib/dependencies/logger/index";
-import { ContainerContext } from "../../../utils/InversifyProvider";
 
 import * as styles from "./TooltipBase.module.scss";
 

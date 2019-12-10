@@ -1,6 +1,5 @@
-import { expect } from "chai";
-
 import { withParams } from "@neufund/shared";
+import { expect } from "chai";
 
 describe("@neufund/shared", () => {
   it("replace params with correct value", () => {

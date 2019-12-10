@@ -1,3 +1,4 @@
+import { assertNever } from "@neufund/shared";
 import { RouterState } from "connected-react-router";
 import * as queryString from "query-string";
 import * as React from "react";
@@ -9,7 +10,6 @@ import { selectIsAuthorized, selectUserType } from "../../../modules/auth/select
 import { selectWalletTypeFromQueryString } from "../../../modules/routing/selectors";
 import { EWalletType } from "../../../modules/web3/types";
 import { appConnect } from "../../../store";
-import { assertNever } from "@neufund/shared";
 import { appRoutes } from "../../appRoutes";
 import { walletLoginRoutes } from "../../wallet-selector/walletRoutes";
 

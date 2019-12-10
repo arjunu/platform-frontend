@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { objectToFilteredArray } from "./objectToFilteredArray";
+import { objectToFilteredArray } from "@neufund/shared"
 
 describe("objectToFilteredArray", () => {
   const data1 = { id: "1", stuff: "some data" };

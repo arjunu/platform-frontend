@@ -1,3 +1,4 @@
+import { ContainerContext } from "@neufund/shared"
 import { Container } from "inversify";
 import * as React from "react";
 import { hot } from "react-hot-loader/root";
@@ -11,7 +12,6 @@ import { INACTIVITY_THROTTLE_THRESHOLD } from "../modules/auth/constants";
 import { EInitType } from "../modules/init/reducer";
 import { selectInitError, selectIsInitInProgress } from "../modules/init/selectors";
 import { appConnect } from "../store";
-import { ContainerContext } from "../utils/InversifyProvider";
 import { onEnterAction } from "../utils/OnEnterAction";
 import { ScrollToTop } from "../utils/ScrollToTop";
 import { withRootMetaTag } from "../utils/withMetaTags.unsafe";

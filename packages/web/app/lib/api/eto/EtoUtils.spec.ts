@@ -1,6 +1,6 @@
+import { convertToUlps } from "@neufund/shared"
 import { expect } from "chai";
 
-import { convertToUlps } from "../../../utils/NumberUtils";
 import { calcInvestmentAmount, calcShareAndTokenPrice, calculateTarget } from "./EtoUtils";
 
 describe("EtoUtils", () => {

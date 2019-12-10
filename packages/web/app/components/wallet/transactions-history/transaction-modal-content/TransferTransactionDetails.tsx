@@ -1,3 +1,4 @@
+import { assertNever } from "@neufund/shared";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
@@ -9,7 +10,6 @@ import {
   ETransactionSubType,
   TExtractTxHistoryFromType,
 } from "../../../../modules/tx-history/types";
-import { assertNever } from "@neufund/shared";
 import { etoPublicViewByIdLinkLegacy } from "../../../appRouteUtils";
 import { DataRow, DataRowSeparator } from "../../../modals/tx-sender/shared/DataRow";
 import { ECurrency } from "../../../shared/formatters/utils";

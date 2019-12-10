@@ -1,3 +1,4 @@
+import { ContainerContext } from "@neufund/shared";
 import { Container } from "inversify";
 import * as React from "react";
 
@@ -7,7 +8,6 @@ import {
   AsyncIntervalScheduler,
   AsyncIntervalSchedulerFactoryType,
 } from "./AsyncIntervalScheduler";
-import { ContainerContext } from "./InversifyProvider";
 
 interface IActionWatcherDispatchProps {
   watchAction: () => void;
@@ -19,9 +19,11 @@ interface IWatchActionOptions {
 }
 
 /**
+ * @deprecated
  * It runs action on enter and then every defined interval.
  * It makes sure that action finishes before running it next time.
  */
+
 export const withActionWatcher: (
   options: IWatchActionOptions,
 ) => (

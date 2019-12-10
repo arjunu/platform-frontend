@@ -1,8 +1,8 @@
+import { invariant } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EProductName } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
-import { invariant } from "../../../../utils/invariant";
 import { THumanReadableFormat, ToHumanReadableForm } from "../../../shared/ToHumanReadableForm";
 
 export const convertAmountToText = (amount: number) =>

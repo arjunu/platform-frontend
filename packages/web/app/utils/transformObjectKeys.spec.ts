@@ -1,6 +1,5 @@
+import { toCamelCase, toSnakeCase } from "@neufund/shared"
 import { expect } from "chai";
-
-import { toCamelCase, toSnakeCase } from "./transformObjectKeys";
 
 describe("transform object keys", () => {
   it("should transform shallow object to camel case and back", () => {

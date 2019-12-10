@@ -7,11 +7,11 @@
  * It supports validating response shape. Validation happens AFTER camelCasing.
  */
 
+import { toCamelCase } from "@neufund/shared"
 import { injectable } from "inversify";
 import * as Yup from "yup";
 
 import { Dictionary } from "../../../types";
-import { toCamelCase } from "../../../utils/transformObjectKeys";
 import { isYTS, Schema } from "../../yup-ts.unsafe";
 import { HttpClient, ResponseParsingError } from "./HttpClient";
 import { HttpMethod, IHttpRequestCommon, IHttpResponse } from "./IHttpClient";

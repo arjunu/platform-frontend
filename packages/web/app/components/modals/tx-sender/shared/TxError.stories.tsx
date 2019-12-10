@@ -1,9 +1,9 @@
+import { convertToUlps } from "@neufund/shared"
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { ETransactionErrorType } from "../../../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../../../modules/tx/types";
-import { convertToUlps } from "../../../../utils/NumberUtils";
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withStore } from "../../../../utils/storeDecorator.unsafe";
 import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";

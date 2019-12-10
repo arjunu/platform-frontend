@@ -1,7 +1,7 @@
+import { convertFromUlps } from "@neufund/shared"
 import { fork, put, select } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../../../di/setupBindings";
-import { convertFromUlps } from "../../../../../utils/NumberUtils";
 import { actions, TActionFromCreator } from "../../../../actions";
 import { neuDebounce } from "../../../../sagasUtils";
 import { ETxSenderType } from "../../../types";

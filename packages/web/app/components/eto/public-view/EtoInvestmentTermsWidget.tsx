@@ -1,3 +1,4 @@
+import { divideBigNumbers } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
@@ -12,7 +13,6 @@ import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { getEtoEurMinTarget } from "../../../modules/eto/utils";
 import { appConnect } from "../../../store";
 import { TDataTestId, TTranslatedString } from "../../../types";
-import { divideBigNumbers } from "../../../utils/BigNumberUtils";
 import { DocumentButton } from "../../shared/DocumentLink";
 import { FormatNumber } from "../../shared/formatters/FormatNumber";
 import { FormatNumberRange } from "../../shared/formatters/FormatNumberRange";

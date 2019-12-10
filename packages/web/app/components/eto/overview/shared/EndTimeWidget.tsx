@@ -1,9 +1,9 @@
+import { isLessThanNDays } from "@neufund/shared"
 import * as React from "react";
 import { FormattedRelative, FormattedTime } from "react-intl";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { CommonHtmlProps, TDataTestId } from "../../../../types";
-import { isLessThanNDays } from "@neufund/shared"
 import { TimeBasedComponentSwitcher } from "../../shared/TimeBasedComponentSwitcher";
 
 interface IExternalProps {

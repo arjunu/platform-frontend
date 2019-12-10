@@ -1,9 +1,8 @@
+import { compareBigNumbers, convertToUlps, subtractBigNumbers } from "@neufund/shared";
 import { BigNumber } from "bignumber.js";
 
 import { ETH_DECIMALS } from "../../../../config/constants";
 import { IAppState } from "../../../../store";
-import { compareBigNumbers, subtractBigNumbers } from "../../../../utils/BigNumberUtils";
-import { convertToUlps } from "../../../../utils/NumberUtils";
 import { EInvestmentType } from "../../../investment-flow/reducer";
 import {
   selectLiquidEtherBalance,

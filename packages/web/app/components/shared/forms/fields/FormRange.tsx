@@ -1,9 +1,9 @@
+import { findMax, findMin, getSchemaField, getValidationSchema } from "@neufund/shared"
 import { connect, Field, FieldProps } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { TFormikConnect } from "../../../../types";
-import { findMax, findMin, getSchemaField, getValidationSchema } from "@neufund/shared"
 
 import * as styles from "./FormRange.module.scss";
 

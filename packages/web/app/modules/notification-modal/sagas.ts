@@ -1,7 +1,7 @@
+import { assertNever } from "@neufund/shared";
 import { fork } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../di/setupBindings";
-import { assertNever } from "@neufund/shared";
 import { actions, TActionFromCreator } from "../actions";
 import { neuTakeEvery } from "../sagasUtils";
 import { ENotificationModalType } from "./actions";

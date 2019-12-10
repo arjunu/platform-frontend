@@ -1,5 +1,3 @@
-import { expect } from "chai";
-
 import {
   formatDate,
   isLessThanNDays,
@@ -8,6 +6,7 @@ import {
   minutesToMs,
   secondsToMs,
 } from "@neufund/shared"
+import { expect } from "chai";
 
 describe("date utils", () => {
   describe("formatDate", () => {

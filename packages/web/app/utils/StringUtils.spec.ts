@@ -1,6 +1,5 @@
+import { extractNumber, getHostname, isExternalUrl } from "@neufund/shared"
 import { expect } from "chai";
-
-import { extractNumber, getHostname, isExternalUrl } from "./StringUtils";
 
 describe("StringUtils", () => {
   describe("extractNumber", () => {

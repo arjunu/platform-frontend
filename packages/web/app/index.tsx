@@ -17,6 +17,7 @@ import { applyMiddleware, createStore, Store } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 
+import { InversifyProvider } from "@neufund/shared"
 import { App } from "./components/App";
 import { getConfig } from "./config/getConfig";
 import { createGlobalDependencies, setupBindings, TGlobalDependencies } from "./di/setupBindings";
@@ -27,7 +28,6 @@ import { rootSaga } from "./modules/sagas";
 import { generateRootReducer, IAppState } from "./store";
 import * as ga from "./utils/googleAnalitycs.js";
 import { IntlProviderAndInjector } from "./utils/IntlProviderAndInjector";
-import { InversifyProvider } from "./utils/InversifyProvider";
 import * as serviceWorker from "./utils/serviceWorker.unsafe";
 
 function renderApp(

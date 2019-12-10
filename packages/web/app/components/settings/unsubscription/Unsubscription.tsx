@@ -1,3 +1,4 @@
+import { isEmail } from "@neufund/shared"
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { branch, compose, renderComponent, withProps } from "recompose";
@@ -7,7 +8,6 @@ import { actions } from "../../../modules/actions";
 import { selectUnsubscriptionLinkFromQueryString } from "../../../modules/marketing-emails/selectors";
 import { isValidLink } from "../../../modules/marketing-emails/utils";
 import { appConnect } from "../../../store";
-import { isEmail } from "../../../utils/StringUtils";
 import { withContainer } from "../../../utils/withContainer.unsafe";
 import { EContentWidth } from "../../layouts/Content";
 import { Layout } from "../../layouts/Layout";

@@ -1,10 +1,10 @@
+import { assertNever } from "@neufund/shared";
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EJurisdiction } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
 import { CommonHtmlProps, TTranslatedString } from "../../../../types";
-import { assertNever } from "@neufund/shared";
 import { EImageFit, IResponsiveImage, ResponsiveImage } from "../../../shared/ResponsiveImage";
 import { Tag } from "../../../shared/Tag";
 

@@ -2,7 +2,7 @@ import { isFunction } from "lodash/fp";
 
 import { etoRegisterRoutes } from "../../components/eto/registration/routes";
 import { TPartialCompanyEtoData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { toCamelCase, toSnakeCase } from "../../utils/transformObjectKeys";
+import { toCamelCase, toSnakeCase } from "@neufund/shared"
 import { withParams } from "@neufund/shared";
 import { confirmAccessModal } from "../utils";
 import { assertIssuerDashboard } from "../utils/assertions";

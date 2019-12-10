@@ -7,7 +7,7 @@ import {
   divideBigNumbers,
   multiplyBigNumbers,
   subtractBigNumbers,
-} from "@neufund/shared"
+} from "./BigNumberUtils";
 
 describe("BigNumber Utils", () => {
   describe("addBigNumbers", () => {

@@ -1,3 +1,5 @@
+import { InvariantError } from "@neufund/shared"
+import { nonNullable } from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { cloneDeep, isEmpty } from "lodash/fp";
 import { all, delay, fork, put, select } from "redux-saga/effects";
@@ -19,8 +21,6 @@ import { EEtoState, TNomineeRequestResponse } from "../../lib/api/eto/EtoApi.int
 import { IssuerIdInvalid, NomineeRequestExists } from "../../lib/api/eto/EtoNomineeApi";
 import { ETOCommitment } from "../../lib/contracts/ETOCommitment";
 import { Dictionary } from "../../types";
-import { InvariantError } from "../../utils/invariant";
-import { nonNullable } from "../../utils/nonNullable";
 import { actions, TActionFromCreator } from "../actions";
 import { selectIsUserFullyVerified } from "../auth/selectors";
 import { selectIsBankAccountVerified } from "../bank-transfer-flow/selectors";

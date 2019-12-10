@@ -1,6 +1,5 @@
 export * from "./modules/actionsUtils";
 export * from "./modules/assertNever";
-export * from "@neufund/shared"
 export * from "./modules/DateUtils";
 export * from "./modules/NumberUtils";
 export * from "./modules/PromiseUtils";
@@ -23,3 +22,5 @@ export * from "./modules/locationUtils";
 export * from "./modules/isGaslessTxEnabled";
 export * from "./modules/invariant";
 export * from "./modules/errors";
+export * from "./modules/injectIntlHelpers.unsafe";
+export * from "./modules/BigNumberUtils";

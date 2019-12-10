@@ -1,8 +1,8 @@
+import { isZero } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { ETxSenderType } from "../../../../modules/tx/types";
-import { isZero } from "../../../../utils/NumberUtils";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,

@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { convertToUlps } from "../../utils/NumberUtils";
+import { convertToUlps } from "@neufund/shared"
 import { assertMoneyNotEmpty, etoFixtureByName } from "../utils";
 import { goToDashboard, goToDashboardWithRequiredPayoutAmountSet } from "../utils/navigation";
 import { tid } from "../utils/selectors";

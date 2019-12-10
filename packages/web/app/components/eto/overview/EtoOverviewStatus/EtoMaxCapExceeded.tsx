@@ -1,3 +1,4 @@
+import { divideBigNumbers } from "@neufund/shared"
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
@@ -10,7 +11,6 @@ import {
 } from "../../../../modules/eto/types";
 import { selectEtherPriceEur } from "../../../../modules/shared/tokenPrice/selectors";
 import { appConnect } from "../../../../store";
-import { divideBigNumbers } from "../../../../utils/BigNumberUtils";
 import { FormatNumber } from "../../../shared/formatters/FormatNumber";
 import { Money } from "../../../shared/formatters/Money";
 import {

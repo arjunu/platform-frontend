@@ -1,8 +1,8 @@
+import { withParams } from "@neufund/shared";
 import { inject, injectable } from "inversify";
 
 import { symbols } from "../../../di/symbols";
 import { ENomineeUpdateRequestStatus } from "../../../modules/nominee-flow/types";
-import { withParams } from "@neufund/shared";
 import { IHttpClient } from "../client/IHttpClient";
 import { TNomineeRequestResponse } from "./EtoApi.interfaces.unsafe";
 

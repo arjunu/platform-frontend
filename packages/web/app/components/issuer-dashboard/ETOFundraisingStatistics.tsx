@@ -1,3 +1,4 @@
+import { divideBigNumbers, multiplyBigNumbers } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, withProps } from "recompose";
@@ -8,7 +9,6 @@ import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { isOnChain } from "../../modules/eto/utils";
 import { selectEtherPriceEur } from "../../modules/shared/tokenPrice/selectors";
 import { appConnect } from "../../store";
-import { divideBigNumbers, multiplyBigNumbers } from "../../utils/BigNumberUtils";
 import { DashboardWidget } from "../shared/dashboard-widget/DashboardWidget";
 import { Money } from "../shared/formatters/Money";
 import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../shared/formatters/utils";

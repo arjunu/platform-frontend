@@ -1,7 +1,7 @@
+import { toCamelCase } from "@neufund/shared"
 import * as queryString from "query-string";
 
 import { IAppState } from "../../store";
-import { toCamelCase } from "../../utils/transformObjectKeys";
 import { isValidLink } from "./utils";
 
 const getUnsubscriptionLinkFromQueryString = (query: string) => {

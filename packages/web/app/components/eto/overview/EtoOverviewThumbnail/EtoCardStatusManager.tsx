@@ -1,3 +1,4 @@
+import { nonNullable } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
@@ -8,7 +9,6 @@ import {
   TEtoWithCompanyAndContractReadonly,
 } from "../../../../modules/eto/types";
 import { isOnChain } from "../../../../modules/eto/utils";
-import { nonNullable } from "../../../../utils/nonNullable";
 import { Money } from "../../../shared/formatters/Money";
 import {
   EAbbreviatedNumberOutputFormat,

@@ -9,7 +9,7 @@ import {
   selectNomineeActiveEtoCompanyName,
 } from "../../modules/nominee-flow/selectors";
 import { appConnect } from "../../store";
-import { nonNullable } from "../../utils/nonNullable";
+import { nonNullable } from "@neufund/shared"
 import { Button, EButtonLayout } from "../shared/buttons/Button";
 
 import * as styles from "./NomineeDashboard.module.scss";

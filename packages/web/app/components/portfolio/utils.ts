@@ -1,6 +1,6 @@
+import { compareBigNumbers, convertToUlps } from "@neufund/shared";
+
 import { IWindowWithData } from "../../../test/helperTypes";
-import { compareBigNumbers } from "../../utils/BigNumberUtils";
-import { convertToUlps } from "../../utils/NumberUtils";
 import { ECurrency } from "../shared/formatters/utils";
 
 export const getRequiredAmount = (token: ECurrency) => {

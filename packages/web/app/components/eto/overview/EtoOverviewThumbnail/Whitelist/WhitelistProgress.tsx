@@ -1,6 +1,6 @@
+import { normalize } from "@neufund/shared"
 import * as React from "react";
 
-import { normalize } from "../../../../../utils/NumberUtils";
 import { ProgressBarSimple } from "../../../../shared/ProgressBarSimple";
 
 type TProps = {

@@ -1,12 +1,11 @@
-import { expect } from "chai";
-
 import {
   convertFromUlps,
   convertToUlps,
   isLessThanOrEqualToZero,
   isZero,
   normalize,
-} from "./NumberUtils";
+} from "@neufund/shared"
+import { expect } from "chai";
 
 describe("convertToUlps", () => {
   it("converts decimal to ulps representation", () => {

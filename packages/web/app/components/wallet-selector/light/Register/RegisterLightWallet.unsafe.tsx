@@ -1,3 +1,4 @@
+import { IIntlProps, injectIntlHelpers } from "@neufund/shared"
 import * as cn from "classnames";
 import { FormikProps, withFormik } from "formik";
 import * as React from "react";
@@ -8,7 +9,6 @@ import * as Yup from "yup";
 
 import { actions } from "../../../../modules/actions";
 import { appConnect } from "../../../../store";
-import { IIntlProps, injectIntlHelpers } from "@neufund/shared"
 import { Button } from "../../../shared/buttons";
 import { FormDeprecated, FormField } from "../../../shared/forms";
 import { TMessage } from "../../../translatedMessages/utils";

@@ -1,4 +1,4 @@
-import { extractNumber } from "../../utils/StringUtils";
+import { extractNumber } from "@neufund/shared"
 import { closeModal, confirmAccessModal } from "../utils";
 import { goToWallet } from "../utils/navigation";
 import { tid } from "../utils/selectors";

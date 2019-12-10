@@ -1,9 +1,9 @@
+import { convertFromUlps, isZero } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
 import { EETOStateOnChain, IEtoTokenGeneralDiscounts } from "../../../../modules/eto/types";
 import { IPersonalDiscount } from "../../../../modules/investor-portfolio/types";
-import { convertFromUlps, isZero } from "../../../../utils/NumberUtils";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,

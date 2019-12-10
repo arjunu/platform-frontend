@@ -1,10 +1,10 @@
+import { multiplyBigNumbers } from "@neufund/shared"
 import { fork, put, select } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { ETOCommitment } from "../../../../lib/contracts/ETOCommitment";
 import { ITxData } from "../../../../lib/web3/types";
 import { IAppState } from "../../../../store";
-import { multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
 import { EthereumAddressWithChecksum } from "../../../../utils/opaque-types/types";
 import { actions, TActionFromCreator } from "../../../actions";
 import { selectEtoWithCompanyAndContractById } from "../../../eto/selectors";

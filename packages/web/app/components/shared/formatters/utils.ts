@@ -1,9 +1,8 @@
+import { convertFromUlps, invariant } from "@neufund/shared";
 import BigNumber from "bignumber.js";
 
 import { DEFAULT_DECIMAL_PLACES } from "../../../config/constants";
 import { TBigNumberVariants } from "../../../lib/web3/types";
-import { invariant } from "../../../utils/invariant";
-import { convertFromUlps } from "../../../utils/NumberUtils";
 import { EquityToken } from "../../../utils/opaque-types/types";
 
 export enum ERoundingMode {

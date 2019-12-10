@@ -1,8 +1,8 @@
+import { convertToUlps } from "@neufund/shared"
 import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { convertToUlps } from "../../../../utils/NumberUtils";
 import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { BankTransferVerifyInfoLayout } from "./BankTransferVerifyAgreement";
 

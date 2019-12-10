@@ -1,3 +1,4 @@
+import { subtractBigNumbers } from "@neufund/shared"
 import { all, delay, fork, put, select } from "redux-saga/effects";
 
 import { ECurrency } from "../../components/shared/formatters/utils";
@@ -11,7 +12,6 @@ import {
   TAnalyticsTransactionsResponse,
 } from "../../lib/api/analytics-api/interfaces";
 import { IAppState } from "../../store";
-import { subtractBigNumbers } from "../../utils/BigNumberUtils";
 import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
 import { actions, TActionFromCreator } from "../actions";
 import { neuCall, neuTakeLatest, neuTakeUntil } from "../sagasUtils";

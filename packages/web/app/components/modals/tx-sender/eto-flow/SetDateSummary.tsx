@@ -1,3 +1,5 @@
+import { withParams } from "@neufund/shared";
+import { nonNullable } from "@neufund/shared"
 import { find } from "lodash";
 import * as moment from "moment";
 import * as React from "react";
@@ -23,8 +25,6 @@ import { selectTxAdditionalData } from "../../../../modules/tx/sender/selectors"
 import { TEtoSetDateAdditionalData } from "../../../../modules/tx/transactions/eto-flow/types";
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { appConnect } from "../../../../store";
-import { nonNullable } from "../../../../utils/nonNullable";
-import { withParams } from "@neufund/shared";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { EtherscanAddressLink, ExternalLink } from "../../../shared/links";

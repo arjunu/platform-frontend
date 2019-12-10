@@ -1,3 +1,4 @@
+import { nonNullable } from "@neufund/shared"
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
@@ -5,7 +6,6 @@ import { compose } from "recompose";
 import { selectTokensDisbursal } from "../../../../modules/investor-portfolio/selectors";
 import { ITokenDisbursal } from "../../../../modules/investor-portfolio/types";
 import { appConnect } from "../../../../store";
-import { nonNullable } from "../../../../utils/nonNullable";
 import { appRoutes } from "../../../appRoutes";
 import { EButtonLayout, EIconPosition } from "../../../shared/buttons/Button";
 import { ButtonLink } from "../../../shared/buttons/ButtonLink";

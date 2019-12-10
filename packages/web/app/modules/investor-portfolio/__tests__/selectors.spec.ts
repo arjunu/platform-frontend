@@ -1,3 +1,4 @@
+import { convertToUlps } from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { expect } from "chai";
 import * as sinon from "sinon";
@@ -5,7 +6,6 @@ import * as sinon from "sinon";
 import { Q18 } from "../../../config/constants";
 import * as etoUtils from "../../../lib/api/eto/EtoUtils";
 import { IAppState } from "../../../store";
-import { convertToUlps } from "../../../utils/NumberUtils";
 import * as etoSelectors from "../../eto/selectors";
 import { IInvestorTicketsState } from "../reducer";
 import * as investorTicketSelectors from "../selectors";

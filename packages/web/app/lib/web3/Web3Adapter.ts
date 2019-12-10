@@ -1,3 +1,4 @@
+import { promisify } from "@neufund/shared"
 import { BigNumber } from "bignumber.js";
 import * as Web3 from "web3";
 
@@ -7,7 +8,6 @@ import {
   EthereumAddressWithChecksum,
   EthereumNetworkId,
 } from "../../utils/opaque-types/types";
-import { promisify } from "../../utils/PromiseUtils";
 
 class Web3Error extends Error {}
 export class NeuWeb3Error extends Error {}

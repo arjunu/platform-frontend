@@ -1,7 +1,6 @@
+import { addBigNumbers, convertToUlps, subtractBigNumbers } from "@neufund/shared";
 import { expect } from "chai";
 
-import { addBigNumbers, subtractBigNumbers } from "../../../../utils/BigNumberUtils";
-import { convertToUlps } from "../../../../utils/NumberUtils";
 import { EInvestmentType } from "../../../investment-flow/reducer";
 import { selectTxGasCostEthUlps } from "../../sender/selectors";
 import { selectMaximumInvestment } from "./selectors";

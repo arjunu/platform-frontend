@@ -1,6 +1,6 @@
+import { multiplyBigNumbers } from "@neufund/shared"
 import * as React from "react";
 
-import { multiplyBigNumbers } from "../../../../utils/BigNumberUtils";
 import { Money } from "../../../shared/formatters/Money";
 import {
   ECurrency,

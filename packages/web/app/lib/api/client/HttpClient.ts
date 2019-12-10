@@ -2,6 +2,7 @@
  * Handel's general requests
  */
 
+import { invariant, toSnakeCase } from "@neufund/shared";
 import { inject, injectable } from "inversify";
 // top-level import is not working correctly for unit tests
 import * as urlJoin from "proper-url-join/lib";
@@ -9,8 +10,6 @@ import * as urlJoin from "proper-url-join/lib";
 import { IBackendRoot } from "../../../config/getConfig";
 import { symbols } from "../../../di/symbols";
 import { Dictionary } from "../../../types";
-import { invariant } from "../../../utils/invariant";
-import { toSnakeCase } from "../../../utils/transformObjectKeys";
 import {
   HttpMethod,
   IHttpClient,

@@ -1,9 +1,8 @@
+import { formatFlexiPrecision,invariant } from "@neufund/shared"
 import BigNumber from "bignumber.js";
 import { cloneDeep, flow, get, set } from "lodash";
 
 import { TCompanyEtoData } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { invariant } from "../../utils/invariant";
-import { formatFlexiPrecision } from "../../utils/NumberUtils";
 import { TShareholder } from "./public-view/LegalInformationWidget";
 
 const HUNDRED_PERCENT = new BigNumber("100");

@@ -1,8 +1,8 @@
+import { invariant } from "@neufund/shared"
 import * as cn from "classnames";
 import * as React from "react";
 
 import { OmitKeys, PartialByKeys, TDataTestId } from "../../../types";
-import { invariant } from "../../../utils/invariant";
 import { InlineIcon } from "../icons";
 import { LoadingIndicator } from "../loading-indicator/LoadingIndicator";
 import { ButtonBase } from "./ButtonBase";

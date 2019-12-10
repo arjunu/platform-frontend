@@ -1,3 +1,4 @@
+import { invariant } from "@neufund/shared"
 import * as cn from "classnames";
 import { connect as formikConnect, Field, FieldProps } from "formik";
 import * as React from "react";
@@ -5,7 +6,6 @@ import { Input } from "reactstrap";
 import { branch, compose, renderComponent } from "recompose";
 
 import { CommonHtmlProps, TFormikConnect } from "../../../../types";
-import { invariant } from "../../../../utils/invariant";
 import { FormFieldError, generateErrorId } from "./FormFieldError";
 import {
   applyCharactersLimit,
