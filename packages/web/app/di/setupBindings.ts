@@ -140,6 +140,7 @@ export function setupBindings(config: IConfig): Container {
     .bind(symbols.contractsService)
     .to(ContractsService)
     .inSingletonScope();
+
   container
     .bind<LedgerWalletConnector>(symbols.ledgerWalletConnector)
     .to(LedgerWalletConnector)

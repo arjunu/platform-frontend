@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { branch, compose, renderComponent, withProps } from "recompose";
 
@@ -8,7 +9,6 @@ import {
   selectNomineeFlowHasError,
 } from "../../modules/nominee-flow/selectors";
 import { appConnect } from "../../store";
-import { withContainer } from "../../utils/withContainer.unsafe";
 import { Layout } from "../layouts/Layout";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
 import {

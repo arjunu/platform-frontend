@@ -1,10 +1,10 @@
+import { safeDelay } from "@neufund/shared";
+import { setupFakeClock } from "@neufund/shared/src/modules/test/setupFakeClock";
 import { expect } from "chai";
 import { spy } from "sinon";
 
-import { setupFakeClock } from "../../../test/integrationTestUtils.unsafe";
 import { noopLogger } from "../../lib/dependencies/logger";
 import { AsyncIntervalScheduler } from "./AsyncIntervalScheduler";
-import { safeDelay } from "./safeTimers";
 
 describe("AsyncIntervalScheduler", () => {
   const expectedInterval = 500;

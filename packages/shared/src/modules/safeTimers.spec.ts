@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { spy } from "sinon";
 
-import { setupFakeClock } from "../../test/integrationTestUtils.unsafe";
 import { clearSafeTimeout, EDelayTiming, safeSetTimeout } from "./safeTimers";
+import { setupFakeClock } from "./test/setupFakeClock";
 
 describe("safeSetTimeout", () => {
   const clock = setupFakeClock();

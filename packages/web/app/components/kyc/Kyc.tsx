@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { Redirect } from "react-router";
 import { branch, compose, renderComponent, withProps } from "recompose";
@@ -18,7 +19,6 @@ import {
 } from "../../modules/kyc/selectors";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/react-connected-components/OnEnterAction";
-import { withContainer } from "../../utils/withContainer.unsafe";
 import { appRoutes } from "../appRoutes";
 import { EContentWidth } from "../layouts/Content";
 import { FullscreenProgressLayout } from "../layouts/FullscreenProgressLayout";

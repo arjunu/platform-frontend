@@ -1,10 +1,10 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose, withProps } from "recompose";
 
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
-import { withContainer } from "../../../utils/withContainer.unsafe";
 import { EContentWidth } from "../../layouts/Content";
 import { Layout } from "../../layouts/Layout";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";

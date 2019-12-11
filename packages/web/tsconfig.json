@@ -27,7 +27,7 @@
     "./app/**/*.ts",
     "./app/**/*.tsx",
     "./test/**/*.ts",
-    "./test/**/*.tsx"
+    "./test/**/*.tsx", "../shared/src/modules/test/setupFakeClock.tsx"
   ],
   "exclude": ["./app/test-e2e/**"]
 }

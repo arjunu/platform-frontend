@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { branch, lifecycle, renderComponent, withProps } from "recompose";
@@ -36,7 +37,6 @@ import { selectIsLightWallet } from "../../modules/web3/selectors";
 import { appConnect } from "../../store";
 import { RequiredByKeys } from "../../types";
 import { onEnterAction } from "../../utils/react-connected-components/OnEnterAction";
-import { withContainer } from "../../utils/withContainer.unsafe";
 import { DashboardHeading } from "../eto/shared/DashboardHeading";
 import { EProjectStatusLayout, EProjectStatusSize, ETOIssuerState } from "../eto/shared/ETOState";
 import { Container, EColumnSpan, EContainerType } from "../layouts/Container";

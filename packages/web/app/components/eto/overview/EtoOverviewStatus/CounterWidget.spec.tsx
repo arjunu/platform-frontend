@@ -1,3 +1,4 @@
+import { setupFakeClock } from "@neufund/shared/src/modules/test/setupFakeClock";
 import { expect } from "chai";
 import { cloneDeep } from "lodash";
 import * as React from "react";
@@ -7,7 +8,6 @@ import { createMount } from "../../../../../test/createMount";
 import { testCompany, testContract, testEto } from "../../../../../test/fixtures";
 import {
   createIntegrationTestsSetup,
-  setupFakeClock,
   wrapWithProviders,
 } from "../../../../../test/integrationTestUtils.unsafe";
 import { tid } from "../../../../../test/testUtils";

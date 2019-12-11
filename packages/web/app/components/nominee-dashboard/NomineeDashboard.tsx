@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import { branch, compose, renderComponent } from "recompose";
 
 import {
@@ -8,7 +9,6 @@ import {
 import { ENomineeEtoSpecificTask, ENomineeTask } from "../../modules/nominee-flow/types";
 import { appConnect } from "../../store";
 import { RequiredByKeys } from "../../types";
-import { withContainer } from "../../utils/withContainer.unsafe";
 import { Layout } from "../layouts/Layout";
 import { ErrorBoundaryComponent } from "../shared/errorBoundary/ErrorBoundaryLayout";
 import { LoadingIndicator } from "../shared/loading-indicator/LoadingIndicator";

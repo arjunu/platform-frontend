@@ -1,5 +1,4 @@
-import { objectToFilteredArray } from "@neufund/shared"
-import { nonNullable } from "@neufund/shared"
+import { nonNullable, objectToFilteredArray } from "@neufund/shared";
 import { find, some } from "lodash";
 import { createSelector } from "reselect";
 

@@ -1,8 +1,8 @@
+import { dummyIntl } from "@neufund/shared";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { DEFAULT_DERIVATION_PATH_PREFIX } from "../../../modules/wallet-selector/ledger-wizard/reducer";
-import { dummyIntl } from "../../../utils/injectIntlHelpers.fixtures";
 import { DPChooserComponent } from "./WalletLedgerDPChooser";
 
 const initialState = {

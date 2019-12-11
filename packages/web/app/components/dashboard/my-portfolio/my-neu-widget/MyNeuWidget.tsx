@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { branch, compose, renderComponent } from "recompose";
@@ -10,7 +11,6 @@ import {
   selectWalletError,
 } from "../../../../modules/wallet/selectors";
 import { appConnect } from "../../../../store";
-import { withContainer } from "../../../../utils/withContainer.unsafe";
 import { EButtonLayout, EIconPosition } from "../../../shared/buttons/Button";
 import { ButtonLink } from "../../../shared/buttons/ButtonLink";
 import { ECurrency } from "../../../shared/formatters/utils";

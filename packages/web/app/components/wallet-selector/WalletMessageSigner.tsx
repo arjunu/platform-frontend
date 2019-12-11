@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
@@ -7,7 +8,6 @@ import { actions } from "../../modules/actions";
 import { selectWalletType } from "../../modules/web3/selectors";
 import { EWalletType } from "../../modules/web3/types";
 import { appConnect } from "../../store";
-import { withContainer } from "../../utils/withContainer.unsafe";
 import { Button } from "../shared/buttons";
 import { LoadingIndicator } from "../shared/loading-indicator";
 import { WarningAlert } from "../shared/WarningAlert";

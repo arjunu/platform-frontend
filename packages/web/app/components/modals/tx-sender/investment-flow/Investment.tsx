@@ -1,5 +1,10 @@
-import { addBigNumbers, IIntlProps, injectIntlHelpers, multiplyBigNumbers } from "@neufund/shared";
-import { nonNullable } from "@neufund/shared"
+import {
+  addBigNumbers,
+  IIntlProps,
+  injectIntlHelpers,
+  multiplyBigNumbers,
+  nonNullable,
+} from "@neufund/shared";
 import { BigNumber } from "bignumber.js";
 import * as cn from "classnames";
 import * as React from "react";

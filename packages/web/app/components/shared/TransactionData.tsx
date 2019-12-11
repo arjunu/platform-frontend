@@ -1,8 +1,8 @@
+import { makeTid } from "@neufund/shared";
 import * as cn from "classnames";
 import * as React from "react";
 
 import { TDataTestId } from "../../types";
-import { makeTid } from "../../utils/tidUtils";
 
 import * as styles from "./TransactionData.module.scss";
 

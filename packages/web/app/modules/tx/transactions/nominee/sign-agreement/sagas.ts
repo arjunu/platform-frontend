@@ -1,5 +1,4 @@
-import { assertNever } from "@neufund/shared";
-import { nonNullable } from "@neufund/shared"
+import { assertNever, nonNullable } from "@neufund/shared";
 import { fork, put, select } from "redux-saga/effects";
 
 import { ipfsLinkFromHash } from "../../../../../components/documents/utils";

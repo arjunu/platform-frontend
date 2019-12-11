@@ -1,9 +1,10 @@
 import {
   addBigNumbers,
   compareBigNumbers,
+  isGaslessTxEnabled,
   multiplyBigNumbers,
   subtractBigNumbers,
-} from "@neufund/shared"
+} from "@neufund/shared";
 import BigNumber from "bignumber.js";
 import { fork, put, select } from "redux-saga/effects";
 
@@ -21,7 +22,6 @@ import { generateInvestmentTransaction } from "../transactions/investment/sagas"
 import { selectMaximumInvestment } from "../transactions/investment/selectors";
 import { ETxSenderType } from "../types";
 import { STIPEND_ELIGIBLE_WALLETS } from "./../../../lib/web3/constants";
-import { isGaslessTxEnabled } from "./../../../utils/isGaslessTxEnabled";
 import { EValidationState } from "./reducer";
 import { selectInvestmentFLow } from "./selectors";
 import { txValidateTokenTransfer } from "./transfer/token-transfer/sagas";

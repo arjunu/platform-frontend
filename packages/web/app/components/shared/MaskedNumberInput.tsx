@@ -1,8 +1,8 @@
+import { FormInputError } from "@neufund/shared";
 import * as React from "react";
 
 import { DEFAULT_DECIMAL_PLACES } from "../../config/constants";
 import { TTranslatedString } from "../../types";
-import { FormInputError } from "../../utils/errors";
 import {
   ENumberInputFormat,
   ENumberOutputFormat,

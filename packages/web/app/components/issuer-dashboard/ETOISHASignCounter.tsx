@@ -1,3 +1,4 @@
+import { nonNullable } from "@neufund/shared"
 import { Moment } from "moment";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
@@ -13,7 +14,6 @@ import { selectEtoOnChainState } from "../../modules/eto/selectors";
 import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { isOnChain } from "../../modules/eto/utils";
 import { appConnect, IAppState } from "../../store";
-import { nonNullable } from "@neufund/shared"
 import { DashboardWidget } from "../shared/dashboard-widget/DashboardWidget";
 import { IPanelProps } from "../shared/Panel";
 import { TimeLeftWithUTC } from "../shared/TimeLeftWithUTC";

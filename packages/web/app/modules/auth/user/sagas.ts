@@ -1,4 +1,4 @@
-import { assertNever, minutesToMs, secondsToMs } from "@neufund/shared";
+import { assertNever, minutesToMs, safeDelay, secondsToMs } from "@neufund/shared";
 import { call, delay, fork, put, race, select, take } from "redux-saga/effects";
 
 import { SignInUserErrorMessage } from "../../../components/translatedMessages/messages";
@@ -16,7 +16,6 @@ import {
   SignerUnknownError,
 } from "../../../lib/web3/Web3Manager/Web3Manager";
 import { IAppState } from "../../../store";
-import { safeDelay } from "../../../utils/safeTimers";
 import { actions, TActionFromCreator } from "../../actions";
 import { EInitType } from "../../init/reducer";
 import { loadKycRequestData } from "../../kyc/sagas";

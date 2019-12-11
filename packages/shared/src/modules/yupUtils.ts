@@ -16,10 +16,7 @@ export const getSchemaField = <T>(
   context?: FormikContext<any>,
 ) => schema && reach(schema, name, context ? context.values : undefined);
 
-export const isRequired = compose(
-  includes("required"),
-  getSchemaTests,
-);
+export const isRequired = compose(includes("required"), getSchemaTests);
 
 // TODO: Refactor to use Yup's `describe` method
 const findSchemaConstraint = (constraintName: string, schema: any) => {

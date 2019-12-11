@@ -1,4 +1,4 @@
-import { nonNullable } from "@neufund/shared"
+import { nonNullable, withContainer, withMetaTags } from "@neufund/shared";
 import { isEmpty } from "lodash";
 import * as React from "react";
 import { Redirect } from "react-router";
@@ -33,8 +33,6 @@ import { selectAreTherePendingTxs } from "../../../modules/tx/monitor/selectors"
 import { appConnect } from "../../../store";
 import { DeepReadonly } from "../../../types";
 import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
-import { withContainer } from "../../../utils/withContainer.unsafe";
-import { withMetaTags } from "../../../utils/withMetaTags.unsafe";
 import { appRoutes } from "../../appRoutes";
 import { Layout } from "../../layouts/Layout";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";

@@ -1,3 +1,4 @@
+import { setupFakeClock } from "@neufund/shared/src/modules/test/setupFakeClock";
 import { BigNumber } from "bignumber.js";
 import { expect } from "chai";
 import { createMemoryHistory } from "history";
@@ -6,7 +7,6 @@ import { createStore } from "redux";
 import { createMount } from "../../../../../test/createMount";
 import {
   createIntegrationTestsSetup,
-  setupFakeClock,
   waitForTid,
   wrapWithProviders,
 } from "../../../../../test/integrationTestUtils.unsafe";

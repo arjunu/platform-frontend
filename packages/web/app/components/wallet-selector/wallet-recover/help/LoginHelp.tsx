@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Link } from "react-router-dom";
@@ -6,7 +7,6 @@ import { compose, withProps } from "recompose";
 
 import { externalRoutes } from "../../../../config/externalRoutes";
 import { TDataTestId } from "../../../../types";
-import { withContainer } from "../../../../utils/withContainer.unsafe";
 import { ButtonLink } from "../../../shared/buttons";
 import { ExternalLink } from "../../../shared/links";
 import { walletLoginRoutes } from "../../walletRoutes";

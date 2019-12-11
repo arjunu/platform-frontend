@@ -24,3 +24,5 @@ export * from "./modules/invariant";
 export * from "./modules/errors";
 export * from "./modules/injectIntlHelpers.unsafe";
 export * from "./modules/BigNumberUtils";
+export * from "./modules/StringUtils";
+export * from "./modules/test/setupFakeClock";

@@ -1,5 +1,4 @@
-import { addBigNumbers, convertFromUlps, convertToUlps } from "@neufund/shared";
-import { nonNullable } from "@neufund/shared"
+import { addBigNumbers, convertFromUlps, convertToUlps, nonNullable } from "@neufund/shared";
 import BigNumber from "bignumber.js";
 import { filter, map } from "lodash/fp";
 import { all, fork, put, select } from "redux-saga/effects";

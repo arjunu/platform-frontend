@@ -1,10 +1,10 @@
+import { setupFakeClock } from "@neufund/shared/src/modules/test/setupFakeClock";
 import { expect } from "chai";
 import { spy } from "sinon";
 
 import { testCompany, testContract, testEto } from "../../../test/fixtures";
 import {
   createIntegrationTestsSetup,
-  setupFakeClock,
 } from "../../../test/integrationTestUtils.unsafe";
 import { actions } from "../actions";
 import { neuCall } from "../sagasUtils";

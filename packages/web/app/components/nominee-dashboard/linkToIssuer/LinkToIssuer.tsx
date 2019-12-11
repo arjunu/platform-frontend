@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as cn from "classnames";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
@@ -18,7 +19,6 @@ import {
 import { takeLatestNomineeRequest } from "../../../modules/nominee-flow/utils";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
-import { withContainer } from "../../../utils/withContainer.unsafe";
 import { NomineeLinkRequestForm } from "./LinkToIssuerForm";
 import { NomineeRequestPending } from "./NomineeRequestPending";
 import { ENomineeRequestComponentState } from "./types";

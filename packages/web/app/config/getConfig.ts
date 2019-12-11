@@ -1,4 +1,5 @@
-import { isGaslessTxEnabled } from "../utils/isGaslessTxEnabled";
+import { isGaslessTxEnabled } from "@neufund/shared";
+
 import { getOptionalEnv, getRequiredEnv, verifyOptionalFlagEnv } from "./configUtils";
 
 export interface IBackendRoot {

@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import { StaticContext } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
 import { branch, compose, renderComponent, withStateHandlers } from "recompose";
@@ -14,7 +15,6 @@ import {
   selectUrlUserType,
 } from "../../modules/wallet-selector/selectors";
 import { appConnect } from "../../store";
-import { withContainer } from "../../utils/withContainer.unsafe";
 import { TransitionalLayout } from "../layouts/Layout";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout";

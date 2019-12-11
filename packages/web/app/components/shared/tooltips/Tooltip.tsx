@@ -1,8 +1,8 @@
+import { makeTid } from "@neufund/shared";
 import * as cn from "classnames";
 import * as React from "react";
 
 import { CommonHtmlProps, OmitKeys, TDataTestId, TTranslatedString } from "../../../types";
-import { makeTid } from "../../../utils/tidUtils";
 import { InlineIcon } from "../icons";
 import { TooltipBase } from "./TooltipBase";
 

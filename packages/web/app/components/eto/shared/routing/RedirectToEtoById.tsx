@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { Redirect } from "react-router";
 import { branch, compose, renderComponent } from "recompose";
@@ -7,7 +8,6 @@ import { selectEtoWithCompanyAndContractById } from "../../../../modules/eto/sel
 import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { appConnect } from "../../../../store";
 import { onEnterAction } from "../../../../utils/react-connected-components/OnEnterAction";
-import { withContainer } from "../../../../utils/withContainer.unsafe";
 import { etoPublicViewByIdLink } from "../../../appRouteUtils";
 import { Layout } from "../../../layouts/Layout";
 import { LoadingIndicator } from "../../../shared/loading-indicator";

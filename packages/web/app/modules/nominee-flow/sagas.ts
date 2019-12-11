@@ -1,5 +1,4 @@
-import { InvariantError } from "@neufund/shared"
-import { nonNullable } from "@neufund/shared"
+import { InvariantError, nonNullable } from "@neufund/shared";
 import BigNumber from "bignumber.js";
 import { cloneDeep, isEmpty } from "lodash/fp";
 import { all, delay, fork, put, select } from "redux-saga/effects";

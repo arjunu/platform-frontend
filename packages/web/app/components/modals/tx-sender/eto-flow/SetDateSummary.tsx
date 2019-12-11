@@ -1,5 +1,4 @@
-import { withParams } from "@neufund/shared";
-import { nonNullable } from "@neufund/shared"
+import { nonNullable, withParams } from "@neufund/shared";
 import { find } from "lodash";
 import * as moment from "moment";
 import * as React from "react";

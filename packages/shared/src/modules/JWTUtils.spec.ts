@@ -1,16 +1,15 @@
+import { expect } from "chai";
+
+import { AUTH_TOKEN_REFRESH_THRESHOLD } from "./constants";
+import { minutesToMs, secondsToMs } from "./DateUtils";
 import {
   getJwtExpiryDate,
   hasValidPermissions,
   isJwtExpiringLateEnough,
   isValid,
-  minutesToMs,
   parseJwt,
-  secondsToMs,
-} from "@neufund/shared";
-import { expect } from "chai";
-
-import { setupFakeClock } from "../../test/integrationTestUtils.unsafe";
-import { AUTH_TOKEN_REFRESH_THRESHOLD } from "../modules/auth/constants";
+} from "./JWTUtils";
+import { setupFakeClock } from "./test/setupFakeClock";
 
 const tokenWithPermissions = {
   parsed: {
@@ -40,7 +39,7 @@ describe("JWT Utils", () => {
     describe("with permissions", () => {
       const { jwt, parsed } = tokenWithPermissions;
 
-      const clock = setupFakeClock(secondsToMs(parsed.iat));
+      const clock = setupFakeClock({ now: secondsToMs(parsed.iat) });
 
       it("should return true when permissions are valid", () => {
         const result = hasValidPermissions(jwt, ["sign-tos", "do-bookbuilding"]);
@@ -66,7 +65,7 @@ describe("JWT Utils", () => {
     describe("without permissions", () => {
       const { jwt, parsed } = tokenWithoutPermissions;
 
-      setupFakeClock(secondsToMs(parsed.iat));
+      setupFakeClock({ now: secondsToMs(parsed.iat) });
 
       it("should return false when  is without permissions", () => {
         const result = hasValidPermissions(jwt, ["sign-tos"]);
@@ -86,7 +85,7 @@ describe("JWT Utils", () => {
   describe("isValid", () => {
     const { parsed, jwt } = tokenWithPermissions;
 
-    const clock = setupFakeClock(secondsToMs(parsed.iat));
+    const clock = setupFakeClock({ now: secondsToMs(parsed.iat) });
 
     it("should return true when jwt is valid", () => {
       const result = isValid(jwt);
@@ -149,7 +148,7 @@ describe("JWT Utils", () => {
   describe("isJwtExpiringLateEnough", () => {
     const { jwt, parsed } = tokenWithPermissions;
 
-    const clock = setupFakeClock(secondsToMs(parsed.iat));
+    const clock = setupFakeClock({ now: secondsToMs(parsed.iat) });
 
     it("should return true when jwt expiry is late enough", () => {
       clock.fakeClock.tick(secondsToMs(parsed.exp - parsed.iat) - AUTH_TOKEN_REFRESH_THRESHOLD);

@@ -1,3 +1,4 @@
+import { withContainer, withMetaTags } from "@neufund/shared";
 import * as React from "react";
 import { Redirect } from "react-router";
 import { branch, compose, renderComponent, setDisplayName } from "recompose";
@@ -13,8 +14,6 @@ import {
   selectNomineeFlowHasError,
 } from "../../../modules/nominee-flow/selectors";
 import { appConnect } from "../../../store";
-import { withContainer } from "../../../utils/withContainer.unsafe";
-import { withMetaTags } from "../../../utils/withMetaTags.unsafe";
 import { appRoutes } from "../../appRoutes";
 import { Layout } from "../../layouts/Layout";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";

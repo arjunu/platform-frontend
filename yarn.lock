@@ -12124,6 +12124,11 @@ lolex@^4.0.1:
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-4.0.1.tgz#4a99c2251579d693c6a083446dae0e5c3844d3fa"
   integrity sha512-UHuOBZ5jjsKuzbB/gRNNW8Vg8f00Emgskdq2kvZxgBJCS0aqquAuXai/SkWORlKeZEiNQWZjFZOqIUcH9LqKCw==
 
+lolex@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/lolex/-/lolex-5.1.1.tgz#9587144854511d27940ee5e113dcb7de9b0fd666"
+  integrity sha512-dEwHz1CJ8DsdgfpiimgQQEhEJYOEiJ69a0s4aJDNHajaTqOJuF34vBAWVa/sS0V8aQvt72p+KgQ3pRmEVJM+iA==
+
 lolex@kylefleming/lolex#d683851fedb7237b9e5606ee139090ed71378842:
   version "1.6.0"
   resolved "https://codeload.github.com/kylefleming/lolex/tar.gz/d683851fedb7237b9e5606ee139090ed71378842"
@@ -15485,11 +15490,6 @@ react-intl-phraseapp@^0.2.4:
   resolved "https://registry.yarnpkg.com/react-intl-phraseapp/-/react-intl-phraseapp-0.2.4.tgz#02963975b007c2bd49b091802909a28bd87c3d51"
   integrity sha512-13i6gRbDkBvO5XlhiCvmuwO5EUXaAbkxOWJTFPkq8PfkPw/JnoVBLorfya3Gu8CoUM4j82Q52dewDA9/Vj1MqA==
 
-react-intl-phraseapp@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/react-intl-phraseapp/-/react-intl-phraseapp-0.4.1.tgz#cdcbb0334530f56ca7543ed117e92a1cc6eb65e4"
-  integrity sha512-SllFFfDtKQyz38WyL3O4zEYCB63C7nihyJsAxRlHzzX/kz2lFM3GXg4NRwGNGrxZ+IgNM0E+yol0JJUVxnuLsA==
-
 react-intl@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-2.4.0.tgz#66c14dc9df9a73b2fbbfbd6021726e80a613eb15"
@@ -15975,6 +15975,16 @@ redux@^4.0.4:
   dependencies:
     loose-envify "^1.4.0"
     symbol-observable "^1.2.0"
+
+redux@~3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-3.5.2.tgz#4533745e970b647ec26066a83aa30e9e26faf843"
+  integrity sha1-RTN0XpcLZH7CYGaoOqMOnib6+EM=
+  dependencies:
+    lodash "^4.2.1"
+    lodash-es "^4.2.1"
+    loose-envify "^1.1.0"
+    symbol-observable "^0.2.3"
 
 reflect-metadata@^0.1.10:
   version "0.1.10"

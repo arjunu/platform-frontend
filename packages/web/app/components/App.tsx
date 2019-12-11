@@ -1,4 +1,4 @@
-import { ContainerContext } from "@neufund/shared"
+import { ContainerContext, withRootMetaTag } from "@neufund/shared";
 import { Container } from "inversify";
 import * as React from "react";
 import { hot } from "react-hot-loader/root";
@@ -14,7 +14,6 @@ import { selectInitError, selectIsInitInProgress } from "../modules/init/selecto
 import { appConnect } from "../store";
 import { onEnterAction } from "../utils/react-connected-components/OnEnterAction";
 import { ScrollToTop } from "../utils/react-connected-components/ScrollToTop";
-import { withRootMetaTag } from "../utils/withMetaTags.unsafe";
 import { AppRouter } from "./AppRouter";
 import { CriticalError } from "./layouts/CriticalError";
 import { FullPageLoading } from "./modals/full-page-loading/FullPageLoading";

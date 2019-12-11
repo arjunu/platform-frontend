@@ -1,3 +1,4 @@
+import { withContainer } from "@neufund/shared";
 import * as React from "react";
 import { compose } from "redux";
 
@@ -6,7 +7,6 @@ import { selectBackupCodesVerified } from "../../../modules/auth/selectors";
 import { IWalletPrivateData } from "../../../modules/web3/reducer";
 import { selectIsUnlocked, selectWalletPrivateData } from "../../../modules/web3/selectors";
 import { appConnect } from "../../../store";
-import { withContainer } from "../../../utils/withContainer.unsafe";
 import { Layout } from "../../layouts/Layout";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";

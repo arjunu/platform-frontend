@@ -1,4 +1,4 @@
-import { nonNullable } from "@neufund/shared"
+import { DataUnavailableError, nonNullable } from "@neufund/shared";
 import { find } from "lodash/fp";
 import createCachedSelector from "re-reselect";
 import { createSelector } from "reselect";
@@ -13,7 +13,6 @@ import { calcShareAndTokenPrice } from "../../lib/api/eto/EtoUtils";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { IAppState } from "../../store";
 import { DeepReadonly } from "../../types";
-import { DataUnavailableError } from "../../utils/errors";
 import { selectUserType } from "../auth/selectors";
 import { selectIssuerEto, selectIssuerEtoWithCompanyAndContract } from "../eto-flow/selectors";
 import { selectIsEligibleToPreEto } from "../investor-portfolio/selectors";

@@ -1,3 +1,4 @@
+import { setupFakeClock } from "@neufund/shared/src/modules/test/setupFakeClock";
 import { expect } from "chai";
 import { render, shallow } from "enzyme";
 import * as React from "react";
@@ -5,7 +6,6 @@ import { spy } from "sinon";
 
 import { createMount } from "../../../../test/createMount";
 import {
-  setupFakeClock,
   waitUntilDoesntThrow,
   wrapWithIntl,
 } from "../../../../test/integrationTestUtils.unsafe";
