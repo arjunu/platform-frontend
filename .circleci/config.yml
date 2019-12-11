@@ -56,6 +56,10 @@ jobs:
           no_output_timeout: 10m
       - run:
           command: yarn workspace @neufund/web test:e2e:chrome
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - cypress/screenshots
 
   build-frontend:
     executor: docker
@@ -132,6 +136,19 @@ jobs:
       - run: yarn workspace @neufund/web storybook:screenshots
       - run: yarn workspace @neufund/web codechecks ./codechecks-vis-reg.ts
 
+  codechecks-e2e-vis-reg:
+    executor: docker-browsers
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v24-deps-{{ checksum "package.json" }}
+            - v24-deps-
+
+      - run: yarn --frozen-lockfile
+      - run: yarn workspace @neufund/web codechecks ./codechecks-e2e-vis-reg.ts
+
   deploy-storybook:
     executor: docker
 
@@ -168,6 +185,10 @@ workflows:
       - codechecks-vis-reg:
           requires:
             - build-frontend
+      #temporary only wait for .io tests
+      - codechecks-e2e-vis-reg:
+          requires:
+            - build-docker-test-e2e
 
   nightly:
     triggers:

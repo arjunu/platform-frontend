@@ -51,6 +51,8 @@ export const fillAndAssertFull = (section: string, sideEffect: TFormFixture | ((
 
 export const fillAndAssert = (section: string, sideEffect: TFormFixture | (() => void)) => {
   goToSection(section);
+  cy.get("form").should("exist");
+  cy.screenshot();
 
   if (isFunction(sideEffect)) {
     sideEffect();
