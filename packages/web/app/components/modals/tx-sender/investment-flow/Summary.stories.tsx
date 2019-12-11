@@ -2,7 +2,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { InvestmentSummaryComponent } from "./Summary";
 
 import * as tokenIcon from "../../../../assets/img/token_icon.svg";

@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { testEto } from "../../../../../../test/fixtures";
-import { withMockedDate } from "../../../../../utils/storybookHelpers.unsafe";
+import { withMockedDate } from "../../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { InvestmentWidgetLayout } from "./InvestmentWidget";
 
 const defaultProps = {

@@ -56,7 +56,7 @@ import { Web3Manager } from "../lib/web3/Web3Manager/Web3Manager";
 import {
   AsyncIntervalSchedulerFactory,
   AsyncIntervalSchedulerFactoryType,
-} from "../utils/AsyncIntervalScheduler";
+} from "../utils/react-connected-components/AsyncIntervalScheduler";
 import { symbols } from "./symbols";
 
 export function setupBindings(config: IConfig): Container {

@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { EInvestmentType } from "../../../../modules/investment-flow/reducer";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { InvestmentTypeSelector, WalletSelectionData } from "./InvestmentTypeSelector";
 
 export const wallets: WalletSelectionData[] = [

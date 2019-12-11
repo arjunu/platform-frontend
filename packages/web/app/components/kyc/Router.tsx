@@ -5,7 +5,7 @@ import { Redirect, Route } from "react-router-dom";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { selectUserType } from "../../modules/auth/selectors";
 import { appConnect } from "../../store";
-import { SwitchConnected } from "../../utils/connectedRouting";
+import { SwitchConnected } from "../../utils/react-connected-components/connectedRouting";
 import { KYCBeneficialOwners } from "./business/BeneficialOwners";
 import { KycBusinessData } from "./business/BusinessData.unsafe";
 import { KycLegalRepresentative } from "./business/LegalRepresentative.unsafe";

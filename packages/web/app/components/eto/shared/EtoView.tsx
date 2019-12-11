@@ -19,7 +19,7 @@ import {
 } from "../../../modules/eto/types";
 import { isOnChain } from "../../../modules/eto/utils";
 import { appConnect } from "../../../store";
-import { SwitchConnected } from "../../../utils/connectedRouting";
+import { SwitchConnected } from "../../../utils/react-connected-components/connectedRouting";
 import { withMetaTags } from "../../../utils/withMetaTags.unsafe";
 import { Container, EColumnSpan, EContainerType } from "../../layouts/Container";
 import { WidgetGrid } from "../../layouts/WidgetGrid";

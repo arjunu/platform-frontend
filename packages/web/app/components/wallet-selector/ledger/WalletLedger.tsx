@@ -4,7 +4,7 @@ import { compose } from "recompose";
 import { actions } from "../../../modules/actions";
 import { isSupportingLedger } from "../../../modules/user-agent/reducer";
 import { appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
 import { resetWalletOnEnter } from "../resetWallet";
 import { WalletLedgerChooser } from "./WalletLedgerChooser";
 import { WalletLedgerInit } from "./WalletLedgerInitComponent";

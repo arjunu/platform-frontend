@@ -4,7 +4,7 @@ import { compose, setDisplayName, withProps } from "recompose";
 
 import { actions } from "../../modules/actions";
 import { TDataTestId } from "../../types";
-import { onEnterAction } from "../../utils/OnEnterAction";
+import { onEnterAction } from "../../utils/react-connected-components/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
 import { Container, EColumnSpan } from "../layouts/Container";
 import { Layout } from "../layouts/Layout";

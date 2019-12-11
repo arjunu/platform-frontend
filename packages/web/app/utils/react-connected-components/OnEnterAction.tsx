@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { compose, withProps } from "recompose";
 
-import { AppDispatch } from "../store";
+import { AppDispatch } from "../../store";
 
 interface IOnEnterActionDispatchProps {
   enterAction: Function;

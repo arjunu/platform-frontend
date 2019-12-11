@@ -4,7 +4,7 @@ import { compose } from "redux";
 import { EKycRequestType, IKycFileInfo } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { AppActionTypes, appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { EKycUploadType, MultiFileUpload } from "../../shared/MultiFileUpload";

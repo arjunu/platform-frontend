@@ -5,8 +5,8 @@ import * as React from "react";
 import { ETransactionErrorType } from "../../../../modules/tx/sender/reducer";
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
-import { withStore } from "../../../../utils/storeDecorator.unsafe";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withStore } from "../../../../utils/react-connected-components/storeDecorator.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { TxErrorLayout } from "./TxError";
 
 import * as tokenIcon from "../../../../assets/img/token_icon.svg";

@@ -13,8 +13,8 @@ import {
 } from "../../../../modules/eto/types";
 import { ICalculatedContribution } from "../../../../modules/investor-portfolio/types";
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
-import { withStore } from "../../../../utils/storeDecorator.unsafe";
-import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
+import { withStore } from "../../../../utils/react-connected-components/storeDecorator.unsafe";
+import { withMockedDate } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { EtoOverviewThumbnail } from "./EtoOverviewThumbnail";
 
 import * as icbmThumbnail from "../../../../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";

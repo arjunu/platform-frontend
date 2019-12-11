@@ -17,7 +17,7 @@ import {
   selectKycRequestType,
 } from "../../modules/kyc/selectors";
 import { appConnect } from "../../store";
-import { onEnterAction } from "../../utils/OnEnterAction";
+import { onEnterAction } from "../../utils/react-connected-components/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
 import { appRoutes } from "../appRoutes";
 import { EContentWidth } from "../layouts/Content";

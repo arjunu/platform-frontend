@@ -2,7 +2,7 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { withMockedDate } from "../../../utils/storybookHelpers.unsafe";
+import { withMockedDate } from "../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { EtoStartDateWidgetComponent } from "./ChooseEtoStartDateWidget";
 
 const TEST_OFFSET_PERIOD = 604800; //7 days

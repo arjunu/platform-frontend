@@ -2,7 +2,7 @@ import * as React from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { EJurisdiction } from "../lib/api/eto/EtoProductsApi.interfaces";
-import { SwitchConnected } from "../utils/connectedRouting";
+import { SwitchConnected } from "../utils/react-connected-components/connectedRouting";
 import { appRoutes } from "./appRoutes";
 import { Dashboard } from "./dashboard/Dashboard";
 import { Documents } from "./documents/issuerDocuments/Documents";

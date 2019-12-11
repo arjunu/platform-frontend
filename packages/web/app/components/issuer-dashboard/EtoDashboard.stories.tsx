@@ -6,7 +6,7 @@ import { testEto } from "../../../test/fixtures";
 import { mockedStore } from "../../../test/fixtures/mockedStore";
 import { EEtoState } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { EOfferingDocumentType } from "../../lib/api/eto/EtoProductsApi.interfaces";
-import { withStore } from "../../utils/storeDecorator.unsafe";
+import { withStore } from "../../utils/react-connected-components/storeDecorator.unsafe";
 import { EtoDashboardLayout } from "./EtoDashboard";
 import { EEtoStep } from "./utils";
 

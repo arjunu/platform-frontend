@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { ITxData } from "../../../../lib/web3/types";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { UnlockFundsSummaryComponent } from "./Summary.unsafe";
 
 const txData: ITxData = {

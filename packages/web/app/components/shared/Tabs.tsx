@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 
 import { CommonHtmlProps, TTranslatedString } from "../../types";
-import { NavLinkConnected } from "../../utils/connectedRouting";
+import { NavLinkConnected } from "../../utils/react-connected-components/connectedRouting";
 
 import * as styles from "./Tabs.module.scss";
 

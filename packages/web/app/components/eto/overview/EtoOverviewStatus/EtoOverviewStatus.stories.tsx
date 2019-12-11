@@ -11,8 +11,8 @@ import {
   TEtoWithCompanyAndContractReadonly,
 } from "../../../../modules/eto/types";
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
-import { withStore } from "../../../../utils/storeDecorator.unsafe";
-import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
+import { withStore } from "../../../../utils/react-connected-components/storeDecorator.unsafe";
+import { withMockedDate } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { ECurrency } from "../../../shared/formatters/utils";
 import { EtoOverviewStatus } from "./EtoOverviewStatus";
 

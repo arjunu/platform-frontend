@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import * as React from "react";
 
 import { Q18 } from "../../../../config/constants";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { BankTransferRedeemLayout } from "./BankTransferRedeemInit";
 
 storiesOf("BankTransferRedeem/Init", module)

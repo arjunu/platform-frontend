@@ -1,6 +1,6 @@
 import { actions } from "../../modules/actions";
-import { onEnterAction } from "../../utils/OnEnterAction";
-import { onLeaveAction } from "../../utils/OnLeaveAction";
+import { onEnterAction } from "../../utils/react-connected-components/OnEnterAction";
+import { onLeaveAction } from "../../utils/react-connected-components/OnLeaveAction";
 
 /**
  * Cancels all previous started wallet selector actions while mounting the component

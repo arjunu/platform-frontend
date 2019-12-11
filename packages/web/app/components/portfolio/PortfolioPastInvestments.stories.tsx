@@ -4,7 +4,7 @@ import * as React from "react";
 import { testEto } from "../../../test/fixtures";
 import { EETOStateOnChain } from "../../modules/eto/types";
 import { IInvestorTicket, TETOWithInvestorTicket } from "../../modules/investor-portfolio/types";
-import { withStore } from "../../utils/storeDecorator.unsafe";
+import { withStore } from "../../utils/react-connected-components/storeDecorator.unsafe";
 import { PortfolioPastInvestments } from "./PortfolioPastInvestments";
 
 const eto = {

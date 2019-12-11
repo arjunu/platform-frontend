@@ -10,7 +10,7 @@ import { selectNEURStatus } from "../../../modules/wallet/selectors";
 import { ENEURWalletStatus } from "../../../modules/wallet/types";
 import { appConnect } from "../../../store";
 import { DeepReadonly } from "../../../types";
-import { onEnterAction } from "../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
 
 interface IDispatchProps {
   verifyBankAccount: () => void;

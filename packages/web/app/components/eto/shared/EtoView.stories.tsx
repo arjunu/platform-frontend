@@ -4,7 +4,7 @@ import * as React from "react";
 import { Container } from "reactstrap";
 
 import { testCompany, testContract, testEto } from "../../../../test/fixtures";
-import { withStore } from "../../../utils/storeDecorator.unsafe";
+import { withStore } from "../../../utils/react-connected-components/storeDecorator.unsafe";
 import { EtoView } from "./EtoView";
 
 const testStore = {

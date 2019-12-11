@@ -4,7 +4,7 @@ import * as moment from "moment";
 import * as React from "react";
 
 import { ITokenDisbursal } from "../../../../modules/investor-portfolio/types";
-import { withMockedDate, withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withMockedDate, withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { ECurrency } from "../../../shared/formatters/utils";
 import { InvestorRedistributePayoutSuccessLayout } from "./RedistributeSuccess";
 

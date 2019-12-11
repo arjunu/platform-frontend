@@ -6,7 +6,7 @@ import { actions } from "../../../../modules/actions";
 import { selectInvestorEtoWithCompanyAndContract } from "../../../../modules/eto/selectors";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/types";
 import { appConnect } from "../../../../store";
-import { onEnterAction } from "../../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../../utils/react-connected-components/OnEnterAction";
 import { withContainer } from "../../../../utils/withContainer.unsafe";
 import { etoPublicViewLink } from "../../../appRouteUtils";
 import { Layout } from "../../../layouts/Layout";

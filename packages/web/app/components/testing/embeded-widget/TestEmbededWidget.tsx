@@ -8,7 +8,7 @@ import {
 } from "../../../modules/eto/selectors";
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
 import { etoWidgetViewLink } from "../../appRouteUtils";
 
 interface IStateProps {

@@ -5,7 +5,7 @@ import * as React from "react";
 import { Q18 } from "../../../../config/constants";
 import { ITxData } from "../../../../lib/web3/types";
 import { ETxSenderType, TAdditionalDataByType } from "../../../../modules/tx/types";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { RefundSummaryLayout } from "./RefundSummary";
 
 const txData: ITxData = {

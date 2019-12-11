@@ -4,7 +4,7 @@ import * as moment from "moment";
 import * as React from "react";
 
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
-import { withMockedDate, withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withMockedDate, withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { InvestmentSuccessComponent } from "./Success";
 
 import * as tokenIcon from "../../../../assets/img/token_icon.svg";

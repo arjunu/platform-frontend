@@ -3,8 +3,8 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
 import { TTranslatedString } from "../../../types";
-import { withHeaderButton } from "../../../utils/withHeaderButton";
-import { withProgress } from "../../../utils/withProgress";
+import { withHeaderButton } from "../../../utils/react-connected-components/withHeaderButton";
+import { withProgress } from "../../../utils/react-connected-components/withProgress";
 
 import * as styles from "./KycStep.module.scss";
 

@@ -2,8 +2,8 @@ import { ContainerContext } from "@neufund/shared";
 import { Container } from "inversify";
 import * as React from "react";
 
-import { symbols } from "../di/symbols";
-import { appConnect, AppDispatch } from "../store";
+import { symbols } from "../../di/symbols";
+import { appConnect, AppDispatch } from "../../store";
 import {
   AsyncIntervalScheduler,
   AsyncIntervalSchedulerFactoryType,

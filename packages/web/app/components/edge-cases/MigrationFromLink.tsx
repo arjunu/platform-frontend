@@ -7,7 +7,7 @@ import { EUserType } from "../../lib/api/users/interfaces";
 import { actions } from "../../modules/actions";
 import { selectUserType } from "../../modules/auth/selectors";
 import { appConnect } from "../../store";
-import { onEnterAction } from "../../utils/OnEnterAction";
+import { onEnterAction } from "../../utils/react-connected-components/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
 import { DashboardHeading } from "../eto/shared/DashboardHeading";
 import { Layout } from "../layouts/Layout";

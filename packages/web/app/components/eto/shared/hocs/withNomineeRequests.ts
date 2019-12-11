@@ -5,8 +5,8 @@ import { selectNomineeRequests } from "../../../../modules/eto-nominee/selectors
 import { INomineeRequest } from "../../../../modules/nominee-flow/types";
 import { appConnect } from "../../../../store";
 import { THocProps } from "../../../../types";
-import { onEnterAction } from "../../../../utils/OnEnterAction";
-import { onLeaveAction } from "../../../../utils/OnLeaveAction";
+import { onEnterAction } from "../../../../utils/react-connected-components/OnEnterAction";
+import { onLeaveAction } from "../../../../utils/react-connected-components/OnLeaveAction";
 
 type TStateProps = {
   nomineeRequests: INomineeRequest[];

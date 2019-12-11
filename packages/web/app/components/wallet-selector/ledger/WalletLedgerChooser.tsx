@@ -7,7 +7,7 @@ import {
   selectHasPreviousPage,
 } from "../../../modules/wallet-selector/ledger-wizard/reducer";
 import { appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
 import {
   IWalletLedgerChooserComponent,
   IWalletLedgerChooserComponentDispatchProps,

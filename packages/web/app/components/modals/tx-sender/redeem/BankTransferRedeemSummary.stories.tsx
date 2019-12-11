@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { Q18 } from "../../../../config/constants";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { BankTransferRedeemSummaryLayout } from "./BankTransferRedeemSummary";
 
 storiesOf("BankTransferRedeem/Summary", module)

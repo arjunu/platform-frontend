@@ -5,7 +5,7 @@ import { dummyEthereumAddressWithChecksum } from "../../../test/fixtures";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { IAppState } from "../../store";
 import { DeepPartial } from "../../types";
-import { withStore } from "../../utils/storeDecorator.unsafe";
+import { withStore } from "../../utils/react-connected-components/storeDecorator.unsafe";
 import { EContentWidth } from "./Content";
 import { LayoutComponent, TransitionalLayout } from "./Layout";
 

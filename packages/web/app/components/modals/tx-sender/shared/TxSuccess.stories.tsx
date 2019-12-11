@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { ETxSenderType } from "../../../../modules/tx/types";
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { TxSuccessLayout } from "./TxSuccess";
 
 import * as tokenIcon from "../../../../assets/img/token_icon.svg";

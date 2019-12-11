@@ -15,8 +15,8 @@ import {
   selectWidgetError,
 } from "../../../modules/kyc/selectors";
 import { appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
-import { onLeaveAction } from "../../../utils/OnLeaveAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
+import { onLeaveAction } from "../../../utils/react-connected-components/OnLeaveAction";
 
 interface IStateProps {
   requestStatus: EKycRequestStatus | undefined;

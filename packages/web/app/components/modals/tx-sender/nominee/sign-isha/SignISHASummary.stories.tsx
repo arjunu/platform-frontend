@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { EProcessState } from "../../../../../utils/enums/processStates";
-import { withModalBody } from "../../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { SignNomineeISHASummaryLayout } from "./SignISHASummary";
 
 storiesOf("NomineeSignISHA/Summary", module)

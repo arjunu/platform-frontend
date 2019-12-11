@@ -4,7 +4,7 @@ import { compose, nest, withProps } from "recompose";
 import {
   calculateStepProgress,
   FullscreenProgressContext,
-} from "../components/layouts/FullscreenProgressLayout";
+} from "../../components/layouts/FullscreenProgressLayout";
 
 type TWithProgressOptions = {
   step: number;

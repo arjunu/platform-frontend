@@ -5,7 +5,7 @@ import * as React from "react";
 import { testCompany, testContract, testEto } from "../../../../../../test/fixtures";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { ETxSenderType } from "../../../../../modules/tx/types";
-import { withModalBody } from "../../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { SignNomineeAgreementSummaryLayout } from "./SignAgreementSummary";
 
 const eto: TEtoWithCompanyAndContractReadonly = {

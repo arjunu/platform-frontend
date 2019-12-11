@@ -6,7 +6,7 @@ import { compose } from "redux";
 import { IKycBeneficialOwner } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
 import { Accordion } from "../../shared/Accordion";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons";
 import { HorizontalLine } from "../../shared/HorizontalLine";

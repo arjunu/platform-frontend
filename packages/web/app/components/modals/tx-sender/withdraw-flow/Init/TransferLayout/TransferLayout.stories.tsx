@@ -8,7 +8,7 @@ import {
   EValidationState,
 } from "../../../../../../modules/tx/validator/reducer";
 import { toEquityTokenSymbol } from "../../../../../../utils/opaque-types/utils";
-import { withModalBody } from "../../../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { TransferLayout } from "./TransferLayout";
 
 const props = {

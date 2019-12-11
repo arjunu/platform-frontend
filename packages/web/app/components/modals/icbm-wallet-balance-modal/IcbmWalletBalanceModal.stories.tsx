@@ -1,7 +1,7 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { withModalBody } from "../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { IcbmWalletBalanceComponentInner } from "./IcbmWalletBalanceModal";
 
 export const dummyEthereumAddress = "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359";

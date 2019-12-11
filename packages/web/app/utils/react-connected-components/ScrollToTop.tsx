@@ -1,7 +1,7 @@
 import * as React from "react";
 import { RouteProps } from "react-router";
 
-import { appConnect } from "../store";
+import { appConnect } from "../../store";
 
 class ScrollToTopComponent extends React.Component<RouteProps> {
   componentDidUpdate(prevProps: RouteProps): void {

@@ -4,9 +4,9 @@ import { Provider as ReduxProvider } from "react-redux";
 import { createStore } from "redux";
 import configureStore, { MockStore } from "redux-mock-store";
 
-import { TAction } from "../modules/actions";
-import { generateRootReducer, IAppState } from "../store";
-import { DeepPartial } from "../types";
+import { TAction } from "../../modules/actions";
+import { generateRootReducer, IAppState } from "../../store";
+import { DeepPartial } from "../../types";
 
 const mockStore = configureStore();
 

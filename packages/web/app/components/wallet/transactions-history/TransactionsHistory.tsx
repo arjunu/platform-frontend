@@ -8,8 +8,8 @@ import { ETransactionDirection } from "../../../lib/api/analytics-api/interfaces
 import { actions } from "../../../modules/actions";
 import { selectTxHistoryPaginated } from "../../../modules/tx-history/selectors";
 import { appConnect } from "../../../store";
-import { onEnterAction } from "../../../utils/OnEnterAction";
-import { onLeaveAction } from "../../../utils/OnLeaveAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
+import { onLeaveAction } from "../../../utils/react-connected-components/OnLeaveAction";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { ETheme, Money } from "../../shared/formatters/Money";
 import { ENumberOutputFormat } from "../../shared/formatters/utils";

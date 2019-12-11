@@ -1,5 +1,5 @@
 import { actions } from "../../../../modules/actions";
-import { onEnterAction } from "../../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../../utils/react-connected-components/OnEnterAction";
 
 export const withJurisdictionRoute = <P extends object>(
   getProps: (props: P) => { previewCode: string; jurisdiction: string },

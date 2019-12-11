@@ -14,7 +14,7 @@ import {
 } from "../../../../modules/investor-portfolio/selectors";
 import { snapshotIsActual } from "../../../../modules/investor-portfolio/utils";
 import { appConnect } from "../../../../store";
-import { onEnterAction } from "../../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../../utils/react-connected-components/OnEnterAction";
 import { LoadingIndicator } from "../../../shared/loading-indicator/LoadingIndicator";
 import { IncomingPayoutAvailable } from "./IncomingPayoutAvailable";
 import { IncomingPayoutPending } from "./IncomingPayoutPending";

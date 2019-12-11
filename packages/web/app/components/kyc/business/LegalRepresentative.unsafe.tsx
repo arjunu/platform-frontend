@@ -16,7 +16,7 @@ import {
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { ECountries } from "../../../utils/enums/countriesEnum";
-import { onEnterAction } from "../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import {
   BOOL_FALSE_KEY,

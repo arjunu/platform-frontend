@@ -30,7 +30,7 @@ import {
 import { ENEURWalletStatus } from "../../../../modules/wallet/types";
 import { selectEthereumAddressWithChecksum } from "../../../../modules/web3/selectors";
 import { appConnect } from "../../../../store";
-import { onEnterAction } from "../../../../utils/OnEnterAction";
+import { onEnterAction } from "../../../../utils/react-connected-components/OnEnterAction";
 import { Container, EColumnSpan } from "../../../layouts/Container";
 import { LoadingIndicatorContainer } from "../../../shared/loading-indicator";
 import { TransactionsHistory } from "../../transactions-history/TransactionsHistory";

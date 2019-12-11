@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Redirect, Route } from "react-router-dom";
 
-import { SwitchConnected } from "../../../../utils/connectedRouting";
+import { SwitchConnected } from "../../../../utils/react-connected-components/connectedRouting";
 import { LoginHelp } from "../help/LoginHelp";
 import { RecoverWallet } from "../recovery/RecoverWallet";
 import { RecoverySuccess } from "../success/RecoverySuccess";

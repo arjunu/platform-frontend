@@ -8,7 +8,7 @@ import {
   TEtoContractData,
   TEtoWithCompanyAndContractReadonly,
 } from "../../modules/eto/types";
-import { withMockedDate } from "../../utils/storybookHelpers.unsafe";
+import { withMockedDate } from "../../utils/react-connected-components/storybookHelpers.unsafe";
 import { ETOFundraisingCounterWidget } from "./ETOFundraisingCounterWidget";
 
 const dummyNow = new Date(2018, 11, 17);

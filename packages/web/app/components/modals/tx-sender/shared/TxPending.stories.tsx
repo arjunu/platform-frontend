@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { ETokenType, ETxSenderType } from "../../../../modules/tx/types";
-import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
+import { withModalBody } from "../../../../utils/react-connected-components/storybookHelpers.unsafe";
 import { TxPendingLayout } from "./TxPending";
 
 const txData: React.ComponentProps<typeof TxPendingLayout> = {

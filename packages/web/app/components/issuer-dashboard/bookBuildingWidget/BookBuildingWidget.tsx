@@ -24,8 +24,8 @@ import { selectIssuerEtoInvestmentCalculatedValues } from "../../../modules/eto/
 import { EETOStateOnChain } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
 import { OmitKeys, TTranslatedString } from "../../../types";
-import { onEnterAction } from "../../../utils/OnEnterAction";
-import { onLeaveAction } from "../../../utils/OnLeaveAction";
+import { onEnterAction } from "../../../utils/react-connected-components/OnEnterAction";
+import { onLeaveAction } from "../../../utils/react-connected-components/OnLeaveAction";
 import { EColumnSpan } from "../../layouts/Container";
 import { createErrorBoundary } from "../../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryPanel } from "../../shared/errorBoundary/ErrorBoundaryPanel";

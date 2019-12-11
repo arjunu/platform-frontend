@@ -1,8 +1,8 @@
 import * as React from "react";
 import { compose, nest, withProps } from "recompose";
 
-import { FullscreenButtonContext } from "../components/layouts/FullscreenProgressLayout";
-import { TTranslatedString } from "../types";
+import { FullscreenButtonContext } from "../../components/layouts/FullscreenProgressLayout";
+import { TTranslatedString } from "../../types";
 
 type TWithHeaderButtonOptions = {
   buttonAction?: () => void;

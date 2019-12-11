@@ -5,7 +5,7 @@ import { selectIsUserFullyVerified } from "../../modules/auth/selectors";
 import { selectIssuerEtoWithCompanyAndContract } from "../../modules/eto-flow/selectors";
 import { TEtoWithCompanyAndContractReadonly } from "../../modules/eto/types";
 import { appConnect } from "../../store";
-import { onEnterAction } from "../../utils/OnEnterAction";
+import { onEnterAction } from "../../utils/react-connected-components/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
 import { Layout } from "../layouts/Layout";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";

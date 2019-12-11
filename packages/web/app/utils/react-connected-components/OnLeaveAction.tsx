@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { AppDispatch } from "../store";
+import { AppDispatch } from "../../store";
 
 interface IOnLeaveActionDispatchProps {
   enterAction: Function;
