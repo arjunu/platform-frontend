@@ -57,9 +57,9 @@ jobs:
       - run:
           command: yarn workspace @neufund/web test:e2e:chrome
       - persist_to_workspace:
-          root: /home/circleci/project
+          root: /home/circleci/app
           paths:
-            - cypress/screenshots
+            - packages/web/cypress/screenshots
 
   build-frontend:
     executor: docker
