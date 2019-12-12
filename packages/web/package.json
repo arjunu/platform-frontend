@@ -37,7 +37,7 @@
     "start:remote:serve-on-network": "(cp -n ./app/config/.env.example .env || true) && NODE_ENV=development && NF_SERVE_ON_NETWORK=$(eval network private_ip) webpack-dev-server --config ./webpack/webpack.config.dev-remote.js",
     "start:translate": "(cp -n ./app/config/.env.example .env || true) && NODE_ENV=development && NF_ENABLE_TRANSLATE_OVERLAY=1 webpack-dev-server --config ./webpack/webpack.config.translate.js",
     "storybook": "(cp -n ./app/config/.env.storybook .env || true) && start-storybook -p 9001 -c .storybook -s ./app/assets",
-    "storybook:screenshots": "storycap ----serverTimeout 200000 --serverCmd \"yarn storybook\" --parallel 10 http://localhost:9001",
+    "storybook:screenshots": "storycap ----serverTimeout 200000 --serverCmd \"yarn storybook\" --parallel 8 http://localhost:9001",
     "test:browser": "NF_MOCHA_RUN=1 TS_NODE_PROJECT=tsconfig.spec.json TS_NODE_IGNORE='node_modules\\/(?!@neufund)' mocha --require ts-node/register/transpile-only --require jsdom-global/register --require ./test/setupBrowserTests.ts './test/setupTestsHooks.ts' './app/**/*.spec.ts?(x)'",
     "test:browser:watch": "yarn test:browser --watch --watch-extensions ts,tsx ",
     "test:e2e": "./e2e/setup-e2e.sh",
