@@ -1,4 +1,4 @@
-import { expectSaga } from "redux-saga-test-plan";
+import { expectSaga } from "@neufund/sagas"
 import * as matchers from "redux-saga-test-plan/matchers";
 
 import { createMock } from "../../../../../test/testUtils";

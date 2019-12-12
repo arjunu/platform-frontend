@@ -1,5 +1,4 @@
-import { call, put, race, select, take, takeLatest } from "@neufund/sagas";
-import { Channel } from "redux-saga";
+import { call, Channel, put, race, select, take, takeLatest } from "@neufund/sagas";
 
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import {

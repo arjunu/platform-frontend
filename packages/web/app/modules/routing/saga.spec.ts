@@ -1,5 +1,5 @@
+import { expectSaga } from "@neufund/sagas"
 import { LocationChangeAction } from "connected-react-router";
-import { expectSaga } from "redux-saga-test-plan";
 
 import { appRoutes } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";

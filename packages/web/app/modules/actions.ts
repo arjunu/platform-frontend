@@ -1,4 +1,4 @@
-import { StringableActionCreator } from "@redux-saga/types";
+import { StringableActionCreator } from "@neufund/sagas";
 import { LocationChangeAction } from "connected-react-router";
 
 import { portfolioActions } from "../components/portfolio/actions";

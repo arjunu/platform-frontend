@@ -1,3 +1,4 @@
+import createSagaMiddleware, { SagaMiddleware } "@neufund/sagas";
 import { ConnectedRouter, routerMiddleware } from "connected-react-router";
 import { ReactWrapper } from "enzyme";
 import { createMemoryHistory, History } from "history";
@@ -7,7 +8,6 @@ import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { Provider as ReduxProvider } from "react-redux";
 import { applyMiddleware, createStore, Store } from "redux";
-import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 import { SinonSpy } from "sinon";
 
 import {

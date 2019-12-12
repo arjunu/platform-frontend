@@ -1,4 +1,4 @@
-import { expectSaga } from "redux-saga-test-plan";
+import { expectSaga } from "@neufund/sagas"
 
 import { ECurrency, ENumberInputFormat } from "../../components/shared/formatters/utils";
 import {

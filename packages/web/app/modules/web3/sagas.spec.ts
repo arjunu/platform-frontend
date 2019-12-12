@@ -1,7 +1,6 @@
-import { delay } from "@neufund/sagas";
+import { delay, expectSaga } from "@neufund/sagas";
 import { expect } from "chai";
 import { EventEmitter } from "events";
-import { expectSaga } from "redux-saga-test-plan";
 
 import { createMock } from "../../../test/testUtils";
 import { LIGHT_WALLET_PASSWORD_CACHE_TIME } from "../../config/constants";

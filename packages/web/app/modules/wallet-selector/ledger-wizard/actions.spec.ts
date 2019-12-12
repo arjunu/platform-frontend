@@ -1,6 +1,6 @@
+import { expectSaga } from "@neufund/sagas"
 import { BigNumber } from "bignumber.js";
 import { expect } from "chai";
-import { expectSaga } from "redux-saga-test-plan";
 import { spy } from "sinon";
 
 import { dummyEthereumAddress, dummyNetworkId } from "../../../../test/fixtures";

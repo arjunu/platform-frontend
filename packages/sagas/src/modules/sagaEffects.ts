@@ -1,4 +1,7 @@
 export * from "redux-saga/effects";
-import { call, race, SagaGenerator, select } from "typed-redux-saga";
+export * from "redux-saga";
+export * from "redux-saga-test-plan";
 
-export { call, race, SagaGenerator, select };
+export { StringableActionCreator } from "@redux-saga/types";
+
+export { call, race, SagaGenerator, select } from "typed-redux-saga";

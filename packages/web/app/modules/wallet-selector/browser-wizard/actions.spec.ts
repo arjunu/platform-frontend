@@ -1,5 +1,5 @@
+import { expectSaga } from "@neufund/sagas"
 import { expect } from "chai";
-import { expectSaga } from "redux-saga-test-plan";
 
 import { dummyEthereumAddress, dummyNetworkId } from "../../../../test/fixtures";
 import { createMock } from "../../../../test/testUtils";

@@ -1,6 +1,5 @@
-import { fork, put, select } from "@neufund/sagas";
+import { fork, put, SagaIterator, select } from "@neufund/sagas";
 import { LocationChangeAction } from "connected-react-router";
-import { SagaIterator } from "redux-saga";
 
 import { appRoutes } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";

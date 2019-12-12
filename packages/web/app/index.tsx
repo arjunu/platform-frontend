@@ -5,6 +5,7 @@ import "./components/translatedMessages/yupLocales.sideEffect";
 
 import "./index.scss";
 
+import createSagaMiddleware from "@neufund/sagas";
 import { ConnectedRouter, routerMiddleware } from "connected-react-router";
 import { createBrowserHistory, History } from "history";
 import { Container } from "inversify";
@@ -15,7 +16,6 @@ import { initializePhraseAppEditor } from "react-intl-phraseapp";
 import { Provider as ReduxProvider } from "react-redux";
 import { applyMiddleware, createStore, Store } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import createSagaMiddleware from "redux-saga";
 
 import { App } from "./components/App";
 import { getConfig } from "./config/getConfig";

@@ -1,13 +1,14 @@
 diff --git a/node_modules/typed-redux-saga/dist/index.d.ts b/node_modules/typed-redux-saga/dist/index.d.ts
-index b9a94bc..46f0ad3 100644
+index b9a94bc..3c9e14b 100644
 --- a/node_modules/typed-redux-saga/dist/index.d.ts
 +++ b/node_modules/typed-redux-saga/dist/index.d.ts
-@@ -1,8 +1,8 @@
+@@ -1,8 +1,9 @@
  import { Action } from "redux";
  import { Buffer } from "redux-saga";
  import { ActionPattern, Effect } from "redux-saga/effects";
 -declare type SagaGenerator<RT> = Generator<Effect<any>, RT, any>;
 -declare type UnwrapReturnType<R> = R extends SagaGenerator<infer RT> ? RT : R extends Promise<infer PromiseValue> ? PromiseValue : R;
++
 +export declare type SagaGenerator<RT> = Generator<Effect<any>, RT, any>;
 +export declare type UnwrapReturnType<R> = R extends SagaGenerator<infer RT> ? RT : R extends Promise<infer PromiseValue> ? PromiseValue : R;
  export declare function take<A extends Action>(pattern?: ActionPattern<A>): SagaGenerator<A>;
