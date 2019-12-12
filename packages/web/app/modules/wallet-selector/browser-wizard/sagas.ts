@@ -39,7 +39,7 @@ export function* tryConnectingWithBrowserWallet({
   }
 }
 
-export function* browserWalletSagas(): Iterator<any> {
+export function* browserWalletSagas(): Generator<any, any, any> {
   yield fork(
     neuTakeUntil,
     "BROWSER_WALLET_TRY_CONNECTING",

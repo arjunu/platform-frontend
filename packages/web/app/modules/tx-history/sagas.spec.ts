@@ -8,6 +8,7 @@ import {
 } from "../../lib/api/analytics-api/interfaces";
 import { noopLogger } from "../../lib/dependencies/logger";
 import { EthereumAddressWithChecksum, EthereumTxHash } from "../../utils/opaque-types/types";
+import { TGlobalDependencies } from "./../../di/setupBindings";
 import { mapAnalyticsApiTransactionResponse } from "./sagas";
 import { ETransactionStatus } from "./types";
 
@@ -47,7 +48,7 @@ describe("Tx History sagas", () => {
         mapAnalyticsApiTransactionResponse,
         {
           logger: noopLogger,
-        },
+        } as TGlobalDependencies,
         transaction,
       )
         .returns({

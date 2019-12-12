@@ -1,4 +1,5 @@
 import { IPerson } from "../../app/components/shared/PeopleSwiperWidget";
+import { ESocialChannelType } from "../../app/lib/api/eto/EtoApi.interfaces.unsafe";
 
 export const zoe: IPerson = {
   description:
@@ -9,15 +10,15 @@ export const zoe: IPerson = {
   role: "CEO & Co-Founder",
   socialChannels: [
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "https://medium.com/@ZoeAdamovicz",
     },
     {
-      type: "twitter",
+      type: ESocialChannelType.TWITTER,
       url: "https://twitter.com/zoeadamovicz",
     },
     {
-      type: "linkedin",
+      type: ESocialChannelType.LINKEDIN,
       url: "https://www.linkedin.com/in/zoeadamovicz/",
     },
   ],
@@ -33,15 +34,15 @@ export const marcin: IPerson = {
   role: "CTO & Co-Founder",
   socialChannels: [
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "https://medium.com/@rudolfix",
     },
     {
-      type: "twitter",
+      type: ESocialChannelType.TWITTER,
       url: "https://twitter.com/rudolfix",
     },
     {
-      type: "linkedin",
+      type: ESocialChannelType.LINKEDIN,
       url: "https://www.linkedin.com/in/marcinrudolf/",
     },
   ],
@@ -55,55 +56,55 @@ export const aga: IPerson = {
   role: "VP Ventures",
   socialChannels: [
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "",
     },
     {
-      type: "twitter",
+      type: ESocialChannelType.TWITTER,
       url: "",
     },
     {
-      type: "linkedin",
+      type: ESocialChannelType.LINKEDIN,
       url: "",
     },
     {
-      type: "slack",
+      type: ESocialChannelType.SLACK,
       url: "",
     },
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "https://blog.neufund.org",
     },
     {
-      type: "reddit",
+      type: ESocialChannelType.REDDIT,
       url: "https://www.reddit.com/r/neufund",
     },
     {
-      type: "telegram",
+      type: ESocialChannelType.TELEGRAM,
       url: "https://t.me/neufund",
     },
     {
-      type: "github",
+      type: ESocialChannelType.GITHUB,
       url: "https://github.com/Neufund/",
     },
     {
-      type: "instagram",
+      type: ESocialChannelType.INSTAGRAM,
       url: "",
     },
     {
-      type: "gplus",
+      type: ESocialChannelType.G_PLUS,
       url: "",
     },
     {
-      type: "youtube",
+      type: ESocialChannelType.YOUTUBE,
       url: "",
     },
     {
-      type: "xing",
+      type: ESocialChannelType.XING,
       url: "",
     },
     {
-      type: "bitcointalk",
+      type: ESocialChannelType.BITCOINTALK,
       url: "",
     },
   ],
@@ -117,55 +118,55 @@ export const sergiej: IPerson = {
   role: "VP Engineering",
   socialChannels: [
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "",
     },
     {
-      type: "twitter",
+      type: ESocialChannelType.TWITTER,
       url: "",
     },
     {
-      type: "linkedin",
+      type: ESocialChannelType.LINKEDIN,
       url: "",
     },
     {
-      type: "slack",
+      type: ESocialChannelType.SLACK,
       url: "",
     },
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "https://blog.neufund.org",
     },
     {
-      type: "reddit",
+      type: ESocialChannelType.REDDIT,
       url: "https://www.reddit.com/r/neufund",
     },
     {
-      type: "telegram",
+      type: ESocialChannelType.TELEGRAM,
       url: "https://t.me/neufund",
     },
     {
-      type: "github",
+      type: ESocialChannelType.GITHUB,
       url: "https://github.com/Neufund/",
     },
     {
-      type: "instagram",
+      type: ESocialChannelType.INSTAGRAM,
       url: "",
     },
     {
-      type: "gplus",
+      type: ESocialChannelType.G_PLUS,
       url: "",
     },
     {
-      type: "youtube",
+      type: ESocialChannelType.YOUTUBE,
       url: "",
     },
     {
-      type: "xing",
+      type: ESocialChannelType.XING,
       url: "",
     },
     {
-      type: "bitcointalk",
+      type: ESocialChannelType.BITCOINTALK,
       url: "",
     },
   ],
@@ -180,55 +181,55 @@ export const panor: IPerson = {
   role: "VP Trading",
   socialChannels: [
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "",
     },
     {
-      type: "twitter",
+      type: ESocialChannelType.TWITTER,
       url: "",
     },
     {
-      type: "linkedin",
+      type: ESocialChannelType.LINKEDIN,
       url: "",
     },
     {
-      type: "slack",
+      type: ESocialChannelType.SLACK,
       url: "",
     },
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "https://blog.neufund.org",
     },
     {
-      type: "reddit",
+      type: ESocialChannelType.REDDIT,
       url: "https://www.reddit.com/r/neufund",
     },
     {
-      type: "telegram",
+      type: ESocialChannelType.TELEGRAM,
       url: "https://t.me/neufund",
     },
     {
-      type: "github",
+      type: ESocialChannelType.GITHUB,
       url: "https://github.com/Neufund/",
     },
     {
-      type: "instagram",
+      type: ESocialChannelType.INSTAGRAM,
       url: "",
     },
     {
-      type: "gplus",
+      type: ESocialChannelType.G_PLUS,
       url: "",
     },
     {
-      type: "youtube",
+      type: ESocialChannelType.YOUTUBE,
       url: "",
     },
     {
-      type: "xing",
+      type: ESocialChannelType.XING,
       url: "",
     },
     {
-      type: "bitcointalk",
+      type: ESocialChannelType.BITCOINTALK,
       url: "",
     },
   ],
@@ -242,55 +243,55 @@ export const ula: IPerson = {
   role: "VP Marketing",
   socialChannels: [
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "",
     },
     {
-      type: "twitter",
+      type: ESocialChannelType.TWITTER,
       url: "",
     },
     {
-      type: "linkedin",
+      type: ESocialChannelType.LINKEDIN,
       url: "",
     },
     {
-      type: "slack",
+      type: ESocialChannelType.SLACK,
       url: "",
     },
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "https://blog.neufund.org",
     },
     {
-      type: "reddit",
+      type: ESocialChannelType.REDDIT,
       url: "https://www.reddit.com/r/neufund",
     },
     {
-      type: "telegram",
+      type: ESocialChannelType.TELEGRAM,
       url: "https://t.me/neufund",
     },
     {
-      type: "github",
+      type: ESocialChannelType.GITHUB,
       url: "https://github.com/Neufund/",
     },
     {
-      type: "instagram",
+      type: ESocialChannelType.INSTAGRAM,
       url: "",
     },
     {
-      type: "gplus",
+      type: ESocialChannelType.G_PLUS,
       url: "",
     },
     {
-      type: "youtube",
+      type: ESocialChannelType.YOUTUBE,
       url: "",
     },
     {
-      type: "xing",
+      type: ESocialChannelType.XING,
       url: "",
     },
     {
-      type: "bitcointalk",
+      type: ESocialChannelType.BITCOINTALK,
       url: "",
     },
   ],

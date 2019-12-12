@@ -7,7 +7,7 @@ import { loadKycRequestData } from "../../../kyc/sagas";
 import { neuCall } from "../../../sagasUtils";
 import { loadPreviousWallet } from "../../../web3/sagas";
 
-export function* loadUser({ apiUserService }: TGlobalDependencies): Iterator<any> {
+export function* loadUser({ apiUserService }: TGlobalDependencies): Generator<any, any, any> {
   const user: IUser = yield apiUserService.me();
   yield neuCall(loadPreviousWallet);
   yield put(actions.auth.setUser(user));
@@ -21,7 +21,7 @@ export async function createUserPromise(
   return apiUserService.createAccount(user);
 }
 
-export function* createUser(newUser: IUserInput): Iterator<any> {
+export function* createUser(newUser: IUserInput): Generator<any, any, any> {
   const user: IUser = yield neuCall(createUserPromise, newUser);
   yield put(actions.auth.setUser(user));
 
@@ -31,7 +31,7 @@ export function* createUser(newUser: IUserInput): Iterator<any> {
 export function* updateUser(
   { apiUserService }: TGlobalDependencies,
   updatedUser: IUserInput,
-): Iterator<any> {
+): Generator<any, any, any> {
   const user: IUser = yield apiUserService.updateUser(updatedUser);
   yield put(actions.auth.setUser(user));
 }
@@ -41,7 +41,7 @@ export function* logoutUser({
   jwtStorage,
   logger,
   userStorage,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   userStorage.clear();
   jwtStorage.clear();
 
@@ -52,6 +52,6 @@ export function* logoutUser({
   logger.info("user has been logged out");
 }
 
-export function* waitUntilUserLogoutIsDone(): Iterator<any> {
+export function* waitUntilUserLogoutIsDone(): Generator<any, any, any> {
   yield take(actions.auth.reset.getType());
 }

@@ -1,6 +1,7 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
+import { ESocialChannelType } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { SlidePerson } from "./SlidePerson";
 
 const person = {
@@ -13,9 +14,9 @@ const person = {
   role: "person role",
   description:
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non tenetur, impedit labore vero eum omnis iusto quaerat ea, facere perferendis quae!",
-  socialChannels: [{ type: "", url: "" }],
+  socialChannels: [{ type: ESocialChannelType.FACEBOOK, url: "facebook.com/pawel" }],
 };
 
 storiesOf("SlidePerson", module)
-  .add("layout: vartical", () => <SlidePerson {...person} layout="vertical" />)
+  .add("layout: vertical", () => <SlidePerson {...person} layout="vertical" />)
   .add("layout: horizontal", () => <SlidePerson {...person} layout="horizontal" />);

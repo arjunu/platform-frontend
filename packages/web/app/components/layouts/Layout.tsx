@@ -14,8 +14,7 @@ import { NotificationWidget } from "../shared/notification-widget/NotificationWi
 import { Content } from "./Content";
 import { Footer } from "./Footer";
 import { HeaderAuthorized, HeaderTransitional, HeaderUnauthorized } from "./header/Header";
-
-import * as styles from "./Layout.module.scss";
+import { LayoutWrapper } from "./LayoutWrapper";
 
 interface IStateProps {
   userIsAuthorized: boolean;
@@ -45,7 +44,7 @@ const LayoutAuthorized: React.FunctionComponent<TContentExternalProps> = ({
   <>
     <HeaderAuthorized />
     <Content {...contentProps}>
-      <NotificationWidget className={styles.notification} />
+      <NotificationWidget />
       {children}
     </Content>
     <Footer />
@@ -56,15 +55,6 @@ const LayoutAuthorized: React.FunctionComponent<TContentExternalProps> = ({
     <BankTransferFlowModal />
     <DownloadTokenAgreementModal />
   </>
-);
-
-const LayoutWrapper: React.FunctionComponent<TDataTestId> = ({
-  children,
-  "data-test-id": dataTestId,
-}) => (
-  <div className={styles.layout} data-test-id={dataTestId}>
-    {children}
-  </div>
 );
 
 const LayoutComponent: React.FunctionComponent<IStateProps &

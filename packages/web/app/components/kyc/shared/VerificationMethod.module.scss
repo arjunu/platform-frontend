@@ -1,0 +1,59 @@
+.card {
+  @include nds-body;
+
+  @include media-breakpoint-down(xs) {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: px-to-rem(30px);
+  }
+
+  font-weight: normal;
+  color: $neu-shuttle-gray;
+  display: flex;
+  min-height: px-to-rem(114px);
+  margin-bottom: px-to-rem(16px);
+  align-items: center;
+  text-align: left;
+  padding: 0;
+
+  &:disabled {
+    color: $neu-shuttle-gray;
+    opacity: .4;
+    background: $neu-white-two;
+  }
+}
+
+.text {
+  @include media-breakpoint-down(xs) {
+    order: 3;
+    margin-top: px-to-rem(26px);
+  }
+
+  order: 2;
+}
+
+.image {
+  @include media-breakpoint-down(xs) {
+    margin: 0;
+  }
+
+  order: 1;
+  max-width: px-to-rem(94px);
+  margin-left: px-to-rem(30px);
+  margin-right: px-to-rem(26px);
+}
+
+
+.icon {
+  @include rect(24px);
+
+  @include media-breakpoint-down(xs) {
+    order: 2;
+    margin: 0;
+  }
+
+  order: 3;
+  color: transparent;
+  margin-right: px-to-rem(30px);
+  margin-left: px-to-rem(20px);
+}

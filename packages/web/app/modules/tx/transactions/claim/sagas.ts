@@ -59,7 +59,10 @@ function* startClaimGenerator(_: TGlobalDependencies, etoId: string): any {
   );
 }
 
-function* userClaimSaga({ logger }: TGlobalDependencies, action: TAction): Iterator<any> {
+function* userClaimSaga(
+  { logger }: TGlobalDependencies,
+  action: TAction,
+): Generator<any, any, any> {
   if (action.type !== "TRANSACTIONS_START_CLAIM") return;
   const etoId = action.payload;
   try {
@@ -77,6 +80,6 @@ function* userClaimSaga({ logger }: TGlobalDependencies, action: TAction): Itera
   }
 }
 
-export const txUserClaimSagas = function*(): Iterator<any> {
+export const txUserClaimSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeLatest, "TRANSACTIONS_START_CLAIM", userClaimSaga);
 };

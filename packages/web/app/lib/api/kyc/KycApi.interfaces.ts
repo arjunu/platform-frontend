@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 import { ECountries } from "../../../utils/enums/countriesEnum";
 import { EUSState } from "../../../utils/enums/usStatesEnum";
-import { makeAllRequired, makeAllRequiredExcept } from "../../../utils/yupUtils";
+import { makeAllRequiredExcept } from "../../../utils/yupUtils";
 import * as YupTS from "../../yup-ts.unsafe";
 import { countryCode, percentage, personBirthDate, restrictedCountry } from "../util/customSchemas";
 
@@ -13,8 +13,19 @@ export enum EKycRequestType {
   NONE = "none",
   BUSINESS = "business",
   INDIVIDUAL = "individual",
-  // TODO: Check when request type is returned as `us_accreditation`
-  US_ACCREDITATION = "us_accreditation",
+}
+
+export type TInstantIdNoneProvider = "none";
+export type TManualIdProvider = "manual";
+
+export enum EKycInstantIdProvider {
+  ID_NOW = "id_now",
+  ONFIDO = "onfido",
+}
+
+export enum EKycInstantIdStatus {
+  DRAFT = "draft",
+  PENDING = "pending",
 }
 
 export interface IKycPerson {
@@ -29,12 +40,17 @@ export interface IKycPerson {
   placeOfBirth?: string;
   nationality?: string;
   isPoliticallyExposed?: boolean;
+  // TODO: Remove when not needed. This adds additional fields required by backend
+  isHighIncome?: boolean;
 }
 
 const stateSchema = Yup.string().when("country", (country: string, schema: Yup.Schema<string>) =>
   country === ECountries.UNITED_STATES ? schema.required() : schema,
 );
 
+/*
+  TODO: This is legacy schema, remove when refactoring KYC is done
+ */
 export const KycPersonSchema = Yup.object().shape({
   firstName: Yup.string(),
   lastName: Yup.string(),
@@ -46,8 +62,43 @@ export const KycPersonSchema = Yup.object().shape({
   placeOfBirth: countryCode,
   nationality: countryCode,
   isPoliticallyExposed: Yup.bool(),
-  usState: stateSchema,
+  usState: Yup.string(),
+  id: Yup.string(),
 });
+
+// Base schema for personal details
+export const KycPersonalDataSchema = Yup.object().shape({
+  birthDate: personBirthDate,
+  country: restrictedCountry,
+  firstName: Yup.string(),
+  lastName: Yup.string(),
+  nationality: countryCode,
+  placeOfBirth: countryCode,
+  id: Yup.string(),
+});
+
+// Base schema for address
+const KycBaseAddressSchema = Yup.object().shape({
+  street: Yup.string(),
+  additionalInformation: Yup.string(),
+  city: Yup.string(),
+  zipCode: Yup.string(),
+  country: restrictedCountry,
+});
+
+// Address schema with required usState when country is set to US
+export const KycPersonalAddressSchema = KycBaseAddressSchema.concat(
+  Yup.object().shape({
+    usState: stateSchema,
+  }),
+);
+
+// Schema used for checking responses from API with all fields optional
+export const KycFullIndividualSchema = KycPersonalDataSchema.concat(KycBaseAddressSchema).concat(
+  Yup.object().shape({
+    usState: Yup.string(),
+  }),
+);
 
 export const KycAdditionalDataSchema = Yup.object().shape({
   // Allow only true value to be saved, do not display any additional message
@@ -65,34 +116,32 @@ export interface IKycIndividualData extends IKycPerson {
   isAccreditedUsCitizen?: string;
 }
 
-const KycIndividualDataShape =
-  process.env.NF_DISABLE_HIGH_INCOME === "1"
-    ? {}
-    : {
-        isHighIncome: Yup.bool(),
-      };
-
 export const KycStatusSchema = YupTS.object({
   inProhibitedRegion: YupTS.boolean(),
-  instantIdProvider: YupTS.string(),
-  originCountry: YupTS.string<ECountries>(),
-  recommendedInstantIdProvider: YupTS.string(),
-  status: YupTS.string(),
-  supportedInstantIdProviders: YupTS.array(YupTS.string()),
+  instantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
+  instantIdStatus: YupTS.string<EKycInstantIdStatus>().optional(),
+  originCountry: YupTS.string<ECountries>().optional(),
+  recommendedInstantIdProvider: YupTS.string<EKycInstantIdProvider | TInstantIdNoneProvider>(),
+  status: YupTS.string<EKycRequestStatus>(),
+  supportedInstantIdProviders: YupTS.array(YupTS.string<EKycInstantIdProvider>()),
   type: YupTS.string<EKycRequestType>(),
 });
 
 export type TKycStatus = YupTS.TypeOf<typeof KycStatusSchema>;
 
-export const KycIndividualDataSchema = KycPersonSchema.concat(
-  Yup.object().shape(KycIndividualDataShape),
-);
-
-export const KycIndividualDataSchemaRequired = makeAllRequiredExcept(KycIndividualDataSchema, [
+export const KycPersonalDataSchemaRequired = makeAllRequiredExcept(KycPersonalDataSchema, ["id"]);
+export const KycPersonalAddressSchemaRequired = makeAllRequiredExcept(KycPersonalAddressSchema, [
+  "additionalInformation",
   "usState",
 ]);
 
-export const KycIndividualDataSchemaRequiredWithAdditionalData = KycIndividualDataSchemaRequired.concat(
+export const KycIdNowIdentificationSchema = YupTS.object({
+  redirectUrl: YupTS.string(),
+});
+
+export type TKycIdNowIdentification = YupTS.TypeOf<typeof KycIdNowIdentificationSchema>;
+
+export const KycPersonalDataSchemaRequiredWithAdditionalData = KycPersonalDataSchemaRequired.concat(
   KycAdditionalDataSchema,
 );
 
@@ -124,9 +173,10 @@ export const KycBusinessDataSchema = Yup.object<any>().shape({
 
 // legal representative (same as base person)
 export interface IKycLegalRepresentative extends IKycPerson {}
-export const KycLegalRepresentativeSchema = KycPersonSchema;
+export const KycLegalRepresentativeSchema = makeAllRequiredExcept(KycPersonSchema, ["id"]);
 export const KycLegalRepresentativeSchemaRequired = makeAllRequiredExcept(KycPersonSchema, [
   "usState",
+  "id",
 ]);
 
 // beneficial owner
@@ -141,7 +191,9 @@ export const KycBeneficialOwnerSchema = KycPersonSchema.concat(
     id: Yup.string(),
   }),
 );
-export const KycBeneficialOwnerSchemaRequired = makeAllRequired(KycBeneficialOwnerSchema);
+export const KycBeneficialOwnerSchemaRequired = makeAllRequiredExcept(KycBeneficialOwnerSchema, [
+  "usState",
+]);
 
 // file
 export interface IKycFileInfo {
@@ -164,29 +216,6 @@ export enum EKycRequestStatus {
   ACCEPTED = "accepted",
   IGNORED = "ignored",
 }
-
-export enum ERequestOutsourcedStatus {
-  STARTED = "started",
-  SUCCESS = "success",
-  SUCCESS_DATA_CHANGED = "success_data_changed",
-  REVIEW_PENDING = "review_pending",
-  ABORTED = "aborted",
-  CANCELED = "canceled",
-  OTHER = "other",
-}
-
-export interface IKycRequestState {
-  status: EKycRequestStatus;
-  outsourcedStatus?: ERequestOutsourcedStatus;
-  redirectUrl?: string;
-}
-
-export const KycRequestStateSchema = Yup.object().shape({
-  status: Yup.string().required("Request state is required"),
-  outsourcedStatus: Yup.string(),
-  redirectUrl: Yup.string(),
-  type: Yup.string(),
-});
 
 export enum EKycBusinessType {
   CORPORATE = "corporate",
@@ -225,3 +254,16 @@ export type KycBankQuintessenceBankAccount = YupTS.TypeOf<
 >;
 export type TKycBankAccount = YupTS.TypeOf<typeof KycBankAccountSchema>;
 export type TKycBankTransferPurpose = YupTS.TypeOf<typeof KycBankTransferPurposeSchema>;
+
+export const KycOnfidoUploadRequestSchema = YupTS.object({
+  webtoken: YupTS.string(),
+});
+
+export type TKycOnfidoUploadRequest = YupTS.TypeOf<typeof KycOnfidoUploadRequestSchema>;
+
+export const KycOnfidoCheckRequestSchema = YupTS.object({
+  result: YupTS.string().optional(),
+  status: YupTS.string(),
+});
+
+export type TKycOnfidoCheckRequest = YupTS.TypeOf<typeof KycOnfidoCheckRequestSchema>;

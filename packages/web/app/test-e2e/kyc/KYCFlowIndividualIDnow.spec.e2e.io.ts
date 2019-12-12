@@ -1,70 +1,80 @@
 import { appRoutes } from "../../components/appRoutes";
 import { kycRoutes } from "../../components/kyc/routes";
-import { fillForm, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
+import { ID_NOW_EXTERNAL_MOCK } from "../config";
+import { fillForm, TFormFixture, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
+import { stubWindow } from "../utils/index";
 import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
-import { kycInvidualForm, kycInvidualFormUS } from "./fixtures";
+import {
+  kycInvidualAddressForm,
+  kycInvidualAddressFormUSResident,
+  kycInvidualForm,
+  kycInvidualFormUS,
+  kycInvidualFormUSResident,
+} from "./fixtures";
+import { goToPersonalVerification } from "./utils";
 
-const initiateIDNowKyc = (isUSInvestor: boolean) => {
-  // go to kyc select and then individual page
-  cy.visit(kycRoutes.start);
+const assertOutsourcedVerification = () => {
+  stubWindow("windowOpen");
 
-  cy.get(tid("kyc-start-go-to-personal")).click();
+  cy.get(tid("kyc-go-to-outsourced-verification-id_now")).click();
 
-  cy.url().should("contain", kycRoutes.individualStart);
+  cy.get("@windowOpen").should("be.calledWithMatch", ID_NOW_EXTERNAL_MOCK, "_blank");
 
-  if (isUSInvestor) {
-    // fill the form
-    fillForm(kycInvidualFormUS, { submit: false });
+  cy.get(tid("kyc-id-now-started")).should("exist");
+};
+
+const assertOutsourcedKycWidgetStatus = () => {
+  cy.visit(appRoutes.profile);
+
+  stubWindow("windowOpen");
+
+  cy.get(tid("settings.kyc-status-widget.continue-kyc-verification")).click();
+
+  cy.url().should("contain", kycRoutes.start);
+};
+
+const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, isUS: boolean) => {
+  createAndLoginNewUser({ type: "investor" });
+
+  goToPersonalVerification();
+
+  // fill the form
+  fillForm(personalData, isUS ? { submit: false } : undefined);
+
+  if (isUS) {
+    // form should be disabled before the accreditation file is uploaded
+    cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
 
     // Upload accreditation documents
-    uploadMultipleFilesToFieldWithTid("kyc-personal-accreditation-upload-dropzone", [
-      "example.jpg",
-    ]);
+    uploadMultipleFilesToFieldWithTid("kyc-upload-documents-dropzone", ["example.jpg"]);
 
     cy.get(tid("kyc-personal-start-submit-form")).click();
-  } else {
-    // fill and submit the form
-    fillForm(kycInvidualForm);
   }
 
-  cy.get(tid("kyc-go-to-outsourced-verification")).click();
+  fillForm(addressData);
 
-  cy.get(tid("kyc-panel-outsourced")).should("exist");
+  assertOutsourcedVerification();
+
+  assertOutsourcedKycWidgetStatus();
 };
 
 describe("KYC Personal flow with ID Now", () => {
-  it("should go through ID Now Cancel then try ID now again", () => {
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      initiateIDNowKyc(false);
+  it("should go through ID Now", function(): void {
+    this.retries(2);
 
-      cy.visit(appRoutes.profile);
-
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).click();
-      cy.get(tid("settings.kyc-status-widget.start-kyc-process")).should("exist");
-
-      //Second Time
-      initiateIDNowKyc(false);
-
-      cy.visit(appRoutes.profile);
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).should("exist");
-    });
+    fillAndAssert(kycInvidualForm, kycInvidualAddressForm, false);
   });
 
-  it.skip("should go through ID Now for US investor", () => {
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      initiateIDNowKyc(true);
+  it("should go through ID Now for US investor", function(): void {
+    this.retries(2);
 
-      cy.visit(appRoutes.profile);
+    fillAndAssert(kycInvidualFormUS, kycInvidualAddressForm, true);
+  });
 
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).click();
-      cy.get(tid("settings.kyc-status-widget.start-kyc-process")).should("exist");
+  it("should go through ID Now for US resident", function(): void {
+    this.retries(2);
 
-      //Second Time
-      initiateIDNowKyc(true);
-
-      cy.visit(appRoutes.profile);
-      cy.get(tid("settings.kyc-status-widget.cancel-external-kyc-button")).should("exist");
-    });
+    fillAndAssert(kycInvidualFormUSResident, kycInvidualAddressFormUSResident, true);
   });
 });

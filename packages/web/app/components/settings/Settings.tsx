@@ -102,7 +102,7 @@ export const Settings = compose<React.FunctionComponent>(
   onEnterAction({
     actionCreator: dispatch => {
       dispatch(actions.wallet.loadWalletData());
-      dispatch(actions.kyc.kycLoadIndividualData());
+      dispatch(actions.kyc.kycLoadStatusAndData());
     },
   }),
   withContainer(Layout),

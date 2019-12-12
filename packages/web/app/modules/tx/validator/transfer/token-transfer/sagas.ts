@@ -27,7 +27,7 @@ function* validateUserHasEnoughTokens(
   { contractsService }: TGlobalDependencies,
   tokenAddress: EthereumAddress,
   value: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const from: string = yield select(selectEthereumAddressWithChecksum);
   const contractInstance: IERC223Token = yield contractsService.getERC223(tokenAddress);
   const userTokenBalance: BigNumber = yield contractInstance.balanceOf(from);
@@ -41,13 +41,15 @@ function* transferTokenValueToUlps(
   { contractsService }: TGlobalDependencies,
   tokenAddress: EthereumAddress,
   value: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const contractInstance: IERC223Token = yield contractsService.getERC223(tokenAddress);
   const tokenDecimals: BigNumber = yield contractInstance.decimals;
   return convertToUlps(value, tokenDecimals.toNumber());
 }
 
-export function* txValidateTokenTransfer(userInput: ITokenTransferDraftType): Iterator<any> {
+export function* txValidateTokenTransfer(
+  userInput: ITokenTransferDraftType,
+): Generator<any, any, any> {
   try {
     const tokenAddress: ReturnType<typeof selectUserFlowTokenAddress> = yield select(
       selectUserFlowTokenAddress,

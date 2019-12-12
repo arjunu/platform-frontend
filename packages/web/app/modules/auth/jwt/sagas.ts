@@ -1,4 +1,4 @@
-import { call, Effect, fork, put, select } from "redux-saga/effects";
+import { call, fork, put, select } from "redux-saga/effects";
 
 import { calculateTimeLeft } from "../../../components/shared/utils";
 import { TMessage } from "../../../components/translatedMessages/utils";
@@ -18,14 +18,17 @@ import { selectJwt } from "../selectors";
 /**
  * Load to store jwt from browser storage
  */
-export function* loadJwt({ jwtStorage }: TGlobalDependencies): Iterator<Effect> {
+export function* loadJwt({ jwtStorage }: TGlobalDependencies): Generator<any, any, any> {
   return jwtStorage.get();
 }
 
 /**
  * Save jwt to the browser storage and update the store
  */
-export function* setJwt({ jwtStorage }: TGlobalDependencies, jwt: string): Iterator<any> {
+export function* setJwt(
+  { jwtStorage }: TGlobalDependencies,
+  jwt: string,
+): Generator<any, any, any> {
   jwtStorage.set(jwt);
 
   yield put(actions.auth.setJWT(jwt));
@@ -37,7 +40,7 @@ export function* setJwt({ jwtStorage }: TGlobalDependencies, jwt: string): Itera
 function* signChallenge(
   { web3Manager, signatureAuthApi, cryptoRandomString, logger }: TGlobalDependencies,
   permissions: Array<string> = [],
-): Iterator<any> {
+): Generator<any, any, any> {
   const address: EthereumAddressWithChecksum = yield select(selectEthereumAddressWithChecksum);
 
   const salt = cryptoRandomString({ length: 64 });
@@ -72,7 +75,7 @@ function* signChallenge(
 export function* createJwt(
   { signatureAuthApi, logger }: TGlobalDependencies,
   permissions: Array<string> = [],
-): Iterator<any> {
+): Generator<any, any, any> {
   logger.info("Creating jwt");
 
   const { signedChallenge, challenge, signerType } = yield neuCall(signChallenge, permissions);
@@ -97,7 +100,7 @@ export function* createJwt(
 export function* escalateJwt(
   { signatureAuthApi, logger }: TGlobalDependencies,
   permissions: Array<string> = [],
-): Iterator<any> {
+): Generator<any, any, any> {
   const currentJwt: string = yield select(selectJwt);
   if (!currentJwt) {
     throw new JwtNotAvailable();
@@ -124,7 +127,10 @@ export function* escalateJwt(
  * Refresh JWT with new default expire date.
  * Permissions expire dates left untouched.
  */
-export function* refreshJWT({ signatureAuthApi, logger }: TGlobalDependencies): Iterator<any> {
+export function* refreshJWT({
+  signatureAuthApi,
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   logger.info("Refreshing jwt");
 
   const { jwt }: ICreateJwtEndpointResponse = yield signatureAuthApi.refreshJwt();
@@ -140,12 +146,12 @@ export function* refreshJWT({ signatureAuthApi, logger }: TGlobalDependencies): 
  */
 export function* ensurePermissionsArePresentAndRunEffect(
   { logger }: TGlobalDependencies,
-  effect: Iterator<any>,
+  effect: Generator<any, any, any>,
   permissions: Array<string> = [],
   title: TMessage,
   message?: TMessage,
   inputLabel?: TMessage,
-): Iterator<any> {
+): Generator<any, any, any> {
   const jwt: string = yield select(selectJwt);
 
   // check whether all permissions are present and still valid
@@ -173,7 +179,7 @@ export function* ensurePermissionsArePresentAndRunEffect(
  * Refresh jwt before timing out.
  * In case it's not possible will log out user.
  */
-export function* handleJwtTimeout({ logger }: TGlobalDependencies): Iterator<any> {
+export function* handleJwtTimeout({ logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     const jwt: string | undefined = yield select(selectJwt);
 
@@ -212,6 +218,6 @@ export function* handleJwtTimeout({ logger }: TGlobalDependencies): Iterator<any
   }
 }
 
-export function* authJwtSagas(): Iterator<Effect> {
+export function* authJwtSagas(): Generator<any, any, any> {
   yield fork(neuTakeLatest, actions.auth.setJWT, handleJwtTimeout);
 }

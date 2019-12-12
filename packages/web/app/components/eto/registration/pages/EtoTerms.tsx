@@ -2,7 +2,7 @@ import { FormikConsumer } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
-import { branch, compose, fromRenderProps, renderComponent, setDisplayName } from "recompose";
+import { branch, compose, renderComponent, setDisplayName } from "recompose";
 
 import { symbols } from "../../../../di/symbols";
 import { getEtoTermsSchema, TEtoSpecsData } from "../../../../lib/api/eto/EtoApi.interfaces.unsafe";
@@ -26,7 +26,6 @@ import {
 import { EEtoFormTypes } from "../../../../modules/eto-flow/types";
 import { appConnect } from "../../../../store";
 import { DeepReadonly, RequiredByKeys } from "../../../../types";
-import { ContainerContext, TContainerContext } from "../../../../utils/InversifyProvider";
 import { onEnterAction } from "../../../../utils/OnEnterAction";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import {
@@ -42,6 +41,7 @@ import {
   FormToggle,
   RadioButtonLayout,
 } from "../../../shared/forms/index";
+import { withDependencies } from "../../../shared/hocs/withDependencies";
 import { List } from "../../../shared/List";
 import { LoadingIndicator } from "../../../shared/loading-indicator";
 import { Tooltip } from "../../../shared/tooltips";
@@ -64,11 +64,13 @@ interface IDispatchProps {
   changeProductType: (productId: string) => void;
 }
 
-interface IContainerProps {
+interface IDependenciesProps {
   logger: ILogger | undefined;
 }
 
-type IProps = RequiredByKeys<IStateProps, "availableProducts"> & IDispatchProps & IContainerProps;
+type IProps = RequiredByKeys<IStateProps, "availableProducts"> &
+  IDispatchProps &
+  IDependenciesProps;
 
 interface ICurrencies {
   [key: string]: string;
@@ -440,10 +442,7 @@ const EtoRegistrationTerms = compose<IProps, {}>(
     props => props.availableProducts === undefined,
     renderComponent(LoadingIndicator),
   ),
-  fromRenderProps<IContainerProps, unknown, TContainerContext>(
-    ContainerContext.Consumer,
-    container => ({ logger: container && container.get<ILogger>(symbols.logger) }),
-  ),
+  withDependencies<IDependenciesProps>({ logger: symbols.logger }),
 )(EtoRegistrationTermsLayout);
 
 const fromFormState = {

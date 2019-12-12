@@ -2,6 +2,7 @@ import { includes, some } from "lodash";
 import { createSelector } from "reselect";
 
 import { appRoutes } from "../../components/appRoutes";
+import { EKycRequestStatus } from "../../lib/api/kyc/KycApi.interfaces";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { IAppState } from "../../store";
 import {
@@ -10,8 +11,7 @@ import {
   selectIsUserEmailVerified,
   selectUserType,
 } from "../auth/selectors";
-import { selectKycLoading, selectKycRequestStatus } from "../kyc/selectors";
-import { EKycRequestStatus } from "./../../lib/api/kyc/KycApi.interfaces";
+import { selectKycIsLoading, selectKycRequestStatus } from "../kyc/selectors";
 import { settingsNotificationInvestor, settingsNotificationIssuer } from "./reducer";
 import { INotification } from "./types";
 
@@ -19,7 +19,7 @@ export const selectNotifications = (state: IAppState): ReadonlyArray<INotificati
   state.notifications.notifications;
 
 export const selectIsActionRequiredSettings = (state: IAppState): boolean => {
-  if (selectKycLoading(state)) {
+  if (selectKycIsLoading(state)) {
     return false;
   }
   return (

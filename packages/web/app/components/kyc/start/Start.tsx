@@ -1,71 +1,55 @@
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
-import { compose } from "redux";
+import { compose } from "recompose";
 
+import { EKycRequestType } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
-import { KycPanel } from "../KycPanel";
-import { Panels } from "../shared/Panels";
+import { KycStep } from "../shared/KycStep";
+import { SelectTypeCard } from "../shared/SelectTypeCard";
 
-import * as styles from "../KycPanel.module.scss";
+import * as styles from "./Start.module.scss";
 
-export const personalSteps = [
-  {
-    label: <FormattedMessage id="kyc.steps.representation" />,
-    isChecked: true,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.personal-details" />,
-    isChecked: false,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.documents-verification" />,
-    isChecked: false,
-  },
-  {
-    label: <FormattedMessage id="kyc.steps.review" />,
-    isChecked: false,
-  },
-];
-
-interface IProps {
+type TProps = {
   goToPerson: () => void;
   goToCompany: () => void;
-}
+  goToDashboard: () => void;
+};
 
-export const KYCStartComponent = ({ ...props }) => (
-  <KycPanel
-    steps={personalSteps}
-    title={<FormattedMessage id="kyc.start.title" />}
-    isMaxWidth={true}
-  >
-    <p className={styles.textFieldNarrow}>
-      <FormattedHTMLMessage tagName="span" id="kyc.start.description" />
-    </p>
-    <Panels
-      panels={[
-        {
-          content: <FormattedMessage id="kyc.start.go-to-personal" />,
-          id: 1,
-          onClick: () => props.goToPerson(),
-          "data-test-id": "kyc-start-go-to-personal",
-        },
-        {
-          content: <FormattedMessage id="kyc.start.go-to-company" />,
-          id: 2,
-          onClick: () => props.goToCompany(),
-          "data-test-id": "kyc-start-go-to-company",
-        },
-      ]}
+export const KYCStartComponent: React.FunctionComponent<TProps> = ({
+  goToPerson,
+  goToCompany,
+  goToDashboard,
+}) => (
+  <>
+    <KycStep
+      step={1}
+      allSteps={5}
+      title={<FormattedMessage id="kyc.start.title" />}
+      description={<FormattedHTMLMessage tagName="span" id="kyc.start.description" />}
+      buttonAction={() => goToDashboard()}
     />
-  </KycPanel>
+    <section className={styles.cardsContainer}>
+      <SelectTypeCard
+        data-test-id="kyc-start-go-to-personal"
+        kycType={EKycRequestType.INDIVIDUAL}
+        onClick={goToPerson}
+      />
+      <SelectTypeCard
+        data-test-id="kyc-start-go-to-business"
+        kycType={EKycRequestType.BUSINESS}
+        onClick={goToCompany}
+      />
+    </section>
+  </>
 );
 
-export const KYCStart = compose<React.FunctionComponent>(
-  appConnect<IProps>({
+export const KYCStart = compose<TProps, {}>(
+  appConnect<TProps>({
     dispatchToProps: dispatch => ({
       goToPerson: () => dispatch(actions.routing.goToKYCIndividualStart()),
       goToCompany: () => dispatch(actions.routing.goToKYCBusinessData()),
+      goToDashboard: () => dispatch(actions.routing.goToDashboard()),
     }),
   }),
 )(KYCStartComponent);

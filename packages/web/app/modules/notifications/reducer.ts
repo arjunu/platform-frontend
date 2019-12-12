@@ -1,9 +1,13 @@
+import {
+  ENotificationText,
+  getMessageTranslation,
+} from "../../components/translatedMessages/messages";
 import { AppReducer } from "../../store";
 import { DeepReadonly } from "../../types";
 import { actions } from "../actions";
 import { routingActions } from "../routing/actions";
 import { notificationActions } from "./actions";
-import { ENotificationText, ENotificationType, INotification } from "./types";
+import { ENotificationType, INotification } from "./types";
 
 export interface INotificationsState {
   notifications: Array<INotification>;
@@ -52,13 +56,13 @@ export const notificationsReducer: AppReducer<INotificationsState> = (
 export const settingsNotificationIssuer = (): INotification => ({
   id: Date.now(),
   type: ENotificationType.WARNING,
-  text: ENotificationText.COMPLETE_UPDATE_ACCOUNT,
+  text: getMessageTranslation({ messageType: ENotificationText.COMPLETE_UPDATE_ACCOUNT }),
   onClickAction: routingActions.goToProfile(),
 });
 
 export const settingsNotificationInvestor = (): INotification => ({
   id: Date.now(),
   type: ENotificationType.WARNING,
-  text: ENotificationText.COMPLETE_REQUEST_NOTIFICATION,
+  text: getMessageTranslation({ messageType: ENotificationText.COMPLETE_REQUEST_NOTIFICATION }),
   onClickAction: routingActions.goToProfile(),
 });

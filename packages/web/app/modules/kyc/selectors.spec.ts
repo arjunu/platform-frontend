@@ -18,9 +18,8 @@ describe("selectKycRequestStatus", () => {
   it("should return pending if kyc is approved and on chain claim is false", () => {
     const appState: DeepPartial<IAppState> = {
       kyc: {
-        individualRequestStateLoading: true,
-        individualRequestState: { status: EKycRequestStatus.ACCEPTED },
-        businessRequestStateLoading: false,
+        statusLoading: true,
+        status: { status: EKycRequestStatus.ACCEPTED },
         claims: { isVerified: false },
       },
       router: {},
@@ -33,9 +32,8 @@ describe("selectKycRequestStatus", () => {
   it("should return approved if kyc is approved and on chain claim is true", () => {
     const appState: DeepPartial<IAppState> = {
       kyc: {
-        individualRequestStateLoading: true,
-        individualRequestState: { status: EKycRequestStatus.DRAFT },
-        businessRequestStateLoading: false,
+        statusLoading: true,
+        status: { status: EKycRequestStatus.DRAFT },
         claims: { isVerified: true },
       },
       router: {},
@@ -48,9 +46,8 @@ describe("selectKycRequestStatus", () => {
   it("should return approved if kyc is approved and on chain claim is true", () => {
     const appState: DeepPartial<IAppState> = {
       kyc: {
-        individualRequestStateLoading: true,
-        individualRequestState: { status: EKycRequestStatus.ACCEPTED },
-        businessRequestStateLoading: false,
+        statusLoading: true,
+        status: { status: EKycRequestStatus.ACCEPTED },
         claims: { isVerified: false },
       },
       router: {},

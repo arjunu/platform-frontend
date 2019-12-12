@@ -15,7 +15,7 @@ import { isAddressValidAcceptsEther } from "../../../validator/transfer/withdraw
 import { toFormValue } from "../utils";
 import { ITxData } from "./../../../../../lib/web3/types";
 
-export function* getMaxWithdrawAmount(to: string | undefined): Iterator<any> {
+export function* getMaxWithdrawAmount(to: string | undefined): Generator<any, any, any> {
   const maxEtherUlps: string = yield select(selectLiquidEtherBalance);
 
   const txDetails: ITxData = yield neuCall(generateEthWithdrawTransaction, {
@@ -33,7 +33,7 @@ export function* getMaxWithdrawAmount(to: string | undefined): Iterator<any> {
 export function* detectMaxWithdraw(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.txUserFlowWithdraw.runUserFlowOperations>,
-): Iterator<any> {
+): Generator<any, any, any> {
   // Add case where address is undefined
   // Add case where value is undefined
   const { to, value } = action.payload;
@@ -66,6 +66,6 @@ export function* detectMaxWithdraw(
   );
 }
 
-export const txWithdrawUserFlowSagasWatcher = function*(): Iterator<any> {
+export const txWithdrawUserFlowSagasWatcher = function*(): Generator<any, any, any> {
   yield fork(neuDebounce, 300, actions.txUserFlowWithdraw.runUserFlowOperations, detectMaxWithdraw);
 };

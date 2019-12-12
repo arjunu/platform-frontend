@@ -1,5 +1,4 @@
-import { delay } from "redux-saga";
-import { fork, put, select } from "redux-saga/effects";
+import { delay, fork, put, select } from "redux-saga/effects";
 
 import { BookbuildingFlowMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
@@ -18,7 +17,7 @@ export function* saveMyPledgeEffect(
   { apiEtoPledgeService }: TGlobalDependencies,
   etoId: string,
   pledge: IPledge,
-): Iterator<any> {
+): Generator<any, any, any> {
   const pledgeResult: IHttpResponse<IPledge> = yield apiEtoPledgeService.saveMyPledge(
     etoId,
     pledge,
@@ -31,7 +30,7 @@ export function* saveMyPledgeEffect(
 export function* saveMyPledge(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.bookBuilding.savePledge>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { etoId, pledge } = action.payload;
 
   try {
@@ -63,7 +62,7 @@ export function* deleteMyPledgeEffect(
 export function* deleteMyPledge(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.bookBuilding.deletePledge>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { etoId } = action.payload;
   try {
     yield neuCall(
@@ -84,7 +83,7 @@ export function* deleteMyPledge(
 export function* watchBookBuildingStats(
   { logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.bookBuilding.bookBuildingStartWatch>,
-): Iterator<any> {
+): Generator<any, any, any> {
   while (true) {
     logger.info("Querying for bookbuilding stats...");
     try {
@@ -102,7 +101,7 @@ export function* watchBookBuildingStats(
 export function* loadBookBuildingStats(
   { apiEtoService, notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.bookBuilding.loadBookBuildingStats>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const etoId = action.payload.etoId;
     const statsResponse: IHttpResponse<any> = yield apiEtoService.getBookBuildingStats(etoId);
@@ -120,7 +119,7 @@ export function* loadBookBuildingStats(
 export function* loadMyPledge(
   { apiEtoPledgeService, notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.bookBuilding.loadPledge>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const { etoId } = action.payload;
 
@@ -145,7 +144,7 @@ export function* loadMyPledge(
   }
 }
 
-export function* bookBuildingFlowSagas(): Iterator<any> {
+export function* bookBuildingFlowSagas(): Generator<any, any, any> {
   yield fork(neuTakeEvery, actions.bookBuilding.loadBookBuildingStats, loadBookBuildingStats);
   yield fork(
     neuTakeLatestUntil,

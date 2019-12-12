@@ -8,7 +8,7 @@ import { Col, Row } from "reactstrap";
 import { externalRoutes } from "../../config/externalRoutes";
 import { EUserType } from "../../lib/api/users/interfaces";
 import { ELogoutReason } from "../../modules/auth/types";
-import { ENotificationText, ENotificationType } from "../../modules/notifications/types";
+import { ENotificationType } from "../../modules/notifications/types";
 import { TLoginRouterState } from "../../modules/routing/types";
 import { appRoutes } from "../appRoutes";
 import { ButtonInline, ButtonLink } from "../shared/buttons";
@@ -70,12 +70,11 @@ export const WalletSelectorLayout: React.FunctionComponent<IExternalProps & TRou
       {logoutReason === ELogoutReason.SESSION_TIMEOUT && (
         <Notification
           data-test-id="wallet-selector-session-timeout-notification"
-          text={ENotificationText.AUTH_SESSION_TIMEOUT}
+          text={<FormattedMessage id="notifications.auth-session-timeout" />}
           type={ENotificationType.WARNING}
           onClick={hideLogoutReason}
         />
       )}
-
       <Row>
         <Col tag="section" md={{ size: 10, offset: 1 }} lg={{ size: 8, offset: 2 }}>
           <h1 className={cn(styles.walletChooserTitle, "my-4", "text-center")}>

@@ -10,7 +10,7 @@ import {
   TEtoWithCompanyAndContractReadonly,
 } from "../eto/types";
 import { isOnChain } from "../eto/utils";
-import { generateHash } from "./lazy";
+import { lazyLoadIpfsOnlyHash } from "./lazy";
 import {
   ENomineeEtoSpecificTask,
   ENomineeRequestStatus,
@@ -191,6 +191,9 @@ const generateBuffer = (file: File): Promise<Buffer> =>
     reader.onerror = (e: Event) => reject(e);
     reader.readAsArrayBuffer(file);
   });
+
+export const generateHash = (buffer: Buffer): Promise<string> =>
+  lazyLoadIpfsOnlyHash().then(Hash => Hash.of(buffer));
 
 export const generateIpfsHash = (file: File) =>
   generateBuffer(file).then((buffer: Buffer) => generateHash(buffer));

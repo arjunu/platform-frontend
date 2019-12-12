@@ -1,4 +1,4 @@
-import { all, call, Effect, fork, getContext } from "redux-saga/effects";
+import { all, call, fork, getContext } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../di/setupBindings";
 import { actions } from "./actions";
@@ -42,7 +42,7 @@ import { web3Sagas } from "./web3/sagas";
 /**
  * Restart all sagas on error and report error to sentry
  */
-function* allSagas(): Iterator<Effect> {
+function* allSagas(): Generator<any, any, any> {
   yield all([
     // Sagas that should keep running even after logout
     fork(initSagas),
@@ -84,13 +84,13 @@ function* allSagas(): Iterator<Effect> {
   ]);
 }
 
-function* handleRootError(error: Error): Iterator<Effect> {
+function* handleRootError(error: Error): Generator<any, any, any> {
   const { logger }: TGlobalDependencies = yield getContext("deps");
 
   logger.error(error);
 }
 
-export function* rootSaga(): Iterator<Effect> {
+export function* rootSaga(): /* Iterator<unknown, Saga<any[]>> */ any {
   while (true) {
     try {
       yield call(allSagas);

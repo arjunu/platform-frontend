@@ -89,7 +89,7 @@ function* startNEuroRedeemGenerator(_: TGlobalDependencies): any {
   );
 }
 
-function* neurRedeemSaga({ logger }: TGlobalDependencies): Iterator<any> {
+function* neurRedeemSaga({ logger }: TGlobalDependencies): Generator<any, any, any> {
   const isVerified: boolean = yield select(selectIsBankAccountVerified);
 
   if (!isVerified) {
@@ -109,6 +109,6 @@ function* neurRedeemSaga({ logger }: TGlobalDependencies): Iterator<any> {
   }
 }
 
-export const txRedeemSagas = function*(): Iterator<any> {
+export const txRedeemSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeLatest, actions.txTransactions.startWithdrawNEuro, neurRedeemSaga);
 };

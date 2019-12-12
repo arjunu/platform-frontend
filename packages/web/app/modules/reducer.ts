@@ -9,6 +9,7 @@ import { etoDocumentReducer } from "./eto-documents/reducer";
 import { etoFlowReducer } from "./eto-flow/reducer";
 import { etoNomineeReducer } from "./eto-nominee/reducer";
 import { etoReducer } from "./eto/reducer";
+import { fullPageLoadingReducer } from "./full-page-loading/reducer";
 import { gasReducer } from "./gas/reducer";
 import { genericModalReducer } from "./generic-modal/reducer";
 import { icbmWalletBalanceModalReducer } from "./icbm-wallet-balance-modal/reducer";
@@ -71,4 +72,5 @@ export const appReducers = {
   portfolioDownloadAgreementsModal: portfolioDownloadAgreementsModalReducer,
   immutableStorage: immutableStorageReducer,
   nomineeFlow: nomineeFlowReducer,
+  fullPageLoading: fullPageLoadingReducer,
 };

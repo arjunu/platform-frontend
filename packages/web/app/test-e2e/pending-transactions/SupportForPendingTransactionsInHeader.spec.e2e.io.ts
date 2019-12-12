@@ -132,7 +132,7 @@ describe("Pending Transactions In Header", () => {
   describe("Tests that conduct a real transaction", () => {
     it("should remove transaction from pending list after success", () => {
       removePendingExternalTransaction();
-      doWithdraw(testAddress, new BigNumber(amount).minus("0.001").toString(), {
+      doWithdraw(testAddress, new BigNumber(amount).div("2").toString(), {
         closeWhen: "success",
       });
 

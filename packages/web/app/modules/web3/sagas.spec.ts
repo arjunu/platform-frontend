@@ -1,14 +1,14 @@
 import { expect } from "chai";
 import { EventEmitter } from "events";
-import { delay } from "redux-saga";
 import { expectSaga } from "redux-saga-test-plan";
-import { call } from "redux-saga/effects";
+import { delay } from "redux-saga/effects";
 
 import { createMock } from "../../../test/testUtils";
 import { LIGHT_WALLET_PASSWORD_CACHE_TIME } from "../../config/constants";
 import { noopLogger } from "../../lib/dependencies/logger";
 import { EWeb3ManagerEvents, Web3Manager } from "../../lib/web3/Web3Manager/Web3Manager";
 import { actions } from "../actions";
+import { TGlobalDependencies } from "./../../di/setupBindings";
 import { autoLockLightWallet, initWeb3ManagerEvents } from "./sagas";
 
 describe("Web3 sagas", () => {
@@ -26,8 +26,8 @@ describe("Web3 sagas", () => {
         logger: noopLogger,
       })
         .put(actions.web3.walletLocked())
-        .call(delay, LIGHT_WALLET_PASSWORD_CACHE_TIME)
-        .provide([[call(delay, LIGHT_WALLET_PASSWORD_CACHE_TIME), undefined]])
+        .delay(LIGHT_WALLET_PASSWORD_CACHE_TIME)
+        .provide([[delay(LIGHT_WALLET_PASSWORD_CACHE_TIME), undefined]])
         .run();
 
       expect(personalWalletMock.password).to.be.undefined;
@@ -42,8 +42,8 @@ describe("Web3 sagas", () => {
         isUnlocked: true,
       };
       const promise = expectSaga(initWeb3ManagerEvents, {
-        web3Manager: web3ManagerMock,
-      })
+        web3Manager: web3ManagerMock as Web3Manager,
+      } as TGlobalDependencies)
         .put(
           actions.web3.newPersonalWalletPlugged(
             eventPayload.metaData as any,

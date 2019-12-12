@@ -39,6 +39,8 @@ addDecorator(withScreenshot);
 
 addParameters({
   screenshot: {
+    // wait for component to load and render before taking screenshots
+    delay: 1000,
     viewports: {
       // Mobile
       "375x667": {

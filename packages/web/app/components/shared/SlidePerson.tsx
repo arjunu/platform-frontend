@@ -1,9 +1,10 @@
 import * as cn from "classnames";
 import * as React from "react";
 
+import { TSocialChannelsType } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { ISrcSet } from "./HiResImage";
 import { ResponsiveImage } from "./ResponsiveImage";
-import { IEtoSocialProfile, SocialProfilesList } from "./SocialProfilesList";
+import { SocialProfilesList } from "./SocialProfilesList";
 
 import * as styles from "./SlidePerson.module.scss";
 
@@ -12,12 +13,10 @@ export type TSlidePersonLayout = "horizontal" | "vertical";
 interface IProps {
   srcSet: ISrcSet;
   name: string;
-  socialChannels: ReadonlyArray<IEtoSocialProfile>;
+  socialChannels: TSocialChannelsType;
   role: string;
   layout?: TSlidePersonLayout;
   description: string | React.ReactNode;
-  showLabels?: boolean;
-  isClickable?: boolean;
   elementWidth?: number;
 }
 
@@ -27,8 +26,6 @@ const SlidePerson: React.FunctionComponent<IProps> = ({
   role,
   layout = "vertical",
   socialChannels,
-  showLabels,
-  isClickable,
 }) => (
   <div className={cn(styles.slidePerson, layout)}>
     <div className={styles.profile}>
@@ -42,8 +39,6 @@ const SlidePerson: React.FunctionComponent<IProps> = ({
           profiles={socialChannels}
           layoutIconSize="small"
           layoutIconsPosition="center"
-          showLabels={showLabels}
-          isClickable={isClickable}
         />
       )}
     </div>

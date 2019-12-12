@@ -1,6 +1,17 @@
 $_dropzone-size-xl: 200px;
 $_dropzone-size-sm: 120px;
 
+.title {
+  @include nds-body;
+  color: $neu-greyish-brown;
+}
+
+.hint {
+  @include nds-body;
+
+  color: $neu-slate-grey;
+}
+
 .upload {
   @include media-breakpoint-up(md) {
     flex-direction: row;
@@ -9,20 +20,15 @@ $_dropzone-size-sm: 120px;
   display: flex;
   flex-direction: column;
 
-  .title {
-    @include font-default;
-    color: $neu-greyish-brown;
-  }
-
-  .hint {
-    @include font-default;
-    color: $neu-slate-grey;
-  }
-
   .upload-informations-wrapper {
-    padding-right: 40px;
-    margin-right: 40px;
-    border-right: 1px solid $neu-silver;
+    @include nds-button-label;
+
+    @include media-breakpoint-up(md) {
+      margin-left: px-to-rem(24px);
+    }
+
+    font-weight: 400;
+    color: $neu-shuttle-gray;
     display: flex;
     flex-direction: column;
   }
@@ -59,6 +65,7 @@ $_dropzone-size-sm: 120px;
   }
 
   &:global(.vertical) {
+    width: 100%;
     flex-direction: column;
 
     :local(.requirements-title) {
@@ -69,10 +76,6 @@ $_dropzone-size-sm: 120px;
       @include rect($_dropzone-size-xl);
     }
   }
-}
-
-.title {
-  color: $neu-greyish-brown;
 }
 
 .file-info {
@@ -113,7 +116,7 @@ $_dropzone-size-sm: 120px;
 }
 
 .dropzone-wrapper {
-  display: flex;
+  width: px-to-rem(162px);
 }
 
 .requirements-title {
@@ -123,17 +126,16 @@ $_dropzone-size-sm: 120px;
 
 .upload-container {
   display: flex;
-  margin-bottom: px-to-rem(22px);
 }
 
 .uploader-info {
-  flex-shrink: 3;
   margin-left: px-to-rem(12px);
 }
 
 .file-types {
   @include nds-overline;
 
+  margin-top: px-to-rem(8px);
   color: $neu-shuttle-gray;
 }
 

@@ -12,20 +12,16 @@
   }
 
   &--fill-outline {
-    svg {
-      > g {
-        color: inherit;
-        stroke: currentColor;
-      }
+    * {
+      color: inherit;
+      stroke: currentColor;
     }
   }
 
   &--fill-shape {
-    svg {
-      > g {
-        color: inherit;
-        fill: currentColor;
-      }
+    * {
+      color: inherit;
+      fill: currentColor;
     }
   }
 }

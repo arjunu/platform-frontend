@@ -18,6 +18,7 @@
   display: flex;
   flex-direction: column;
   padding: px-to-rem(10px) px-to-rem(12px);
+  text-align: left;
 
   &:global {
     &.info {

@@ -1,5 +1,5 @@
-import { delay, END, eventChannel, Task } from "redux-saga";
-import { call, cancel, fork, put, take } from "redux-saga/effects";
+import { END, eventChannel, Task } from "redux-saga";
+import { cancel, delay, fork, put, take } from "redux-saga/effects";
 
 import {
   LIGHT_WALLET_PASSWORD_CACHE_TIME,
@@ -14,10 +14,13 @@ import { EWalletType, TWalletMetadata } from "./types";
 
 let lockWalletTask: Task | undefined;
 
-export function* autoLockLightWallet({ web3Manager, logger }: TGlobalDependencies): Iterator<any> {
+export function* autoLockLightWallet({
+  web3Manager,
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   logger.info(`Resetting light wallet password in ${LIGHT_WALLET_PASSWORD_CACHE_TIME} ms`);
 
-  yield call(delay, LIGHT_WALLET_PASSWORD_CACHE_TIME);
+  yield delay(LIGHT_WALLET_PASSWORD_CACHE_TIME);
 
   if (web3Manager.personalWallet) {
     logger.info("Resetting light wallet password now");
@@ -26,10 +29,12 @@ export function* autoLockLightWallet({ web3Manager, logger }: TGlobalDependencie
   }
 }
 
-export function* autoClearWalletPrivateDataWatcher({ logger }: TGlobalDependencies): Iterator<any> {
+export function* autoClearWalletPrivateDataWatcher({
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   logger.info(`Clearing wallet private data in ${LIGHT_WALLET_PRIVATE_DATA_CACHE_TIME} ms`);
 
-  yield call(delay, LIGHT_WALLET_PRIVATE_DATA_CACHE_TIME);
+  yield delay(LIGHT_WALLET_PRIVATE_DATA_CACHE_TIME);
 
   logger.info("Clearing wallet private data now");
   yield put(actions.web3.clearWalletPrivateDataFromState()); //Better to clear the seed here as well
@@ -38,7 +43,7 @@ export function* autoClearWalletPrivateDataWatcher({ logger }: TGlobalDependenci
 export function* autoLockLightWalletWatcher(
   _deps: TGlobalDependencies,
   action: TAction,
-): Iterator<any> {
+): Generator<any, any, any> {
   if (lockWalletTask) {
     yield cancel(lockWalletTask);
   }
@@ -51,13 +56,15 @@ export function* autoLockLightWalletWatcher(
   lockWalletTask = yield neuCall(autoLockLightWallet);
 }
 
-export function* cancelLocking(): Iterator<any> {
+export function* cancelLocking(): Generator<any, any, any> {
   if (lockWalletTask) {
     yield cancel(lockWalletTask);
   }
 }
 
-export function* loadPreviousWallet({ walletStorage }: TGlobalDependencies): Iterator<any> {
+export function* loadPreviousWallet({
+  walletStorage,
+}: TGlobalDependencies): Generator<any, any, any> {
   const storageData = walletStorage.get();
 
   if (storageData) {
@@ -93,7 +100,7 @@ export function* initWeb3ManagerEvents({ web3Manager }: TGlobalDependencies): an
   }
 }
 
-export const web3Sagas = function*(): Iterator<any> {
+export const web3Sagas = function*(): Generator<any, any, any> {
   yield fork(
     neuTakeEvery,
     ["NEW_PERSONAL_WALLET_PLUGGED", "WEB3_WALLET_UNLOCKED"],

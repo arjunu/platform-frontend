@@ -112,8 +112,9 @@ class BackupSeedVerify extends React.Component<IBackupSeedVerifyProps, IBackupSe
         clearable={true}
         matchPos="start"
         matchProp="value"
-        ref={(ref: TElementRef<VirtualizedSelect>) =>
-          (this.verificationSelectRefs[wordOnPageNumber] = ref)
+        ref={
+          ((ref: TElementRef<VirtualizedSelect>) =>
+            (this.verificationSelectRefs[wordOnPageNumber] = ref)) as any
         }
         value={this.state.verificationWords[wordOnPageNumber].word}
         onChange={this.updateValueFactory(wordOnPageNumber)}

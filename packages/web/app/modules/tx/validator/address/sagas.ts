@@ -10,7 +10,7 @@ export function* txProcessAddressValidations(
   { web3Manager, contractsService }: TGlobalDependencies,
   address: string,
   registeredChecks: EAdditionalValidationDataNotifications[],
-): Iterator<any> {
+): Generator<any, any, any> {
   if (!isAddressValid(address)) {
     throw new Error(`Invalid ethereum address passed: ${address}`);
   }

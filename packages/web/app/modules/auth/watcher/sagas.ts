@@ -1,4 +1,4 @@
-import { channel, Effect } from "redux-saga";
+import { channel } from "redux-saga";
 import { fork, put, race, take } from "redux-saga/effects";
 
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -24,7 +24,7 @@ const redirectChannel = channel<{ type: EUserAuthType }>();
 export function* startRedirectChannel({
   userActivityChannel,
   logger,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   userActivityChannel.addEventListener("message", ({ status }) => {
     switch (status) {
       case EUserActivityMessage.USER_ACTIVE:
@@ -60,7 +60,7 @@ export function* startRedirectChannel({
  * Saga that watches events coming from redirectChannel and
  * dispatches login/logout actions
  */
-export function* watchRedirectChannel(): Iterator<any> {
+export function* watchRedirectChannel(): Generator<any, any, any> {
   yield neuCall(startRedirectChannel);
   while (true) {
     const userAction = yield take(redirectChannel);
@@ -81,7 +81,7 @@ export function* watchRedirectChannel(): Iterator<any> {
 /**
  * Saga that watches for timeout events and logs out the
  * user when a timeout actions is dispatched */
-export function* watchTimeoutActions(): Iterator<any> {
+export function* watchTimeoutActions(): Generator<any, any, any> {
   yield race({
     userTimeout: take(actions.auth.userActivityTimeout),
     jwtTimeout: take(actions.auth.jwtTimeout),
@@ -89,7 +89,7 @@ export function* watchTimeoutActions(): Iterator<any> {
   yield put(actions.auth.logout({ logoutType: ELogoutReason.SESSION_TIMEOUT }));
 }
 
-export function* authWatcherSagas(): Iterator<Effect> {
+export function* authWatcherSagas(): Generator<any, any, any> {
   yield fork(watchRedirectChannel);
   yield neuTakeUntil(actions.auth.setUser, actions.auth.logout, watchTimeoutActions);
 }

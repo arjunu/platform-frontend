@@ -1,7 +1,7 @@
-import { delay } from "redux-saga";
 import { expectSaga } from "redux-saga-test-plan";
-import { cancelled, put } from "redux-saga/effects";
+import { cancelled, delay, put } from "redux-saga/effects";
 
+import { TPattern } from "./actions";
 import { neuRepeatIf, neuRestartIf, neuTakeOnly, neuTakeUntil } from "./sagasUtils";
 
 describe("sagasUtils", () => {
@@ -48,7 +48,7 @@ describe("sagasUtils", () => {
     it("should return action on payload match", () => {
       const action = { type: "INIT_START", payload: { init: "app", foo: "bar" } };
 
-      return expectSaga(neuTakeOnly, "INIT_START", { init: "app" })
+      return (expectSaga(neuTakeOnly as any, "INIT_START", { init: "app" } as any) as any)
         .dispatch(action)
         .returns(action)
         .silentRun();
@@ -57,7 +57,7 @@ describe("sagasUtils", () => {
     it("should try to take action again when payload doesn't match", () => {
       const action = { type: "INIT_START", payload: { init: "smartcontracts" } };
 
-      return expectSaga(neuTakeOnly, "INIT_START", { init: "app" })
+      return (expectSaga(neuTakeOnly as any, "INIT_START", { init: "app" } as any) as any)
         .dispatch(action)
         .take("INIT_START")
         .take("INIT_START")
@@ -71,21 +71,21 @@ describe("sagasUtils", () => {
     }
 
     it("should repeat when repeat action was dispatched", () =>
-      expectSaga(neuRepeatIf, "INIT_START", "INIT_END", baseSaga)
+      expectSaga(neuRepeatIf, "INIT_START", "INIT_END" as TPattern, baseSaga)
         .call.fn(baseSaga)
         .dispatch({ type: "INIT_START" })
         .call.fn(baseSaga)
         .silentRun());
 
     it("should exit when repeat action was dispatched", () =>
-      expectSaga(neuRepeatIf, "INIT_START", "INIT_END", baseSaga)
+      expectSaga(neuRepeatIf, "INIT_START", "INIT_END" as TPattern, baseSaga)
         .call.fn(baseSaga)
         .dispatch({ type: "INIT_END" })
         .not.call.fn(baseSaga)
         .silentRun());
 
     it("should pass args to base saga", () =>
-      expectSaga(neuRepeatIf, "INIT_START", "INIT_END", baseSaga, "foo", "bar")
+      expectSaga(neuRepeatIf, "INIT_START", "INIT_END" as TPattern, baseSaga, "foo", "bar")
         .call.like({ fn: baseSaga, args: ["foo", "bar"] })
         .silentRun());
   });
@@ -96,14 +96,14 @@ describe("sagasUtils", () => {
     }
 
     it("should repeat when repeat action was dispatched", () =>
-      expectSaga(neuRestartIf, "INIT_END", baseSaga)
+      expectSaga(neuRestartIf, "INIT_END" as TPattern, baseSaga)
         .call.fn(baseSaga)
         .dispatch({ type: "INIT_END" })
         .call.fn(baseSaga)
         .silentRun());
 
     it("should pass args to base saga", () =>
-      expectSaga(neuRestartIf, "INIT_END", baseSaga, "foo", "bar")
+      expectSaga(neuRestartIf, "INIT_END" as TPattern, baseSaga, "foo", "bar")
         .call.like({ fn: baseSaga, args: ["foo", "bar"] })
         .silentRun());
   });

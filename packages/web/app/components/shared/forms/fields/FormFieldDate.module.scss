@@ -6,8 +6,7 @@
 
 .date-field {
   @include in-a-row {
-    align-items: center;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
   }
 
@@ -27,7 +26,7 @@
     .input {
       @include in-a-row {
         width: px-to-rem(80px);
-        margin: 0 px-to-rem(10px);
+        margin: 0 px-to-rem(10px) 0 0;
 
         &:last-child {
           margin-right: 0;

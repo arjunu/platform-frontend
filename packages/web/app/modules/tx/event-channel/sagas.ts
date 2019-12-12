@@ -1,5 +1,5 @@
-import { buffers, channel, Channel, delay } from "redux-saga";
-import { call, put, race } from "redux-saga/effects";
+import { buffers, channel, Channel } from "redux-saga";
+import { call, delay, put, race } from "redux-saga/effects";
 import * as Web3 from "web3";
 
 import { BLOCK_MINING_TIME_DELAY } from "../../../config/constants";
@@ -23,7 +23,7 @@ enum TRANSACTION_STATUS {
 export function* getTransactionOrThrow(
   { web3Manager, apiUserService }: TGlobalDependencies,
   txHash: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const tx: Web3.Transaction = yield web3Manager.getTransactionByHash(txHash);
   const txReceipt: Web3.TransactionReceipt | null = yield web3Manager.getTransactionReceipt(txHash);
 
@@ -66,7 +66,7 @@ export function* watchForTx(
   { web3Manager }: TGlobalDependencies,
   txHash: string,
   txChannel: Channel<TEventEmitterChannelEvents>,
-): Iterator<any> {
+): Generator<any, any, any> {
   let lastBlockId = -1;
   while (true) {
     try {
@@ -103,8 +103,8 @@ export function* watchForTx(
 
 export function* createWatchTxChannel(
   txHash: string,
-  actionGeneratingSaga: (channel: Channel<TEventEmitterChannelEvents>) => Iterator<any>,
-): Iterator<any> {
+  actionGeneratingSaga: (channel: Channel<TEventEmitterChannelEvents>) => Generator<any, any, any>,
+): Generator<any, any, any> {
   // Be really careful here as `channel` only allows single subscriber and
   // it's really hard to catch why not all subscribers are notified
   // TODO: replace by `multicastChannel` after migration to redux-saga 1.*

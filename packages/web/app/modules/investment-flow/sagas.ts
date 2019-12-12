@@ -1,6 +1,5 @@
 import BigNumber from "bignumber.js";
-import { delay } from "redux-saga";
-import { all, put, select, take, takeEvery, takeLatest } from "redux-saga/effects";
+import { all, delay, put, select, take, takeEvery, takeLatest } from "redux-saga/effects";
 
 import { ECurrency } from "../../components/shared/formatters/utils";
 import { TGlobalDependencies } from "../../di/setupBindings";
@@ -52,7 +51,7 @@ import { getCurrencyByInvestmentType } from "./utils";
 
 function* processCurrencyValue(
   action: TActionFromCreator<typeof actions.investmentFlow.submitCurrencyValue>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const state: IAppState = yield select();
 
   const value = action.payload.value && convertToUlps(extractNumber(action.payload.value));
@@ -230,7 +229,7 @@ function* validateAndCalculateInputs({ contractsService }: TGlobalDependencies):
 
 function* start(
   action: TActionFromCreator<typeof actions.investmentFlow.startInvestment>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const etoId = action.payload.etoId;
   const eto: TEtoWithCompanyAndContractReadonly = nonNullable(
     yield select((state: IAppState) => selectEtoWithCompanyAndContractById(state, etoId)),
@@ -238,7 +237,7 @@ function* start(
 
   yield put(actions.investmentFlow.resetInvestment());
   yield put(actions.investmentFlow.setEtoId(etoId));
-  yield put(actions.kyc.kycLoadClientData());
+  yield put(actions.kyc.kycLoadStatusAndData());
   yield put(actions.investorEtoTicket.loadEtoInvestorTicket(eto));
 
   yield put(actions.investorEtoTicket.loadTokenPersonalDiscount(eto));
@@ -261,7 +260,7 @@ export function* onInvestmentTxModalHide(): any {
   yield put(actions.investmentFlow.resetInvestment());
 }
 
-function* getActiveInvestmentTypes(): Iterator<any> {
+function* getActiveInvestmentTypes(): Generator<any, any, any> {
   const state: IAppState = yield select();
   const etoId = selectInvestmentEtoId(state);
   const etoOnChainState = selectEtoOnChainStateById(state, etoId);

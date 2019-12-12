@@ -7,7 +7,6 @@ import { actions, TAction } from "./modules/actions";
 import { initInitialState } from "./modules/init/reducer";
 import { appReducers } from "./modules/reducer";
 import { DeepReadonly } from "./types";
-import { FunctionWithDeps } from "./utils/opaque-types/types";
 
 export interface IAppAction {
   type: string;
@@ -16,7 +15,7 @@ export interface IAppAction {
 export type ActionType<T extends IAppAction> = T["type"];
 export type ActionPayload<T extends IAppAction> = T["payload"];
 
-export type AppDispatch = (a: AppActionTypes | FunctionWithDeps) => void;
+export type AppDispatch = (a: AppActionTypes) => void;
 
 export type AppReducer<S> = Reducer<DeepReadonly<S>, AppActionTypes>;
 

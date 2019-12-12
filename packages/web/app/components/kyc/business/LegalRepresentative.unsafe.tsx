@@ -249,7 +249,7 @@ export const KycLegalRepresentative = compose<React.FunctionComponent>(
       onDropFile: (file: File) => dispatch(actions.kyc.kycUploadLegalRepresentativeDocument(file)),
       onContinue: () => dispatch(actions.kyc.kycSubmitBusinessRequest()),
       submitForm: (values: IKycIndividualData) =>
-        dispatch(actions.kyc.kycSubmitLegalRepresentative(values)),
+        dispatch(actions.kyc.kycSubmitLegalRepresentative(boolify(values))),
     }),
   }),
   onEnterAction({

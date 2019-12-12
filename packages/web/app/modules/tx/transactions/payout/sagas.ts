@@ -11,7 +11,7 @@ import { startInvestorPayoutRedistributionGenerator } from "../payout/redistribu
 function* investorPayoutRedistributeSaga(
   { logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.txTransactions.startInvestorPayoutRedistribute>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const tokenDisbursals = action.payload.tokenDisbursals;
 
   try {
@@ -32,7 +32,7 @@ function* investorPayoutRedistributeSaga(
 function* investorPayoutAcceptSaga(
   { logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.txTransactions.startInvestorPayoutAccept>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const tokensDisbursals = action.payload.tokensDisbursals;
 
   try {
@@ -50,7 +50,7 @@ function* investorPayoutAcceptSaga(
   }
 }
 
-export const txPayoutSagas = function*(): Iterator<any> {
+export const txPayoutSagas = function*(): Generator<any, any, any> {
   yield fork(
     neuTakeLatest,
     actions.txTransactions.startInvestorPayoutAccept,
