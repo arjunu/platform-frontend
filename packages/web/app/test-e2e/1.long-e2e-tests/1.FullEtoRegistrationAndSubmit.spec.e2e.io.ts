@@ -21,7 +21,8 @@ import { goToIssuerDashboard } from "../utils/navigation";
 import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
 
-describe("Eto Forms", () => {
+// tslint:disable-next-line:mocha-avoid-only
+describe.only("Eto Forms", () => {
   before(() => {
     createAndLoginNewUser({ type: "issuer", kyc: "business" });
     cy.saveLocalStorage();
