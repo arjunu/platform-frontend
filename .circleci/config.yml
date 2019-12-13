@@ -36,7 +36,7 @@ jobs:
             - node_modules
             - packages/web/app/lib/contracts
             - /home/circleci/.cache/Cypress
-          key: v24-deps-{{ checksum "package.json" }}
+          key: v25-deps-{{ checksum "package.json" }}
 
   build-docker-test-e2e:
     executor: docker-browsers
@@ -47,8 +47,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v24-deps-{{ checksum "package.json" }}
-            - v24-deps-
+            - v25-deps-{{ checksum "package.json" }}
+            - v25-deps-
 
       - run: yarn --frozen-lockfile
       - run:
@@ -64,8 +64,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v24-deps-{{ checksum "package.json" }}
-            - v24-deps-
+            - v25-deps-{{ checksum "package.json" }}
+            - v25-deps-
 
       - run: yarn --frozen-lockfile
       - run:
@@ -97,8 +97,8 @@ jobs:
       - run: ./.circleci/install-yarn.sh
       - restore_cache:
           keys:
-            - v24-deps-{{ checksum "package.json" }}
-            - v24-deps-
+            - v25-deps-{{ checksum "package.json" }}
+            - v25-deps-
 
       - run:
           command: source /opt/circleci/.nvm/nvm.sh && yarn workspace @neufund/web test:e2e
@@ -111,8 +111,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v24-deps-{{ checksum "package.json" }}
-            - v24-deps-
+            - v25-deps-{{ checksum "package.json" }}
+            - v25-deps-
 
       - run: yarn --frozen-lockfile
       - run: yarn workspace @neufund/web build:commit-deployment
@@ -125,8 +125,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v24-deps-{{ checksum "package.json" }}
-            - v24-deps-
+            - v25-deps-{{ checksum "package.json" }}
+            - v25-deps-
 
       - run: yarn --frozen-lockfile
       - run: yarn workspace @neufund/web storybook:screenshots
@@ -139,8 +139,8 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v24-deps-{{ checksum "package.json" }}
-            - v24-deps-
+            - v25-deps-{{ checksum "package.json" }}
+            - v25-deps-
 
       - run: yarn --frozen-lockfile
       - run: yarn workspace @neufund/web deploy-storybook --ci --host-token-env-variable=DANGER_GITHUB_API_TOKEN
