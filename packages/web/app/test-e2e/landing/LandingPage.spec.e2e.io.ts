@@ -5,5 +5,7 @@ describe("Landing", () => {
     cy.visit("/");
 
     assertLanding();
+
+    cy.screenshot();
   });
 });

@@ -15,11 +15,15 @@ describe("NEUR US States restrictions", () => {
       cy.get(tid("wallet-balance.neur.purchase-button")).should("be.disabled");
       cy.get(tid("wallet-balance.neur.redeem-button")).should("be.disabled");
 
+      cy.screenshot();
+
       // assert on profile
 
       goToProfile();
 
       cy.get(tid("linked-bank-account-widget")).should("not.exist");
+
+      cy.screenshot();
     });
   });
 

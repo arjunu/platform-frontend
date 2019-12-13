@@ -28,6 +28,8 @@ const assertISHAConfidentialityAgreement = () => {
 
   cy.get(tid("eto.document-confidentiality-agreement-modal")).should("exist");
 
+  cy.screenshot();
+
   shouldDownloadDocument(
     "eto.document-confidentiality-agreement-modal.confirm",
     "Investment and Shareholder Agreement.pdf",
@@ -50,11 +52,15 @@ describe("Eto ISHA documents", () => {
     goToEtoViewById(ETO_ID);
     asserISHADocumentsHidden();
 
+    cy.screenshot();
+
     // assert for logged in user unverified user
     createAndLoginNewUser({ type: "investor" });
 
     goToEtoViewById(ETO_ID);
     asserISHADocumentsHidden();
+
+    cy.screenshot();
   });
 
   it.skip("should ask for ISHA confidentiality agreement once when downloading from eto investment terms section", () => {
@@ -83,6 +89,8 @@ describe("Eto ISHA documents", () => {
         "eto-public-view.investment-terms.document.investment_and_shareholder_agreement_preview",
         "Investment and Shareholder Agreement.pdf",
       );
+
+      cy.screenshot();
     });
   });
 
@@ -121,6 +129,8 @@ describe("Eto ISHA documents", () => {
           "eto-public-view.documents.investment_and_shareholder_agreement_preview",
           "Investment and Shareholder Agreement.pdf",
         );
+
+        cy.screenshot();
       });
     });
   });

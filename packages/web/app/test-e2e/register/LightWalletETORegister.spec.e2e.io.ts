@@ -15,6 +15,7 @@ describe("Wallet backup e2e recovery phrase", () => {
     registerWithLightWalletETO("moe-wallet-backup-e2e@test.com", passowrd);
 
     assertIssuerDashboard();
+    cy.screenshot();
   });
 
   it("should raise an error that user is already used", () => {
@@ -28,6 +29,7 @@ describe("Wallet backup e2e recovery phrase", () => {
       registerWithLightWalletETO(metaData.email, passowrd, false);
 
       assertErrorModal();
+      cy.screenshot();
     });
   });
 });

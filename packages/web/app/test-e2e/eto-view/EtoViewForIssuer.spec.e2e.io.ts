@@ -6,6 +6,7 @@ describe("Eto Issuer View", () => {
     this.retries(2);
     createAndLoginNewUser({ type: "issuer", kyc: "business" }).then(() => {
       goToIssuerEtoView();
+      cy.screenshot();
     });
   });
 });

@@ -51,27 +51,27 @@ const GetStartedButton: React.FunctionComponent = () => (
 );
 
 const HeaderUnauthorized: React.FunctionComponent = () => (
-  <div className={styles.headerUnauth}>
+  <header className={styles.headerUnauth}>
     <LogoUnauth />
     <LoginButton />
     <GetStartedButton />
-  </div>
+  </header>
 );
 
 const HeaderTransitional: React.FunctionComponent = () => (
-  <div className={styles.headerUnauth}>
+  <header className={styles.headerUnauth}>
     <LogoUnauth />
-  </div>
+  </header>
 );
 
 const HeaderAuthorized: React.FunctionComponent = () => (
-  <div className={styles.headerAuth}>
+  <header className={styles.headerAuth}>
     <MobileMenu />
     <LogoAuth />
     <Menu />
     <PendingTransactionStatus className={styles.transactionStatus} />
     <MyAccountMenu />
-  </div>
+  </header>
 );
 
 export { HeaderUnauthorized, HeaderAuthorized, HeaderTransitional, LogoAuth, LogoUnauth };

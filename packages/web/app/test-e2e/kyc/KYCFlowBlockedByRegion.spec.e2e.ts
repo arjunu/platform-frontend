@@ -19,6 +19,8 @@ describe("KYC flow blocked by region", () => {
     goToProfile();
     cy.get(tid("settings.kyc-status-widget.kyc-prohibited-region")).should("exist");
 
+    cy.screenshot();
+
     // Should block access to kyc route
 
     cy.visit("/kyc");

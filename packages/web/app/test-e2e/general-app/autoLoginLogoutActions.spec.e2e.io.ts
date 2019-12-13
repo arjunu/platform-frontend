@@ -82,6 +82,8 @@ describe("auto-logout/auto-login", () => {
           assertDashboard();
           clock.tick(AUTH_INACTIVITY_THRESHOLD);
           assertLogin();
+
+          cy.screenshot();
         });
       });
     });

@@ -62,6 +62,8 @@ describe("Verify Wallet", () => {
       // @SEE https://github.com/Neufund/platform-frontend/issues/2709
       cy.get(tid("modules.auth.sagas.verify-user-email.toast.verification-failed")).should("exist");
 
+      cy.screenshot();
+
       cy.get(tid("light-wallet-login-with-email-email-field")).contains(email);
 
       fillForm({

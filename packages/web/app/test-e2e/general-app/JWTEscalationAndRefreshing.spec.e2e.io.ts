@@ -38,6 +38,8 @@ describe("JWT Refreshing and Escalation", () => {
       cy.wrap(null).should(() => {
         expect(getJwtToken()).to.equal(null);
       });
+
+      cy.screenshot();
     });
   });
 
@@ -60,6 +62,8 @@ describe("JWT Refreshing and Escalation", () => {
       assertUserInLightWalletLoginPage();
 
       cy.get(tid("wallet-selector-session-timeout-notification")).should("exist");
+
+      cy.screenshot();
     });
   });
 

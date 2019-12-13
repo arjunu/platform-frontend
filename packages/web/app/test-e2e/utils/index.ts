@@ -200,6 +200,8 @@ export const goThroughKycCorporateProcess = () => {
   fillForm(kycCorporateCompanyForm);
   fillForm(kycCompanyDocsForm);
 
+  cy.screenshot();
+
   // uplaod legal rep data
   fillForm(kycLegalRepForm);
   fillForm(kycLegalRepDocsForm, { submit: false });

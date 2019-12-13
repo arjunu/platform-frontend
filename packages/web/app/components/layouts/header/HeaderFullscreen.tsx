@@ -32,12 +32,12 @@ const HeaderFullscreen: React.FunctionComponent<THeaderFullscreenProps> = ({
   buttonAction,
   buttonText,
 }) => (
-  <div className={styles.headerUnauth}>
+  <header className={styles.headerUnauth}>
     <LogoUnauth />
     {buttonAction && (
       <ActionButton className={styles.button} buttonAction={buttonAction} buttonText={buttonText} />
     )}
-  </div>
+  </header>
 );
 
 export { HeaderFullscreen };

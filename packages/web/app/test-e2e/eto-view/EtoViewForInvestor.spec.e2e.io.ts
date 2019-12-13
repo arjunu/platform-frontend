@@ -29,6 +29,8 @@ describe("Eto Investor View", () => {
     it("should load empty Eto", () => {
       cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
       assertEtoView(ETO_ID);
+
+      cy.screenshot();
     });
 
     it.skip("should display correct eto investment terms", () => {
@@ -197,6 +199,8 @@ describe("Eto Investor View", () => {
           getYesOrNo(etoData.hasDividendRights, true, true),
         );
       });
+
+      cy.screenshot();
     });
 
     it("should should tradability when transferability is set to true", () => {
@@ -216,6 +220,8 @@ describe("Eto Investor View", () => {
           etoData.tokenTradeableOnSuccess ? "Immediately after ETO" : "In the future",
         );
       });
+
+      cy.screenshot();
     });
   });
 
@@ -229,6 +235,7 @@ describe("Eto Investor View", () => {
 
         // This ETO has product id set so token terms should be available
         cy.get(tid("eto-public-view-token-terms")).should("exist");
+        cy.screenshot();
       });
     });
 
@@ -239,6 +246,7 @@ describe("Eto Investor View", () => {
         goToEtoPreview();
 
         cy.get(tid("eto-public-view-token-terms")).should("exist");
+        cy.screenshot();
       });
     });
   });

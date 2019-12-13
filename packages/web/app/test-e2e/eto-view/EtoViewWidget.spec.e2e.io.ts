@@ -35,6 +35,8 @@ describe("Eto view widget", () => {
       "href",
       etherscanAddressLink(etoId),
     );
+
+    cy.screenshot();
   });
 
   it("should render tags as non clickable when documents and pitch are not available and eto is not on chain", () => {
@@ -49,6 +51,8 @@ describe("Eto view widget", () => {
     assertIsNonClickableTag("eto-overview-prospectus-approved-button");
 
     assertIsNonClickableTag("eto-overview-smart-contract-on-chain-button");
+
+    cy.screenshot();
   });
 
   it("should render eto stats for eto in pre-sale", () => {
@@ -61,6 +65,8 @@ describe("Eto view widget", () => {
     cy.get(tid("eto-overview.stats.new-shares-generated")).contains("2.38–8.22 %");
     cy.get(tid("eto-overview.stats.equity-token-price")).contains("0.3390 EUR");
     cy.get(tid("eto-overview.stats.equity-token-price-whitelist-discount")).contains("20%");
+
+    cy.screenshot();
   });
 
   it("should render eto stats for eto in public-sale", () => {
@@ -73,6 +79,8 @@ describe("Eto view widget", () => {
     cy.get(tid("eto-overview.stats.new-shares-generated")).contains("10.00–12.00 %");
     cy.get(tid("eto-overview.stats.equity-token-price")).contains("0.6000 EUR");
     cy.get(tid("eto-overview.stats.equity-token-price-public-discount")).should("not.exist");
+
+    cy.screenshot();
   });
 
   it("should render TBA for comming soon state", () => {
@@ -85,5 +93,7 @@ describe("Eto view widget", () => {
     cy.get(tid("eto-overview.stats.new-shares-generated")).contains("TBA");
     cy.get(tid("eto-overview.stats.equity-token-price")).contains("TBA");
     cy.get(tid("eto-overview.stats.equity-token-price-public-discount")).should("not.exist");
+
+    cy.screenshot();
   });
 });

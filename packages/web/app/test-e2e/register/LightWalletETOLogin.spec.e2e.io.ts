@@ -15,6 +15,8 @@ const loginWithLightWalletETO = (testEmail: string, password: string) => {
   logoutViaAccountMenu();
   loginWithLightWallet(testEmail, password);
   assertIssuerDashboard();
+
+  cy.screenshot();
 };
 
 describe("Light Wallet ETO Login", () => {

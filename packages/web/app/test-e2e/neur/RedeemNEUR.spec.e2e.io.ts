@@ -31,6 +31,8 @@ describe("Redeem NEUR", function(): void {
   });
 
   it("should not allow to use value below 5 NEUR", () => {
+    cy.screenshot();
+
     fillForm(
       {
         amount: "2.22",
@@ -39,9 +41,13 @@ describe("Redeem NEUR", function(): void {
     );
     cy.get(tid("form.amount.error-message")).should("exist");
     cy.get(tid("bank-transfer.reedem-init.continue")).should("be.disabled");
+
+    cy.screenshot();
   });
 
   it("should not allow to use value above NEUR balance", () => {
+    cy.screenshot();
+
     fillForm(
       {
         amount: "9999999999.99",
@@ -50,9 +56,13 @@ describe("Redeem NEUR", function(): void {
     );
     cy.get(tid("form.amount.error-message")).should("exist");
     cy.get(tid("bank-transfer.reedem-init.continue")).should("be.disabled");
+
+    cy.screenshot();
   });
 
   it("should correctly format input", () => {
+    cy.screenshot();
+
     const value = "-3s32aa@fax2.24@#2535%s9sf92";
 
     fillForm(
@@ -81,9 +91,13 @@ describe("Redeem NEUR", function(): void {
     });
 
     cy.get(formField("amount")).should("have.value", nextExpectedValue);
+
+    cy.screenshot();
   });
 
   it("should work correctly after start of link back account flow start", () => {
+    cy.screenshot();
+
     fillForm(
       {
         amount: "124",
@@ -95,6 +109,8 @@ describe("Redeem NEUR", function(): void {
     cy.get(".modal-content").within(() => {
       cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
     });
+
+    cy.screenshot();
 
     // close bank account link modal
     cy.get(tid("bank-transfer.summary.transfer-completed")).click();
@@ -113,5 +129,7 @@ describe("Redeem NEUR", function(): void {
     cy.get(tid("bank-transfer.redeem.init.fee")).within(() => {
       cy.get(tid("value")).should("not.contain", "0");
     });
+
+    cy.screenshot();
   });
 });

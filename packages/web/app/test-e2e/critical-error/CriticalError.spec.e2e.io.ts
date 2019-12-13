@@ -9,6 +9,7 @@ describe("Critical error page", () => {
     cy.visit(e2eRoutes.criticalError);
 
     cy.get(tid("critical-error-page")).should("exist");
+    cy.screenshot();
     cy.get(tid("critical-error-page-error-detail")).contains("Test Critical Error");
   });
 });

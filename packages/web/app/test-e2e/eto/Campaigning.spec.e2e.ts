@@ -56,6 +56,8 @@ describe("Eto campaigning state", () => {
     cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
     cy.get(tid("eto.public-view")).should("exist");
 
+    cy.screenshot();
+
     cy.get(tid("logged-out-campaigning-register")).awaitedClick();
 
     assertRegister();
@@ -99,12 +101,16 @@ describe("Eto campaigning state", () => {
           .then($element => Number($element.text()))
           .as("remainingSlots");
 
+        cy.screenshot();
+
         submitBookBuilding(PLEDGE_AMOUNT, true);
 
         cy.get<number>("@remainingSlots").then(remainingSlots => {
           // Remove one from remaining slots as it's first pledge
           cy.get(tid("eto-bookbuilding-remaining-slots")).should("contain", remainingSlots - 1);
         });
+
+        cy.screenshot();
 
         logout();
 

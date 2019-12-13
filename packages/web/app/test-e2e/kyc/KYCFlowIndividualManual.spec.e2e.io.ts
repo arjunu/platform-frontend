@@ -17,8 +17,13 @@ const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, is
 
   // go to kyc select and then individual page
   cy.visit(kycRoutes.start);
+
+  cy.screenshot();
+
   cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
   cy.url().should("contain", kycRoutes.individualStart);
+
+  cy.screenshot();
 
   // fill personal details form
   fillForm(personalData, isUS ? { submit: false } : undefined);
@@ -32,12 +37,18 @@ const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, is
 
     cy.get(tid("kyc-personal-start-submit-form")).click();
   }
+
+  cy.screenshot();
+
   // fill address form
   fillForm(addressData);
 
   // go to the manual verification with file upload
   cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
   cy.url().should("contain", kycRoutes.individualUpload);
+
+  cy.screenshot();
+
   // upload file
   uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
 
@@ -47,6 +58,8 @@ const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, is
 
   // panel should now be in pending state
   cy.get(tid("kyc-success")).should("exist");
+
+  cy.screenshot();
 };
 
 describe("KYC Personal flow with manual verification", () => {

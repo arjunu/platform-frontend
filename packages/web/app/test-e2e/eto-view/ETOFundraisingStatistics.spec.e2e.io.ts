@@ -11,12 +11,16 @@ const assertFundraisingStatisticsTab = (etoId: string) => {
   cy.get(tid("eto.public-view.fundraising-statistics.iframe"))
     .and("have.attr", "src")
     .and("include", withParams(externalRoutes.icoMonitorStats, { etoId }));
+
+  cy.screenshot();
 };
 
 const assertNoFundraisingStatisticsTab = (etoId: string) => {
   goToEtoViewById(etoId);
 
   cy.get(tid("eto.public-view.fundraising-statistics")).should("not.exist");
+
+  cy.screenshot();
 };
 
 describe("ETO Fundraising Statistics", () => {

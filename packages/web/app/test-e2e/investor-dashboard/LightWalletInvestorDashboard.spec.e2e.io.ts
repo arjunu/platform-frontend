@@ -25,6 +25,8 @@ describe("Incoming payout", function(): void {
       assertMoneyNotEmpty("incoming-payout-euro-token");
 
       assertMoneyNotEmpty("incoming-payout-ether-token");
+
+      cy.screenshot();
     });
   });
 
@@ -48,6 +50,8 @@ describe("Incoming payout", function(): void {
 
       cy.get(tid("incoming-payout-done"));
 
+      cy.screenshot();
+
       cy.get(tid("incoming-payout-go-to-portfolio"))
         .click()
         .then(() => {
@@ -68,6 +72,8 @@ describe("Incoming payout", function(): void {
       assertMoneyNotEmpty("incoming-payout-euro-token");
 
       cy.get(tid("incoming-payout-ether-token")).should("not.exist");
+
+      cy.screenshot();
     });
   });
 
@@ -76,11 +82,13 @@ describe("Incoming payout", function(): void {
     const ETO_ID = eto.address;
     const numberOfInvestors = Object.keys(eto.investors).length;
 
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      goToDashboard();
-      cy.get(tid(`eto-overview-${ETO_ID}-investors-count`))
-        .get(tid("value"))
-        .contains(numberOfInvestors);
-    });
+    createAndLoginNewUser({ type: "investor" });
+
+    goToDashboard();
+    cy.get(tid(`eto-overview-${ETO_ID}-investors-count`))
+      .get(tid("value"))
+      .contains(numberOfInvestors);
+
+    cy.screenshot();
   });
 });

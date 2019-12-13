@@ -19,6 +19,8 @@ const goToKycIndividualFlow = () => {
 
   cy.get(tid("kyc-start-go-to-personal")).click();
   cy.url().should("contain", kycRoutes.individualStart);
+
+  cy.screenshot();
 };
 
 const assertOutsourcedVerification = () => {
@@ -59,7 +61,11 @@ const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, is
     cy.get(tid("kyc-personal-start-submit-form")).click();
   }
 
+  cy.screenshot();
+
   fillForm(addressData);
+
+  cy.screenshot();
 
   assertOutsourcedVerification();
 

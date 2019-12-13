@@ -11,6 +11,8 @@ function assertBankTransferFlow({
   if (agreementApprovalRequired) {
     cy.get(tid("bank-verification.link-now")).click();
 
+    cy.screenshot();
+
     fillForm({
       quintessenceTosApproved: {
         type: "checkbox",
@@ -36,10 +38,14 @@ function assertBankTransferFlow({
     .as("referenceNumber")
     .should("match", /NR[\w\d]{10}NR/);
 
+  cy.screenshot();
+
   cy.get(tid("bank-transfer.summary.transfer-completed")).click();
 
   // TODO: Email are not send immediately after moving backend to use queues
   // cy.get<string>("@referenceNumber").then(assertWaitForBankTransferSummary);
+
+  cy.screenshot();
 
   cy.get(tid("bank-transfer.verify.success.go-to-wallet")).click();
 
@@ -123,6 +129,8 @@ describe("Bank Verification", () => {
       // Disabled on wallet
       goToWallet();
       cy.get(tid("locked-wallet.neur.bank-account.link-account")).should("be.disabled");
+
+      cy.screenshot();
     });
   });
 });

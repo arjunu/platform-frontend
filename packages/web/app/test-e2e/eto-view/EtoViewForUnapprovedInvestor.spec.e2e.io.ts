@@ -19,6 +19,8 @@ describe("Eto Unapproved Investor View", function(): void {
     assertEtoView(ETO_ID);
 
     cy.get(tid("eto-overview-settings-update-required-to-invest")).should("exist");
+
+    cy.screenshot();
   });
 
   describe("for ETO with GE jurisdiction", () => {
@@ -28,6 +30,8 @@ describe("Eto Unapproved Investor View", function(): void {
       cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
 
       cy.get(tid("jurisdiction-disclaimer-modal")).should("exist");
+
+      cy.screenshot();
 
       cy.get(tid("jurisdiction-disclaimer-modal.confirm")).click();
 

@@ -9,6 +9,8 @@ function assertBankTransferFlow({
 }: {
   agreementApprovalRequired: boolean;
 }): void {
+  cy.screenshot();
+
   if (agreementApprovalRequired) {
     fillForm({
       quintessenceTosApproved: {
@@ -35,10 +37,14 @@ function assertBankTransferFlow({
     .as("referenceNumber")
     .should("match", /NR[\w\d]{10}NR/);
 
+  cy.screenshot();
+
   cy.get(tid("bank-transfer.purchase.summary.transfer-completed")).click();
 
   // TODO: Email are not send immediately after moving backend to use queues
   // cy.get<string>("@referenceNumber").then(assertWaitForBankTransferSummary);
+
+  cy.screenshot();
 
   cy.get(tid("bank-transfer.purchase.success.go-to-wallet")).click();
 
@@ -83,25 +89,26 @@ describe("Purchase", () => {
     loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
       kyc: "business",
       clearPendingTransactions: true,
-    }).then(() => {
-      // On wallet
-      goToWallet();
-
-      assertBankAccountDetails();
-
-      // On profile
-      goToProfile();
-
-      assertBankAccountDetails();
     });
+    // On wallet
+    goToWallet();
+
+    assertBankAccountDetails();
+
+    // On profile
+    goToProfile();
+
+    assertBankAccountDetails();
+    cy.screenshot();
   });
 
   it("should disable all action buttons related to bank transfer when not verified", () => {
     createAndLoginNewUser({
       type: "investor",
-    }).then(() => {
-      goToWallet();
-      cy.get(tid("wallet-balance.neur.purchase-button")).should("be.disabled");
     });
+    goToWallet();
+    cy.get(tid("wallet-balance.neur.purchase-button")).should("be.disabled");
+
+    cy.screenshot();
   });
 });

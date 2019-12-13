@@ -5,6 +5,7 @@ const assertFoundersQuote = () => {
   cy.get(tid("eto-overview-status-founders-quote")).should("exist");
   cy.get(tid("eto.public-view.investor-preview-banner.view-as-investor")).click();
   cy.get(tid("eto-overview-status-founders-quote")).should("exist");
+  cy.screenshot();
 };
 
 describe("ETO founders quote", () => {

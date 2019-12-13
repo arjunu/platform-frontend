@@ -11,6 +11,8 @@ describe("Eto Unauthorized View", () => {
 
       assertEtoView(ETO_ID);
       cy.get(tid("jurisdiction-disclaimer-modal")).should("not.exist");
+
+      cy.screenshot();
     });
   });
 
@@ -22,6 +24,8 @@ describe("Eto Unauthorized View", () => {
 
       cy.get(tid("jurisdiction-disclaimer-modal")).should("exist");
 
+      cy.screenshot();
+
       cy.get(tid("jurisdiction-disclaimer-modal.confirm")).click();
       assertEtoView(ETO_ID);
     });
@@ -30,6 +34,8 @@ describe("Eto Unauthorized View", () => {
       cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
 
       cy.get(tid("jurisdiction-disclaimer-modal")).should("exist");
+
+      cy.screenshot();
 
       cy.get(tid("jurisdiction-disclaimer-modal.deny")).click();
 
@@ -44,5 +50,7 @@ describe("Eto Unauthorized View", () => {
     assertEtoView(ETO_ID);
 
     cy.get(tid("eto-widget-register-to-invest-button")).should("exist");
+
+    cy.screenshot();
   });
 });

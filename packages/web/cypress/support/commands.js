@@ -125,3 +125,21 @@ Cypress.Commands.add("iframe", selector => {
     });
   });
 });
+
+Cypress.Screenshot.defaults({
+  onBeforeScreenshot($el) {
+    const $header = $el.find("header");
+
+    if ($header) {
+      $header.css("position", "absolute");
+    }
+  },
+
+  onAfterScreenshot($el, _) {
+    const $header = $el.find("header");
+
+    if ($header) {
+      $header.css("position", "sticky");
+    }
+  },
+});

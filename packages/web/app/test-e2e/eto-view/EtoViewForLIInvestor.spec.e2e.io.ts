@@ -18,6 +18,8 @@ describe("Eto LI Investor View", () => {
     it("should allow to visit ", () => {
       cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
       assertEtoView(ETO_ID);
+
+      cy.screenshot();
     });
 
     it("should not allow link with wrong Jurisdiction ", () => {

@@ -20,6 +20,8 @@ describe("Portfolio", () => {
       goToPortfolio();
 
       cy.get(tid(`portfolio-my-assets-token-${etoId}`)).should("exist");
+
+      cy.screenshot();
     });
   });
 
@@ -34,6 +36,8 @@ describe("Portfolio", () => {
 
       cy.get(tid(`asset-portfolio.payout-eth`)).should("not.exist");
       cy.get(tid(`asset-portfolio.payout-eur_t`)).should("exist");
+
+      cy.screenshot();
     });
 
     it("should hide all pending payouts", () => {
@@ -45,6 +49,8 @@ describe("Portfolio", () => {
       goToPortfolioWithRequiredPayoutAmountSet(convertToUlps("5000"));
 
       cy.get(tid(`asset-portfolio.no-payouts`)).should("exist");
+
+      cy.screenshot();
     });
   });
 
@@ -60,6 +66,8 @@ describe("Portfolio", () => {
       const etoId = etoFixtureAddressByName("ETOInPayoutState");
 
       cy.get(tid(`past-investments-${etoId}`)).should("exist");
+
+      cy.screenshot();
     });
   });
 });
