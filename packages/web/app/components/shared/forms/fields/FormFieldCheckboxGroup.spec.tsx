@@ -13,7 +13,7 @@ describe("FormFieldCheckboxGroup", () => {
     const submitFormHandler = spy();
 
     const Component = formWrapper(
-      {},
+      { checkboxes: ["a"] },
       submitFormHandler,
     )(() => (
       <FormFieldCheckboxGroup name="checkboxes">
@@ -21,29 +21,32 @@ describe("FormFieldCheckboxGroup", () => {
         <FormFieldCheckbox label="B" value="b" data-test-id="b" />
       </FormFieldCheckboxGroup>
     ));
+
     const component = mount(<Component />);
 
     const changeAndSubmit = async (id: string, value: boolean) => {
-      component
-        .find(tid(id))
-        .last()
-        .simulate("change", { target: { checked: value } });
+      const element = component.find(tid(id)).find("input");
+
+      element.simulate("change", {
+        target: Object.assign(element.getDOMNode(), { checked: value }),
+      });
 
       await submit(component);
     };
 
-    await changeAndSubmit("a", true);
+    await submit(component);
 
-    expect(submitFormHandler).to.be.calledOnce;
-    expect(submitFormHandler).to.be.calledWith({ checkboxes: ["a"] });
+    expect(submitFormHandler).to.be.calledOnceWith({ checkboxes: ["a"] });
+
+    submitFormHandler.resetHistory();
 
     await changeAndSubmit("b", true);
-    expect(submitFormHandler).to.be.calledTwice;
-    expect(submitFormHandler).to.be.calledWith({ checkboxes: ["a", "b"] });
+    expect(submitFormHandler).to.be.calledOnceWith({ checkboxes: ["a", "b"] });
 
-    await changeAndSubmit("a", true);
-    expect(submitFormHandler).to.be.calledThrice;
-    expect(submitFormHandler).to.be.calledWith({ checkboxes: ["b"] });
+    submitFormHandler.resetHistory();
+
+    await changeAndSubmit("a", false);
+    expect(submitFormHandler).to.be.calledOnceWith({ checkboxes: ["b"] });
   });
 
   it("should set default value", async () => {
@@ -62,7 +65,6 @@ describe("FormFieldCheckboxGroup", () => {
 
     await submit(component);
 
-    expect(submitFormHandler).to.be.calledOnce;
-    expect(submitFormHandler).to.be.calledWith({ checkboxes: [] });
+    expect(submitFormHandler).to.be.calledOnceWith({ checkboxes: [] });
   });
 });

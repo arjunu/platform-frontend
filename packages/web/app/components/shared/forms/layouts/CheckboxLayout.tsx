@@ -24,7 +24,7 @@ interface IProps {
 
 const CheckboxLayout: React.FunctionComponent<IProps & TDataTestId & CommonHtmlProps> = ({
   className,
-  layout,
+  layout = ECheckboxLayout.INLINE,
   name,
   label,
   value = "true",
@@ -48,18 +48,14 @@ const CheckboxLayout: React.FunctionComponent<IProps & TDataTestId & CommonHtmlP
       disabled={disabled}
       ref={inputRef}
     />
-    <div className={cn(styles.indicator, disabled && styles.disabled)} />
+    <div className={cn(styles.indicator, { [styles.disabled]: disabled })} />
     {label && <div className={styles.label}>{label}</div>}
   </label>
 );
 
-CheckboxLayout.defaultProps = {
-  layout: ECheckboxLayout.INLINE,
-};
-
 const RadioButtonLayout: React.FunctionComponent<IProps & TDataTestId & CommonHtmlProps> = ({
   className,
-  layout,
+  layout = ECheckboxLayout.INLINE,
   name,
   label,
   value = "true",
@@ -81,13 +77,9 @@ const RadioButtonLayout: React.FunctionComponent<IProps & TDataTestId & CommonHt
       data-test-id={dataTestId}
       ref={inputRef}
     />
-    <div className={cn(styles.indicator, disabled && styles.disabled)} />
+    <div className={cn(styles.indicator, { [styles.disabled]: disabled })} />
     {label && <div className={styles.label}>{label}</div>}
   </label>
 );
-
-RadioButtonLayout.defaultProps = {
-  layout: ECheckboxLayout.INLINE,
-};
 
 export { RadioButtonLayout, CheckboxLayout };

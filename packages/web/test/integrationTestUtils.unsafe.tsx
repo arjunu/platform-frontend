@@ -32,6 +32,7 @@ import { generateRootReducer, IAppState } from "../app/store";
 import { DeepPartial } from "../app/types";
 import { dummyIntl } from "../app/utils/injectIntlHelpers.fixtures";
 import { InversifyProvider } from "../app/utils/InversifyProvider";
+import { simpleDelay } from "../app/utils/safeTimers";
 import { LolexClockAsync } from "../typings/lolex";
 import { dummyConfig } from "./fixtures";
 import { createSpyMiddleware } from "./reduxSpyMiddleware";
@@ -160,8 +161,9 @@ export async function waitForTid(component: ReactWrapper, id: string): Promise<v
 export async function waitForPredicate(predicate: () => boolean, errorMsg: string): Promise<void> {
   // wait until event queue is empty :/ currently we don't have a better way to solve it
   let waitTime = 20;
+
   while (--waitTime > 0 && !predicate()) {
-    await Promise.resolve();
+    await simpleDelay(10);
   }
 
   if (waitTime === 0) {
@@ -203,7 +205,7 @@ interface ICreateProviderContext {
 export function wrapWithProviders(
   Component: React.ComponentType,
   context: ICreateProviderContext = {},
-): React.ReactElement<any> {
+): React.ReactElement {
   // avoid creating store and container if they were provided
   let setup: ICreateIntegrationTestsSetupOutput | null = null;
   if (!context.store || !context.container) {
@@ -230,7 +232,7 @@ export function wrapWithProviders(
   );
 }
 
-export function wrapWithIntl(component: React.ReactElement<any>): React.ReactElement<any> {
+export function wrapWithIntl(component: React.ReactElement): React.ReactElement<any> {
   return (
     <IntlProvider locale="en-en" messages={defaultTranslations}>
       {component}
@@ -238,16 +240,19 @@ export function wrapWithIntl(component: React.ReactElement<any>): React.ReactEle
   );
 }
 
-const getCurrentSubmitCount = (element: ReactWrapper<any, any>) =>
-  element.find(tid("test-form-submit-count")).text();
+const getCurrentSubmitCount = (element: ReactWrapper): number =>
+  +element.find(tid("test-form-submit-count")).text();
 
-export const submit = async (element: ReactWrapper<any, any>): Promise<void> => {
+const getIsSubmitting = (element: ReactWrapper): boolean =>
+  element.find(tid("test-form-is-submitting")).text() === "true";
+
+export const submit = async (element: ReactWrapper): Promise<void> => {
   const currentCount = getCurrentSubmitCount(element);
 
   clickFirstTid(element, "test-form-submit");
 
   await waitForPredicate(
-    () => currentCount !== getCurrentSubmitCount(element),
+    () => currentCount + 1 === getCurrentSubmitCount(element) && !getIsSubmitting(element),
     "Waiting for form to be submitted",
   );
 };

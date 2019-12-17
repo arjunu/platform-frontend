@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
-import { FormikContext } from "formik";
-import { CSSProperties, ReactElement } from "react";
+import { FormikContext, FormikContextType } from "formik";
+import { CSSProperties, default as React, ReactElement } from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { ToastOptions } from "react-toastify";
 import { ComponentEnhancer } from "recompose";
@@ -151,7 +151,7 @@ export type Values<T> = T[keyof T];
 
 // TODO: Remove `any` and provide correct types everywhere
 export type TFormikConnect<Values = any> = {
-  formik: FormikContext<Values>;
+  formik: FormikContextType<Values>;
 };
 
 export type TElementRef<T> = null | T;

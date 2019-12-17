@@ -80,4 +80,9 @@ export function safeDelay(ms: number, options?: TSafeSetTimeoutOptions): Promise
   });
 }
 
+/*
+ * Simple Promise wrapper around `setTimeout`.
+ * Be careful with longer timeouts as this one doesn't consider
+ * sleep/hibernation. Prefer `safeTimeout` for delays longer 1 minute
+ */
 export const simpleDelay = (ms: number) => new Promise(res => setTimeout(res, ms));

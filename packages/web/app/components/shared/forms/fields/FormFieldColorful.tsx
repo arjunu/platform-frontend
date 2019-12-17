@@ -12,13 +12,15 @@ import { isNonValid } from "./utils.unsafe";
 import * as styles from "./FormFieldColorful.module.scss";
 
 interface IFieldGroup {
-  label?: string | React.ReactNode;
-  placeholder?: string | React.ReactNode;
+  label?: string;
+  placeholder?: string;
   type?: InputProps["type"];
   maxLength?: string;
   showAvatar?: boolean;
   errorMessage?: TTranslatedString;
 }
+// TODO: Bootstrap and formik typings are not in sync. Remove `any` after we bootstrap update
+// tslint:disable-next-line:no-any-on-steroid
 type FieldGroupProps = IFieldGroup & FieldAttributes<any> & CommonHtmlProps;
 
 export class FormFieldColorful extends React.Component<FieldGroupProps> {

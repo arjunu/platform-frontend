@@ -17,8 +17,7 @@ import {
   toFixedPrecision,
   TValueFormat,
 } from "./formatters/utils";
-import { EInputSize, InputLayout } from "./forms/index";
-import { EInputTheme } from "./forms/layouts/InputLayout";
+import { EInputSize, EInputTheme, InputLayout } from "./forms/layouts/InputLayout";
 
 interface IProps {
   name: string;

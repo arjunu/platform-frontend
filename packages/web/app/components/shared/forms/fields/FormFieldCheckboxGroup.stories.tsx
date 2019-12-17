@@ -1,16 +1,36 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
+import withFormik from "storybook-formik";
 
 import { FormFieldCheckbox, FormFieldCheckboxGroup } from "./FormFieldCheckboxGroup";
-import { formWrapper } from "./testingUtils.unsafe";
 
-storiesOf("forms/fields/FieldCheckboxGroup", module).add(
-  "default",
-  formWrapper({ animals: ["dog"] })(() => (
-    <FormFieldCheckboxGroup name="animals">
-      <h1>Checkbox group</h1>
-      <FormFieldCheckbox value="dog" label="Dog" />
-      <FormFieldCheckbox value="cat" label="Cat" />
-    </FormFieldCheckboxGroup>
-  )),
-);
+storiesOf("forms/fields/FieldCheckboxGroup", module)
+  .addDecorator(withFormik)
+  .add(
+    "with `dog` selected",
+    () => (
+      <FormFieldCheckboxGroup label="Checkbox group" name="animals">
+        <FormFieldCheckbox value="dog" label="Dog" />
+        <FormFieldCheckbox value="cat" label="Cat" />
+      </FormFieldCheckboxGroup>
+    ),
+    {
+      formik: {
+        initialValues: { animals: ["dog"] },
+      },
+    },
+  )
+  .add(
+    "without selected value",
+    () => (
+      <FormFieldCheckboxGroup label="Checkbox group" name="animals">
+        <FormFieldCheckbox value="dog" label="Dog" />
+        <FormFieldCheckbox value="cat" label="Cat" />
+      </FormFieldCheckboxGroup>
+    ),
+    {
+      formik: {
+        initialValues: { animals: undefined },
+      },
+    },
+  );

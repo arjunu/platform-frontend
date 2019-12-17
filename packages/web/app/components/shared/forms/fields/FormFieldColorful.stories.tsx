@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import * as React from "react";
 
 import { FormDeprecated } from "../FormDeprecated";
-import { FormFieldColorful } from "./FormFieldColorful.unsafe";
+import { FormFieldColorful } from "./FormFieldColorful";
 
 storiesOf("forms/fields/FormFieldColorful", module)
   .add("default", () => (

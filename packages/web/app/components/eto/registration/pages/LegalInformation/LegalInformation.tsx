@@ -8,7 +8,7 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { ArrayOfKeyValueFields } from "../../../../shared/forms/fields/FormCategoryDistribution.unsafe";
+import { ArrayOfKeyValueFields } from "../../../../shared/forms/fields/FormCategoryDistribution";
 import { FormField } from "../../../../shared/forms/fields/FormField";
 import { FormFieldDate } from "../../../../shared/forms/fields/FormFieldDate";
 import { FormFieldError } from "../../../../shared/forms/fields/FormFieldError";
