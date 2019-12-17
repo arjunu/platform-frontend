@@ -4,7 +4,7 @@ import { FormGroup } from "reactstrap";
 
 import { TTranslatedString, XOR } from "../../../../types";
 import { ENumberInputFormat, ENumberOutputFormat, TValueFormat } from "../../formatters/utils";
-import { MaskedNumberInput } from "../../MaskedNumberInput";
+import { MaskedNumberInputLayout } from "../layouts/MaskedNumberInputLayout";
 import { FormFieldLabel } from "./FormFieldLabel";
 
 interface ICommonProps {
@@ -46,7 +46,7 @@ export const FormMaskedNumberInput: React.FunctionComponent<ICommonProps & TExte
     {label && <FormFieldLabel name={name}>{label}</FormFieldLabel>}
     <FormikConsumer>
       {({ values, setFieldValue, setFieldTouched }) => (
-        <MaskedNumberInput
+        <MaskedNumberInputLayout
           outputFormat={outputFormat}
           storageFormat={storageFormat}
           name={name}

@@ -12,8 +12,12 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../../shared/formatters/utils";
-import { EInputTheme, FormFieldBoolean, FormLabel } from "../../../../../shared/forms";
-import { MaskedNumberInput } from "../../../../../shared/MaskedNumberInput";
+import {
+  EInputTheme,
+  FormFieldBoolean,
+  FormLabel,
+  MaskedNumberInputLayout,
+} from "../../../../../shared/forms";
 import { hasNotification } from "../utils";
 
 import * as styles from "../../Transfer.module.scss";
@@ -48,7 +52,7 @@ const TokenValueFormRow: React.FunctionComponent<{
       <FormLabel for="value" className={styles.label}>
         <FormattedMessage id="modal.transfer.sent.amount" />
       </FormLabel>
-      <MaskedNumberInput
+      <MaskedNumberInputLayout
         className="text-right"
         storageFormat={ENumberInputFormat.FLOAT}
         valueType={tokenSymbol}

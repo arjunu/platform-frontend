@@ -21,6 +21,7 @@ export * from "./layouts/CheckboxLayout";
 export * from "./layouts/FormFieldLayout";
 export * from "./layouts/InputLayout";
 export * from "./layouts/FormLabel";
+export * from "./layouts/MaskedNumberInputLayout";
 
 export * from "./FormDeprecated";
 export * from "./Form";

@@ -28,10 +28,10 @@ import {
   formatNumber,
   selectDecimalPlaces,
 } from "../../../shared/formatters/utils";
+import { MaskedNumberInputLayout } from "../../../shared/forms";
 import { FormDeprecated } from "../../../shared/forms/FormDeprecated";
 import { FormLabel } from "../../../shared/forms/layouts/FormLabel";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
-import { MaskedNumberInput } from "../../../shared/MaskedNumberInput";
 import { ETheme, MoneySuiteWidget } from "../../../shared/MoneySuiteWidget/MoneySuiteWidget";
 import { Tooltip } from "../../../shared/tooltips/Tooltip";
 import { formatEuroValueToString } from "../../../shared/utils";
@@ -159,7 +159,7 @@ const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
           </section>
 
           <FormDeprecated>
-            <MaskedNumberInput
+            <MaskedNumberInputLayout
               storageFormat={ENumberInputFormat.FLOAT}
               valueType={ECurrency.EUR}
               outputFormat={ENumberOutputFormat.FULL}

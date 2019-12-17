@@ -2,8 +2,8 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "./formatters/utils";
-import { MaskedNumberInput } from "./MaskedNumberInput";
+import { ECurrency, ENumberInputFormat, ENumberOutputFormat } from "../../formatters/utils";
+import { MaskedNumberInputLayout } from "./MaskedNumberInputLayout";
 
 const defaultProps = {
   outputFormat: ENumberOutputFormat.FULL,
@@ -17,21 +17,21 @@ const defaultProps = {
 
 storiesOf("MaskedNumberInput", module)
   .add("shows Eth (4 decimal places)", () => (
-    <MaskedNumberInput
+    <MaskedNumberInputLayout
       {...defaultProps}
       valueType={ECurrency.ETH}
       storageFormat={ENumberInputFormat.ULPS}
     />
   ))
   .add("shows EuroToken (2 decimal places)", () => (
-    <MaskedNumberInput
+    <MaskedNumberInputLayout
       {...defaultProps}
       valueType={ECurrency.EUR_TOKEN}
       storageFormat={ENumberInputFormat.ULPS}
     />
   ))
   .add("shows EuroToken (2 decimal places) with units", () => (
-    <MaskedNumberInput
+    <MaskedNumberInputLayout
       {...defaultProps}
       valueType={ECurrency.EUR_TOKEN}
       storageFormat={ENumberInputFormat.ULPS}

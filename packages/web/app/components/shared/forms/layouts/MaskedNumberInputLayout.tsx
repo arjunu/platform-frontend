@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { DEFAULT_DECIMAL_PLACES } from "../../config/constants";
-import { TTranslatedString } from "../../types";
-import { FormInputError } from "../../utils/errors";
+import { DEFAULT_DECIMAL_PLACES } from "../../../../config/constants";
+import { TTranslatedString } from "../../../../types";
+import { FormInputError } from "../../../../utils/errors";
 import {
   ENumberInputFormat,
   ENumberOutputFormat,
@@ -16,8 +16,8 @@ import {
   stripNumberFormatting,
   toFixedPrecision,
   TValueFormat,
-} from "./formatters/utils";
-import { EInputSize, EInputTheme, InputLayout } from "./forms/layouts/InputLayout";
+} from "../../formatters/utils";
+import { EInputSize, EInputTheme, InputLayout } from "./InputLayout";
 
 interface IProps {
   name: string;
@@ -45,7 +45,7 @@ interface IProps {
   validateOnMount?: boolean; //this is a workaround to validate initial values on mount before we upgraded formik to 2.0. Please do not use it!
 }
 
-export class MaskedNumberInput extends React.Component<IProps> {
+export class MaskedNumberInputLayout extends React.Component<IProps> {
   private decimals: number;
 
   constructor(props: IProps) {
@@ -150,7 +150,7 @@ export class MaskedNumberInput extends React.Component<IProps> {
 
   componentDidUpdate(): void {
     if (!(this.props.value === undefined || typeof this.props.value === "string")) {
-      throw new FormInputError("MaskedNumberInput accepts only string|undefined");
+      throw new FormInputError("MaskedNumberInputLayout accepts only string|undefined");
     }
     if (isValidNumber(this.props.value) || isEmptyValue(this.props.value)) {
       const propsValue = this.formatForDisplay(this.props.value, this.props.storageFormat);

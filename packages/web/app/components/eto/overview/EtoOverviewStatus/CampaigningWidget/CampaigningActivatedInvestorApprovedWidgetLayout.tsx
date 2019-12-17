@@ -11,8 +11,12 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { CheckboxLayout, EInputSize, FormDeprecated } from "../../../../shared/forms";
-import { MaskedNumberInput } from "../../../../shared/MaskedNumberInput";
+import {
+  CheckboxLayout,
+  EInputSize,
+  FormDeprecated,
+  MaskedNumberInputLayout,
+} from "../../../../shared/forms";
 import { Tooltip } from "../../../../shared/tooltips";
 
 import * as styles from "../EtoOverviewStatus.module.scss";
@@ -111,7 +115,7 @@ const CampaigningActivatedInvestorApprovedWidgetLayout: React.FunctionComponent<
                 <FormattedMessage id="eto-overview.campaigning.indicate-commitment" />
               </div>
               <div className={cn(styles.label)}>
-                <MaskedNumberInput
+                <MaskedNumberInputLayout
                   size={EInputSize.SMALL}
                   storageFormat={ENumberInputFormat.FLOAT}
                   valueType={ECurrency.EUR}
