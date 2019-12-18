@@ -1,6 +1,6 @@
 import "../app/polyfills.sideEffect";
 
-import "./setup-styles";
+import "./setup-styles.sideEffect";
 
 import * as React from "react";
 import { configure, addDecorator, addParameters } from "@storybook/react";

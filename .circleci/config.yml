@@ -143,7 +143,7 @@ jobs:
             - v25-deps-
 
       - run: yarn --frozen-lockfile
-      - run: yarn workspace @neufund/web deploy-storybook --ci --host-token-env-variable=DANGER_GITHUB_API_TOKEN
+      - run: yarn workspace @neufund/web storybook:deploy-ghpages --ci --host-token-env-variable=DANGER_GITHUB_API_TOKEN
 
 workflows:
   version: 2
