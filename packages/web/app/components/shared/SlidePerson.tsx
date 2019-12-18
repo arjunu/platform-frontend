@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 
 import { TSocialChannelsType } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { ISrcSet } from "./HiResImage";
+import { ISrcSet } from "./Image";
 import { ResponsiveImage } from "./ResponsiveImage";
 import { SocialProfilesList } from "./SocialProfilesList";
 

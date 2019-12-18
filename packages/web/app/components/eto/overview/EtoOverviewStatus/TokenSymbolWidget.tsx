@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { ISrcSet } from "../../../shared/HiResImage";
 import { TokenIcon } from "../../../shared/icons/TokenIcon";
+import { ISrcSet } from "../../../shared/Image";
 
 import * as styles from "./TokenSymbolWidget.module.scss";
 

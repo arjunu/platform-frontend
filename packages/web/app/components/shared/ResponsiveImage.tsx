@@ -1,7 +1,7 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { HiResImage, ISrcSet } from "./HiResImage";
+import { Image, ISrcSet } from "./Image";
 import { Proportion } from "./Proportion";
 
 import * as styles from "./ResponsiveImage.module.scss";
@@ -40,7 +40,7 @@ const ResponsiveImage: React.FunctionComponent<IResponsiveImage> = ({
     className={cn(styles.responsiveImage, className, theme)}
     onClick={onClick}
   >
-    {srcSet["1x"] && <HiResImage alt={alt} srcSet={srcSet} className={cn(styles.image, fit)} />}
+    {srcSet["1x"] && <Image alt={alt} srcSet={srcSet} className={cn(styles.image, fit)} />}
   </Proportion>
 );
 
@@ -49,4 +49,4 @@ ResponsiveImage.defaultProps = {
   fit: EImageFit.CONTAIN,
 };
 
-export { ResponsiveImage, IResponsiveImage };
+export { ResponsiveImage };

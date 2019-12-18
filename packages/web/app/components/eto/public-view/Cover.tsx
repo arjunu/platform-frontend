@@ -5,17 +5,21 @@ import { COMPANY_TAGS_LIMIT } from "../../../config/constants";
 import { EJurisdiction } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { TTranslatedString } from "../../../types";
 import { Container, EColumnSpan, EContainerType } from "../../layouts/Container";
-import { srcSetToString } from "../../shared/HiResImage";
-import { IResponsiveImage } from "../../shared/ResponsiveImage";
+import { Image, ISrcSet } from "../../shared/Image";
 import { Tag } from "../../shared/Tag";
 
 import * as styles from "./Cover.module.scss";
 
+type TImage = {
+  srcSet: ISrcSet;
+  alt: string;
+};
+
 interface IProps {
-  companyBanner: IResponsiveImage;
+  companyBanner: TImage;
   companyName: TTranslatedString;
   companyOneliner: TTranslatedString;
-  companyLogo: IResponsiveImage | undefined;
+  companyLogo: TImage | undefined;
   companyJurisdiction: EJurisdiction;
   tags: ReadonlyArray<TTranslatedString> | undefined;
 }
@@ -31,11 +35,8 @@ export const Cover: React.FunctionComponent<IProps> = ({
     className={styles.cover}
     type={EContainerType.CONTAINER}
   >
-    <img
-      src={companyBanner.srcSet["1x"]}
-      srcSet={srcSetToString(companyBanner.srcSet)}
-      alt={companyBanner.alt}
-    />
+    <Image srcSet={companyBanner.srcSet} alt={companyBanner.alt} width={1250} height={400} />
+
     <div className={styles.companyDetails}>
       {companyLogo && (
         <div className={styles.logoWrapper}>

@@ -5,13 +5,19 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { EJurisdiction } from "../../../../lib/api/eto/EtoProductsApi.interfaces";
 import { CommonHtmlProps, TTranslatedString } from "../../../../types";
 import { assertNever } from "../../../../utils/assertNever";
-import { EImageFit, IResponsiveImage, ResponsiveImage } from "../../../shared/ResponsiveImage";
+import { ISrcSet } from "../../../shared/Image";
+import { EImageFit, ResponsiveImage } from "../../../shared/ResponsiveImage";
 import { Tag } from "../../../shared/Tag";
 
 import * as styles from "./Cover.module.scss";
 
+type TImage = {
+  srcSet: ISrcSet;
+  alt: string;
+};
+
 interface IProps {
-  companyBanner: IResponsiveImage;
+  companyBanner: TImage;
   jurisdiction: EJurisdiction | undefined;
   tags: ReadonlyArray<TTranslatedString> | undefined;
 }

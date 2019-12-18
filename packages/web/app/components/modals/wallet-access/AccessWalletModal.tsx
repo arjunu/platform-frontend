@@ -13,7 +13,7 @@ import { EWalletSubType, EWalletType } from "../../../modules/web3/types";
 import { appConnect } from "../../../store";
 import { TTranslatedString } from "../../../types";
 import { Button } from "../../shared/buttons";
-import { HiResImage, ISrcSet } from "../../shared/HiResImage";
+import { Image, ISrcSet } from "../../shared/Image";
 import { WarningAlert } from "../../shared/WarningAlert";
 import { getMessageTranslation } from "../../translatedMessages/messages";
 import { Modal } from "../Modal";
@@ -96,9 +96,9 @@ export const AccessWalletContainerComponent: React.FunctionComponent<IStateProps
     )}
     {walletType === EWalletType.BROWSER && (
       <div>
-        <HiResImage
+        <Image
           srcSet={walletSubType === EWalletSubType.GNOSIS ? logoGnosisSrcSet : logoMetamaskSrcSet}
-          alt={walletSubType}
+          alt={walletSubType || ""}
           title={walletSubType}
           className="mt-3 mb-3"
         />
