@@ -22,6 +22,7 @@ export * from "./layouts/FormFieldLayout";
 export * from "./layouts/InputLayout";
 export * from "./layouts/FormLabel";
 export * from "./layouts/MaskedNumberInputLayout";
+export * from "./layouts/DatePickerLayout";
 
 export * from "./FormDeprecated";
 export * from "./Form";

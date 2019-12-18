@@ -126,16 +126,6 @@ $_font-color: #323c47;
     }
   }
 }
-//
-//.input-wrapper {
-//  display: flex;
-//
-//  input {
-//    &:focus {
-//      border-color: $_border-color;
-//    }
-//  }
-//}
 
 .icon {
   @include rect(49px);

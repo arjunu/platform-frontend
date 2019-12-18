@@ -1,15 +1,31 @@
 import * as moment from "moment";
 import * as React from "react";
+import * as DateTime from "react-datetime";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { TDataTestId } from "../../types";
-import { DatetimeProps, TypedDatetime } from "./forms/fields/FormFieldDatePicker.unsafe";
-import { InlineIcon } from "./icons";
-import { TimeLeft } from "./TimeLeft.unsafe";
-import { utcTime } from "./utils";
+import { TDataTestId } from "../../../../types";
+import { InlineIcon } from "../../icons/index";
+import { TimeLeft } from "../../TimeLeft.unsafe";
+import { utcTime } from "../../utils";
 
-import * as iconCalendar from "../../assets/img/inline_icons/calendar.svg";
-import * as styles from "./forms/fields/FormFieldDatePicker.module.scss";
+import "react-datetime/css/react-datetime.css";
+import * as iconCalendar from "../../../../assets/img/inline_icons/calendar.svg";
+import * as styles from "./DatePickerLayout.module.scss";
+
+// We need to do this because of missing type for `renderInput`
+// https://github.com/YouCanBookMe/react-datetime/pull/541
+type DatetimeProps = React.ComponentProps<typeof DateTime> & {
+  dataTestId?: string;
+  renderInput?: (
+    // tslint:disable-next-line:no-any-on-steroid
+    props: any,
+    openCalendar: () => void,
+    closeCalendar: () => void,
+    onChange: () => void,
+  ) => void;
+};
+
+const TypedDatetime = DateTime as React.ComponentType<DatetimeProps>;
 
 interface IDatePickerProps {
   isValidDate?: (currentDate: moment.Moment) => boolean;
@@ -39,7 +55,9 @@ const TestInput: React.ComponentType<ITestInputProps & TDataTestId> = ({
   </>
 );
 
-class DatePicker extends React.PureComponent<DatetimeProps & IDatePickerProps & ITestInputProps> {
+class DatePickerLayout extends React.PureComponent<
+  DatetimeProps & IDatePickerProps & ITestInputProps
+> {
   shouldComponentUpdate(nextProps: DatetimeProps & IDatePickerProps & ITestInputProps): boolean {
     return (
       Boolean(this.props.value) &&
@@ -80,4 +98,4 @@ class DatePicker extends React.PureComponent<DatetimeProps & IDatePickerProps & 
   }
 }
 
-export { DatePicker };
+export { DatePickerLayout };
