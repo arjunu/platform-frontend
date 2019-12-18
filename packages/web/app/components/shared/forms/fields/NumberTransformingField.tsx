@@ -1,5 +1,5 @@
 import * as cn from "classnames";
-import { FastField, FieldProps, FormikConsumer } from "formik";
+import { FastField, FieldProps, FieldValidator, FormikConsumer } from "formik";
 import * as React from "react";
 import { FormGroup, Input, InputGroup, InputGroupAddon } from "reactstrap";
 
@@ -22,7 +22,7 @@ interface IFieldGroup {
   maxLength?: number;
   min?: number | string;
   ratio?: number;
-  customValidation?: (value: string | undefined) => string | Function | Promise<void> | undefined;
+  customValidation?: FieldValidator;
   customOnBlur?: Function;
 }
 

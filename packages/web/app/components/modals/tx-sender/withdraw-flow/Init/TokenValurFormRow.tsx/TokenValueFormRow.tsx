@@ -25,8 +25,7 @@ import * as styles from "../../Transfer.module.scss";
 const TokenValueFormRow: React.FunctionComponent<{
   disabled?: boolean;
   valueEuro: string;
-  setFieldValue: (field: string, value: string, shouldValidate?: boolean) => void;
-  setFieldTouched: (field: string, touched?: boolean, shouldValidate?: boolean) => void;
+  onClick: (amount: string) => void;
   values: FormikValues;
   notifications: ReadonlyArray<EAdditionalValidationDataNotifications>;
   errors: FormikErrors<{ value: string }>;
@@ -35,10 +34,9 @@ const TokenValueFormRow: React.FunctionComponent<{
   tokenSymbol: EquityToken;
   decimals: number;
 }> = ({
-  setFieldValue,
-  setFieldTouched,
+  onClick,
   values,
-  notifications: warnings,
+  notifications,
   valueEuro,
   errors,
   disabled,
@@ -61,10 +59,7 @@ const TokenValueFormRow: React.FunctionComponent<{
         name="value"
         reverseMetaInfo={true}
         value={values.value}
-        onChangeFn={value => {
-          setFieldValue("value", value);
-          setFieldTouched("value", true);
-        }}
+        onChangeFn={onClick}
         returnInvalidValues={true}
         disabled={disabled}
         showUnits={true}
@@ -94,7 +89,7 @@ const TokenValueFormRow: React.FunctionComponent<{
         </small>
       )}
     </section>
-    {hasNotification(EAdditionalValidationDataNotifications.WILL_EMPTY_WALLET, warnings) && (
+    {hasNotification(EAdditionalValidationDataNotifications.WILL_EMPTY_WALLET, notifications) && (
       <FormFieldBoolean
         className={styles.withSpacing}
         data-test-id="modals.tx-sender.withdraw-flow.withdraw-component.will-empty-wallet"

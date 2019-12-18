@@ -9,14 +9,14 @@ import * as styles from "../../Transfer.module.scss";
 
 type TExternalProps = {
   disabled: boolean;
-  setFieldValue: (field: string, value: string, shouldValidate?: boolean) => void;
+  onClick: (amount: string) => void;
   amount: string;
   decimals: number;
 };
 
 const TransferAllButton: React.FunctionComponent<TExternalProps> = ({
   amount,
-  setFieldValue,
+  onClick,
   disabled,
   decimals,
 }) => (
@@ -25,7 +25,7 @@ const TransferAllButton: React.FunctionComponent<TExternalProps> = ({
       data-test-id="modals.tx-sender.transfer-flow.transfer-component.whole-balance"
       disabled={disabled}
       onClick={() => {
-        setFieldValue("value", amount ? toFormValue(amount, decimals) : "0", true);
+        onClick(amount ? toFormValue(amount, decimals) : "0");
       }}
     >
       <FormattedMessage id="modal.sent-eth.whole-balance" />

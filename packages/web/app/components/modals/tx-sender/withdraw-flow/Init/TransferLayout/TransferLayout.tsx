@@ -137,14 +137,16 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
             tokenDecimals={tokenDecimals}
           />
           <TransferAllButton
-            setFieldValue={setFieldValue}
+            onClick={amount => setFieldValue("value", amount, true)}
             amount={tokenAmount}
             disabled={validationState === EValidationState.IS_NOT_ACCEPTING_ETHER}
             decimals={tokenDecimals}
           />
           <TokenValueFormRow
-            setFieldValue={setFieldValue}
-            setFieldTouched={setFieldTouched}
+            onClick={amount => {
+              setFieldValue("value", amount);
+              setFieldTouched("value", true);
+            }}
             valueEuro={userFlowDetails.inputValueEuro}
             values={values}
             notifications={notifications}

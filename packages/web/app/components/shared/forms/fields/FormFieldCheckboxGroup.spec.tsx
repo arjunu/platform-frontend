@@ -61,6 +61,7 @@ describe("FormFieldCheckboxGroup", () => {
         <FormFieldCheckbox label="B" value="b" data-test-id="b" />
       </FormFieldCheckboxGroup>
     ));
+
     const component = mount(<Component />);
 
     await submit(component);
