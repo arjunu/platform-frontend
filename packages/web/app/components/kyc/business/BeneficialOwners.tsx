@@ -10,7 +10,7 @@ import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Accordion } from "../../shared/Accordion";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons";
 import { HorizontalLine } from "../../shared/HorizontalLine";
-import { KYCBeneficialOwner } from "./BeneficialOwner.unsafe";
+import { KYCBeneficialOwner } from "./BeneficialOwner";
 
 import * as plusIcon from "../../../assets/img/inline_icons/plus.svg";
 import * as styles from "./BeneficialOwners.module.scss";

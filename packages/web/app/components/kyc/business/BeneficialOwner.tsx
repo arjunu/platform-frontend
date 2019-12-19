@@ -1,4 +1,5 @@
 import { FormikProps, withFormik } from "formik";
+import { defaultTo } from "lodash/fp";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
@@ -19,7 +20,6 @@ import { Button, EButtonLayout } from "../../shared/buttons";
 import {
   BOOL_FALSE_KEY,
   BOOL_TRUE_KEY,
-  boolify,
   FormDeprecated,
   FormField,
   FormFieldDate,
@@ -27,7 +27,6 @@ import {
   FormSelectField,
   FormSelectNationalityField,
   NONE_KEY,
-  unboolify,
 } from "../../shared/forms";
 import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
@@ -128,14 +127,18 @@ const KYCForm = injectIntlHelpers<FormikProps<IKycBeneficialOwner> & IProps>(
   ),
 );
 
+const defaultEmptyObject = defaultTo<IKycBeneficialOwner | {}>({});
+
 const KYCEnhancedForm = withFormik<IProps, IKycBeneficialOwner>({
   validationSchema: KycBeneficialOwnerSchemaRequired,
-  mapPropsToValues: props => unboolify(props.owner),
-  isInitialValid: (props: any) => KycBeneficialOwnerSchemaRequired.isValidSync(props.owner),
+  validateOnMount: true,
   enableReinitialize: true,
-  handleSubmit: (values, props) => {
+  mapPropsToValues: props => defaultEmptyObject(props.owner),
+  handleSubmit: (values, { props }) => {
+    // TODO: Fix props here, `ownership` from ui is passed as string but it's declared as number in types
+    // tslint:disable-next-line:no-any-on-steroid
     const ownership: any = values.ownership || "";
-    props.props.submitForm(boolify({ ...values, ownership: parseInt(ownership, 10) || 0 }));
+    props.submitForm({ ...values, ownership: parseInt(ownership, 10) || 0 });
   },
 })(KYCForm);
 

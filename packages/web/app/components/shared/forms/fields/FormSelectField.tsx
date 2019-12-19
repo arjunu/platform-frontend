@@ -16,6 +16,14 @@ export const NONE_KEY = "";
 export const BOOL_TRUE_KEY = "true";
 export const BOOL_FALSE_KEY = "false";
 
+const boolifySingle = (value: string): boolean | string => {
+  if (value === BOOL_TRUE_KEY) return true;
+
+  if (value === BOOL_FALSE_KEY) return false;
+
+  return value;
+};
+
 export const boolify = <T extends {}>(values: T): T => {
   if (!values) return values;
 
@@ -83,7 +91,7 @@ export class FormSelectField extends React.Component<IFieldGroup & IOwnProps & T
 
     return (
       <FormikConsumer>
-        {({ touched, errors, setFieldTouched, submitCount }) => {
+        {({ touched, errors, setFieldValue, submitCount }) => {
           const invalid = isNonValid(touched, errors, name, submitCount);
 
           return (
@@ -100,9 +108,15 @@ export class FormSelectField extends React.Component<IFieldGroup & IOwnProps & T
                       aria-invalid={invalid}
                       invalid={invalid}
                       disabled={disabled}
-                      onFocus={() => setFieldTouched(name, true)}
                       type="select"
                       value={field.value}
+                      onChange={event => {
+                        const value = event.target.value;
+
+                        // provide a proper boolean value for
+                        // BOOL_TRUE_KEY and BOOL_FALSE_KEY
+                        setFieldValue(name, boolifySingle(value));
+                      }}
                     >
                       {this.renderOptions()}
                     </Input>

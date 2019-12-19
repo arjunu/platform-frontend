@@ -1,4 +1,5 @@
 import { FormikProps, withFormik } from "formik";
+import { defaultTo } from "lodash/fp";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
@@ -28,7 +29,6 @@ import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
 import {
   BOOL_FALSE_KEY,
   BOOL_TRUE_KEY,
-  boolify,
   FormDeprecated,
   FormField,
   FormFieldDate,
@@ -36,7 +36,6 @@ import {
   FormSelectField,
   FormSelectNationalityField,
   NONE_KEY,
-  unboolify,
 } from "../../shared/forms";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { EKycUploadType } from "../../shared/MultiFileUpload";
@@ -95,7 +94,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
         allSteps={5}
         title={<FormattedMessage id="kyc.personal.details.title" />}
         description={<FormattedMessage id="kyc.personal.details.description" />}
-        buttonAction={() => props.submitAndClose(boolify(values))}
+        buttonAction={() => props.submitAndClose(values)}
         data-test-id="kyc.individual-start"
       />
       <FormDeprecated>
@@ -154,16 +153,16 @@ const KYCForm: React.FunctionComponent<TProps> = ({
               data-test-id="kyc-personal-start-is-accredited-us-citizen"
             />
 
-            {values.isAccreditedUsCitizen === BOOL_FALSE_KEY && (
+            {values.isAccreditedUsCitizen === false && (
               <Notification
                 className="mb-4"
                 text={<FormattedMessage id="notifications.not-accredited-investor" />}
                 type={ENotificationType.WARNING}
               />
             )}
-            {values.isAccreditedUsCitizen === BOOL_TRUE_KEY && (
+            {values.isAccreditedUsCitizen === true && (
               <KYCAddDocuments
-                onEnter={actions.kyc.kycSubmitPersonalDataNoRedirect(boolify(values))}
+                onEnter={actions.kyc.kycSubmitPersonalDataNoRedirect(values)}
                 uploadType={EKycUploadType.US_ACCREDITATION}
                 // We can skip showing loader if there is a file already uploaded
                 isLoading={props.isSavingForm && uploadedFiles.length === 0}
@@ -187,6 +186,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
             layout={EButtonLayout.PRIMARY}
             size={EButtonSize.HUGE}
             disabled={shouldDisableSubmit}
+            isLoading={props.isSavingForm}
             data-test-id="kyc-personal-start-submit-form"
           >
             <FormattedMessage id="form.save-and-submit" />
@@ -197,16 +197,15 @@ const KYCForm: React.FunctionComponent<TProps> = ({
   );
 };
 
+const defaultEmptyObject = defaultTo<IKycIndividualData | {}>({});
+
 const KYCEnhancedForm = withFormik<IStateProps & IDispatchProps, IKycIndividualData>({
   validationSchema: KycPersonalDataSchemaRequiredWithAdditionalData,
-  isInitialValid: (props: object) =>
-    KycPersonalDataSchemaRequiredWithAdditionalData.isValidSync(
-      (props as IStateProps).currentValues,
-    ),
-  mapPropsToValues: props => unboolify(props.currentValues as IKycIndividualData),
+  validateOnMount: true,
   enableReinitialize: true,
+  mapPropsToValues: props => defaultEmptyObject(props.currentValues),
   handleSubmit: (values, props) => {
-    props.props.submitForm(boolify(values));
+    props.props.submitForm(values);
   },
 })(KYCForm);
 

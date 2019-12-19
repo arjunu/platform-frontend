@@ -1,4 +1,5 @@
 import { FormikProps, withFormik } from "formik";
+import { defaultTo } from "lodash/fp";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
@@ -8,6 +9,7 @@ import {
   EKycRequestType,
   IKycBusinessData,
   IKycFileInfo,
+  IKycLegalRepresentative,
   KycBusinessDataSchema,
 } from "../../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../../modules/actions";
@@ -127,11 +129,13 @@ const KYCForm = injectIntlHelpers<FormikProps<IKycBusinessData> & IProps>(
   ),
 );
 
-const KYCEnhancedForm = withFormik<IProps, IKycBusinessData>({
+const defaultEmptyObject = defaultTo<IKycLegalRepresentative | {}>({});
+
+const KYCEnhancedForm = withFormik<IProps, IKycLegalRepresentative>({
   validationSchema: KycBusinessDataSchema,
-  mapPropsToValues: props => props.currentValues as IKycBusinessData,
   enableReinitialize: true,
-  isInitialValid: (props: any) => KycBusinessDataSchema.isValidSync(props.currentValues),
+  validateOnMount: true,
+  mapPropsToValues: props => defaultEmptyObject(props.currentValues),
   handleSubmit: (values, props) => props.props.submitForm(values),
 })(KYCForm);
 

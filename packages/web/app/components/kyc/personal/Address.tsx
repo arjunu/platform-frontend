@@ -1,4 +1,5 @@
 import { FormikProps, withFormik } from "formik";
+import { defaultTo } from "lodash/fp";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
@@ -24,7 +25,7 @@ import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { EButtonLayout, EButtonSize } from "../../shared/buttons/Button";
 import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
-import { boolify, FormDeprecated, FormField, unboolify } from "../../shared/forms";
+import { FormDeprecated, FormField } from "../../shared/forms";
 import { FormSelectCountryField } from "../../shared/forms/fields/FormSelectCountryField.unsafe";
 import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
@@ -148,6 +149,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
             layout={EButtonLayout.PRIMARY}
             size={EButtonSize.HUGE}
             className={styles.button}
+            isLoading={props.isSavingForm}
             disabled={shouldDisableSubmit}
             data-test-id="kyc-personal-address-submit-form"
           >
@@ -159,14 +161,15 @@ const KYCForm: React.FunctionComponent<TProps> = ({
   );
 };
 
+const defaultEmptyObject = defaultTo<IKycIndividualData | {}>({});
+
 const KYCEnhancedForm = withFormik<IStateProps & IDispatchProps, IKycIndividualData>({
   validationSchema: KycPersonalAddressSchemaRequired,
-  isInitialValid: (props: object) =>
-    KycPersonalAddressSchemaRequired.isValidSync((props as IStateProps).currentValues),
-  mapPropsToValues: props => unboolify(props.currentValues as IKycIndividualData),
+  validateOnMount: true,
   enableReinitialize: true,
+  mapPropsToValues: props => defaultEmptyObject(props.currentValues),
   handleSubmit: (values, { props }) => {
-    props.submitForm(boolify(values));
+    props.submitForm(values);
   },
 })(KYCForm);
 

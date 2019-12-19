@@ -1,4 +1,5 @@
 import { FormikProps, withFormik } from "formik";
+import { defaultTo } from "lodash/fp";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { Col, Row } from "reactstrap";
@@ -21,7 +22,6 @@ import { Button } from "../../shared/buttons";
 import {
   BOOL_FALSE_KEY,
   BOOL_TRUE_KEY,
-  boolify,
   FormDeprecated,
   FormField,
   FormFieldDate,
@@ -29,7 +29,6 @@ import {
   FormSelectField,
   FormSelectNationalityField,
   NONE_KEY,
-  unboolify,
 } from "../../shared/forms";
 import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
 import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
@@ -175,13 +174,14 @@ const KYCForm = injectIntlHelpers<FormikProps<IKycLegalRepresentative> & IProps>
   ),
 );
 
+const defaultEmptyObject = defaultTo<IKycIndividualData | {}>({});
+
 const KYCEnhancedForm = withFormik<IProps, IKycIndividualData>({
   validationSchema: KycLegalRepresentativeSchemaRequired,
-  mapPropsToValues: props => unboolify(props.legalRepresentative as IKycIndividualData),
-  isInitialValid: (props: any) =>
-    KycLegalRepresentativeSchemaRequired.isValidSync(props.legalRepresentative),
+  validateOnMount: true,
   enableReinitialize: true,
-  handleSubmit: (values, props) => props.props.submitForm(boolify(values)),
+  mapPropsToValues: props => defaultEmptyObject(props.legalRepresentative),
+  handleSubmit: (values, props) => props.props.submitForm(values),
 })(KYCForm);
 
 const FileUploadList: React.FunctionComponent<IProps & { lrDataValid: boolean }> = props => {
@@ -249,7 +249,7 @@ export const KycLegalRepresentative = compose<React.FunctionComponent>(
       onDropFile: (file: File) => dispatch(actions.kyc.kycUploadLegalRepresentativeDocument(file)),
       onContinue: () => dispatch(actions.kyc.kycSubmitBusinessRequest()),
       submitForm: (values: IKycIndividualData) =>
-        dispatch(actions.kyc.kycSubmitLegalRepresentative(boolify(values))),
+        dispatch(actions.kyc.kycSubmitLegalRepresentative(values)),
     }),
   }),
   onEnterAction({
