@@ -9,14 +9,7 @@ import {
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
 import { ArrayOfKeyValueFields } from "../../../../shared/forms/fields/FormCategoryDistribution";
-import { FormField } from "../../../../shared/forms/fields/FormField";
-import { FormFieldDate } from "../../../../shared/forms/fields/FormFieldDate";
-import { FormFieldError } from "../../../../shared/forms/fields/FormFieldError";
-import { FormFieldLabel } from "../../../../shared/forms/fields/FormFieldLabel";
-import { FormMaskedNumberInput } from "../../../../shared/forms/fields/FormMaskedNumberInput";
-import { FormSelectField } from "../../../../shared/forms/fields/FormSelectField";
-import { FormTextArea } from "../../../../shared/forms/fields/FormTextArea";
-import { FormHighlightGroup } from "../../../../shared/forms/FormHighlightGroup";
+import { FormField, FormFieldDate, FormFieldError, FormFieldLabel, FormHighlightGroup, FormMaskedNumberInput, FormSelectField, FormTextArea } from "../../../../shared/forms/index";
 import { FUNDING_ROUNDS } from "../../../constants";
 import { EtoFormBase } from "../../EtoFormBase";
 import { Section } from "../../Shared";

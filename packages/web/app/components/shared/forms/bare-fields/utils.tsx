@@ -3,7 +3,7 @@ import { FormGroup } from "reactstrap";
 
 import { TTranslatedString } from "../../../../types";
 import { FormError } from "../fields/FormFieldError";
-import { FormFieldLabel } from "../fields/FormFieldLabel";
+import { FormFieldLabelLayout } from "../fields/FormFieldLabel";
 import { withCountedCharacters } from "../fields/utils.unsafe";
 
 import * as styles from "../fields/FormStyles.module.scss";
@@ -20,11 +20,8 @@ type TInputComponentRequiredProps = {
   name: string;
   invalid: boolean;
   value: string | undefined | number;
-  // // tslint:disable-next-line:no-any-on-steroid
-  // [key: string]: any;
 };
 
-// tslint:disable-next-line:no-any-on-steroid
 export const withBareFormField = <T extends TInputComponentRequiredProps>(
   InputComponent: React.ComponentType<T>,
 ): React.FunctionComponent<TBareFormFieldExternalProps & T> => ({
@@ -36,7 +33,7 @@ export const withBareFormField = <T extends TInputComponentRequiredProps>(
   ...inputProps
 }) => (
   <FormGroup className={wrapperClassName}>
-    {label && <FormFieldLabel name={inputProps.name}>{label}</FormFieldLabel>}
+    {label && <FormFieldLabelLayout name={inputProps.name}>{label}</FormFieldLabelLayout>}
 
     <InputComponent {...inputProps as T} />
 

@@ -2,20 +2,20 @@ import { FormikContextType, FormikErrors, FormikTouched } from "formik";
 import { get } from "lodash";
 import * as React from "react";
 import { FormGroup, InputProps } from "reactstrap";
-import { createNumberMask } from "text-mask-addons/dist/textMaskAddons";
 import { Schema } from "yup";
 
-import { ArrayWithAtLeastOneMember, Dictionary, TTranslatedString } from "../../../../types";
+import { ArrayWithAtLeastOneMember, TTranslatedString } from "../../../../types";
 import {
   getSchemaField,
   getSchemaMeta,
   getValidationSchema,
   isRequired,
 } from "../../../../utils/yupUtils";
-import { ECurrency } from "../../formatters/utils";
-import { selectDecimalPlaces } from "../../Money.unsafe";
+import { FormFieldError } from "./FormFieldError";
 import { FormFieldLabel } from "./FormFieldLabel";
 import { IImageDimensions } from "./FormSingleFileUpload";
+
+import * as styles from "../fields/FormStyles.module.scss";
 
 export enum EMimeType {
   PDF = "application/pdf",
@@ -30,15 +30,57 @@ export type TAcceptedFileType = EMimeType & string;
 
 export interface IFormField {
   name: string;
-  label?: TTranslatedString;
 }
 
-export const withFormField = (
-  Component: React.ComponentType<any>,
-): React.FunctionComponent<Dictionary<any> & IFormField> => ({ label, name, ...inputProps }) => (
-  <FormGroup>
-    {label && <FormFieldLabel name={name}>{label}</FormFieldLabel>}
-    <Component name={name} {...inputProps} />
+type TBareFormFieldExternalProps = {
+  wrapperClassName?: string;
+  label?: TTranslatedString;
+  errorMsg?: TTranslatedString;
+  reverseMetaInfo?: boolean;
+  charactersLimit?: number;
+  ignoreTouched?: boolean;
+  invalid?: boolean;
+};
+
+export const withFormField = <T extends IFormField>(
+  InputComponent: React.ComponentType<T>,
+): React.FunctionComponent<TBareFormFieldExternalProps & T> => ({
+  label,
+  wrapperClassName,
+  reverseMetaInfo,
+  charactersLimit,
+  errorMsg,
+  ignoreTouched,
+  invalid,
+  ...inputProps
+}) => (
+  <FormGroup className={wrapperClassName}>
+    {label && <FormFieldLabel name={inputProps.name}>{label}</FormFieldLabel>}
+
+    <InputComponent {...inputProps as T} />
+
+    {reverseMetaInfo ? (
+      <div className={styles.inputMeta}>
+        {/*{charactersLimit && <div>{withCountedCharacters(value, charactersLimit)}</div>}*/}
+        <FormFieldError
+          name={inputProps.name}
+          invalid={invalid}
+          defaultMessage={errorMsg}
+          ignoreTouched={ignoreTouched}
+          alignLeft={true}
+        />
+      </div>
+    ) : (
+      <>
+        <FormFieldError
+          name={inputProps.name}
+          invalid={invalid}
+          defaultMessage={errorMsg}
+          ignoreTouched={ignoreTouched}
+        />
+        {/*{charactersLimit && <div>{withCountedCharacters(value, charactersLimit)}</div>}*/}
+      </>
+    )}
   </FormGroup>
 );
 
@@ -60,6 +102,7 @@ export const isValid = (
   return undefined;
 };
 
+// TODO: Update to pass `invalid` value from formik `meta`
 export const isNonValid = (
   touched: FormikTouched<any>,
   errors: FormikErrors<any>,
@@ -113,18 +156,6 @@ export const isWysiwyg = <T extends any>(validationSchema: Schema<T>, name: stri
   } else {
     return false;
   }
-};
-
-export const generateMaskFromCurrency = (currency: ECurrency, isPrice?: boolean) => {
-  const decimalLimit = selectDecimalPlaces(currency, isPrice);
-  const integerLimit = 15 - decimalLimit; // when over 16 digits Formik starts to throw errors
-  return createNumberMask({
-    prefix: "",
-    thousandsSeparatorSymbol: " ",
-    allowDecimal: true,
-    decimalLimit,
-    integerLimit,
-  });
 };
 
 const mapMimeTypeToExtension = (mimeType: EMimeType): string => {

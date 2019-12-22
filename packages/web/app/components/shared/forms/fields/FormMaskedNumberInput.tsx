@@ -1,20 +1,19 @@
-import { FormikConsumer } from "formik";
+import { Field, FieldProps } from "formik";
 import * as React from "react";
-import { FormGroup } from "reactstrap";
 
-import { TTranslatedString, XOR } from "../../../../types";
+import { OmitKeys, XOR } from "../../../../types";
 import { ENumberInputFormat, ENumberOutputFormat, TValueFormat } from "../../formatters/utils";
 import { MaskedNumberInputLayout } from "../layouts/MaskedNumberInputLayout";
-import { FormFieldLabel } from "./FormFieldLabel";
+import { isNonValid } from "./utils.unsafe";
 
 interface ICommonProps {
-  name: string;
-  label?: TTranslatedString;
-  placeholder?: string;
-  disabled?: boolean;
-  prefix?: TTranslatedString;
-  suffix?: TTranslatedString;
+  ignoreTouched?: boolean;
 }
+
+type TLayoutProps = OmitKeys<
+  React.ComponentProps<typeof MaskedNumberInputLayout>,
+  "onChangeFn" | "value" | "invalid"
+>;
 
 interface IFormMaskedNumberProps {
   storageFormat: ENumberInputFormat;
@@ -30,40 +29,27 @@ interface IFormMaskedNumberMoneyProps {
 
 type TExternalProps = XOR<IFormMaskedNumberProps, IFormMaskedNumberMoneyProps>;
 
-export const FormMaskedNumberInput: React.FunctionComponent<ICommonProps & TExternalProps> = ({
-  label,
-  name,
-  disabled,
-  placeholder,
-  storageFormat,
-  outputFormat,
-  valueType,
-  showUnits,
-  prefix,
-  suffix,
-}) => (
-  <FormGroup>
-    {label && <FormFieldLabel name={name}>{label}</FormFieldLabel>}
-    <FormikConsumer>
-      {({ values, setFieldValue, setFieldTouched }) => (
+const FormMaskedNumberInput: React.FunctionComponent<
+  ICommonProps & TExternalProps & TLayoutProps
+> = ({ name, ignoreTouched, ...layoutProps }) => (
+  <Field name={name}>
+    {({ field, form }: FieldProps) => {
+      const invalid = isNonValid(form.touched, form.errors, name, form.submitCount, ignoreTouched);
+
+      return (
         <MaskedNumberInputLayout
-          outputFormat={outputFormat}
-          storageFormat={storageFormat}
           name={name}
-          value={values[name]}
+          value={field.value}
           onChangeFn={value => {
-            setFieldValue(name, value);
-            setFieldTouched(name, true);
+            form.setFieldValue(name, value);
+            form.setFieldTouched(name, true);
           }}
-          returnInvalidValues={true}
-          valueType={valueType}
-          showUnits={showUnits}
-          disabled={disabled}
-          placeholder={placeholder}
-          prefix={prefix}
-          suffix={suffix}
+          invalid={invalid}
+          {...layoutProps}
         />
-      )}
-    </FormikConsumer>
-  </FormGroup>
+      );
+    }}
+  </Field>
 );
+
+export { FormMaskedNumberInput };

@@ -51,4 +51,4 @@ const FormFieldLabel = compose<
   ),
 )(FormFieldLabelLayout);
 
-export { FormFieldLabel };
+export { FormFieldLabel, FormFieldLabelLayout };

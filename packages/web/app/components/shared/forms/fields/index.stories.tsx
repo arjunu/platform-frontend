@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import * as React from "react";
 
 import { FormDeprecated } from "../FormDeprecated";
-import { FormField } from "./FormField";
+import { FormField } from "./index";
 
 storiesOf("forms/fields/Field", module)
   .add("default", () => (

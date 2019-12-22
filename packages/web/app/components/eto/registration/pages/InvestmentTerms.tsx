@@ -41,8 +41,7 @@ import {
   THumanReadableFormat,
   TValueFormat,
 } from "../../../shared/formatters/utils";
-import { FormFieldLayout, FormHighlightGroup, FormMaskedNumberInput } from "../../../shared/forms";
-import { FormField } from "../../../shared/forms/fields/FormField";
+import { FormFieldLayout, FormHighlightGroup, FormMaskedNumberInput, FormField } from "../../../shared/forms";
 import {
   convert,
   convertFractionToPercentage,

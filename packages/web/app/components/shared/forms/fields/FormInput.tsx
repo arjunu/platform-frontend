@@ -6,6 +6,8 @@ import { applyCharactersLimit, isNonValid } from "./utils.unsafe";
 
 type TExternalProps = {
   customValidation?: (value: string | undefined) => string | Function | Promise<void> | undefined;
+  charactersLimit?: number;
+  ignoreTouched?: boolean;
 };
 
 export type FormInputProps = React.ComponentProps<typeof InputLayout>;
@@ -33,16 +35,15 @@ export const FormInput: React.FunctionComponent<TExternalProps & FormInputProps>
   suffix,
   className,
   addonStyle,
-  charactersLimit,
-  errorMsg,
   size,
   disabled,
   customValidation,
   onBlur,
-  ignoreTouched,
   icon,
   theme,
   maxLength,
+  charactersLimit,
+  ignoreTouched,
   ...props
 }) => (
   <FormikConsumer>
@@ -64,14 +65,11 @@ export const FormInput: React.FunctionComponent<TExternalProps & FormInputProps>
                 addonStyle={addonStyle}
                 prefix={prefix}
                 suffix={suffix}
-                errorMsg={errorMsg}
                 size={size}
                 value={val}
                 disabled={disabled}
                 maxLength={maxLength}
-                charactersLimit={charactersLimit}
                 onBlur={onBlur}
-                ignoreTouched={ignoreTouched}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setFieldTouched(name);
                   setFieldValue(

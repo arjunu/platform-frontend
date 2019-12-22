@@ -15,8 +15,8 @@ import {
   CheckboxLayout,
   EInputSize,
   FormDeprecated,
-  MaskedNumberInputLayout,
-} from "../../../../shared/forms";
+  FormMaskedNumberInput,
+} from "../../../../shared/forms/index";
 import { Tooltip } from "../../../../shared/tooltips";
 
 import * as styles from "../EtoOverviewStatus.module.scss";
@@ -42,7 +42,9 @@ interface IPledgeData {
   amount: string;
 }
 
-const CampaigningActivatedInvestorApprovedWidgetLayout: React.FunctionComponent<ICampaigningActivatedInvestorWidgetLayoutProps> = ({
+const CampaigningActivatedInvestorApprovedWidgetLayout: React.FunctionComponent<
+  ICampaigningActivatedInvestorWidgetLayoutProps
+> = ({
   pledgedAmount,
   consentToRevealEmail,
   backNow,
@@ -109,23 +111,19 @@ const CampaigningActivatedInvestorApprovedWidgetLayout: React.FunctionComponent<
         isInitialValid={!!pledgedAmount}
       >
         <FormikConsumer>
-          {({ values, setFieldValue, isValid, setFieldTouched }: FormikProps<IPledgeData>) => (
+          {({ isValid }: FormikProps<IPledgeData>) => (
             <FormDeprecated className={cn(styles.group, styles.groupNoPadding)}>
               <div className={cn(styles.label, styles.labelFull)}>
                 <FormattedMessage id="eto-overview.campaigning.indicate-commitment" />
               </div>
               <div className={cn(styles.label)}>
-                <MaskedNumberInputLayout
+                <FormMaskedNumberInput
+                  wrapperClassName="mb-0"
                   size={EInputSize.SMALL}
                   storageFormat={ENumberInputFormat.FLOAT}
                   valueType={ECurrency.EUR}
                   outputFormat={ENumberOutputFormat.INTEGER}
                   name="amount"
-                  value={values["amount"]}
-                  onChangeFn={value => {
-                    setFieldValue("amount", value);
-                    setFieldTouched("amount", true);
-                  }}
                   returnInvalidValues={true}
                   showUnits={true}
                 />

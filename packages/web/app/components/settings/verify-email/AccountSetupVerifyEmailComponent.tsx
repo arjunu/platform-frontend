@@ -6,8 +6,7 @@ import * as Yup from "yup";
 import { TDataTestId } from "../../../types";
 import { injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { Button, ButtonInline, EButtonLayout } from "../../shared/buttons";
-import { FormField } from "../../shared/forms/fields/FormField";
-import { FormDeprecated } from "../../shared/forms/FormDeprecated";
+import { FormField, FormDeprecated } from "../../shared/forms/index";
 import { connectVerifyEmailComponent } from "./ConnectVerifyEmail";
 
 import * as styles from "./AccountSetupVerifyEmailComponent.module.scss";
@@ -151,8 +150,9 @@ const UnverifiedEmail: React.FunctionComponent<IUnverifiedEmailWidgetProps & TDa
   </section>
 );
 
-const AccountSetupVerifyEmailWidgetLayout: React.FunctionComponent<IStateProps &
-  IDispatchProps> = ({
+const AccountSetupVerifyEmailWidgetLayout: React.FunctionComponent<
+  IStateProps & IDispatchProps
+> = ({
   resendEmail,
   unverifiedEmail,
   cancelEmail,

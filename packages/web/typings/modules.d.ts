@@ -20,7 +20,6 @@ declare module "react-sizes";
 declare module "react-id-swiper";
 declare module "react-id-swiper/lib/custom";
 declare module "react-blockies";
-declare module "react-to-print";
 
 declare module "qrcode";
 declare module "proper-url-join/lib";
