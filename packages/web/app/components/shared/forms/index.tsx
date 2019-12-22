@@ -17,6 +17,8 @@ export * from "./fields/FormToggle";
 export * from "./fields/NumberTransformingField";
 export * from "./fields/utils.unsafe";
 
+export * from "./bare-fields/index";
+
 export * from "./layouts/CheckboxLayout";
 export * from "./layouts/FormFieldLayout";
 export * from "./layouts/InputLayout";

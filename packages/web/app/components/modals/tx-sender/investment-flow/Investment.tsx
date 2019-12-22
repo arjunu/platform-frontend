@@ -66,7 +66,7 @@ import {
   formatThousands,
   selectDecimalPlaces,
 } from "../../../shared/formatters/utils";
-import { MaskedNumberInputLayout } from "../../../shared/forms";
+import { MaskedNumberInput } from "../../../shared/forms";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { InvestmentPriceInfo } from "./InvestmentPriceInfo";
 import { InvestmentTypeSelector, WalletSelectionData } from "./InvestmentTypeSelector";
@@ -230,7 +230,8 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
           <Row>
             <Col className="text-right">
               {investmentCurrency === EInvestmentCurrency.EUR_TOKEN && (
-                <MaskedNumberInputLayout
+                <MaskedNumberInput
+                  wrapperClassName="mb-0"
                   name="euroValue"
                   value={this.props.euroValue}
                   storageFormat={ENumberInputFormat.ULPS}
@@ -249,7 +250,8 @@ export class InvestmentSelectionComponent extends React.Component<IProps, IState
               )}
               {investmentCurrency === EInvestmentCurrency.ETH && (
                 <>
-                  <MaskedNumberInputLayout
+                  <MaskedNumberInput
+                    wrapperClassName="mb-0"
                     name="ethValue"
                     valueType={ECurrency.ETH}
                     storageFormat={ENumberInputFormat.ULPS}

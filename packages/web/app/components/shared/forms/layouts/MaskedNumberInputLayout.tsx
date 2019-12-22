@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { DEFAULT_DECIMAL_PLACES } from "../../../../config/constants";
-import { TTranslatedString } from "../../../../types";
+import { TDataTestId, TTranslatedString } from "../../../../types";
 import { FormInputError } from "../../../../utils/errors";
 import {
   ENumberInputFormat,
@@ -24,28 +24,26 @@ interface IProps {
   storageFormat: ENumberInputFormat; // how is this value stored in the app state (ULPS or FLOAT)
   outputFormat: ENumberOutputFormat; // how should this value be visualized
   valueType?: TValueFormat;
-  value?: string;
+  value: string;
   onChangeFn: (value: string) => void;
   returnInvalidValues?: boolean;
   setError?: (v: boolean) => void;
   placeholder?: string;
-  "data-test-id"?: string;
   showUnits?: boolean;
-  errorMsg?: TTranslatedString;
-  invalid?: boolean;
+  invalid: boolean;
   disabled?: boolean;
   className?: string;
   theme?: EInputTheme;
   icon?: string;
-  reverseMetaInfo?: boolean;
   prefix?: TTranslatedString;
   suffix?: TTranslatedString;
   size?: EInputSize;
   tokenDecimals?: number;
+  // TODO: Remove from props
   validateOnMount?: boolean; //this is a workaround to validate initial values on mount before we upgraded formik to 2.0. Please do not use it!
 }
 
-export class MaskedNumberInputLayout extends React.Component<IProps> {
+export class MaskedNumberInputLayout extends React.Component<IProps & TDataTestId> {
   private decimals: number;
 
   constructor(props: IProps) {
@@ -183,7 +181,6 @@ export class MaskedNumberInputLayout extends React.Component<IProps> {
         placeholder={this.props.placeholder}
         prefix={this.props.prefix}
         suffix={this.formatSuffix()}
-        errorMsg={this.props.errorMsg}
         invalid={this.props.invalid}
         onBlur={(e: React.FocusEvent<HTMLInputElement>) => this.onBlur(e.target.value)}
         onFocus={(e: React.FocusEvent<HTMLInputElement>) => this.onFocus(e.target.value)}
@@ -192,11 +189,8 @@ export class MaskedNumberInputLayout extends React.Component<IProps> {
         disabled={this.props.disabled}
         theme={this.props.theme}
         icon={this.props.icon}
-        reverseMetaInfo={this.props.reverseMetaInfo}
         size={this.props.size}
       />
     );
   }
 }
-
-//TODO add api calls error handling
