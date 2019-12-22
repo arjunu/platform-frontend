@@ -4,12 +4,11 @@ import * as React from "react";
 import { Input } from "reactstrap";
 import { branch, compose, renderComponent } from "recompose";
 
-import { CommonHtmlProps, TFormikConnect } from "../../../../types";
+import { CommonHtmlProps, TFormikConnect, THocOuterProps, THocProps } from "../../../../types";
 import { invariant } from "../../../../utils/invariant";
 import { FormFieldError, generateErrorId } from "./FormFieldError";
 import {
   applyCharactersLimit,
-  IFormField,
   isNonValid,
   isWysiwyg,
   withCountedCharacters,
@@ -119,10 +118,10 @@ const TextArea: React.FunctionComponent<TFieldGroupProps & TFormikConnect> = ({
 };
 
 export const FormTextArea = compose<
-  TFieldGroupProps & TFormikConnect,
-  TFieldGroupProps & IFormField
+  TFieldGroupProps & TFormikConnect & THocProps<typeof withFormField>,
+  TFieldGroupProps & THocOuterProps<typeof withFormField>
 >(
-  withFormField,
+  withFormField(),
   formikConnect,
   branch<IFieldGroup & TFormikConnect>(
     props => !!props.isWysiwyg || isWysiwyg(props.formik.validationSchema, props.name),

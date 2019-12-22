@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { FormikContext, FormikContextType } from "formik";
-import { CSSProperties, default as React, ReactElement } from "react";
+import { ComponentType as Component, CSSProperties, default as React, ReactElement } from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { ToastOptions } from "react-toastify";
 import { ComponentEnhancer } from "recompose";
@@ -164,9 +164,26 @@ export type ArrayWithAtLeastOneMember<T> = [T, ...T[]];
  * @example
  * import { compose } from "recompose";
  *
- * const withFoo = () => compose<{ foo: string }, {}>(...);
+ * const withFoo = () => compose<{ foo: string }, { bar: boolean }>(...);
  * THocProps<typeof withFoo> // { foo: string }
  */
 export type THocProps<
-  H extends () => ComponentEnhancer<any, any>
-> = H extends () => ComponentEnhancer<infer R, any> ? R : never;
+  H extends () => (component: React.ComponentType<any>) => React.ComponentType<any>
+> = H extends () => (component: React.ComponentType<infer R>) => React.ComponentType<any>
+  ? R
+  : never;
+
+/**
+ * Returns HOC outer props
+ * @note For consistency HOC\s should be always wrapped by function
+ * @example
+ * import { compose } from "recompose";
+ *
+ * const withFoo = () => compose<{ foo: string }, { bar: boolean }>(...);
+ * THocOuterProps<typeof withFoo> // { bar: boolean }
+ */
+export type THocOuterProps<
+  H extends () => (component: React.ComponentType<any>) => React.ComponentType<any>
+> = H extends () => (component: React.ComponentType<any>) => React.ComponentType<infer R>
+  ? R
+  : never;

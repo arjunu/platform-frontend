@@ -123,7 +123,6 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
         isValid,
         isValidating,
         setFieldValue,
-        setFieldTouched,
         values,
         errors,
         touched,
@@ -143,12 +142,7 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
             decimals={tokenDecimals}
           />
           <TokenValueFormRow
-            onClick={amount => {
-              setFieldValue("value", amount);
-              setFieldTouched("value", true);
-            }}
             valueEuro={userFlowDetails.inputValueEuro}
-            values={values}
             notifications={notifications}
             errors={errors}
             touched={touched}

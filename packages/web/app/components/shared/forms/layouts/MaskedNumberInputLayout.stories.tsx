@@ -13,6 +13,7 @@ const defaultProps = {
   placeholder: "money input placeholder",
   "data-test-id": "dataTestID",
   setError: action("error"),
+  invalid: false,
 };
 
 storiesOf("MaskedNumberInput", module)

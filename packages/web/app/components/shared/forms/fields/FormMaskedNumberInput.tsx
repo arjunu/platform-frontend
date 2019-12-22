@@ -29,9 +29,9 @@ interface IFormMaskedNumberMoneyProps {
 
 type TExternalProps = XOR<IFormMaskedNumberProps, IFormMaskedNumberMoneyProps>;
 
-const FormMaskedNumberInput: React.FunctionComponent<
-  ICommonProps & TExternalProps & TLayoutProps
-> = ({ name, ignoreTouched, ...layoutProps }) => (
+const FormMaskedNumberInput: React.FunctionComponent<ICommonProps &
+  TExternalProps &
+  TLayoutProps> = ({ name, ignoreTouched, ...layoutProps }) => (
   <Field name={name}>
     {({ field, form }: FieldProps) => {
       const invalid = isNonValid(form.touched, form.errors, name, form.submitCount, ignoreTouched);

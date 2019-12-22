@@ -52,13 +52,11 @@ const InputLayout: React.FunctionComponent<TProps> = ({
   icon,
   ...props
 }) => (
-  <InputGroup size={size}>
+  <InputGroup size={size} className={cn({ "is-invalid": invalid })}>
     {prefix && (
-      <div
-        className={cn(styles.addon, addonStyle, { "is-invalid": invalid }, "input-group-prepend")}
-      >
-        <span className="input-group-text">{prefix}</span>
-      </div>
+      <InputGroupAddon addonType="prepend" className={cn(styles.addon, { "is-invalid": invalid })}>
+        <InputGroupText>{prefix}</InputGroupText>
+      </InputGroupAddon>
     )}
     <Input
       aria-describedby={generateErrorId(name)}

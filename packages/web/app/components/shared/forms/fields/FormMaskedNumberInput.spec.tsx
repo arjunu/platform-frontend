@@ -19,7 +19,6 @@ describe("FormMaskedNumberInput", () => {
           outputFormat={ENumberOutputFormat.FULL}
           valueType={ECurrency.EUR}
           showUnits={true}
-          label="test_label"
         />
       </Formik>,
     );
@@ -46,7 +45,6 @@ describe("FormMaskedNumberInput", () => {
           outputFormat={ENumberOutputFormat.FULL}
           valueType={ECurrency.EUR}
           showUnits={true}
-          label="test_label"
         />
       </Formik>,
     );

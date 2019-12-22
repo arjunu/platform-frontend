@@ -34,11 +34,11 @@ import {
   FormFieldCheckbox,
   FormFieldCheckboxGroup,
   FormFieldLabel,
-  FormFieldLayout,
   FormHighlightGroup,
   FormLabel,
   FormRange,
   FormToggle,
+  Input,
   RadioButtonLayout,
 } from "../../../shared/forms/index";
 import { withDependencies } from "../../../shared/hocs/withDependencies";
@@ -343,7 +343,7 @@ const EtoRegistrationProductType: React.FunctionComponent<IProps> = ({
           </div>
 
           {values.product.maxInvestmentAmount === 0 ? (
-            <FormFieldLayout
+            <Input
               name="product.maxInvestmentAmount"
               disabled={true}
               label={<FormattedMessage id="eto.form.section.eto-terms.product.max-amount.label" />}

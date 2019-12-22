@@ -28,9 +28,7 @@ import {
   formatNumber,
   selectDecimalPlaces,
 } from "../../../shared/formatters/utils";
-import { MaskedNumberInputLayout } from "../../../shared/forms";
-import { FormDeprecated } from "../../../shared/forms/FormDeprecated";
-import { FormLabel } from "../../../shared/forms/layouts/FormLabel";
+import { FormDeprecated, FormLabel, FormMaskedNumberInput } from "../../../shared/forms/index";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { ETheme, MoneySuiteWidget } from "../../../shared/MoneySuiteWidget/MoneySuiteWidget";
 import { Tooltip } from "../../../shared/tooltips/Tooltip";
@@ -159,16 +157,11 @@ const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
           </section>
 
           <FormDeprecated>
-            <MaskedNumberInputLayout
+            <FormMaskedNumberInput
               storageFormat={ENumberInputFormat.FLOAT}
               valueType={ECurrency.EUR}
               outputFormat={ENumberOutputFormat.FULL}
               name="amount"
-              value={values["amount"]}
-              onChangeFn={value => {
-                setFieldValue("amount", value);
-                setFieldTouched("amount", true);
-              }}
               returnInvalidValues={true}
               showUnits={true}
               validateOnMount={true}

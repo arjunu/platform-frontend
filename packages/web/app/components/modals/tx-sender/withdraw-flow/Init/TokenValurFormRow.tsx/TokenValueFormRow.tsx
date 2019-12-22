@@ -1,5 +1,5 @@
 import * as cn from "classnames";
-import { FormikErrors, FormikTouched, FormikValues } from "formik";
+import { FormikErrors, FormikTouched } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
@@ -15,9 +15,8 @@ import {
 import {
   EInputTheme,
   FormFieldBoolean,
-  FormLabel,
-  MaskedNumberInputLayout,
-} from "../../../../../shared/forms";
+  FormMaskedNumberInput,
+} from "../../../../../shared/forms/index";
 import { hasNotification } from "../utils";
 
 import * as styles from "../../Transfer.module.scss";
@@ -25,8 +24,6 @@ import * as styles from "../../Transfer.module.scss";
 const TokenValueFormRow: React.FunctionComponent<{
   disabled?: boolean;
   valueEuro: string;
-  onClick: (amount: string) => void;
-  values: FormikValues;
   notifications: ReadonlyArray<EAdditionalValidationDataNotifications>;
   errors: FormikErrors<{ value: string }>;
   touched: FormikTouched<{ value: boolean }>;
@@ -34,8 +31,6 @@ const TokenValueFormRow: React.FunctionComponent<{
   tokenSymbol: EquityToken;
   decimals: number;
 }> = ({
-  onClick,
-  values,
   notifications,
   valueEuro,
   errors,
@@ -46,28 +41,24 @@ const TokenValueFormRow: React.FunctionComponent<{
   decimals,
 }) => (
   <>
-    <section>
-      <FormLabel for="value" className={styles.label}>
-        <FormattedMessage id="modal.transfer.sent.amount" />
-      </FormLabel>
-      <MaskedNumberInputLayout
-        className="text-right"
-        storageFormat={ENumberInputFormat.FLOAT}
-        valueType={tokenSymbol}
-        outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
-        data-test-id="modals.tx-sender.withdraw-flow.withdraw-component.value"
-        name="value"
-        reverseMetaInfo={true}
-        value={values.value}
-        onChangeFn={onClick}
-        returnInvalidValues={true}
-        disabled={disabled}
-        showUnits={true}
-        theme={EInputTheme.BOX}
-        icon={tokenImage}
-        tokenDecimals={decimals}
-      />
-    </section>
+    <FormMaskedNumberInput
+      label={<FormattedMessage id="modal.transfer.sent.amount" />}
+      labelClassName={styles.label}
+      className="text-right"
+      storageFormat={ENumberInputFormat.FLOAT}
+      valueType={tokenSymbol}
+      outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
+      data-test-id="modals.tx-sender.withdraw-flow.withdraw-component.value"
+      name="value"
+      reverseMetaInfo={true}
+      returnInvalidValues={true}
+      disabled={disabled}
+      showUnits={true}
+      theme={EInputTheme.BOX}
+      icon={tokenImage}
+      tokenDecimals={decimals}
+    />
+    {/* TODO: Replace error.values and touched.values by `useIsFieldInvalid` hook */}
     <section
       className={cn(styles.withSpacing, "text-right", {
         [styles.compensateSpacing]: errors.value && touched.value,

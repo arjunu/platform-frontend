@@ -3,6 +3,6 @@ import { FormInput } from "./FormInput";
 import { FormMaskedNumberInput as FormMaskedNumberInputInternal } from "./FormMaskedNumberInput";
 import { withFormField } from "./utils.unsafe";
 
-export const FormMaskedNumberInput = withFormField(FormMaskedNumberInputInternal);
+export const FormMaskedNumberInput = withFormField()(FormMaskedNumberInputInternal);
 
-export const FormField = withFormField(FormInput);
+export const FormField = withFormField()(FormInput);

@@ -3,13 +3,14 @@ import { FormGroup } from "reactstrap";
 
 import { TTranslatedString } from "../../../../types";
 import { FormError } from "../fields/FormFieldError";
-import { FormFieldLabelLayout } from "../fields/FormFieldLabel";
-import { withCountedCharacters } from "../fields/utils.unsafe";
+import { applyCharactersLimit, withCountedCharacters } from "../fields/utils.unsafe";
+import { FormLabel } from "../layouts/FormLabel";
 
 import * as styles from "../fields/FormStyles.module.scss";
 
 type TBareFormFieldExternalProps = {
   wrapperClassName?: string;
+  labelClassName?: string;
   label?: TTranslatedString;
   reverseMetaInfo?: boolean;
   charactersLimit?: number;
@@ -18,37 +19,48 @@ type TBareFormFieldExternalProps = {
 
 type TInputComponentRequiredProps = {
   name: string;
-  invalid: boolean;
-  value: string | undefined | number;
+  invalid?: boolean;
+  value?: string | string[] | number;
 };
 
 export const withBareFormField = <T extends TInputComponentRequiredProps>(
   InputComponent: React.ComponentType<T>,
 ): React.FunctionComponent<TBareFormFieldExternalProps & T> => ({
   wrapperClassName,
+  labelClassName,
   label,
   reverseMetaInfo,
   charactersLimit,
   errorMsg,
   ...inputProps
-}) => (
-  <FormGroup className={wrapperClassName}>
-    {label && <FormFieldLabelLayout name={inputProps.name}>{label}</FormFieldLabelLayout>}
+}) => {
+  const computedValue = applyCharactersLimit(inputProps.value, charactersLimit);
 
-    <InputComponent {...inputProps as T} />
+  return (
+    <FormGroup className={wrapperClassName}>
+      {label && (
+        <FormLabel for={inputProps.name} className={labelClassName}>
+          {label}
+        </FormLabel>
+      )}
 
-    {reverseMetaInfo ? (
-      <div className={styles.inputMeta}>
-        {charactersLimit && <div>{withCountedCharacters(inputProps.value, charactersLimit)}</div>}
-        {inputProps.invalid && errorMsg && (
-          <FormError name={inputProps.name} message={errorMsg} alignLeft={true} />
-        )}
-      </div>
-    ) : (
-      <>
-        {inputProps.invalid && errorMsg && <FormError name={inputProps.name} message={errorMsg} />}
-        {charactersLimit && <div>{withCountedCharacters(inputProps.value, charactersLimit)}</div>}
-      </>
-    )}
-  </FormGroup>
-);
+      <InputComponent value={computedValue} {...(inputProps as T)} />
+
+      {reverseMetaInfo ? (
+        <div className={styles.inputMeta}>
+          {charactersLimit && <div>{withCountedCharacters(computedValue, charactersLimit)}</div>}
+          {inputProps.invalid && errorMsg && (
+            <FormError name={inputProps.name} message={errorMsg} alignLeft={true} />
+          )}
+        </div>
+      ) : (
+        <>
+          {inputProps.invalid && errorMsg && (
+            <FormError name={inputProps.name} message={errorMsg} />
+          )}
+          {charactersLimit && <div>{withCountedCharacters(computedValue, charactersLimit)}</div>}
+        </>
+      )}
+    </FormGroup>
+  );
+};

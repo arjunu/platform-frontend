@@ -34,6 +34,7 @@ export interface IFormField {
 
 type TBareFormFieldExternalProps = {
   wrapperClassName?: string;
+  labelClassName?: string;
   label?: TTranslatedString;
   errorMsg?: TTranslatedString;
   reverseMetaInfo?: boolean;
@@ -42,7 +43,7 @@ type TBareFormFieldExternalProps = {
   invalid?: boolean;
 };
 
-export const withFormField = <T extends IFormField>(
+export const withFormField = () => <T extends IFormField>(
   InputComponent: React.ComponentType<T>,
 ): React.FunctionComponent<TBareFormFieldExternalProps & T> => ({
   label,
@@ -57,7 +58,7 @@ export const withFormField = <T extends IFormField>(
   <FormGroup className={wrapperClassName}>
     {label && <FormFieldLabel name={inputProps.name}>{label}</FormFieldLabel>}
 
-    <InputComponent {...inputProps as T} />
+    <InputComponent {...(inputProps as T)} />
 
     {reverseMetaInfo ? (
       <div className={styles.inputMeta}>

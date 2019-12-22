@@ -2,9 +2,9 @@ import { connect as formikConnect, Field, FieldProps, getIn } from "formik";
 import * as React from "react";
 import { compose } from "recompose";
 
-import { TFormikConnect } from "../../../../types";
+import { TFormikConnect, THocOuterProps, THocProps, TTranslatedString } from "../../../../types";
 import { CheckboxLayout } from "../layouts/CheckboxLayout";
-import { IFormField, withFormField } from "./utils.unsafe";
+import { withFormField } from "./utils.unsafe";
 
 interface IFormFieldCheckboxGroupProps {
   name: string;
@@ -12,7 +12,7 @@ interface IFormFieldCheckboxGroupProps {
 
 interface IFormFieldCheckboxProps {
   value: string;
-  label: string;
+  label: TTranslatedString;
   disabled?: boolean;
 }
 
@@ -62,8 +62,11 @@ const FormFieldCheckboxGroupLayout: React.FunctionComponent<IFormFieldCheckboxGr
 };
 
 // TODO: Fix accessibility
-const FormFieldCheckboxGroup = compose<IFormFieldCheckboxGroupProps & TFormikConnect, IFormField>(
-  withFormField,
+const FormFieldCheckboxGroup = compose<
+  IFormFieldCheckboxGroupProps & TFormikConnect & THocProps<typeof withFormField>,
+  IFormFieldCheckboxGroupProps & THocOuterProps<typeof withFormField>
+>(
+  withFormField(),
   formikConnect,
 )(FormFieldCheckboxGroupLayout);
 

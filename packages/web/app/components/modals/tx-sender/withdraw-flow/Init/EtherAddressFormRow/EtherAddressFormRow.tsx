@@ -6,8 +6,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import * as YupTS from "../../../../../../lib/yup-ts.unsafe";
 import { ETH_ADDRESS_SIZE } from "../../../../../../modules/tx/utils";
 import { isAddressValid } from "../../../../../../modules/web3/utils";
-import { FormLabel } from "../../../../../shared/forms";
-import { FormInput } from "../../../../../shared/forms/fields/FormInput";
+import { FormField, FormLabel } from "../../../../../shared/forms";
 import { EInputTheme } from "../../../../../shared/forms/layouts/InputLayout";
 import { EtherscanAddressLink } from "../../../../../shared/links/EtherscanLink";
 import { DataRow } from "../../../shared/DataRow";
@@ -53,7 +52,7 @@ const EtherAddressFormRow: React.FunctionComponent<{
         }
       />
 
-      <FormInput
+      <FormField
         name="to"
         reverseMetaInfo={true}
         data-test-id="modals.tx-sender.withdraw-flow.withdraw-component.to-address"

@@ -42,9 +42,7 @@ interface IPledgeData {
   amount: string;
 }
 
-const CampaigningActivatedInvestorApprovedWidgetLayout: React.FunctionComponent<
-  ICampaigningActivatedInvestorWidgetLayoutProps
-> = ({
+const CampaigningActivatedInvestorApprovedWidgetLayout: React.FunctionComponent<ICampaigningActivatedInvestorWidgetLayoutProps> = ({
   pledgedAmount,
   consentToRevealEmail,
   backNow,
