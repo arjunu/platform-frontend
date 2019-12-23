@@ -147,8 +147,11 @@ const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
                 data-test-id="bank-transfer.reedem-init.redeem-whole-balance"
                 className={styles.linkButton}
                 onClick={() => {
+                  // do not run validation twice here, just only when changing the value
+                  // also it's important to do touch field before changing the value
+                  // as otherwise validation gonna be called with previous value
+                  setFieldTouched("amount", true, false);
                   setFieldValue("amount", formatEuroValueToString(neuroAmount), true);
-                  setFieldTouched("amount", true, true);
                 }}
               >
                 <FormattedMessage id="bank-transfer.redeem.init.entire-wallet" />

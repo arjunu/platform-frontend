@@ -72,8 +72,11 @@ export const NumberTransformingField = ({
                     setFieldValue(name, convertToPrecision(2)(e.target.valueAsNumber));
                   }}
                   onChange={e => {
+                    // do not run validation twice here, just only when changing the value
+                    // also it's important to do touch field before changing the value
+                    // as otherwise validation gonna be called with previous value
+                    setFieldTouched(name, true, false);
                     setFieldValue(name, e.target.value === "" ? undefined : e.target.value);
-                    setFieldTouched(name, true);
                   }}
                   value={field.value !== undefined ? field.value : ""}
                   placeholder={placeholder}
