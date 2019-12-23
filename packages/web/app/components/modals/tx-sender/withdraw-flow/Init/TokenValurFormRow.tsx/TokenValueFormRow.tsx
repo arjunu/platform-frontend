@@ -58,6 +58,7 @@ const TokenValueFormRow: React.FunctionComponent<{
       icon={tokenImage}
       tokenDecimals={decimals}
     />
+
     {/* TODO: Replace error.values and touched.values by `useIsFieldInvalid` hook */}
     <section
       className={cn(styles.withSpacing, "text-right", {
@@ -80,6 +81,7 @@ const TokenValueFormRow: React.FunctionComponent<{
         </small>
       )}
     </section>
+
     {hasNotification(EAdditionalValidationDataNotifications.WILL_EMPTY_WALLET, notifications) && (
       <FormFieldBoolean
         className={styles.withSpacing}

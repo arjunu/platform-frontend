@@ -48,7 +48,7 @@ const TransferTokensInit = compose<TTransferLayoutProps, {}>(
     ITransferLayoutStateProps & ITransferLayoutDispatchProps,
     { onValidateHandler: ReturnType<typeof onTransferValidateHandler> }
   >({
-    onValidateHandler: onTransferValidateHandler,
+    onValidateHandler: ({ onValidate }) => onTransferValidateHandler(onValidate),
   }),
 )(TransferLayout);
 

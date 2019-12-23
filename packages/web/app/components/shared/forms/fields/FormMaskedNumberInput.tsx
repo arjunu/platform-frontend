@@ -41,8 +41,11 @@ const FormMaskedNumberInput: React.FunctionComponent<ICommonProps &
           name={name}
           value={field.value}
           onChangeFn={value => {
+            // do not run validation twice here, just only when changing the value
+            // also it's important to do touch field before changing the value
+            // as otherwise validation gonna be called with previous value
+            form.setFieldTouched(name, true, false);
             form.setFieldValue(name, value);
-            form.setFieldTouched(name, true);
           }}
           invalid={invalid}
           {...layoutProps}

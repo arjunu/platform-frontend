@@ -2,6 +2,7 @@ import * as cn from "classnames";
 import { Formik, FormikErrors, FormikProps } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
+import { defaultMemoize } from "reselect";
 
 import { TSelectUserFlowDetails } from "../../../../../../modules/tx/user-flow/transfer/selectors";
 import { TxUserFlowInputData } from "../../../../../../modules/tx/user-flow/transfer/types";
@@ -89,6 +90,17 @@ const AvailableTokenBalance: React.FunctionComponent<{
   />
 );
 
+const getInitialValues = (to: string, value: string) => ({
+  to: isAddressValid(to) ? to : "",
+  value: isValidFormNumber(value) ? value : "",
+  withdrawAll: false,
+  allowNewAddress: false,
+  allowSmartContract: false,
+});
+
+// without memoization `initialValues` will revalidate form on each render causing infinite loop
+const getInitialValuesMemoized = defaultMemoize(getInitialValues);
+
 const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
   notifications,
   onAccept,
@@ -104,19 +116,9 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
   <TransferHeader tokenSymbol={tokenSymbol} data-test-id="modals.shared.tx-transfer.modal">
     <Formik<ITransferData>
       validate={onValidateHandler}
-      enableReinitialize={false}
-      // Cannot enable now until we update formik to version 2
-      // @See https://github.com/jaredpalmer/formik/issues/1439
-      initialValues={{
-        to: (isAddressValid(txUserFlowInputData.to) && txUserFlowInputData.to) || "",
-        value: (isValidFormNumber(txUserFlowInputData.value) && txUserFlowInputData.value) || "",
-        withdrawAll: false,
-        allowNewAddress: false,
-        allowSmartContract: false,
-      }}
-      isInitialValid={
-        isAddressValid(txUserFlowInputData.to) && isValidFormNumber(txUserFlowInputData.value)
-      }
+      enableReinitialize={true}
+      validateOnMount={true}
+      initialValues={getInitialValuesMemoized(txUserFlowInputData.to, txUserFlowInputData.value)}
       onSubmit={onAccept}
     >
       {({

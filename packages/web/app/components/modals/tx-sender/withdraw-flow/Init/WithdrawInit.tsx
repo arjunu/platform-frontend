@@ -45,7 +45,7 @@ const WithdrawInit = compose<TTransferLayoutProps, {}>(
     }),
   }),
   withHandlers<ITransferLayoutStateProps & ITransferLayoutDispatchProps, {}>({
-    onValidateHandler: onTransferValidateHandler,
+    onValidateHandler: ({ onValidate }) => onTransferValidateHandler(onValidate),
   }),
 )(TransferLayout);
 
