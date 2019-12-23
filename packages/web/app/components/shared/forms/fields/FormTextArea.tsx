@@ -6,14 +6,8 @@ import { branch, compose, renderComponent } from "recompose";
 
 import { CommonHtmlProps, TFormikConnect, THocOuterProps, THocProps } from "../../../../types";
 import { invariant } from "../../../../utils/invariant";
-import { FormFieldError, generateErrorId } from "./FormFieldError";
-import {
-  applyCharactersLimit,
-  isNonValid,
-  isWysiwyg,
-  withCountedCharacters,
-  withFormField,
-} from "./utils.unsafe";
+import { generateErrorId } from "./FormFieldError";
+import { applyCharactersLimit, isNonValid, isWysiwyg, withFormField } from "./utils.unsafe";
 
 import * as styles from "./FormStyles.module.scss";
 
@@ -57,21 +51,18 @@ const RichTextArea: React.FunctionComponent<TFieldGroupProps & TFormikConnect> =
     <Field
       name={name}
       render={({ field }: FieldProps) => (
-        <>
-          <RichTextAreaLayout
-            invalid={invalid}
-            name={name}
-            placeholder={placeholder}
-            className={className}
-            disabled={disabled}
-            value={field.value}
-            onChange={value => {
-              setFieldTouched(name);
-              setFieldValue(name, value);
-            }}
-          />
-          <FormFieldError name={name} />
-        </>
+        <RichTextAreaLayout
+          invalid={invalid}
+          name={name}
+          placeholder={placeholder}
+          className={className}
+          disabled={disabled}
+          value={field.value}
+          onChange={value => {
+            setFieldTouched(name);
+            setFieldValue(name, value);
+          }}
+        />
       )}
     />
   );
@@ -93,25 +84,21 @@ const TextArea: React.FunctionComponent<TFieldGroupProps & TFormikConnect> = ({
     <Field
       name={name}
       render={({ field }: FieldProps) => (
-        <>
-          <Input
-            {...field}
-            type="textarea"
-            aria-describedby={generateErrorId(name)}
-            aria-invalid={invalid}
-            invalid={invalid}
-            disabled={disabled}
-            value={field.value === undefined ? "" : field.value}
-            placeholder={placeholder}
-            className={cn(className, styles.inputField)}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldTouched(name);
-              setFieldValue(name, applyCharactersLimit(e.target.value, charactersLimit));
-            }}
-          />
-          <FormFieldError name={name} />
-          {charactersLimit && withCountedCharacters(field.value, charactersLimit)}
-        </>
+        <Input
+          {...field}
+          type="textarea"
+          aria-describedby={generateErrorId(name)}
+          aria-invalid={invalid}
+          invalid={invalid}
+          disabled={disabled}
+          value={field.value === undefined ? "" : field.value}
+          placeholder={placeholder}
+          className={cn(className, styles.inputField)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setFieldTouched(name);
+            setFieldValue(name, applyCharactersLimit(e.target.value, charactersLimit));
+          }}
+        />
       )}
     />
   );
