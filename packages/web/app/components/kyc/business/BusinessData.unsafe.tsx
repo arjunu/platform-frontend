@@ -18,9 +18,13 @@ import { ECountries } from "../../../utils/enums/countriesEnum";
 import { IIntlProps, injectIntlHelpers } from "../../../utils/injectIntlHelpers.unsafe";
 import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
-import { FormDeprecated, FormField, FormSelectCountryField } from "../../shared/forms";
-import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
-import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
+import {
+  EMimeType,
+  FormDeprecated,
+  FormField,
+  FormSelectCountryField,
+  FormSelectStateField,
+} from "../../shared/forms";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
 import { KycPanel } from "../KycPanel";
 import { kycRoutes } from "../routes";

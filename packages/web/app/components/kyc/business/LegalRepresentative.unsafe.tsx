@@ -22,16 +22,16 @@ import { Button } from "../../shared/buttons";
 import {
   BOOL_FALSE_KEY,
   BOOL_TRUE_KEY,
+  EMimeType,
   FormDeprecated,
   FormField,
   FormFieldDate,
   FormSelectCountryField,
   FormSelectField,
   FormSelectNationalityField,
+  FormSelectStateField,
   NONE_KEY,
 } from "../../shared/forms";
-import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
-import { EMimeType } from "../../shared/forms/fields/utils.unsafe";
 import { MultiFileUpload } from "../../shared/MultiFileUpload";
 import { Tooltip } from "../../shared/tooltips";
 import { KycPanel } from "../KycPanel";

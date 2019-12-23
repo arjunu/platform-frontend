@@ -25,9 +25,12 @@ import { onEnterAction } from "../../../utils/OnEnterAction";
 import { Button } from "../../shared/buttons";
 import { EButtonLayout, EButtonSize } from "../../shared/buttons/Button";
 import { ButtonGroup } from "../../shared/buttons/ButtonGroup";
-import { FormDeprecated, FormField } from "../../shared/forms";
-import { FormSelectCountryField } from "../../shared/forms/fields/FormSelectCountryField.unsafe";
-import { FormSelectStateField } from "../../shared/forms/fields/FormSelectStateField.unsafe";
+import {
+  FormDeprecated,
+  FormField,
+  FormSelectCountryField,
+  FormSelectStateField,
+} from "../../shared/forms";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { EKycUploadType } from "../../shared/MultiFileUpload";
 import { KYCAddDocuments } from "../shared/AddDocuments";

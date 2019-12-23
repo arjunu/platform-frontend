@@ -17,7 +17,7 @@ import {
   ECurrency,
   ENumberInputFormat,
 } from "../../../shared/formatters/utils";
-import { VALUES } from "../../../shared/forms/fields/FormSelectCountryField.unsafe";
+import { VALUES } from "../../../shared/forms/fields/form-select-fields/FormSelectCountryField";
 import { EHeadingSize, Heading } from "../../../shared/Heading";
 import { FUNDING_ROUNDS } from "../../constants";
 import { ComingSoonEtoState, ETOInvestorState, SuccessEtoState } from "../../shared/ETOState";

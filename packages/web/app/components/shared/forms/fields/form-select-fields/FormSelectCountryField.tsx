@@ -1,19 +1,19 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { OmitKeys } from "../../../../types";
-import { NATIONALITIES } from "../../../../utils/enums/countriesEnum";
+import { Dictionary, OmitKeys, TTranslatedString } from "../../../../../types";
+import { COUNTRIES } from "../../../../../utils/enums/countriesEnum";
 import { FormSelectField, NONE_KEY } from "./FormSelectField";
 
-const VALUES = {
+const VALUES: Dictionary<TTranslatedString> = {
   [NONE_KEY]: <FormattedMessage id="form.select.please-select" />,
-  ...NATIONALITIES,
+  ...COUNTRIES,
 };
 
 type TExternalProps = OmitKeys<React.ComponentProps<typeof FormSelectField>, "values">;
 
-const FormSelectNationalityField: React.FunctionComponent<TExternalProps> = props => (
+const FormSelectCountryField: React.FunctionComponent<TExternalProps> = props => (
   <FormSelectField {...props} values={VALUES} />
 );
 
-export { FormSelectNationalityField };
+export { FormSelectCountryField, VALUES };

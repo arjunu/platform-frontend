@@ -4,13 +4,13 @@ import { map, mapValues } from "lodash";
 import * as React from "react";
 import { FormGroup, Input } from "reactstrap";
 
-import { Dictionary, TDataTestId, TTranslatedString } from "../../../../types";
-import { FormFieldError, generateErrorId } from "./FormFieldError";
-import { FormFieldLabel } from "./FormFieldLabel";
-import { isNonValid } from "./utils.unsafe";
+import { Dictionary, TDataTestId, TTranslatedString } from "../../../../../types";
+import { FormFieldError, generateErrorId } from "../FormFieldError";
+import { FormFieldLabel } from "../FormFieldLabel";
+import { isNonValid } from "../utils.unsafe";
 
+import * as sharedStyles from "../FormStyles.module.scss";
 import * as styles from "./FormSelectField.module.scss";
-import * as sharedStyles from "./FormStyles.module.scss";
 
 export const NONE_KEY = "";
 export const BOOL_TRUE_KEY = "true";

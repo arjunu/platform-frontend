@@ -1,8 +1,8 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { Dictionary, OmitKeys, TTranslatedString } from "../../../../types";
-import { US_STATES } from "../../../../utils/enums/usStatesEnum";
+import { Dictionary, OmitKeys, TTranslatedString } from "../../../../../types";
+import { US_STATES } from "../../../../../utils/enums/usStatesEnum";
 import { FormSelectField, NONE_KEY } from "./FormSelectField";
 
 const VALUES: Dictionary<TTranslatedString> = {
@@ -16,4 +16,4 @@ const FormSelectStateField: React.FunctionComponent<TExternalProps> = props => (
   <FormSelectField {...props} values={VALUES} />
 );
 
-export { FormSelectStateField, VALUES };
+export { FormSelectStateField };
