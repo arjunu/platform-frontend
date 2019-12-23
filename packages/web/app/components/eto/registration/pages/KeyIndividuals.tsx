@@ -198,9 +198,8 @@ class KeyIndividualsGroupLayout extends React.Component<IKeyIndividualsGroup & T
     const individuals = this.isEmpty() ? [] : values[name].members;
     return (
       <FormSection title={title}>
-        <FieldArray
-          name={`${name}.members`}
-          render={arrayHelpers => (
+        <FieldArray name={`${name}.members`}>
+          {arrayHelpers => (
             <>
               {individuals.map((member: IMemberData, index: number) => {
                 const canRemove = !(index === 0 && this.isRequired());
@@ -228,7 +227,7 @@ class KeyIndividualsGroupLayout extends React.Component<IKeyIndividualsGroup & T
               </Button>
             </>
           )}
-        />
+        </FieldArray>
       </FormSection>
     );
   }

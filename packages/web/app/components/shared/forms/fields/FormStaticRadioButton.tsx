@@ -11,6 +11,7 @@ type TMonoToggleProps = {
   value: string;
 };
 
+// TODO: move to layout
 /* this element is is for the EtoVotingRights form to represent a selection without the choice :)) */
 export const FormStaticRadioButton: React.FunctionComponent<TMonoToggleProps> = ({
   label,

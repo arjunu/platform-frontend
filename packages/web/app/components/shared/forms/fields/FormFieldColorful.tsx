@@ -23,6 +23,7 @@ interface IFieldGroup {
 // tslint:disable-next-line:no-any-on-steroid
 type FieldGroupProps = IFieldGroup & FieldAttributes<any> & CommonHtmlProps;
 
+// TODO: Wrap `withFormField`
 export class FormFieldColorful extends React.Component<FieldGroupProps> {
   render(): React.ReactNode {
     const { label, type, placeholder, name, className, showAvatar, ...props } = this.props;
@@ -32,9 +33,9 @@ export class FormFieldColorful extends React.Component<FieldGroupProps> {
         {({ touched, errors, submitCount }) => (
           <FormGroup>
             {label && <FormFieldLabel name={name}>{label}</FormFieldLabel>}
-            <Field
-              name={name}
-              render={({ field }: FieldProps) => {
+
+            <Field name={name}>
+              {({ field }: FieldProps) => {
                 const validClass = () => {
                   if (field.value) {
                     return errors[name] !== undefined ? "is-invalid" : "is-valid";
@@ -69,7 +70,7 @@ export class FormFieldColorful extends React.Component<FieldGroupProps> {
                   </>
                 );
               }}
-            />
+            </Field>
           </FormGroup>
         )}
       </FormikConsumer>

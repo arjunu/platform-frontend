@@ -94,12 +94,9 @@ const FormRangeBase: React.FunctionComponent<IProps & TFormikConnect> = ({
   const max = props.max !== undefined ? props.max : findMax(fieldSchema);
 
   return (
-    <Field
-      name={name}
-      render={({ field }: FieldProps) => (
-        <RangeComponent {...props} min={min} max={max} {...field} />
-      )}
-    />
+    <Field name={name}>
+      {({ field }: FieldProps) => <RangeComponent {...props} min={min} max={max} {...field} />}
+    </Field>
   );
 };
 

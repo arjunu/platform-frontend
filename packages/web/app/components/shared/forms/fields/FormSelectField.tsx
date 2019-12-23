@@ -94,13 +94,14 @@ export class FormSelectField extends React.Component<IFieldGroup & IOwnProps & T
         {({ touched, errors, setFieldValue, submitCount }) => {
           const invalid = isNonValid(touched, errors, name, submitCount);
 
+          // TODO: move label and error message to withFormField
           return (
             <FormGroup>
               {label && <FormFieldLabel name={name}>{label}</FormFieldLabel>}
               <div className={cn(styles.customSelect, { [styles.disabled]: disabled })}>
-                <Field
-                  name={name}
-                  render={({ field }: FieldProps) => (
+                {/* TODO: Check if we can pass type `select` and multiple prop here to reduce boilerplate */}
+                <Field name={name}>
+                  {({ field }: FieldProps) => (
                     <Input
                       {...field}
                       data-test-id={dataTestId}
@@ -121,7 +122,7 @@ export class FormSelectField extends React.Component<IFieldGroup & IOwnProps & T
                       {this.renderOptions()}
                     </Input>
                   )}
-                />
+                </Field>
               </div>
               <FormFieldError name={name} />
 

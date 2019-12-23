@@ -243,9 +243,8 @@ class SocialProfilesEditorLayout extends React.Component<IProps & TFormikConnect
           onClick={this.toggleProfileVisibility}
           selectedFields={selectedFields}
         />
-        <FieldArray
-          name={name}
-          render={_ =>
+        <FieldArray name={name}>
+          {_ =>
             selectedFields.map(
               (singleField: boolean, index: number) =>
                 singleField && (
@@ -257,7 +256,7 @@ class SocialProfilesEditorLayout extends React.Component<IProps & TFormikConnect
                 ),
             )
           }
-        />
+        </FieldArray>
       </section>
     );
   }

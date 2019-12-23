@@ -48,9 +48,8 @@ const RichTextArea: React.FunctionComponent<TFieldGroupProps & TFormikConnect> =
   const invalid = isNonValid(touched, errors, name, submitCount);
 
   return (
-    <Field
-      name={name}
-      render={({ field }: FieldProps) => (
+    <Field name={name}>
+      {({ field }: FieldProps) => (
         <RichTextAreaLayout
           invalid={invalid}
           name={name}
@@ -67,7 +66,7 @@ const RichTextArea: React.FunctionComponent<TFieldGroupProps & TFormikConnect> =
           }}
         />
       )}
-    />
+    </Field>
   );
 };
 
@@ -84,9 +83,8 @@ const TextArea: React.FunctionComponent<TFieldGroupProps & TFormikConnect> = ({
   const invalid = isNonValid(touched, errors, name, submitCount);
 
   return (
-    <Field
-      name={name}
-      render={({ field }: FieldProps) => (
+    <Field name={name}>
+      {({ field }: FieldProps) => (
         <Input
           {...field}
           type="textarea"
@@ -106,7 +104,7 @@ const TextArea: React.FunctionComponent<TFieldGroupProps & TFormikConnect> = ({
           }}
         />
       )}
-    />
+    </Field>
   );
 };
 

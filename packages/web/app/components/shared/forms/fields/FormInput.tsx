@@ -51,10 +51,8 @@ export const FormInput: React.FunctionComponent<TExternalProps & FormInputProps>
       const invalid = isNonValid(touched, errors, name, submitCount, ignoreTouched);
 
       return (
-        <Field
-          name={name}
-          validate={customValidation}
-          render={({ field }: FieldProps) => {
+        <Field name={name} validate={customValidation}>
+          {({ field }: FieldProps) => {
             const val = transform(field.value);
             return (
               <InputLayout
@@ -92,7 +90,7 @@ export const FormInput: React.FunctionComponent<TExternalProps & FormInputProps>
               />
             );
           }}
-        />
+        </Field>
       );
     }}
   </FormikConsumer>

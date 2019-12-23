@@ -1,7 +1,7 @@
-import { FieldAttributes } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { OmitKeys } from "../../../../types";
 import { NATIONALITIES } from "../../../../utils/enums/countriesEnum";
 import { FormSelectField, NONE_KEY } from "./FormSelectField";
 
@@ -10,14 +10,9 @@ const VALUES = {
   ...NATIONALITIES,
 };
 
-interface IFieldGroup {
-  label?: string;
-  "data-test-id"?: string;
-}
+type TExternalProps = OmitKeys<React.ComponentProps<typeof FormSelectField>, "values">;
 
-type FieldGroupProps = IFieldGroup & FieldAttributes<any>;
-
-const FormSelectNationalityField: React.FunctionComponent<FieldGroupProps> = props => (
+const FormSelectNationalityField: React.FunctionComponent<TExternalProps> = props => (
   <FormSelectField {...props} values={VALUES} />
 );
 

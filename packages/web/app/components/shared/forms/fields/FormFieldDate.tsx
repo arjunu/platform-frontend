@@ -70,9 +70,8 @@ class FormFieldDate extends React.Component<IProps & TDataTestId> {
                   {label}
                 </FormFieldLabel>
                 <div className={styles.inputsWrapper}>
-                  <Field
-                    name={name}
-                    render={({ field }: FieldProps) => (
+                  <Field name={name}>
+                    {({ field }: FieldProps) => (
                       <Input
                         {...field}
                         data-test-id="form-field-date-day"
@@ -94,11 +93,10 @@ class FormFieldDate extends React.Component<IProps & TDataTestId> {
                         maxLength={2}
                       />
                     )}
-                  />
+                  </Field>
                   {"/"}
-                  <Field
-                    name={this.props.name}
-                    render={({ field }: FieldProps) => (
+                  <Field name={this.props.name}>
+                    {({ field }: FieldProps) => (
                       <Input
                         {...field}
                         data-test-id="form-field-date-month"
@@ -122,11 +120,10 @@ class FormFieldDate extends React.Component<IProps & TDataTestId> {
                         innerRef={this.monthInput}
                       />
                     )}
-                  />
+                  </Field>
                   {"/"}
-                  <Field
-                    name={this.props.name}
-                    render={({ field }: FieldProps) => (
+                  <Field name={this.props.name}>
+                    {({ field }: FieldProps) => (
                       <Input
                         {...field}
                         data-test-id="form-field-date-year"
@@ -142,7 +139,7 @@ class FormFieldDate extends React.Component<IProps & TDataTestId> {
                         innerRef={this.yearInput}
                       />
                     )}
-                  />
+                  </Field>
                 </div>
               </div>
               <FormFieldError name={name} />

@@ -86,15 +86,15 @@ const TagsFormEditor: React.FunctionComponent<ICombinedProps & IInternalProps> =
   </div>
 );
 
+// TODO: Move to form/fields as a generic tag widget
 const EtoTagWidget: React.FunctionComponent<IProps & CommonHtmlProps> = props => (
   <FormikConsumer>
     {({ values, setFieldValue }) => {
       const selectedTags: string[] = values[props.name] || [];
 
       return (
-        <Field
-          name={props.name}
-          render={({ field }: FieldProps) => (
+        <Field name={props.name}>
+          {({ field }: FieldProps) => (
             <>
               <FormFieldLabel name={props.name}>
                 <FormattedMessage id="eto.form.company-information.company-categories" />
@@ -121,7 +121,7 @@ const EtoTagWidget: React.FunctionComponent<IProps & CommonHtmlProps> = props =>
               />
             </>
           )}
-        />
+        </Field>
       );
     }}
   </FormikConsumer>

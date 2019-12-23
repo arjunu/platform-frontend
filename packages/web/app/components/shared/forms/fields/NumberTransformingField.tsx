@@ -48,10 +48,8 @@ export const NumberTransformingField = ({
       return (
         <FormGroup>
           {label && <FormFieldLabel name={name}>{label}</FormFieldLabel>}
-          <FastField
-            name={name}
-            validate={customValidation}
-            render={({ field }: FieldProps) => (
+          <FastField name={name} validate={customValidation}>
+            {({ field }: FieldProps) => (
               <InputGroup>
                 {prefix && (
                   <InputGroupAddon addonType="prepend" className={cn(styles.addon, addonStyle)}>
@@ -91,7 +89,8 @@ export const NumberTransformingField = ({
                 )}
               </InputGroup>
             )}
-          />
+            />
+          </FastField>
           <FormFieldError name={name} />
         </FormGroup>
       );

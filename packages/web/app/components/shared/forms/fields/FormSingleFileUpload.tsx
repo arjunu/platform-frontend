@@ -146,9 +146,8 @@ export class FormSingleFileUploadComponent extends React.Component<
     const { label, name, acceptedFiles, className, style, disabled } = this.props;
 
     return (
-      <Field
-        name={name}
-        render={({ field }: FieldProps) => (
+      <Field name={name}>
+        {({ field }: FieldProps) => (
           <SingleFileUpload
             name={name}
             data-test-id={this.props["data-test-id"]}
@@ -171,11 +170,12 @@ export class FormSingleFileUploadComponent extends React.Component<
             }}
           />
         )}
-      />
+      </Field>
     );
   }
 }
 
+// TODO: Disconnect from the store
 export const FormSingleFileUpload = compose<
   IOwnProps & IDispatchProps & CommonHtmlProps & TFormikConnect,
   IOwnProps & CommonHtmlProps

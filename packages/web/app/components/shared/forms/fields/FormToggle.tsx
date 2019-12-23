@@ -87,9 +87,8 @@ class FormToggleLayout extends React.Component<IProps & TFormikConnect> {
     const { name, trueValue } = this.props;
 
     return (
-      <Field
-        name={name}
-        render={({ field }: FieldProps) => (
+      <Field name={name}>
+        {({ field }: FieldProps) => (
           <ToggleComponent
             {...this.props}
             {...field}
@@ -97,7 +96,7 @@ class FormToggleLayout extends React.Component<IProps & TFormikConnect> {
             onChange={this.onChange}
           />
         )}
-      />
+      </Field>
     );
   }
 }

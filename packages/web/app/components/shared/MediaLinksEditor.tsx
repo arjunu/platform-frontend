@@ -106,9 +106,8 @@ class MediaLinksEditorLayout extends React.Component<IProps & TFormikConnect> {
 
     const mediaLinks: object[] = values[name] || [blankField];
     return (
-      <FieldArray
-        name={name}
-        render={arrayHelpers => (
+      <FieldArray name={name}>
+        {arrayHelpers => (
           <div className={styles.fieldTable}>
             {mediaLinks
               .map((_: object, index: number) => {
@@ -135,7 +134,7 @@ class MediaLinksEditorLayout extends React.Component<IProps & TFormikConnect> {
               .reverse()}
           </div>
         )}
-      />
+      </FieldArray>
     );
   }
 }
