@@ -39,8 +39,6 @@ interface IProps {
   suffix?: TTranslatedString;
   size?: EInputSize;
   tokenDecimals?: number;
-  // TODO: Remove from props
-  validateOnMount?: boolean; //this is a workaround to validate initial values on mount before we upgraded formik to 2.0. Please do not use it!
 }
 
 export class MaskedNumberInputLayout extends React.Component<IProps & TDataTestId> {
@@ -139,12 +137,6 @@ export class MaskedNumberInputLayout extends React.Component<IProps & TDataTestI
   };
 
   hasFocus = (id: string) => !!document.activeElement && document.activeElement.id === id;
-
-  componentDidMount(): void {
-    if (this.props.validateOnMount) {
-      this.changeValue(this.props.value === undefined ? "" : this.props.value);
-    }
-  }
 
   componentDidUpdate(): void {
     if (!(this.props.value === undefined || typeof this.props.value === "string")) {

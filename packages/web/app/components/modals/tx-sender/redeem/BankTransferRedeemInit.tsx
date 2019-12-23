@@ -164,7 +164,6 @@ const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
               name="amount"
               returnInvalidValues={true}
               showUnits={true}
-              validateOnMount={true}
             />
 
             <section className={cn(styles.section, "mt-4")}>
@@ -262,12 +261,7 @@ const BankTransferRedeemInit = compose<TComponentProps, {}>(
       amount: props.initialAmount && formatEuroValueToString(props.initialAmount),
     }),
     validationSchema: (props: IStateProps) => getValidators(props.minAmount, props.neuroAmount),
-    isInitialValid: props =>
-      //casting is necessary because formik has incorrect typings for isInitialValid()
-      !!(props as IStateProps).initialAmount &&
-      new BigNumber((props as IStateProps).initialAmount!).lessThanOrEqualTo(
-        (props as IStateProps).neuroAmount,
-      ),
+    validateOnMount: true,
     handleSubmit: (values, { props }) => {
       props.confirm({ value: values.amount });
     },
