@@ -45,7 +45,7 @@ export const withBareFormField = <T extends TInputComponentRequiredProps>(
         </FormLabel>
       )}
 
-      <InputComponent value={computedValue} {...inputProps as T} />
+      <InputComponent value={computedValue} {...(inputProps as T)} />
 
       <div className={cn(styles.inputMeta, { [styles.inputMetaReverse]: reverseMetaInfo })}>
         {charactersLimit && <span>{withCountedCharacters(computedValue, charactersLimit)}</span>}

@@ -178,7 +178,8 @@ class KeyIndividualsGroupLayout extends React.Component<IKeyIndividualsGroup & T
     const { validationSchema } = formik;
 
     const fieldSchema = getSchemaField(name, getValidationSchema(validationSchema));
-    return isRequired(fieldSchema);
+
+    return fieldSchema ? isRequired(fieldSchema) : false;
   }
 
   componentDidMount(): void {

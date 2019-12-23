@@ -14,7 +14,7 @@ export const getSchemaField = <T>(
   name: string,
   schema: Schema<T> | undefined,
   context?: FormikContextType<any>,
-) => schema && reach(schema, name, context ? context.values : undefined);
+) => (schema ? reach(schema, name, context?.values) : undefined);
 
 export const isRequired = compose(includes("required"), getSchemaTests);
 
