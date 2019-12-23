@@ -9,7 +9,7 @@ import { TimeLeft } from "../../TimeLeft.unsafe";
 import { utcTime } from "../../utils";
 
 import "react-datetime/css/react-datetime.css";
-import * as iconCalendar from "../../../../assets/img/inline_icons/calendar.svg";
+import iconCalendar from "../../../../assets/img/inline_icons/calendar.svg";
 import * as styles from "./DatePickerLayout.module.scss";
 
 // We need to do this because of missing type for `renderInput`

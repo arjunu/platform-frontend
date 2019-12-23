@@ -8,7 +8,7 @@ import { Message } from "../../modals/message/Message";
 import { ButtonArrowRight, EButtonLayout } from "../../shared/buttons";
 import { VALUES } from "../../shared/forms/fields/form-select-fields/FormSelectCountryField";
 
-import * as cityIcon from "../../../assets/img/eto/city.png";
+import cityIcon from "../../../assets/img/eto/city.png";
 
 interface IExternalProps {
   closeModal: () => void;

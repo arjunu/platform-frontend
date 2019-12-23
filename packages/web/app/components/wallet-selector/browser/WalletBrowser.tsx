@@ -15,9 +15,9 @@ import { getMessageTranslation } from "../../translatedMessages/messages";
 import { TMessage } from "../../translatedMessages/utils";
 import { resetWalletOnEnter } from "../resetWallet";
 
-import * as check_metamask from "../../../assets/img/wallet_selector/check_metamask.svg";
-import * as enter_password from "../../../assets/img/wallet_selector/enter_password.svg";
-import * as reload from "../../../assets/img/wallet_selector/reload.svg";
+import check_metamask from "../../../assets/img/wallet_selector/check_metamask.svg";
+import enter_password from "../../../assets/img/wallet_selector/enter_password.svg";
+import reload from "../../../assets/img/wallet_selector/reload.svg";
 import * as styles from "./WalletBrowser.module.scss";
 
 interface IWalletBrowserProps {

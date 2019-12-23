@@ -6,6 +6,7 @@ import { BLOCK_MINING_TIME_DELAY } from "../../../config/constants";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { TPendingTxs } from "../../../lib/api/users/interfaces";
 import { OutOfGasError, RevertedTransactionError } from "../../../lib/web3/Web3Adapter";
+import { secondsToMs } from "../../../utils/DateUtils";
 import { neuCall } from "../../sagasUtils";
 import { TransactionCancelledError } from "./errors";
 import { EEventEmitterChannelEvents, TEventEmitterChannelEvents } from "./types";
@@ -59,7 +60,7 @@ export function* getTransactionOrThrow(
 
 /**
  * Watch for a given `txHash` and emit events to the `txChannel`
- * @note `watchForTx` won't cancel watching on her own.
+ * @note `watchForTx` won't cancel watching on it's own.
  *       It's a responsibility of the consumer to cancel the watcher (by canceling the saga)
  */
 export function* watchForTx(
@@ -67,6 +68,14 @@ export function* watchForTx(
   txHash: string,
   txChannel: Channel<TEventEmitterChannelEvents>,
 ): Generator<any, any, any> {
+  // Our local ethereum node is based on POA therefore we don't have
+  // a mining pool which makes tests flaky when there is not enough memory on CI
+  // Introducing an artificial delay here should make the pending modal stay a little bit longer
+  // so cypress can properly assert modal content
+  if (process.env.NF_CYPRESS_RUN === "1") {
+    yield delay(secondsToMs(3));
+  }
+
   let lastBlockId = -1;
   while (true) {
     try {

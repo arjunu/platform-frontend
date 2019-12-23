@@ -12,7 +12,7 @@ import { ButtonLink } from "../../../shared/buttons/ButtonLink";
 import { ETheme, Money } from "../../../shared/formatters/Money";
 import { ENumberInputFormat, ENumberOutputFormat } from "../../../shared/formatters/utils";
 
-import * as arrowRight from "../../../../assets/img/inline_icons/arrow_right.svg";
+import arrowRight from "../../../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./PayoutWidget.module.scss";
 
 type TIncomingPayoutAvailableProps = {

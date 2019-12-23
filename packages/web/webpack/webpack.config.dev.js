@@ -74,9 +74,10 @@ module.exports = merge.smart(configCommon, {
                 options: {
                   sourceMap: true,
                   importLoaders: 3,
-                  modules: true,
-                  localIdentName: "[name]__[local]___[hash:base64:5]",
-                  camelCase: "dashesOnly",
+                  modules: {
+                    localIdentName: "[name]__[local]___[hash:base64:5]",
+                  },
+                  localsConvention: "dashesOnly",
                 },
               },
               {

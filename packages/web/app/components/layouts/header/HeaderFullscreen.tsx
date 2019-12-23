@@ -4,7 +4,7 @@ import { CommonHtmlProps, TTranslatedString } from "../../../types";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons/Button";
 import { LogoUnauth } from "./Header";
 
-import * as close from "../../../assets/img/inline_icons/close.svg";
+import close from "../../../assets/img/inline_icons/close.svg";
 import * as styles from "./Header.module.scss";
 
 export type THeaderFullscreenProps = {

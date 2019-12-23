@@ -7,7 +7,7 @@ import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withMockedDate, withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { InvestmentSuccessComponent } from "./Success";
 
-import * as tokenIcon from "../../../../assets/img/token_icon.svg";
+import tokenIcon from "../../../../assets/img/token_icon.svg";
 
 const dummyNow = new Date("10/3/2019");
 const date = moment.utc(dummyNow).subtract(1, "day");

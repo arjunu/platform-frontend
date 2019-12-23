@@ -7,7 +7,7 @@ import { tid } from "../../../../../test/testUtils";
 import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { InvestmentTransactionDetails } from "./InvestmentTransactionDetails";
 
-import * as tokenIcon from "../../../../assets/img/token_icon.svg";
+import tokenIcon from "../../../../assets/img/token_icon.svg";
 
 describe("InvestmentTransactionDetails", () => {
   const additionalData = {

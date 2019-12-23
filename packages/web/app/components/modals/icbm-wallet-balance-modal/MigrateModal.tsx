@@ -14,7 +14,7 @@ import { ExternalLink } from "../../shared/links";
 import { InfoList } from "../tx-sender/shared/InfoList";
 import { InfoRow } from "../tx-sender/shared/InfoRow";
 
-import * as iconMyEtherWallet from "../../../assets/img/myEtherWallet.svg";
+import iconMyEtherWallet from "../../../assets/img/myEtherWallet.svg";
 import * as styles from "./IcbmWalletBalanceModal.module.scss";
 
 interface IMigrationModal {

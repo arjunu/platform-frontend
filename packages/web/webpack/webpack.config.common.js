@@ -1,7 +1,6 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const WorkboxPlugin = require("workbox-webpack-plugin");
 
 const paths = require("./paths");
 const loadAppEnv = require("./loadAppEnv");
@@ -28,12 +27,6 @@ module.exports = {
     }),
     // import only `en-gb` locale from moment (which is a default one)
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en-gb/),
-    new WorkboxPlugin.GenerateSW({
-      swDest: "sw.js",
-      clientsClaim: true,
-      skipWaiting: true,
-      importWorkboxFrom: "local",
-    }),
   ],
   module: {
     rules: [

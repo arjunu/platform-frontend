@@ -11,7 +11,7 @@ import {
 } from "../eto/overview/EtoOverviewStatus/InvestmentWidget/InvestmentStatusWidget";
 import { Button, EButtonLayout, EButtonSize, EIconPosition } from "../shared/buttons";
 
-import * as arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
+import arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
 
 type TExternalProps = {
   state: EETOStateOnChain;

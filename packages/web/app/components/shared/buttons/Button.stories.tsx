@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { Button, EButtonLayout, EButtonSize, EButtonWidth, EIconPosition } from "./Button";
 
-import * as icon from "../../../assets/img/inline_icons/download.svg";
+import icon from "../../../assets/img/inline_icons/download.svg";
 
 type TGenerateStoryProps = {
   layout: EButtonLayout;

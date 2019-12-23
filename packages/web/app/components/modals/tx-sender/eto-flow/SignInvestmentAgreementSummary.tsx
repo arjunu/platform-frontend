@@ -7,7 +7,7 @@ import { appConnect } from "../../../../store";
 import { Button, EButtonLayout } from "../../../shared/buttons";
 import { ResponsiveImage } from "../../../shared/ResponsiveImage";
 
-import * as signGraphic from "../../../../assets/img/sign-agreement.svg";
+import signGraphic from "../../../../assets/img/sign-agreement.svg";
 import * as styles from "./SignInvestmentAgreementSummary.module.scss";
 
 interface IDispatchProps {

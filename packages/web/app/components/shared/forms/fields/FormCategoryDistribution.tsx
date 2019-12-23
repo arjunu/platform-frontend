@@ -9,8 +9,8 @@ import { EButtonLayout } from "../../buttons/Button";
 import { FormInput } from "./FormInput";
 import { NumberTransformingField } from "./NumberTransformingField";
 
-import * as closeIcon from "../../../../assets/img/inline_icons/round_close.svg";
-import * as plusIcon from "../../../../assets/img/inline_icons/round_plus.svg";
+import closeIcon from "../../../../assets/img/inline_icons/round_close.svg";
+import plusIcon from "../../../../assets/img/inline_icons/round_plus.svg";
 import * as styles from "./FormCategoryDistribution.module.scss";
 
 interface IProps {

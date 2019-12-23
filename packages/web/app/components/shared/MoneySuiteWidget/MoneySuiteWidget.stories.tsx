@@ -11,8 +11,8 @@ import {
   StaticMoneyWidget,
 } from "./MoneySuiteWidget";
 
-import * as ethIcon from "../../../assets/img/eth_icon.svg";
-import * as neuIcon from "../../../assets/img/neu_icon.svg";
+import ethIcon from "../../../assets/img/eth_icon.svg";
+import neuIcon from "../../../assets/img/neu_icon.svg";
 
 storiesOf("Core|Molecules/MoneySuiteWidget", module)
   .add("with icon", () => (

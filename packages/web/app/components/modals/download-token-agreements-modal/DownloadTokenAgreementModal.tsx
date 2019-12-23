@@ -28,7 +28,7 @@ import { Modal } from "../Modal";
 import { InfoList } from "../tx-sender/shared/InfoList";
 import { InfoRow } from "../tx-sender/shared/InfoRow";
 
-import * as iconDownload from "../../../assets/img/inline_icons/download.svg";
+import iconDownload from "../../../assets/img/inline_icons/download.svg";
 import * as styles from "./DownloadTokenAgreementModal.module.scss";
 
 interface IStateProps {

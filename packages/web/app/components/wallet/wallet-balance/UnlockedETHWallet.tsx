@@ -9,7 +9,7 @@ import { AccountBalance } from "../../shared/AccountBalance";
 import { ECurrency } from "../../shared/formatters/utils";
 import { WalletBalanceContainer } from "./WalletBalance";
 
-import * as ethIcon from "../../../assets/img/eth_icon.svg";
+import ethIcon from "../../../assets/img/eth_icon.svg";
 import * as styles from "./WalletBalance.module.scss";
 
 interface IUnlockedETHWallet {

@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { DepositFunds } from "./DepositFunds";
 
-import * as icon from "../../../../assets/img/nEUR_icon.svg";
+import icon from "../../../../assets/img/nEUR_icon.svg";
 import * as styles from "./DepositEuroToken.module.scss";
 
 interface IProps {

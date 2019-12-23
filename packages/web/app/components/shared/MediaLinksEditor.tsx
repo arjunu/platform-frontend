@@ -8,8 +8,8 @@ import { Button } from "./buttons";
 import { EButtonLayout } from "./buttons/Button";
 import { FormField } from "./forms";
 
-import * as closeIcon from "../../assets/img/inline_icons/round_close.svg";
-import * as plusIcon from "../../assets/img/inline_icons/round_plus.svg";
+import closeIcon from "../../assets/img/inline_icons/round_close.svg";
+import plusIcon from "../../assets/img/inline_icons/round_plus.svg";
 import * as styles from "./MediaLinksEditor.module.scss";
 
 interface ISingleMediaLinkFieldInternalProps {

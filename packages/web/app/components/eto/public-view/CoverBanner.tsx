@@ -13,7 +13,7 @@ import { selectBaseUrl } from "../../../utils/locationUtils";
 import { Container, EColumnSpan } from "../../layouts/Container";
 import { ExternalLink } from "../../shared/links/ExternalLink";
 
-import * as infoIcon from "../../../assets/img/notifications/info.svg";
+import infoIcon from "../../../assets/img/notifications/info.svg";
 import * as styles from "./CoverBanner.module.scss";
 
 interface IExternalProps {

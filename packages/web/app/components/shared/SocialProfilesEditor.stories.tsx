@@ -4,16 +4,16 @@ import * as React from "react";
 import { formWrapper } from "./forms/fields/testingUtils.unsafe";
 import { SocialProfilesEditor } from "./SocialProfilesEditor";
 
-import * as githubIcon from "../../assets/img/inline_icons/social_github.svg";
-import * as googlePlusIcon from "../../assets/img/inline_icons/social_google_plus.svg";
-import * as instagramIcon from "../../assets/img/inline_icons/social_instagram.svg";
-import * as mediumIcon from "../../assets/img/inline_icons/social_medium.svg";
-import * as redditIcon from "../../assets/img/inline_icons/social_reddit.svg";
-import * as slackIcon from "../../assets/img/inline_icons/social_slack.svg";
-import * as telegramIcon from "../../assets/img/inline_icons/social_telegram.svg";
-import * as twitterIcon from "../../assets/img/inline_icons/social_twitter.svg";
-import * as xingIcon from "../../assets/img/inline_icons/social_xing.svg";
-import * as youtubeIcon from "../../assets/img/inline_icons/social_youtube.svg";
+import githubIcon from "../../assets/img/inline_icons/social_github.svg";
+import googlePlusIcon from "../../assets/img/inline_icons/social_google_plus.svg";
+import instagramIcon from "../../assets/img/inline_icons/social_instagram.svg";
+import mediumIcon from "../../assets/img/inline_icons/social_medium.svg";
+import redditIcon from "../../assets/img/inline_icons/social_reddit.svg";
+import slackIcon from "../../assets/img/inline_icons/social_slack.svg";
+import telegramIcon from "../../assets/img/inline_icons/social_telegram.svg";
+import twitterIcon from "../../assets/img/inline_icons/social_twitter.svg";
+import xingIcon from "../../assets/img/inline_icons/social_xing.svg";
+import youtubeIcon from "../../assets/img/inline_icons/social_youtube.svg";
 
 const socialProfiles = [
   {

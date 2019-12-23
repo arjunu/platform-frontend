@@ -4,7 +4,7 @@ import * as React from "react";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 import { EAccountSetupStepState, IStepComponentProps } from "./types";
 
-import * as checkMark from "../../../assets/img/inline_icons/icon_check.svg";
+import checkMark from "../../../assets/img/inline_icons/icon_check.svg";
 import * as styles from "../NomineeDashboard.module.scss";
 
 interface IStepTickerProps {

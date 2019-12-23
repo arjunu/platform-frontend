@@ -11,8 +11,8 @@ import { EColumnSpan } from "../../layouts/Container";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons";
 import { Panel } from "../../shared/Panel";
 
-import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
-import * as personImage from "../../../assets/img/person.png";
+import arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
+import personImage from "../../../assets/img/person.png";
 import * as styles from "./PersonalAccountDetails.module.scss";
 
 interface IStateProps {

@@ -8,7 +8,7 @@ import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons";
 import { Heading } from "../../shared/Heading";
 import { PrivateKeyDisplay } from "./PrivateKeyDisplay";
 
-import * as arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
+import arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
 import * as styles from "./BackupSeedDisplay.module.scss";
 
 interface IBackupSeedDisplayProps {

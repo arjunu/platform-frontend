@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { EHeadingSize, Heading } from "./Heading";
 
-import * as neuIcon from "../../assets/img/neu_icon.svg";
+import neuIcon from "../../assets/img/neu_icon.svg";
 
 storiesOf("Atoms/Heading", module)
   .add("layout: has decorator", () => <Heading level={3}>Lorem Ipsum</Heading>)

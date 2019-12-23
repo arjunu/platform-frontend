@@ -6,7 +6,7 @@ import { makeTid } from "../../../utils/tidUtils";
 import { InlineIcon } from "../icons";
 import { TooltipBase } from "./TooltipBase";
 
-import * as icon from "../../../assets/img/inline_icons/icon_questionmark.svg";
+import icon from "../../../assets/img/inline_icons/icon_questionmark.svg";
 import * as styles from "./Tooltip.module.scss";
 
 interface IProps {

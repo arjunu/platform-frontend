@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { VerificationMethod } from "./VerificationMethod";
 
-import * as onfido from "../../../assets/img/instant-id/onfido.svg";
+import onfido from "../../../assets/img/instant-id/onfido.svg";
 
 storiesOf("molecules|KYC/VerificationMethod", module)
   .add("default", () => (

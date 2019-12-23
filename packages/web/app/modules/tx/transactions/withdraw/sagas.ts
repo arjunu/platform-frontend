@@ -23,7 +23,7 @@ import { selectLiquidEtherBalance } from "./../../../wallet/selectors";
 import { TxUserFlowInputData, TxUserFlowTransferDetails } from "./../../user-flow/transfer/types";
 import { TWithdrawAdditionalData } from "./types";
 
-import * as ethImage from "../../../../assets/img/eth_icon.svg";
+import ethImage from "../../../../assets/img/eth_icon.svg";
 
 export interface IWithdrawTxGenerator {
   to: string;

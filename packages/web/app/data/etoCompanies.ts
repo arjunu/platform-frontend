@@ -1,9 +1,9 @@
 import { Q18 } from "../config/constants";
 
-import * as emfluxThumbnail from "../assets/img/eto_offers/investment_thumbnails_emflux_motors.jpg";
-import * as icbmThumbnail from "../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";
-import * as mySwooopThumbnail from "../assets/img/eto_offers/investment_thumbnails_my_swooop.jpg";
-import * as ngraveThumbnail from "../assets/img/eto_offers/investment_thumbnails_ngrave.jpg";
+import emfluxThumbnail from "../assets/img/eto_offers/investment_thumbnails_emflux_motors.jpg";
+import icbmThumbnail from "../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";
+import mySwooopThumbnail from "../assets/img/eto_offers/investment_thumbnails_my_swooop.jpg";
+import ngraveThumbnail from "../assets/img/eto_offers/investment_thumbnails_ngrave.jpg";
 
 export type TMockEto = {
   brandName: string;

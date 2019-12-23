@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { DropdownMenuEntry, EMenuEntryType, MenuEntry } from "./MenuEntry";
 
-import * as logoutIcon from "../../../assets/img/inline_icons/logout.svg";
+import logoutIcon from "../../../assets/img/inline_icons/logout.svg";
 
 storiesOf("Menu entries/Dropdown menu", module)
   .add("entry link", () => (

@@ -10,7 +10,7 @@ import { ExternalLink } from "../../shared/links/ExternalLink";
 import { Message } from "../message/Message";
 import { Modal } from "../Modal";
 
-import * as tosImg from "../../../assets/img/tos.jpg";
+import tosImg from "../../../assets/img/tos.jpg";
 import * as styles from "./AcceptTosModal.module.scss";
 
 interface IStateProps {

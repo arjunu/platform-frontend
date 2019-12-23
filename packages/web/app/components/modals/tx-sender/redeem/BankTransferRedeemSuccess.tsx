@@ -11,7 +11,7 @@ import { Message } from "../../message/Message";
 import { TxHashAndBlock } from "../shared/TxHashAndBlock";
 import { BankTransferRedeemDetails } from "./BankTransferRedeemDetails";
 
-import * as neurEurTransfer from "../../../../assets/img/bank-transfer/neur-eur.svg";
+import neurEurTransfer from "../../../../assets/img/bank-transfer/neur-eur.svg";
 import * as styles from "./BankTransferRedeemSuccess.module.scss";
 
 interface IExternalProps {
