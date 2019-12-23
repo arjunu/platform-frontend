@@ -1,6 +1,6 @@
 import * as cn from "classnames";
 import { Field, FieldProps, FormikConsumer } from "formik";
-import { map, mapValues } from "lodash";
+import { map } from "lodash";
 import * as React from "react";
 import { FormGroup, Input } from "reactstrap";
 
@@ -22,26 +22,6 @@ const boolifySingle = (value: string): boolean | string => {
   if (value === BOOL_FALSE_KEY) return false;
 
   return value;
-};
-
-export const boolify = <T extends {}>(values: T): T => {
-  if (!values) return values;
-
-  return mapValues(values, key => {
-    if (key === BOOL_TRUE_KEY) return true;
-    if (key === BOOL_FALSE_KEY) return false;
-    return key;
-  }) as T;
-};
-
-export const unboolify = <T extends {}>(values: T): T => {
-  if (!values) return values;
-
-  return mapValues(values, key => {
-    if (key === true) return BOOL_TRUE_KEY;
-    if (key === false) return BOOL_FALSE_KEY;
-    return key;
-  }) as T;
 };
 
 interface IOwnProps {
