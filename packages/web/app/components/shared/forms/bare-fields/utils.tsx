@@ -1,3 +1,4 @@
+import * as cn from "classnames";
 import * as React from "react";
 import { FormGroup } from "reactstrap";
 
@@ -44,23 +45,14 @@ export const withBareFormField = <T extends TInputComponentRequiredProps>(
         </FormLabel>
       )}
 
-      <InputComponent value={computedValue} {...(inputProps as T)} />
+      <InputComponent value={computedValue} {...inputProps as T} />
 
-      {reverseMetaInfo ? (
-        <div className={styles.inputMeta}>
-          {charactersLimit && <div>{withCountedCharacters(computedValue, charactersLimit)}</div>}
-          {inputProps.invalid && errorMsg && (
-            <FormError name={inputProps.name} message={errorMsg} alignLeft={true} />
-          )}
-        </div>
-      ) : (
-        <>
-          {inputProps.invalid && errorMsg && (
-            <FormError name={inputProps.name} message={errorMsg} />
-          )}
-          {charactersLimit && <div>{withCountedCharacters(computedValue, charactersLimit)}</div>}
-        </>
-      )}
+      <div className={cn(styles.inputMeta, { [styles.inputMetaReverse]: reverseMetaInfo })}>
+        {charactersLimit && <span>{withCountedCharacters(computedValue, charactersLimit)}</span>}
+        {inputProps.invalid && errorMsg && (
+          <FormError name={inputProps.name} message={errorMsg} alignLeft={reverseMetaInfo} />
+        )}
+      </div>
     </FormGroup>
   );
 };

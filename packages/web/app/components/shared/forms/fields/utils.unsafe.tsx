@@ -1,4 +1,5 @@
-import { FormikContextType, FormikErrors, FormikTouched } from "formik";
+import * as cn from "classnames";
+import { FormikContextType, FormikErrors, FormikTouched, useField } from "formik";
 import { get } from "lodash";
 import * as React from "react";
 import { FormGroup, InputProps } from "reactstrap";
@@ -54,36 +55,28 @@ export const withFormField = () => <T extends IFormField>(
   ignoreTouched,
   invalid,
   ...inputProps
-}) => (
-  <FormGroup className={wrapperClassName}>
-    {label && <FormFieldLabel name={inputProps.name}>{label}</FormFieldLabel>}
+}) => {
+  const [, meta] = useField(inputProps.name);
 
-    <InputComponent {...(inputProps as T)} />
+  return (
+    <FormGroup className={wrapperClassName}>
+      {label && <FormFieldLabel name={inputProps.name}>{label}</FormFieldLabel>}
 
-    {reverseMetaInfo ? (
-      <div className={styles.inputMeta}>
-        {/*{charactersLimit && <div>{withCountedCharacters(value, charactersLimit)}</div>}*/}
+      <InputComponent {...(inputProps as T)} />
+
+      <div className={cn(styles.inputMeta, { [styles.inputMetaReverse]: reverseMetaInfo })}>
+        {charactersLimit && <span>{withCountedCharacters(meta.value, charactersLimit)}</span>}
         <FormFieldError
           name={inputProps.name}
           invalid={invalid}
           defaultMessage={errorMsg}
           ignoreTouched={ignoreTouched}
-          alignLeft={true}
+          alignLeft={reverseMetaInfo}
         />
       </div>
-    ) : (
-      <>
-        <FormFieldError
-          name={inputProps.name}
-          invalid={invalid}
-          defaultMessage={errorMsg}
-          ignoreTouched={ignoreTouched}
-        />
-        {/*{charactersLimit && <div>{withCountedCharacters(value, charactersLimit)}</div>}*/}
-      </>
-    )}
-  </FormGroup>
-);
+    </FormGroup>
+  );
+};
 
 /* The function that encapsulates the logic of determining a value for Input field valid property. Note we have to
    return boolean | undefined value. Undefined should be returned when the field has not been touched by the user. */
