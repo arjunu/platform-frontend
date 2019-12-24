@@ -9,7 +9,7 @@ import { IUser, OOO_TRANSACTION_TYPE, TxPendingWithMetadata } from "../../lib/ap
 import { getVaultKey } from "../../modules/wallet-selector/light-wizard/utils";
 import { promisify } from "../../utils/PromiseUtils";
 import { toCamelCase } from "../../utils/transformObjectKeys";
-import { assertLanding } from "./assertions";
+import { assertIsUserVerifiedOnBlockchain, assertLanding } from "./assertions";
 import { getAgreementHash } from "./getAgreementHash";
 import { tid } from "./selectors";
 
@@ -17,8 +17,6 @@ const VAULT_API_ROOT = "/api/wallet";
 export const WALLET_STORAGE_KEY = "NF_WALLET_METADATA";
 export const JWT_KEY = "NF_JWT";
 export const NF_USER_KEY = "NF_USER";
-
-const NUMBER_OF_ATTEMPTS = 2;
 
 export const generateRandomEmailAddress = () =>
   `${Math.random()
@@ -28,22 +26,21 @@ export const generateRandomEmailAddress = () =>
 export const getJwtToken = () => JSON.parse(localStorage.getItem(JWT_KEY)!);
 export const getWalletMetaData = () => JSON.parse(localStorage.getItem(WALLET_STORAGE_KEY)!);
 
+type TCreateAndLoginParams = {
+  type: TUserType;
+  kyc?: "business" | "individual";
+  seed?: string;
+  hdPath?: string;
+  clearPendingTransactions?: boolean;
+  onlyLogin?: boolean;
+  signTosAgreement?: boolean;
+  permissions?: string[];
+};
+
 /*
  * Pre-login user for faster tests
  */
-export const createAndLoginNewUser = (
-  params: {
-    type: TUserType;
-    kyc?: "business" | "individual";
-    seed?: string;
-    hdPath?: string;
-    clearPendingTransactions?: boolean;
-    onlyLogin?: boolean;
-    signTosAgreement?: boolean;
-    permissions?: string[];
-  },
-  attempts: number = 0,
-) =>
+export const createAndLoginNewUser = (params: TCreateAndLoginParams) =>
   cy.clearLocalStorage().then(async ls => {
     cy.log("Logging in...");
 
@@ -95,19 +92,10 @@ export const createAndLoginNewUser = (
       await setCorrectAgreement(jwt);
     }
 
-    cy.wait(3000);
-
-    const userData = await getUserData(jwt);
-    const kycStatus = await getKycStatus(jwt);
-    cy.log(userData.verified_email as string);
-    cy.log(`KYC status ${kycStatus}`);
-    if ((params.kyc && kycStatus !== "accepted") || !userData.verified_email) {
-      if (attempts > NUMBER_OF_ATTEMPTS) {
-        throw new Error("Cannot create user something wrong happened in the backend");
-      }
-      cy.log("User was not created correctly repeating");
-      cy.wait(1000);
-      createAndLoginNewUser(params, attempts + 1);
+    if (params.kyc) {
+      // wait for kyc to be properly set as verified on blockchain
+      // otherwise UI is not deterministically stable
+      assertIsUserVerifiedOnBlockchain(address);
     }
 
     // TODO: find why we need to `cy.wrap` as normal `return { address }` is not working
