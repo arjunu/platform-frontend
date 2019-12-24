@@ -223,7 +223,6 @@ describe("Eto Investor View", () => {
     it.skip("coming soon state should have token terms", () => {
       loginFixtureAccount("ISSUER_PREVIEW", {
         signTosAgreement: true,
-        kyc: "business",
       }).then(() => {
         goToEtoPreview();
 

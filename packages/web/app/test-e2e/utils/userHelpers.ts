@@ -26,13 +26,18 @@ export const generateRandomEmailAddress = () =>
 export const getJwtToken = () => JSON.parse(localStorage.getItem(JWT_KEY)!);
 export const getWalletMetaData = () => JSON.parse(localStorage.getItem(WALLET_STORAGE_KEY)!);
 
+type TKycType = "business" | "individual";
+
 type TCreateAndLoginParams = {
   type: TUserType;
-  kyc?: "business" | "individual";
+  kyc?: TKycType;
   seed?: string;
   hdPath?: string;
   clearPendingTransactions?: boolean;
-  onlyLogin?: boolean;
+  /**
+   * In case it's a fixture account you can skip creating new user
+   */
+  skipCreatingNewUser?: boolean;
   signTosAgreement?: boolean;
   permissions?: string[];
 };
@@ -40,7 +45,16 @@ type TCreateAndLoginParams = {
 /*
  * Pre-login user for faster tests
  */
-export const createAndLoginNewUser = (params: TCreateAndLoginParams) =>
+export const createAndLoginNewUser = ({
+  clearPendingTransactions: shouldClearPendingTransactions,
+  hdPath,
+  kyc,
+  permissions,
+  seed,
+  signTosAgreement,
+  skipCreatingNewUser,
+  type,
+}: TCreateAndLoginParams) =>
   cy.clearLocalStorage().then(async ls => {
     cy.log("Logging in...");
 
@@ -50,53 +64,52 @@ export const createAndLoginNewUser = (params: TCreateAndLoginParams) =>
       address,
       privateKey,
       walletKey,
-    } = await createLightWalletWithKeyPair(params.seed, params.hdPath);
+    } = await createLightWalletWithKeyPair(seed, hdPath);
 
     // set wallet data on local storage
     ls.setItem(
       WALLET_STORAGE_KEY,
       JSON.stringify({
         address,
-        userType: params.type,
+        salt,
+        userType: type,
         email: `${address.slice(0, 7).toLowerCase()}@neufund.org`,
-        salt: salt,
         walletType: "LIGHT",
       }),
     );
 
     // fetch a token and store it in local storage
-    const jwt = await getJWT(address, lightWalletInstance, walletKey, params.permissions);
+    const jwt = await getJWT(address, lightWalletInstance, walletKey, permissions);
     ls.setItem(JWT_KEY, `"${jwt}"`);
     await createVaultApi(salt, DEFAULT_PASSWORD, lightWalletInstance.serialize());
 
-    if (!params.onlyLogin) {
+    if (!skipCreatingNewUser) {
       // create a user object on the backend
-      await createUser(params.type, privateKey, params.kyc);
+      await createUser(type, privateKey, kyc);
 
       // mark backup codes verified
       await markBackupCodesVerified(jwt);
-      // set correct agreement
-
-      if (params.clearPendingTransactions) {
-        clearPendingTransactions();
-      }
-
-      cy.log(
-        `Logged in as ${params.type}`,
-        `KYC: ${params.kyc}, clearPendingTransactions: ${params.clearPendingTransactions}, seed: ${params.seed}`,
-      );
     }
 
-    if (params.signTosAgreement || !params.onlyLogin) {
+    if (shouldClearPendingTransactions) {
+      clearPendingTransactions();
+    }
+
+    if (signTosAgreement) {
       // This was done to maintain `signTosAgreement` without changing the interface of existing tests
       await setCorrectAgreement(jwt);
     }
 
-    if (params.kyc) {
+    if (kyc) {
       // wait for kyc to be properly set as verified on blockchain
       // otherwise UI is not deterministically stable
       assertIsUserVerifiedOnBlockchain(address);
     }
+
+    cy.log(
+      `Logged in as ${type}`,
+      `KYC: ${kyc}, clearPendingTransactions: ${shouldClearPendingTransactions}, seed: ${seed}`,
+    );
 
     // TODO: find why we need to `cy.wrap` as normal `return { address }` is not working
     return new Promise<{ address: string }>(resolve => resolve(cy.wrap({ address })));
@@ -107,33 +120,32 @@ export const createAndLoginNewUser = (params: TCreateAndLoginParams) =>
  */
 export const loginFixtureAccount = (
   accountFixtureName: string,
-  params: {
-    kyc?: "business" | "individual";
-    clearPendingTransactions?: boolean;
-    onlyLogin?: boolean;
-    signTosAgreement?: boolean;
-    permissions?: string[];
-    customDerivationPath?: string;
-  },
+  params: Omit<
+    Parameters<typeof createAndLoginNewUser>["0"],
+    "type" | "seed" | "kyc" | "skipCreatingNewUser"
+  > = {},
 ) => {
-  const fixture = accountFixtureByName(accountFixtureName);
-  let hdPath: string;
+  cy.log(`Logging in as ${accountFixtureName}`);
 
-  if (params.customDerivationPath) {
-    hdPath = params.customDerivationPath;
-  } else {
-    hdPath = fixture.definition.derivationPath;
-    if (hdPath) {
-      hdPath = fixture.definition.derivationPath.substr(
-        0,
-        fixture.definition.derivationPath.lastIndexOf("/"),
-      );
+  const fixture = accountFixtureByName(accountFixtureName);
+
+  let hdPath: string | undefined = params.hdPath;
+
+  // in case hd path is not provided derive one from fixture configuration
+  if (hdPath === undefined) {
+    const hdPathFull = fixture.definition.derivationPath;
+
+    if (hdPathFull) {
+      hdPath = hdPathFull.substr(0, hdPathFull.lastIndexOf("/"));
     }
   }
 
   return createAndLoginNewUser({
     type: fixture.type,
     seed: fixture.definition.seed,
+    // fixtures should be already properly populated in the database,
+    // therefore there is no need to create new user
+    skipCreatingNewUser: true,
     hdPath,
     ...params,
   });
@@ -185,11 +197,7 @@ const CREATE_USER_PATH = "/api/external-services-mock/e2e-tests/user/";
 
 type TUserType = "investor" | "issuer" | "nominee";
 
-export const createUser = (
-  userType: TUserType,
-  privateKey?: string,
-  kyc?: "business" | "individual",
-) => {
+export const createUser = (userType: TUserType, privateKey?: string, kyc?: TKycType) => {
   let path = `${CREATE_USER_PATH}?user_type=${userType}`;
 
   if (kyc) {

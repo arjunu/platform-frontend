@@ -5,7 +5,6 @@ describe("Investment modal token price", () => {
   it("should show correct token price without discount", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
     loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      kyc: "business",
       clearPendingTransactions: true,
     });
 
@@ -24,7 +23,6 @@ describe("Investment modal token price", () => {
   it("should show correct token price with personal and whitelist discount", () => {
     const PRESALE_ETO_ID = etoFixtureAddressByName("ETOInWhitelistState");
     loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      kyc: "business",
       clearPendingTransactions: true,
     });
 
@@ -46,7 +44,6 @@ describe("Investment modal token price", () => {
   it("should show correct token price with whitelist discount", () => {
     const PRESALE_ETO_ID = etoFixtureAddressByName("ETOInWhitelistState");
     loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      kyc: "business",
       clearPendingTransactions: true,
     });
 

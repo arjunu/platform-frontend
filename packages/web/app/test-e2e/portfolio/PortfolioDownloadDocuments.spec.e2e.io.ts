@@ -7,7 +7,6 @@ describe("Download documents from portfolio", () => {
   it("do", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPayoutState");
     loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-      kyc: "business",
       clearPendingTransactions: true,
     }).then(() => {
       goToPortfolio();

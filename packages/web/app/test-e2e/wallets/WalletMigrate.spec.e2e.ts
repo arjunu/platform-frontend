@@ -23,9 +23,7 @@ const FIXTURE_DIV_CONSTANT = 100000000000000;
 
 describe("Wallet Migration Flow", () => {
   it("It should check icbm migration wallet when user has locked wallet", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      kyc: "business",
-    }).then(() => {
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC").then(() => {
       cy.visit(appRoutes.icbmMigration);
       cy.get(tid("models.profile.icbm-wallet-widget.check-your-icbm-wallet-widget"));
     });

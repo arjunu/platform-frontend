@@ -6,7 +6,6 @@ describe("Wallet Transfer", () => {
   it("should generate correct qr-code and address", () => {
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
       signTosAgreement: true,
-      onlyLogin: true,
     }).then(() => {
       goToDashboard();
 

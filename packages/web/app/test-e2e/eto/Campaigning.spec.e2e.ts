@@ -66,7 +66,6 @@ describe("Eto campaigning state", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInSetupState");
 
     loginFixtureAccount("ISSUER_SETUP", {
-      kyc: "business",
       permissions: ["do-bookbuilding"],
     }).then(() =>
       // make sure bookbuilding is off (especially after CI retry)
@@ -126,9 +125,7 @@ describe("Eto campaigning state", () => {
   });
 
   it("should allow to change pledge by investor", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      kyc: "business",
-    });
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC");
 
     const ETO_ID = etoFixtureAddressByName("ETOInSetupState");
 
@@ -141,9 +138,7 @@ describe("Eto campaigning state", () => {
   });
 
   it("load pledge data correclty", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      kyc: "business",
-    });
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC");
 
     const amount = "200";
     const ETO_ID = etoFixtureAddressByName("ETOInSetupState");

@@ -6,7 +6,6 @@ describe("Unlock Ether Funds", () => {
   it.skip("do", () => {
     //Can't enable without a new fixture
     loginFixtureAccount("", {
-      kyc: "business",
       clearPendingTransactions: true,
     }).then(() => {
       cy.visit("/wallet-unlock-etherlock");

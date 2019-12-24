@@ -42,9 +42,7 @@ describe("Eto start date setup", function(): void {
   this.retries(2);
   it("sets the date", () => {
     // enable after
-    loginFixtureAccount("ISSUER_SETUP", {
-      kyc: "business",
-    }).then(() => {
+    loginFixtureAccount("ISSUER_SETUP").then(() => {
       //happy path
       const newStartDate = moment
         .utc()

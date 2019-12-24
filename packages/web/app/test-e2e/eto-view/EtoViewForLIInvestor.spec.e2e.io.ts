@@ -6,11 +6,7 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 import { assertEtoView } from "./EtoViewUtils";
 
 describe("Eto LI Investor View", () => {
-  beforeEach(() =>
-    loginFixtureAccount("SPARE_1", {
-      kyc: "business",
-    }),
-  );
+  beforeEach(() => loginFixtureAccount("SPARE_1"));
 
   describe("for ETO with LI jurisdiction", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInPublicState");

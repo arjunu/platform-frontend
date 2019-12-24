@@ -9,7 +9,6 @@ describe("US investors investment flow", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
     loginFixtureAccount("demoinvestor10", {
-      kyc: "individual",
       signTosAgreement: true,
       clearPendingTransactions: true,
     });

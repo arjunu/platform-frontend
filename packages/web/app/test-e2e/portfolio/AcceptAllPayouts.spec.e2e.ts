@@ -13,7 +13,6 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 
 it("should correctly accept all payouts", () => {
   loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-    kyc: "business",
     clearPendingTransactions: true,
   }).then(() => {
     getWalletEthAmount().as("balanceEthBefore");

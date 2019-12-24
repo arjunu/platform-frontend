@@ -7,7 +7,6 @@ describe("Eto Terms", () => {
   it("should show 6 available products", () => {
     loginFixtureAccount("ISSUER_PREVIEW", {
       signTosAgreement: true,
-      kyc: "business",
     });
 
     goToIssuerDashboard();
@@ -20,7 +19,6 @@ describe("Eto Terms", () => {
   it("should show product details on hover", () => {
     loginFixtureAccount("ISSUER_PREVIEW", {
       signTosAgreement: true,
-      kyc: "business",
     });
 
     goToIssuerDashboard();
@@ -35,7 +33,6 @@ describe("Eto Terms", () => {
   it("should hide and show transferable toggle", () => {
     loginFixtureAccount("ISSUER_PREVIEW", {
       signTosAgreement: true,
-      kyc: "business",
     });
 
     goToIssuerDashboard();

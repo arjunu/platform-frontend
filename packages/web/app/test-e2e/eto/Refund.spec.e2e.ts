@@ -66,7 +66,6 @@ describe("Refund", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInRefundState");
 
     loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-      kyc: "business",
       clearPendingTransactions: true,
     });
 
@@ -83,7 +82,6 @@ describe("Refund", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInRefundState");
 
     loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      kyc: "business",
       clearPendingTransactions: true,
     });
 

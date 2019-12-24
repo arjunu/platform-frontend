@@ -4,7 +4,6 @@ import { assertPendingWithdrawModal, assertSuccessWithdrawModal, doWithdraw } fr
 describe("Pending transaction network errors recovering", () => {
   it("should recover pending transaction watcher opened from header", () => {
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      kyc: "business",
       signTosAgreement: true,
       clearPendingTransactions: true,
     }).then(() => {
@@ -31,7 +30,6 @@ describe("Pending transaction network errors recovering", () => {
 
   it("should still watch for a pending transaction after being offline for a while", () => {
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      kyc: "business",
       signTosAgreement: true,
       clearPendingTransactions: true,
     }).then(() => {

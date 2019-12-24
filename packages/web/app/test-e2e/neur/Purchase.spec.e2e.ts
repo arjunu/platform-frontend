@@ -51,7 +51,6 @@ describe("Purchase", () => {
   });
   it("should start purchase agreement approval when bank account not verified", () => {
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      kyc: "business",
       signTosAgreement: true,
     }).then(() => {
       goToWallet();
@@ -66,7 +65,6 @@ describe("Purchase", () => {
 
   it("should start purchase without agreement approval when bank account is verified", () => {
     loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      kyc: "business",
       clearPendingTransactions: true,
     }).then(() => {
       goToWallet();
@@ -81,7 +79,6 @@ describe("Purchase", () => {
 
   it("should show bank account details", () => {
     loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      kyc: "business",
       clearPendingTransactions: true,
     }).then(() => {
       // On wallet

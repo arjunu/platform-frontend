@@ -14,9 +14,7 @@ import { assertBankAccountDetails } from "./assertions";
 describe("Redeem NEUR", function(): void {
   this.retries(2);
   beforeEach(() => {
-    loginFixtureAccount("demoinvestor2", {
-      kyc: "individual",
-    }).then(() => {
+    loginFixtureAccount("demoinvestor2").then(() => {
       // store actual balance
       getWalletNEurAmount().as("currentAmount");
 

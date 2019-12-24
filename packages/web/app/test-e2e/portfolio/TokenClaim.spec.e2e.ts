@@ -13,7 +13,6 @@ describe("Token claim", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInPayoutState");
 
     loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      kyc: "business",
       clearPendingTransactions: true,
     });
 

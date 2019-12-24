@@ -13,7 +13,6 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 describe("Investor accept payout", () => {
   beforeEach(() =>
     loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      kyc: "business",
       clearPendingTransactions: true,
     }),
   );

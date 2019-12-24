@@ -322,7 +322,6 @@ describe("Wallet Withdraw", () => {
     it("should show transaction error with cost for mined transaction", () => {
       loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
         signTosAgreement: true,
-        onlyLogin: true,
       }).then(() => {
         goToDashboard();
 
@@ -349,7 +348,6 @@ describe("Wallet Withdraw", () => {
     it("should show transaction error with no cost for not mined transaction", () => {
       loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
         signTosAgreement: true,
-        onlyLogin: true,
       }).then(() => {
         goToWalletWithParams({
           forceLowGas: true,
@@ -382,7 +380,6 @@ describe("Wallet Withdraw", () => {
       // Web3 Throws when using light wallet due to gas limit checks done before broadcasting the transaction
       loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
         signTosAgreement: true,
-        onlyLogin: true,
       }).then(() => {
         goToDashboard();
 

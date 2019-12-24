@@ -114,7 +114,7 @@ describe("Eto ISHA documents", () => {
       // logout();
 
       // Check issuer
-      loginFixtureAccount("ISSUER_PAYOUT", { kyc: "business" }).then(() => {
+      loginFixtureAccount("ISSUER_PAYOUT").then(() => {
         goToEtoViewById(ETO_ID, eto.previewCode);
 
         shouldDownloadDocument(

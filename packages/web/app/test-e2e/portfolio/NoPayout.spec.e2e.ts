@@ -5,7 +5,6 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 describe("Investor empty payout", () => {
   beforeEach(() =>
     loginFixtureAccount("INV_EMPTY_HAS_KYC", {
-      kyc: "business",
       clearPendingTransactions: true,
     }),
   );
