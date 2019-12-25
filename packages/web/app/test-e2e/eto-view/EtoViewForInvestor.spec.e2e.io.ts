@@ -22,9 +22,7 @@ const ETO_ID = etoFixtureAddressByName("ETONoStartDate");
 
 describe("Eto Investor View", () => {
   describe("Default account tests", () => {
-    beforeEach(() =>
-      createAndLoginNewUser({ type: "investor", kyc: "business", signTosAgreement: true }),
-    );
+    beforeEach(() => createAndLoginNewUser({ type: "investor", kyc: "business" }));
 
     it("should load empty Eto", () => {
       cy.visit(etoPublicViewByIdLinkLegacy(ETO_ID));
@@ -221,9 +219,7 @@ describe("Eto Investor View", () => {
 
   describe("Fixtures tests", () => {
     it.skip("coming soon state should have token terms", () => {
-      loginFixtureAccount("ISSUER_PREVIEW", {
-        signTosAgreement: true,
-      }).then(() => {
+      loginFixtureAccount("ISSUER_PREVIEW").then(() => {
         goToEtoPreview();
 
         // This ETO has product id set so token terms should be available
@@ -232,9 +228,7 @@ describe("Eto Investor View", () => {
     });
 
     it("listed state should have token terms", () => {
-      loginFixtureAccount("ISSUER_LISTED", {
-        signTosAgreement: true,
-      }).then(() => {
+      loginFixtureAccount("ISSUER_LISTED").then(() => {
         goToEtoPreview();
 
         cy.get(tid("eto-public-view-token-terms")).should("exist");

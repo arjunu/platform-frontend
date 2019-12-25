@@ -51,9 +51,7 @@ describe("Bank Verification", () => {
     clearEmailServer();
   });
   it("should start verification process from wallet", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      signTosAgreement: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
       goToWallet();
 
       cy.get(tid("locked-wallet.neur.bank-account.not-verified")).should("exist");
@@ -67,9 +65,7 @@ describe("Bank Verification", () => {
   });
 
   it("should start verification process from profile", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      signTosAgreement: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
       goToProfile();
 
       cy.get(tid("linked-bank-account-widget.link-account")).click();

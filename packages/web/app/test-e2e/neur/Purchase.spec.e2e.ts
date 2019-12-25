@@ -50,9 +50,7 @@ describe("Purchase", () => {
     clearEmailServer();
   });
   it("should start purchase agreement approval when bank account not verified", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      signTosAgreement: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
       goToWallet();
 
       cy.get(tid("wallet-balance.neur.purchase-button")).click();

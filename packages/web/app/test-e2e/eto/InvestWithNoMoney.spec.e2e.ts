@@ -44,7 +44,6 @@ describe("Try and invest without money", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
     loginFixtureAccount(fixture, {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     });
 
@@ -76,7 +75,6 @@ describe("Try and invest without money", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
     loginFixtureAccount(fixture, {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     });
 

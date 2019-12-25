@@ -4,7 +4,6 @@ import { assertPresaleStep } from "./EtoRegistrationUtils";
 describe("Eto presale state", () => {
   it("should show bookbuilding stats", () => {
     loginFixtureAccount("ISSUER_WHITELIST", {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     });
 

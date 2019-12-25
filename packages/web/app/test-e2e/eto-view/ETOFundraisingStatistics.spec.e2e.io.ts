@@ -25,7 +25,6 @@ describe("ETO Fundraising Statistics", () => {
       const etoId = etoFixtureAddressByName("ETOInWhitelistState");
 
       loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-        signTosAgreement: true,
         clearPendingTransactions: true,
       });
 
@@ -36,7 +35,6 @@ describe("ETO Fundraising Statistics", () => {
       const etoId = etoFixtureAddressByName("ETOInWhitelistState");
 
       loginFixtureAccount("INV_EMPTY_HAS_KYC", {
-        signTosAgreement: true,
         clearPendingTransactions: true,
       });
 

@@ -9,7 +9,6 @@ import {
 describe("Nominee Change active eto", () => {
   it("should change active ETO for the current tab", () => {
     loginFixtureAccount("NOMINEE_NEUMINI", {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     });
 

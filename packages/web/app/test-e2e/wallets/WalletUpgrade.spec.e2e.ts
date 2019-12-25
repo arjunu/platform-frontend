@@ -7,7 +7,6 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 describe("Upgrade icbm wallet", () => {
   it("do euro upgrade", () => {
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_2", {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     }).then(() => {
       let icbmBalance: number;

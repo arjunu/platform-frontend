@@ -44,7 +44,6 @@ describe("Invest with eth token", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
     loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     }).then(() => {
       goToDashboard();
@@ -81,7 +80,6 @@ describe("Invest with eth token", () => {
     const WHITELIST_ETO_ID = etoFixtureAddressByName("ETOInWhitelistState");
 
     loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     }).then(() => {
       goToDashboard();

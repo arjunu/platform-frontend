@@ -20,9 +20,7 @@ describe("Backup Seed and Private Key save and view", function(): void {
   });
 
   it("should prompt for an access after password cache expire", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      signTosAgreement: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
       goToProfile();
 
       cy.get(tid("backup-seed-verified-section.view-again")).awaitedClick();
@@ -36,9 +34,7 @@ describe("Backup Seed and Private Key save and view", function(): void {
   });
 
   it("should allow to copy private key", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      signTosAgreement: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
       goToProfile();
 
       cy.get(tid("backup-seed-verified-section.view-again")).awaitedClick();
@@ -55,9 +51,7 @@ describe("Backup Seed and Private Key save and view", function(): void {
   });
 
   it("should allow to view private key", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      signTosAgreement: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
       goToProfile();
 
       cy.get(tid("backup-seed-verified-section.view-again")).awaitedClick();

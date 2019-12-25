@@ -33,13 +33,17 @@ type TCreateAndLoginParams = {
   kyc?: TKycType;
   seed?: string;
   hdPath?: string;
+  permissions?: string[];
   clearPendingTransactions?: boolean;
   /**
    * In case it's a fixture account you can skip creating new user
    */
   skipCreatingNewUser?: boolean;
-  signTosAgreement?: boolean;
-  permissions?: string[];
+  /**
+   * Signing TOS is useful to skip when we want to test the TOS modal flow
+   * Otherwise we should always sign TOS automatically before even logging in
+   */
+  skipSigningTOS?: boolean;
 };
 
 /*
@@ -51,7 +55,7 @@ export const createAndLoginNewUser = ({
   kyc,
   permissions,
   seed,
-  signTosAgreement,
+  skipSigningTOS,
   skipCreatingNewUser,
   type,
 }: TCreateAndLoginParams) =>
@@ -95,7 +99,7 @@ export const createAndLoginNewUser = ({
       clearPendingTransactions();
     }
 
-    if (signTosAgreement) {
+    if (!skipSigningTOS) {
       // This was done to maintain `signTosAgreement` without changing the interface of existing tests
       await setCorrectAgreement(jwt);
     }

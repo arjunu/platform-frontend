@@ -17,7 +17,6 @@ describe("Invest with ethereum", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
     loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     });
 
@@ -66,7 +65,6 @@ describe("Invest with ethereum", () => {
     createAndLoginNewUser({
       type: "investor",
       kyc: "individual",
-      signTosAgreement: true,
     }).then(({ address }) => {
       sendEth("DEPLOYER", address, Q18.mul(value));
 

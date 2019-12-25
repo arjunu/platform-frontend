@@ -34,7 +34,6 @@ describe("Wallet Withdraw", () => {
       type: "investor",
       kyc: "individual",
       clearPendingTransactions: true,
-      signTosAgreement: true,
     }).then(({ address }) => {
       cy.saveLocalStorage();
       userAddress = address;
@@ -320,9 +319,7 @@ describe("Wallet Withdraw", () => {
 
   describe("failed transactions", () => {
     it("should show transaction error with cost for mined transaction", () => {
-      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
-        signTosAgreement: true,
-      }).then(() => {
+      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC").then(() => {
         goToDashboard();
 
         const contactAddress = EuroTokenContract.networks["17"].address;
@@ -346,9 +343,7 @@ describe("Wallet Withdraw", () => {
     });
 
     it("should show transaction error with no cost for not mined transaction", () => {
-      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
-        signTosAgreement: true,
-      }).then(() => {
+      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC").then(() => {
         goToWalletWithParams({
           forceLowGas: true,
         });
@@ -378,9 +373,7 @@ describe("Wallet Withdraw", () => {
 
     it.skip("should show transaction error with cost for a reverted transaction due to out of gas", () => {
       // Web3 Throws when using light wallet due to gas limit checks done before broadcasting the transaction
-      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
-        signTosAgreement: true,
-      }).then(() => {
+      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC").then(() => {
         goToDashboard();
 
         const contractAddress = SimpleExchangeContract.networks["17"].address;

@@ -4,9 +4,7 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 
 describe("Wallet Transfer", () => {
   it("should generate correct qr-code and address", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      signTosAgreement: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
       goToDashboard();
 
       cy.get(tid("authorized-layout-wallet-button")).awaitedClick();

@@ -23,7 +23,6 @@ describe("Invest with nEur", () => {
     const INVESTED_NEUR_AMOUNT = 99.99;
 
     loginFixtureAccount("demoinvestor1", {
-      signTosAgreement: true,
       clearPendingTransactions: true,
     });
 

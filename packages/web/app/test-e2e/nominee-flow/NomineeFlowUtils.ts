@@ -56,7 +56,6 @@ export const assertNoTasks = () => {
 
 export const assertNomineeAgreementsSigningFlow = () => {
   loginFixtureAccount("NOMINEE_SETUP_NO_ST", {
-    signTosAgreement: true,
     clearPendingTransactions: true,
   });
   goToNomineeDashboard();

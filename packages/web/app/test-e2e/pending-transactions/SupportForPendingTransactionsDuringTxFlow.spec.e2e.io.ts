@@ -23,7 +23,6 @@ describe("Pending Transactions During TX flow", () => {
       type: "investor",
       kyc: "individual",
       clearPendingTransactions: true,
-      signTosAgreement: true,
     }).then(({ address }) => {
       cy.saveLocalStorage();
       userAddress = address;
