@@ -44,6 +44,7 @@ type TCreateAndLoginParams = {
    * Otherwise we should always sign TOS automatically before even logging in
    */
   skipSigningTOS?: boolean;
+  skipBackupCodesVerification?: boolean;
 };
 
 /*
@@ -57,6 +58,7 @@ export const createAndLoginNewUser = ({
   seed,
   skipSigningTOS,
   skipCreatingNewUser,
+  skipBackupCodesVerification,
   type,
 }: TCreateAndLoginParams) =>
   cy.clearLocalStorage().then(async ls => {
@@ -90,7 +92,9 @@ export const createAndLoginNewUser = ({
     if (!skipCreatingNewUser) {
       // create a user object on the backend
       await createUser(type, privateKey, kyc);
+    }
 
+    if (!skipBackupCodesVerification) {
       // mark backup codes verified
       await markBackupCodesVerified(jwt);
     }
