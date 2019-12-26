@@ -6,9 +6,7 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 describe("Download documents from portfolio", () => {
   it("do", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPayoutState");
-    loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP").then(() => {
       goToPortfolio();
 
       cy.get(tid(`modals.portfolio.portfolio-assets.download-agreements-${PUBLIC_ETO_ID}`))

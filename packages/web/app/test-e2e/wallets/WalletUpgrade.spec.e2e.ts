@@ -6,9 +6,7 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 
 describe("Upgrade icbm wallet", () => {
   it("do euro upgrade", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_2", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_2").then(() => {
       let icbmBalance: number;
 
       goToWallet();
@@ -35,9 +33,7 @@ describe("Upgrade icbm wallet", () => {
   });
 
   it("do eth upgrade", () => {
-    loginFixtureAccount("INV_ETH_ICBM_NO_KYC_2", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ETH_ICBM_NO_KYC_2").then(() => {
       let icbmBalance: number;
 
       goToWallet();

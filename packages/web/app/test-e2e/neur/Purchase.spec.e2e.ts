@@ -62,9 +62,7 @@ describe("Purchase", () => {
   });
 
   it("should start purchase without agreement approval when bank account is verified", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP").then(() => {
       goToWallet();
 
       cy.get(tid("wallet-balance.neur.purchase-button")).click();
@@ -76,9 +74,7 @@ describe("Purchase", () => {
   });
 
   it("should show bank account details", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP").then(() => {
       // On wallet
       goToWallet();
 

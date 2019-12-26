@@ -33,7 +33,6 @@ describe("Wallet Withdraw", () => {
     createAndLoginNewUser({
       type: "investor",
       kyc: "individual",
-      clearPendingTransactions: true,
     }).then(({ address }) => {
       cy.saveLocalStorage();
       userAddress = address;

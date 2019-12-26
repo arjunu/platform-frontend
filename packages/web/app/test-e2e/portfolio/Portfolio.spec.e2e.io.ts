@@ -12,9 +12,7 @@ describe("Portfolio", () => {
     it("should populate on initial view", () => {
       const etoId = etoFixtureAddressByName("ETOInPayoutState");
 
-      loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-        clearPendingTransactions: true,
-      });
+      loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP");
 
       goToPortfolio();
 
@@ -24,9 +22,7 @@ describe("Portfolio", () => {
 
   describe("Asset portfolio", () => {
     it("should hide ETH in pending payouts", () => {
-      loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP_2", {
-        clearPendingTransactions: true,
-      });
+      loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP_2");
 
       goToPortfolioWithRequiredPayoutAmountSet(convertToUlps("5"));
 
@@ -35,9 +31,7 @@ describe("Portfolio", () => {
     });
 
     it("should hide all pending payouts", () => {
-      loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP_2", {
-        clearPendingTransactions: true,
-      });
+      loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP_2");
 
       goToPortfolioWithRequiredPayoutAmountSet(convertToUlps("5000"));
 
@@ -47,9 +41,7 @@ describe("Portfolio", () => {
 
   describe("PastInvestments", () => {
     it("should populate on initial view", () => {
-      loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP_2", {
-        clearPendingTransactions: true,
-      });
+      loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP_2");
 
       goToPortfolio();
 

@@ -8,9 +8,7 @@ import {
 
 describe("Nominee Change active eto", () => {
   it("should change active ETO for the current tab", () => {
-    loginFixtureAccount("NOMINEE_NEUMINI", {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("NOMINEE_NEUMINI");
 
     const issuerProspectusApprovedId = accountFixtureAddress("ISSUER_PROSPECTUS_APPROVED");
     goToNomineeDashboard();

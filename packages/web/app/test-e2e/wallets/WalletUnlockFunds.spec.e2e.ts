@@ -5,9 +5,7 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 describe("Unlock Ether Funds", () => {
   it.skip("do", () => {
     //Can't enable without a new fixture
-    loginFixtureAccount("", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("").then(() => {
       cy.visit("/wallet-unlock-etherlock");
       cy.get(tid("modals.tx-sender.withdraw-flow.summery.unlock-funds-summary.accept")).click();
       confirmAccessModal();

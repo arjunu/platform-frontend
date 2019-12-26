@@ -26,7 +26,6 @@ describe("Pending Transactions In Header", () => {
     createAndLoginNewUser({
       type: "investor",
       kyc: "individual",
-      clearPendingTransactions: true,
     }).then(({ address }) => {
       cy.saveLocalStorage();
       userAddress = address;

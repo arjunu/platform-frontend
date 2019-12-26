@@ -12,9 +12,7 @@ import { tid } from "../utils/selectors";
 import { loginFixtureAccount } from "../utils/userHelpers";
 
 it("should correctly accept all payouts", () => {
-  loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-    clearPendingTransactions: true,
-  }).then(() => {
+  loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP").then(() => {
     getWalletEthAmount().as("balanceEthBefore");
     getWalletNEurAmount().as("balanceNEurBefore");
 

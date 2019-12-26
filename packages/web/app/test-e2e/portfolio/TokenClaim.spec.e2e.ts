@@ -12,9 +12,7 @@ describe("Token claim", () => {
   it("claimed token should show in My Assets table", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInPayoutState");
 
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC");
 
     goToPortfolio();
 

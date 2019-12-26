@@ -16,9 +16,7 @@ describe("Invest with ethereum", () => {
   it("Invest Small Amount", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED");
 
     goToDashboard();
 

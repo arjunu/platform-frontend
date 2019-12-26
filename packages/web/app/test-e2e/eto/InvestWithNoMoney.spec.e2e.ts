@@ -17,7 +17,6 @@ describe("Try and invest without money", () => {
     createAndLoginNewUser({
       type: "investor",
       kyc: "business",
-      clearPendingTransactions: true,
     }).then(() => {
       goToDashboard();
 
@@ -43,9 +42,7 @@ describe("Try and invest without money", () => {
 
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
-    loginFixtureAccount(fixture, {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount(fixture);
 
     goToEtoViewById(PUBLIC_ETO_ID);
 
@@ -74,9 +71,7 @@ describe("Try and invest without money", () => {
 
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
-    loginFixtureAccount(fixture, {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount(fixture);
 
     cy.window().then(Window => {
       const oldValue = JSON.parse(Window.localStorage.getItem("NF_WALLET_METADATA")!);

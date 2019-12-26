@@ -8,9 +8,7 @@ import { assertInvestmentModal } from "./utils";
 describe("Invest with eth token", () => {
   it("invest into public sale", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC").then(() => {
       goToDashboard();
 
       // click invest now button
@@ -43,9 +41,7 @@ describe("Invest with eth token", () => {
     const WHITELIST_ETO_ID = etoFixtureAddressByName("ETOInWhitelistState");
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
-    loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP").then(() => {
       goToDashboard();
 
       // verify ETO with disabled ETH wallet
@@ -79,9 +75,7 @@ describe("Invest with eth token", () => {
   it("should not show non ICBM wallets in presale after calculating contribution and refreshing modal (fixes #3556)", () => {
     const WHITELIST_ETO_ID = etoFixtureAddressByName("ETOInWhitelistState");
 
-    loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP").then(() => {
       goToDashboard();
 
       // verify ETO with disabled ETH wallet

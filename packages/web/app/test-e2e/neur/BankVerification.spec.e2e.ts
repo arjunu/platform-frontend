@@ -77,9 +77,7 @@ describe("Bank Verification", () => {
   });
 
   it("should start new verification process from wallet", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP").then(() => {
       goToWallet();
 
       cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
@@ -91,9 +89,7 @@ describe("Bank Verification", () => {
   });
 
   it("should start new verification process from profile", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP").then(() => {
       goToProfile();
 
       cy.get(tid("linked-bank-account-widget.link-different-account")).click();

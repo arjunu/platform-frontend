@@ -4,9 +4,7 @@ import { startInvestmentFlow } from "./utils";
 describe("Investment modal token price", () => {
   it("should show correct token price without discount", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC");
 
     startInvestmentFlow(PUBLIC_ETO_ID);
 
@@ -22,9 +20,7 @@ describe("Investment modal token price", () => {
 
   it("should show correct token price with personal and whitelist discount", () => {
     const PRESALE_ETO_ID = etoFixtureAddressByName("ETOInWhitelistState");
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC");
 
     startInvestmentFlow(PRESALE_ETO_ID);
 
@@ -43,9 +39,7 @@ describe("Investment modal token price", () => {
 
   it("should show correct token price with whitelist discount", () => {
     const PRESALE_ETO_ID = etoFixtureAddressByName("ETOInWhitelistState");
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC");
 
     startInvestmentFlow(PRESALE_ETO_ID);
 

@@ -6,9 +6,7 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 describe("Invest with euro token", () => {
   const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
   it("do", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC").then(() => {
       goToDashboard();
 
       cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();

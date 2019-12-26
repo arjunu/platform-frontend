@@ -3,9 +3,7 @@ import { assertPublicStep } from "./EtoRegistrationUtils";
 
 describe("Eto public state", () => {
   it("should not show bookbuilding stats after presale", () => {
-    loginFixtureAccount("ISSUER_PUBLIC", {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("ISSUER_PUBLIC");
 
     goToIssuerDashboard();
 

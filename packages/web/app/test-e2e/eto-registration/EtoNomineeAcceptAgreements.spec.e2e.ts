@@ -8,9 +8,7 @@ import {
 
 describe("Eto Nominee accepts agreements", function(): void {
   it("should go through agreements signing process on both issuer and nominee sides", () => {
-    loginFixtureAccount("ISSUER_SETUP_NO_ST", {
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("ISSUER_SETUP_NO_ST");
 
     goToIssuerDashboard();
 

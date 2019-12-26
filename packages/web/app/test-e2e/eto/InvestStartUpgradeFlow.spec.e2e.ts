@@ -6,9 +6,7 @@ describe("Start upgrade flow from investment", () => {
   it("do", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
     // TODO: you need another fixture that has ICBM wallet but is not upgraded in any other test
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
-      clearPendingTransactions: true,
-    }).then(() => {
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC").then(() => {
       goToDashboard();
 
       cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();

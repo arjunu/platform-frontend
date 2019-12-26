@@ -34,7 +34,7 @@ type TCreateAndLoginParams = {
   seed?: string;
   hdPath?: string;
   permissions?: string[];
-  clearPendingTransactions?: boolean;
+  skipClearingPendingTransactions?: boolean;
   /**
    * In case it's a fixture account you can skip creating new user
    */
@@ -51,7 +51,7 @@ type TCreateAndLoginParams = {
  * Pre-login user for faster tests
  */
 export const createAndLoginNewUser = ({
-  clearPendingTransactions: shouldClearPendingTransactions,
+  skipClearingPendingTransactions,
   hdPath,
   kyc,
   permissions,
@@ -99,7 +99,7 @@ export const createAndLoginNewUser = ({
       await markBackupCodesVerified(jwt);
     }
 
-    if (shouldClearPendingTransactions) {
+    if (!skipClearingPendingTransactions) {
       clearPendingTransactions();
     }
 
@@ -114,10 +114,7 @@ export const createAndLoginNewUser = ({
       assertIsUserVerifiedOnBlockchain(address);
     }
 
-    cy.log(
-      `Logged in as ${type}`,
-      `KYC: ${kyc}, clearPendingTransactions: ${shouldClearPendingTransactions}, seed: ${seed}`,
-    );
+    cy.log(`Logged in as ${type}`, `KYC: ${kyc}, seed: ${seed}`);
 
     // TODO: find why we need to `cy.wrap` as normal `return { address }` is not working
     return new Promise<{ address: string }>(resolve => resolve(cy.wrap({ address })));
