@@ -4,6 +4,7 @@ import { FormikConsumer, FormikProps, withFormik } from "formik";
 import * as React from "react";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
+import { defaultMemoize } from "reselect";
 
 import { ITxData } from "../../../../lib/web3/types";
 import * as YupTS from "../../../../lib/yup-ts.unsafe";
@@ -238,6 +239,12 @@ const BankTransferRedeemLayout: React.FunctionComponent<TComponentProps> = ({
   </>
 );
 
+const getInitialValues = (amount: string | undefined) => ({
+  amount: amount ? formatEuroValueToString(amount) : "",
+});
+
+const getInitialValuesMemoized = defaultMemoize(getInitialValues);
+
 const BankTransferRedeemInit = compose<TComponentProps, {}>(
   onEnterAction({
     actionCreator: d => {
@@ -259,10 +266,7 @@ const BankTransferRedeemInit = compose<TComponentProps, {}>(
     }),
   }),
   withFormik<IStateProps & IDispatchProps, IReedemData>({
-    mapPropsToValues: props => ({
-      ...props,
-      amount: props.initialAmount && formatEuroValueToString(props.initialAmount),
-    }),
+    mapPropsToValues: props => getInitialValuesMemoized(props.initialAmount),
     validationSchema: (props: IStateProps) => getValidators(props.minAmount, props.neuroAmount),
     validateOnMount: true,
     handleSubmit: (values, { props }) => {
