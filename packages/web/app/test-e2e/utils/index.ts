@@ -339,16 +339,16 @@ export const addPendingExternalTransaction = (address: string) => {
     url: MOCK_API_URL + "parity/additional_addresses/",
     method: "PUT",
     body: [address],
-  });
-
-  assertWaitForExternalPendingTransactionCount(1);
+  }).then(() => assertWaitForExternalPendingTransactionCount(1));
 };
 
 export const removePendingExternalTransaction = () => {
   // to clean external pending tx list send empty array
-  cy.request({ url: MOCK_API_URL + "parity/additional_addresses/", method: "PUT", body: [] });
-
-  assertWaitForExternalPendingTransactionCount(0);
+  cy.request({
+    url: MOCK_API_URL + "parity/additional_addresses/",
+    method: "PUT",
+    body: [],
+  }).then(() => assertWaitForExternalPendingTransactionCount(0));
 };
 
 export const getFormattedNumber = (

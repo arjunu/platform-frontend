@@ -122,7 +122,7 @@ export const assertWaitForExternalPendingTransactionCount = (
   count: number,
   timeout: number = 60000,
 ) => {
-  expect(timeout, `External pending transaction not received in ${timeout} ms`).to.be.gt(0);
+  expect(timeout, `External pending transaction count is not equal to ${count}`).to.be.gt(0);
 
   cy.wait(3000);
 
