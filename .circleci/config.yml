@@ -41,7 +41,7 @@ jobs:
   build-docker-test-e2e:
     executor: docker-browsers
 
-    parallelism: 4
+    parallelism: 10
 
     steps:
       - checkout
@@ -86,7 +86,7 @@ jobs:
     environment:
       COMPOSE_INTERACTIVE_NO_CLI: 1
 
-    parallelism: 4
+    parallelism: 10
 
     working_directory: /home/circleci/app
 
