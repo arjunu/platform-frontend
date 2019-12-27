@@ -135,20 +135,21 @@ export const assertWaitForExternalPendingTransactionCount = (
   });
 };
 
-export const assertIsUserVerifiedOnBlockchain = (address: string, timeout: number = 3000) => {
-  expect(timeout, `External pending transaction not received in ${timeout} ms`).to.be.gt(0);
+export const assertIsUserVerifiedOnBlockchain = (address: string, timeout: number = 5000) => {
+  expect(timeout, `User not marked as verified on blockchain in ${timeout} ms`).to.be.gt(0);
 
-  getIsUserVerifiedOnBlockchain("0xb48d3d68435e93e760c266df284405c9f637b331", address).then(
-    isVerified => {
-      if (!isVerified) {
-        const waitTime = 100;
+  // TODO: Replace by proper call to universe smart contract
+  const identityRegistryAddress = "0xb48d3d68435e93e760c266df284405c9f637b331";
 
-        cy.wait(waitTime);
+  getIsUserVerifiedOnBlockchain(identityRegistryAddress, address).then(isVerified => {
+    if (!isVerified) {
+      const waitTime = 100;
 
-        assertIsUserVerifiedOnBlockchain(address, timeout - waitTime);
-      }
-    },
-  );
+      cy.wait(waitTime);
+
+      assertIsUserVerifiedOnBlockchain(address, timeout - waitTime);
+    }
+  });
 };
 
 export const assertLockedAccessModal = () => {
