@@ -4,7 +4,7 @@ import { compose } from "recompose";
 
 import { TFormikConnect, THocOuterProps, THocProps, TTranslatedString } from "../../../../types";
 import { CheckboxLayout } from "../layouts/CheckboxLayout";
-import { withFormField } from "./utils.unsafe";
+import { EWithFormFieldType, withFormField } from "./utils.unsafe";
 
 interface IFormFieldCheckboxGroupProps {
   name: string;
@@ -61,12 +61,11 @@ const FormFieldCheckboxGroupLayout: React.FunctionComponent<IFormFieldCheckboxGr
   );
 };
 
-// TODO: Fix accessibility
 const FormFieldCheckboxGroup = compose<
   IFormFieldCheckboxGroupProps & TFormikConnect & THocProps<typeof withFormField>,
   IFormFieldCheckboxGroupProps & THocOuterProps<typeof withFormField>
 >(
-  withFormField(),
+  withFormField({ type: EWithFormFieldType.CHECKBOX_GROUP }),
   formikConnect,
 )(FormFieldCheckboxGroupLayout);
 

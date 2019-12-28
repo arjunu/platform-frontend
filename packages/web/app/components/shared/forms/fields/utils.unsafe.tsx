@@ -12,6 +12,7 @@ import {
   getValidationSchema,
   isRequired,
 } from "../../../../utils/yupUtils";
+import { generateLabelId } from "../layouts/FormLabel";
 import { FormFieldError } from "./FormFieldError";
 import { FormFieldLabel } from "./FormFieldLabel";
 import { IImageDimensions } from "./FormSingleFileUpload";
@@ -44,7 +45,18 @@ type TBareFormFieldExternalProps = {
   invalid?: boolean;
 };
 
-export const withFormField = () => <T extends IFormField>(
+export enum EWithFormFieldType {
+  NORMAL = "normal",
+  CHECKBOX_GROUP = "checkbox-group",
+}
+
+type TWithFormFieldOptions = {
+  type: EWithFormFieldType;
+};
+
+export const withFormField = (
+  options: TWithFormFieldOptions = { type: EWithFormFieldType.NORMAL },
+) => <T extends IFormField>(
   InputComponent: React.ComponentType<T>,
 ): React.FunctionComponent<TBareFormFieldExternalProps & T> => ({
   label,
@@ -58,9 +70,30 @@ export const withFormField = () => <T extends IFormField>(
 }) => {
   const [, meta] = useField(inputProps.name);
 
+  const wrapperProps:
+    | {
+        role: "group";
+        "aria-labeledby": string;
+      }
+    | {} =
+    options.type === EWithFormFieldType.CHECKBOX_GROUP
+      ? // to be accessible in case it's a checkbox group we need to provide some role and aria attr
+        {
+          role: "group",
+          "aria-labeledby": generateLabelId(inputProps.name),
+        }
+      : {};
+
   return (
-    <FormGroup className={wrapperClassName}>
-      {label && <FormFieldLabel name={inputProps.name}>{label}</FormFieldLabel>}
+    <FormGroup {...wrapperProps} className={wrapperClassName}>
+      {label && (
+        <FormFieldLabel
+          component={options.type === EWithFormFieldType.NORMAL ? "label" : "span"}
+          name={inputProps.name}
+        >
+          {label}
+        </FormFieldLabel>
+      )}
 
       <InputComponent {...(inputProps as T)} />
 

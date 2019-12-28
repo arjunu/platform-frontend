@@ -1,6 +1,7 @@
 .form-label {
   @include nds-button-label;
 
+  display: inline-block;
   text-transform: uppercase;
   color: $neu-charcoal-grey;
   margin-bottom: px-to-rem(4px);
