@@ -1,7 +1,6 @@
-import { Formik } from "formik";
 import * as React from "react";
 
-import { FormDeprecated } from "../FormDeprecated";
+import { Form } from "../Form";
 
 /**
  * Use only for testing.
@@ -9,7 +8,7 @@ import { FormDeprecated } from "../FormDeprecated";
 export const formWrapper = (formState: any, onSubmit: (values: any) => any = () => {}) => (
   Component: React.FunctionComponent,
 ) => () => (
-  <Formik initialValues={formState} onSubmit={async values => await onSubmit(values)}>
+  <Form initialValues={formState} onSubmit={async values => await onSubmit(values)}>
     {({ submitForm, values, submitCount, isSubmitting }) => {
       if (process.env.STORYBOOK_RUN === "1") {
         // tslint:disable-next-line
@@ -17,7 +16,7 @@ export const formWrapper = (formState: any, onSubmit: (values: any) => any = () 
       }
 
       return (
-        <FormDeprecated>
+        <>
           <Component />
 
           {onSubmit && (
@@ -33,8 +32,8 @@ export const formWrapper = (formState: any, onSubmit: (values: any) => any = () 
               <span data-test-id="test-form-is-submitting">{isSubmitting.toString()}</span>
             </>
           }
-        </FormDeprecated>
+        </>
       );
     }}
-  </Formik>
+  </Form>
 );

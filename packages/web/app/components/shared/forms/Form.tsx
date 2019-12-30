@@ -73,7 +73,7 @@ const SchemaFieldsGuard = <Values extends {}>({
     const diff = difference(valuesKeys, schemaKeys);
     if (!isEmpty(diff)) {
       logger.warn(
-        `You have a difference between schema fields and initial values. 
+        `You have a difference between schema fields and initial values.
          Following properties do not exist in "validationSchema" but they are passed as "initialValues": ${diff.join(
            ", ",
          )}.
@@ -108,10 +108,12 @@ const Form = <Values extends {}>({
       validate={validate}
       validationSchema={validationSchema}
       initialValues={initialValues}
+      enableReinitialize={true}
+      validateOnMount={true}
     >
       {formikProps => (
         <FormLayout {...formikProps} className={className} data-test-id={dataTestId}>
-          {children}
+          {typeof children === "function" ? children(formikProps) : children}
         </FormLayout>
       )}
     </Formik>

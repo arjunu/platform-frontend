@@ -1,4 +1,3 @@
-import { Formik, FormikConsumer } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import * as Web3Utils from "web3-utils";
@@ -7,7 +6,7 @@ import { actions } from "../../../modules/actions";
 import { appConnect } from "../../../store";
 import { EColumnSpan } from "../../layouts/Container";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons";
-import { FormDeprecated, FormFieldColorful } from "../../shared/forms";
+import { Form, FormFieldColorful } from "../../shared/forms";
 import { Panel } from "../../shared/Panel";
 import { ECustomTooltipTextPosition, Tooltip } from "../../shared/tooltips";
 
@@ -22,32 +21,7 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-class FormContent extends React.Component {
-  render(): React.ReactNode {
-    return (
-      <FormikConsumer>
-        {({ values }: { values: { address: string } }) => (
-          <>
-            <FormFieldColorful
-              name="address"
-              placeholder="0xff2bee8169957caa2f5a34af7bf8e717fea7f"
-              data-test-id="models.profile.icbm-wallet-widget.check-your-icbm-wallet-widget.address"
-            />
-            <Button
-              layout={EButtonLayout.GHOST}
-              iconPosition={EIconPosition.ICON_AFTER}
-              svgIcon={arrowRight}
-              type="submit"
-              disabled={!Web3Utils.isAddress(values.address.toUpperCase())}
-            >
-              <FormattedMessage id="check-your-icbm-wallet-widget.submit" />
-            </Button>
-          </>
-        )}
-      </FormikConsumer>
-    );
-  }
-}
+type TFormValues = { address: string };
 
 export const CheckYourICBMWalletWidgetComponent: React.FunctionComponent<IExternalProps &
   IDispatchProps> = ({ loadICBMWallet, columnSpan }) => (
@@ -64,18 +38,35 @@ export const CheckYourICBMWalletWidgetComponent: React.FunctionComponent<IExtern
     columnSpan={columnSpan}
     data-test-id="models.profile.icbm-wallet-widget.check-your-icbm-wallet-widget"
   >
-    <Formik<{ address: string }>
+    <Form<TFormValues>
       initialValues={{ address: "" }}
       onSubmit={values => loadICBMWallet(values.address)}
+      className={styles.section}
     >
-      <FormDeprecated className={styles.section}>
-        <p>
-          <FormattedMessage id="check-your-icbm-wallet-widget.notice" />
-        </p>
+      {({ values }) => (
+        <>
+          <p>
+            <FormattedMessage id="check-your-icbm-wallet-widget.notice" />
+          </p>
 
-        <FormContent />
-      </FormDeprecated>
-    </Formik>
+          <FormFieldColorful
+            name="address"
+            placeholder="0xff2bee8169957caa2f5a34af7bf8e717fea7f"
+            data-test-id="models.profile.icbm-wallet-widget.check-your-icbm-wallet-widget.address"
+          />
+          {/* TODO: Move validation to yup schema */}
+          <Button
+            layout={EButtonLayout.GHOST}
+            iconPosition={EIconPosition.ICON_AFTER}
+            svgIcon={arrowRight}
+            type="submit"
+            disabled={!Web3Utils.isAddress(values.address.toUpperCase())}
+          >
+            <FormattedMessage id="check-your-icbm-wallet-widget.submit" />
+          </Button>
+        </>
+      )}
+    </Form>
   </Panel>
 );
 

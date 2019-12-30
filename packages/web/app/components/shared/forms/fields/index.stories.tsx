@@ -1,44 +1,27 @@
 import { storiesOf } from "@storybook/react";
-import { Formik } from "formik";
 import * as React from "react";
 
-import { FormDeprecated } from "../FormDeprecated";
+import { Form } from "../Form";
 import { FormField } from "./index";
 
 storiesOf("forms/fields/Field", module)
   .add("default", () => (
-    <Formik initialValues={{}} onSubmit={() => {}}>
-      {() => (
-        <FormDeprecated>
-          <FormField label="Form field" name="value" />
-        </FormDeprecated>
-      )}
-    </Formik>
+    <Form initialValues={{}} onSubmit={() => {}}>
+      {() => <FormField label="Form field" name="value" />}
+    </Form>
   ))
   .add("with suffix", () => (
-    <Formik initialValues={{}} onSubmit={() => {}}>
-      {() => (
-        <FormDeprecated>
-          <FormField label="Form field" name="value" suffix="%" />
-        </FormDeprecated>
-      )}
-    </Formik>
+    <Form initialValues={{}} onSubmit={() => {}}>
+      {() => <FormField label="Form field" name="value" suffix="%" />}
+    </Form>
   ))
   .add("with prefix", () => (
-    <Formik initialValues={{}} onSubmit={() => {}}>
-      {() => (
-        <FormDeprecated>
-          <FormField label="Form field" name="value" prefix="@" />
-        </FormDeprecated>
-      )}
-    </Formik>
+    <Form initialValues={{}} onSubmit={() => {}}>
+      {() => <FormField label="Form field" name="value" prefix="@" />}
+    </Form>
   ))
   .add("disabled", () => (
-    <Formik initialValues={{}} onSubmit={() => {}}>
-      {() => (
-        <FormDeprecated>
-          <FormField label="Form field" name="value" disabled={true} />
-        </FormDeprecated>
-      )}
-    </Formik>
+    <Form initialValues={{}} onSubmit={() => {}}>
+      {() => <FormField label="Form field" name="value" disabled={true} />}
+    </Form>
   ));

@@ -1,4 +1,3 @@
-import { Formik } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
@@ -8,7 +7,7 @@ import * as YupTS from "../../../../lib/yup-ts.unsafe";
 import { actions } from "../../../../modules/actions";
 import { appConnect } from "../../../../store";
 import { ButtonArrowRight, ButtonInline } from "../../../shared/buttons";
-import { ECheckboxLayout, FormDeprecated, FormFieldBoolean } from "../../../shared/forms";
+import { ECheckboxLayout, Form, FormFieldBoolean } from "../../../shared/forms/index";
 import { Heading } from "../../../shared/Heading";
 import { ExternalLink } from "../../../shared/links";
 
@@ -48,13 +47,14 @@ const BankTransferVerifyAgreementLayout: React.FunctionComponent<IProps> = ({
       <FormattedMessage id="bank-verification.agreement.note" />
     </small>
 
-    <Formik<TAgreementForm>
+    <Form<TAgreementForm>
+      className="d-inline-block"
       validationSchema={AgreementScheme.toYup()}
       initialValues={{ quintessenceTosApproved: false, nEurTosApproved: false }}
       onSubmit={goToSummary}
     >
       {({ isValid }) => (
-        <FormDeprecated className="d-inline-block">
+        <>
           <FormFieldBoolean
             className="mb-3"
             layout={ECheckboxLayout.BLOCK}
@@ -106,9 +106,9 @@ const BankTransferVerifyAgreementLayout: React.FunctionComponent<IProps> = ({
           >
             <FormattedMessage id="bank-verification.agreement.continue" />
           </ButtonArrowRight>
-        </FormDeprecated>
+        </>
       )}
-    </Formik>
+    </Form>
   </section>
 );
 

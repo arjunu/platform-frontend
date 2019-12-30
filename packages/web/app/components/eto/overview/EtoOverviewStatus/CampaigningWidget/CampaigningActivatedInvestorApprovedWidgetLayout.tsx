@@ -1,5 +1,4 @@
 import * as cn from "classnames";
-import { Formik, FormikConsumer, FormikProps } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
@@ -14,7 +13,7 @@ import {
 import {
   CheckboxLayout,
   EInputSize,
-  FormDeprecated,
+  Form,
   FormMaskedNumberInput,
 } from "../../../../shared/forms/index";
 import { Tooltip } from "../../../../shared/tooltips";
@@ -102,45 +101,43 @@ const CampaigningActivatedInvestorApprovedWidgetLayout: React.FunctionComponent<
         </div>
       </div>
     ) : (
-      <Formik<{ amount: string }>
+      <Form<IPledgeData>
         initialValues={{ amount: pledgedAmount }}
         onSubmit={({ amount }) => backNow(Number(amount))}
         validationSchema={generateCampaigningValidation(minPledge, maxPledge)}
-        isInitialValid={!!pledgedAmount}
+        className={cn(styles.group, styles.groupNoPadding)}
       >
-        <FormikConsumer>
-          {({ isValid }: FormikProps<IPledgeData>) => (
-            <FormDeprecated className={cn(styles.group, styles.groupNoPadding)}>
-              <div className={cn(styles.label, styles.labelFull)}>
-                <FormattedMessage id="eto-overview.campaigning.indicate-commitment" />
-              </div>
-              <div className={cn(styles.label)}>
-                <FormMaskedNumberInput
-                  wrapperClassName="mb-0"
-                  size={EInputSize.SMALL}
-                  storageFormat={ENumberInputFormat.FLOAT}
-                  valueType={ECurrency.EUR}
-                  outputFormat={ENumberOutputFormat.INTEGER}
-                  name="amount"
-                  returnInvalidValues={true}
-                  showUnits={true}
-                />
-              </div>
-              <div className={cn(styles.value, styles.backNow)}>
-                <Button
-                  data-test-id="eto-bookbuilding-commit"
-                  type="submit"
-                  size={EButtonSize.SMALL}
-                  width={EButtonWidth.BLOCK}
-                  disabled={!isValid}
-                >
-                  <FormattedMessage id="shared-component.eto-overview.back-now" />
-                </Button>
-              </div>
-            </FormDeprecated>
-          )}
-        </FormikConsumer>
-      </Formik>
+        {({ isValid }) => (
+          <>
+            <div className={cn(styles.label, styles.labelFull)}>
+              <FormattedMessage id="eto-overview.campaigning.indicate-commitment" />
+            </div>
+            <div className={cn(styles.label)}>
+              <FormMaskedNumberInput
+                wrapperClassName="mb-0"
+                size={EInputSize.SMALL}
+                storageFormat={ENumberInputFormat.FLOAT}
+                valueType={ECurrency.EUR}
+                outputFormat={ENumberOutputFormat.INTEGER}
+                name="amount"
+                returnInvalidValues={true}
+                showUnits={true}
+              />
+            </div>
+            <div className={cn(styles.value, styles.backNow)}>
+              <Button
+                data-test-id="eto-bookbuilding-commit"
+                type="submit"
+                size={EButtonSize.SMALL}
+                width={EButtonWidth.BLOCK}
+                disabled={!isValid}
+              >
+                <FormattedMessage id="shared-component.eto-overview.back-now" />
+              </Button>
+            </div>
+          </>
+        )}
+      </Form>
     )}
   </>
 );

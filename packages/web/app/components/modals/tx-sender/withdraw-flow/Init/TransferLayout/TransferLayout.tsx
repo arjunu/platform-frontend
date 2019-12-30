@@ -1,5 +1,5 @@
 import * as cn from "classnames";
-import { Formik, FormikErrors, FormikProps } from "formik";
+import { FormikErrors, FormikProps } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { defaultMemoize } from "reselect";
@@ -17,7 +17,7 @@ import { EquityToken } from "../../../../../../utils/opaque-types/types";
 import { Button } from "../../../../../shared/buttons";
 import { Money } from "../../../../../shared/formatters/Money";
 import { ENumberInputFormat, ENumberOutputFormat } from "../../../../../shared/formatters/utils";
-import { FormDeprecated } from "../../../../../shared/forms";
+import { Form } from "../../../../../shared/forms";
 import { DataRow } from "../../../shared/DataRow";
 import { TransferHeader } from "../../shared/TransferHeader";
 import { EtherAddressFormRow } from "../EtherAddressFormRow/EtherAddressFormRow";
@@ -114,10 +114,8 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
   tokenDecimals,
 }) => (
   <TransferHeader tokenSymbol={tokenSymbol} data-test-id="modals.shared.tx-transfer.modal">
-    <Formik<ITransferData>
+    <Form<ITransferData>
       validate={onValidateHandler}
-      enableReinitialize={true}
-      validateOnMount={true}
       initialValues={getInitialValuesMemoized(txUserFlowInputData.to, txUserFlowInputData.value)}
       onSubmit={onAccept}
     >
@@ -129,7 +127,7 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
         errors,
         touched,
       }: FormikProps<ITransferData>) => (
-        <FormDeprecated>
+        <>
           <EtherAddressFormRow errors={errors} values={values} />
           <ShowAdditionalNotifications errors={errors} notifications={notifications} />
           <AvailableTokenBalance
@@ -216,9 +214,9 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
               )}
             </Button>
           </section>
-        </FormDeprecated>
+        </>
       )}
-    </Formik>
+    </Form>
   </TransferHeader>
 );
 
