@@ -25,8 +25,8 @@ interface IWatchActionOptions {
 export const withActionWatcher: (
   options: IWatchActionOptions,
 ) => (
-  WrappedComponent: React.ComponentType,
-) => React.ComponentClass = options => WrappedComponent =>
+  WrappedComponent: React.ComponentType<unknown>,
+) => React.ComponentType<unknown> = options => WrappedComponent =>
   appConnect<{}, IActionWatcherDispatchProps>({
     dispatchToProps: dispatch => ({
       watchAction: () => options.actionCreator(dispatch),
@@ -37,7 +37,7 @@ export const withActionWatcher: (
 
       asyncIntervalScheduler: AsyncIntervalScheduler;
 
-      constructor(props: any, container: Container) {
+      constructor(props: IActionWatcherDispatchProps, container: Container) {
         super(props);
 
         const asyncIntervalSchedulerFactory = container.get<AsyncIntervalSchedulerFactoryType>(

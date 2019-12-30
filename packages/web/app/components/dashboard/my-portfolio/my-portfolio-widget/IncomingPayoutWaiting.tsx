@@ -8,7 +8,7 @@ import {
   selectEuroTokenIncomingPayout,
 } from "../../../../modules/investor-portfolio/selectors";
 import { appConnect } from "../../../../store";
-import { withActionWatcher } from "../../../../utils/withActionWatcher.unsafe";
+import { withActionWatcher } from "../../../../utils/withActionWatcher";
 import { CounterLayout } from "../../../shared/Counter";
 import { IIncomingPayoutData, IncomingPayoutPendingBase } from "./IncomingPayoutPending";
 
