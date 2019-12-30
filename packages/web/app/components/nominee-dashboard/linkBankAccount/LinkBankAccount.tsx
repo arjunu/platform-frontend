@@ -5,7 +5,7 @@ import { compose } from "recompose";
 import { NOMINEE_BANK_ACCOUNT_WATCHER_DELAY } from "../../../config/constants";
 import { actions } from "../../../modules/actions";
 import { THocProps } from "../../../types";
-import { withActionWatcher } from "../../../utils/withActionWatcher.unsafe";
+import { withActionWatcher } from "../../../utils/withActionWatcher";
 import { connectLinkBankAccountComponent } from "../../settings/linked-bank-account/ConnectLinkBankAccount";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons/Button";
 

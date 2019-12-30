@@ -16,7 +16,7 @@ import { EuroToken } from "../../../../lib/contracts/EuroToken";
 import { FeeDisbursal } from "../../../../lib/contracts/FeeDisbursal";
 import { Neumark } from "../../../../lib/contracts/Neumark";
 import { ContractsService } from "../../../../lib/web3/ContractsService";
-import { generateRootReducer } from "../../../../store";
+import { generateRootReducer, IAppState } from "../../../../store";
 import { PayoutWidget } from "./PayoutWidget";
 
 /*
@@ -56,7 +56,7 @@ const initialState = {
       data: undefined,
     },
   },
-};
+} as IAppState;
 
 const getNonClaimableDisbursalsRejection = (_: string, _1: string) =>
   Promise.reject("nothing for you here");
