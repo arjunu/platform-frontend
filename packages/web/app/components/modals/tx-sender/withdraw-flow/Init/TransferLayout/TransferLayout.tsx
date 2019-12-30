@@ -2,7 +2,6 @@ import * as cn from "classnames";
 import { FormikErrors, FormikProps } from "formik";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
-import { defaultMemoize } from "reselect";
 
 import { TSelectUserFlowDetails } from "../../../../../../modules/tx/user-flow/transfer/selectors";
 import { TxUserFlowInputData } from "../../../../../../modules/tx/user-flow/transfer/types";
@@ -98,9 +97,6 @@ const getInitialValues = (to: string, value: string) => ({
   allowSmartContract: false,
 });
 
-// without memoization `initialValues` will revalidate form on each render causing infinite loop
-const getInitialValuesMemoized = defaultMemoize(getInitialValues);
-
 const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
   notifications,
   onAccept,
@@ -116,7 +112,7 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
   <TransferHeader tokenSymbol={tokenSymbol} data-test-id="modals.shared.tx-transfer.modal">
     <Form<ITransferData>
       validate={onValidateHandler}
-      initialValues={getInitialValuesMemoized(txUserFlowInputData.to, txUserFlowInputData.value)}
+      initialValues={getInitialValues(txUserFlowInputData.to, txUserFlowInputData.value)}
       onSubmit={onAccept}
     >
       {({

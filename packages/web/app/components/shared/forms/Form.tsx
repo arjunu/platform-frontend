@@ -4,6 +4,7 @@ import { difference, isEmpty } from "lodash/fp";
 import * as React from "react";
 
 import { CommonHtmlProps, TDataTestId } from "../../../types";
+import { useDeepMemo } from "../hooks/useDeepMemo";
 import { useLogger } from "../hooks/useLogger";
 import { usePrevious } from "../hooks/usePrevious";
 
@@ -94,30 +95,36 @@ const Form = <Values extends {}>({
   validate,
   "data-test-id": dataTestId,
   ...props
-}: TFormProps<Values>) => (
-  <>
-    {process.env.NODE_ENV === "development" && validationSchema && (
-      <SchemaFieldsGuard<Values>
-        {...props}
-        validationSchema={validationSchema}
-        initialValues={initialValues}
-      />
-    )}
-    <Formik<Values>
-      {...props}
-      validate={validate}
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-      enableReinitialize={true}
-      validateOnMount={true}
-    >
-      {formikProps => (
-        <FormLayout {...formikProps} className={className} data-test-id={dataTestId}>
-          {typeof children === "function" ? children(formikProps) : children}
-        </FormLayout>
+}: TFormProps<Values>) => {
+  // always return the same reference when value is deeply equal
+  // otherwise formik will rererun validation every time it sees a new reference
+  const initialValuesMemoized = useDeepMemo(() => initialValues, [initialValues]);
+
+  return (
+    <>
+      {process.env.NODE_ENV === "development" && validationSchema && (
+        <SchemaFieldsGuard<Values>
+          {...props}
+          validationSchema={validationSchema}
+          initialValues={initialValuesMemoized}
+        />
       )}
-    </Formik>
-  </>
-);
+      <Formik<Values>
+        {...props}
+        validate={validate}
+        validationSchema={validationSchema}
+        initialValues={initialValuesMemoized}
+        enableReinitialize={true}
+        validateOnMount={true}
+      >
+        {formikProps => (
+          <FormLayout {...formikProps} className={className} data-test-id={dataTestId}>
+            {typeof children === "function" ? children(formikProps) : children}
+          </FormLayout>
+        )}
+      </Formik>
+    </>
+  );
+};
 
 export { Form };
