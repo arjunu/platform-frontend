@@ -84,7 +84,7 @@ describe("<ButtonLink />", () => {
 
     const button = mount(node);
 
-    button.simulate("click");
+    button.find(Button).simulate("click");
 
     expect(store.getActions()).to.have.lengthOf(1);
     expect(store.getActions()).to.deep.include({
@@ -104,7 +104,7 @@ describe("<ButtonLink />", () => {
 
     const button = mount(node);
 
-    button.simulate("click");
+    button.find(Button).simulate("click");
 
     expect(store.getActions()).to.have.lengthOf(1);
     expect(store.getActions()).to.deep.include({
