@@ -5,9 +5,9 @@
   "scripts": {
     "format": "prettier --list-different '**/*.{ts,tsx,js,json,md,gql}'",
     "format:fix": "prettier --write '**/*.{ts,tsx,js,json,md,gql}'",
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start:android": "react-native run-android",
+    "start:ios": "react-native run-ios",
+    "start:devtools": "react-devtools",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "prepare": "echo 'Nothing to prepare for wallet yet...'"
   },
@@ -27,6 +27,7 @@
     "eslint": "^6.5.1",
     "metro-react-native-babel-preset": "^0.56.0",
     "prettier": "^1.19.1",
+    "react-devtools": "^3.6.3",
     "react-test-renderer": "16.9.0",
     "typescript": "^3.7.3"
   },
