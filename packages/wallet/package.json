@@ -31,6 +31,9 @@
     "typescript": "^3.7.3"
   },
   "workspaces": {
-    "nohoist": ["**/react-native", "**/react-native/**"]
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**"
+    ]
   }
 }
