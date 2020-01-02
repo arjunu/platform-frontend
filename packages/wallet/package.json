@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "format": "prettier --list-different '**/*.{ts,tsx,js,json,md,gql}'",
+    "format:fix": "prettier --write '**/*.{ts,tsx,js,json,md,gql}'",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
@@ -11,7 +13,8 @@
   },
   "dependencies": {
     "react": "16.9.0",
-    "react-native": "0.61.5"
+    "react-native": "0.61.5",
+    "@neufund/shared": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
@@ -23,6 +26,7 @@
     "@typescript-eslint/parser": "^2.12.0",
     "eslint": "^6.5.1",
     "metro-react-native-babel-preset": "^0.56.0",
+    "prettier": "^1.19.1",
     "react-test-renderer": "16.9.0",
     "typescript": "^3.7.3"
   },
