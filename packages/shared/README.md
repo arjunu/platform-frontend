@@ -7,7 +7,7 @@ A shared library business logic between apps
 
 ## Running project
 
-```sh
+```bash
 yarn start
 ```
 
@@ -15,18 +15,18 @@ Will compile and start watching for changes in library.
 
 ## Running tests
 
-```
+```bash
 yarn test
 ```
 
 ### Fix all autofixable errors
 
-```
+```bash
 yarn lint:fix
 ```
 
 ### Production build
 
-```
+```bash
 yarn build
 ```

@@ -18,7 +18,7 @@ run `yarn start:remote` to connect to remote backend and node.
 
 #### Running production build locally
 
-```sh
+```bash
 yarn build:prod # build production bundle
 
 sh ./scripts/prod-like-srv.sh # run the server
@@ -36,25 +36,25 @@ trigger it manually do: `yarn generate:contracts`.
 
 ## Running tests
 
-```
+```bash
 yarn test
 ```
 
 ### Fix all autofixable errors
 
-```
+```bash
 yarn lint:fix
 ```
 
 ### Production build
 
-```
+```bash
 yarn build:prod
 ```
 
 ### Extracting translations from the app
 
-```
+```bash
 yarn intl:extract
 ```
 
@@ -64,7 +64,7 @@ yarn intl:extract
 
 If you need to push the contract artifacts to the newest version yourself, then run.
 
-```
+```bash
 yarn contract-artifacts:update
 ```
 
@@ -72,7 +72,7 @@ then commit the submodules change. It is important to commit before you run yarn
 prepare script will revert uncommited changes to git submodules, and repin them to the local
 version.
 
-```
+```bash
 yarn
 ```
 
@@ -81,7 +81,7 @@ updated
 
 You will most of the time not need this as updating the contracts is included in
 
-```
+```bash
 yarn lint:fix
 ```
 
