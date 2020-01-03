@@ -147,7 +147,7 @@ export function clickFirstTid(component: ReactWrapper, id: string): void {
 
 export async function waitForTid(component: ReactWrapper, id: string): Promise<void> {
   // wait until event queue is empty :/ currently we don't have a better way to solve it
-  let waitTime = 50;
+  let waitTime = 100;
   while (--waitTime > 0 && component.find(tid(id)).length === 0) {
     await Promise.resolve();
     component.update();
