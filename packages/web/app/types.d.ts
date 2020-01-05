@@ -142,6 +142,13 @@ export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
  */
 export type XOR<T extends object, U extends object> = (Without<T, U> & U) | (Without<U, T> & T);
 
+/**
+ * Get object value types
+ * @example
+ * ValueOf<{ foo: boolean, bar: string }> // boolean | string
+ */
+export type Values<T> = T[keyof T];
+
 // TODO: Remove `any` and provide correct types everywhere
 export type TFormikConnect<Values = any> = {
   formik: FormikContext<Values>;

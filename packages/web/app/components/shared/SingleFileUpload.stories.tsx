@@ -5,7 +5,7 @@ import * as React from "react";
 import { EMimeType } from "./forms/fields/utils.unsafe";
 import { SingleFileUpload } from "./SingleFileUpload";
 
-import * as image from "!!url-loader!../../assets/img/header/social_logo.png";
+import image from "../../assets/img/header/social_logo.png";
 
 //TODO add error state test
 storiesOf("Upload/SingleFileUpload", module)

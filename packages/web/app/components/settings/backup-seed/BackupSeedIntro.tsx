@@ -4,10 +4,10 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons";
 import { StepCard } from "../../shared/StepCard";
 
-import * as arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
-import * as noComputer from "../../../assets/img/seed_backup/no_computer.svg";
-import * as safe from "../../../assets/img/seed_backup/safe.svg";
-import * as write from "../../../assets/img/seed_backup/write.svg";
+import arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
+import noComputer from "../../../assets/img/seed_backup/no_computer.svg";
+import safe from "../../../assets/img/seed_backup/safe.svg";
+import write from "../../../assets/img/seed_backup/write.svg";
 import * as styles from "./BackupSeed.module.scss";
 
 interface IBackupSeedIntroProps {

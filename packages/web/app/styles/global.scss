@@ -51,7 +51,7 @@ body {
 }
 
 .row-gutter-top {
-  &>div {
+  & > div {
     margin-top: $grid-gutter-width;
   }
 }

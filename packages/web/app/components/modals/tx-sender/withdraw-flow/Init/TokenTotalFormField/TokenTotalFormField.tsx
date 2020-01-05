@@ -15,7 +15,7 @@ import {
 } from "../../../../../shared/MoneySuiteWidget/MoneySuiteWidget";
 import { DataRow } from "../../../shared/DataRow";
 
-import * as ethIcon from "../../../../../../assets/img/eth_icon.svg";
+import ethIcon from "../../../../../../assets/img/eth_icon.svg";
 import * as styles from "../../Transfer.module.scss";
 
 const TokenTotalFormField: React.FunctionComponent<{

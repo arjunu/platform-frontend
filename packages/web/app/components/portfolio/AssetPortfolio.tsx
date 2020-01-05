@@ -17,7 +17,7 @@ import { LoadingIndicatorContainer } from "../shared/loading-indicator/LoadingIn
 import { Panel } from "../shared/Panel";
 import { NewTable, NewTableRow } from "../shared/table";
 
-import * as neuIcon from "../../assets/img/neu_icon.svg";
+import neuIcon from "../../assets/img/neu_icon.svg";
 
 interface IExternalProps {
   tokensDisbursal: ReadonlyArray<ITokenDisbursal> | undefined;

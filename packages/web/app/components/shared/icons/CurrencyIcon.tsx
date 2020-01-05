@@ -5,10 +5,10 @@ import { assertNever } from "../../../utils/assertNever";
 import { ECurrency, selectUnits } from "../formatters/utils";
 import { TokenIcon } from "./TokenIcon";
 
-import * as ethIcon from "../../../assets/img/eth_icon.svg";
-import * as eurIcon from "../../../assets/img/euro_icon.svg";
-import * as neuIcon from "../../../assets/img/neu_icon.svg";
-import * as nEurIcon from "../../../assets/img/nEUR_icon.svg";
+import ethIcon from "../../../assets/img/eth_icon.svg";
+import eurIcon from "../../../assets/img/euro_icon.svg";
+import neuIcon from "../../../assets/img/neu_icon.svg";
+import nEurIcon from "../../../assets/img/nEUR_icon.svg";
 
 const getIconForCurrency = (currency: ECurrency) => {
   switch (currency) {

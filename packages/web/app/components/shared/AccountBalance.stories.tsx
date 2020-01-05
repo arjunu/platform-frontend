@@ -5,7 +5,7 @@ import { Q18 } from "../../config/constants";
 import { AccountBalance } from "./AccountBalance";
 import { ECurrency } from "./formatters/utils";
 
-import * as ethIcon from "../../assets/img/eth_icon.svg";
+import ethIcon from "../../assets/img/eth_icon.svg";
 
 storiesOf("AccountBalance", module)
   .add("without actions", () => (

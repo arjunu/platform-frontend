@@ -8,7 +8,7 @@ import { withMockedDate, withModalBody } from "../../../../../utils/storybookHel
 import { ETxStatus } from "../../types";
 import { TransferTransactionWrapperLayout } from "./TransferTransactionLayout";
 
-import * as ethImage from "../../../../../assets/img/eth_icon.svg";
+import ethImage from "../../../../../assets/img/eth_icon.svg";
 
 const dummyNow = new Date("10/3/2019");
 const date = moment.utc(dummyNow).subtract(1, "day");

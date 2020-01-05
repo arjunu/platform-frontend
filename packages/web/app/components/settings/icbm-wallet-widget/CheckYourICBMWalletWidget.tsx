@@ -11,7 +11,7 @@ import { FormDeprecated, FormFieldColorful } from "../../shared/forms";
 import { Panel } from "../../shared/Panel";
 import { ECustomTooltipTextPosition, Tooltip } from "../../shared/tooltips";
 
-import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
+import arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./CheckYourICBMWalletWidget.module.scss";
 
 interface IDispatchProps {
@@ -34,7 +34,6 @@ class FormContent extends React.Component {
               data-test-id="models.profile.icbm-wallet-widget.check-your-icbm-wallet-widget.address"
             />
             <Button
-              className={styles.button}
               layout={EButtonLayout.GHOST}
               iconPosition={EIconPosition.ICON_AFTER}
               svgIcon={arrowRight}

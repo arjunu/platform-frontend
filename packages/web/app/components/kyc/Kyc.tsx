@@ -1,37 +1,43 @@
 import * as React from "react";
 import { Redirect } from "react-router";
-import { branch, compose, renderComponent } from "recompose";
+import { branch, compose, renderComponent, withProps } from "recompose";
 
-import { EKycRequestStatus, EKycRequestType } from "../../lib/api/kyc/KycApi.interfaces";
+import {
+  EKycInstantIdStatus,
+  EKycRequestStatus,
+  EKycRequestType,
+} from "../../lib/api/kyc/KycApi.interfaces";
 import { actions } from "../../modules/actions";
 import { selectIsUserEmailVerified } from "../../modules/auth/selectors";
+import { selectKycIdNowRedirectUrl } from "../../modules/kyc/instant-id/id-now/selectors";
 import {
   selectIsKycFlowBlockedByRegion,
-  selectKycOutSourcedURL,
+  selectKycInstantIdStatus,
   selectKycRequestStatus,
-  selectPendingKycRequestType,
+  selectKycRequestType,
 } from "../../modules/kyc/selectors";
 import { appConnect } from "../../store";
 import { onEnterAction } from "../../utils/OnEnterAction";
 import { withContainer } from "../../utils/withContainer.unsafe";
 import { appRoutes } from "../appRoutes";
-import { Layout } from "../layouts/Layout";
+import { EContentWidth } from "../layouts/Content";
+import { FullscreenProgressLayout } from "../layouts/FullscreenProgressLayout";
+import { TContentExternalProps } from "../layouts/Layout";
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout";
 
 const KycLayout = React.lazy(() => import("./KycLayout").then(imp => ({ default: imp.KycLayout })));
 
 interface IStateProps {
-  requestLoading?: boolean;
   requestStatus?: EKycRequestStatus;
-  redirectUrl: string;
-  pendingRequestType: EKycRequestType | undefined;
+  instantIdStatus: EKycInstantIdStatus | undefined;
+  idNowRedirectUrl: string | undefined;
+  requestType: EKycRequestType | undefined;
   hasVerifiedEmail: boolean;
   isKycFlowBlockedByRegion: boolean;
 }
 
 interface IDispatchProps {
-  reopenRequest: () => void;
   goToProfile: () => void;
   goToDashboard: () => void;
 }
@@ -40,20 +46,17 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
   createErrorBoundary(ErrorBoundaryLayout),
   appConnect<IStateProps, IDispatchProps>({
     stateToProps: state => ({
-      requestLoading:
-        state.kyc.individualRequestStateLoading || state.kyc.businessRequestStateLoading,
       requestStatus: selectKycRequestStatus(state),
-      redirectUrl: selectKycOutSourcedURL(state.kyc),
-      pendingRequestType: selectPendingKycRequestType(state.kyc),
+      instantIdStatus: selectKycInstantIdStatus(state),
+      idNowRedirectUrl: selectKycIdNowRedirectUrl(state),
+      requestType: selectKycRequestType(state),
       hasVerifiedEmail: selectIsUserEmailVerified(state.auth),
       isKycFlowBlockedByRegion: selectIsKycFlowBlockedByRegion(state),
     }),
     dispatchToProps: dispatch => ({
-      reopenRequest: () => {},
       goToProfile: () => dispatch(actions.routing.goToProfile()),
       goToDashboard: () => dispatch(actions.routing.goToDashboard()),
     }),
-    options: { pure: false },
   }),
   branch(
     (props: IStateProps) => !props.hasVerifiedEmail || props.isKycFlowBlockedByRegion,
@@ -61,11 +64,12 @@ const Kyc = compose<IStateProps & IDispatchProps, {}>(
   ),
   onEnterAction({
     actionCreator: dispatch => {
-      dispatch(actions.kyc.kycLoadIndividualRequest());
-      dispatch(actions.kyc.kycLoadBusinessRequest());
+      dispatch(actions.kyc.kycLoadStatusAndData());
     },
   }),
-  withContainer(Layout),
+  withContainer(
+    withProps<TContentExternalProps, {}>({ width: EContentWidth.SMALL })(FullscreenProgressLayout),
+  ),
 )(KycLayout);
 
 export { Kyc };

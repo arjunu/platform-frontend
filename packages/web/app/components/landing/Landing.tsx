@@ -22,7 +22,7 @@ import {
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout";
 
-import * as arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
+import arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./Landing.module.scss";
 
 const LandingLayout: React.FunctionComponent = () => (
@@ -46,7 +46,7 @@ const LandingLayout: React.FunctionComponent = () => (
             columnSpan={EColumnSpan.ONE_AND_HALF_COL}
             type={EContainerType.GRID}
           >
-            <ul className={cn(styles.features, "pure")}>
+            <ul className={cn(styles.features)}>
               <li className={cn(styles.featuresItem, styles.featuresItemInvest)}>
                 <FormattedMessage id="platform.landing.list.first" />
               </li>

@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { Message } from "./Message";
 
-import * as image from "../../../assets/img/header/social_logo.png";
+import image from "../../../assets/img/header/social_logo.png";
 
 storiesOf("Modals/Message", module).add("default", () => (
   <Message

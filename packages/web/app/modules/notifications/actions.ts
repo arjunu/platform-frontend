@@ -1,7 +1,8 @@
 import { createActionFactory } from "@neufund/shared";
 
+import { ENotificationText } from "../../components/translatedMessages/messages";
 import { AppActionTypes } from "../../store";
-import { ENotificationText, ENotificationType } from "./types";
+import { ENotificationType } from "./types";
 
 export interface INewNotification {
   id?: number;

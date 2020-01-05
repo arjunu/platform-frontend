@@ -1,4 +1,4 @@
-import { Effect, fork, put } from "redux-saga/effects";
+import { fork, put } from "redux-saga/effects";
 
 import { hashFromIpfsLink } from "../../components/documents/utils";
 import { AuthMessage, ToSMessage } from "../../components/translatedMessages/messages";
@@ -17,7 +17,7 @@ import { neuCall, neuTakeEvery } from "../sagasUtils";
 export function* getCurrentAgreementHash({
   contractsService,
   logger,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   yield waitUntilSmartContractsAreInitialized();
 
   logger.info("Loading current agreement hash");
@@ -42,7 +42,7 @@ function* handleAcceptCurrentAgreementEffect({ apiUserService }: TGlobalDependen
 function* handleAcceptCurrentAgreement({
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield neuCall(
       ensurePermissionsArePresentAndRunEffect,
@@ -57,6 +57,6 @@ function* handleAcceptCurrentAgreement({
   }
 }
 
-export const termsOfServiceSagas = function*(): Iterator<Effect> {
+export const termsOfServiceSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeEvery, actions.tosModal.acceptCurrentTos, handleAcceptCurrentAgreement);
 };

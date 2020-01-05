@@ -136,6 +136,14 @@
   line-height: 1.33;
 }
 
+@mixin nds-helper-text-bold {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(12px);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 2px;
+}
+
 @mixin nds-button-label {
   font-family: $font-family-roboto;
   font-size: px-to-rem(14px);
@@ -143,11 +151,40 @@
   line-height: 1.71;
 }
 
+@mixin nds-label {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(10px);
+  line-height: 1.6;
+  letter-spacing: px-to-rem(2px);
+}
+
 // TODO: Add this one to the design typography
 @mixin font-large-roboto {
   font-family: $font-family-roboto;
   font-size: px-to-rem(18px);
   font-weight: $font-weight-medium;
+}
+
+@mixin nds-body {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(16px);
+  line-height: 1.5;
+}
+
+@mixin nds-headline-2 {
+  font-family: $font-family-montserrat;
+  font-size: px-to-rem(32px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: .32px;
+}
+
+@mixin nds-headline-3 {
+  font-family: $font-family-roboto;
+  font-size: px-to-rem(24px);
+  font-weight: 500;
+  line-height: 1.33;
+  letter-spacing: .24px;
 }
 
 // Typography utils

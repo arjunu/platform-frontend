@@ -52,9 +52,9 @@
   }
 
   // default states
-  @include _set-indicator-color(green, $green-light);
-  @include _set-indicator-color(black, $black);
-  @include _set-indicator-color(blue, $blue-light);
-  @include _set-indicator-color(red, $neu-red);
-  @include _set-indicator-color(orange, $neu-bright-orange);
+  @include _set-indicator-color("green", $green-light);
+  @include _set-indicator-color("black", $black);
+  @include _set-indicator-color("blue", $blue-light);
+  @include _set-indicator-color("red", $neu-red);
+  @include _set-indicator-color("orange", $neu-bright-orange);
 }

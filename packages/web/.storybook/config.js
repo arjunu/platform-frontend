@@ -1,6 +1,6 @@
 import "../app/polyfills.sideEffect";
 
-import "./setup-styles";
+import "./setup-styles.sideEffect";
 
 import * as React from "react";
 import { configure, addDecorator, addParameters } from "@storybook/react";
@@ -39,6 +39,8 @@ addDecorator(withScreenshot);
 
 addParameters({
   screenshot: {
+    // wait for component to load and render before taking screenshots
+    delay: 1000,
     viewports: {
       // Mobile
       "375x667": {

@@ -23,7 +23,7 @@ import { selectLiquidEtherBalance } from "./../../../wallet/selectors";
 import { TxUserFlowInputData, TxUserFlowTransferDetails } from "./../../user-flow/transfer/types";
 import { TWithdrawAdditionalData } from "./types";
 
-import * as ethImage from "../../../../assets/img/eth_icon.svg";
+import ethImage from "../../../../assets/img/eth_icon.svg";
 
 export interface IWithdrawTxGenerator {
   to: string;
@@ -33,7 +33,7 @@ export interface IWithdrawTxGenerator {
 export function* generateEthWithdrawTransaction(
   { contractsService, web3Manager }: TGlobalDependencies,
   { to, valueUlps }: IWithdrawTxGenerator,
-): Iterator<any> {
+): Generator<any, any, any> {
   // Sanity checks
   if (!to || !isAddressValid(to)) throw new WrongValuesError();
   if (
@@ -103,7 +103,7 @@ export function* generateEthWithdrawTransaction(
   };
 }
 
-function* ethWithdrawFlow(_: TGlobalDependencies): Iterator<any> {
+function* ethWithdrawFlow(_: TGlobalDependencies): Generator<any, any, any> {
   yield take(actions.txSender.txSenderAcceptDraft);
 
   const txUserFlowData: TxUserFlowTransferDetails = yield select(selectUserFlowTxDetails);
@@ -123,7 +123,10 @@ function* ethWithdrawFlow(_: TGlobalDependencies): Iterator<any> {
   yield put(actions.txSender.txSenderContinueToSummary<ETxSenderType.WITHDRAW>(additionalData));
 }
 
-function* withdrawSaga({ logger, contractsService }: TGlobalDependencies): Iterator<any> {
+function* withdrawSaga({
+  logger,
+  contractsService,
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const etherTokenAddress = contractsService.etherToken.address;
     const userBalance: string = yield select(selectLiquidEtherBalance);
@@ -148,6 +151,6 @@ function* withdrawSaga({ logger, contractsService }: TGlobalDependencies): Itera
   }
 }
 
-export const txWithdrawSagas = function*(): Iterator<any> {
+export const txWithdrawSagas = function*(): Generator<any, any, any> {
   yield fork(neuTakeLatest, "TRANSACTIONS_START_WITHDRAW_ETH", withdrawSaga);
 };

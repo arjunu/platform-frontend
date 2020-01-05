@@ -3,12 +3,11 @@ import CKEditor, { IUploadAdapterFactory, TCkEditor } from "@ckeditor/ckeditor5-
 import * as cn from "classnames";
 import { difference } from "lodash";
 import * as React from "react";
-import { compose, fromRenderProps } from "recompose";
+import { compose } from "recompose";
 
 import { symbols } from "../../../../di/symbols";
-import { TRichTextEditorUploadAdapterFactoryType } from "../../../../lib/api/file-storage/RichTextEditorUploadAdapter";
 import { CommonHtmlProps } from "../../../../types";
-import { ContainerContext, TContainerContext } from "../../../../utils/InversifyProvider";
+import { withDependencies } from "../../hocs/withDependencies";
 import { SANITIZER_OPTIONS } from "../../SanitizedHtml";
 import { generateErrorId } from "../fields/FormFieldError";
 import { generateLabelId } from "./FormLabel";
@@ -16,7 +15,7 @@ import { generateLabelId } from "./FormLabel";
 import * as fieldStyles from "../../Field.module.scss";
 import * as styles from "./RichTextAreaLayout.module.scss";
 
-type TRenderPropsProp = { uploadAdapterFactory: IUploadAdapterFactory };
+type TDependenciesProps = { uploadAdapterFactory: IUploadAdapterFactory };
 
 type TExternalProps = {
   invalid?: boolean;
@@ -44,7 +43,7 @@ const toolbar = [
 ].filter(Boolean);
 
 const RichTextAreaLayoutComponent: React.FunctionComponent<TExternalProps &
-  TRenderPropsProp &
+  TDependenciesProps &
   CommonHtmlProps> = ({
   name,
   invalid,
@@ -116,17 +115,12 @@ const RichTextAreaLayoutComponent: React.FunctionComponent<TExternalProps &
 };
 
 const RichTextAreaLayout = compose<
-  TRenderPropsProp & TExternalProps & CommonHtmlProps,
+  TDependenciesProps & TExternalProps & CommonHtmlProps,
   TExternalProps & CommonHtmlProps
 >(
-  fromRenderProps<TRenderPropsProp, TExternalProps, NonNullable<TContainerContext>>(
-    ContainerContext.Consumer,
-    container => ({
-      uploadAdapterFactory:
-        container &&
-        container.get<TRichTextEditorUploadAdapterFactoryType>(symbols.richTextEditorUploadAdapter),
-    }),
-  ),
+  withDependencies<TDependenciesProps>({
+    uploadAdapterFactory: symbols.richTextEditorUploadAdapter,
+  }),
 )(RichTextAreaLayoutComponent);
 
 export { RichTextAreaLayout, RichTextAreaLayoutComponent };

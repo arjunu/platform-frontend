@@ -27,7 +27,7 @@ import { selectInvestmentFLow } from "./selectors";
 import { txValidateTokenTransfer } from "./transfer/token-transfer/sagas";
 import { txValidateWithdraw } from "./transfer/withdraw/sagas";
 
-export function* txValidateInvestment(): Iterator<any> {
+export function* txValidateInvestment(): Generator<any, any, any> {
   try {
     const investFlow = yield select(selectInvestmentFLow);
     const investAmountUlps = yield select(selectMaximumInvestment);
@@ -105,7 +105,7 @@ export function* validateGas({ apiUserService }: TGlobalDependencies, txDetails:
   }
 }
 
-export const txValidatorSagasWatcher = function*(): Iterator<any> {
+export const txValidatorSagasWatcher = function*(): Generator<any, any, any> {
   yield fork(
     neuTakeLatestUntil,
     "TX_SENDER_VALIDATE_DRAFT",

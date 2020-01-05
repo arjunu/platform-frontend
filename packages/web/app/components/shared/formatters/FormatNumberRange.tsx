@@ -61,7 +61,11 @@ export const FormatNumberRange: React.FunctionComponent<INumberRangeProps> = ({
       outputFormat,
     });
 
-    if (Object.values(ESpecialNumber).includes(valueUpto)) {
+    if (
+      typeof valueUpto === "string" &&
+      Object.values(ESpecialNumber).includes(valueUpto as ESpecialNumber)
+      // TODO: Figure out why is this assertion like this
+    ) {
       return (
         <span className={cn(styles.noBreak, className)} data-test-id="value">
           {renderValueFrom}

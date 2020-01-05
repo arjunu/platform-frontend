@@ -11,7 +11,7 @@ import { DocumentLink } from "../../../../shared/DocumentLink";
 import { InlineIcon } from "../../../../shared/icons/index";
 import { Panel } from "../../../../shared/Panel";
 
-import * as icon_link from "../../../../../assets/img/inline_icons/social_link.svg";
+import icon_link from "../../../assets/img/inline_icons/social_link.svg";
 import * as styles from "./documents-widget/DocumentsWidget.module.scss";
 
 type TExternalProps = {

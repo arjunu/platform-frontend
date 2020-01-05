@@ -1,0 +1,49 @@
+$icon-dimensions: px-to-rem(64px);
+
+.card {
+  @include media-breakpoint-down (sm) {
+    width: auto;
+    padding: px-to-rem(24px);
+    margin-bottom: px-to-rem(24px);
+  }
+
+  display: flex;
+  flex-direction: column;
+  height: px-to-rem(364px);
+  border-radius: $nds-border-radius;
+  border: solid 1px $neu-light-blue-grey-two;
+  background-color: $neu-white-two;
+  padding: px-to-rem(64px) px-to-rem(24px) px-to-rem(24px);
+}
+
+.card-container {
+  margin-right: px-to-rem(18px);
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+
+.icon-container {
+  @include rect($icon-dimensions);
+
+  color: transparent;
+  background-color: $neu-pale-grey-three;
+  padding: 16px;
+  border-radius: 50%;
+  margin-bottom: px-to-rem(16px);
+}
+
+.title {
+  @include nds-headline-3;
+
+  color: $neu-charcoal-grey;
+  margin-bottom: px-to-rem(16px);
+}
+
+.description {
+  @include nds-body;
+
+  color: $neu-shuttle-gray;
+}

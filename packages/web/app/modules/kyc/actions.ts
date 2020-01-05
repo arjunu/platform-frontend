@@ -7,19 +7,25 @@ import {
   IKycFileInfo,
   IKycIndividualData,
   IKycLegalRepresentative,
-  IKycRequestState,
   KycBankQuintessenceBankAccount,
   TKycStatus,
 } from "../../lib/api/kyc/KycApi.interfaces";
+import { kycInstantIdIdNowActions } from "./instant-id/id-now/actions";
+import { kycInstantIdOnfidoActions } from "./instant-id/onfido/actions";
 import { TBankAccount, TClaims } from "./types";
 
 export const kycActions = {
+  ...kycInstantIdOnfidoActions,
+  ...kycInstantIdIdNowActions,
+
   /**
    * General
    */
   setStatus: createActionFactory("KYC_SET_STATUS", (status: TKycStatus) => ({ status })),
-  kycLoadClientData: createActionFactory("KYC_LOAD_CLIENT_DATA"),
-  kycFinishedLoadingData: createActionFactory("KYC_FINISHED_LOADING_DATA"),
+  setStatusLoading: createActionFactory("KYC_SET_STATUS_LOADING"),
+  setStatusError: createActionFactory("KYC_SET_STATUS_ERROR", (error: string) => ({ error })),
+
+  kycLoadStatusAndData: createActionFactory("KYC_LOAD_CLIENT_DATA"),
 
   /**
    * Widget watchers
@@ -38,9 +44,25 @@ export const kycActions = {
    */
 
   // data
-  kycSubmitIndividualData: createActionFactory(
-    "KYC_SUBMIT_INDIVIDUAL_FORM",
-    (data: IKycIndividualData, skipContinue = false) => ({ data, skipContinue }),
+  kycSubmitPersonalData: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_DATA",
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalDataAndClose: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_DATA_AND_CLOSE",
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalDataNoRedirect: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_DATA_NO_REDIRECT",
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalAddress: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_ADDRESS",
+    (data: IKycIndividualData) => ({ data }),
+  ),
+  kycSubmitPersonalAddressAndClose: createActionFactory(
+    "KYC_SUBMIT_PERSONAL_ADDRESS_AND_CLOSE",
+    (data: IKycIndividualData) => ({ data }),
   ),
 
   kycLoadIndividualData: createActionFactory("KYC_LOAD_INDIVIDUAL_DATA"),
@@ -84,23 +106,7 @@ export const kycActions = {
     }),
   ),
 
-  kycUpdateIndividualRequestState: createActionFactory(
-    "KYC_UPDATE_INDIVIDUAL_REQUEST_STATE",
-    (
-      individualRequestStateLoading?: boolean,
-      individualRequestState?: IKycRequestState,
-      individualRequestError?: string,
-    ) => ({
-      individualRequestState,
-      individualRequestStateLoading,
-      individualRequestError,
-    }),
-  ),
-
   kycSubmitIndividualRequest: createActionFactory("KYC_SUBMIT_INDIVIDUAL_REQUEST"),
-
-  kycStartInstantId: createActionFactory("KYC_START_INSTANT_ID"),
-  kycCancelInstantId: createActionFactory("KYC_CANCEL_INSTANT_ID"),
 
   /*
     Business
@@ -249,19 +255,6 @@ export const kycActions = {
   kycLoadBusinessRequest: createActionFactory(
     "KYC_LOAD_BUSINESS_REQUEST_STATE",
     (inBackground: boolean = false) => ({ inBackground }),
-  ),
-
-  kycUpdateBusinessRequestState: createActionFactory(
-    "KYC_UPDATE_BUSINESS_REQUEST_STATE",
-    (
-      businessRequestStateLoading?: boolean,
-      businessRequestState?: IKycRequestState,
-      businessRequestError?: string,
-    ) => ({
-      businessRequestState,
-      businessRequestStateLoading,
-      businessRequestError,
-    }),
   ),
 
   kycSubmitBusinessRequest: createActionFactory("KYC_SUBMIT_BUSINESS_REQUEST"),

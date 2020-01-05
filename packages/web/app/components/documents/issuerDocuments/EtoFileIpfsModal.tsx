@@ -12,7 +12,7 @@ import { Modal } from "../../modals/Modal";
 import { ButtonArrowRight } from "../../shared/buttons/index";
 import { ResponsiveImage } from "../../shared/ResponsiveImage";
 
-import * as ipfsImage from "../../../assets/img/ipfs.png";
+import ipfsImage from "../../../assets/img/ipfs.png";
 import * as styles from "./EtoFileIpfsModal.module.scss";
 
 interface IStateProps {

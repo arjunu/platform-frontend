@@ -19,14 +19,14 @@ import { getMessageTranslation } from "../../translatedMessages/messages";
 import { Modal } from "../Modal";
 import { AccessLightWalletPrompt } from "./AccessLightWalletPrompt";
 
-import * as ledgerConfirm from "../../../assets/img/wallet_selector/ledger_confirm.svg";
-import * as lockIcon from "../../../assets/img/wallet_selector/lock_icon.svg";
-import * as logoGnosis1x from "../../../assets/img/wallet_selector/logo_gnosis.png";
-import * as logoGnosis2x from "../../../assets/img/wallet_selector/logo_gnosis@2x.png";
-import * as logoGnosis3x from "../../../assets/img/wallet_selector/logo_gnosis@3x.png";
-import * as logoMetamask1x from "../../../assets/img/wallet_selector/logo_metamask.png";
-import * as logoMetamask2x from "../../../assets/img/wallet_selector/logo_metamask@2x.png";
-import * as logoMetamask3x from "../../../assets/img/wallet_selector/logo_metamask@3x.png";
+import ledgerConfirm from "../../../assets/img/wallet_selector/ledger_confirm.svg";
+import lockIcon from "../../../assets/img/wallet_selector/lock_icon.svg";
+import logoGnosis1x from "../../../assets/img/wallet_selector/logo_gnosis.png";
+import logoGnosis2x from "../../../assets/img/wallet_selector/logo_gnosis@2x.png";
+import logoGnosis3x from "../../../assets/img/wallet_selector/logo_gnosis@3x.png";
+import logoMetamask1x from "../../../assets/img/wallet_selector/logo_metamask.png";
+import logoMetamask2x from "../../../assets/img/wallet_selector/logo_metamask@2x.png";
+import logoMetamask3x from "../../../assets/img/wallet_selector/logo_metamask@3x.png";
 import * as styles from "./AccessWalletModal.module.scss";
 
 interface IStateProps {

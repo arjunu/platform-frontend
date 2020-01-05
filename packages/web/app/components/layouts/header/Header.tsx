@@ -10,8 +10,8 @@ import { MobileMenu } from "../menus/mobileMenu/MobileMenu";
 import { MyAccountMenu } from "../menus/MyAccountMenu";
 import { PendingTransactionStatus } from "./PendingTransactionStatus";
 
-import * as logoNew from "../../../assets/img/logo_neufund_on_white.svg";
-import * as logoNewTitle from "../../../assets/img/logo_neufund_on_white_title.svg";
+import logoNew from "../../../assets/img/logo_neufund_on_white.svg";
+import logoNewTitle from "../../../assets/img/logo_neufund_on_white_title.svg";
 import * as styles from "./Header.module.scss";
 
 const LogoUnauth = () => (
@@ -74,4 +74,4 @@ const HeaderAuthorized: React.FunctionComponent = () => (
   </div>
 );
 
-export { HeaderUnauthorized, HeaderAuthorized, HeaderTransitional };
+export { HeaderUnauthorized, HeaderAuthorized, HeaderTransitional, LogoAuth, LogoUnauth };

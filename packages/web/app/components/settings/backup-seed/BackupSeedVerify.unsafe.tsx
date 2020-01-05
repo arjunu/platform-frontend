@@ -9,7 +9,7 @@ import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons";
 import { VirtualizedSelect } from "../../shared/forms/fields/VirtualizedSelect";
 import { WarningAlert } from "../../shared/WarningAlert";
 
-import * as arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
+import arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
 import * as styles from "./BackupSeedVerify.module.scss";
 
 const WORDS_TO_VERIFY = 4;
@@ -112,8 +112,9 @@ class BackupSeedVerify extends React.Component<IBackupSeedVerifyProps, IBackupSe
         clearable={true}
         matchPos="start"
         matchProp="value"
-        ref={(ref: TElementRef<VirtualizedSelect>) =>
-          (this.verificationSelectRefs[wordOnPageNumber] = ref)
+        ref={
+          ((ref: TElementRef<VirtualizedSelect>) =>
+            (this.verificationSelectRefs[wordOnPageNumber] = ref)) as any
         }
         value={this.state.verificationWords[wordOnPageNumber].word}
         onChange={this.updateValueFactory(wordOnPageNumber)}

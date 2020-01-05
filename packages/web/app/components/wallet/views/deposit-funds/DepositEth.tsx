@@ -6,7 +6,7 @@ import { selectEthereumAddressWithChecksum } from "../../../../modules/web3/sele
 import { appConnect } from "../../../../store";
 import { DepositFunds } from "./DepositFunds";
 
-import * as icon from "../../../../assets/img/eth_icon.svg";
+import icon from "../../../../assets/img/eth_icon.svg";
 import * as styles from "./DepositEth.module.scss";
 
 interface IProps {

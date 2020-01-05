@@ -1,5 +1,5 @@
+import { StringableActionCreator } from "@redux-saga/types";
 import { LocationChangeAction } from "connected-react-router";
-import { StringableActionCreator } from "redux-saga/effects";
 
 import { portfolioActions } from "../components/portfolio/actions";
 import { TDictionaryValues } from "../types";
@@ -14,6 +14,7 @@ import { etoFlowActions } from "./eto-flow/actions";
 import { etoNomineeActions } from "./eto-nominee/actions";
 import { etoViewActions } from "./eto-view/shared/actions";
 import { etoActions } from "./eto/actions";
+import { fullPageLoadingActions } from "./full-page-loading/actions";
 import { gasActions } from "./gas/actions";
 import { genericModalActions } from "./generic-modal/actions";
 import { icbmWalletBalanceModalActions } from "./icbm-wallet-balance-modal/actions";
@@ -83,6 +84,7 @@ export const actions = {
   portfolio: portfolioActions,
   marketingEmails: marketingEmailsActions,
   nomineeFlow: nomineeFlowActions,
+  fullPageLoading: fullPageLoadingActions,
 };
 
 /**

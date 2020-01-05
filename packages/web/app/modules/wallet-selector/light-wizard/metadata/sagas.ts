@@ -1,4 +1,4 @@
-import { select } from "redux-saga/effects";
+import { select } from "typed-redux-saga";
 
 import { TGlobalDependencies } from "../../../../di/setupBindings";
 import { LightWalletWrongPassword } from "../../../../lib/web3/light-wallet/LightWallet";
@@ -10,6 +10,7 @@ import {
 } from "../../../web3/selectors";
 import { EWalletType, ILightWalletRetrieveMetadata } from "../../../web3/types";
 import { getVaultKey } from "../utils";
+import { ILightWalletMetadata } from "./../../../web3/types";
 
 export async function retrieveMetadataFromVaultAPI(
   { vaultApi }: TGlobalDependencies,
@@ -34,20 +35,18 @@ export async function retrieveMetadataFromVaultAPI(
 
 export function* getWalletMetadataByURL(
   password: string,
-): Iterator<any | ILightWalletRetrieveMetadata | undefined> {
-  const queryStringWalletInfo: { email: string; salt: string } | undefined = yield select(
-    selectLightWalletFromQueryString,
-  );
+): Generator<any, ILightWalletMetadata | ILightWalletRetrieveMetadata | undefined, any> {
+  const queryStringWalletInfo = yield* select(selectLightWalletFromQueryString);
 
   if (queryStringWalletInfo) {
-    return yield neuCall(
+    return yield* neuCall(
       retrieveMetadataFromVaultAPI,
       password,
       queryStringWalletInfo.salt,
       queryStringWalletInfo.email,
     );
   }
-  const savedMetadata = yield select((s: IAppState) => selectPreviousConnectedWallet(s.web3));
+  const savedMetadata = yield* select((s: IAppState) => selectPreviousConnectedWallet(s.web3));
   if (savedMetadata && savedMetadata.walletType === EWalletType.LIGHT) {
     return savedMetadata;
   }

@@ -1,11 +1,12 @@
-import { buffers, channel, Channel, delay } from "redux-saga";
-import { call, put, race } from "redux-saga/effects";
+import { buffers, channel, Channel } from "redux-saga";
+import { call, delay, put, race } from "redux-saga/effects";
 import * as Web3 from "web3";
 
 import { BLOCK_MINING_TIME_DELAY } from "../../../config/constants";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { TPendingTxs } from "../../../lib/api/users/interfaces";
 import { OutOfGasError, RevertedTransactionError } from "../../../lib/web3/Web3Adapter";
+import { secondsToMs } from "../../../utils/DateUtils";
 import { neuCall } from "../../sagasUtils";
 import { TransactionCancelledError } from "./errors";
 import { EEventEmitterChannelEvents, TEventEmitterChannelEvents } from "./types";
@@ -23,7 +24,7 @@ enum TRANSACTION_STATUS {
 export function* getTransactionOrThrow(
   { web3Manager, apiUserService }: TGlobalDependencies,
   txHash: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   const tx: Web3.Transaction = yield web3Manager.getTransactionByHash(txHash);
   const txReceipt: Web3.TransactionReceipt | null = yield web3Manager.getTransactionReceipt(txHash);
 
@@ -59,14 +60,22 @@ export function* getTransactionOrThrow(
 
 /**
  * Watch for a given `txHash` and emit events to the `txChannel`
- * @note `watchForTx` won't cancel watching on her own.
+ * @note `watchForTx` won't cancel watching on it's own.
  *       It's a responsibility of the consumer to cancel the watcher (by canceling the saga)
  */
 export function* watchForTx(
   { web3Manager }: TGlobalDependencies,
   txHash: string,
   txChannel: Channel<TEventEmitterChannelEvents>,
-): Iterator<any> {
+): Generator<any, any, any> {
+  // Our local ethereum node is based on POA therefore we don't have
+  // a mining pool which makes tests flaky when there is not enough memory on CI
+  // Introducing an artificial delay here should make the pending modal stay a little bit longer
+  // so cypress can properly assert modal content
+  if (process.env.NF_CYPRESS_RUN === "1") {
+    yield delay(secondsToMs(3));
+  }
+
   let lastBlockId = -1;
   while (true) {
     try {
@@ -103,8 +112,8 @@ export function* watchForTx(
 
 export function* createWatchTxChannel(
   txHash: string,
-  actionGeneratingSaga: (channel: Channel<TEventEmitterChannelEvents>) => Iterator<any>,
-): Iterator<any> {
+  actionGeneratingSaga: (channel: Channel<TEventEmitterChannelEvents>) => Generator<any, any, any>,
+): Generator<any, any, any> {
   // Be really careful here as `channel` only allows single subscriber and
   // it's really hard to catch why not all subscribers are notified
   // TODO: replace by `multicastChannel` after migration to redux-saga 1.*

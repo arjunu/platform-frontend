@@ -1,7 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { addHexPrefix } from "ethereumjs-util";
-import { delay } from "redux-saga";
-import { fork, put, select } from "redux-saga/effects";
+import { delay, fork, put, select } from "redux-saga/effects";
 import * as Web3 from "web3";
 
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -25,7 +24,7 @@ const TX_MONITOR_DELAY = process.env.NF_CYPRESS_RUN === "1" ? 5000 : 30000;
 export function* deletePendingTransaction({
   apiUserService,
   logger,
-}: TGlobalDependencies): Iterable<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   const pendingTransaction: TxPendingWithMetadata | undefined = yield select(
     selectPlatformPendingTransaction,
   );
@@ -104,7 +103,7 @@ export function* markTransactionAsPending(
 
 export function* ensurePendingTransactionSchemaIsValid(
   pendingTransaction: TxPendingWithMetadata,
-): Iterator<any> {
+): Generator<any, any, any> {
   // THIS IS A TEMPORARY PATCH A GENERAL SOLUTION THAT INCLUDES VERSIONING SHOULD COVER ALL TX TYPES
   switch (pendingTransaction.transactionType) {
     case ETxSenderType.WITHDRAW:
@@ -137,7 +136,10 @@ export function* ensurePendingTransactionSchemaIsValid(
   }
 }
 
-export function* updatePendingTxs({ apiUserService, logger }: TGlobalDependencies): Iterator<any> {
+export function* updatePendingTxs({
+  apiUserService,
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
   let apiPendingTx: TPendingTxs = yield apiUserService.pendingTxs();
 
   // check whether transaction was mined
@@ -207,7 +209,7 @@ export function* updatePendingTxs({ apiUserService, logger }: TGlobalDependencie
   }
 }
 
-function* txMonitor({ logger }: TGlobalDependencies): Iterator<any> {
+function* txMonitor({ logger }: TGlobalDependencies): Generator<any, any, any> {
   while (true) {
     logger.info("Querying for pending txs...");
     try {
@@ -220,7 +222,7 @@ function* txMonitor({ logger }: TGlobalDependencies): Iterator<any> {
   }
 }
 
-function* removePendingTransaction({ logger }: TGlobalDependencies): Iterator<any> {
+function* removePendingTransaction({ logger }: TGlobalDependencies): Generator<any, any, any> {
   try {
     // call delete transaction saga
     yield neuCall(deletePendingTransaction);

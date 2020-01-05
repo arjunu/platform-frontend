@@ -6,6 +6,7 @@ import {
   EEtoMarketingDataVisibleInPreview,
   EEtoState,
   EFundingRound,
+  ESocialChannelType,
   ETagAlongVotingRule,
   TCompanyEtoData,
 } from "../app/lib/api/eto/EtoApi.interfaces.unsafe";
@@ -23,17 +24,16 @@ import {
   EOfferingDocumentType,
   EProductName,
 } from "../app/lib/api/eto/EtoProductsApi.interfaces";
-import { EETOStateOnChain } from "../app/modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../app/modules/eto/types";
 import {
   EthereumAddress,
   EthereumAddressWithChecksum,
   EthereumNetworkId,
 } from "../app/utils/opaque-types/types";
 import { toEquityTokenSymbol } from "../app/utils/opaque-types/utils";
-import { TEtoWithCompanyAndContractReadonly } from "./../app/modules/eto/types";
 
-import * as companyBanner from "./assets/company-banner.png";
-import * as companyPreviewCardBanner from "./assets/company-preview-banner.png";
+import companyBanner from "./assets/company-banner.png";
+import companyPreviewCardBanner from "./assets/company-preview-banner.png";
 
 export const dummyConfig: IConfig = {
   ethereumNetwork: {
@@ -94,15 +94,15 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "",
           },
         ],
@@ -119,15 +119,15 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "",
           },
         ],
@@ -181,15 +181,15 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "",
           },
         ],
@@ -206,15 +206,15 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "",
           },
         ],
@@ -245,15 +245,15 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "https://medium.com/@frank_thelen",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "https://twitter.com/frank_thelen",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "https://www.linkedin.com/in/frank-thelen/",
           },
         ],
@@ -273,15 +273,15 @@ export const testCompany: TCompanyEtoData = {
         role: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "https://twitter.com/binance",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "",
           },
         ],
@@ -297,15 +297,15 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "https://twitter.com/MaltaStockExch",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "",
           },
         ],
@@ -345,55 +345,55 @@ export const testCompany: TCompanyEtoData = {
   ],
   socialChannels: [
     {
-      type: "twitter",
+      type: ESocialChannelType.TWITTER,
       url: "https://twitter.com/neufundorg",
     },
     {
-      type: "facebook",
+      type: ESocialChannelType.FACEBOOK,
       url: "https://www.facebook.com/neufundorg/",
     },
     {
-      type: "linkedin",
+      type: ESocialChannelType.LINKEDIN,
       url: "https://www.linkedin.com/company/neufund/",
     },
     {
-      type: "slack",
+      type: ESocialChannelType.SLACK,
       url: "",
     },
     {
-      type: "medium",
+      type: ESocialChannelType.MEDIUM,
       url: "https://blog.neufund.org",
     },
     {
-      type: "reddit",
+      type: ESocialChannelType.REDDIT,
       url: "https://www.reddit.com/r/neufund",
     },
     {
-      type: "telegram",
+      type: ESocialChannelType.TELEGRAM,
       url: "https://t.me/neufund",
     },
     {
-      type: "github",
+      type: ESocialChannelType.GITHUB,
       url: "https://github.com/Neufund/",
     },
     {
-      type: "instagram",
+      type: ESocialChannelType.INSTAGRAM,
       url: "",
     },
     {
-      type: "gplus",
+      type: ESocialChannelType.G_PLUS,
       url: "",
     },
     {
-      type: "youtube",
+      type: ESocialChannelType.YOUTUBE,
       url: "",
     },
     {
-      type: "xing",
+      type: ESocialChannelType.XING,
       url: "",
     },
     {
-      type: "bitcointalk",
+      type: ESocialChannelType.BITCOINTALK,
       url: "",
     },
   ],
@@ -409,15 +409,15 @@ export const testCompany: TCompanyEtoData = {
         role: "CEO & Co-Founder",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "https://medium.com/@ZoeAdamovicz",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "https://twitter.com/zoeadamovicz",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "https://www.linkedin.com/in/zoeadamovicz/",
           },
         ],
@@ -433,15 +433,15 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "https://medium.com/@rudolfix",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "https://twitter.com/rudolfix",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "https://www.linkedin.com/in/marcinrudolf/",
           },
         ],
@@ -455,55 +455,51 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "",
           },
           {
-            type: "twitter",
+            type: ESocialChannelType.TWITTER,
             url: "",
           },
           {
-            type: "linkedin",
+            type: ESocialChannelType.LINKEDIN,
             url: "",
           },
           {
-            type: "slack",
+            type: ESocialChannelType.SLACK,
             url: "",
           },
           {
-            type: "medium",
-            url: "https://blog.neufund.org",
-          },
-          {
-            type: "reddit",
+            type: ESocialChannelType.REDDIT,
             url: "https://www.reddit.com/r/neufund",
           },
           {
-            type: "telegram",
+            type: ESocialChannelType.TELEGRAM,
             url: "https://t.me/neufund",
           },
           {
-            type: "github",
+            type: ESocialChannelType.GITHUB,
             url: "https://github.com/Neufund/",
           },
           {
-            type: "instagram",
+            type: ESocialChannelType.INSTAGRAM,
             url: "",
           },
           {
-            type: "gplus",
+            type: ESocialChannelType.G_PLUS,
             url: "",
           },
           {
-            type: "youtube",
+            type: ESocialChannelType.YOUTUBE,
             url: "",
           },
           {
-            type: "xing",
+            type: ESocialChannelType.XING,
             url: "",
           },
           {
-            type: "bitcointalk",
+            type: ESocialChannelType.BITCOINTALK,
             url: "",
           },
         ],
@@ -514,60 +510,7 @@ export const testCompany: TCompanyEtoData = {
           "https://documents.neufund.io/0x64Ee2B334454A920cE99f39Cc7557b428db8D5B8/2f99640f-3a3f-4f31-85fc-a11ee2dbe084.jpg",
         name: "Sergiej Rewiakin",
         role: "VP Engineering",
-        socialChannels: [
-          {
-            type: "medium",
-            url: "",
-          },
-          {
-            type: "twitter",
-            url: "",
-          },
-          {
-            type: "linkedin",
-            url: "",
-          },
-          {
-            type: "slack",
-            url: "",
-          },
-          {
-            type: "medium",
-            url: "https://blog.neufund.org",
-          },
-          {
-            type: "reddit",
-            url: "https://www.reddit.com/r/neufund",
-          },
-          {
-            type: "telegram",
-            url: "https://t.me/neufund",
-          },
-          {
-            type: "github",
-            url: "https://github.com/Neufund/",
-          },
-          {
-            type: "instagram",
-            url: "",
-          },
-          {
-            type: "gplus",
-            url: "",
-          },
-          {
-            type: "youtube",
-            url: "",
-          },
-          {
-            type: "xing",
-            url: "",
-          },
-          {
-            type: "bitcointalk",
-            url: "",
-          },
-        ],
+        socialChannels: [],
         website: "http://sergiej.com",
       },
       {
@@ -579,56 +522,8 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
-            url: "",
-          },
-          {
-            type: "twitter",
-            url: "",
-          },
-          {
-            type: "linkedin",
-            url: "",
-          },
-          {
-            type: "slack",
-            url: "",
-          },
-          {
-            type: "medium",
-            url: "https://blog.neufund.org",
-          },
-          {
-            type: "reddit",
-            url: "https://www.reddit.com/r/neufund",
-          },
-          {
-            type: "telegram",
+            type: ESocialChannelType.TELEGRAM,
             url: "https://t.me/neufund",
-          },
-          {
-            type: "github",
-            url: "https://github.com/Neufund/",
-          },
-          {
-            type: "instagram",
-            url: "",
-          },
-          {
-            type: "gplus",
-            url: "",
-          },
-          {
-            type: "youtube",
-            url: "",
-          },
-          {
-            type: "xing",
-            url: "",
-          },
-          {
-            type: "bitcointalk",
-            url: "",
           },
         ],
       },
@@ -641,56 +536,16 @@ export const testCompany: TCompanyEtoData = {
         website: "",
         socialChannels: [
           {
-            type: "medium",
-            url: "",
-          },
-          {
-            type: "twitter",
-            url: "",
-          },
-          {
-            type: "linkedin",
-            url: "",
-          },
-          {
-            type: "slack",
-            url: "",
-          },
-          {
-            type: "medium",
+            type: ESocialChannelType.MEDIUM,
             url: "https://blog.neufund.org",
           },
           {
-            type: "reddit",
+            type: ESocialChannelType.REDDIT,
             url: "https://www.reddit.com/r/neufund",
           },
           {
-            type: "telegram",
+            type: ESocialChannelType.REDDIT,
             url: "https://t.me/neufund",
-          },
-          {
-            type: "github",
-            url: "https://github.com/Neufund/",
-          },
-          {
-            type: "instagram",
-            url: "",
-          },
-          {
-            type: "gplus",
-            url: "",
-          },
-          {
-            type: "youtube",
-            url: "",
-          },
-          {
-            type: "xing",
-            url: "",
-          },
-          {
-            type: "bitcointalk",
-            url: "",
           },
         ],
       },

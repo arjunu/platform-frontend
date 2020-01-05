@@ -1,5 +1,4 @@
-import { Effect } from "redux-saga";
-import { call, put, race, select, take } from "redux-saga/effects";
+import { call, Effect, put, race, select, take } from "redux-saga/effects";
 
 import { GenericErrorMessage } from "../../components/translatedMessages/messages";
 import { TMessage } from "../../components/translatedMessages/utils";
@@ -28,6 +27,7 @@ import {
   ILightWalletMetadata,
   ILightWalletRetrieveMetadata,
 } from "../web3/types";
+import { LightWallet } from "./../../lib/web3/light-wallet/LightWallet";
 import { mapSignMessageErrorToErrorMessage, MismatchedWalletAddressError } from "./errors";
 import { selectIsSigning } from "./reducer";
 
@@ -95,7 +95,7 @@ export function* connectLightWallet(
   lightWalletConnector: LightWalletConnector,
   metadata: ILightWalletMetadata,
   password: string,
-): any {
+): Generator<any, LightWallet, any> {
   const walletVault: ILightWalletRetrieveMetadata = yield neuCall(
     retrieveMetadataFromVaultAPI,
     password,
@@ -122,7 +122,7 @@ export function* connectLightWallet(
   return wallet;
 }
 
-export function* connectWallet(): Iterator<any> {
+export function* connectWallet(): Generator<any, any, any> {
   while (true) {
     try {
       const walletType: EWalletType | undefined = yield select((state: IAppState) =>
@@ -155,11 +155,11 @@ export function* connectWallet(): Iterator<any> {
 }
 
 export function* accessWalletAndRunEffect(
-  effect: Effect | Iterator<Effect>,
+  effect: Effect | Generator<any, any, any>,
   title: TMessage,
   message?: TMessage,
   inputLabel?: TMessage,
-): Iterator<any> {
+): Generator<any, any, any> {
   // guard against multiple modals
   const isSigning: boolean = yield select((s: IAppState) => selectIsSigning(s.accessWallet));
   if (isSigning) {

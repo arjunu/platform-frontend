@@ -7,7 +7,7 @@ import { TTranslatedString } from "../../../types";
 import { Button, EButtonLayout } from "../../shared/buttons";
 import { Message } from "../message/Message";
 
-import * as tosImg from "../../../assets/img/tos.jpg";
+import tosImg from "../../../assets/img/tos.jpg";
 import * as styles from "./DocumentConfidentialityAgreementModal.module.scss";
 
 interface IExternalProps {

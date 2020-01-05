@@ -31,7 +31,7 @@ export const shouldPassSmartContractAcceptEtherTest = !!(
 
 export function* prepareTransferValidation(
   userInput: ITokenTransferDraftType | IWithdrawDraftType,
-): Iterator<any> {
+): Generator<any, any, any> {
   yield put(actions.txValidator.setValidationState(EValidationState.VALIDATING));
 
   yield put(actions.txSender.txSenderClearTransactionData());
@@ -52,7 +52,11 @@ export function* prepareTransferValidation(
   return { modifiedUserInput, isValidAddress, isValueValid };
 }
 
-export function* validateWalletAlmostEmpty({ gasPrice, gas, value }: ITxData): Iterator<any> {
+export function* validateWalletAlmostEmpty({
+  gasPrice,
+  gas,
+  value,
+}: ITxData): Generator<any, any, any> {
   const allEther: string = yield select(selectEtherBalance);
 
   let warnings: EAdditionalValidationDataNotifications[] = [];
@@ -75,7 +79,7 @@ export function* runInitialValidations(
   // https://github.com/microsoft/TypeScript/issues/31268
   address?: string,
   value?: string,
-): Iterator<any> {
+): Generator<any, any, any> {
   yield neuCall(validateGas, generatedTxDetails);
 
   const addressNotifications: EAdditionalValidationDataNotifications[] =
@@ -95,7 +99,7 @@ export function* runInitialValidations(
   );
 }
 
-export function* mapErrorToTransferTxError(error: Error): Iterator<any> {
+export function* mapErrorToTransferTxError(error: Error): Generator<any, any, any> {
   if (error instanceof UserHasNotEnoughTokensError) {
     yield put(actions.txValidator.setValidationState(EValidationState.NOT_ENOUGH_TOKENS));
   } else if (error instanceof NotEnoughEtherForGasError) {

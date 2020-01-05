@@ -31,7 +31,7 @@ import { getDocumentByType } from "./utils";
 export function* generateDocumentFromTemplate(
   { apiImmutableStorage, notificationCenter, logger, apiEtoFileService }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.etoDocuments.generateTemplate>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const document = action.payload.document;
     const etoState: EEtoState = yield select(selectEtoState);
@@ -78,7 +78,7 @@ export function* generateDocumentFromTemplate(
 export function* generateDocumentFromTemplateByEtoId(
   { apiImmutableStorage, notificationCenter, logger, apiEtoFileService }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.etoDocuments.generateTemplateByEtoId>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const userEthAddress = yield select(selectEthereumAddressWithChecksum);
     const document = action.payload.document;
@@ -119,7 +119,7 @@ export function* generateDocumentFromTemplateByEtoId(
 export function* downloadDocumentStart(
   { apiImmutableStorage, notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.etoDocuments.downloadDocumentStart>,
-): Iterator<any> {
+): Generator<any, any, any> {
   try {
     const matchingDocument = yield getDocumentOfType(action.payload.documentType);
     const downloadedDocument = yield apiImmutableStorage.getFile({
@@ -143,7 +143,7 @@ export function* loadEtoFilesInfo({
   apiEtoFileService,
   apiEtoProductService,
   logger,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any, any, any> {
   try {
     const etoId = yield select(selectIssuerEtoId);
     if (!etoId) {
@@ -174,7 +174,7 @@ export function* loadEtoFilesInfo({
   }
 }
 
-function* getDocumentOfType(documentType: EEtoDocumentType): Iterator<any> {
+function* getDocumentOfType(documentType: EEtoDocumentType): Generator<any, any, any> {
   const documents: TEtoDocumentTemplates = yield select(selectIssuerEtoDocuments);
 
   return getDocumentByType(documents, documentType);
@@ -184,7 +184,7 @@ function* uploadEtoFileEffect(
   { apiEtoFileService, notificationCenter }: TGlobalDependencies,
   file: File,
   documentType: EEtoDocumentType,
-): Iterator<any> {
+): Generator<any, any, any> {
   const matchingDocument = yield getDocumentOfType(documentType);
 
   if (matchingDocument) {
@@ -199,7 +199,7 @@ function* uploadEtoFileEffect(
 function* removeEtoFileEffect(
   { apiEtoFileService, notificationCenter, logger }: TGlobalDependencies,
   documentType: EEtoDocumentType,
-): Iterator<any> {
+): Generator<any, any, any> {
   const matchingDocument = yield getDocumentOfType(documentType);
 
   if (matchingDocument) {
@@ -214,7 +214,7 @@ function* removeEtoFileEffect(
 function* uploadEtoFile(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.etoDocuments.etoUploadDocumentStart>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { file, documentType } = action.payload;
   try {
     yield put(actions.etoDocuments.hideIpfsModal());
@@ -252,7 +252,7 @@ function* uploadEtoFile(
 function* removeEtoFile(
   { notificationCenter, logger }: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.etoDocuments.etoUploadDocumentStart>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { documentType } = action.payload;
   try {
     yield put(actions.etoDocuments.hideIpfsModal());
@@ -276,7 +276,7 @@ function* removeEtoFile(
   }
 }
 
-export function* etoDocumentsSagas(): Iterator<any> {
+export function* etoDocumentsSagas(): Generator<any, any, any> {
   yield fork(
     neuTakeEvery,
     actions.etoDocuments.generateTemplateByEtoId,

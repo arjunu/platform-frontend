@@ -6,7 +6,7 @@ import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { appRoutes } from "../../appRoutes";
 import { EMenuEntryType, TMenuEntry } from "./MenuEntry";
 
-import * as logoutIcon from "../../../assets/img/inline_icons/logout.svg";
+import logoutIcon from "../../../assets/img/inline_icons/logout.svg";
 
 export const menuSeparatorData = (key: string): TMenuEntry => ({
   type: EMenuEntryType.SEPARATOR,
@@ -51,6 +51,7 @@ export const investorMenuData = (): TMenuEntry[] => {
       key: "portfolio",
       to: appRoutes.portfolio,
       menuName: <FormattedMessage id="menu.portfolio" />,
+      "data-test-id": "menu-go-to-portfolio",
     },
     {
       type: EMenuEntryType.LINK,

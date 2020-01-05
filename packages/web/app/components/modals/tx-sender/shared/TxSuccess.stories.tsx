@@ -7,7 +7,7 @@ import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { TxSuccessLayout } from "./TxSuccess";
 
-import * as tokenIcon from "../../../../assets/img/token_icon.svg";
+import tokenIcon from "../../../../assets/img/token_icon.svg";
 
 const txData: React.ComponentProps<typeof TxSuccessLayout> = {
   type: ETxSenderType.INVEST,

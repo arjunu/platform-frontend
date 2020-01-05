@@ -8,9 +8,9 @@ import { Panel } from "../../shared/Panel";
 import { profileRoutes } from "../routes";
 import { connectBackupSeedWidget } from "./ConnectSetupWidget";
 
-import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
-import * as successIcon from "../../../assets/img/notifications/success.svg";
-import * as warningIcon from "../../../assets/img/notifications/warning.svg";
+import arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
+import successIcon from "../../../assets/img/notifications/success.svg";
+import warningIcon from "../../../assets/img/notifications/warning.svg";
 import * as styles from "./BackupSeedWidget.module.scss";
 
 interface IProps {

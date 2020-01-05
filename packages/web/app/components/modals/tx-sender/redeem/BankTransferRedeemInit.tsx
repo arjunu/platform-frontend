@@ -39,7 +39,7 @@ import { VerifiedBankAccount } from "../../../wallet/VerifiedBankAccount";
 import { CalculatedFee } from "./CalculatedFee";
 import { TotalRedeemed } from "./TotalRedeemed";
 
-import * as neuroIcon from "../../../../assets/img/nEUR_icon.svg";
+import neuroIcon from "../../../../assets/img/nEUR_icon.svg";
 import * as styles from "./BankTransferRedeemInit.module.scss";
 
 interface IStateProps {

@@ -7,12 +7,13 @@ import { Container, EColumnSpan, EContainerType } from "../../layouts/Container"
 import { InlineIcon } from "../icons/InlineIcon";
 import { LoadingIndicatorHexagon } from "./LoadingIndicatorHexagon";
 
-import * as loadingSpinner from "./../../../assets/img/inline_icons/loading_spinner.svg";
-import * as spinning from "./../../../assets/img/inline_icons/spinner.svg";
+import loadingSpinner from "./../../../assets/img/inline_icons/loading_spinner.svg";
+import spinning from "./../../../assets/img/inline_icons/spinner.svg";
 import * as styles from "./LoadingIndicator.module.scss";
 
 export enum ELoadingIndicator {
   PULSE = "pulse",
+  PULSE_WHITE = "pulse-white",
   BLOCKS = "blocks",
   HEXAGON = "hexagon",
   SPINNER = "spinner",
@@ -31,14 +32,19 @@ const LoadingIndicator: React.FunctionComponent<ILoadingIndicatorProps & CommonH
 }) => {
   switch (type) {
     case ELoadingIndicator.PULSE:
+    case ELoadingIndicator.PULSE_WHITE:
       return (
         <div>
           <div
             data-test-id="loading-indicator-pulse"
-            className={cn(className, styles.pulse, { [styles.light]: light })}
+            className={cn(className, styles.pulse, {
+              [styles.pulseLight]: light,
+              [styles.pulseWhite]: type === ELoadingIndicator.PULSE_WHITE,
+            })}
           />
         </div>
       );
+
     case ELoadingIndicator.BLOCKS:
       return (
         <div className={cn(className, styles.blocks)}>

@@ -87,9 +87,6 @@ storiesOf("ETO/EtoOverviewStatus", module)
         },
       },
       kyc: {
-        individualRequestState: {
-          status: EKycRequestStatus.ACCEPTED,
-        },
         claims: {
           isVerified: true,
         },
@@ -221,9 +218,6 @@ storiesOf("ETO/EtoOverviewStatus/whitelisting, investor limit reached", module)
         },
       },
       kyc: {
-        individualRequestState: {
-          status: EKycRequestStatus.ACCEPTED,
-        },
         claims: {
           isVerified: true,
         },

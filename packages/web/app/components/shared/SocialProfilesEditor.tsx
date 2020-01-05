@@ -8,19 +8,19 @@ import { CommonHtmlProps, TFormikConnect } from "../../types";
 import { FormField } from "./forms";
 import { InlineIcon } from "./icons";
 
-import * as iconChat from "../../assets/img/inline_icons/icon-menu-help.svg";
-import * as facebookIcon from "../../assets/img/inline_icons/social_facebook.svg";
-import * as githubIcon from "../../assets/img/inline_icons/social_github.svg";
-import * as googleIcon from "../../assets/img/inline_icons/social_google_plus.svg";
-import * as instagramIcon from "../../assets/img/inline_icons/social_instagram.svg";
-import * as linkedinIcon from "../../assets/img/inline_icons/social_linkedin.svg";
-import * as mediumIcon from "../../assets/img/inline_icons/social_medium.svg";
-import * as redditIcon from "../../assets/img/inline_icons/social_reddit.svg";
-import * as slackIcon from "../../assets/img/inline_icons/social_slack.svg";
-import * as telegramIcon from "../../assets/img/inline_icons/social_telegram.svg";
-import * as socialTwitter from "../../assets/img/inline_icons/social_twitter.svg";
-import * as xingIcon from "../../assets/img/inline_icons/social_xing.svg";
-import * as youtubeIcon from "../../assets/img/inline_icons/social_youtube.svg";
+import iconChat from "../../assets/img/inline_icons/icon-menu-help.svg";
+import facebookIcon from "../../assets/img/inline_icons/social_facebook.svg";
+import githubIcon from "../../assets/img/inline_icons/social_github.svg";
+import googleIcon from "../../assets/img/inline_icons/social_google_plus.svg";
+import instagramIcon from "../../assets/img/inline_icons/social_instagram.svg";
+import linkedinIcon from "../../assets/img/inline_icons/social_linkedin.svg";
+import mediumIcon from "../../assets/img/inline_icons/social_medium.svg";
+import redditIcon from "../../assets/img/inline_icons/social_reddit.svg";
+import slackIcon from "../../assets/img/inline_icons/social_slack.svg";
+import telegramIcon from "../../assets/img/inline_icons/social_telegram.svg";
+import socialTwitter from "../../assets/img/inline_icons/social_twitter.svg";
+import xingIcon from "../../assets/img/inline_icons/social_xing.svg";
+import youtubeIcon from "../../assets/img/inline_icons/social_youtube.svg";
 import * as styles from "./SocialProfilesEditor.module.scss";
 
 export const SOCIAL_PROFILES_ICONS = [

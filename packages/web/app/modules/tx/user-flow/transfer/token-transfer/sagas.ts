@@ -11,7 +11,7 @@ import { selectUserFlowTokenDecimals, selectUserFlowUserBalance } from "./../sel
 function* detectMaxWithdraw(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.txUserFlowWithdraw.runUserFlowOperations>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { to, value } = action.payload;
 
   let modifiedValue = value;
@@ -39,7 +39,7 @@ function* detectMaxWithdraw(
   );
 }
 
-export const txTokenTransferFlowSagasWatcher = function*(): Iterator<any> {
+export const txTokenTransferFlowSagasWatcher = function*(): Generator<any, any, any> {
   yield fork(
     neuDebounce,
     300,

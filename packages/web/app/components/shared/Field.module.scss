@@ -23,6 +23,17 @@
   ul,
   ol {
     overflow: hidden;
+
+    margin: 0 0 1rem;
+    padding: 0 0 0 2rem;
+
+    li {
+      padding-left: .5rem;
+    }
+  }
+
+  ul {
+    list-style: disc;
   }
 
   :global {

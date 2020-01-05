@@ -6,6 +6,11 @@ import { ELoadingIndicator, LoadingIndicator, LoadingIndicatorContainer } from "
 
 storiesOf("LoadingIndicator", module)
   .add("pulse (default)", () => <LoadingIndicator />)
+  .add("pulse light", () => <LoadingIndicator type={ELoadingIndicator.PULSE} light={true} />)
+  .add("pulse white", () => <LoadingIndicator type={ELoadingIndicator.PULSE_WHITE} />)
+  .add("pulse white light", () => (
+    <LoadingIndicator type={ELoadingIndicator.PULSE_WHITE} light={true} />
+  ))
   .add("blocks", () => <LoadingIndicator type={ELoadingIndicator.BLOCKS} />)
   .add("hexagon", () => <LoadingIndicator type={ELoadingIndicator.HEXAGON} />)
   .add("spinner", () => <LoadingIndicator type={ELoadingIndicator.SPINNER} />)

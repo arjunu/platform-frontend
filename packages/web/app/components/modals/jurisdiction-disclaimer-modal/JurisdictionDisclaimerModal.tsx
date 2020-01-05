@@ -8,7 +8,7 @@ import { ButtonArrowRight, EButtonLayout } from "../../shared/buttons";
 import { VALUES } from "../../shared/forms/fields/FormSelectCountryField.unsafe";
 import { Message } from "../message/Message";
 
-import * as cityIcon from "../../../assets/img/eto/city.png";
+import cityIcon from "../../../assets/img/eto/city.png";
 
 interface IExternalProps {
   closeModal: () => void;

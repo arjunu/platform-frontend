@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { CircleButton, ECircleButtonIconPosition, ECircleButtonLayout } from "./CircleButton";
 
-import * as icon from "../../../assets/img/inline_icons/download.svg";
+import icon from "../../../assets/img/inline_icons/download.svg";
 
 type TGenerateStoryProps = {
   layout: ECircleButtonLayout;

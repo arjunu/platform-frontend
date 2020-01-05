@@ -26,7 +26,7 @@ import { InfoRow } from "../shared/InfoRow";
 import { ClaimTransactionDetails } from "./ClaimTransactionDetails";
 import { SummaryForm } from "./SummaryForm.unsafe";
 
-import * as iconDownload from "../../../../assets/img/inline_icons/download.svg";
+import iconDownload from "../../../../assets/img/inline_icons/download.svg";
 import * as styles from "./Summary.module.scss";
 
 interface IStateProps {

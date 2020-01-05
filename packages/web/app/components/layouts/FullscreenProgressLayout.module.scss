@@ -1,0 +1,11 @@
+.progress {
+  @include media-breakpoint-down(md) {
+    top: 64px;
+  }
+
+  grid-area: progress;
+  margin: 0;
+  top: 80px;
+  z-index: 15;
+  position: sticky;
+}

@@ -17,7 +17,6 @@
 @import "./elements/label";
 @import "./elements/table";
 @import "./elements/textarea";
-@import "./elements/ul-ol";
 
 .form-group {
   margin-bottom: $spacing-vertical-lg-1;
@@ -115,9 +114,16 @@ textarea {
 .modal-backdrop {
   background-color: $neu-charcoal-grey;
 
-  &:global(.show) {
+  &.show {
     opacity: 0.75;
   }
 }
+
+// Onfido
+// need to specify custom z-index to be higher the navbar z-index
+.onfido-sdk-ui-Modal-overlay {
+  z-index: 999;
+}
+
 
 

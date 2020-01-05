@@ -9,7 +9,7 @@ import { LoadingIndicator } from "../shared/loading-indicator/index";
 import { Panel } from "../shared/Panel";
 import { Proportion } from "../shared/Proportion";
 
-import * as arrowRightIcon from "../../assets/img/inline_icons/arrow_right.svg";
+import arrowRightIcon from "../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./EtoFormProgressWidget.module.scss";
 
 interface IProps {

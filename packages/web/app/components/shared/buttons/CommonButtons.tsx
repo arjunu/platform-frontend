@@ -4,9 +4,9 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { OmitKeys } from "../../../types";
 import { Button, EButtonLayout, EButtonWidth, EIconPosition } from "./Button";
 
-import * as arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
-import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
-import * as closeIcon from "../../../assets/img/inline_icons/close.svg";
+import arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
+import arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
+import closeIcon from "../../../assets/img/inline_icons/close.svg";
 
 type TButtonProps = React.ComponentProps<typeof Button>;
 

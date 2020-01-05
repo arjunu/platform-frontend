@@ -6,7 +6,7 @@ import { toEquityTokenSymbol } from "../../../../../../utils/opaque-types/utils"
 import { withModalBody } from "../../../../../../utils/storybookHelpers.unsafe";
 import { TransferSummaryLayout } from "./TransferSummaryLayout";
 
-import * as ethImage from "../../../../../../assets/img/eth_icon.svg";
+import ethImage from "../../../../../../assets/img/eth_icon.svg";
 
 const props = {
   txHash: "0xdb3c43a0cfc4e221ecb52655eab3c3b88ba521a",

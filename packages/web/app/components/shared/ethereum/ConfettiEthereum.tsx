@@ -5,7 +5,7 @@ import { Confetti, EConfettiSize } from "../Confetti";
 import { EEthereumIconSize, EthereumIcon } from "./EthereumIcon";
 
 export const ConfettiEthereum: React.FunctionComponent<CommonHtmlProps &
-  React.ComponentProps<EthereumIcon>> = ({ className, style, ...props }) => (
+  React.ComponentProps<typeof EthereumIcon>> = ({ className, style, ...props }) => (
   <Confetti
     className={className}
     style={style}

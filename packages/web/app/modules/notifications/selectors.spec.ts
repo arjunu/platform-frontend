@@ -10,8 +10,7 @@ describe("selectIsVisibleSecurityNotification", () => {
   it("should return false if KYC data is still loading", () => {
     const appState: DeepPartial<IAppState> = {
       kyc: {
-        individualRequestStateLoading: false,
-        businessRequestStateLoading: true,
+        statusLoading: true,
       },
       auth: {
         user: {

@@ -7,7 +7,7 @@ import { ButtonLink, EButtonLayout, EIconPosition } from "../shared/buttons";
 import { Panel } from "../shared/Panel";
 import { IVerificationProgressStep, VerificationStatus } from "../shared/VerificationStatus";
 
-import * as arrowLeft from "../../assets/img/inline_icons/arrow_left.svg";
+import arrowLeft from "../../assets/img/inline_icons/arrow_left.svg";
 import * as styles from "./KycPanel.module.scss";
 
 interface IPropsKycPanel {
@@ -32,23 +32,29 @@ export const KycPanel: React.FunctionComponent<IPropsKycPanel & TDataTestId> = (
   <Panel data-test-id={testId} className={cn("mt-4", styles.kycPanel)}>
     <header className={styles.header}>
       <h2 className={styles.title}>{title || <FormattedMessage id="kyc.panel.verification" />}</h2>
+
       <VerificationStatus steps={steps} />
+
       {description && (
         <div className={styles.description} data-test-id="kyc-panel-description">
           {description}
         </div>
       )}
     </header>
-    <div
-      className={cn(
-        isMaxWidth ? styles.content : styles.contentNarrow,
-        fullHeightContent ? styles.noTopPadding : null,
-      )}
-    >
-      {children}
-    </div>
-    <footer className={styles.footer}>
-      {backLink && (
+
+    {children && (
+      <div
+        className={cn(
+          isMaxWidth ? styles.content : styles.contentNarrow,
+          fullHeightContent ? styles.noTopPadding : null,
+        )}
+      >
+        {children}
+      </div>
+    )}
+
+    {backLink && (
+      <footer className={styles.footer}>
         <ButtonLink
           to={backLink}
           layout={EButtonLayout.GHOST}
@@ -57,7 +63,7 @@ export const KycPanel: React.FunctionComponent<IPropsKycPanel & TDataTestId> = (
         >
           <FormattedMessage id="kyc.panel.go-back" />
         </ButtonLink>
-      )}
-    </footer>
+      </footer>
+    )}
   </Panel>
 );

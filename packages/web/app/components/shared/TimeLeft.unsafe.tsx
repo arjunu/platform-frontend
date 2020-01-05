@@ -4,8 +4,8 @@ import { FormattedMessage } from "react-intl-phraseapp";
 
 import { calculateTimeLeft, calculateTimeLeftUnits } from "./utils";
 
-import * as sheep from "../../assets/img/landing/rainbowsheep.gif";
-import * as test_sheep from "../../assets/img/landing/test_rainbowsheep.png";
+import sheep from "../../assets/img/landing/rainbowsheep.gif";
+import test_sheep from "../../assets/img/landing/test_rainbowsheep.png";
 import * as styles from "./TimeLeft.module.scss";
 
 interface ITimeLeftRefresher {

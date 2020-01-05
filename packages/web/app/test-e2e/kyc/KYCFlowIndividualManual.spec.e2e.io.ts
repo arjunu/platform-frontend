@@ -1,80 +1,82 @@
 import { kycRoutes } from "../../components/kyc/routes";
-import {
-  assertAllJurisdictionEtosExist,
-  assertFilteredDeJurisdiction,
-} from "../investor-dashboard/utils";
+import { assertFilteredDeJurisdiction } from "../investor-dashboard/utils";
 import { confirmAccessModal } from "../utils";
-import { fillForm, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
+import { fillForm, TFormFixture, uploadMultipleFilesToFieldWithTid } from "../utils/forms";
 import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
-import { kycInvidualForm, kycInvidualFormUS } from "./fixtures";
+import {
+  kycInvidualAddressForm,
+  kycInvidualAddressFormUSResident,
+  kycInvidualForm,
+  kycInvidualFormUS,
+  kycInvidualFormUSResident,
+} from "./fixtures";
+import {
+  assertIndividualAddress,
+  assertIndividualDocumentVerification,
+  goToPersonalVerification,
+} from "./utils";
+
+const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, isUS: boolean) => {
+  createAndLoginNewUser({ type: "investor" });
+
+  goToPersonalVerification();
+
+  // fill personal details form
+  fillForm(personalData, isUS ? { submit: false } : undefined);
+
+  if (isUS) {
+    // form should be disabled before the accreditation file is uploaded
+    cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
+
+    // Upload accreditation documents
+    uploadMultipleFilesToFieldWithTid("kyc-upload-documents-dropzone", ["example.jpg"]);
+
+    cy.get(tid("kyc-personal-start-submit-form")).click();
+  }
+
+  assertIndividualAddress();
+
+  // fill address form
+  fillForm(addressData);
+
+  assertIndividualDocumentVerification();
+
+  // go to the manual verification with file upload
+  cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
+  cy.url().should("contain", kycRoutes.individualUpload);
+  // upload file
+  uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
+
+  // submit request and accept with the wallet
+  cy.get(tid("kyc-personal-upload-submit")).awaitedClick();
+  confirmAccessModal();
+
+  // panel should now be in pending state
+  cy.get(tid("kyc-success")).should("exist");
+};
 
 describe("KYC Personal flow with manual verification", () => {
   it("went through KYC flow with personal data", () => {
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      // TODO: Move to a separate test
-      // Tests multi jurisdiction
-      assertAllJurisdictionEtosExist();
-      // go to kyc select and then individual page
-      cy.visit(kycRoutes.start);
-      cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
-      cy.url().should("contain", kycRoutes.individualStart);
+    fillAndAssert(kycInvidualForm, kycInvidualAddressForm, false);
 
-      // fill and submit the form
-      fillForm(kycInvidualForm);
-
-      // go to the manual verification with file upload
-      cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
-      cy.url().should("contain", kycRoutes.individualUpload);
-
-      // upload file
-      uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
-
-      // submt request and accept with the wallet
-      cy.get(tid("kyc-personal-upload-submit")).awaitedClick();
-      confirmAccessModal();
-
-      // panel should now be in pending state
-      cy.get(tid("kyc-panel-pending"));
-      // TODO: Move to a separate test
-      // Tests multi jurisdiction
-      assertFilteredDeJurisdiction();
-    });
+    // Tests multi jurisdiction
+    assertFilteredDeJurisdiction();
   });
 
   it("went through KYC flow with personal data for US investor", function(): void {
     this.retries(2);
-    createAndLoginNewUser({ type: "investor" }).then(() => {
-      // go to kyc select and then individual page
-      cy.visit(kycRoutes.start);
-      cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
-      cy.url().should("contain", kycRoutes.individualStart);
 
-      // fill the form
-      fillForm(kycInvidualFormUS, { submit: false });
+    createAndLoginNewUser({ type: "investor" });
 
-      // form should be disabled before the accreditation file is uploaded
-      cy.get(tid("kyc-personal-start-submit-form")).should("be.disabled");
+    fillAndAssert(kycInvidualFormUS, kycInvidualAddressForm, true);
+  });
 
-      // Upload accreditation documents
-      uploadMultipleFilesToFieldWithTid("kyc-personal-accreditation-upload-dropzone", [
-        "example.jpg",
-      ]);
+  it("went through KYC flow with personal data for US resident", function(): void {
+    this.retries(2);
 
-      cy.get(tid("kyc-personal-start-submit-form")).click();
+    createAndLoginNewUser({ type: "investor" });
 
-      // go to the manual verification with file upload
-      cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();
-      cy.url().should("contain", kycRoutes.individualUpload);
-      // upload file
-      uploadMultipleFilesToFieldWithTid("kyc-personal-upload-dropzone", ["example.jpg"]);
-
-      // submit request and accept with the wallet
-      cy.get(tid("kyc-personal-upload-submit")).awaitedClick();
-      confirmAccessModal();
-
-      // panel should now be in pending state
-      cy.get(tid("kyc-panel-pending")).should("exist");
-    });
+    fillAndAssert(kycInvidualFormUSResident, kycInvidualAddressFormUSResident, true);
   });
 });

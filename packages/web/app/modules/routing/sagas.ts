@@ -1,7 +1,9 @@
 import { LocationChangeAction } from "connected-react-router";
+import { SagaIterator } from "redux-saga";
+import { select } from "typed-redux-saga";
 import { Location } from "history";
 import { matchPath } from "react-router";
-import { Effect, fork, put, select } from "redux-saga/effects";
+import { Effect, fork, put } from "redux-saga/effects";
 
 import {
   appRoutes,
@@ -29,7 +31,7 @@ export const GREYP_PREVIEW_CODE = "e2b6949e-951d-4e99-ac11-534fdad86a80";
 function* openInNewWindowSaga(
   _: TGlobalDependencies,
   action: TActionFromCreator<typeof actions.routing.openInNewWindow>,
-): Iterator<any> {
+): Generator<any, any, any> {
   const { path } = action.payload;
 
   //Open the popup and set the opener and referrer policy instruction
@@ -117,10 +119,10 @@ export function* fallbackRedirect(_: TGlobalDependencies, location: Location): I
 export function* startRouteBasedSagas(
   { logger }: TGlobalDependencies,
   action: LocationChangeAction,
-): IterableIterator<any> {
+): Generator<any, any, any> {
   const appIsReady = yield waitForAppInit();
-  const userIsAuthorized: boolean = yield select(selectIsAuthorized);
-  const userType: EUserType | undefined = yield select(selectUserType);
+  const userIsAuthorized = yield* select(selectIsAuthorized);
+  const userType = yield* select(selectUserType);
 
   logger.info(
     `userIsAuthorized: ${userIsAuthorized.toString()}, userType: ${userType}, route: ${
@@ -145,7 +147,7 @@ export function* startRouteBasedSagas(
   }
 }
 
-export function* routingSagas(): Iterator<Effect> {
+export function* routingSagas(): SagaIterator<void> {
   yield fork(neuTakeEvery, actions.routing.openInNewWindow, openInNewWindowSaga);
   yield fork(neuTakeEvery, "@@router/LOCATION_CHANGE", startRouteBasedSagas);
 }

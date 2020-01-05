@@ -25,7 +25,7 @@ import { TimestampRow } from "../shared/TimestampRow";
 import { TransactionDetailsComponent } from "../types";
 import { getActualTokenPriceEur, getTokenPriceDiscount } from "./utils";
 
-import * as info from "../../../../assets/img/notifications/info.svg";
+import info from "../../../../assets/img/notifications/info.svg";
 import * as styles from "./Summary.module.scss";
 
 const NeuRewardCaption: React.FunctionComponent<{ isIcbm?: boolean }> = ({ isIcbm }) => {

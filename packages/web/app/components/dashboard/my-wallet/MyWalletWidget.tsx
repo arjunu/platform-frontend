@@ -28,9 +28,9 @@ import { Panel } from "../../shared/Panel";
 import { ECustomTooltipTextPosition, Tooltip } from "../../shared/tooltips";
 import { WarningAlert } from "../../shared/WarningAlert";
 
-import * as ethIcon from "../../../assets/img/eth_icon.svg";
-import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
-import * as moneyIcon from "../../../assets/img/nEUR_icon.svg";
+import ethIcon from "../../../assets/img/eth_icon.svg";
+import arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
+import moneyIcon from "../../../assets/img/nEUR_icon.svg";
 import * as styles from "./MyWalletWidget.module.scss";
 
 type StateProps = {

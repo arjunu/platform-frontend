@@ -6,8 +6,8 @@ import { Col, Row } from "reactstrap";
 import { WarningAlert } from "../../shared/WarningAlert";
 import { LedgerHeader } from "./LedgerHeader";
 
-import * as arrowIcon from "../../../assets/img/link_arrow.svg";
-import * as logoChrome from "../../../assets/img/wallet_selector/logo_chrome.svg";
+import arrowIcon from "../../../assets/img/inline_icons/link_arrow.svg";
+import logoChrome from "../../../assets/img/wallet_selector/logo_chrome.svg";
 import * as styles from "./WalletLedgerNotSupportedComponent.module.scss";
 
 interface IBrowserCard {

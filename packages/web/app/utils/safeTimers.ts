@@ -79,3 +79,5 @@ export function safeDelay(ms: number, options?: TSafeSetTimeoutOptions): Promise
     safeSetTimeout(resolve, ms, options);
   });
 }
+
+export const simpleDelay = (ms: number) => new Promise(res => setTimeout(res, ms));

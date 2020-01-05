@@ -2,6 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
+import { TSocialChannelsType } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { actions } from "../../modules/actions";
 import { appConnect } from "../../store";
 import { TTranslatedString } from "../../types";
@@ -9,10 +10,9 @@ import { Button, EButtonLayout } from "./buttons";
 import { EButtonSize } from "./buttons/Button";
 import { EInlineIconFill } from "./icons/InlineIcon";
 import { SlidePerson } from "./SlidePerson";
-import { IEtoSocialProfile } from "./SocialProfilesList";
 
-import * as prevIcon from "../../assets/img/inline_icons/arrow_bordered_left.svg";
-import * as nextIcon from "../../assets/img/inline_icons/arrow_bordered_right.svg";
+import prevIcon from "../../assets/img/inline_icons/arrow_bordered_left.svg";
+import nextIcon from "../../assets/img/inline_icons/arrow_bordered_right.svg";
 import * as styles from "./PeopleSwiperWidget.module.scss";
 
 export interface IPerson {
@@ -20,7 +20,7 @@ export interface IPerson {
   image: string;
   description: string;
   role: string;
-  socialChannels: IEtoSocialProfile[];
+  socialChannels: TSocialChannelsType;
   website?: string;
 }
 
@@ -34,7 +34,7 @@ interface IDispatchProps {
     role: string,
     description: TTranslatedString,
     image: string,
-    socialChannels: IEtoSocialProfile[],
+    socialChannels: TSocialChannelsType,
     website?: string,
   ) => void;
 }
