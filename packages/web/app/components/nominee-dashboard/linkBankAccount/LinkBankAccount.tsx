@@ -9,7 +9,7 @@ import { withActionWatcher } from "../../../utils/withActionWatcher.unsafe";
 import { connectLinkBankAccountComponent } from "../../settings/linked-bank-account/ConnectLinkBankAccount";
 import { Button, EButtonLayout, EIconPosition } from "../../shared/buttons/Button";
 
-import * as link from "../../../assets/img/inline_icons/social_link.svg";
+import link from "../../../assets/img/inline_icons/social_link.svg";
 
 type TProps = Pick<THocProps<typeof connectLinkBankAccountComponent>, "verifyBankAccount">;
 

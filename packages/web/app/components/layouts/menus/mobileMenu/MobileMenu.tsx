@@ -13,8 +13,8 @@ import { InvestorMobileMenu } from "./InvestorMobileMenu";
 import { IssuerMobileMenu } from "./IssuerMobileMenu";
 import { NomineeMobileMenu } from "./NomineeMobileMenu";
 
-import * as close from "../../../../assets/img/close.svg";
-import * as hamburger from "../../../../assets/img/hamburger.svg";
+import close from "../../../../assets/img/close.svg";
+import hamburger from "../../../../assets/img/hamburger.svg";
 import * as styles from "./MobileMenu.module.scss";
 
 interface IStateProps {

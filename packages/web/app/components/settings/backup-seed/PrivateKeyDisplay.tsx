@@ -7,9 +7,9 @@ import { Heading } from "../../shared/Heading";
 import { useCopyClipboard } from "../../shared/hooks/useCopyToClipboard";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 
-import * as blindIcon from "../../../assets/img/inline_icons/blind.svg";
-import * as eyeIcon from "../../../assets/img/inline_icons/eye.svg";
-import * as clipboardIcon from "../../../assets/img/inline_icons/icon-clipboard.svg";
+import blindIcon from "../../../assets/img/inline_icons/blind.svg";
+import eyeIcon from "../../../assets/img/inline_icons/eye.svg";
+import clipboardIcon from "../../../assets/img/inline_icons/icon-clipboard.svg";
 import * as styles from "./PrivateKeyDisplay.module.scss";
 
 type TProps = {

@@ -7,7 +7,7 @@ import { ButtonLink, EButtonLayout, EIconPosition } from "../shared/buttons";
 import { Panel } from "../shared/Panel";
 import { IVerificationProgressStep, VerificationStatus } from "../shared/VerificationStatus";
 
-import * as arrowLeft from "../../assets/img/inline_icons/arrow_left.svg";
+import arrowLeft from "../../assets/img/inline_icons/arrow_left.svg";
 import * as styles from "./KycPanel.module.scss";
 
 interface IPropsKycPanel {

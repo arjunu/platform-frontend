@@ -7,8 +7,8 @@ import { Container, EColumnSpan } from "../../layouts/Container";
 import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 
-import * as company from "../../../assets/img/inline_icons/company.svg";
-import * as individual from "../../../assets/img/inline_icons/individual.svg";
+import company from "../../../assets/img/inline_icons/company.svg";
+import individual from "../../../assets/img/inline_icons/individual.svg";
 import * as styles from "./SelectTypeCard.module.scss";
 
 type TProps = {

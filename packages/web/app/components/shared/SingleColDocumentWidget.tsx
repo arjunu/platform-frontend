@@ -12,7 +12,7 @@ import { getDocumentTemplateTitles } from "../documents/utils";
 import { DocumentButton } from "./DocumentLink";
 import { InlineIcon } from "./icons";
 
-import * as link from "../../assets/img/inline_icons/social_link.svg";
+import link from "../../assets/img/inline_icons/social_link.svg";
 import * as styles from "./SingleColDocumentWidget.module.scss";
 
 interface IOwnProps {

@@ -9,7 +9,7 @@ import { withStore } from "../../../../utils/storeDecorator.unsafe";
 import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { TxErrorLayout } from "./TxError";
 
-import * as tokenIcon from "../../../../assets/img/token_icon.svg";
+import tokenIcon from "../../../../assets/img/token_icon.svg";
 
 const baseTxData = {
   blockId: 4623487932,

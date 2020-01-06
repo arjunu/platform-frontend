@@ -8,8 +8,8 @@ import { HorizontalLine } from "../../shared/HorizontalLine";
 import { isWalletNotEmpty } from "./utils";
 import { IWalletValues, WalletBalanceContainer } from "./WalletBalance";
 
-import * as ethIcon from "../../../assets/img/eth_icon.svg";
-import * as neuroIcon from "../../../assets/img/nEUR_icon.svg";
+import ethIcon from "../../../assets/img/eth_icon.svg";
+import neuroIcon from "../../../assets/img/nEUR_icon.svg";
 import * as styles from "./WalletBalance.module.scss";
 
 interface ILockedWallet {

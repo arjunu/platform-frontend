@@ -11,17 +11,16 @@ import {
   kycInvidualFormUS,
   kycInvidualFormUSResident,
 } from "./fixtures";
+import {
+  assertIndividualAddress,
+  assertIndividualDocumentVerification,
+  goToPersonalVerification,
+} from "./utils";
 
 const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, isUS: boolean) => {
   createAndLoginNewUser({ type: "investor" });
 
-  // go to kyc select and then individual page
-  cy.visit(kycRoutes.start);
-
-  cy.screenshot();
-
-  cy.get(tid("kyc-start-go-to-personal")).awaitedClick();
-  cy.url().should("contain", kycRoutes.individualStart);
+  goToPersonalVerification();
 
   cy.screenshot();
 
@@ -38,10 +37,12 @@ const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, is
     cy.get(tid("kyc-personal-start-submit-form")).click();
   }
 
-  cy.screenshot();
+  assertIndividualAddress();
 
   // fill address form
   fillForm(addressData);
+
+  assertIndividualDocumentVerification();
 
   // go to the manual verification with file upload
   cy.get(tid("kyc-go-to-manual-verification")).awaitedClick();

@@ -10,8 +10,8 @@ import { MoneySuiteWidget } from "../../shared/MoneySuiteWidget/MoneySuiteWidget
 import { Panel } from "../../shared/Panel";
 import { PercentageIndicatorBar } from "../../shared/PercentageIndicatorBar";
 
-import * as ethIcon from "../../../assets/img/eth_icon.svg";
-import * as moneyIcon from "../../../assets/img/nEUR_icon.svg";
+import ethIcon from "../../../assets/img/eth_icon.svg";
+import moneyIcon from "../../../assets/img/nEUR_icon.svg";
 import * as stylesCommon from "../EtoOverviewCommon.module.scss";
 import * as styles from "./EtoRaisedAmount.module.scss";
 

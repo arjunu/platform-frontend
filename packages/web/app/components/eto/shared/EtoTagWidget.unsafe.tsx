@@ -11,7 +11,7 @@ import { FormFieldLabel } from "../../shared/forms/fields/FormFieldLabel";
 import { VirtualizedSelect } from "../../shared/forms/fields/VirtualizedSelect";
 import { ETagSize, Tag } from "../../shared/Tag";
 
-import * as checkIcon from "../../../assets/img/inline_icons/close_no_border.svg";
+import checkIcon from "../../../assets/img/inline_icons/close_no_border.svg";
 import * as styles from "./EtoTagWidget.module.scss";
 
 type ICombinedProps = IProps & CommonHtmlProps;

@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { InlineIcon } from "../../shared/icons";
 
-import * as checkIcon from "../../../assets/img/inline_icons/check.svg";
+import checkIcon from "../../../assets/img/inline_icons/check.svg";
 import * as styles from "./EtoProgressStepper.module.scss";
 
 export interface IStepProps {

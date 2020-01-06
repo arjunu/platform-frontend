@@ -4,8 +4,8 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { TDataTestId } from "../../types";
 import { CircleButton, ECircleButtonLayout } from "./buttons";
 
-import * as remove from "../../assets/img/inline_icons/delete.svg";
-import * as download from "../../assets/img/inline_icons/download.svg";
+import remove from "../../assets/img/inline_icons/delete.svg";
+import download from "../../assets/img/inline_icons/download.svg";
 
 interface IProps {
   className?: string;

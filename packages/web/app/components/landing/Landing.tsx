@@ -22,7 +22,7 @@ import {
 import { createErrorBoundary } from "../shared/errorBoundary/ErrorBoundary.unsafe";
 import { ErrorBoundaryLayout } from "../shared/errorBoundary/ErrorBoundaryLayout";
 
-import * as arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
+import arrowRight from "../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./Landing.module.scss";
 
 const LandingLayout: React.FunctionComponent = () => (

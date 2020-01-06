@@ -5,7 +5,7 @@ import { toEquityTokenSymbol } from "../../../../utils/opaque-types/utils";
 import { withModalBody } from "../../../../utils/storybookHelpers.unsafe";
 import { InvestmentSummaryComponent } from "./Summary";
 
-import * as tokenIcon from "../../../../assets/img/token_icon.svg";
+import tokenIcon from "../../../../assets/img/token_icon.svg";
 
 const data = {
   additionalData: {

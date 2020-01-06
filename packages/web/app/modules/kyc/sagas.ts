@@ -1,4 +1,5 @@
-import { all, call, delay, fork, put, select } from "redux-saga/effects";
+import { all, call, delay, fork, put } from "redux-saga/effects";
+import { select } from "typed-redux-saga";
 
 import { KycFlowMessage } from "../../components/translatedMessages/messages";
 import { createMessage } from "../../components/translatedMessages/utils";
@@ -35,9 +36,9 @@ import {
 } from "./selectors";
 import { deserializeClaims } from "./utils";
 
-export function* loadClientData({
-  logger,
+export function* loadKycStatus({
   apiKycService,
+  logger,
 }: TGlobalDependencies): Generator<any, any, any> {
   try {
     yield put(actions.kyc.setStatusLoading());
@@ -45,8 +46,23 @@ export function* loadClientData({
     const kycStatus: TKycStatus = yield apiKycService.getKycStatus();
 
     yield put(actions.kyc.setStatus(kycStatus));
+  } catch (e) {
+    logger.error("Error while getting KYC status", e);
 
-    switch (kycStatus.type) {
+    yield put(actions.kyc.setStatusError(e.message));
+
+    // let the caller know that status is unknown
+    throw e;
+  }
+}
+
+export function* loadClientData({ logger }: TGlobalDependencies): Generator<any, any, any> {
+  try {
+    yield neuCall(loadKycStatus);
+
+    const kycStatusType = yield* select(selectKycRequestType);
+
+    switch (kycStatusType) {
       case EKycRequestType.BUSINESS:
         yield neuCall(loadBusinessData);
 
@@ -56,12 +72,14 @@ export function* loadClientData({
 
         break;
       default:
-        logger.info(`Kyc type is ${kycStatus.type} therefore omitting loading kyc data`);
+        logger.info(`Kyc type is ${kycStatusType} therefore omitting loading kyc data`);
     }
   } catch (e) {
-    logger.error("Error while getting KYC status", e);
+    logger.error("Error while loading client kyc data", e);
 
-    yield put(actions.kyc.setStatusError(e.message));
+    // we are not able to provide meaningful user experience in case of missing client data
+    // rethrow the error to be catched by the root saga and show fallback UI
+    throw e;
   }
 }
 
@@ -110,14 +128,25 @@ function expandWatchTimeout(): void {
 /**
  * Individual Request
  */
-function* loadIdentityClaim({ contractsService }: TGlobalDependencies): Generator<any, any, any> {
-  const identityRegistry: IdentityRegistry = contractsService.identityRegistry;
+function* loadIdentityClaim({
+  contractsService,
+  logger,
+}: TGlobalDependencies): Generator<any, any, any> {
+  try {
+    const identityRegistry: IdentityRegistry = contractsService.identityRegistry;
 
-  const loggedInUser: IUser = yield select((state: IAppState) => selectUser(state.auth));
+    const loggedInUser: IUser = yield select((state: IAppState) => selectUser(state.auth));
 
-  const claims: string = yield identityRegistry.getClaims(loggedInUser.userId);
+    const claims: string = yield identityRegistry.getClaims(loggedInUser.userId);
 
-  yield put(actions.kyc.kycSetClaims(deserializeClaims(claims)));
+    yield put(actions.kyc.kycSetClaims(deserializeClaims(claims)));
+  } catch (e) {
+    logger.error("Error while loading kyc identity claims", e);
+
+    // we are not able to provide meaningful user experience in case of missing identity data
+    // rethrow the error to be catched by the root saga and show fallback UI
+    throw e;
+  }
 }
 
 /**
@@ -145,6 +174,9 @@ function* submitPersonalDataSaga(
   data: IKycIndividualData,
 ): Generator<any, any, any> {
   const result: IHttpResponse<IKycIndividualData> = yield apiKycService.putPersonalData(data);
+
+  // update kyc status after submitting personal data as it may affect supported instant id providers
+  yield neuCall(loadKycStatus);
 
   yield put(
     actions.kyc.kycUpdateIndividualData(false, {

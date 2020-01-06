@@ -17,19 +17,12 @@ import { makeEthereumAddressChecksummed } from "../../modules/web3/utils";
 import { EthereumAddress } from "../../utils/opaque-types/types";
 import { mockApiUrl } from "../config";
 import {
-  kycCompanyDocsForm,
-  kycCorporateCompanyForm,
-  kycLegalRepDocsForm,
-  kycLegalRepForm,
-} from "../kyc/fixtures";
-import {
   assertDashboard,
   assertIssuerDashboard,
   assertLanding,
   assertWaitForExternalPendingTransactionCount,
   getLatestEmailByUser,
 } from "./assertions";
-import { fillForm } from "./forms";
 import { goToWallet } from "./navigation";
 import { tid } from "./selectors";
 import { DEFAULT_PASSWORD, verifyUserEmailCall } from "./userHelpers";
@@ -193,27 +186,6 @@ export const logoutViaAccountMenu = () => {
     .awaitedClick();
 
   assertLanding();
-};
-
-export const goThroughKycCorporateProcess = () => {
-  // fill out and submit business form
-  fillForm(kycCorporateCompanyForm);
-  fillForm(kycCompanyDocsForm);
-
-  cy.screenshot();
-
-  // uplaod legal rep data
-  fillForm(kycLegalRepForm);
-  fillForm(kycLegalRepDocsForm, { submit: false });
-
-  // add a new beneficial owner entry
-  cy.get(tid("kyc-beneficial-owner-add-new")).awaitedClick();
-  // remove him again
-  cy.get(tid("kyc-beneficial-owner-delete")).awaitedClick();
-
-  // submit and accept
-  cy.get(tid("kyc-company-legal-representative-upload-and-submit")).awaitedClick();
-  confirmAccessModal();
 };
 
 export const goToUserAccountSettings = () => {
@@ -424,3 +396,4 @@ export * from "./selectors";
 export * from "./navigation";
 export * from "./userHelpers";
 export * from "./forms";
+export * from "./offlineHelpers";

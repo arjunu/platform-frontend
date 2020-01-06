@@ -18,8 +18,8 @@ import { LoadingIndicator } from "../../../shared/loading-indicator/LoadingIndic
 import { ESize, MoneySuiteWidget } from "../../../shared/MoneySuiteWidget/MoneySuiteWidget";
 import { MyNeuWidgetError } from "./MyNeuWidgetError";
 
-import * as arrowRight from "../../../../assets/img/inline_icons/arrow_right.svg";
-import * as icon from "../../../../assets/img/neu_icon.svg";
+import arrowRight from "../../../../assets/img/inline_icons/arrow_right.svg";
+import icon from "../../../../assets/img/neu_icon.svg";
 import * as styles from "./MyNeuWidget.module.scss";
 
 interface IStateProps {

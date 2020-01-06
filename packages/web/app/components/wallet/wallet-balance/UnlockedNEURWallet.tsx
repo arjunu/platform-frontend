@@ -17,7 +17,7 @@ import { ExternalLink } from "../../shared/links/ExternalLink";
 import { VerifiedBankAccount } from "../VerifiedBankAccount";
 import { WalletBalanceContainer } from "./WalletBalance";
 
-import * as neuroIcon from "../../../assets/img/nEUR_icon.svg";
+import neuroIcon from "../../../assets/img/nEUR_icon.svg";
 import * as styles from "./WalletBalance.module.scss";
 
 interface IUnlockedNEURWallet {

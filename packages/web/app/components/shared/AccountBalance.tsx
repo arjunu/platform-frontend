@@ -6,7 +6,7 @@ import { Button, EButtonLayout, EIconPosition } from "./buttons";
 import { EButtonSize } from "./buttons/Button";
 import { IMoneySuiteWidgetProps, MoneySuiteWidget } from "./MoneySuiteWidget/MoneySuiteWidget";
 
-import * as arrowRightIcon from "../../assets/img/inline_icons/arrow_right.svg";
+import arrowRightIcon from "../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./AccountBalance.module.scss";
 
 type TAction = {

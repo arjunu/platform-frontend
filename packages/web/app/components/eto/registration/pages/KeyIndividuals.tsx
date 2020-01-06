@@ -31,10 +31,10 @@ import { convert, generateKeys, removeKeys, setDefaultValueIfUndefined } from ".
 import { EtoFormBase } from "../EtoFormBase";
 import { Section } from "../Shared";
 
-import * as downIcon from "../../../../assets/img/inline_icons/down.svg";
-import * as closeIcon from "../../../../assets/img/inline_icons/round_close.svg";
-import * as plusIcon from "../../../../assets/img/inline_icons/round_plus.svg";
-import * as upIcon from "../../../../assets/img/inline_icons/up.svg";
+import downIcon from "../../../../assets/img/inline_icons/down.svg";
+import closeIcon from "../../../../assets/img/inline_icons/round_close.svg";
+import plusIcon from "../../../../assets/img/inline_icons/round_plus.svg";
+import upIcon from "../../../../assets/img/inline_icons/up.svg";
 import * as styles from "../Shared.module.scss";
 import * as localStyles from "./KeyIndividuals.module.scss";
 

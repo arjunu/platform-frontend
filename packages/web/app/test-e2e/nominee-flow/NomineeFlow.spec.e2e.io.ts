@@ -1,8 +1,8 @@
+import { goThroughKycCorporateProcess } from "../kyc/utils";
 import { backupLightWalletSeedFromAccountSetupDashboard } from "../shared/backupLightWalletSeed";
 import {
   assertNomineeDashboard,
   generateRandomEmailAddress,
-  goThroughKycCorporateProcess,
   loginWithLightWallet,
   logoutViaAccountMenu,
   registerWithLightWalletNominee,

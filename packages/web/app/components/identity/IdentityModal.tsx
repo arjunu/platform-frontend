@@ -4,7 +4,7 @@ import { Col, Row } from "reactstrap";
 
 import { ResponsiveImage } from "../shared/ResponsiveImage";
 
-import * as ipfsImage from "../../assets/img/ipfs.png";
+import ipfsImage from "../../assets/img/ipfs.png";
 import * as styles from "./IdentityModal.module.scss";
 
 const IdentityModal: React.FunctionComponent = () => (

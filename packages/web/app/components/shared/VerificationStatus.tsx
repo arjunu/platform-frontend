@@ -4,7 +4,7 @@ import * as React from "react";
 import { CommonHtmlProps } from "../../types";
 import { InlineIcon } from "./icons";
 
-import * as icon from "../../assets/img/inline_icons/icon_check.svg";
+import icon from "../../assets/img/inline_icons/icon_check.svg";
 import * as styles from "./VerificationStatus.module.scss";
 
 export interface IVerificationProgressStep {

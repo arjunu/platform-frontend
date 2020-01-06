@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { ResponsiveImage } from "./ResponsiveImage";
 
-import * as image from "../../assets/img/wallet_selector/logo_metamask@2x.png";
+import image from "../../assets/img/wallet_selector/logo_metamask@2x.png";
 
 storiesOf("ResponsiveImage", module).add("default", () => (
   <ResponsiveImage

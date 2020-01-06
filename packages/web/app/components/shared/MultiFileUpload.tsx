@@ -9,9 +9,9 @@ import { TAcceptedFileType } from "./forms/fields/utils.unsafe";
 import { ResponsiveImage } from "./ResponsiveImage";
 import { UploadedFiles } from "./UploadedFiles";
 
-import * as documentBothSidesImage from "../../assets/img/document-both-side.jpg";
-import * as documentBothSidesImage2x from "../../assets/img/document-both-side@2x.jpg";
-import * as documentBothSidesImage3x from "../../assets/img/document-both-side@3x.jpg";
+import documentBothSidesImage from "../../assets/img/document-both-side.jpg";
+import documentBothSidesImage2x from "../../assets/img/document-both-side@2x.jpg";
+import documentBothSidesImage3x from "../../assets/img/document-both-side@3x.jpg";
 import * as styles from "./MultiFileUpload.module.scss";
 
 export enum EKycUploadType {

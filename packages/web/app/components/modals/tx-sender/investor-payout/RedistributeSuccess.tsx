@@ -10,7 +10,7 @@ import { ButtonArrowRight } from "../../../shared/buttons";
 import { Message } from "../../message/Message";
 import { RedistributeTransactionDetails } from "./RedistributeTransactionDetails";
 
-import * as redistributeIcon from "../../../../assets/img/redistribute.svg";
+import redistributeIcon from "../../../../assets/img/redistribute.svg";
 
 interface IExternalProps {
   txTimestamp: number;

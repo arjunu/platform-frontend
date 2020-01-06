@@ -6,7 +6,7 @@ import { appConnect } from "../../../../store";
 import { Button, ButtonArrowRight, EButtonLayout } from "../../../shared/buttons";
 import { Message } from "../../message/Message";
 
-import * as redistributeIcon from "../../../../assets/img/redistribute.svg";
+import redistributeIcon from "../../../../assets/img/redistribute.svg";
 
 interface IDispatchProps {
   confirm: () => void;

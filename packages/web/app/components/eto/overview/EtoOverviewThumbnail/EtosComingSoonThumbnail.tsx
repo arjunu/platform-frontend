@@ -4,7 +4,7 @@ import { FormattedHTMLMessage } from "react-intl-phraseapp";
 import { ResponsiveImage } from "../../../shared/ResponsiveImage";
 import { EtoCardPanel } from "./EtoCardPanel";
 
-import * as comingSoonImg from "../../../../assets/img/etos-comings-soon/coming-soon.png";
+import comingSoonImg from "../../../../assets/img/etos-comings-soon/coming-soon.png";
 import * as styles from "./EtosComingSoonThumbnail.module.scss";
 
 export const EtosComingSoonThumbnail: React.FunctionComponent = () => (

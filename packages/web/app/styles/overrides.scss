@@ -114,7 +114,7 @@ textarea {
 .modal-backdrop {
   background-color: $neu-charcoal-grey;
 
-  &:global(.show) {
+  &.show {
     opacity: 0.75;
   }
 }

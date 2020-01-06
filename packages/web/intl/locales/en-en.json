@@ -837,6 +837,7 @@
   "kyc.personal.verify.description": "You will now be redirected to our partner’s identity verification service. Please make sure you have your identity documentation ready. Note that once you have selected an identity verification partner, you will not be able to change your choice.",
   "kyc.personal.verify.error": "Oops, something went wrong. To continue the verification process, please take note of the requirements below.",
   "kyc.personal.verify.manual": "Or start manual verification",
+  "kyc.personal.verify.none-providers-allowed": "Oh, no. Looks like your location is not supported by our identity verification providers. Currently we are not able to process your request.",
   "kyc.personal.verify.title": "Verify your account",
   "kyc.request-state.accepted.description": "Your Verification Process request was approved",
   "kyc.request-state.accepted.title": "Verification Process request approved",

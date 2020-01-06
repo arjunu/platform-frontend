@@ -73,6 +73,7 @@ const KYCForm: React.FunctionComponent<TProps> = ({
         title={<FormattedMessage id="kyc.personal.address.title" />}
         description={<FormattedMessage id="kyc.personal.address.description" />}
         buttonAction={() => props.submitAndClose(values)}
+        data-test-id="kyc.individual-address"
       />
       <FormDeprecated>
         <FormField

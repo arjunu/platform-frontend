@@ -6,8 +6,8 @@ import {
 import { OnfidoSDK } from "../../lib/dependencies/onfido/OnfidoSDK";
 import { assertNever } from "../../utils/assertNever";
 
-import * as id_now from "../../assets/img/instant-id/id_now.svg";
-import * as onfido from "../../assets/img/instant-id/onfido.svg";
+import id_now from "../../assets/img/instant-id/id_now.svg";
+import onfido from "../../assets/img/instant-id/onfido.svg";
 
 export const NONE_KYC_INSTANTID_PROVIDER: TInstantIdNoneProvider = "none";
 export const MANUAL_KYC_PROVIDER: TManualIdProvider = "manual";

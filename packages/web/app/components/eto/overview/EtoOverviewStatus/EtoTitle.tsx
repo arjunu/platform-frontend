@@ -7,7 +7,7 @@ import { TEtoWithCompanyAndContractReadonly } from "../../../../modules/eto/type
 import { etoPublicViewLink } from "../../../appRouteUtils";
 import { TokenSymbolWidget } from "./TokenSymbolWidget";
 
-import * as tokenIcon from "../../../../assets/img/token_icon.svg";
+import tokenIcon from "../../../../assets/img/token_icon.svg";
 import * as styles from "./EtoOverviewStatus.module.scss";
 
 interface IExternalProps {

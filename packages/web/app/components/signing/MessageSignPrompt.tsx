@@ -6,8 +6,8 @@ import { selectWalletSubType, selectWalletType } from "../../modules/web3/select
 import { EWalletSubType, EWalletType } from "../../modules/web3/types";
 import { appConnect } from "../../store";
 
-import * as ledgerConfirm from "../../assets/img/wallet_selector/ledger_confirm.svg";
-import * as walletConfirmIcon from "../../assets/img/wallet_selector/wallet_confirm_icon.svg";
+import ledgerConfirm from "../../assets/img/wallet_selector/ledger_confirm.svg";
+import walletConfirmIcon from "../../assets/img/wallet_selector/wallet_confirm_icon.svg";
 
 interface IStateProps {
   walletType: EWalletType;

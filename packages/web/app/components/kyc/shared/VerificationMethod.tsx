@@ -6,7 +6,7 @@ import { Button, EButtonLayout } from "../../shared/buttons/Button";
 import { InlineIcon } from "../../shared/icons/InlineIcon";
 import { Notification } from "../../shared/notification-widget/Notification";
 
-import * as arrow from "../../../assets/img/inline_icons/link_arrow.svg";
+import arrow from "../../../assets/img/inline_icons/link_arrow.svg";
 import * as styles from "./VerificationMethod.module.scss";
 
 type TProps = {

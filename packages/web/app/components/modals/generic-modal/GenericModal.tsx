@@ -17,8 +17,8 @@ import { Button } from "../../shared/buttons";
 import { getMessageTranslation } from "../../translatedMessages/messages";
 import { Modal } from "../Modal";
 
-import * as successIcon from "../../../assets/img/notifications/success.svg";
-import * as warningIcon from "../../../assets/img/notifications/warning.svg";
+import successIcon from "../../../assets/img/notifications/success.svg";
+import warningIcon from "../../../assets/img/notifications/warning.svg";
 import * as styles from "./GenericModal.module.scss";
 
 interface IStateProps {

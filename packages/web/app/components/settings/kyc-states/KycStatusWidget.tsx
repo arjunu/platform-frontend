@@ -15,10 +15,10 @@ import { Panel } from "../../shared/Panel";
 import { WarningAlert } from "../../shared/WarningAlert";
 import { connectKycStatusWidget } from "./connectKycStatus";
 
-import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
-import * as infoIcon from "../../../assets/img/notifications/info.svg";
-import * as successIcon from "../../../assets/img/notifications/success.svg";
-import * as warningIcon from "../../../assets/img/notifications/warning.svg";
+import arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
+import infoIcon from "../../../assets/img/notifications/info.svg";
+import successIcon from "../../../assets/img/notifications/success.svg";
+import warningIcon from "../../../assets/img/notifications/warning.svg";
 import * as styles from "./KycStatusWidget.module.scss";
 
 interface IExternalProps {

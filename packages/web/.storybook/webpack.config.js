@@ -16,10 +16,11 @@ module.exports = ({ config }) => {
               loader: "css-loader",
               options: {
                 sourceMap: true,
-                importLoaders: 1,
-                modules: true,
-                localIdentName: "[name]__[local]___[hash:base64:5]",
-                camelCase: "dashesOnly",
+                importLoaders: 3,
+                modules: {
+                  localIdentName: "[name]__[local]___[hash:base64:5]",
+                },
+                localsConvention: "dashesOnly",
               },
             },
             {
@@ -46,10 +47,7 @@ module.exports = ({ config }) => {
             {
               loader: "css-loader",
               options: {
-                importLoaders: 1,
-                modules: false,
-                localIdentName: "[name]__[local]___[hash:base64:5]",
-                camelCase: "dashesOnly",
+                importLoaders: 2,
               },
             },
             {
@@ -67,12 +65,6 @@ module.exports = ({ config }) => {
             },
             {
               loader: "css-loader",
-              options: {
-                importLoaders: 1,
-                modules: false,
-                localIdentName: "[name]__[local]___[hash:base64:5]",
-                camelCase: "dashesOnly",
-              },
             },
           ],
         },

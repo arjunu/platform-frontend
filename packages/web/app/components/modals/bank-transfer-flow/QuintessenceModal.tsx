@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Modal } from "../Modal";
 
-import * as quintessenceIcon from "../../../assets/img/bank-transfer/quintessence.png";
+import quintessenceIcon from "../../../assets/img/bank-transfer/quintessence.png";
 import * as styles from "./QuintessenceModal.module.scss";
 
 type TProps = {

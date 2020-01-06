@@ -7,7 +7,7 @@ import { ButtonArrowRight } from "../../../shared/buttons";
 import { Confetti, EConfettiTheme } from "../../../shared/Confetti";
 import { Message } from "../../message/Message";
 
-import * as bankIcon from "../../../../assets/img/bank-transfer/bank.svg";
+import bankIcon from "../../../../assets/img/bank-transfer/bank.svg";
 
 interface IDispatchProps {
   goToWallet: () => void;

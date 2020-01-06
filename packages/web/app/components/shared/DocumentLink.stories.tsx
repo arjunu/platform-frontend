@@ -6,8 +6,8 @@ import { EButtonLayout } from "./buttons";
 import { DocumentButton, DocumentLabel, DocumentLink } from "./DocumentLink";
 import { InlineIcon } from "./icons";
 
-import * as link_out from "../../assets/img/inline_icons/link_out.svg";
-import * as link from "../../assets/img/inline_icons/social_link.svg";
+import link_out from "../../assets/img/inline_icons/link_out.svg";
+import link from "../../assets/img/inline_icons/social_link.svg";
 
 storiesOf("Document/DocumentLink", module)
   .add("doc", () => <DocumentLink url="doc" name="foo" />)
