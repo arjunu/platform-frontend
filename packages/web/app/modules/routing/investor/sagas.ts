@@ -4,8 +4,7 @@ import { put } from "redux-saga/effects";
 
 import {
   appRoutes,
-  TEtoViewByIdMatch,
-  TEtoViewByPreviewCodeMatch,
+
 } from "../../../components/appRoutes";
 import { profileRoutes } from "../../../components/settings/routes";
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -18,6 +17,7 @@ import {
   redirectLegacyEtoView,
   redirectLegacyEtoViewById,
 } from "../sagas";
+import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../types";
 
 export function* investorRouting(
   { logger }: TGlobalDependencies,

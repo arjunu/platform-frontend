@@ -4,8 +4,7 @@ import { put } from "redux-saga/effects";
 
 import {
   appRoutes,
-  TEtoViewByIdMatch,
-  TEtoViewByPreviewCodeMatch,
+
 } from "../../../components/appRoutes";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions } from "../../actions";
@@ -17,6 +16,7 @@ import {
   redirectLegacyEtoView,
   redirectLegacyEtoViewById,
 } from "../sagas";
+import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../types";
 
 export function* notAuthorizedRouting(
   { logger }: TGlobalDependencies,

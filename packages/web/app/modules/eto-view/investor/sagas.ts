@@ -1,7 +1,6 @@
 import { match } from "react-router";
 import { call, fork, put, select } from "redux-saga/effects";
 
-import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
 import { EtoMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
@@ -13,6 +12,7 @@ import { ensureEtoJurisdiction } from "../../routing/sagas";
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import { calculateCampaignOverviewData } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
+import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../routing/types";
 
 function* loadInvestorEtoViewInternal(
   eto: TEtoWithCompanyAndContractReadonly,

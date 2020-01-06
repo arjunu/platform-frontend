@@ -1,7 +1,7 @@
 import { match } from "react-router";
 import { call, select } from "redux-saga/effects";
 
-import { appRoutes, TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
+import { appRoutes} from "../../../components/appRoutes";
 import { ETHEREUM_ZERO_ADDRESS } from "../../../config/constants";
 import { EUserType } from "../../../lib/api/users/interfaces";
 import { selectUserType } from "../../auth/selectors";
@@ -16,6 +16,7 @@ import { etoViewNomineeSagas } from "../nominee/sagas";
 import { etoViewNotAuthSagas } from "../notAuth/sagas";
 import { EEtoViewCampaignOverviewType } from "./types";
 import { getTwitterData } from "./utils";
+import { TEtoViewByPreviewCodeMatch } from "../../routing/types";
 
 export function* calculateEtoViewCampaignOverviewType(
   eto: TEtoWithCompanyAndContractReadonly,

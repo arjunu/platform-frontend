@@ -7,8 +7,7 @@ import { Effect, fork, put } from "redux-saga/effects";
 
 import {
   appRoutes,
-  TEtoPublicViewByIdLegacyRoute,
-  TEtoPublicViewLegacyRouteMatch,
+
 } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
@@ -22,6 +21,7 @@ import { investorRouting } from "./investor/sagas";
 import { issuerRouting } from "./issuer/sagas";
 import { nomineeRouting } from "./nominee/sagas";
 import { notAuthorizedRouting } from "./notAuth/sagas";
+import { TEtoPublicViewByIdLegacyRoute, TEtoPublicViewLegacyRouteMatch } from "./types";
 
 //---------//
 // export const GREYP_PREVIEW_CODE = "1eb004fd-c44d-4bed-9e76-0e0858649587";

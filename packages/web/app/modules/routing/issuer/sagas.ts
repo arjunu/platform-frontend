@@ -4,14 +4,14 @@ import { put } from "redux-saga/effects";
 
 import {
   appRoutes,
-  TEtoViewByIdMatch,
-  TEtoViewByPreviewCodeMatch,
+
 } from "../../../components/appRoutes";
 import { profileRoutes } from "../../../components/settings/routes";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions } from "../../actions";
 import { neuCall } from "../../sagasUtils";
 import { fallbackRedirect, redirectLegacyEtoView, redirectLegacyEtoViewById } from "../sagas";
+import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../types";
 
 export function* issuerRouting(
   { logger }: TGlobalDependencies,

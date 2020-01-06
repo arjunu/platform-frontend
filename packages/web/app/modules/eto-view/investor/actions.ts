@@ -1,7 +1,7 @@
 import { createActionFactory } from "@neufund/shared";
 import { match } from "react-router";
 
-import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../../components/appRoutes";
+import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../routing/types";
 
 export const etoViewInvestorActions = {
   loadInvestorEtoView: createActionFactory(
