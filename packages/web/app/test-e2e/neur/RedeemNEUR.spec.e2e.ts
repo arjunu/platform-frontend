@@ -16,18 +16,17 @@ import { assertBankAccountDetails } from "./assertions";
 describe("Redeem NEUR", function(): void {
   this.retries(2);
   beforeEach(() => {
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC").then(() => {
-      // store actual balance
-      getWalletNEurAmount().as("currentAmount");
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC");
+    // store actual balance
+    getWalletNEurAmount().as("currentAmount");
 
-      assertWallet();
+    assertWallet();
 
-      // check if bank account is linked
-      assertBankAccountDetails();
+    // check if bank account is linked
+    assertBankAccountDetails();
 
-      // start redeem flow
-      cy.get(tid("wallet-balance.neur.redeem-button")).click();
-    });
+    // start redeem flow
+    cy.get(tid("wallet-balance.neur.redeem-button")).click();
   });
 
   it("should withdraw whole balance", () => {

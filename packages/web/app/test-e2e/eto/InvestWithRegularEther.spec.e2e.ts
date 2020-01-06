@@ -56,6 +56,7 @@ describe("Invest with ethereum", () => {
       });
     });
   });
+
   it("Invest ALL", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 

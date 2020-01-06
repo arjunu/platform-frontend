@@ -3,46 +3,44 @@ import { assertPendingWithdrawModal, assertSuccessWithdrawModal, doWithdraw } fr
 
 describe("Pending transaction network errors recovering", () => {
   it("should recover pending transaction watcher opened from header", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
-      const address = "0x16cd5aC5A1b77FB72032E3A09E91A98bB21D8988";
-      const amount = "10";
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED");
+    const address = "0x16cd5aC5A1b77FB72032E3A09E91A98bB21D8988";
+    const amount = "10";
 
-      doWithdraw(address, amount, { closeWhen: "pending" });
+    doWithdraw(address, amount, { closeWhen: "pending" });
 
-      goOffline();
+    goOffline();
 
-      cy.get(tid("pending-transactions-status.mining")).click();
+    cy.get(tid("pending-transactions-status.mining")).click();
 
-      assertPendingWithdrawModal(address, amount);
+    assertPendingWithdrawModal(address, amount);
 
-      cy.wait(10000);
+    cy.wait(10000);
 
-      assertPendingWithdrawModal(address, amount);
+    assertPendingWithdrawModal(address, amount);
 
-      goOnline();
+    goOnline();
 
-      assertSuccessWithdrawModal(address, amount);
-    });
+    assertSuccessWithdrawModal(address, amount);
   });
 
   it("should still watch for a pending transaction after being offline for a while", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED").then(() => {
-      const address = "0x16cd5aC5A1b77FB72032E3A09E91A98bB21D8988";
-      const amount = "10";
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED");
+    const address = "0x16cd5aC5A1b77FB72032E3A09E91A98bB21D8988";
+    const amount = "10";
 
-      doWithdraw(address, amount, { closeWhen: "never" });
+    doWithdraw(address, amount, { closeWhen: "never" });
 
-      goOffline();
+    goOffline();
 
-      assertPendingWithdrawModal(address, amount);
+    assertPendingWithdrawModal(address, amount);
 
-      cy.wait(10000);
+    cy.wait(10000);
 
-      assertPendingWithdrawModal(address, amount);
+    assertPendingWithdrawModal(address, amount);
 
-      goOnline();
+    goOnline();
 
-      assertSuccessWithdrawModal(address, amount);
-    });
+    assertSuccessWithdrawModal(address, amount);
   });
 });

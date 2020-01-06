@@ -219,20 +219,18 @@ describe("Eto Investor View", () => {
 
   describe("Fixtures tests", () => {
     it.skip("coming soon state should have token terms", () => {
-      loginFixtureAccount("ISSUER_PREVIEW").then(() => {
-        goToEtoPreview();
+      loginFixtureAccount("ISSUER_PREVIEW");
+      goToEtoPreview();
 
-        // This ETO has product id set so token terms should be available
-        cy.get(tid("eto-public-view-token-terms")).should("exist");
-      });
+      // This ETO has product id set so token terms should be available
+      cy.get(tid("eto-public-view-token-terms")).should("exist");
     });
 
     it("listed state should have token terms", () => {
-      loginFixtureAccount("ISSUER_LISTED").then(() => {
-        goToEtoPreview();
+      loginFixtureAccount("ISSUER_LISTED");
+      goToEtoPreview();
 
-        cy.get(tid("eto-public-view-token-terms")).should("exist");
-      });
+      cy.get(tid("eto-public-view-token-terms")).should("exist");
     });
   });
 });
