@@ -2,14 +2,13 @@ import { createActionFactory } from "@neufund/shared";
 import * as React from "react";
 
 import { TMessage } from "../../components/translatedMessages/utils";
-import { OmitKeys } from "../../types";
 import { createAction } from "../actionsUtils";
 import { TIconType } from "./reducer";
 
 // TODO: Refactor actions to receive single object as a parameter
 export const genericModalActions = {
   // TODO: Check if it's possible to generate generic types for sub function
-  showModal: <T extends { closeModal?: () => void }, P extends object = OmitKeys<T, "closeModal">>(
+  showModal: <T extends { closeModal?: () => void }, P extends object = Omit<T, "closeModal">>(
     component: React.ComponentType<T>,
     props?: P,
   ) => createAction("MODAL_SHOW", { component, props }),

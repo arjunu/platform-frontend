@@ -42,44 +42,42 @@ describe("Eto start date setup", function(): void {
   this.retries(2);
   it("sets the date", () => {
     // enable after
-    loginFixtureAccount("ISSUER_SETUP", {
-      kyc: "business",
-    }).then(() => {
-      //happy path
-      const newStartDate = moment
-        .utc()
-        .add(20, "days")
-        .add(5, "hours")
-        .add(5, "minute");
+    loginFixtureAccount("ISSUER_SETUP");
 
-      // match non breaking spaces
-      const newStartDateText = new RegExp(
-        /^(19|20) days[\s|\u00A0]\d\d? hour(s?)[\s|\u00A0]\d\d? minute(s?)/,
-      );
+    //happy path
+    const newStartDate = moment
+      .utc()
+      .add(20, "days")
+      .add(5, "hours")
+      .add(5, "minute");
 
-      setStartDay(newStartDate, newStartDateText);
+    // match non breaking spaces
+    const newStartDateText = new RegExp(
+      /^(19|20) days[\s|\u00A0]\d\d? hour(s?)[\s|\u00A0]\d\d? minute(s?)/,
+    );
 
-      // should allow to set date to tomorrow
-      const tomorrowStartDate = moment
-        .utc()
-        .add(24, "hours")
-        .add(5, "minutes");
+    setStartDay(newStartDate, newStartDateText);
 
-      const tomorrowStartDateText = new RegExp(/^(1) day/);
+    // should allow to set date to tomorrow
+    const tomorrowStartDate = moment
+      .utc()
+      .add(24, "hours")
+      .add(5, "minutes");
 
-      setStartDay(tomorrowStartDate, tomorrowStartDateText);
+    const tomorrowStartDateText = new RegExp(/^(1) day/);
 
-      // should not be allowed to set a date that is too soon
-      const falseDate = newStartDate.clone().subtract(20, "days");
+    setStartDay(tomorrowStartDate, tomorrowStartDateText);
 
-      cy.get(tid("eto-settings-start-date-open-date-picker"))
-        .click()
-        .get(tid("eto-settings-start-date-input"))
-        .clear({ force: true })
-        .type(falseDate.format("MM/DD/YYYY HH:mm"), { force: true })
-        .get(tid("eto-settings-start-date-confirm"))
-        .should("be.disabled")
-        .get(tid("form.etoStartDate.error-message"));
-    });
+    // should not be allowed to set a date that is too soon
+    const falseDate = newStartDate.clone().subtract(20, "days");
+
+    cy.get(tid("eto-settings-start-date-open-date-picker"))
+      .click()
+      .get(tid("eto-settings-start-date-input"))
+      .clear({ force: true })
+      .type(falseDate.format("MM/DD/YYYY HH:mm"), { force: true })
+      .get(tid("eto-settings-start-date-confirm"))
+      .should("be.disabled")
+      .get(tid("form.etoStartDate.error-message"));
   });
 });

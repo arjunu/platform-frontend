@@ -10,25 +10,19 @@ const assertFoundersQuote = () => {
 
 describe("ETO founders quote", () => {
   it("should dispaly founders quote for eto in draft state for both issuer and investor", () => {
-    loginFixtureAccount("ISSUER_HAS_KYC_AND_FILLED_COMPANY_DATA", {
-      kyc: "business",
-    });
+    loginFixtureAccount("ISSUER_HAS_KYC_AND_FILLED_COMPANY_DATA");
 
     assertFoundersQuote();
   });
 
   it("should dispaly founders quote for eto in campaign state for both issuer and investor", () => {
-    loginFixtureAccount("ISSUER_LISTED", {
-      kyc: "business",
-    });
+    loginFixtureAccount("ISSUER_LISTED");
 
     assertFoundersQuote();
   });
 
   it("should dispaly founders quote for eto in pending state for both issuer and investor", () => {
-    loginFixtureAccount("ISSUER_PENDING", {
-      kyc: "business",
-    });
+    loginFixtureAccount("ISSUER_PENDING");
 
     assertFoundersQuote();
   });

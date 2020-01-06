@@ -17,23 +17,21 @@ describe("Try and invest without money", () => {
     createAndLoginNewUser({
       type: "investor",
       kyc: "business",
-      clearPendingTransactions: true,
-    }).then(() => {
-      goToDashboard();
-
-      // make sure that INV_EMPTY_HAS_KYC has no ether by sending ether to address 0
-      // all required helper functions are available.
-
-      // click invest now button
-      cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
-      cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).click();
-
-      cy.get(tid("invest-modal-eth-field"))
-        .clear()
-        .type("10");
-
-      cy.get(tid("invest-modal-invest-now-button")).should("be.disabled");
     });
+    goToDashboard();
+
+    // make sure that INV_EMPTY_HAS_KYC has no ether by sending ether to address 0
+    // all required helper functions are available.
+
+    // click invest now button
+    cy.get(tid(`eto-overview-${PUBLIC_ETO_ID}`)).click();
+    cy.get(tid("eto-invest-now-button-" + PUBLIC_ETO_ID)).click();
+
+    cy.get(tid("invest-modal-eth-field"))
+      .clear()
+      .type("10");
+
+    cy.get(tid("invest-modal-invest-now-button")).should("be.disabled");
   });
 
   it.skip("should invest when user has no ether - Gasless Transaction", () => {
@@ -43,11 +41,7 @@ describe("Try and invest without money", () => {
 
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
-    loginFixtureAccount(fixture, {
-      kyc: "business",
-      signTosAgreement: true,
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount(fixture);
 
     goToEtoViewById(PUBLIC_ETO_ID);
 
@@ -76,11 +70,7 @@ describe("Try and invest without money", () => {
 
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
-    loginFixtureAccount(fixture, {
-      kyc: "business",
-      signTosAgreement: true,
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount(fixture);
 
     cy.window().then(Window => {
       const oldValue = JSON.parse(Window.localStorage.getItem("NF_WALLET_METADATA")!);

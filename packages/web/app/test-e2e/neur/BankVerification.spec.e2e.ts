@@ -57,80 +57,63 @@ describe("Bank Verification", () => {
     clearEmailServer();
   });
   it("should start verification process from wallet", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      kyc: "business",
-      signTosAgreement: true,
-    }).then(() => {
-      goToWallet();
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED");
+    goToWallet();
 
-      cy.get(tid("locked-wallet.neur.bank-account.not-verified")).should("exist");
+    cy.get(tid("locked-wallet.neur.bank-account.not-verified")).should("exist");
 
-      cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
+    cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
 
-      assertBankTransferFlow({
-        agreementApprovalRequired: true,
-      });
+    assertBankTransferFlow({
+      agreementApprovalRequired: true,
     });
   });
 
   it("should start verification process from profile", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      kyc: "business",
-      signTosAgreement: true,
-    }).then(() => {
-      goToProfile();
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED");
+    goToProfile();
 
-      cy.get(tid("linked-bank-account-widget.link-account")).click();
+    cy.get(tid("linked-bank-account-widget.link-account")).click();
 
-      assertBankTransferFlow({
-        agreementApprovalRequired: true,
-      });
+    assertBankTransferFlow({
+      agreementApprovalRequired: true,
     });
   });
 
   it("should start new verification process from wallet", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    }).then(() => {
-      goToWallet();
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP");
+    goToWallet();
 
-      cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
+    cy.get(tid("locked-wallet.neur.bank-account.link-account")).click();
 
-      assertBankTransferFlow({
-        agreementApprovalRequired: false,
-      });
+    assertBankTransferFlow({
+      agreementApprovalRequired: false,
     });
   });
 
   it("should start new verification process from profile", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    }).then(() => {
-      goToProfile();
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP");
+    goToProfile();
 
-      cy.get(tid("linked-bank-account-widget.link-different-account")).click();
+    cy.get(tid("linked-bank-account-widget.link-different-account")).click();
 
-      assertBankTransferFlow({
-        agreementApprovalRequired: false,
-      });
+    assertBankTransferFlow({
+      agreementApprovalRequired: false,
     });
   });
 
   it("should disable all action buttons related to bank transfer when not verified", () => {
     createAndLoginNewUser({
       type: "investor",
-    }).then(() => {
-      // Disabled on profile
-      goToProfile();
-      cy.get(tid("linked-bank-account-widget.link-account")).should("be.disabled");
-
-      // Disabled on wallet
-      goToWallet();
-      cy.get(tid("locked-wallet.neur.bank-account.link-account")).should("be.disabled");
-
-      cy.screenshot();
     });
+    // Disabled on profile
+    goToProfile();
+    cy.get(tid("linked-bank-account-widget.link-account")).should("be.disabled");
+
+    // Disabled on wallet
+    goToWallet();
+    cy.get(tid("locked-wallet.neur.bank-account.link-account")).should("be.disabled");
+
+    cy.screenshot();
   });
 });

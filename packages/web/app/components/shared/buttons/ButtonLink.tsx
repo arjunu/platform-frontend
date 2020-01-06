@@ -5,7 +5,6 @@ import { compose, mapProps, setDisplayName } from "recompose";
 
 import { routingActions } from "../../../modules/routing/actions";
 import { appConnect } from "../../../store";
-import { OmitKeys } from "../../../types";
 import { isExternalUrl } from "../../../utils/StringUtils";
 import { Button } from "./Button";
 
@@ -33,7 +32,7 @@ type TButtonDispatchProps = {
   navigate: () => void;
 };
 
-type TButtonWithoutOnClick = OmitKeys<TButtonProps, "onClick">;
+type TButtonWithoutOnClick = Omit<TButtonProps, "onClick">;
 
 type TProps = TButtonLinkComponentProps & TButtonDispatchProps & TButtonWithoutOnClick;
 

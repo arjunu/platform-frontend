@@ -56,40 +56,29 @@ describe("Purchase", () => {
     clearEmailServer();
   });
   it("should start purchase agreement approval when bank account not verified", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      kyc: "business",
-      signTosAgreement: true,
-    }).then(() => {
-      goToWallet();
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED");
+    goToWallet();
 
-      cy.get(tid("wallet-balance.neur.purchase-button")).click();
+    cy.get(tid("wallet-balance.neur.purchase-button")).click();
 
-      assertBankTransferFlow({
-        agreementApprovalRequired: true,
-      });
+    assertBankTransferFlow({
+      agreementApprovalRequired: true,
     });
   });
 
   it("should start purchase without agreement approval when bank account is verified", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    }).then(() => {
-      goToWallet();
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP");
+    goToWallet();
 
-      cy.get(tid("wallet-balance.neur.purchase-button")).click();
+    cy.get(tid("wallet-balance.neur.purchase-button")).click();
 
-      assertBankTransferFlow({
-        agreementApprovalRequired: false,
-      });
+    assertBankTransferFlow({
+      agreementApprovalRequired: false,
     });
   });
 
   it("should show bank account details", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP");
     // On wallet
     goToWallet();
 

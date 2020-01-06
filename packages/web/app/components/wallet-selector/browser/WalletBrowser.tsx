@@ -60,7 +60,7 @@ export const WalletBrowserComponent: React.FunctionComponent<IWalletBrowserProps
 
             <Button
               onClick={tryConnectingWithBrowserWallet}
-              data-test-id="ledger-wallet-init.try-again"
+              data-test-id="browser-wallet-init.try-again"
             >
               <FormattedMessage id="common.try-again" />
             </Button>

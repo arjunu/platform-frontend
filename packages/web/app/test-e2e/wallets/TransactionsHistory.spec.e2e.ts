@@ -4,9 +4,7 @@ import { goToWallet, loginFixtureAccount, tid } from "../utils/index";
 
 describe("TransactionHistory", () => {
   it("should load transaction history", () => {
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      kyc: "business",
-    });
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC");
 
     goToWallet();
 
@@ -22,9 +20,7 @@ describe("TransactionHistory", () => {
   });
 
   it("should open transaction history modal", () => {
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      kyc: "business",
-    });
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC");
 
     goToWallet();
 
@@ -36,7 +32,7 @@ describe("TransactionHistory", () => {
   });
 
   it("should watch for new transactions", () => {
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC", { kyc: "business" });
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC");
 
     // generate withdraw transaction to have new item in tx history list
     const randomAddress: string = generateRandomEthereumAddress();

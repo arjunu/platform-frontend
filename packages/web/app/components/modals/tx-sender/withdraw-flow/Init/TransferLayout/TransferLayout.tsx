@@ -11,7 +11,6 @@ import {
 } from "../../../../../../modules/tx/validator/reducer";
 import { isValidFormNumber } from "../../../../../../modules/tx/validator/transfer/utils";
 import { isAddressValid } from "../../../../../../modules/web3/utils";
-import { OmitKeys } from "../../../../../../types";
 import { EquityToken } from "../../../../../../utils/opaque-types/types";
 import { Button } from "../../../../../shared/buttons";
 import { Money } from "../../../../../shared/formatters/Money";
@@ -56,7 +55,7 @@ export interface ITransferLayoutDispatchProps {
 }
 
 export type TTransferLayoutProps = ITransferLayoutStateProps &
-  OmitKeys<ITransferLayoutDispatchProps, "onValidate"> &
+  Omit<ITransferLayoutDispatchProps, "onValidate"> &
   IHandlersProps;
 
 export interface ITransferData {
@@ -108,8 +107,8 @@ const TransferLayout: React.FunctionComponent<TTransferLayoutProps> = ({
       // Cannot enable now until we update formik to version 2
       // @See https://github.com/jaredpalmer/formik/issues/1439
       initialValues={{
-        to: (isAddressValid(txUserFlowInputData.to) && txUserFlowInputData.to) || "",
-        value: (isValidFormNumber(txUserFlowInputData.value) && txUserFlowInputData.value) || "",
+        to: isAddressValid(txUserFlowInputData.to) ? txUserFlowInputData.to : "",
+        value: isValidFormNumber(txUserFlowInputData.value) ? txUserFlowInputData.value : "",
         withdrawAll: false,
         allowNewAddress: false,
         allowSmartContract: false,

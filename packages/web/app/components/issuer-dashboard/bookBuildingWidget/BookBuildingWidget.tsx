@@ -21,7 +21,7 @@ import {
 import { selectIssuerEtoInvestmentCalculatedValues } from "../../../modules/eto/selectors";
 import { EETOStateOnChain } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
-import { OmitKeys, TTranslatedString } from "../../../types";
+import { TTranslatedString } from "../../../types";
 import { assertNever } from "../../../utils/assertNever";
 import { InvariantError } from "../../../utils/invariant";
 import { nonNullable } from "../../../utils/nonNullable";
@@ -71,7 +71,7 @@ interface IPanelProps {
 
 type TProps = IWithProps &
   IDispatchProps &
-  OmitKeys<IStateProps, "onChainState" | "canEnableBookbuilding" | "bookBuildingEnabled"> &
+  Omit<IStateProps, "onChainState" | "canEnableBookbuilding" | "bookBuildingEnabled"> &
   IExternalProps;
 
 export const BookBuildingWidgetComponent: React.FunctionComponent<TProps> = ({

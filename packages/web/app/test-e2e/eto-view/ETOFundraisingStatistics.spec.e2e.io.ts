@@ -28,11 +28,7 @@ describe("ETO Fundraising Statistics", () => {
     it("should show fundraising statistics for whitelisted investor", () => {
       const etoId = etoFixtureAddressByName("ETOInWhitelistState");
 
-      loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-        kyc: "business",
-        signTosAgreement: true,
-        clearPendingTransactions: true,
-      });
+      loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC");
 
       assertFundraisingStatisticsTab(etoId);
     });
@@ -40,11 +36,7 @@ describe("ETO Fundraising Statistics", () => {
     it("should not show fundraising statistics for not whitelisted investor", () => {
       const etoId = etoFixtureAddressByName("ETOInWhitelistState");
 
-      loginFixtureAccount("INV_EMPTY_HAS_KYC", {
-        kyc: "business",
-        signTosAgreement: true,
-        clearPendingTransactions: true,
-      });
+      loginFixtureAccount("INV_EMPTY_HAS_KYC");
 
       assertNoFundraisingStatisticsTab(etoId);
     });
