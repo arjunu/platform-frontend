@@ -11,6 +11,11 @@ executors:
       - image: circleci/node:11.14.0-browsers
     working_directory: /home/circleci/app
 
+  regviz:
+    docker:
+      - image: regviz/node-xcb
+    working_directory: /home/circleci/app
+
 
 jobs:
   install-lint-test:
@@ -59,7 +64,7 @@ jobs:
       - persist_to_workspace:
           root: /home/circleci/app
           paths:
-            - packages/web/cypress/screenshots
+            - ./packages/web/cypress/screenshots
 
   build-frontend:
     executor: docker
@@ -79,7 +84,7 @@ jobs:
       - persist_to_workspace:
           root: /home/circleci/app
           paths:
-            - ./packages/web/cypress/screenshots
+            - ./
 
   test-e2e:
     machine:
@@ -123,7 +128,7 @@ jobs:
       - run: yarn workspace @neufund/web codechecks
 
   codechecks-vis-reg:
-    executor: docker-browsers
+    executor: regviz
 
     steps:
       - checkout
@@ -141,6 +146,8 @@ jobs:
 
     steps:
       - checkout
+      - attach_workspace:
+            at: /home/circleci/app
       - restore_cache:
           keys:
             - v24-deps-{{ checksum "package.json" }}
