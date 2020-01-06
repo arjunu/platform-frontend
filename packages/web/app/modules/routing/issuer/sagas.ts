@@ -16,7 +16,7 @@ import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../types";
 export function* issuerRouting(
   { logger }: TGlobalDependencies,
   { payload }: LocationChangeAction,
-): Iterator<any> {
+): Generator<any,any,any> {
   try {
     const etoViewStatsMatch = yield matchPath(payload.location.pathname, {
       path: appRoutes.etoIssuerViewStats,

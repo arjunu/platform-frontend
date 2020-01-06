@@ -1,6 +1,6 @@
 import { compose } from "recompose";
 
-import { TIssuerPreviewEtoViewData } from "../../../../modules/eto-view/shared/types";
+import { TEtoViewData } from "../../../../modules/eto-view/shared/types";
 import { withContainer } from "../../../../utils/withContainer.unsafe";
 import { withMetaTags } from "../../../../utils/withMetaTags.unsafe";
 import { Layout } from "../../../layouts/Layout";
@@ -8,10 +8,10 @@ import { createErrorBoundary } from "../../../shared/errorBoundary/ErrorBoundary
 import { ErrorBoundaryLayout } from "../../../shared/errorBoundary/ErrorBoundaryLayout";
 import { EtoViewIssuerPreviewLayout } from "./EtoViewIssuerPreviewLayout";
 
-export const EtoViewIssuerPreview = compose<TIssuerPreviewEtoViewData, TIssuerPreviewEtoViewData>(
+export const EtoViewIssuerPreview = compose<TEtoViewData, TEtoViewData>(
   createErrorBoundary(ErrorBoundaryLayout),
   withContainer(Layout),
-  withMetaTags<TIssuerPreviewEtoViewData>(({ eto }, intl) => {
+  withMetaTags<TEtoViewData>(({ eto }, intl) => {
     const requiredDataPresent =
       eto.company.brandName && eto.equityTokenName && eto.equityTokenSymbol;
 

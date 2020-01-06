@@ -12,7 +12,7 @@ import { fallbackRedirect, redirectLegacyEtoView } from "../sagas";
 export function* nomineeRouting(
   { logger }: TGlobalDependencies,
   { payload }: LocationChangeAction,
-): Iterator<any> {
+): Generator<any,any,any> {
   try {
     const dashboardMatch = yield matchPath<{}>(payload.location.pathname, {
       path: appRoutes.dashboard,

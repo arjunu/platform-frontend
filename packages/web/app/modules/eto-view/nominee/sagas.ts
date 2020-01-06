@@ -12,11 +12,12 @@ import {
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import { calculateCampaignOverviewDataIssuerNominee } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
+import { selectIsUserVerifiedOnBlockchain } from "../../kyc/selectors";
 
 export function* loadNomineeEtoView({
   logger,
   notificationCenter,
-}: TGlobalDependencies): Iterator<any> {
+}: TGlobalDependencies): Generator<any,any,any> {
   try {
     let activeNomineeEtoPreviewCode = yield select(selectNomineeActiveEtoPreviewCode);
 
@@ -43,6 +44,7 @@ export function* loadNomineeEtoView({
         actions.etoView.setEtoViewData({
           eto,
           campaignOverviewData,
+          userIsFullyVerified: yield select(selectIsUserVerifiedOnBlockchain),
           etoViewType: EEtoViewType.ETO_VIEW_NOT_AUTHORIZED,
         }),
       );

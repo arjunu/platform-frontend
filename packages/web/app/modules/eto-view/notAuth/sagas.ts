@@ -16,7 +16,7 @@ import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../routing/typ
 function* loadNotAuthorizedEtoViewInternal(
   eto: TEtoWithCompanyAndContractReadonly,
   routeMatch: match<TEtoViewByPreviewCodeMatch | TEtoViewByIdMatch>,
-): Iterator<any> {
+): Generator<any,any,any> {
   yield call(ensureEtoJurisdiction, eto.product.jurisdiction, routeMatch.params.jurisdiction);
 
   yield put(actions.eto.verifyEtoAccess(eto, false));
@@ -37,7 +37,7 @@ function* loadNotAuthorizedEtoViewInternal(
 export function* loadNotAuthorizedEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
-): Iterator<any> {
+): Generator<any,any,any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContract,
@@ -56,7 +56,7 @@ export function* loadNotAuthorizedEtoView(
 export function* loadNotAuthorizedEtoViewById(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadNotAuthorizedEtoViewById>,
-): Iterator<any> {
+): Generator<any,any,any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContractById,

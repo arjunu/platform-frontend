@@ -22,7 +22,7 @@ import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../types";
 export function* investorRouting(
   { logger }: TGlobalDependencies,
   { payload }: LocationChangeAction,
-): Iterator<any> {
+): Generator<any,any,any> {
   try {
     /* --- REDIRECT LEGACY ROUTES ---*/
     const legacyEtoViewRedirected = yield neuCall(redirectLegacyEtoView, payload.location);

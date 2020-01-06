@@ -1,10 +1,11 @@
 import * as React from "react";
 
-import { TInvestorEtoViewData } from "../../../../../modules/eto-view/shared/types";
-import { CampaignOverviewTabsLayout } from "../../shared/campaign-overview/CampaignOverviewTabsLayout";
-import { CampaignOverviewInvestorLayout } from "./CampaignOverviewInvestorLayout";
+import { TEtoViewData } from "../../../../../modules/eto-view/shared/types";
+import { CampaignOverviewTabsLayout } from "./CampaignOverviewTabsLayout";
+import { CampaignOverviewLayout } from "./CampaignOverviewLayout";
 
-export const CampaignOverviewWithStatsInvestorLayout: React.FunctionComponent<TInvestorEtoViewData> = ({
+
+export const CampaignOverviewWithStatsLayout: React.FunctionComponent<TEtoViewData> = ({
   campaignOverviewData,
   userIsFullyVerified,
   eto,
@@ -15,7 +16,7 @@ export const CampaignOverviewWithStatsInvestorLayout: React.FunctionComponent<TI
       url={campaignOverviewData.url}
       path={campaignOverviewData.path}
     >
-      <CampaignOverviewInvestorLayout
+      <CampaignOverviewLayout
         campaignOverviewData={campaignOverviewData}
         userIsFullyVerified={userIsFullyVerified}
         eto={eto}

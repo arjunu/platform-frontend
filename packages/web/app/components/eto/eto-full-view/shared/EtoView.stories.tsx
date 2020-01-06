@@ -50,6 +50,10 @@ storiesOf("ETO/EtoView", module)
   ))
   .add("issuer view", () => (
     <Container>
-      <EtoViewIssuer eto={testEto} campaignOverviewData={campaignOverviewData} />
+      <EtoViewIssuer
+        eto={testEto}
+        campaignOverviewData={campaignOverviewData}
+        userIsFullyVerified={true}
+      />
     </Container>
   ));

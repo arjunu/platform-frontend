@@ -20,7 +20,7 @@ import { TEtoViewByPreviewCodeMatch } from "../../routing/types";
 
 export function* calculateEtoViewCampaignOverviewType(
   eto: TEtoWithCompanyAndContractReadonly,
-): Iterator<any> {
+): Generator<any,EEtoViewCampaignOverviewType,any> {
   const userType = yield select(selectUserType);
   const timedState = eto.contract && eto.contract.timedState;
   const subState = eto.subState;
@@ -42,7 +42,7 @@ export function* calculateEtoViewCampaignOverviewType(
   return EEtoViewCampaignOverviewType.WITHOUT_STATS;
 }
 
-export function* getCampaignOverviewData(eto: TEtoWithCompanyAndContractReadonly): Iterator<any> {
+export function* getCampaignOverviewData(eto: TEtoWithCompanyAndContractReadonly): Generator<any,any,any> {
   const twitterData = getTwitterData(eto.company);
 
   return {
@@ -56,7 +56,7 @@ export function* getCampaignOverviewData(eto: TEtoWithCompanyAndContractReadonly
 
 export function* calculateCampaignOverviewDataIssuerNominee(
   eto: TEtoWithCompanyAndContractReadonly,
-): Iterator<any> {
+): Generator<any,any,any> {
   const campaignOverviewType: EEtoViewCampaignOverviewType = yield call(
     calculateEtoViewCampaignOverviewType,
     eto,
@@ -82,7 +82,7 @@ export function* calculateCampaignOverviewDataIssuerNominee(
 export function* calculateCampaignOverviewData(
   routeMatch: match<TEtoViewByPreviewCodeMatch | {}>,
   eto: TEtoWithCompanyAndContractReadonly,
-): Iterator<any> {
+): Generator<any,any,any> {
   const campaignOverviewType: EEtoViewCampaignOverviewType = yield call(
     calculateEtoViewCampaignOverviewType,
     eto,

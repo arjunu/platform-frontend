@@ -21,29 +21,9 @@ export type TCampaignOverviewTabsData = {
   etoId: string;
 };
 
-export type TNotAuthorizedEtoViewData = {
-  eto: TEtoWithCompanyAndContractReadonly;
-  campaignOverviewData: TCampaignOverviewData;
-};
-
-export type TInvestorEtoViewData = {
+export type TEtoViewData = {
   eto: TEtoWithCompanyAndContractReadonly;
   userIsFullyVerified: boolean;
-  campaignOverviewData: TCampaignOverviewData;
-};
-
-export type TIssuerEtoViewData = {
-  eto: TEtoWithCompanyAndContractReadonly;
-  campaignOverviewData: TCampaignOverviewIssuerData;
-};
-
-export type TIssuerPreviewEtoViewData = {
-  eto: TEtoWithCompanyAndContractReadonly;
-  campaignOverviewData: TCampaignOverviewData;
-};
-
-export type TNomineeEtoViewData = {
-  eto: TEtoWithCompanyAndContractReadonly;
   campaignOverviewData: TCampaignOverviewData;
 };
 
@@ -58,13 +38,6 @@ export type TCampaignOverviewWithStatsRouteData = {
 };
 
 export type TCampaignOverviewParams = {
-  showYouTube: boolean;
-  showSlideshare: boolean;
-  showSocialChannels: boolean;
-  showInvestmentTerms: boolean;
-} & XOR<{ showTwitterFeed: true; twitterUrl: string }, { showTwitterFeed: false }>;
-
-export type TCampaignOverviewIssuerParams = {
   url: string;
   showYouTube: boolean;
   showSlideshare: boolean;
@@ -80,20 +53,12 @@ export type TCampaignOverviewData = TCampaignOverviewParams &
     } & TCampaignOverviewWithStatsRouteData
   >;
 
-export type TCampaignOverviewIssuerData = TCampaignOverviewIssuerParams &
-  XOR<
-    { campaignOverviewType: EEtoViewCampaignOverviewType.WITHOUT_STATS },
-    {
-      campaignOverviewType: EEtoViewCampaignOverviewType.WITH_STATS;
-    } & TCampaignOverviewWithStatsRouteData
-  >;
-
 export type TReadyEtoViewData =
-  | ({ etoViewType: EEtoViewType.ETO_VIEW_NOT_AUTHORIZED } & TNotAuthorizedEtoViewData)
-  | ({ etoViewType: EEtoViewType.ETO_VIEW_INVESTOR } & TInvestorEtoViewData)
-  | ({ etoViewType: EEtoViewType.ETO_VIEW_ISSUER } & TIssuerEtoViewData)
-  | ({ etoViewType: EEtoViewType.ETO_VIEW_ISSUER_PREVIEW } & TIssuerPreviewEtoViewData)
-  | ({ etoViewType: EEtoViewType.ETO_VIEW_NOMINEE } & TNomineeEtoViewData);
+  | ({ etoViewType: EEtoViewType.ETO_VIEW_NOT_AUTHORIZED } & TEtoViewData)
+  | ({ etoViewType: EEtoViewType.ETO_VIEW_INVESTOR } & TEtoViewData)
+  | ({ etoViewType: EEtoViewType.ETO_VIEW_ISSUER } & TEtoViewData)
+  | ({ etoViewType: EEtoViewType.ETO_VIEW_ISSUER_PREVIEW } & TEtoViewData)
+  | ({ etoViewType: EEtoViewType.ETO_VIEW_NOMINEE } & TEtoViewData);
 
 export type TReadyEtoView = {
   processState: EProcessState.SUCCESS;

@@ -2,27 +2,28 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { TNotAuthorizedEtoViewData } from "../../../../../modules/eto-view/shared/types";
+import { TEtoViewData } from "../../../../../modules/eto-view/shared/types";
 import { Container, EColumnSpan, EContainerType } from "../../../../layouts/Container";
 import { DashboardHeading } from "../../../../shared/DashboardHeading";
 import { ILink, MediaLinksWidget } from "../../../../shared/MediaLinksWidget";
 import { Panel } from "../../../../shared/Panel";
 import { Slides } from "../../../../shared/Slides";
-import { IEtoSocialProfile, SocialProfilesList } from "../../../../shared/SocialProfilesList";
+import { SocialProfilesList } from "../../../../shared/SocialProfilesList";
 import { TwitterTimelineEmbed } from "../../../../shared/TwitterTimeline";
 import { Video } from "../../../../shared/Video";
-import { CompanyDescription } from "../../shared/campaign-overview/CompanyDescription";
-import { DocumentsWidget } from "../../shared/campaign-overview/documents-widget/DocumentsWidget";
-import { EtoInvestmentTermsWidget } from "../../shared/campaign-overview/eto-investment-terms-widget/EtoInvestmentTermsWidget";
-import { ETOTimeline } from "../../shared/campaign-overview/eto-timeline/ETOTimeline";
-import { Individuals } from "../../shared/campaign-overview/individuals/Individuals";
-import { LegalInformationWidget } from "../../shared/campaign-overview/legal-information-widget/LegalInformationWidget";
-import { MarketingDocumentsWidget } from "../../shared/campaign-overview/MarketingDocumentsWidget";
-import { EtoAccordionElements } from "../../shared/EtoAccordionElements";
+import { CompanyDescription } from "./CompanyDescription";
+import { DocumentsWidget } from "./documents-widget/DocumentsWidget";
+import { EtoInvestmentTermsWidget } from "./eto-investment-terms-widget/EtoInvestmentTermsWidget";
+import { ETOTimeline } from "./eto-timeline/ETOTimeline";
+import { Individuals } from "./individuals/Individuals";
+import { LegalInformationWidget } from "./legal-information-widget/LegalInformationWidget";
+import { MarketingDocumentsWidget } from "./MarketingDocumentsWidget";
+import { EtoAccordionElements } from "../EtoAccordionElements";
+import { TSocialChannelsType } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 
 import * as styles from "../../shared/EtoView.module.scss";
 
-export const CampaignOverviewNotAuthLayout: React.FunctionComponent<TNotAuthorizedEtoViewData> = ({
+export const CampaignOverviewLayout: React.FunctionComponent<TEtoViewData> = ({
   campaignOverviewData: {
     showTwitterFeed,
     twitterUrl,
@@ -32,6 +33,7 @@ export const CampaignOverviewNotAuthLayout: React.FunctionComponent<TNotAuthoriz
     showInvestmentTerms,
   },
   eto,
+  userIsFullyVerified
 }) => {
   const {
     socialChannels,
@@ -71,7 +73,7 @@ export const CampaignOverviewNotAuthLayout: React.FunctionComponent<TNotAuthoriz
         )}
         <Container>
           <div className={cn((showSlideshare || showYouTube) && "mt-4")}>
-            <SocialProfilesList profiles={(socialChannels as IEtoSocialProfile[]) || []} />
+            <SocialProfilesList profiles={(socialChannels as TSocialChannelsType) || []} />
           </div>
         </Container>
       </Container>
@@ -82,14 +84,21 @@ export const CampaignOverviewNotAuthLayout: React.FunctionComponent<TNotAuthoriz
       {showInvestmentTerms && (
         <Container columnSpan={EColumnSpan.THREE_COL}>
           <DashboardHeading title={<FormattedMessage id="eto.public-view.token-terms.title" />} />
-          <EtoInvestmentTermsWidget eto={eto} isUserFullyVerified={false} />
+          <EtoInvestmentTermsWidget
+            eto={eto}
+            isUserFullyVerified={userIsFullyVerified}
+          />
         </Container>
       )}
       <Individuals eto={eto} />
       <EtoAccordionElements eto={eto} />
 
       <Container columnSpan={EColumnSpan.ONE_COL} type={EContainerType.INHERIT_GRID}>
-        <DocumentsWidget eto={eto} columnSpan={EColumnSpan.THREE_COL} isUserFullyVerified={false} />
+        <DocumentsWidget
+          eto={eto}
+          columnSpan={EColumnSpan.THREE_COL}
+          isUserFullyVerified={userIsFullyVerified}
+        />
 
         {showTwitterFeed && (
           <Container columnSpan={EColumnSpan.ONE_COL}>

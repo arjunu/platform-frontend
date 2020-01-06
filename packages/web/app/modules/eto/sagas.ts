@@ -123,7 +123,7 @@ function* loadEto(
 function* loadEtoInternal(
   { apiEtoService }: TGlobalDependencies,
   eto: TEtoSpecsData,
-): Iterator<any> {
+): Generator<any,any,any> {
   const company: TCompanyEtoData = yield apiEtoService.getCompanyById(eto.companyId);
 
   // Load contract data if eto is already on blockchain
@@ -162,7 +162,7 @@ function* loadEtoInternal(
 export function* loadEtoWithCompanyAndContract(
   { apiEtoService }: TGlobalDependencies,
   previewCode: string,
-): Iterator<any> {
+): Generator<any,any,any> {
   const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEtoPreview(previewCode);
   eto.company = yield apiEtoService.getCompanyById(eto.companyId);
 
@@ -177,7 +177,7 @@ export function* loadEtoWithCompanyAndContract(
 export function* loadEtoWithCompanyAndContractById(
   { apiEtoService }: TGlobalDependencies,
   etoId: string,
-): Iterator<any> {
+): Generator<any,any,any> {
   const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEto(etoId);
   eto.company = yield apiEtoService.getCompanyById(eto.companyId);
 
@@ -599,16 +599,12 @@ function* verifyEtoAccess(
   { payload }: TActionFromCreator<typeof actions.eto.verifyEtoAccess>,
 ): Generator<any, any, any> {
   const eto: ReturnType<typeof selectInvestorEtoWithCompanyAndContract> = yield select(
-    (state: IAppState) => selectInvestorEtoWithCompanyAndContract(state, payload.previewCode),
+    (state: IAppState) => selectInvestorEtoWithCompanyAndContract(state, payload.eto.previewCode),
   );
 
   if (eto === undefined) {
-    throw new Error(`Can not find eto by preview code ${payload.previewCode}`);
+    throw new Error(`Can not find eto by preview code ${payload.eto.previewCode}`);
   }
-
-  const isUserLoggedInAndVerified: ReturnType<typeof selectIsUserVerified> = yield select(
-    selectIsUserVerified,
-  );
 
   // Checks if ETO is an Offer based on
   // @See https://github.com/Neufund/platform-frontend/issues/2789#issuecomment-489084892

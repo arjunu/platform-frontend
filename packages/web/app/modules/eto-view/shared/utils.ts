@@ -1,12 +1,11 @@
-import { TEtoMediaData } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
-import { DeepReadonly, XOR } from "../../../types";
-import { TSocialChannel } from "./types";
+import { TEtoMediaData, TSocialChannelsType, TSocialChannelType } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import { XOR } from "../../../types";
 
-export const getTwitterUrl = (socialChannels: DeepReadonly<TSocialChannel[]> | undefined) => {
+export const getTwitterUrl = (socialChannels: TSocialChannelsType | undefined) => {
   if (!socialChannels) {
     return undefined;
   } else {
-    const twitterData = socialChannels.find((c: TSocialChannel) => c.type === "twitter");
+    const twitterData = socialChannels.find((c: TSocialChannelType) => c.type === "twitter");
     return twitterData && twitterData.url;
   }
 };

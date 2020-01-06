@@ -17,7 +17,7 @@ import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../routing/typ
 function* loadInvestorEtoViewInternal(
   eto: TEtoWithCompanyAndContractReadonly,
   routeMatch: match<TEtoViewByPreviewCodeMatch | TEtoViewByIdMatch>,
-): Iterator<any> {
+): Generator<any,any,any> {
   yield call(ensureEtoJurisdiction, eto.product.jurisdiction, routeMatch.params.jurisdiction);
 
   const userIsFullyVerified = yield select(selectIsUserVerifiedOnBlockchain);
@@ -38,7 +38,7 @@ function* loadInvestorEtoViewInternal(
   };
 }
 
-export function* saveEto(eto: TEtoWithCompanyAndContractReadonly): Iterator<any> {
+export function* saveEto(eto: TEtoWithCompanyAndContractReadonly): Generator<any,any,any> {
   // this is for backwards compatibility with other flows, e.g. investment
   if (eto.contract) {
     yield put(actions.eto.setEtoDataFromContract(eto.previewCode, eto.contract));
@@ -49,7 +49,7 @@ export function* saveEto(eto: TEtoWithCompanyAndContractReadonly): Iterator<any>
 export function* loadInvestorEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
-): Iterator<any> {
+): Generator<any,any,any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContract,
@@ -69,7 +69,7 @@ export function* loadInvestorEtoView(
 export function* loadInvestorEtoViewById(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoViewById>,
-): Iterator<any> {
+): Generator<any,any,any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContractById,
