@@ -11,12 +11,7 @@ import { tid } from "../utils/selectors";
 import { loginFixtureAccount } from "../utils/userHelpers";
 
 describe("Investor accept payout", () => {
-  beforeEach(() =>
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    }),
-  );
+  beforeEach(() => loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC"));
 
   it("eth payout", () => {
     getWalletEthAmount().as("balanceBefore");

@@ -2,7 +2,6 @@ import PrivateKeyProvider from "truffle-privatekey-provider";
 
 import { NODE_ADDRESS } from "../config";
 import {
-  acceptTOS,
   accountFixtureAddress,
   accountFixturePrivateKey,
   assertIssuerDashboard,
@@ -48,8 +47,6 @@ describe("Browser Wallet Login", () => {
     cy.get(tid("signing.browser-wallet.sign-prompt")).should("exist");
 
     assertIssuerDashboard();
-
-    acceptTOS();
 
     goToWallet();
 

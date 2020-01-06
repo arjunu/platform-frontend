@@ -13,7 +13,7 @@ import {
   THumanReadableFormat,
   toFixedPrecision,
 } from "../../components/shared/formatters/utils";
-import { mockApiUrl } from "../config";
+import { MOCK_API_URL } from "../config";
 import {
   assertDashboard,
   assertIssuerDashboard,
@@ -36,7 +36,7 @@ export const letterKeepDotRegExPattern = /[^0-9.]/gi;
 export const charRegExPattern = /[^a-z0-9]/gi;
 
 export const clearEmailServer = () => {
-  cy.request({ url: mockApiUrl + "sendgrid/session/mails", method: "DELETE" });
+  cy.request({ url: MOCK_API_URL + "sendgrid/session/mails", method: "DELETE" });
 };
 
 export const registerWithLightWalletETO = (
@@ -96,23 +96,25 @@ export const getLatestVerifyUserEmailLink = (
   email: string,
   attempts = 5,
 ): Cypress.Chainable<string> =>
-  cy.request({ url: mockApiUrl + `sendgrid/session/mails?to=${email}`, method: "GET" }).then(r => {
-    const latestEmailByUser = getLatestEmailByUser(r, email);
+  cy
+    .request({ url: MOCK_API_URL + `sendgrid/session/mails?to=${email}`, method: "GET" })
+    .then(r => {
+      const latestEmailByUser = getLatestEmailByUser(r, email);
 
-    const activationLink = get(latestEmailByUser, "template_vars.activation_link");
+      const activationLink = get(latestEmailByUser, "template_vars.activation_link");
 
-    if (activationLink) {
-      // we need to replace the loginlink pointing to a remote destination
-      // with one pointing to our local instance
-      return activationLink.replace("platform.neufund.io", "localhost:9090");
-    } else {
-      expect(attempts, `Failed to find activation link for email ${email}`).to.be.gt(0);
+      if (activationLink) {
+        // we need to replace the loginlink pointing to a remote destination
+        // with one pointing to our local instance
+        return activationLink.replace("platform.neufund.io", "localhost:9090");
+      } else {
+        expect(attempts, `Failed to find activation link for email ${email}`).to.be.gt(0);
 
-      cy.wait(1000);
+        cy.wait(1000);
 
-      return getLatestVerifyUserEmailLink(email, attempts - 1);
-    }
-  });
+        return getLatestVerifyUserEmailLink(email, attempts - 1);
+      }
+    });
 
 const verifyLatestUserEmailBase = (email: string, finalCheckTid?: string) => {
   getLatestVerifyUserEmailLink(email).then(activationLink => {
@@ -264,16 +266,20 @@ export const getWalletNEurAmount = (navigate: boolean = true) => {
 };
 
 export const addPendingExternalTransaction = (address: string) => {
-  cy.request({ url: mockApiUrl + "parity/additional_addresses/", method: "PUT", body: [address] });
-
-  assertWaitForExternalPendingTransactionCount(1);
+  cy.request({
+    url: MOCK_API_URL + "parity/additional_addresses/",
+    method: "PUT",
+    body: [address],
+  }).then(() => assertWaitForExternalPendingTransactionCount(1));
 };
 
 export const removePendingExternalTransaction = () => {
   // to clean external pending tx list send empty array
-  cy.request({ url: mockApiUrl + "parity/additional_addresses/", method: "PUT", body: [] });
-
-  assertWaitForExternalPendingTransactionCount(0);
+  cy.request({
+    url: MOCK_API_URL + "parity/additional_addresses/",
+    method: "PUT",
+    body: [],
+  }).then(() => assertWaitForExternalPendingTransactionCount(0));
 };
 
 export const getFormattedNumber = (
