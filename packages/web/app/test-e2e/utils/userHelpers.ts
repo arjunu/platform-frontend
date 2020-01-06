@@ -3,7 +3,6 @@ import * as ethSig from "eth-sig-util";
 import { addHexPrefix, hashPersonalMessage, toBuffer } from "ethereumjs-util";
 import { toChecksumAddress } from "web3-utils";
 
-import { accountFixtureByName, removePendingExternalTransaction } from ".";
 import { TEtoDataWithCompany } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { IUser, OOO_TRANSACTION_TYPE, TxPendingWithMetadata } from "../../lib/api/users/interfaces";
 import { getVaultKey } from "../../modules/wallet-selector/light-wizard/utils";
@@ -11,6 +10,7 @@ import { promisify } from "../../utils/PromiseUtils";
 import { toCamelCase } from "../../utils/transformObjectKeys";
 import { assertIsUserVerifiedOnBlockchain, assertLanding } from "./assertions";
 import { getAgreementHash } from "./getAgreementHash";
+import { accountFixtureByName, removePendingExternalTransaction } from "./index";
 import { tid } from "./selectors";
 
 const VAULT_API_ROOT = "/api/wallet";
