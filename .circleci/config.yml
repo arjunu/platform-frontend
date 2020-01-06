@@ -79,7 +79,7 @@ jobs:
       - persist_to_workspace:
           root: /home/circleci/app
           paths:
-            - ./
+            - ./packages/web/cypress/screenshots
 
   test-e2e:
     machine:
@@ -95,9 +95,9 @@ jobs:
     working_directory: /home/circleci/app
 
     steps:
+      - checkout
       - attach_workspace:
           at: /home/circleci/app
-      - checkout
       - run: ./.circleci/install-yarn.sh
       - restore_cache:
           keys:

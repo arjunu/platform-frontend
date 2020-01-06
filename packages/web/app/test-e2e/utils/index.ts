@@ -173,6 +173,9 @@ export const lightWalletTypeRegistrationInfo = (email: string, password: string)
   cy.get(tid("wallet-selector-register-email")).type(email);
   cy.get(tid("wallet-selector-register-password")).type(password);
   cy.get(tid("wallet-selector-register-confirm-password")).type(password);
+
+  cy.screenshot();
+
   cy.get(tid("wallet-selector-register-button"))
     .should("be.enabled")
     .awaitedClick()
