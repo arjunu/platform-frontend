@@ -1,4 +1,4 @@
-import { expectSaga } from "@neufund/sagas"
+import { expectSaga } from "@neufund/sagas";
 import { expect } from "chai";
 
 import { dummyEthereumAddress, dummyNetworkId } from "../../../../test/fixtures";

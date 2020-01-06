@@ -5,7 +5,7 @@ import "./components/translatedMessages/yupLocales.sideEffect";
 
 import "./index.scss";
 
-import createSagaMiddleware from "@neufund/sagas";
+import { createSagaMiddleware } from "@neufund/sagas";
 import { ConnectedRouter, routerMiddleware } from "connected-react-router";
 import { createBrowserHistory, History } from "history";
 import { Container } from "inversify";

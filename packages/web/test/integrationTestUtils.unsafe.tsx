@@ -1,4 +1,4 @@
-import createSagaMiddleware, { SagaMiddleware } "@neufund/sagas";
+import { createSagaMiddleware, SagaMiddleware } from "@neufund/sagas";
 import { ConnectedRouter, routerMiddleware } from "connected-react-router";
 import { ReactWrapper } from "enzyme";
 import { createMemoryHistory, History } from "history";

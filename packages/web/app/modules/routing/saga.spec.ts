@@ -1,4 +1,4 @@
-import { expectSaga } from "@neufund/sagas"
+import { expectSaga } from "@neufund/sagas";
 import { LocationChangeAction } from "connected-react-router";
 
 import { appRoutes } from "../../components/appRoutes";

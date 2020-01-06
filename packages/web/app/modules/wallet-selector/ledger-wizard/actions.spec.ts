@@ -1,4 +1,4 @@
-import { expectSaga } from "@neufund/sagas"
+import { expectSaga } from "@neufund/sagas";
 import { BigNumber } from "bignumber.js";
 import { expect } from "chai";
 import { spy } from "sinon";

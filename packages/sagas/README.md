@@ -1,7 +1,7 @@
-## Shared
+## Sagas
 
-[![Project dependencies Status](https://david-dm.org/Neufund/platform-frontend/status.svg?path=packages/shared)](https://david-dm.org/Neufund/platform-frontend?path=packages/shared)
-[![Project devDependencies Status](https://david-dm.org/Neufund/platform-frontend/dev-status.svg?path=packages/shared)](https://david-dm.org/Neufund/platform-frontend?type=dev&path=packages/shared)
+[![Project dependencies Status](https://david-dm.org/Neufund/platform-frontend/status.svg?path=packages/sagas)](https://david-dm.org/Neufund/platform-frontend?path=packages/sagas)
+[![Project devDependencies Status](https://david-dm.org/Neufund/platform-frontend/dev-status.svg?path=packages/sagas)](https://david-dm.org/Neufund/platform-frontend?type=dev&path=packages/sagas)
 
 A shared library business logic between apps
 
