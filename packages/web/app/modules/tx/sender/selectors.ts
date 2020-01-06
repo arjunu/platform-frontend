@@ -20,8 +20,8 @@ export const selectTxTimestamp = (state: IAppState): number | undefined =>
 
 export const selectTxGasCostEthUlps = (state: IAppState): string => {
   const details = selectTxDetails(state);
-  const gasPrice = (details && details.gasPrice) || "0";
-  const gasLimit = (details && details.gas) || "0";
+  const gasPrice = details?.gasPrice ?? "0";
+  const gasLimit = details?.gas ?? "0";
   return multiplyBigNumbers([gasPrice, gasLimit]);
 };
 

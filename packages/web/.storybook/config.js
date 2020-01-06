@@ -6,7 +6,7 @@ import * as React from "react";
 import { configure, addDecorator, addParameters } from "@storybook/react";
 import { setIntlConfig, withIntl } from "storybook-addon-intl";
 import StoryRouter from "storybook-react-router";
-import { withScreenshot } from "storycap";
+import { withScreenshot, isScreenshot } from "storycap";
 import { withA11y } from "@storybook/addon-a11y";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
@@ -102,5 +102,25 @@ addParameters({
     viewports: { ...INITIAL_VIEWPORTS, ...newViewports },
   },
 });
+
+const IsScreenshotDecorator = storyFn => {
+  const divRef = React.useRef();
+
+  React.useLayoutEffect(() => {
+    if (isScreenshot()) {
+      // disable video play
+      const videos = divRef.current.getElementsByTagName("video");
+
+      for (const video of videos) {
+        video.currentTime = 1;
+        video.pause();
+      }
+    }
+  });
+
+  return React.createElement("div", { ref: divRef }, storyFn());
+};
+
+addDecorator(IsScreenshotDecorator);
 
 configure(loadStories, module);
