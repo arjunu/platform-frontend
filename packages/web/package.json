@@ -126,7 +126,7 @@
     "concurrently": "^4.1.0",
     "copy-webpack-plugin": "^5.1.0",
     "css-loader": "^3.3.0",
-    "cypress": "^3.7.0",
+    "cypress": "^3.8.1",
     "cypress-plugin-retries": "^1.4.0",
     "dotenv": "^6.0.0",
     "enzyme": "^3.10.0",
