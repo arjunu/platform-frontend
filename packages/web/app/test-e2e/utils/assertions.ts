@@ -134,6 +134,23 @@ export const assertWaitForExternalPendingTransactionCount = (
   });
 };
 
+export const assertIsUserVerifiedOnBlockchain = (address: string, timeout: number = 10000) => {
+  expect(timeout, `User not marked as verified on blockchain in ${timeout} ms`).to.be.gt(0);
+
+  // TODO: Replace by proper call to universe smart contract
+  const identityRegistryAddress = "0xb48d3d68435e93e760c266df284405c9f637b331";
+
+  getIsUserVerifiedOnBlockchain(identityRegistryAddress, address).then(isVerified => {
+    if (!isVerified) {
+      const waitTime = 200;
+
+      cy.wait(waitTime);
+
+      assertIsUserVerifiedOnBlockchain(address, timeout - waitTime);
+    }
+  });
+};
+
 export const assertLockedAccessModal = () => {
   cy.get(tid("access-light-wallet-locked")).should("exist");
 };
