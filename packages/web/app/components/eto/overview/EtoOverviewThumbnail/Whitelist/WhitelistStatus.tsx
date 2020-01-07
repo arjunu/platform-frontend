@@ -7,7 +7,6 @@ import {
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { WhitelistProgress } from "./WhitelistProgress";
 
 import * as styles from "./WhitelistStatus.module.scss";
 
@@ -30,7 +29,7 @@ const WhitelistStatus: React.FunctionComponent<IInvestmentWidgetProps> = ({
           values={{
             amount: (
               <Money
-                value={pledgedAmount ? pledgedAmount.toString() : null}
+                value={pledgedAmount ? pledgedAmount.toString() : "0"}
                 inputFormat={ENumberInputFormat.FLOAT}
                 outputFormat={ENumberOutputFormat.ONLY_NONZERO_DECIMALS}
                 valueType={ECurrency.EUR}
@@ -53,7 +52,6 @@ const WhitelistStatus: React.FunctionComponent<IInvestmentWidgetProps> = ({
         />
       </div>
     </div>
-    <WhitelistProgress investorsLimit={investorsLimit} investorsCount={investorsCount} />
   </div>
 );
 

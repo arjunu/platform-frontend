@@ -6,7 +6,10 @@ import {
   TEtoSpecsData,
 } from "../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
-import { calculateTarget } from "../../lib/api/eto/EtoUtils";
+import {
+  calculateCurrentInvestmentProgressPercentage,
+  calculateTarget,
+} from "../../lib/api/eto/EtoUtils";
 import { DeepPartial, Overwrite } from "../../types";
 import { EthereumAddressWithChecksum } from "../../utils/opaque-types/types";
 import { isPastInvestment } from "../investor-portfolio/utils";
@@ -193,26 +196,18 @@ export const getEtoSubState = ({
     }
   }
 };
-
-export const getInvestmentCalculatedPercentage = (eto: TEtoSpecsData) =>
-  (eto.newSharesToIssue / eto.minimumNewSharesToIssue) * 100;
-
-export const getCurrentInvestmentProgressPercentage = (eto: TEtoWithCompanyAndContractReadonly) => {
-  const totalTokensInt = eto.contract!.totalInvestment.totalTokensInt;
-
-  return (
-    (parseInt(totalTokensInt, 10) / (eto.minimumNewSharesToIssue * eto.equityTokensPerShare)) * 100
-  );
-};
-
-export const isEtoSoftCapReached = (eto: TEtoWithCompanyAndContractReadonly) => {
+export const getInvestmentCalculatedPercentage = (eto: TEtoWithCompanyAndContractReadonly) => {
   if (isOnChain(eto)) {
-    const currentProgress = getCurrentInvestmentProgressPercentage(eto);
+    const { totalTokensInt } = eto.contract.totalInvestment;
+    const { minimumNewSharesToIssue, equityTokensPerShare } = eto;
 
-    return currentProgress >= 100;
+    return calculateCurrentInvestmentProgressPercentage(
+      totalTokensInt,
+      minimumNewSharesToIssue.toString(),
+      equityTokensPerShare.toString(),
+    );
   }
-
-  return false;
+  return undefined;
 };
 
 export const getEtoEurMinTarget = (eto: TEtoWithCompanyAndContractReadonly) => {
