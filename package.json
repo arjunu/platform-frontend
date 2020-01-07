@@ -3,6 +3,9 @@
   "workspaces": [
     "packages/**"
   ],
+  "engines": {
+    "node": "^11.0.0"
+  },
   "scripts": {
     "lint": "yarn workspaces run lint",
     "test": "yarn workspaces run test",
