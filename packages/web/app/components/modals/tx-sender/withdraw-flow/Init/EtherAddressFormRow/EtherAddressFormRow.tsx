@@ -12,7 +12,7 @@ import { EInputTheme } from "../../../../../shared/forms/layouts/InputLayout";
 import { EtherscanAddressLink } from "../../../../../shared/links/EtherscanLink";
 import { DataRow } from "../../../shared/DataRow";
 
-import * as txSuccess from "../../../../../../assets/img/icon_txn_status_success.svg";
+import txSuccess from "../../../../../../assets/img/icon_txn_status_success.svg";
 import * as styles from "../../Transfer.module.scss";
 
 const ethereumAddressFormValidation = YupTS.string().enhance(v =>

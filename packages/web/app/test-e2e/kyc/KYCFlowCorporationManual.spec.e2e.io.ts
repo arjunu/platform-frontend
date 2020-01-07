@@ -1,7 +1,7 @@
 import { kycRoutes } from "../../components/kyc/routes";
-import { goThroughKycCorporateProcess } from "../utils/index";
 import { tid } from "../utils/selectors";
 import { createAndLoginNewUser } from "../utils/userHelpers";
+import { goThroughKycCorporateProcess } from "./utils";
 
 describe("KYC Business flow", () => {
   it("with manual verification should went through KYC business flow", () => {

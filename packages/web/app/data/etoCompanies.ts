@@ -1,10 +1,9 @@
 import { Q18 } from "../config/constants";
 
-import * as airProfileThumbnail from "../assets/img/eto_offers/investment_thumbnails_air_profile.jpg";
-import * as emfluxThumbnail from "../assets/img/eto_offers/investment_thumbnails_emflux_motors.jpg";
-import * as icbmThumbnail from "../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";
-import * as mySwooopThumbnail from "../assets/img/eto_offers/investment_thumbnails_my_swooop.jpg";
-import * as ngraveThumbnail from "../assets/img/eto_offers/investment_thumbnails_ngrave.jpg";
+import emfluxThumbnail from "../assets/img/eto_offers/investment_thumbnails_emflux_motors.jpg";
+import icbmThumbnail from "../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";
+import mySwooopThumbnail from "../assets/img/eto_offers/investment_thumbnails_my_swooop.jpg";
+import ngraveThumbnail from "../assets/img/eto_offers/investment_thumbnails_ngrave.jpg";
 
 export type TMockEto = {
   brandName: string;
@@ -53,14 +52,5 @@ export const etoMockCompanies: TMockEto[] = [
     categories: ["Re-Commerce", "Germany"],
     keyQuoteFounder:
       "Omni-channel re-commerce platform buying and selling new and used electronics. With tailored software technology, mySWOOOP automatically determines current market prices in real-time assuring attractive resale-margins.",
-  },
-  {
-    brandName: "AirProfile",
-    url: "https://www.air-profile.com/",
-    companyPreviewCardBanner: airProfileThumbnail,
-    id: "air-profile",
-    categories: ["Cleantech", "Germany"],
-    keyQuoteFounder:
-      "Based on a new patented technology for detecting precise wind speed, Air Profile boosts the energy transition all over the world. The device simplifies the wind resource assessment for each and every wind farm project worldwide.",
   },
 ];

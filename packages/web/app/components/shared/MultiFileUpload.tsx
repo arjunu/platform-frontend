@@ -9,14 +9,15 @@ import { TAcceptedFileType } from "./forms/fields/utils.unsafe";
 import { ResponsiveImage } from "./ResponsiveImage";
 import { UploadedFiles } from "./UploadedFiles";
 
-import * as documentBothSidesImage from "../../assets/img/document-both-side.jpg";
-import * as documentBothSidesImage2x from "../../assets/img/document-both-side@2x.jpg";
-import * as documentBothSidesImage3x from "../../assets/img/document-both-side@3x.jpg";
+import documentBothSidesImage from "../../assets/img/document-both-side.jpg";
+import documentBothSidesImage2x from "../../assets/img/document-both-side@2x.jpg";
+import documentBothSidesImage3x from "../../assets/img/document-both-side@3x.jpg";
 import * as styles from "./MultiFileUpload.module.scss";
 
 export enum EKycUploadType {
   US_ACCREDITATION = "us_accreditation",
   PROOF_OF_ADDRESS = "proof_of_address",
+  ADDITIONAL_INDIVIDUAL = "additional_individual",
 }
 
 interface IProps {
@@ -71,7 +72,9 @@ const MultiFileUploadComponent: React.FunctionComponent<IProps> = ({
           </p>
         </div>
         <section className={styles.uploaderInfo}>
-          <MultiFileUploadInfo uploadType={uploadType} />
+          <div className={styles.uploadInformationsWrapper}>
+            <MultiFileUploadInfo uploadType={uploadType} />
+          </div>
         </section>
       </div>
 
@@ -90,7 +93,7 @@ const MultiFileUploadInfo: React.FunctionComponent<{
   switch (uploadType) {
     case EKycRequestType.BUSINESS:
       return (
-        <div className={styles.uploadInformationsWrapper}>
+        <>
           <div className={styles.title}>
             <FormattedHTMLMessage
               tagName="span"
@@ -100,35 +103,36 @@ const MultiFileUploadInfo: React.FunctionComponent<{
           <h4 className={cn(styles.hint, "mb-3")}>
             <FormattedMessage id="shared-component.multi-file-upload.requirements.business.documents-note" />
           </h4>
-        </div>
+        </>
       );
     case EKycRequestType.INDIVIDUAL:
       return (
-        <div className={styles.uploadInformationsWrapper}>
-          <FormattedHTMLMessage
-            tagName="span"
-            id="shared-component.multi-file-upload.individual.info"
-          />
-        </div>
+        <FormattedHTMLMessage
+          tagName="span"
+          id="shared-component.multi-file-upload.individual.info"
+        />
       );
     case EKycUploadType.PROOF_OF_ADDRESS:
       return (
-        <div className={styles.uploadInformationsWrapper}>
-          <FormattedHTMLMessage
-            tagName="span"
-            id="shared-component.multi-file-upload.proof-of-address.info"
-          />
-        </div>
+        <FormattedHTMLMessage
+          tagName="span"
+          id="shared-component.multi-file-upload.proof-of-address.info"
+        />
       );
     /* Preparation for Accreditation documents upload */
     case EKycUploadType.US_ACCREDITATION:
       return (
-        <div className={styles.uploadInformationsWrapper}>
-          <FormattedHTMLMessage
-            tagName="span"
-            id="shared-component.multi-file-upload.us-accreditation.info"
-          />
-        </div>
+        <FormattedHTMLMessage
+          tagName="span"
+          id="shared-component.multi-file-upload.us-accreditation.info"
+        />
+      );
+    case EKycUploadType.ADDITIONAL_INDIVIDUAL:
+      return (
+        <FormattedHTMLMessage
+          tagName="span"
+          id="shared-component.multi-file-upload.additional-upload.info"
+        />
       );
     default:
       return null;
@@ -155,6 +159,14 @@ export const MultiFileUploadGuide: React.FunctionComponent<{
             width={344}
             height={111}
           />
+        </section>
+      );
+    case EKycUploadType.ADDITIONAL_INDIVIDUAL:
+      return (
+        <section className="mb-4">
+          <span className={cn(styles.hint, "mb-4")}>
+            <FormattedMessage id="shared-component.multi-file-upload.requirements.individual.additional-upload" />
+          </span>
         </section>
       );
     default:

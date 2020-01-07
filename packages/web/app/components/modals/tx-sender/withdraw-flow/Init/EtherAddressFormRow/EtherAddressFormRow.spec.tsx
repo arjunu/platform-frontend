@@ -19,8 +19,8 @@ describe("EtherAddressFormRow", () => {
       ));
       const component = mount(wrapWithIntl(<Component />));
       expect(component.find(etherscanAddressLinkTid).exists()).to.be.true;
-      expect(component.find(successIconTid).exists()).to.be.true;
     });
+
     it("should not render if address is invalid", () => {
       const Component = formWrapper({})(() => (
         <EtherAddressFormRow errors={{ to: "failure message" }} values={{ to: dummyAddress }} />
@@ -29,6 +29,7 @@ describe("EtherAddressFormRow", () => {
       expect(component.find(etherscanAddressLinkTid).exists()).to.be.false;
       expect(component.find(successIconTid).exists()).to.be.false;
     });
+
     it("should not render if address is not entered", () => {
       const Component = formWrapper({})(() => <EtherAddressFormRow errors={{}} values={{}} />);
       const component = mount(wrapWithIntl(<Component />));

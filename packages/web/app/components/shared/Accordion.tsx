@@ -5,7 +5,7 @@ import { TTranslatedString } from "../../types";
 import { Field } from "./Field";
 import { InlineIcon } from "./icons";
 
-import * as indicatorIcon from "../../assets/img/inline_icons/accordion_arrow.svg";
+import indicatorIcon from "../../assets/img/inline_icons/accordion_arrow.svg";
 import * as styles from "./Accordion.module.scss";
 
 interface IAccordionElementProps {

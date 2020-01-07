@@ -21,7 +21,7 @@ import { EHeadingSize, Heading } from "../../../../shared/Heading";
 import { InlineIcon } from "../../../../shared/icons/InlineIcon";
 import { isRAASign, selectDocument } from "./utils";
 
-import * as link from "../../../../../assets/img/inline_icons/download.svg";
+import link from "../../../../../assets/img/inline_icons/download.svg";
 
 interface IStateProps {
   nomineeEto?: TEtoWithCompanyAndContractReadonly;

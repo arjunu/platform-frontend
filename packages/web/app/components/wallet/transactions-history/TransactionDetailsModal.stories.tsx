@@ -10,7 +10,7 @@ import { withModalBody } from "../../../utils/storybookHelpers.unsafe";
 import { ECurrency, ENumberInputFormat } from "../../shared/formatters/utils";
 import { TransactionDetailsModal } from "./TransactionDetailsModal";
 
-import * as tokenIcon from "../../../assets/img/token_icon.svg";
+import tokenIcon from "../../../assets/img/token_icon.svg";
 
 const transactionCommon = {
   blockNumber: 634,

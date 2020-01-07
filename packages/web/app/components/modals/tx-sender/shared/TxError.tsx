@@ -21,7 +21,7 @@ import { TxName } from "../TxName";
 import { TransferError } from "../withdraw-flow/Error/Error";
 import { TxHashAndBlock } from "./TxHashAndBlock";
 
-import * as failedImg from "../../../../assets/img/ether_fail.svg";
+import failedImg from "../../../../assets/img/ether_fail.svg";
 import * as styles from "./TxError.module.scss";
 
 export interface IStateProps {

@@ -2,7 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { Input, InputGroup, InputGroupAddon, InputGroupText, InputProps } from "reactstrap";
 
-import { CommonHtmlProps, Omit, TDataTestId, TTranslatedString } from "../../../../types";
+import { CommonHtmlProps, TDataTestId, TTranslatedString } from "../../../../types";
 import { FormFieldError, generateErrorId } from "../fields/FormFieldError";
 import { withCountedCharacters } from "../fields/utils.unsafe";
 
@@ -34,7 +34,10 @@ interface IExternalProps {
   reverseMetaInfo?: boolean;
 }
 
-type TProps = IExternalProps & CommonHtmlProps & TDataTestId & Omit<InputProps, IExternalProps>;
+type TProps = IExternalProps &
+  CommonHtmlProps &
+  TDataTestId &
+  Omit<InputProps, keyof IExternalProps>;
 
 const InputLayout: React.FunctionComponent<TProps> = ({
   type,

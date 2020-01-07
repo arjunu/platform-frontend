@@ -8,7 +8,7 @@ import { InlineIcon } from "./icons";
 import { TimeLeft } from "./TimeLeft.unsafe";
 import { utcTime } from "./utils";
 
-import * as iconCalendar from "../../assets/img/inline_icons/calendar.svg";
+import iconCalendar from "../../assets/img/inline_icons/calendar.svg";
 import * as styles from "./forms/fields/FormFieldDatePicker.module.scss";
 
 interface IDatePickerProps {

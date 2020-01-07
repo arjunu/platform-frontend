@@ -5,9 +5,9 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { assertNever } from "../../../../utils/assertNever";
 import { ETxStatus } from "../types";
 
-import * as txError from "../../../../assets/img/icon_txn_status_error.svg";
-import * as txPending from "../../../../assets/img/icon_txn_status_pending_transaction.svg";
-import * as txSuccess from "../../../../assets/img/icon_txn_status_success.svg";
+import txError from "../../../../assets/img/icon_txn_status_error.svg";
+import txPending from "../../../../assets/img/icon_txn_status_pending_transaction.svg";
+import txSuccess from "../../../../assets/img/icon_txn_status_success.svg";
 import * as styles from "./TxStatusLabel.module.scss";
 
 interface IProps {

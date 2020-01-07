@@ -1,6 +1,9 @@
 [![CircleCI](https://circleci.com/gh/Neufund/platform-frontend.svg?style=svg)](https://circleci.com/gh/Neufund/platform-frontend)
 
-A monorepo of neufund frontend.
+
+![Neufund logo](https://neufund.org/img/logo-neufund.svg)
+
+A monorepo of Neufund frontend.
 
 ## packages
 
@@ -10,7 +13,7 @@ A monorepo of neufund frontend.
 
 ## scripts
 
-### `yarn deduplicate` 
+### `yarn deduplicate`
 
 Removes duplicated transitive dependencies. Run after major dependencies upgrade to clean up `node_modules`.
 
@@ -24,3 +27,4 @@ package.
 - [Testing production build](./docs/testing-prod-build.md)
 - [Working with Intl](./docs/working-with-intl.md)
 - [Feature flags](./docs/feature-flags.md)
+- [Security Policy](./SECURITY.md)

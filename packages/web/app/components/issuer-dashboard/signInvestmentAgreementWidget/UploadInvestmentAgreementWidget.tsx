@@ -12,7 +12,6 @@ import {
 import { selectEtoOnChainState } from "../../../modules/eto/selectors";
 import { EETOStateOnChain } from "../../../modules/eto/types";
 import { appConnect } from "../../../store";
-import { OmitKeys } from "../../../types";
 import { appRoutes } from "../../appRoutes";
 import { EColumnSpan } from "../../layouts/Container";
 import { ButtonGroup, ButtonLink } from "../../shared/buttons";
@@ -39,7 +38,7 @@ interface IExternalProps {
   columnSpan?: EColumnSpan;
 }
 
-export const UploadInvestmentAgreementLayout: React.FunctionComponent<OmitKeys<
+export const UploadInvestmentAgreementLayout: React.FunctionComponent<Omit<
   IStateProps,
   "stateOnChain"
 > &

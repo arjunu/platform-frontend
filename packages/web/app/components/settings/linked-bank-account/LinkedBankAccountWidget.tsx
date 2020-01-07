@@ -16,8 +16,8 @@ import { Panel } from "../../shared/Panel";
 import { BankAccount } from "../../wallet/BankAccount";
 import { connectLinkBankAccountComponent } from "./ConnectLinkBankAccount";
 
-import * as bankIcon from "../../../assets/img/bank-transfer/bank-icon.svg";
-import * as arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
+import bankIcon from "../../../assets/img/bank-transfer/bank-icon.svg";
+import arrowRight from "../../../assets/img/inline_icons/arrow_right.svg";
 import * as styles from "./LinkedBankAccountWidget.module.scss";
 
 interface IExternalProps {

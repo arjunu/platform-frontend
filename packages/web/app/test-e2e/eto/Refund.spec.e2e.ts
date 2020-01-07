@@ -65,10 +65,7 @@ describe("Refund", () => {
   it("Refund from ETO Page with ICBM wallet investment (only ETH)", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInRefundState");
 
-    loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_ICBM_ETH_M_HAS_KYC_DUP");
 
     getLockedWalletEthAmount().as("currentAmountEth");
 
@@ -82,10 +79,7 @@ describe("Refund", () => {
   it("Refund from ETO Page with wallet investment (nEUR and ETH)", () => {
     const ETO_ID = etoFixtureAddressByName("ETOInRefundState");
 
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC");
 
     getWalletEthAmount().as("currentAmountEth");
     getWalletNEurAmount(false).as("currentAmountNEur");

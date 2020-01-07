@@ -22,11 +22,7 @@ describe("Invest with nEur", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
     const INVESTED_NEUR_AMOUNT = 99.99;
 
-    loginFixtureAccount("demoinvestor1", {
-      kyc: "individual",
-      signTosAgreement: true,
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("demoinvestor1");
 
     goToDashboard();
 

@@ -17,7 +17,7 @@ export const selectConnectedWeb3State = (state: IWeb3State): IConnectedWeb3State
   return state;
 };
 
-const selectEthereumAddress = (state: IAppState): EthereumAddress =>
+export const selectEthereumAddress = (state: IAppState): EthereumAddress =>
   state.web3.connected ? state.web3.wallet.address : state.web3.previousConnectedWallet!.address;
 
 export const selectEthereumAddressWithChecksum = createSelector(selectEthereumAddress, address =>

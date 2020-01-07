@@ -199,6 +199,7 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
         title={<FormattedMessage id="kyc.personal.verify.title" />}
         description={<FormattedMessage id="kyc.personal.verify.description" />}
         buttonAction={() => goToDashboard()}
+        data-test-id="kyc.individual-document-verification"
       />
 
       {onfidoRequestStartError && (
@@ -206,6 +207,15 @@ export const KycPersonalDocumentVerificationComponent: React.FunctionComponent<I
           className="mb-4"
           type={ENotificationType.WARNING}
           text={<FormattedMessage id="kyc.personal.verify.error" />}
+        />
+      )}
+
+      {enabledInstantIdProviders.length === 0 && (
+        <Notification
+          className="mb-4"
+          type={ENotificationType.INFO}
+          text={<FormattedMessage id="kyc.personal.verify.none-providers-allowed" />}
+          data-test-id="kyc.individual-document-verification.none-providers-allowed"
         />
       )}
 

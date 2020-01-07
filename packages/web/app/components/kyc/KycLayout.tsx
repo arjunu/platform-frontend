@@ -12,8 +12,8 @@ import { KycSubmitedRouter } from "./KycSubmitedRouter";
 import { KycRouter } from "./Router";
 import { KYCAddDocuments } from "./shared/AddDocuments";
 
-import * as addFile from "../../assets/img/inline_icons/add_file.svg";
-import * as arrowLeft from "../../assets/img/inline_icons/arrow_left.svg";
+import addFile from "../../assets/img/inline_icons/add_file.svg";
+import arrowLeft from "../../assets/img/inline_icons/arrow_left.svg";
 
 export const personalSteps = [
   {

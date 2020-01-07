@@ -24,17 +24,16 @@ import {
   EOfferingDocumentType,
   EProductName,
 } from "../app/lib/api/eto/EtoProductsApi.interfaces";
-import { EETOStateOnChain } from "../app/modules/eto/types";
+import { EETOStateOnChain, TEtoWithCompanyAndContractReadonly } from "../app/modules/eto/types";
 import {
   EthereumAddress,
   EthereumAddressWithChecksum,
   EthereumNetworkId,
 } from "../app/utils/opaque-types/types";
 import { toEquityTokenSymbol } from "../app/utils/opaque-types/utils";
-import { TEtoWithCompanyAndContractReadonly } from "./../app/modules/eto/types";
 
-import * as companyBanner from "./assets/company-banner.png";
-import * as companyPreviewCardBanner from "./assets/company-preview-banner.png";
+import companyBanner from "./assets/company-banner.png";
+import companyPreviewCardBanner from "./assets/company-preview-banner.png";
 
 export const dummyConfig: IConfig = {
   ethereumNetwork: {

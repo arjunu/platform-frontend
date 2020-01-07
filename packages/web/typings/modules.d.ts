@@ -27,3 +27,5 @@ declare module "proper-url-join/lib";
 
 // Custom node module imports
 declare module "bitcore-mnemonic";
+
+declare module "truffle-privatekey-provider";

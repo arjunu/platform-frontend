@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 import { compose } from "recompose";
 
-import { TTranslatedString } from "../../../types";
+import { TDataTestId, TTranslatedString } from "../../../types";
 import { withHeaderButton } from "../../../utils/withHeaderButton";
 import { withProgress } from "../../../utils/withProgress";
 
@@ -16,14 +16,15 @@ type TProps = {
   buttonAction: () => void;
 };
 
-const KycStepComponent: React.FunctionComponent<TProps> = ({
+const KycStepComponent: React.FunctionComponent<TProps & TDataTestId> = ({
   step,
   allSteps,
   title,
   description,
+  ["data-test-id"]: dataTestId,
 }) => (
   <>
-    <span className={styles.step}>
+    <span className={styles.step} data-test-id={dataTestId}>
       <FormattedMessage id="shared.kyc.step" values={{ step, allSteps }} />
     </span>
     <h1 className={styles.title}>{title}</h1>

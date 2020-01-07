@@ -12,14 +12,7 @@ import {
   kycInvidualFormUS,
   kycInvidualFormUSResident,
 } from "./fixtures";
-
-const goToKycIndividualFlow = () => {
-  // go to kyc select and then individual page
-  cy.visit(kycRoutes.start);
-
-  cy.get(tid("kyc-start-go-to-personal")).click();
-  cy.url().should("contain", kycRoutes.individualStart);
-};
+import { goToPersonalVerification } from "./utils";
 
 const assertOutsourcedVerification = () => {
   stubWindow("windowOpen");
@@ -44,7 +37,7 @@ const assertOutsourcedKycWidgetStatus = () => {
 const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, isUS: boolean) => {
   createAndLoginNewUser({ type: "investor" });
 
-  goToKycIndividualFlow();
+  goToPersonalVerification();
 
   // fill the form
   fillForm(personalData, isUS ? { submit: false } : undefined);

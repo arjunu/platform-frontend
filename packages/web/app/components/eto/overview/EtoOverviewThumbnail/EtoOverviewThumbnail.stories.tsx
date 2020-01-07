@@ -17,7 +17,7 @@ import { withStore } from "../../../../utils/storeDecorator.unsafe";
 import { withMockedDate } from "../../../../utils/storybookHelpers.unsafe";
 import { EtoOverviewThumbnail } from "./EtoOverviewThumbnail";
 
-import * as icbmThumbnail from "../../../../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";
+import icbmThumbnail from "../../../../assets/img/eto_offers/investment_thumbnails_icbm_capital_raise.png";
 
 const rootEto: TEtoWithCompanyAndContractReadonly = {
   ...testEto,

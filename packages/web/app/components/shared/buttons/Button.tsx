@@ -1,7 +1,7 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { OmitKeys, PartialByKeys, TDataTestId } from "../../../types";
+import { PartialByKeys, TDataTestId } from "../../../types";
 import { invariant } from "../../../utils/invariant";
 import { InlineIcon } from "../icons";
 import { LoadingIndicator } from "../loading-indicator/LoadingIndicator";
@@ -81,7 +81,7 @@ type ButtonLayoutProps = React.ComponentProps<typeof ButtonLayout>;
 type TButtonProps = {
   svgIcon?: string;
   iconPosition?: EIconPosition;
-  iconProps?: OmitKeys<React.ComponentProps<typeof InlineIcon>, "svgIcon">;
+  iconProps?: Omit<React.ComponentProps<typeof InlineIcon>, "svgIcon">;
 } & PartialByKeys<ButtonLayoutProps, "layout" | "size" | "width">;
 
 const Button = React.forwardRef<HTMLButtonElement, TButtonProps>(

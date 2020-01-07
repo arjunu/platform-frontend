@@ -5,7 +5,7 @@ import { TKycOnfidoUploadRequest } from "../../../../lib/api/kyc/KycApi.interfac
 import { EOnfidoSDKEvents } from "../../../../lib/dependencies/onfido/OnfidoSDK";
 import { actions } from "../../../actions";
 import { neuCall, neuTakeUntil } from "../../../sagasUtils";
-import { loadClientData } from "../../sagas";
+import { loadKycStatus } from "../../sagas";
 
 type TChannelTypes = {
   type: EOnfidoSDKEvents;
@@ -21,7 +21,7 @@ function* initOnfidoSdk({
     const uploadRequest: TKycOnfidoUploadRequest = yield apiKycService.putOnfidoUploadRequest();
 
     // Update kyc status after starting onfido request
-    yield neuCall(loadClientData);
+    yield neuCall(loadKycStatus);
 
     yield onfidoSDK.init({
       token: uploadRequest.webtoken,
@@ -43,7 +43,7 @@ function* checkOnfidoRequest({ apiKycService }: TGlobalDependencies): Generator<
     yield apiKycService.putOnfidoCheckRequest();
 
     // Update kyc status after successful check request
-    yield neuCall(loadClientData);
+    yield neuCall(loadKycStatus);
   } finally {
     yield put(actions.fullPageLoading.hideFullPageLoading());
   }

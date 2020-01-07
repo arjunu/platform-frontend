@@ -50,58 +50,45 @@ describe("Purchase", () => {
     clearEmailServer();
   });
   it("should start purchase agreement approval when bank account not verified", () => {
-    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED", {
-      kyc: "business",
-      signTosAgreement: true,
-    }).then(() => {
-      goToWallet();
+    loginFixtureAccount("INV_EUR_ICBM_HAS_KYC_SEED");
+    goToWallet();
 
-      cy.get(tid("wallet-balance.neur.purchase-button")).click();
+    cy.get(tid("wallet-balance.neur.purchase-button")).click();
 
-      assertBankTransferFlow({
-        agreementApprovalRequired: true,
-      });
+    assertBankTransferFlow({
+      agreementApprovalRequired: true,
     });
   });
 
   it("should start purchase without agreement approval when bank account is verified", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    }).then(() => {
-      goToWallet();
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP");
+    goToWallet();
 
-      cy.get(tid("wallet-balance.neur.purchase-button")).click();
+    cy.get(tid("wallet-balance.neur.purchase-button")).click();
 
-      assertBankTransferFlow({
-        agreementApprovalRequired: false,
-      });
+    assertBankTransferFlow({
+      agreementApprovalRequired: false,
     });
   });
 
   it("should show bank account details", () => {
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    }).then(() => {
-      // On wallet
-      goToWallet();
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC_DUP");
+    // On wallet
+    goToWallet();
 
-      assertBankAccountDetails();
+    assertBankAccountDetails();
 
-      // On profile
-      goToProfile();
+    // On profile
+    goToProfile();
 
-      assertBankAccountDetails();
-    });
+    assertBankAccountDetails();
   });
 
   it("should disable all action buttons related to bank transfer when not verified", () => {
     createAndLoginNewUser({
       type: "investor",
-    }).then(() => {
-      goToWallet();
-      cy.get(tid("wallet-balance.neur.purchase-button")).should("be.disabled");
     });
+    goToWallet();
+    cy.get(tid("wallet-balance.neur.purchase-button")).should("be.disabled");
   });
 });

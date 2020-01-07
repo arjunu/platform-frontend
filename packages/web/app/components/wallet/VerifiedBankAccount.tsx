@@ -8,7 +8,7 @@ import { selectIsBankAccountVerified } from "../../modules/bank-transfer-flow/se
 import { selectBankAccount, selectIsBankAccountLoading } from "../../modules/kyc/selectors";
 import { TBankAccount } from "../../modules/kyc/types";
 import { appConnect } from "../../store";
-import { CommonHtmlProps, DeepReadonly, OmitKeys } from "../../types";
+import { CommonHtmlProps, DeepReadonly } from "../../types";
 import { ButtonInline } from "../shared/buttons";
 import { LoadingIndicator } from "../shared/loading-indicator/LoadingIndicator";
 import { BankAccount } from "./BankAccount";
@@ -27,9 +27,7 @@ interface IStateProps {
   isUserFullyVerified: boolean;
 }
 
-type IComponentProps = IExternalProps &
-  OmitKeys<IStateProps, "isBankAccountLoading"> &
-  CommonHtmlProps;
+type IComponentProps = IExternalProps & Omit<IStateProps, "isBankAccountLoading"> & CommonHtmlProps;
 
 const VerifiedBankAccountComponent: React.FunctionComponent<IComponentProps> = ({
   isVerified,

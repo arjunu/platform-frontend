@@ -1,12 +1,12 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { CommonHtmlProps, OmitKeys, TDataTestId, TTranslatedString } from "../../../types";
+import { CommonHtmlProps, TDataTestId, TTranslatedString } from "../../../types";
 import { makeTid } from "../../../utils/tidUtils";
 import { InlineIcon } from "../icons";
 import { TooltipBase } from "./TooltipBase";
 
-import * as icon from "../../../assets/img/inline_icons/icon_questionmark.svg";
+import icon from "../../../assets/img/inline_icons/icon_questionmark.svg";
 import * as styles from "./Tooltip.module.scss";
 
 interface IProps {
@@ -15,7 +15,7 @@ interface IProps {
   preventDefault?: boolean;
 }
 
-type TForwardedProps = OmitKeys<React.ComponentProps<typeof TooltipBase>, "target">;
+type TForwardedProps = Omit<React.ComponentProps<typeof TooltipBase>, "target">;
 
 let tooltipCount = 0;
 

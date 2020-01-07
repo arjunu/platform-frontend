@@ -10,7 +10,6 @@ import {
 } from "../../../../../modules/investor-portfolio/selectors";
 import { IInvestorTicket } from "../../../../../modules/investor-portfolio/types";
 import { appConnect } from "../../../../../store";
-import { Omit } from "../../../../../types";
 
 interface IExternalProps {
   etoId: string;
@@ -32,7 +31,7 @@ interface IWithProps {
 }
 
 export const withCanClaimToken = <T extends IWithProps>(wrapper: React.ComponentType<T>) =>
-  compose<T, IExternalProps & Omit<T, IWithProps>>(
+  compose<T, IExternalProps & Omit<T, keyof IWithProps>>(
     appConnect<IStateProps, IDispatchProps, IExternalProps>({
       stateToProps: (state, props) => ({
         doesInvestorInvest: selectHasInvestorTicket(state, props.etoId),

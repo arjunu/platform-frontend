@@ -11,8 +11,8 @@ import { EButtonSize } from "./buttons/Button";
 import { EInlineIconFill } from "./icons/InlineIcon";
 import { SlidePerson } from "./SlidePerson";
 
-import * as prevIcon from "../../assets/img/inline_icons/arrow_bordered_left.svg";
-import * as nextIcon from "../../assets/img/inline_icons/arrow_bordered_right.svg";
+import prevIcon from "../../assets/img/inline_icons/arrow_bordered_left.svg";
+import nextIcon from "../../assets/img/inline_icons/arrow_bordered_right.svg";
 import * as styles from "./PeopleSwiperWidget.module.scss";
 
 export interface IPerson {

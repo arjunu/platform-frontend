@@ -4,7 +4,7 @@ import { Row } from "reactstrap";
 
 import { recoverRoutes } from "../../wallet-recover/router/recoverRoutes";
 
-import * as mailLink from "../../../../assets/img/mail_link.svg";
+import mailLink from "../../../../assets/img/mail_link.svg";
 import * as styles from "../WalletLight.module.scss";
 
 export const MissingEmailLightWallet: React.FunctionComponent<{}> = () => (

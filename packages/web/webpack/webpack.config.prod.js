@@ -1,6 +1,6 @@
 const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const webpack = require("webpack");
 
@@ -19,9 +19,7 @@ module.exports = merge.smart(configCommon, {
     runtimeChunk: true,
     minimizer: [
       new TerserPlugin({
-        parallel: true,
         terserOptions: {
-          ecma: 6,
           mangle: {
             // for details see https://github.com/ethereum/web3.js/issues/1356
             reserved: ["BigNumber"],
@@ -56,9 +54,10 @@ module.exports = merge.smart(configCommon, {
                 loader: "css-loader",
                 options: {
                   importLoaders: 3,
-                  modules: true,
-                  localIdentName: "[name]__[local]___[hash:base64:5]",
-                  camelCase: "dashesOnly",
+                  modules: {
+                    localIdentName: "[name]__[local]___[hash:base64:5]",
+                  },
+                  localsConvention: "dashesOnly",
                 },
               },
               {

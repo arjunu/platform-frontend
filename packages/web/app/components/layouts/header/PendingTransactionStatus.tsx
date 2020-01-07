@@ -11,10 +11,10 @@ import { appConnect } from "../../../store";
 import { ButtonBase } from "../../shared/buttons";
 import { TooltipBase } from "../../shared/tooltips";
 
-import * as txError from "../../../assets/img/icon_txn_status_error.svg";
-import * as txNoPending from "../../../assets/img/icon_txn_status_no_pending.svg";
-import * as txPending from "../../../assets/img/icon_txn_status_pending_transaction.svg";
-import * as txSuccess from "../../../assets/img/icon_txn_status_success.svg";
+import txError from "../../../assets/img/icon_txn_status_error.svg";
+import txNoPending from "../../../assets/img/icon_txn_status_no_pending.svg";
+import txPending from "../../../assets/img/icon_txn_status_pending_transaction.svg";
+import txSuccess from "../../../assets/img/icon_txn_status_success.svg";
 import * as styles from "./PendingTransactionStatus.module.scss";
 
 interface IStateProps {

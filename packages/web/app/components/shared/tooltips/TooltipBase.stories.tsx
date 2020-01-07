@@ -4,7 +4,7 @@ import * as React from "react";
 import { Button } from "../buttons";
 import { ECustomTooltipTextPosition, TooltipBase } from "./TooltipBase";
 
-import * as icon from "../../../assets/img/logo_yellow.svg";
+import icon from "../../../assets/img/logo_yellow.svg";
 
 storiesOf("Basic UI/TooltipBase", module)
   .add("default", () => (

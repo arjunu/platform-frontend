@@ -13,15 +13,7 @@ import {
   THumanReadableFormat,
   toFixedPrecision,
 } from "../../components/shared/formatters/utils";
-import { makeEthereumAddressChecksummed } from "../../modules/web3/utils";
-import { EthereumAddress } from "../../utils/opaque-types/types";
-import { mockApiUrl } from "../config";
-import {
-  kycCompanyDocsForm,
-  kycCorporateCompanyForm,
-  kycLegalRepDocsForm,
-  kycLegalRepForm,
-} from "../kyc/fixtures";
+import { MOCK_API_URL } from "../config";
 import {
   assertDashboard,
   assertIssuerDashboard,
@@ -29,16 +21,11 @@ import {
   assertWaitForExternalPendingTransactionCount,
   getLatestEmailByUser,
 } from "./assertions";
-import { fillForm } from "./forms";
 import { goToWallet } from "./navigation";
 import { tid } from "./selectors";
 import { DEFAULT_PASSWORD, verifyUserEmailCall } from "./userHelpers";
 
 export const LONG_WAIT_TIME = 60000;
-
-export const ETO_FIXTURES: any = require("../../../../../git_modules/platform-contracts-artifacts/localhost/eto_fixtures.json");
-export const ETO_TERMS_FIXTURES: any = require("../../../../../git_modules/platform-contracts-artifacts/localhost/eto_terms_contraints_fixtures.json");
-export const FIXTURE_ACCOUNTS: any = require("../../../../../git_modules/platform-contracts-artifacts/localhost/fixtures.json");
 
 export const numberRegExPattern = /\d+/g;
 
@@ -49,7 +36,7 @@ export const letterKeepDotRegExPattern = /[^0-9.]/gi;
 export const charRegExPattern = /[^a-z0-9]/gi;
 
 export const clearEmailServer = () => {
-  cy.request({ url: mockApiUrl + "sendgrid/session/mails", method: "DELETE" });
+  cy.request({ url: MOCK_API_URL + "sendgrid/session/mails", method: "DELETE" });
 };
 
 export const registerWithLightWalletETO = (
@@ -109,23 +96,25 @@ export const getLatestVerifyUserEmailLink = (
   email: string,
   attempts = 5,
 ): Cypress.Chainable<string> =>
-  cy.request({ url: mockApiUrl + `sendgrid/session/mails?to=${email}`, method: "GET" }).then(r => {
-    const latestEmailByUser = getLatestEmailByUser(r, email);
+  cy
+    .request({ url: MOCK_API_URL + `sendgrid/session/mails?to=${email}`, method: "GET" })
+    .then(r => {
+      const latestEmailByUser = getLatestEmailByUser(r, email);
 
-    const activationLink = get(latestEmailByUser, "template_vars.activation_link");
+      const activationLink = get(latestEmailByUser, "template_vars.activation_link");
 
-    if (activationLink) {
-      // we need to replace the loginlink pointing to a remote destination
-      // with one pointing to our local instance
-      return activationLink.replace("platform.neufund.io", "localhost:9090");
-    } else {
-      expect(attempts, `Failed to find activation link for email ${email}`).to.be.gt(0);
+      if (activationLink) {
+        // we need to replace the loginlink pointing to a remote destination
+        // with one pointing to our local instance
+        return activationLink.replace("platform.neufund.io", "localhost:9090");
+      } else {
+        expect(attempts, `Failed to find activation link for email ${email}`).to.be.gt(0);
 
-      cy.wait(1000);
+        cy.wait(1000);
 
-      return getLatestVerifyUserEmailLink(email, attempts - 1);
-    }
-  });
+        return getLatestVerifyUserEmailLink(email, attempts - 1);
+      }
+    });
 
 const verifyLatestUserEmailBase = (email: string, finalCheckTid?: string) => {
   getLatestVerifyUserEmailLink(email).then(activationLink => {
@@ -195,25 +184,6 @@ export const logoutViaAccountMenu = () => {
   assertLanding();
 };
 
-export const goThroughKycCorporateProcess = () => {
-  // fill out and submit business form
-  fillForm(kycCorporateCompanyForm);
-  fillForm(kycCompanyDocsForm);
-
-  // uplaod legal rep data
-  fillForm(kycLegalRepForm);
-  fillForm(kycLegalRepDocsForm, { submit: false });
-
-  // add a new beneficial owner entry
-  cy.get(tid("kyc-beneficial-owner-add-new")).awaitedClick();
-  // remove him again
-  cy.get(tid("kyc-beneficial-owner-delete")).awaitedClick();
-
-  // submit and accept
-  cy.get(tid("kyc-company-legal-representative-upload-and-submit")).awaitedClick();
-  confirmAccessModal();
-};
-
 export const goToUserAccountSettings = () => {
   cy.get(tid("account-menu-open-button"))
     .awaitedClick()
@@ -233,69 +203,6 @@ export const loginWithLightWallet = (email: string, password: string) => {
   cy.get(tid("wallet-selector-light")).awaitedClick();
 
   lightWalletTypeLoginInfo(email, password);
-};
-
-export const etoFixtureByName = (name: string) => {
-  const etoAddress = Object.keys(ETO_FIXTURES).find(a => ETO_FIXTURES[a].name === name);
-  if (etoAddress) {
-    return ETO_FIXTURES[etoAddress];
-  } else {
-    throw new Error(
-      `Cannot find ${name} in ETO_FIXTURES. Please check if the fixtures are in sync`,
-    );
-  }
-};
-
-export const etoProductFixtureIdByName = (name: string): string => {
-  const productId = Object.keys(ETO_TERMS_FIXTURES).find(
-    fixtureKey => ETO_TERMS_FIXTURES[fixtureKey].name === name,
-  );
-  if (productId) {
-    return productId;
-  } else {
-    throw new Error(
-      `Cannot find ${name} in ETO_TERMS_FIXTURES. Please check if the fixtures are in sync`,
-    );
-  }
-};
-
-export const etoFixtureAddressByName = (name: string): string => {
-  const address = Object.keys(ETO_FIXTURES).find(
-    a => ETO_FIXTURES[a].name === name,
-  ) as EthereumAddress;
-  if (address) {
-    return makeEthereumAddressChecksummed(address);
-  } else {
-    throw new Error(
-      `Cannot find ${name} in ETO_FIXTURES. Please check if the fixtures are in sync`,
-    );
-  }
-};
-
-export const accountFixtureByName = (name: string) => {
-  const address = Object.keys(FIXTURE_ACCOUNTS).find(f => FIXTURE_ACCOUNTS[f].name === name);
-  if (address) {
-    return FIXTURE_ACCOUNTS[address];
-  } else {
-    throw new Error(
-      `Cannot find ${name} in FIXTURE_ACCOUNTS. Please check if the fixtures are in sync`,
-    );
-  }
-};
-
-export const accountFixtureAddress = (name: string) => {
-  const fixture = accountFixtureByName(name);
-  return makeEthereumAddressChecksummed(fixture.definition.address);
-};
-
-export const accountFixtureSeed = (name: string) => {
-  const fixture = accountFixtureByName(name);
-  return fixture.definition.seed.toString();
-};
-
-export const accountFixturePrivateKey = (name: string) => {
-  const fixture = accountFixtureByName(name);
-  return fixture.definition.privateKey as string;
 };
 
 export const stubWindow = (hookName: string) =>
@@ -359,16 +266,20 @@ export const getWalletNEurAmount = (navigate: boolean = true) => {
 };
 
 export const addPendingExternalTransaction = (address: string) => {
-  cy.request({ url: mockApiUrl + "parity/additional_addresses/", method: "PUT", body: [address] });
-
-  assertWaitForExternalPendingTransactionCount(1);
+  cy.request({
+    url: MOCK_API_URL + "parity/additional_addresses/",
+    method: "PUT",
+    body: [address],
+  }).then(() => assertWaitForExternalPendingTransactionCount(1));
 };
 
 export const removePendingExternalTransaction = () => {
   // to clean external pending tx list send empty array
-  cy.request({ url: mockApiUrl + "parity/additional_addresses/", method: "PUT", body: [] });
-
-  assertWaitForExternalPendingTransactionCount(0);
+  cy.request({
+    url: MOCK_API_URL + "parity/additional_addresses/",
+    method: "PUT",
+    body: [],
+  }).then(() => assertWaitForExternalPendingTransactionCount(0));
 };
 
 export const getFormattedNumber = (
@@ -422,3 +333,5 @@ export * from "./selectors";
 export * from "./navigation";
 export * from "./userHelpers";
 export * from "./forms";
+export * from "./offlineHelpers";
+export * from "./fixtures";

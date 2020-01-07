@@ -11,7 +11,7 @@ import { InlineIcon } from "../../shared/icons";
 import { Panel } from "../../shared/Panel";
 import { DashboardHeading } from "../shared/DashboardHeading";
 
-import * as icon_link from "../../../assets/img/inline_icons/social_link.svg";
+import icon_link from "../../../assets/img/inline_icons/social_link.svg";
 import * as styles from "./DocumentsWidget.module.scss";
 
 type TExternalProps = {

@@ -14,7 +14,7 @@ import {
   StaticMoneyWidget,
 } from "../../../../shared/MoneySuiteWidget/MoneySuiteWidget";
 
-import * as ethIcon from "../../../../../assets/img/eth_icon.svg";
+import ethIcon from "../../../../../assets/img/eth_icon.svg";
 
 export const TransactionFeeWidget: React.FunctionComponent<{ cost: string; costEur: string }> = ({
   cost,

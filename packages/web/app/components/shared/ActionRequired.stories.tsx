@@ -4,7 +4,7 @@ import * as React from "react";
 import { ActionRequired, EActionRequiredPosition } from "./ActionRequired";
 import { InlineIcon } from "./icons/InlineIcon";
 
-import * as iconFingerprint from "../../assets/img/inline_icons/icon-menu-fingerprint.svg";
+import iconFingerprint from "../../assets/img/inline_icons/icon-menu-fingerprint.svg";
 
 storiesOf("ActionRequired", module)
   .add("default (active and top)", () => (

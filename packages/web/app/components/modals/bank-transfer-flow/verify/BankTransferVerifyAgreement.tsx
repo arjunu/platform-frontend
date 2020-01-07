@@ -14,7 +14,7 @@ import {
 import { Message } from "../../message/Message";
 import { BankTransferAgreement } from "../shared/BankTransferAgreement";
 
-import * as bankVaultIcon from "../../../../assets/img/bank-transfer/bank-vault.svg";
+import bankVaultIcon from "../../../../assets/img/bank-transfer/bank-vault.svg";
 
 export enum EBankTransferInitState {
   INFO,

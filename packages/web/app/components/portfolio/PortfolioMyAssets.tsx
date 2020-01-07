@@ -25,7 +25,7 @@ import {
 import { TokenIcon } from "../shared/icons/TokenIcon";
 import { ENewTableCellLayout, NewTable, NewTableRow } from "../shared/table";
 
-import * as neuIcon from "../../assets/img/neu_icon.svg";
+import neuIcon from "../../assets/img/neu_icon.svg";
 import * as styles from "./PortfolioLayout.module.scss";
 
 interface IExternalProps {

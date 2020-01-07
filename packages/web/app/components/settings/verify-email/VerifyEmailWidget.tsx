@@ -11,8 +11,8 @@ import { FormDeprecated, FormField } from "../../shared/forms";
 import { Panel } from "../../shared/Panel";
 import { connectVerifyEmailComponent } from "./ConnectVerifyEmail";
 
-import * as successIcon from "../../../assets/img/notifications/success.svg";
-import * as warningIcon from "../../../assets/img/notifications/warning.svg";
+import successIcon from "../../../assets/img/notifications/success.svg";
+import warningIcon from "../../../assets/img/notifications/warning.svg";
 import * as styles from "./VerifyEmailWidget.module.scss";
 
 interface IStateProps {

@@ -2,11 +2,11 @@ import * as cn from "classnames";
 import * as React from "react";
 
 import { ENotificationType } from "../../../modules/notifications/types";
-import { CommonHtmlProps, OmitKeys, TDataTestId, TTranslatedString } from "../../../types";
+import { CommonHtmlProps, TDataTestId, TTranslatedString } from "../../../types";
 import { ButtonBase, ButtonClose } from "../buttons";
 
-import * as infoIcon from "../../../assets/img/notifications/info.svg";
-import * as warningIcon from "../../../assets/img/notifications/warning.svg";
+import infoIcon from "../../../assets/img/notifications/info.svg";
+import warningIcon from "../../../assets/img/notifications/warning.svg";
 import * as styles from "./Notification.module.scss";
 
 export interface INotificationProps {
@@ -20,7 +20,7 @@ const icons = {
   [ENotificationType.WARNING]: warningIcon,
 };
 
-const NotificationContent: React.FunctionComponent<OmitKeys<INotificationProps, "onClick">> = ({
+const NotificationContent: React.FunctionComponent<Omit<INotificationProps, "onClick">> = ({
   text,
   type,
 }) => (

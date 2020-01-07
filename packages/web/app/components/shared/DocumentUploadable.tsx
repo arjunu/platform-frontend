@@ -8,8 +8,8 @@ import { ButtonInline } from "./buttons";
 import { DocumentTile } from "./Document";
 import { InlineIcon } from "./icons/InlineIcon";
 
-import * as error from "../../assets/img/inline_icons/error.svg";
-import * as warning from "../../assets/img/inline_icons/warning.svg";
+import error from "../../assets/img/inline_icons/error.svg";
+import warning from "../../assets/img/inline_icons/warning.svg";
 import * as styles from "./Document.module.scss";
 
 const MAX_UPLOADABLE_SIZE = 20 * 1024 * 1024; // 20 MB
