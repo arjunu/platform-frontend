@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="122px" height="108px" viewBox="0 0 122 108" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Settings</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ON" transform="translate(0.000000, -3.000000)">
+            <g id="Settings">
+                <text id="ok" font-family=".AppleSystemUIFont" font-size="14" font-weight="normal" fill="#656B72">
+                    <tspan x="52.7138672" y="14">ok</tspan>
+                </text>
+                <path d="M52,46 L52,28" id="Line" stroke="#D8D8D8" stroke-linecap="square"></path>
+                <path id="Line-decoration-1" d="M55,35.2 L52,46 L49,35.2" stroke="#D8D8D8" stroke-linecap="square"></path>
+                <path d="M68,46 L68,28" id="Line" stroke="#D8D8D8" stroke-linecap="square"></path>
+                <path id="Line-decoration-1" d="M71,35.2 L68,46 L65,35.2" stroke="#D8D8D8" stroke-linecap="square"></path>
+                <path d="M49.5,20.5 L70.5950231,20.5" id="Line-3" stroke="#D8D8D8" stroke-width="2" stroke-linecap="square"></path>
+                <g id="Page-1" transform="translate(0.000000, 71.000000)" stroke="#C4C5C6">
+                    <g id="Group-16" transform="translate(0.000000, 0.250000)">
+                        <path d="M118.1025,6 L3.8975,6 C2.2975,6 0.9995,7.298 0.9995,8.897 L0.9995,35.103 C0.9995,36.702 2.2975,38 3.8975,38 L118.1025,38 C119.7025,38 120.9995,36.702 120.9995,35.103 L120.9995,8.897 C120.9995,7.298 119.7025,6 118.1025,6 Z" id="Stroke-5" stroke-width="2"></path>
+                        <polyline id="Stroke-7" stroke-width="2" points="26.625 5.25 26.625 0.75 13.125 0.75 13.125 5.25"></polyline>
+                        <polyline id="Stroke-9" stroke-width="2" points="108.625 5.25 108.625 0.75 95.125 0.75 95.125 5.25"></polyline>
+                        <polygon id="Stroke-13" stroke-width="2.431" points="12.25 30.5 109.75 30.5 109.75 13.5 12.25 13.5"></polygon>
+                        <polyline id="Stroke-14" points="16.4145019 19.2497 20.2500663 25.5067 23.9901166 19.2497"></polyline>
+                    </g>
+                </g>
+                <text font-family="Helvetica-Bold, Helvetica" font-size="7" font-weight="bold" fill="#656B72">
+                    <tspan x="47.1931152" y="96">Settings</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

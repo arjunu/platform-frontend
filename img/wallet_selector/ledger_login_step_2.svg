@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="125px" height="107px" viewBox="0 0 125 107" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="regstration_ledger_start_error" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-599.000000, -426.000000)">
+        <g id="Group-2" transform="translate(598.000000, 422.000000)">
+            <g id="Group-5">
+                <text id="down" font-family="OpenSans-Semibold, Open Sans" font-size="14" font-weight="500" fill="#656B72">
+                    <tspan x="4.84130859" y="51">down</tspan>
+                </text>
+                <g id="Page-1" transform="translate(5.000000, 71.000000)">
+                    <polygon id="Fill-1" fill="#FFFFFF" points="12.125 7.5 26.125 7.5 26.125 1.5 12.125 1.5"></polygon>
+                    <polygon id="Fill-2" fill="#FFFFFF" points="94.125 9.5 108.125 9.5 108.125 1.5 94.125 1.5"></polygon>
+                    <g id="Group-23" transform="translate(0.000000, 0.250000)">
+                        <path d="M117.1021,6 L2.8981,6 C1.2971,6 0.0001,7.298 0.0001,8.897 L0.0001,35.103 C0.0001,36.702 1.2971,38 2.8981,38 L117.1021,38 C118.7031,38 120.0001,36.702 120.0001,35.103 L120.0001,8.897 C120.0001,7.298 118.7031,6 117.1021,6" id="Fill-3" fill="#FFFFFF"></path>
+                        <path d="M117.1021,6 L2.8981,6 C1.2971,6 0.0001,7.298 0.0001,8.897 L0.0001,35.103 C0.0001,36.702 1.2971,38 2.8981,38 L117.1021,38 C118.7031,38 120.0001,36.702 120.0001,35.103 L120.0001,8.897 C120.0001,7.298 118.7031,6 117.1021,6 Z" id="Stroke-5" stroke="#C4C5C6" stroke-width="2"></path>
+                        <polyline id="Stroke-7" stroke="#C4C5C6" stroke-width="2" points="25.625 5.25 25.625 0.75 12.125 0.75 12.125 5.25"></polyline>
+                        <polyline id="Stroke-9" stroke="#C4C5C6" stroke-width="2" points="107.625 5.25 107.625 0.75 94.125 0.75 94.125 5.25"></polyline>
+                        <polygon id="Fill-11" fill="#FFFFFF" points="11.25 30.5 108.75 30.5 108.75 13.5 11.25 13.5"></polygon>
+                        <polygon id="Stroke-13" stroke="#C4C5C6" stroke-width="2.431" points="11.25 30.5 108.75 30.5 108.75 13.5 11.25 13.5"></polygon>
+                        <path d="M35.0957,22.4854 C35.0957,20.9744 33.8707,19.7504 32.3607,19.7504 C30.8497,19.7504 29.6247,20.9744 29.6247,22.4854 C29.6247,23.9964 30.8497,25.2204 32.3607,25.2204 C33.8707,25.2204 35.0957,23.9964 35.0957,22.4854" id="Fill-14" fill="#656B72"></path>
+                        <path d="M43.6055,22.4854 C43.6055,20.9744 42.3805,19.7504 40.8705,19.7504 C39.3595,19.7504 38.1345,20.9744 38.1345,22.4854 C38.1345,23.9964 39.3595,25.2204 40.8705,25.2204 C42.3805,25.2204 43.6055,23.9964 43.6055,22.4854" id="Fill-15" fill="#656B72"></path>
+                        <path d="M52.1152,22.4854 C52.1152,20.9744 50.8902,19.7504 49.3802,19.7504 C47.8692,19.7504 46.6442,20.9744 46.6442,22.4854 C46.6442,23.9964 47.8692,25.2204 49.3802,25.2204 C50.8902,25.2204 52.1152,23.9964 52.1152,22.4854" id="Fill-16" fill="#656B72"></path>
+                        <path d="M60.625,22.4854 C60.625,20.9744 59.4,19.7504 57.89,19.7504 C56.379,19.7504 55.154,20.9744 55.154,22.4854 C55.154,23.9964 56.379,25.2204 57.89,25.2204 C59.4,25.2204 60.625,23.9964 60.625,22.4854" id="Fill-17" fill="#656B72"></path>
+                        <polyline id="Stroke-18" stroke="#656B72" points="16.8823 18.6211 21.6253 24.8791 26.3673 18.6211"></polyline>
+                        <polyline id="Stroke-19" stroke="#656B72" points="103.3677 24.8789 98.6247 18.6209 93.8827 24.8789"></polyline>
+                        <path d="M70.625,25.25 L79.625,25.25" id="Stroke-20" stroke="#656B72"></path>
+                        <path d="M82.625,25.25 L91.625,25.25" id="Stroke-21" stroke="#656B72"></path>
+                        <polyline id="Stroke-22" stroke="#656B72" points="64.2007 21.4111 66.6627 24.6591 70.0367 17.1611"></polyline>
+                    </g>
+                </g>
+                <path d="M23,65.5071414 L23,64.5071414" id="Line" stroke="#C4C5C6" stroke-linecap="square"></path>
+                <path id="Line-decoration-1" d="M26,54.7071414 L23,65.5071414 L20,54.7071414" stroke="#C4C5C6" stroke-linecap="square"></path>
+                <text id="up" font-family="OpenSans-Semibold, Open Sans" font-size="14" font-weight="500" fill="#656B72">
+                    <tspan x="97.6953125" y="51">up</tspan>
+                </text>
+                <path d="M106,65.5071414 L106,64.5071414" id="Line" stroke="#C4C5C6" stroke-linecap="square"></path>
+                <path id="Line-decoration-1" d="M109,54.7071414 L106,65.5071414 L103,54.7071414" stroke="#C4C5C6" stroke-linecap="square"></path>
+                <g id="Group-3" transform="translate(42.000000, 0.000000)">
+                    <text id="ok" font-family="OpenSans-Semibold, Open Sans" font-size="14" font-weight="500" fill="#656B72">
+                        <tspan x="15.2216797" y="15">ok</tspan>
+                    </text>
+                    <path d="M15,45.5071414 L15,27.5071414" id="Line" stroke="#C4C5C6" stroke-linecap="square"></path>
+                    <path id="Line-decoration-1" d="M18,34.7071414 L15,45.5071414 L12,34.7071414" stroke="#C4C5C6" stroke-linecap="square"></path>
+                    <path d="M31,45.5071414 L31,27.5071414" id="Line" stroke="#C4C5C6" stroke-linecap="square"></path>
+                    <path id="Line-decoration-1" d="M34,34.7071414 L31,45.5071414 L28,34.7071414" stroke="#C4C5C6" stroke-linecap="square"></path>
+                    <path d="M12.5,20.5 L33.5950231,20.5" id="Line-3" stroke="#C4C5C6" stroke-width="2" stroke-linecap="square"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

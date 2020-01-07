@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="122px" height="107px" viewBox="0 0 122 107" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>3</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="regstration_ledger_start_error" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-879.000000, -426.000000)">
+        <g id="3" transform="translate(879.000000, 422.000000)">
+            <g id="connecting_ledger3">
+                <text id="ok" font-family="OpenSans-Semibold, Open Sans" font-size="14" font-weight="500" fill="#656B72">
+                    <tspan x="52.2216797" y="15">ok</tspan>
+                </text>
+                <path d="M52,46 L52,28" id="Line" stroke="#D8D8D8" stroke-linecap="square"></path>
+                <path id="Line-decoration-1" d="M55,35.2 L52,46 L49,35.2" stroke="#D8D8D8" stroke-linecap="square"></path>
+                <path d="M68,46 L68,28" id="Line" stroke="#D8D8D8" stroke-linecap="square"></path>
+                <path id="Line-decoration-1" d="M71,35.2 L68,46 L65,35.2" stroke="#D8D8D8" stroke-linecap="square"></path>
+                <path d="M49.5,20.5 L70.5950231,20.5" id="Line-3" stroke="#D8D8D8" stroke-width="2" stroke-linecap="square"></path>
+                <g id="Page-1" transform="translate(0.000000, 71.000000)">
+                    <g id="Group-16" transform="translate(0.000000, 0.250000)">
+                        <path d="M118.1025,6 L3.8975,6 C2.2975,6 0.9995,7.298 0.9995,8.897 L0.9995,35.103 C0.9995,36.702 2.2975,38 3.8975,38 L118.1025,38 C119.7025,38 120.9995,36.702 120.9995,35.103 L120.9995,8.897 C120.9995,7.298 119.7025,6 118.1025,6 Z" id="Stroke-5" stroke="#C4C5C6" stroke-width="2"></path>
+                        <polyline id="Stroke-7" stroke="#C4C5C6" stroke-width="2" points="26.625 5.25 26.625 0.75 13.125 0.75 13.125 5.25"></polyline>
+                        <polyline id="Stroke-9" stroke="#C4C5C6" stroke-width="2" points="108.625 5.25 108.625 0.75 95.125 0.75 95.125 5.25"></polyline>
+                        <polygon id="Stroke-13" stroke="#C4C5C6" stroke-width="2.431" points="12.25 30.5 109.75 30.5 109.75 13.5 12.25 13.5"></polygon>
+                        <polyline id="Stroke-14" stroke="#C4C5C6" points="23.3818 17.6357 17.1248 22.3787 23.3818 27.1207"></polyline>
+                        <path d="M96.3115,20.2471 C97.1675,20.2571 97.8545,20.9621 97.8445,21.8191 C97.8355,22.6761 97.1295,23.3621 96.2735,23.3521 C95.4165,23.3441 94.7305,22.6381 94.7395,21.7811 C94.7495,20.9251 95.4545,20.2381 96.3115,20.2471 Z M92.4575,20.9221 C92.1605,20.9531 91.9315,21.2031 91.9285,21.5031 L91.9215,22.1001 C91.9165,22.3991 92.1385,22.6541 92.4365,22.6921 L92.8745,22.7491 C92.9485,23.0161 93.0525,23.2701 93.1865,23.5111 L92.9035,23.8601 C92.7145,24.0941 92.7285,24.4291 92.9395,24.6431 L93.3565,25.0701 C93.5665,25.2851 93.9015,25.3091 94.1405,25.1251 L94.4925,24.8531 C94.7395,25.0001 95.0015,25.1151 95.2755,25.1961 L95.3225,25.6491 C95.3535,25.9461 95.6035,26.1751 95.9035,26.1781 L96.4995,26.1841 C96.7995,26.1891 97.0545,25.9681 97.0925,25.6701 L97.1465,25.2401 C97.4445,25.1681 97.7275,25.0571 97.9965,24.9101 L98.3265,25.1771 C98.5605,25.3661 98.8955,25.3511 99.1105,25.1421 L99.5375,24.7241 C99.7515,24.5141 99.7755,24.1791 99.5915,23.9401 L99.3385,23.6121 C99.4945,23.3521 99.6155,23.0771 99.6975,22.7861 L100.0885,22.7461 C100.3865,22.7161 100.6155,22.4661 100.6185,22.1661 L100.6245,21.5681 C100.6295,21.2691 100.4085,21.0151 100.1105,20.9761 L99.7285,20.9271 C99.6555,20.6391 99.5465,20.3601 99.4055,20.1011 L99.6435,19.8091 C99.8325,19.5751 99.8185,19.2391 99.6075,19.0241 L99.1905,18.5981 C98.9805,18.3831 98.6455,18.3591 98.4065,18.5441 L98.1215,18.7631 C97.8525,18.6011 97.5645,18.4751 97.2625,18.3901 L97.2245,18.0191 C97.1935,17.7231 96.9435,17.4931 96.6435,17.4911 L96.0465,17.4841 C95.7475,17.4791 95.4925,17.7011 95.4545,17.9981 L95.4075,18.3661 C95.0955,18.4461 94.7955,18.5691 94.5175,18.7291 L94.2225,18.4891 C93.9895,18.3011 93.6545,18.3141 93.4395,18.5241 L93.0095,18.9441 C92.7945,19.1541 92.7715,19.4901 92.9555,19.7281 L93.2075,20.0541 C93.0615,20.3131 92.9465,20.5901 92.8705,20.8801 L92.4575,20.9221 Z" id="Fill-15" fill="#C4C5C6"></path>
+                    </g>
+                </g>
+                <text id="Ethereum" font-family="OpenSans-Semibold, Open Sans" font-size="10" font-weight="500" fill="#656B72">
+                    <tspan x="39.7988281" y="96">Ethereum</tspan>
+                </text>
+                <g id="ethereum" transform="translate(29.000000, 87.000000)" fill="#010101" fill-rule="nonzero">
+                    <g id="Group" opacity="0.6" transform="translate(0.000000, 4.285714)">
+                        <polygon id="Shape" points="3.83958133 0.00642439753 0.00903430902 1.86468138 3.83958133 4.27864875 7.66862264 1.86468138"></polygon>
+                    </g>
+                    <g id="Group" opacity="0.45">
+                        <polygon id="Shape" points="0.00803049691 6.31616039 3.41296119 8.56519832 3.41296119 0"></polygon>
+                    </g>
+                    <g id="Group" opacity="0.8" transform="translate(3.428571, 0.000000)">
+                        <polygon id="Shape" points="0 0 0 8.56519832 3.40359227 6.31616039"></polygon>
+                    </g>
+                    <g id="Group" opacity="0.45" transform="translate(0.000000, 6.857143)">
+                        <polygon id="Shape" points="0.00803049691 0.004293533 3.41296119 5.13363429 3.41296119 2.15535357"></polygon>
+                    </g>
+                    <g id="Group" opacity="0.8" transform="translate(3.428571, 6.857143)">
+                        <polygon id="Shape" points="0 2.15535357 0 5.13363429 3.4062691 0.004293533"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
