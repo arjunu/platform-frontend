@@ -3,7 +3,7 @@ import * as React from "react";
 import { TDataTestId } from "../../../../../types";
 import { Container, EColumnSpan } from "../../../../layouts/Container";
 
-import * as infoIcon from "../../../../../assets/img/notifications/info.svg";
+import infoIcon from "../../../../../assets/img/notifications/info.svg";
 import * as styles from "./CoverBanner.module.scss";
 
 export const CoverBannerBase: React.FunctionComponent<TDataTestId> = ({

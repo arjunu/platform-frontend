@@ -123,7 +123,7 @@ function* loadEto(
 function* loadEtoInternal(
   { apiEtoService }: TGlobalDependencies,
   eto: TEtoSpecsData,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   const company: TCompanyEtoData = yield apiEtoService.getCompanyById(eto.companyId);
 
   // Load contract data if eto is already on blockchain
@@ -162,7 +162,7 @@ function* loadEtoInternal(
 export function* loadEtoWithCompanyAndContract(
   { apiEtoService }: TGlobalDependencies,
   previewCode: string,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEtoPreview(previewCode);
   eto.company = yield apiEtoService.getCompanyById(eto.companyId);
 
@@ -177,7 +177,7 @@ export function* loadEtoWithCompanyAndContract(
 export function* loadEtoWithCompanyAndContractById(
   { apiEtoService }: TGlobalDependencies,
   etoId: string,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   const eto: TEtoWithCompanyAndContract = yield apiEtoService.getEto(etoId);
   eto.company = yield apiEtoService.getCompanyById(eto.companyId);
 
@@ -460,10 +460,10 @@ function* downloadDocument(
   // for guest users we always require agreement acceptance
   const isAgreementAlreadyAccepted = userId
     ? yield documentsConfidentialityAgreementsStorage.isAgreementAccepted(
-        userId,
-        eto.previewCode,
-        document.documentType,
-      )
+      userId,
+      eto.previewCode,
+      document.documentType,
+    )
     : false;
 
   if (
@@ -598,19 +598,11 @@ function* verifyEtoAccess(
   _: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.eto.verifyEtoAccess>,
 ): Generator<any, any, any> {
-  const eto: ReturnType<typeof selectInvestorEtoWithCompanyAndContract> = yield select(
-    (state: IAppState) => selectInvestorEtoWithCompanyAndContract(state, payload.eto.previewCode),
-  );
-
-  if (eto === undefined) {
-    throw new Error(`Can not find eto by preview code ${payload.eto.previewCode}`);
-  }
-
   // Checks if ETO is an Offer based on
   // @See https://github.com/Neufund/platform-frontend/issues/2789#issuecomment-489084892
-  const isEtoAnOffer: boolean = yield !!eto.contract && etoIsInOfferState(eto.contract.timedState);
+  const isEtoAnOffer: boolean = yield !!payload.eto.contract && etoIsInOfferState(payload.eto.contract.timedState);
 
-  if (isRestrictedEto(eto) && isEtoAnOffer) {
+  if (isRestrictedEto(payload.eto) && isEtoAnOffer) {
     if (payload.userIsFullyVerified) {
       const jurisdiction: ReturnType<typeof selectClientJurisdiction> = yield select(
         selectClientJurisdiction,
