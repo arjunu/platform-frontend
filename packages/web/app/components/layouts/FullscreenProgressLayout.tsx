@@ -89,7 +89,10 @@ const FullscreenProgressLayout: React.FunctionComponent<TDataTestId &
             buttonAction={buttonCtx.buttonProps && buttonCtx.buttonProps.buttonAction}
             buttonText={buttonCtx.buttonProps && buttonCtx.buttonProps.buttonText}
           />
-          <ProgressBarSimple className={styles.progress} progress={progressCtx.progress} />
+          <ProgressBarSimple
+            className={styles.progress}
+            progress={progressCtx.progress.toString()}
+          />
           <Content {...contentProps}>{children}</Content>
         </FullscreenButtonContext.Provider>
       </FullscreenProgressContext.Provider>

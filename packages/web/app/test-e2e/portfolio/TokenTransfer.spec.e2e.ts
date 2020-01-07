@@ -41,10 +41,7 @@ describe("Token Transfer", () => {
   const testAddress = "0x00b30CC2cc22c9820d47a4E0C9E1A54455bA0883";
   const testValue = "5";
   it("should transfer tokens to new wallet", () => {
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      signTosAgreement: true,
-      onlyLogin: true,
-    }).then(({ address }) => {
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC").then(({ address }) => {
       getTokenBalance("0xf4c2ccae6289a23f663e9b10795d1ef6f80d494e", address).then(tokenBalance => {
         const etoId = etoFixtureAddressByName("ETOInClaimState");
 
@@ -62,10 +59,7 @@ describe("Token Transfer", () => {
     });
   });
   it("should transfer all tokens to new wallet", () => {
-    loginFixtureAccount("INV_HAS_EUR_HAS_KYC", {
-      signTosAgreement: true,
-      onlyLogin: true,
-    }).then(({ address }) => {
+    loginFixtureAccount("INV_HAS_EUR_HAS_KYC").then(({ address }) => {
       const zeroAmount = "0";
       const etoId = etoFixtureAddressByName("ETOInClaimState");
 

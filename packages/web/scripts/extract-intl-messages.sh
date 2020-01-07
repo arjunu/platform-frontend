@@ -10,7 +10,7 @@ if [[ $* == *--check* ]]; then
 fi
 
 echo "Creating messages..."
-node_modules/.bin/babel --plugins @babel/plugin-proposal-optional-chaining "./app/**/*.{ts,tsx}" > /dev/null
+node_modules/.bin/babel "./app/**/*.{ts,tsx}" > /dev/null
 echo "done"
 
 echo "Merging with locale file for en-en"

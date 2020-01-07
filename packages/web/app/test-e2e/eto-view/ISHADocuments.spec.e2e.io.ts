@@ -114,14 +114,13 @@ describe("Eto ISHA documents", () => {
       // logout();
 
       // Check issuer
-      loginFixtureAccount("ISSUER_PAYOUT", { kyc: "business" }).then(() => {
-        goToEtoViewById(ETO_ID, eto.previewCode);
+      loginFixtureAccount("ISSUER_PAYOUT");
+      goToEtoViewById(ETO_ID, eto.previewCode);
 
-        shouldDownloadDocument(
-          "eto-public-view.documents.investment_and_shareholder_agreement_preview",
-          "Investment and Shareholder Agreement.pdf",
-        );
-      });
+      shouldDownloadDocument(
+        "eto-public-view.documents.investment_and_shareholder_agreement_preview",
+        "Investment and Shareholder Agreement.pdf",
+      );
     });
   });
 });

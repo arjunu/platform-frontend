@@ -20,7 +20,6 @@ import { CounterWidget } from "../EtoOverviewStatus/CounterWidget";
 import { InvestmentStatusWidget } from "../EtoOverviewStatus/InvestmentWidget/InvestmentStatusWidget";
 import { EndTimeWidget } from "../shared/EndTimeWidget";
 import { GreenInfo, Info } from "./Info";
-import { InvestmentStatus } from "./InvestmentStatus/InvestmentStatus";
 import { Whitelist } from "./Whitelist/Whitelist";
 
 interface IExternalProps {
@@ -75,7 +74,7 @@ const EtoCardStatusManager = ({ eto }: IExternalProps) => {
       } else {
         return (
           <>
-            <InvestmentStatus eto={eto} />
+            <InvestmentStatusWidget eto={eto} />
 
             <Info>
               <FormattedMessage id="eto-overview-thumbnail.presale.view-offer" />

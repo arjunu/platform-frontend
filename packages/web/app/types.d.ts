@@ -76,18 +76,6 @@ export type ToastWithTestData = ToastOptions & TDataTestId;
 export type TSingleOrArray<T> = T | T[];
 
 /**
- * From T, omit a set of properties whose keys are in the union K
- * @example OmitKeys<{ foo: boolean, bar: string }, "foo"> // { bar: string }
- */
-export type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
-
-/**
- * From T, omit a set of properties from K
- * @example OmitKeys<{ foo: boolean, bar: string }, { foo: boolean, }> // { bar: string }
- */
-export type Omit<T, K> = OmitKeys<T, keyof K>;
-
-/**
  * From T, select a union of property names which values extends R
  * @example
  * SelectPropertyNames<{ foo: boolean, bar: string, baz: string }, string> // "bar" | "baz"
@@ -112,14 +100,14 @@ export type RequiredNonNullable<T> = { [P in keyof T]-?: NonNullable<T[P]> };
  * @example
  * RequiredByKeys<{ foo?: boolean | null, bar?: string }, "foo"> // { foo: boolean, bar?: string }
  */
-export type RequiredByKeys<T, K extends keyof T> = RequiredNonNullable<Pick<T, K>> & OmitKeys<T, K>;
+export type RequiredByKeys<T, K extends keyof T> = RequiredNonNullable<Pick<T, K>> & Omit<T, K>;
 
 /**
  * In T, mark as partial properties from K
  * @example
  * PartialByKeys<{ foo: boolean, bar: string }, "foo"> // { foo?: boolean, bar: string }
  */
-export type PartialByKeys<T, K extends keyof T> = Partial<Pick<T, K>> & OmitKeys<T, K>;
+export type PartialByKeys<T, K extends keyof T> = Partial<Pick<T, K>> & Omit<T, K>;
 
 /**
  * Overwrites properties from T1 with one from T2

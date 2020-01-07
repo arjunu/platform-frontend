@@ -1,20 +1,21 @@
 import BigNumber from "bignumber.js";
 
+import { Q18 } from "../../config/constants";
+import { ETxSenderState } from "../../modules/tx/sender/reducer";
+import { sendEth } from "../utils/ethRpcUtils";
 import {
   addFailedPendingTransactions,
   addPendingExternalTransaction,
+  addPendingTransactions,
+  assertTxErrorDialogueNoCost,
+  clearPendingTransactions,
   closeModal,
   goToDashboard,
   goToWallet,
   removePendingExternalTransaction,
   tid,
-} from "../utils";
-import { assertTxErrorDialogueNoCost } from "../utils/assertions";
-import { addPendingTransactions, clearPendingTransactions } from "../utils/userHelpers";
-import { Q18 } from "./../../config/constants";
-import { ETxSenderState } from "./../../modules/tx/sender/reducer";
-import { sendEth } from "./../utils/ethRpcUtils";
-import { createAndLoginNewUser } from "./../utils/userHelpers";
+} from "../utils/index";
+import { createAndLoginNewUser } from "../utils/userHelpers";
 import { generalPendingTxFixture } from "./generalPendingTxFixture";
 import { assertPendingWithdrawModal, doWithdraw } from "./utils";
 
@@ -26,8 +27,6 @@ describe("Pending Transactions In Header", () => {
     createAndLoginNewUser({
       type: "investor",
       kyc: "individual",
-      clearPendingTransactions: true,
-      signTosAgreement: true,
     }).then(({ address }) => {
       cy.saveLocalStorage();
       userAddress = address;
@@ -119,6 +118,7 @@ describe("Pending Transactions In Header", () => {
 
     it("external pending transaction should not affect header icon", () => {
       clearPendingTransactions();
+
       addPendingExternalTransaction(userAddress);
 
       goToDashboard();

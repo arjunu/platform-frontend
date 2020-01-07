@@ -1,21 +1,22 @@
+import BigNumber from "bignumber.js";
 import * as React from "react";
 
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
-import { getCurrentInvestmentProgressPercentage } from "../../../modules/eto/utils";
+import { getInvestmentCalculatedPercentage } from "../../../modules/eto/utils";
+import { nonNullable } from "../../../utils/nonNullable";
 import { ProgressBarSimple } from "../../shared/ProgressBarSimple";
 
-type TProps = {
+type TExternalProps = {
   eto: TEtoWithCompanyAndContractReadonly;
 };
 
-const InvestmentProgress: React.FunctionComponent<TProps> = ({ eto }) => {
-  const currentProgressPercentage = getCurrentInvestmentProgressPercentage(eto);
+const InvestmentProgress: React.FunctionComponent<TExternalProps> = ({ eto }) => {
+  const currentInvestmentProgressPercentage = nonNullable(getInvestmentCalculatedPercentage(eto));
 
-  return (
-    <ProgressBarSimple
-      progress={currentProgressPercentage > 100 ? 100 : currentProgressPercentage}
-    />
-  );
+  const progressBn = new BigNumber(currentInvestmentProgressPercentage);
+  const progress = progressBn.greaterThan("100") ? "100" : progressBn.toString();
+
+  return <ProgressBarSimple progress={progress} />;
 };
 
 export { InvestmentProgress };

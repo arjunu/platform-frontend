@@ -12,7 +12,6 @@ import { selectEtoOnChainNextStateStartDate } from "../../../../../modules/eto/s
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
 import { selectIsUserVerifiedOnBlockchain } from "../../../../../modules/kyc/selectors";
 import { appConnect } from "../../../../../store";
-import { OmitKeys } from "../../../../../types";
 import { invariant } from "../../../../../utils/invariant";
 import { appRoutes } from "../../../../appRoutes";
 import { etoPublicViewLink } from "../../../../appRouteUtils";
@@ -41,7 +40,7 @@ interface IDispatchProps {
   startInvestmentFlow: () => void;
 }
 
-type TInvestWidgetProps = IExternalProps & OmitKeys<IStateProps, "isUsInvestor"> & IDispatchProps;
+type TInvestWidgetProps = IExternalProps & Omit<IStateProps, "isUsInvestor"> & IDispatchProps;
 
 const InvestNowButton: React.FunctionComponent<TInvestWidgetProps> = ({
   eto,

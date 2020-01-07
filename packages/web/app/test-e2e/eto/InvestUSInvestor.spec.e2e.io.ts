@@ -8,11 +8,7 @@ describe("US investors investment flow", () => {
   it("should block investment flow for us investors", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
 
-    loginFixtureAccount("demoinvestor10", {
-      kyc: "individual",
-      signTosAgreement: true,
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("demoinvestor10");
 
     goToEtoViewById(PUBLIC_ETO_ID);
 

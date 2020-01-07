@@ -1,12 +1,12 @@
 import { get } from "lodash";
 
-import { mockApiUrl } from "../config";
+import { MOCK_API_URL } from "../config";
 import { tid } from "../utils/selectors";
 
 export const assertWaitForBankTransferSummary = (reference: string, timeout: number = 60000) => {
   expect(timeout, `Bank transfer summary not received in ${timeout} ms`).to.be.gt(0);
   cy.wait(1000);
-  cy.request({ url: mockApiUrl + "sendgrid/session/mails", method: "GET" }).then(r => {
+  cy.request({ url: MOCK_API_URL + "sendgrid/session/mails", method: "GET" }).then(r => {
     if (r.status === 200) {
       const purpose = get(r, "body[0].template_vars.purpose");
 
