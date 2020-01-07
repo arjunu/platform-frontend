@@ -8,10 +8,7 @@ export async function main(): Promise<void> {
 
 async function visReg(): Promise<void> {
   const execOptions = { timeout: 300000, cwd: process.cwd(), log: true };
-  await codechecks.saveDirectory(
-    "e2e-vis-reg",
-    join(__dirname, "packages/web/cypress/screenshots"),
-  );
+  await codechecks.saveDirectory("e2e-vis-reg", join(__dirname, "cypress/screenshots"));
 
   if (codechecks.isPr()) {
     await codechecks.getDirectory("e2e-vis-reg", join(__dirname, ".reg/expected"));
