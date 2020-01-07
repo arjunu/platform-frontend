@@ -31,6 +31,11 @@ Cypress.Commands.add("awaitedClick", { prevSubject: "element" }, (subject, waitD
     .click(),
 );
 
+Cypress.Commands.add(
+  "requestsCount",
+  alias => cy.state("requests").filter(a => a.alias === alias).length,
+);
+
 const LOCAL_STORAGE_MEMORY = new Map();
 const DEFAULT_STORAGE_KEY = "main";
 

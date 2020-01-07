@@ -1,4 +1,5 @@
 import {
+  AUTH_INACTIVITY_THRESHOLD,
   AUTH_JWT_TIMING_THRESHOLD,
   AUTH_TOKEN_REFRESH_THRESHOLD,
 } from "../../modules/auth/constants";
@@ -12,6 +13,7 @@ import {
   goToProfile,
   tid,
 } from "../utils";
+import { assertDashboard, assertLogin } from "../utils/assertions";
 import { fillForm } from "../utils/forms";
 import {
   createAndLoginNewUser,
@@ -90,6 +92,47 @@ describe("JWT Refreshing and Escalation", () => {
       cy.wrap(jwtToken).should(token => {
         expect(token).to.not.equal(getJwtToken());
       });
+    });
+  });
+
+  it("should not refresh jwt token after logging out due to inactivity", () => {
+    cy.server();
+
+    createAndLoginNewUser({ type: "investor" }).then(() => {
+      goToDashboard();
+
+      const jwtToken = getJwtToken();
+
+      const jwtExpiryDate = getJwtExpiryDate(jwtToken);
+
+      let now = Date.now();
+
+      // simulate inactivity logout
+      cy.clock(now);
+
+      cy.tick(AUTH_INACTIVITY_THRESHOLD / 2);
+      now += AUTH_INACTIVITY_THRESHOLD / 2;
+
+      assertDashboard();
+
+      cy.tick(AUTH_INACTIVITY_THRESHOLD);
+      now += AUTH_INACTIVITY_THRESHOLD;
+
+      assertLogin();
+
+      cy.route({
+        method: "POST",
+        url: "**/jwt/refresh",
+      }).as("jwtRefresh");
+
+      const diff = jwtExpiryDate.diff(now, "milliseconds");
+
+      const expectedTokenRefreshTimeFromNow = diff - AUTH_TOKEN_REFRESH_THRESHOLD;
+
+      cy.tick(expectedTokenRefreshTimeFromNow + 1);
+
+      // should not try refresh jwt token after inactivity logout
+      cy.requestsCount("jwtRefresh").should("equal", 0);
     });
   });
 

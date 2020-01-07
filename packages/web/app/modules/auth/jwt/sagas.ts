@@ -9,7 +9,7 @@ import { EthereumAddressWithChecksum } from "../../../utils/opaque-types/types";
 import { EDelayTiming, safeDelay } from "../../../utils/safeTimers";
 import { accessWalletAndRunEffect } from "../../access-wallet/sagas";
 import { actions } from "../../actions";
-import { neuCall, neuTakeLatest } from "../../sagasUtils";
+import { neuCall, neuTakeLatestUntil } from "../../sagasUtils";
 import { selectEthereumAddressWithChecksum } from "../../web3/selectors";
 import { AUTH_JWT_TIMING_THRESHOLD, AUTH_TOKEN_REFRESH_THRESHOLD } from "../constants";
 import { JwtNotAvailable, MessageSignCancelledError } from "../errors";
@@ -219,5 +219,5 @@ export function* handleJwtTimeout({ logger }: TGlobalDependencies): Generator<an
 }
 
 export function* authJwtSagas(): Generator<any, any, any> {
-  yield fork(neuTakeLatest, actions.auth.setJWT, handleJwtTimeout);
+  yield fork(neuTakeLatestUntil, actions.auth.setJWT, actions.auth.logout, handleJwtTimeout);
 }
