@@ -2,6 +2,12 @@ import BigNumber from "bignumber.js";
 import { curry } from "lodash/fp";
 
 import { TBigNumberVariants } from "../lib/web3/types";
+import {
+  addBigNumbers,
+  divideBigNumbers,
+  multiplyBigNumbers,
+  subtractBigNumbers,
+} from "./BigNumberUtils";
 
 export function isZero(value: TBigNumberVariants): boolean {
   const bigNumberValue = new BigNumber(value);
@@ -40,15 +46,31 @@ export function formatFlexiPrecision(
   });
 }
 
-type TNormalizeOptions = { min: number; max: number };
+type TNormalizeOptions = { min: TBigNumberVariants; max: TBigNumberVariants };
 
-function normalizeValue(options: TNormalizeOptions, value: number): number {
-  const minAllowed = 0;
-  const maxAllowed = 1;
+/**
+ * Rescaling (min-max normalization)
+ * @param {TNormalizeOptions} options - normalisation option
+ * @param {TBigNumberVariants} value - value to be normalised
+ */
+function normalizeValue(options: TNormalizeOptions, value: TBigNumberVariants): string {
+  const valueBn = new BigNumber(value);
+  const scaleMinBn = new BigNumber(options.min);
+  const scaleMaxBn = new BigNumber(options.max);
+  const maxAllowedBn = new BigNumber("1");
+  const minAllowedBn = new BigNumber("0");
 
-  return (
-    ((maxAllowed - minAllowed) * (value - options.min)) / (options.max - options.min) + minAllowed
-  );
+  // Formula: minAllowed + ((maxAllowed - minAllowed) * (value - options.min)) / (options.max - options.min)
+  return addBigNumbers([
+    minAllowedBn,
+    divideBigNumbers(
+      multiplyBigNumbers([
+        subtractBigNumbers([maxAllowedBn, minAllowedBn]),
+        subtractBigNumbers([valueBn, scaleMinBn]),
+      ]),
+      subtractBigNumbers([scaleMaxBn, scaleMinBn]),
+    ),
+  ]);
 }
 
 export const normalize = curry(normalizeValue);

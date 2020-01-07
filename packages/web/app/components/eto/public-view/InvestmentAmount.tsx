@@ -1,8 +1,11 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TEtoInvestmentCalculatedValues } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { TEtoWithCompanyAndContractReadonly } from "../../../modules/eto/types";
 import { getEtoEurMaxTarget, getEtoEurMinTarget } from "../../../modules/eto/utils";
+import { nonNullable } from "../../../utils/nonNullable";
+import { Entry } from "../../shared/Entry";
 import { MoneyRange } from "../../shared/formatters/MoneyRange";
 import {
   EAbbreviatedNumberOutputFormat,
@@ -11,22 +14,29 @@ import {
 } from "../../shared/formatters/utils";
 import { Tooltip } from "../../shared/tooltips/Tooltip";
 import { ECustomTooltipTextPosition } from "../../shared/tooltips/TooltipBase";
-import { ToBeAnnounced } from "./ToBeAnnouncedTooltip";
+import { ToBeAnnounced } from "../shared/ToBeAnnouncedTooltip";
 
 type TExternalProps = {
-  etoData: TEtoWithCompanyAndContractReadonly;
+  eto: TEtoWithCompanyAndContractReadonly;
 };
 
-const InvestmentAmount: React.FunctionComponent<TExternalProps> = ({ etoData }) => {
-  const minInvestmentAmount = etoData.investmentCalculatedValues
-    ? etoData.investmentCalculatedValues.minInvestmentAmount
-    : undefined;
-  const maxInvestmentAmount = etoData.investmentCalculatedValues
-    ? etoData.investmentCalculatedValues.maxInvestmentAmount
-    : undefined;
+type TRangeProps = {
+  minTarget: string | undefined;
+  maxTarget: string | undefined;
+  investmentCalculatedValues: TEtoInvestmentCalculatedValues;
+};
 
-  const minTarget = getEtoEurMinTarget(etoData);
-  const maxTarget = getEtoEurMaxTarget(etoData);
+const InvestmentAmountRange: React.FunctionComponent<TRangeProps> = ({
+  minTarget,
+  maxTarget,
+  investmentCalculatedValues,
+}) => {
+  const minInvestmentAmount = investmentCalculatedValues
+    ? investmentCalculatedValues.minInvestmentAmount
+    : undefined;
+  const maxInvestmentAmount = investmentCalculatedValues
+    ? investmentCalculatedValues.maxInvestmentAmount
+    : undefined;
 
   const minTargetAmount = minTarget ? minTarget : minInvestmentAmount;
   const maxTargetAmount = maxTarget ? maxTarget : maxInvestmentAmount;
@@ -64,6 +74,31 @@ const InvestmentAmount: React.FunctionComponent<TExternalProps> = ({ etoData }) 
         />
       )}
     </>
+  );
+};
+
+const InvestmentAmount: React.FunctionComponent<TExternalProps> = ({ eto }) => {
+  const minTarget = getEtoEurMinTarget(eto);
+  const maxTarget = getEtoEurMaxTarget(eto);
+
+  return (
+    <Entry
+      label={
+        minTarget ? (
+          <FormattedMessage id="eto.public-view.token-terms.investment-amount-with-discount" />
+        ) : (
+          <FormattedMessage id="eto.public-view.token-terms.investment-amount" />
+        )
+      }
+      value={
+        <InvestmentAmountRange
+          minTarget={minTarget}
+          maxTarget={maxTarget}
+          investmentCalculatedValues={nonNullable(eto.investmentCalculatedValues)}
+        />
+      }
+      data-test-id="eto-public-view-investment-amount"
+    />
   );
 };
 

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { OmitKeys, TDataTestId } from "../../../types";
+import { TDataTestId } from "../../../types";
 
-type TProps = OmitKeys<
+type TProps = Omit<
   React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>,
   "target" | "rel"
 >;

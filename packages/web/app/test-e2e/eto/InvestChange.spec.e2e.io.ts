@@ -6,10 +6,7 @@ import { loginFixtureAccount } from "../utils/userHelpers";
 describe("Invest with change", () => {
   it("do", () => {
     const PUBLIC_ETO_ID = etoFixtureAddressByName("ETOInPublicState");
-    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    });
+    loginFixtureAccount("INV_ETH_EUR_ICBM_M_HAS_KYC");
 
     goToDashboard();
 

@@ -1,7 +1,6 @@
 import * as cn from "classnames";
 import * as React from "react";
 
-import { OmitKeys } from "../../../types";
 import { invariant } from "../../../utils/invariant";
 import { InlineIcon } from "../icons/InlineIcon";
 import { ButtonBase } from "./ButtonBase";
@@ -23,7 +22,7 @@ type TButtonBaseProps = React.ComponentProps<typeof ButtonBase>;
 type TExternalProps = {
   svgIcon?: string;
   iconPosition?: ECircleButtonIconPosition;
-  iconProps?: OmitKeys<React.ComponentProps<typeof InlineIcon>, "svgIcon">;
+  iconProps?: Omit<React.ComponentProps<typeof InlineIcon>, "svgIcon">;
   layout: ECircleButtonLayout;
 };
 

@@ -5,7 +5,8 @@ import {
   walletLoginRoutes,
   walletRegisterRoutes,
 } from "../../components/wallet-selector/walletRoutes";
-import { mockApiUrl } from "../config";
+import { MOCK_API_URL } from "../config";
+import { getIsUserVerifiedOnBlockchain } from "./ethRpcUtils";
 import { tid } from "./selectors";
 import { getPendingTransactions } from "./userHelpers";
 
@@ -71,7 +72,7 @@ export const assertWaitForLatestEmailSentWithSalt = (
 
   cy.wait(1000);
 
-  cy.request({ url: mockApiUrl + `sendgrid/session/mails?to=${userEmail}`, method: "GET" }).then(
+  cy.request({ url: MOCK_API_URL + `sendgrid/session/mails?to=${userEmail}`, method: "GET" }).then(
     r => {
       if (r.status === 200 && getLatestEmailByUser(r, userEmail)) {
         const loginLink = get(getLatestEmailByUser(r, userEmail), "template_vars.login_link");
@@ -121,7 +122,7 @@ export const assertWaitForExternalPendingTransactionCount = (
   count: number,
   timeout: number = 60000,
 ) => {
-  expect(timeout, `External pending transaction not received in ${timeout} ms`).to.be.gt(0);
+  expect(timeout, `External pending transaction count is not equal to ${count}`).to.be.gt(0);
 
   cy.wait(3000);
 
@@ -131,6 +132,23 @@ export const assertWaitForExternalPendingTransactionCount = (
     }
 
     assertWaitForExternalPendingTransactionCount(count, timeout - 3000);
+  });
+};
+
+export const assertIsUserVerifiedOnBlockchain = (address: string, timeout: number = 5000) => {
+  expect(timeout, `User not marked as verified on blockchain in ${timeout} ms`).to.be.gt(0);
+
+  // TODO: Replace by proper call to universe smart contract
+  const identityRegistryAddress = "0xb48d3d68435e93e760c266df284405c9f637b331";
+
+  getIsUserVerifiedOnBlockchain(identityRegistryAddress, address).then(isVerified => {
+    if (!isVerified) {
+      const waitTime = 100;
+
+      cy.wait(waitTime);
+
+      assertIsUserVerifiedOnBlockchain(address, timeout - waitTime);
+    }
   });
 };
 

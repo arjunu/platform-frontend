@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { OmitKeys, TDataTestId, TTranslatedString } from "../../../../types";
+import { TDataTestId, TTranslatedString } from "../../../../types";
 import { SuccessTick } from "../../../shared/SuccessTick";
 
 import * as styles from "./Message.module.scss";
@@ -26,7 +26,7 @@ const Message: React.FunctionComponent<IExternalProps & TDataTestId> = ({
   </section>
 );
 
-const SuccessMessage: React.FunctionComponent<OmitKeys<IExternalProps, "tick"> &
+const SuccessMessage: React.FunctionComponent<Omit<IExternalProps, "tick"> &
   TDataTestId> = props => <Message {...props} tick={<SuccessTick />} />;
 
 export { Message, SuccessMessage };

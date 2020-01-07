@@ -45,6 +45,7 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
   computedMinCapPercent,
 }) => {
   const shouldShowComputedCap = eto.newSharesToIssue && eto.minimumNewSharesToIssue;
+  const eurMinTarget = getEtoEurMinTarget(eto);
 
   return (
     <div className={cn(styles.etoStatsWrapper, styles.groupWrapper)}>
@@ -76,7 +77,7 @@ const EtoStatsLayout: React.FunctionComponent<IStateProps & IExternalProps> = ({
         </span>
         <span className={styles.value}>
           <Money
-            value={getEtoEurMinTarget(eto)}
+            value={eurMinTarget}
             inputFormat={ENumberInputFormat.FLOAT}
             valueType={ECurrency.EUR}
             outputFormat={ENumberOutputFormat.INTEGER}
