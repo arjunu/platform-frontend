@@ -33,8 +33,6 @@ describe("Wallet Withdraw", () => {
     createAndLoginNewUser({
       type: "investor",
       kyc: "individual",
-      clearPendingTransactions: true,
-      signTosAgreement: true,
     }).then(({ address }) => {
       cy.saveLocalStorage();
       userAddress = address;
@@ -320,100 +318,88 @@ describe("Wallet Withdraw", () => {
 
   describe("failed transactions", () => {
     it("should show transaction error with cost for mined transaction", () => {
-      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
-        signTosAgreement: true,
-        onlyLogin: true,
-      }).then(() => {
-        goToDashboard();
+      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC");
+      goToDashboard();
 
-        const contactAddress = EuroTokenContract.networks["17"].address;
+      const contactAddress = EuroTokenContract.networks["17"].address;
 
-        goToWalletWithParams({
-          disableNotAcceptingEtherCheck: true,
-        });
-        continueWithdrawFlow(contactAddress, testValue);
-
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
-          .should("be.enabled")
-          .click();
-
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
-
-        confirmAccessModal(DEFAULT_PASSWORD);
-
-        cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        assertTxErrorDialogueWithCost();
+      goToWalletWithParams({
+        disableNotAcceptingEtherCheck: true,
       });
+      continueWithdrawFlow(contactAddress, testValue);
+
+      cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
+        .should("be.enabled")
+        .click();
+
+      cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
+
+      confirmAccessModal(DEFAULT_PASSWORD);
+
+      cy.get(tid("modals.shared.signing-message.modal")).should("exist");
+      assertTxErrorDialogueWithCost();
     });
 
     it("should show transaction error with no cost for not mined transaction", () => {
-      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
-        signTosAgreement: true,
-        onlyLogin: true,
-      }).then(() => {
-        goToWalletWithParams({
-          forceLowGas: true,
-        });
-        continueWithdrawFlow(testAddress, testValue);
-
-        fillForm(
-          {
-            allowNewAddress: {
-              type: "checkbox",
-              values: { false: true },
-            },
-          },
-          { submit: false },
-        );
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
-          .should("be.enabled")
-          .click();
-
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
-
-        confirmAccessModal(DEFAULT_PASSWORD);
-
-        cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-        assertTxErrorDialogueNoCost();
+      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC");
+      goToWalletWithParams({
+        forceLowGas: true,
       });
+      continueWithdrawFlow(testAddress, testValue);
+
+      fillForm(
+        {
+          allowNewAddress: {
+            type: "checkbox",
+            values: { false: true },
+          },
+        },
+        { submit: false },
+      );
+      cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
+        .should("be.enabled")
+        .click();
+
+      cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
+
+      confirmAccessModal(DEFAULT_PASSWORD);
+
+      cy.get(tid("modals.shared.signing-message.modal")).should("exist");
+      assertTxErrorDialogueNoCost();
     });
 
     it.skip("should show transaction error with cost for a reverted transaction due to out of gas", () => {
       // Web3 Throws when using light wallet due to gas limit checks done before broadcasting the transaction
-      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC", {
-        signTosAgreement: true,
-        onlyLogin: true,
-      }).then(() => {
-        goToDashboard();
+      loginFixtureAccount("INV_EUR_ICBM_HAS_KYC");
+      goToDashboard();
 
-        const contractAddress = SimpleExchangeContract.networks["17"].address;
+      const contractAddress = SimpleExchangeContract.networks["17"].address;
 
-        goToWalletWithParams({
-          forceStandardGas: true,
-        });
-        continueWithdrawFlow(contractAddress, testValue);
-
-        fillForm(
-          {
-            allowSmartContract: {
-              type: "checkbox",
-              values: { false: true },
-            },
-          },
-          { submit: false },
-        );
-        cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
-          .should("be.enabled")
-          .click();
-
-        cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
-
-        confirmAccessModal(DEFAULT_PASSWORD);
-
-        cy.get(tid("modals.shared.signing-message.modal")).should("exist");
-
-        assertTxErrorDialogueWithCost();
+      goToWalletWithParams({
+        forceStandardGas: true,
       });
+      continueWithdrawFlow(contractAddress, testValue);
+
+      fillForm(
+        {
+          allowSmartContract: {
+            type: "checkbox",
+            values: { false: true },
+          },
+        },
+        { submit: false },
+      );
+      cy.get(tid("modals.tx-sender.withdraw-flow.withdraw-component.send-transaction-button"))
+        .should("be.enabled")
+        .click();
+
+      cy.get(tid("modals.tx-sender.withdraw-flow.summary.accept")).awaitedClick();
+
+      confirmAccessModal(DEFAULT_PASSWORD);
+
+      cy.get(tid("modals.shared.signing-message.modal")).should("exist");
+
+      assertTxErrorDialogueWithCost();
     });
   });
 });

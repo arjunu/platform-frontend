@@ -5,12 +5,16 @@ import * as React from "react";
 import { testEto } from "../../../../../../test/fixtures";
 import { EWhitelistingState } from "../../../../../modules/bookbuilding-flow/utils";
 import { EETOStateOnChain } from "../../../../../modules/eto/types";
+import { withMockedDate } from "../../../../../utils/storybookHelpers.unsafe";
 import { ECurrency } from "../../../../shared/formatters/utils";
 import { Panel } from "../../../../shared/Panel";
 import { CampaigningActivatedWidgetLayout } from "./CampaigningActivatedWidget";
 
+const dummyNow = new Date("10/3/2019");
+
 storiesOf("ETO/CampaigningActivatedWidgetLayout", module)
   .addDecorator(story => <Panel>{story()}</Panel>)
+  .addDecorator(withMockedDate(dummyNow))
   .add("Active, not authorized, no investors pledged", () => (
     <CampaigningActivatedWidgetLayout
       whitelistingState={EWhitelistingState.ACTIVE}
@@ -316,7 +320,7 @@ storiesOf("ETO/CampaigningActivatedWidgetLayout", module)
       investorsLimit={500}
       minPledge={10}
       nextState={EETOStateOnChain.Public}
-      countdownDate={moment()
+      countdownDate={moment(dummyNow)
         .add(3, "day")
         .toDate()}
       keyQuoteFounder="Quotes are like boats"
@@ -337,7 +341,7 @@ storiesOf("ETO/CampaigningActivatedWidgetLayout", module)
       investorsLimit={500}
       minPledge={10}
       nextState={EETOStateOnChain.Public}
-      countdownDate={moment()
+      countdownDate={moment(dummyNow)
         .add(3, "day")
         .toDate()}
       keyQuoteFounder="Quotes are like boats"
@@ -357,7 +361,7 @@ storiesOf("ETO/CampaigningActivatedWidgetLayout", module)
       investorsLimit={500}
       minPledge={10}
       nextState={EETOStateOnChain.Public}
-      countdownDate={moment()
+      countdownDate={moment(dummyNow)
         .add(3, "day")
         .toDate()}
       keyQuoteFounder="Quotes are like boats"

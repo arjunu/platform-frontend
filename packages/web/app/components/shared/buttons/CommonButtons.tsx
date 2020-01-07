@@ -1,7 +1,6 @@
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
-import { OmitKeys } from "../../../types";
 import { Button, EButtonLayout, EButtonWidth, EIconPosition } from "./Button";
 
 import arrowLeft from "../../../assets/img/inline_icons/arrow_left.svg";
@@ -10,7 +9,7 @@ import closeIcon from "../../../assets/img/inline_icons/close.svg";
 
 type TButtonProps = React.ComponentProps<typeof Button>;
 
-type TButtonArrowProps = OmitKeys<TButtonProps, "svgIcon" | "iconPosition">;
+type TButtonArrowProps = Omit<TButtonProps, "svgIcon" | "iconPosition">;
 
 const ButtonArrowRight: React.FunctionComponent<TButtonArrowProps> = props => (
   <Button
@@ -30,7 +29,7 @@ const ButtonArrowLeft: React.FunctionComponent<TButtonArrowProps> = props => (
   />
 );
 
-const ButtonClose: React.FunctionComponent<OmitKeys<TButtonProps, "svgIcon">> = ({
+const ButtonClose: React.FunctionComponent<Omit<TButtonProps, "svgIcon">> = ({
   iconProps = {},
   ...props
 }) => (

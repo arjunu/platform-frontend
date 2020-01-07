@@ -3,11 +3,7 @@ import { tid } from "../utils/selectors";
 import { loginFixtureAccount } from "../utils/userHelpers";
 
 describe("Investor blocked payout", () => {
-  beforeEach(() =>
-    loginFixtureAccount("INV_ETH_ICBM_NO_KYC", {
-      clearPendingTransactions: true,
-    }),
-  );
+  beforeEach(() => loginFixtureAccount("INV_ETH_ICBM_NO_KYC"));
 
   it("should disable payout when account is not verified", () => {
     goToPortfolio();

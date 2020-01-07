@@ -5,9 +5,7 @@ describe("Eto Preview For Issuer", () => {
   it("should change state depending whether it's issuer view or investor view", () => {
     const etoId = accountFixtureAddress("ISSUER_PREVIEW");
 
-    loginFixtureAccount("ISSUER_PREVIEW", {
-      kyc: "business",
-    });
+    loginFixtureAccount("ISSUER_PREVIEW");
 
     goToIssuerEtoView();
 

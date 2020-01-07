@@ -1,12 +1,11 @@
 import { Field, FieldProps, getIn } from "formik";
 import * as React from "react";
 
-import { OmitKeys } from "../../../../types";
 import { CheckboxLayout, ECheckboxLayout, RadioButtonLayout } from "../layouts/CheckboxLayout";
 import { FormFieldError } from "./FormFieldError";
 
 type LayoutProps = React.ComponentProps<typeof CheckboxLayout>;
-type TProps = OmitKeys<LayoutProps, "onChange">;
+type TProps = Omit<LayoutProps, "onChange">;
 
 type TRadioButtonProps = {
   layout?: ECheckboxLayout;

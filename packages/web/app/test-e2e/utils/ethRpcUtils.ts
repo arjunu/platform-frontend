@@ -67,6 +67,36 @@ export const getTokenBalance = (
     },
   ]).then(response => abiCoder.decodeParameter("uint256", response.body.result));
 
+export const getIsUserVerifiedOnBlockchain = (
+  identityRegistryAddress: string,
+  walletAddress: string,
+): Cypress.Chainable<boolean> =>
+  requestFromWeb3Node("eth_call", [
+    {
+      from: walletAddress,
+      to: identityRegistryAddress,
+      data: abiCoder.encodeFunctionCall(
+        {
+          constant: true,
+          inputs: [{ name: "identity", type: "address" }],
+          name: "getClaims",
+          outputs: [{ name: "claims", type: "bytes32" }],
+          type: "function",
+        },
+        [walletAddress],
+      ),
+    },
+  ])
+    .then(
+      response => (abiCoder.decodeParameter("bytes32", response.body.result) as unknown) as string,
+    )
+    .then(claims => {
+      const claimsN = new BigNumber(claims, 16);
+
+      // taken from `deserializeClaims` app method
+      return claimsN.mod("2").eq("1");
+    });
+
 export const getBalanceRpc = (address: string) =>
   requestFromWeb3Node("eth_getBalance", [address, "latest"]).then(
     v => new BigNumber(v.body.result),

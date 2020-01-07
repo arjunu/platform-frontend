@@ -3,12 +3,7 @@ import { tid } from "../utils/selectors";
 import { loginFixtureAccount } from "../utils/userHelpers";
 
 describe("Investor empty payout", () => {
-  beforeEach(() =>
-    loginFixtureAccount("INV_EMPTY_HAS_KYC", {
-      kyc: "business",
-      clearPendingTransactions: true,
-    }),
-  );
+  beforeEach(() => loginFixtureAccount("INV_EMPTY_HAS_KYC"));
 
   it("should show message that there are no payouts", () => {
     goToPortfolio();

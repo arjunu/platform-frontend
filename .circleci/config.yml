@@ -11,6 +11,11 @@ executors:
       - image: circleci/node:11.14.0-browsers
     working_directory: /home/circleci/app
 
+  regviz:
+    docker:
+      - image: regviz/node-xcb
+    working_directory: /home/circleci/app
+
 
 jobs:
   install-lint-test:
@@ -119,7 +124,7 @@ jobs:
       - run: yarn workspace @neufund/web codechecks
 
   codechecks-vis-reg:
-    executor: docker-browsers
+    executor: regviz
 
     steps:
       - checkout
