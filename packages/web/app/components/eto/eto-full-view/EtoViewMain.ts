@@ -13,6 +13,7 @@ import { EtoViewIssuer } from "./issuer/EtoViewIssuer";
 import { EtoViewIssuerPreview } from "./issuer/EtoViewIssuerPreview";
 import { EtoViewNominee } from "./nominee/EtoViewNominee";
 import { EtoViewNonAuthorized } from "./notAuth/EtoViewNonAuthorized";
+import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
 
 export const EtoViewMain = compose<{}, {}>(
   appConnect<TEtoViewState, {}, {}>({
@@ -21,10 +22,15 @@ export const EtoViewMain = compose<{}, {}>(
     }),
   }),
   branch<TEtoViewState>(
-    ({ processState }) => processState !== EProcessState.SUCCESS,
+    ({ processState }) => processState === EProcessState.ERROR,
+    renderComponent(ErrorBoundaryLayout),
+  ),
+  branch<TEtoViewState>(
+    ({ processState }) =>
+      processState === EProcessState.NOT_STARTED ||
+      processState === EProcessState.IN_PROGRESS,
     renderComponent(LoadingIndicator),
-  ), //todo add error state
-
+  ),
   branch<TEtoViewState>(
     ({ etoViewType }) => etoViewType === EEtoViewType.ETO_VIEW_NOT_AUTHORIZED,
     renderComponent<TEtoViewData>(EtoViewNonAuthorized),
