@@ -95,6 +95,7 @@ describe("JWT Utils", () => {
 
     it("should return false when jwt is expired", () => {
       clock.fakeClock.tick(secondsToMs(parsed.exp - parsed.iat));
+      clock.fakeClock.tick(1);
 
       const result = isValid(jwt);
 
@@ -160,6 +161,7 @@ describe("JWT Utils", () => {
 
     it("should return false when jwt expiry overflows threshold", () => {
       clock.fakeClock.tick(secondsToMs(parsed.exp - parsed.iat) - AUTH_TOKEN_REFRESH_THRESHOLD + 1);
+      clock.fakeClock.tick(1);
 
       const result = isJwtExpiringLateEnough(jwt);
 

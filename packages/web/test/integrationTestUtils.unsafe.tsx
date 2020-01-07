@@ -32,7 +32,6 @@ import { generateRootReducer, IAppState } from "../app/store";
 import { DeepPartial } from "../app/types";
 import { dummyIntl } from "../app/utils/injectIntlHelpers.fixtures";
 import { InversifyProvider } from "../app/utils/InversifyProvider";
-import { LolexClockAsync } from "../typings/lolex";
 import { dummyConfig } from "./fixtures";
 import { createSpyMiddleware } from "./reduxSpyMiddleware";
 import { createMock, tid } from "./testUtils";
@@ -59,19 +58,17 @@ interface ICreateIntegrationTestsSetupOutput {
 }
 
 export const setupFakeClock = (now?: number) => {
-  let wrapper: { fakeClock: LolexClockAsync<any> } = {} as any;
+  let wrapper: { fakeClock?: lolex.InstalledClock<lolex.Clock> } = {};
 
   beforeEach(() => {
-    // note: we use custom fork of lolex providing tickAsync function which should be used to await for any async actions triggered by tick. Read more: https://github.com/sinonjs/lolex/pull/105
-    // TODO: check why typings are not accurate here
-    wrapper.fakeClock = lolex.install(now as any);
+    wrapper.fakeClock = lolex.install({ now });
   });
 
   afterEach(() => {
-    wrapper.fakeClock.uninstall();
+    wrapper.fakeClock?.uninstall();
   });
 
-  return wrapper;
+  return wrapper as { fakeClock: lolex.InstalledClock<lolex.Clock> };
 };
 
 export function createIntegrationTestsSetup(
@@ -170,7 +167,7 @@ export async function waitForPredicate(predicate: () => boolean, errorMsg: strin
 }
 
 export async function waitUntilDoesntThrow(
-  globalFakeClock: LolexClockAsync<any>,
+  globalFakeClock: lolex.InstalledClock<lolex.Clock>,
   fn: () => any,
   errorMsg: string,
 ): Promise<void> {
