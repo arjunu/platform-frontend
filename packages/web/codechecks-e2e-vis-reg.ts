@@ -7,14 +7,15 @@ export async function main(): Promise<void> {
 }
 
 async function visReg(): Promise<void> {
-  const execOptions = { timeout: 300000, cwd: process.cwd(), log: true };
   await codechecks.saveDirectory("e2e-vis-reg", join(__dirname, "cypress/screenshots"));
 
   if (codechecks.isPr()) {
     await codechecks.getDirectory("e2e-vis-reg", join(__dirname, ".reg/expected"));
+
+    const execOptions = { timeout: 300000, cwd: process.cwd(), log: true };
     await exec("./node_modules/.bin/reg-suit compare", execOptions);
 
-    await codechecks.getDirectory("e2e-vis-reg-report", join(__dirname, ".reg"));
+    await codechecks.saveDirectory("e2e-vis-reg-report", join(__dirname, ".reg"));
 
     const reportData = require("./.reg/out.json");
     await codechecks.success({
