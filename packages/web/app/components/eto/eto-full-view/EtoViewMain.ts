@@ -8,12 +8,12 @@ import {
 import { appConnect } from "../../../store";
 import { EProcessState } from "../../../utils/enums/processStates";
 import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
-import { EtoViewInvestor } from "./investor/EtoViewInvestor";
-import { EtoViewIssuer } from "./issuer/EtoViewIssuer";
-import { EtoViewIssuerPreview } from "./issuer/EtoViewIssuerPreview";
-import { EtoViewNominee } from "./nominee/EtoViewNominee";
-import { EtoViewNonAuthorized } from "./notAuth/EtoViewNonAuthorized";
 import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
+import { EtoViewInvestor } from "./EtoViewInvestorLayout";
+import { EtoViewNonAuthorized } from "./EtoViewNonAuthorizedLayout";
+import { EtoViewIssuer } from "./EtoViewIssuerLayout";
+import { EtoViewIssuerPreview } from "./EtoViewIssuerPreviewLayout";
+import { EtoViewNominee } from "./EtoViewNomineeLayout";
 
 export const EtoViewMain = compose<{}, {}>(
   appConnect<TEtoViewState, {}, {}>({

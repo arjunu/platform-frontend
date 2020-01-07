@@ -1,8 +1,9 @@
 import * as React from "react";
 
-import { TEtoViewData } from "../../../../modules/eto-view/shared/types";
-import { EtoViewLayout } from "../shared/EtoViewLayout";
-import { IssuerCoverBanner } from "../shared/cover-banner/IssuerCoverBanner";
+import { TEtoViewData } from "../../../modules/eto-view/shared/types";
+import { EtoViewLayout } from "./shared/EtoViewLayout";
+import { IssuerCoverBanner } from "./shared/cover-banner/IssuerCoverBanner";
+import { initEtoViewLayoutIssuer } from "./shared/initEtoViewLayoutIssuer";
 
 const EtoViewIssuerLayout: React.FunctionComponent<TEtoViewData> = ({
   eto,
@@ -21,4 +22,6 @@ const EtoViewIssuerLayout: React.FunctionComponent<TEtoViewData> = ({
     />
   </EtoViewLayout>;
 
-export { EtoViewIssuerLayout };
+const EtoViewIssuer = initEtoViewLayoutIssuer(EtoViewIssuerLayout);
+
+export { EtoViewIssuerLayout,EtoViewIssuer };

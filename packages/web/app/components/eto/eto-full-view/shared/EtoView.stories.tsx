@@ -1,6 +1,5 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
-import { Container } from "reactstrap";
 
 import { testCompany, testContract, testEto } from "../../../../../test/fixtures";
 import {
@@ -8,8 +7,8 @@ import {
   TCampaignOverviewData,
 } from "../../../../modules/eto-view/shared/types";
 import { withStore } from "../../../../utils/storeDecorator.unsafe";
-import { EtoViewInvestor } from "../investor/EtoViewInvestor";
-import { EtoViewIssuer } from "../issuer/EtoViewIssuer";
+import { EtoViewInvestor } from "../EtoViewInvestorLayout";
+import { EtoViewIssuer } from "../EtoViewIssuerLayout";
 
 const testStore = {
   eto: {
@@ -40,20 +39,16 @@ const campaignOverviewData: TCampaignOverviewData = {
 storiesOf("ETO/EtoView", module)
   .addDecorator(withStore(testStore))
   .add("investor view", () => (
-    <Container>
       <EtoViewInvestor
         eto={testEto}
         userIsFullyVerified={true}
         campaignOverviewData={campaignOverviewData}
       />
-    </Container>
   ))
   .add("issuer view", () => (
-    <Container>
       <EtoViewIssuer
         eto={testEto}
         campaignOverviewData={campaignOverviewData}
         userIsFullyVerified={true}
       />
-    </Container>
   ));
