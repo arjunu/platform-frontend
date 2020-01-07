@@ -56,8 +56,6 @@ const fillAndAssert = (personalData: TFormFixture, addressData: TFormFixture, is
 
   fillForm(addressData);
 
-  cy.screenshot();
-
   assertOutsourcedVerification();
 
   assertOutsourcedKycWidgetStatus();

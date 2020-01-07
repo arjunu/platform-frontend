@@ -100,8 +100,6 @@ describe("Eto campaigning state", () => {
           .then($element => Number($element.text()))
           .as("remainingSlots");
 
-        cy.screenshot();
-
         submitBookBuilding(PLEDGE_AMOUNT, true);
 
         cy.get<number>("@remainingSlots").then(remainingSlots => {

@@ -15,8 +15,6 @@ describe("Eto Preview For Issuer", () => {
     // should have preview banner
     cy.get(tid("eto.public-view.investor-preview-banner")).should("exist");
 
-    cy.screenshot();
-
     // should go to eto by preview code
     cy.get(tid("eto.public-view.investor-preview-banner.view-as-investor")).click();
 

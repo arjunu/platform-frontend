@@ -38,8 +38,6 @@ function assertBankTransferFlow({
     .as("referenceNumber")
     .should("match", /NR[\w\d]{10}NR/);
 
-  cy.screenshot();
-
   cy.get(tid("bank-transfer.summary.transfer-completed")).click();
 
   // TODO: Email are not send immediately after moving backend to use queues

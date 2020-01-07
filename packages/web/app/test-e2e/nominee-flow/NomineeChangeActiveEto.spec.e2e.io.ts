@@ -18,8 +18,8 @@ describe("Nominee Change active eto", () => {
     getEto(issuerListedId).then(eto => {
       goToNomineeDashboard(eto.previewCode);
       cy.get(tid(`eto-overview-${issuerListedId}`)).should("exist");
-    });
 
-    cy.screenshot();
+      cy.screenshot();
+    });
   });
 });
