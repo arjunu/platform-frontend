@@ -1,9 +1,11 @@
 import { match } from "react-router";
-import { call, fork, put } from "redux-saga/effects";
+import { fork, put } from "redux-saga/effects";
+import { call } from "typed-redux-saga";
 
 import { EtoMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
+import { EJurisdiction } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { actions, TActionFromCreator } from "../../actions";
 import { loadEtoWithCompanyAndContract, loadEtoWithCompanyAndContractById } from "../../eto/sagas";
 import { TEtoWithCompanyAndContractReadonly } from "../../eto/types";
@@ -11,12 +13,11 @@ import { ensureEtoJurisdiction } from "../../routing/sagas";
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import { calculateCampaignOverviewData } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
-import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../routing/types";
 
 function* loadNotAuthorizedEtoViewInternal(
   eto: TEtoWithCompanyAndContractReadonly,
-  routeMatch: match<TEtoViewByPreviewCodeMatch | TEtoViewByIdMatch>,
-): Generator<any,any,any> {
+  routeMatch: match<{ jurisdiction: EJurisdiction }>,
+): Generator<any, any, any> {
   yield call(ensureEtoJurisdiction, eto.product.jurisdiction, routeMatch.params.jurisdiction);
 
   yield put(actions.eto.verifyEtoAccess(eto, false));
@@ -37,7 +38,7 @@ function* loadNotAuthorizedEtoViewInternal(
 export function* loadNotAuthorizedEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContract,
@@ -56,7 +57,7 @@ export function* loadNotAuthorizedEtoView(
 export function* loadNotAuthorizedEtoViewById(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadNotAuthorizedEtoViewById>,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContractById,

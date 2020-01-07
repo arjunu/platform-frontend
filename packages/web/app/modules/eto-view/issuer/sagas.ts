@@ -1,5 +1,5 @@
-import {  fork, put } from "redux-saga/effects";
-import {call,select} from "typed-redux-saga"
+import { fork, put } from "redux-saga/effects";
+import { call, select } from "typed-redux-saga";
 
 import { EtoMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
@@ -16,7 +16,7 @@ import {
 } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
 
-export function* selectOrLoadEto(): Generator<any,any,any> {
+export function* selectOrLoadEto(): Generator<any, any, any> {
   let eto = yield select(selectIssuerEtoWithCompanyAndContract);
   if (eto === undefined) {
     yield neuCall(loadIssuerEto);
@@ -28,11 +28,13 @@ export function* selectOrLoadEto(): Generator<any,any,any> {
 export function* loadIssuerEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
   _: TActionFromCreator<typeof actions.etoView.loadIssuerEtoView>,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly | undefined = yield call(selectOrLoadEto);
 
     if (eto) {
+      const userIsFullyVerified = true;
+      const etoViewType = EEtoViewType.ETO_VIEW_ISSUER;
       const campaignOverviewData: TCampaignOverviewData = yield call(
         calculateCampaignOverviewDataIssuerNominee,
         eto,
@@ -41,9 +43,9 @@ export function* loadIssuerEtoView(
       yield put(
         actions.etoView.setEtoViewData({
           eto,
-          userIsFullyVerified: true,
           campaignOverviewData,
-          etoViewType: EEtoViewType.ETO_VIEW_ISSUER,
+          userIsFullyVerified,
+          etoViewType,
         }),
       );
     } else {
@@ -59,7 +61,7 @@ export function* loadIssuerEtoView(
 export function* loadIssuerEtoPreview(
   { logger, notificationCenter }: TGlobalDependencies,
   { payload }: TActionFromCreator<typeof actions.etoView.loadIssuerPreviewEtoView>,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContract,
@@ -67,6 +69,9 @@ export function* loadIssuerEtoPreview(
     );
 
     if (eto) {
+      const userIsFullyVerified = true;
+      const etoViewType = EEtoViewType.ETO_VIEW_ISSUER_PREVIEW;
+
       const campaignOverviewData: TCampaignOverviewData = yield call(
         calculateCampaignOverviewData,
         payload.routeMatch,
@@ -76,9 +81,9 @@ export function* loadIssuerEtoPreview(
       yield put(
         actions.etoView.setEtoViewData({
           eto,
-          userIsFullyVerified: true,
           campaignOverviewData,
-          etoViewType: EEtoViewType.ETO_VIEW_ISSUER_PREVIEW,
+          userIsFullyVerified,
+          etoViewType,
         }),
       );
     }
@@ -91,16 +96,17 @@ export function* loadIssuerEtoPreview(
 
 export function* loadIssuerPreviewByIdEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
-  action: TActionFromCreator<typeof actions.etoView.loadIssuerPreviewEtoViewById>,
-): Generator<any,any,any> {
+  { payload }: TActionFromCreator<typeof actions.etoView.loadIssuerPreviewEtoViewById>,
+): Generator<any, any, any> {
   try {
-    const { payload } = action;
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContractById,
       payload.etoId,
     );
 
     if (eto) {
+      const userIsFullyVerified = true;
+      const etoViewType = EEtoViewType.ETO_VIEW_ISSUER_PREVIEW;
       const campaignOverviewData: TCampaignOverviewData = yield call(
         calculateCampaignOverviewData,
         payload.routeMatch,
@@ -110,9 +116,9 @@ export function* loadIssuerPreviewByIdEtoView(
       yield put(
         actions.etoView.setEtoViewData({
           eto,
-          userIsFullyVerified: true,
           campaignOverviewData,
-          etoViewType: EEtoViewType.ETO_VIEW_ISSUER_PREVIEW,
+          userIsFullyVerified,
+          etoViewType,
         }),
       );
     }

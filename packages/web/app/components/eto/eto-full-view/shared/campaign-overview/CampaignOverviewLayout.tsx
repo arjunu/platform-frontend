@@ -2,6 +2,7 @@ import * as cn from "classnames";
 import * as React from "react";
 import { FormattedMessage } from "react-intl-phraseapp";
 
+import { TSocialChannelsType } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { TEtoViewData } from "../../../../../modules/eto-view/shared/types";
 import { Container, EColumnSpan, EContainerType } from "../../../../layouts/Container";
 import { DashboardHeading } from "../../../../shared/DashboardHeading";
@@ -11,6 +12,7 @@ import { Slides } from "../../../../shared/Slides";
 import { SocialProfilesList } from "../../../../shared/SocialProfilesList";
 import { TwitterTimelineEmbed } from "../../../../shared/TwitterTimeline";
 import { Video } from "../../../../shared/Video";
+import { EtoAccordionElements } from "../EtoAccordionElements";
 import { CompanyDescription } from "./CompanyDescription";
 import { DocumentsWidget } from "./documents-widget/DocumentsWidget";
 import { EtoInvestmentTermsWidget } from "./eto-investment-terms-widget/EtoInvestmentTermsWidget";
@@ -18,8 +20,6 @@ import { ETOTimeline } from "./eto-timeline/ETOTimeline";
 import { Individuals } from "./individuals/Individuals";
 import { LegalInformationWidget } from "./legal-information-widget/LegalInformationWidget";
 import { MarketingDocumentsWidget } from "./MarketingDocumentsWidget";
-import { EtoAccordionElements } from "../EtoAccordionElements";
-import { TSocialChannelsType } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 
 import * as styles from "../../shared/EtoView.module.scss";
 
@@ -33,7 +33,7 @@ export const CampaignOverviewLayout: React.FunctionComponent<TEtoViewData> = ({
     showInvestmentTerms,
   },
   eto,
-  userIsFullyVerified
+  userIsFullyVerified,
 }) => {
   const {
     socialChannels,
@@ -84,10 +84,7 @@ export const CampaignOverviewLayout: React.FunctionComponent<TEtoViewData> = ({
       {showInvestmentTerms && (
         <Container columnSpan={EColumnSpan.THREE_COL}>
           <DashboardHeading title={<FormattedMessage id="eto.public-view.token-terms.title" />} />
-          <EtoInvestmentTermsWidget
-            eto={eto}
-            isUserFullyVerified={userIsFullyVerified}
-          />
+          <EtoInvestmentTermsWidget eto={eto} isUserFullyVerified={userIsFullyVerified} />
         </Container>
       )}
       <Individuals eto={eto} />

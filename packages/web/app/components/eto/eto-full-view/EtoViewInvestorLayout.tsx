@@ -9,14 +9,15 @@ const EtoViewInvestorLayout: React.FunctionComponent<TEtoViewData> = ({
   eto,
   userIsFullyVerified,
   campaignOverviewData,
-}) =>
+}) => (
   <EtoViewLayout
     eto={eto}
     userIsFullyVerified={userIsFullyVerified}
     campaignOverviewData={campaignOverviewData}
   >
     <CoverBanner jurisdiction={eto.product.jurisdiction} />
-  </EtoViewLayout>;
+  </EtoViewLayout>
+);
 
 const EtoViewInvestor = initEtoViewLayout(EtoViewInvestorLayout);
 

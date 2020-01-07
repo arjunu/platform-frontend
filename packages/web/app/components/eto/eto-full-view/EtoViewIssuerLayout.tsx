@@ -1,15 +1,15 @@
 import * as React from "react";
 
 import { TEtoViewData } from "../../../modules/eto-view/shared/types";
-import { EtoViewLayout } from "./shared/EtoViewLayout";
 import { IssuerCoverBanner } from "./shared/cover-banner/IssuerCoverBanner";
+import { EtoViewLayout } from "./shared/EtoViewLayout";
 import { initEtoViewLayoutIssuer } from "./shared/initEtoViewLayoutIssuer";
 
 const EtoViewIssuerLayout: React.FunctionComponent<TEtoViewData> = ({
   eto,
   userIsFullyVerified,
   campaignOverviewData,
-}) =>
+}) => (
   <EtoViewLayout
     eto={eto}
     userIsFullyVerified={userIsFullyVerified}
@@ -20,8 +20,9 @@ const EtoViewIssuerLayout: React.FunctionComponent<TEtoViewData> = ({
       jurisdiction={eto.product.jurisdiction}
       url={campaignOverviewData.url}
     />
-  </EtoViewLayout>;
+  </EtoViewLayout>
+);
 
 const EtoViewIssuer = initEtoViewLayoutIssuer(EtoViewIssuerLayout);
 
-export { EtoViewIssuerLayout,EtoViewIssuer };
+export { EtoViewIssuerLayout, EtoViewIssuer };

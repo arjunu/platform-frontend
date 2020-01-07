@@ -9,14 +9,15 @@ const EtoViewNonAuthorizedLayout: React.FunctionComponent<TEtoViewData> = ({
   eto,
   userIsFullyVerified,
   campaignOverviewData,
-}) =>
+}) => (
   <EtoViewLayout
     eto={eto}
     userIsFullyVerified={userIsFullyVerified}
     campaignOverviewData={campaignOverviewData}
   >
     <CoverBanner jurisdiction={eto.product.jurisdiction} />
-  </EtoViewLayout>;
+  </EtoViewLayout>
+);
 
 const EtoViewNonAuthorized = initEtoViewLayout(EtoViewNonAuthorizedLayout);
-export { EtoViewNonAuthorizedLayout,EtoViewNonAuthorized };
+export { EtoViewNonAuthorizedLayout, EtoViewNonAuthorized };

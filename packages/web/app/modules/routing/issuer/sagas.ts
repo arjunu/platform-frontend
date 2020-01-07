@@ -1,11 +1,8 @@
 import { LocationChangeAction } from "connected-react-router";
-import { matchPath } from "react-router";
+import { match, matchPath } from "react-router";
 import { put } from "redux-saga/effects";
 
-import {
-  appRoutes,
-
-} from "../../../components/appRoutes";
+import { appRoutes } from "../../../components/appRoutes";
 import { profileRoutes } from "../../../components/settings/routes";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions } from "../../actions";
@@ -16,7 +13,7 @@ import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../types";
 export function* issuerRouting(
   { logger }: TGlobalDependencies,
   { payload }: LocationChangeAction,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   try {
     const etoViewStatsMatch = yield matchPath(payload.location.pathname, {
       path: appRoutes.etoIssuerViewStats,
@@ -37,7 +34,7 @@ export function* issuerRouting(
     }
     /* ---------------*/
 
-    const etoViewMatch = yield matchPath(payload.location.pathname, {
+    const etoViewMatch: match<{}> = yield matchPath(payload.location.pathname, {
       path: appRoutes.etoIssuerView,
       exact: true,
     });
@@ -45,7 +42,7 @@ export function* issuerRouting(
       return yield put(actions.etoView.loadIssuerEtoView());
     }
 
-    const etoViewIssuerPreviewMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(
+    const etoViewIssuerPreviewMatch: match<TEtoViewByPreviewCodeMatch> = yield matchPath(
       payload.location.pathname,
       {
         path: appRoutes.etoPublicView,
@@ -58,7 +55,7 @@ export function* issuerRouting(
       );
     }
 
-    const etoViewIssuerPreviewByIdMatch = yield matchPath<TEtoViewByIdMatch>(
+    const etoViewIssuerPreviewByIdMatch: match<TEtoViewByIdMatch> = yield matchPath(
       payload.location.pathname,
       {
         path: appRoutes.etoPublicViewById,

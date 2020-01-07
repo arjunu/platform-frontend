@@ -1,9 +1,8 @@
 import * as React from "react";
 
 import { TEtoViewData } from "../../../../../modules/eto-view/shared/types";
-import { CampaignOverviewTabsLayout } from "./CampaignOverviewTabsLayout";
 import { CampaignOverviewLayout } from "./CampaignOverviewLayout";
-
+import { CampaignOverviewTabsLayout } from "./CampaignOverviewTabsLayout";
 
 export const CampaignOverviewWithStatsLayout: React.FunctionComponent<TEtoViewData> = ({
   campaignOverviewData,

@@ -2,10 +2,7 @@ import { LocationChangeAction } from "connected-react-router";
 import { matchPath } from "react-router";
 import { put } from "redux-saga/effects";
 
-import {
-  appRoutes,
-
-} from "../../../components/appRoutes";
+import { appRoutes } from "../../../components/appRoutes";
 import { TGlobalDependencies } from "../../../di/setupBindings";
 import { actions } from "../../actions";
 import { neuCall } from "../../sagasUtils";
@@ -21,7 +18,7 @@ import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../types";
 export function* notAuthorizedRouting(
   { logger }: TGlobalDependencies,
   { payload }: LocationChangeAction,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   try {
     /* --- REDIRECT LEGACY ROUTES ---*/
     const legacyEtoViewRedirected = yield neuCall(redirectLegacyEtoView, payload.location);

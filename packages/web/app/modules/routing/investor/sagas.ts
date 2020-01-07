@@ -1,13 +1,11 @@
 import { LocationChangeAction } from "connected-react-router";
-import { matchPath } from "react-router";
+import { match, matchPath } from "react-router";
 import { put } from "redux-saga/effects";
 
-import {
-  appRoutes,
-
-} from "../../../components/appRoutes";
+import { appRoutes } from "../../../components/appRoutes";
 import { profileRoutes } from "../../../components/settings/routes";
 import { TGlobalDependencies } from "../../../di/setupBindings";
+import { EJurisdiction } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { actions } from "../../actions";
 import { neuCall } from "../../sagasUtils";
 import {
@@ -22,7 +20,7 @@ import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../types";
 export function* investorRouting(
   { logger }: TGlobalDependencies,
   { payload }: LocationChangeAction,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   try {
     /* --- REDIRECT LEGACY ROUTES ---*/
     const legacyEtoViewRedirected = yield neuCall(redirectLegacyEtoView, payload.location);
@@ -44,23 +42,31 @@ export function* investorRouting(
       return;
     }
 
-    const greypMatch = yield matchPath<any>(payload.location.pathname, {
-      path: appRoutes.greypWithJurisdiction,
-    });
+    const greypMatch: match<{ jurisdiction: EJurisdiction }> = yield matchPath<any>(
+      payload.location.pathname,
+      {
+        path: appRoutes.greypWithJurisdiction,
+      },
+    );
     if (greypMatch !== null) {
       return yield put(actions.etoView.loadInvestorEtoView(GREYP_PREVIEW_CODE, greypMatch));
     }
     /* ----------------------------------------- */
 
-    const etoViewByIdMatch = yield matchPath<TEtoViewByIdMatch>(payload.location.pathname, {
-      path: appRoutes.etoPublicViewById,
-    });
+    const etoViewByIdMatch: match<TEtoViewByIdMatch> = yield matchPath<TEtoViewByIdMatch>(
+      payload.location.pathname,
+      {
+        path: appRoutes.etoPublicViewById,
+      },
+    );
     if (etoViewByIdMatch !== null) {
       const etoId = yield etoViewByIdMatch.params.etoId;
       return yield put(actions.etoView.loadInvestorEtoViewById(etoId, etoViewByIdMatch));
     }
 
-    const etoViewMatch = yield matchPath<TEtoViewByPreviewCodeMatch>(payload.location.pathname, {
+    const etoViewMatch: match<TEtoViewByPreviewCodeMatch> = yield matchPath<
+      TEtoViewByPreviewCodeMatch
+    >(payload.location.pathname, {
       path: appRoutes.etoPublicView,
     });
     if (etoViewMatch !== null) {

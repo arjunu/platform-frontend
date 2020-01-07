@@ -460,10 +460,10 @@ function* downloadDocument(
   // for guest users we always require agreement acceptance
   const isAgreementAlreadyAccepted = userId
     ? yield documentsConfidentialityAgreementsStorage.isAgreementAccepted(
-      userId,
-      eto.previewCode,
-      document.documentType,
-    )
+        userId,
+        eto.previewCode,
+        document.documentType,
+      )
     : false;
 
   if (
@@ -600,7 +600,8 @@ function* verifyEtoAccess(
 ): Generator<any, any, any> {
   // Checks if ETO is an Offer based on
   // @See https://github.com/Neufund/platform-frontend/issues/2789#issuecomment-489084892
-  const isEtoAnOffer: boolean = yield !!payload.eto.contract && etoIsInOfferState(payload.eto.contract.timedState);
+  const isEtoAnOffer: boolean = yield !!payload.eto.contract &&
+    etoIsInOfferState(payload.eto.contract.timedState);
 
   if (isRestrictedEto(payload.eto) && isEtoAnOffer) {
     if (payload.userIsFullyVerified) {

@@ -1,14 +1,11 @@
 import { LocationChangeAction } from "connected-react-router";
-import { SagaIterator } from "redux-saga";
-import { select } from "typed-redux-saga";
 import { Location } from "history";
 import { matchPath } from "react-router";
+import { SagaIterator } from "redux-saga";
 import { fork, put } from "redux-saga/effects";
+import { select } from "typed-redux-saga";
 
-import {
-  appRoutes,
-
-} from "../../components/appRoutes";
+import { appRoutes } from "../../components/appRoutes";
 import { TGlobalDependencies } from "../../di/setupBindings";
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
 import { EUserType } from "../../lib/api/users/interfaces";
@@ -46,7 +43,7 @@ function* openInNewWindowSaga(
 export function* ensureEtoJurisdiction(
   etoJurisdiction: EJurisdiction,
   routJurisdiction: EJurisdiction,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   if (etoJurisdiction !== routJurisdiction) {
     // TODO: Add 404 page
     yield put(actions.routing.goTo404());
@@ -56,7 +53,7 @@ export function* ensureEtoJurisdiction(
 export function* redirectLegacyEtoView(
   { apiEtoService }: TGlobalDependencies,
   location: Location,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   const etoPublicViewLegacyRouteMatch = yield matchPath<TEtoPublicViewLegacyRouteMatch>(
     location.pathname,
     {
@@ -76,7 +73,7 @@ export function* redirectLegacyEtoView(
 export function* redirectLegacyEtoViewById(
   { apiEtoService }: TGlobalDependencies,
   location: Location,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   const etoPublicViewByIdLegacyRouteMatch = yield matchPath<TEtoPublicViewByIdLegacyRoute>(
     location.pathname,
     {
@@ -95,7 +92,7 @@ export function* redirectLegacyEtoViewById(
 export function* redirectGreypWithoutJurisdiction(
   _: TGlobalDependencies,
   location: Location,
-): Generator<any,any,any> {
+): Generator<any, any, any> {
   const greypWithoutJurisdictionMatch = yield matchPath<any>(location.pathname, {
     path: appRoutes.greyp,
   });
@@ -105,7 +102,10 @@ export function* redirectGreypWithoutJurisdiction(
 }
 
 // TODO this is a workaround to have a catch-all during the time we still use react-router and saga routing together
-export function* fallbackRedirect(_: TGlobalDependencies, location: Location): Generator<any,any,any> {
+export function* fallbackRedirect(
+  _: TGlobalDependencies,
+  location: Location,
+): Generator<any, any, any> {
   const fallbackMatch = yield matchPath(location.pathname, {
     path: appRoutes.dashboard,
     exact: true,

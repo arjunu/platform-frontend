@@ -1,4 +1,8 @@
-import { TEtoMediaData, TSocialChannelsType, TSocialChannelType } from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
+import {
+  TEtoMediaData,
+  TSocialChannelsType,
+  TSocialChannelType,
+} from "../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { XOR } from "../../../types";
 
 export const getTwitterUrl = (socialChannels: TSocialChannelsType | undefined) => {

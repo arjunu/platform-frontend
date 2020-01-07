@@ -9,15 +9,16 @@ const EtoViewNomineeLayout: React.FunctionComponent<TEtoViewData> = ({
   eto,
   userIsFullyVerified,
   campaignOverviewData,
-}) =>
+}) => (
   <EtoViewLayout
     eto={eto}
     userIsFullyVerified={userIsFullyVerified}
     campaignOverviewData={campaignOverviewData}
   >
     <CoverBanner jurisdiction={eto.product.jurisdiction} />
-  </EtoViewLayout>;
+  </EtoViewLayout>
+);
 
 const EtoViewNominee = initEtoViewLayout(EtoViewNomineeLayout);
 
-export { EtoViewNomineeLayout,EtoViewNominee };
+export { EtoViewNomineeLayout, EtoViewNominee };

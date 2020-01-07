@@ -1,5 +1,5 @@
-import { ELogoutReason } from "../auth/types";
 import { EJurisdiction } from "../../lib/api/eto/EtoProductsApi.interfaces";
+import { ELogoutReason } from "../auth/types";
 
 export type TLoginRouterState = { logoutReason: ELogoutReason } | undefined;
 export type TEtoViewByPreviewCodeMatch = { jurisdiction: EJurisdiction; previewCode: string };

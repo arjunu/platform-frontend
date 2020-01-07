@@ -1,9 +1,11 @@
 import { match } from "react-router";
-import { call, fork, put, select } from "redux-saga/effects";
+import { fork, put } from "redux-saga/effects";
+import { call, select } from "typed-redux-saga";
 
 import { EtoMessage } from "../../../components/translatedMessages/messages";
 import { createMessage } from "../../../components/translatedMessages/utils";
 import { TGlobalDependencies } from "../../../di/setupBindings";
+import { EJurisdiction } from "../../../lib/api/eto/EtoProductsApi.interfaces";
 import { actions, TActionFromCreator } from "../../actions";
 import { loadEtoWithCompanyAndContract, loadEtoWithCompanyAndContractById } from "../../eto/sagas";
 import { TEtoWithCompanyAndContractReadonly } from "../../eto/types";
@@ -12,12 +14,11 @@ import { ensureEtoJurisdiction } from "../../routing/sagas";
 import { neuCall, neuTakeEvery } from "../../sagasUtils";
 import { calculateCampaignOverviewData } from "../shared/sagas";
 import { EEtoViewType, TCampaignOverviewData } from "../shared/types";
-import { TEtoViewByIdMatch, TEtoViewByPreviewCodeMatch } from "../../routing/types";
 
 function* loadInvestorEtoViewInternal(
   eto: TEtoWithCompanyAndContractReadonly,
-  routeMatch: match<TEtoViewByPreviewCodeMatch | TEtoViewByIdMatch>,
-): Generator<any,any,any> {
+  routeMatch: match<{ jurisdiction: EJurisdiction }>,
+): Generator<any, any, any> {
   yield call(ensureEtoJurisdiction, eto.product.jurisdiction, routeMatch.params.jurisdiction);
 
   const userIsFullyVerified = yield select(selectIsUserVerifiedOnBlockchain);
@@ -38,7 +39,7 @@ function* loadInvestorEtoViewInternal(
   };
 }
 
-export function* saveEto(eto: TEtoWithCompanyAndContractReadonly): Generator<any,any,any> {
+export function* saveEto(eto: TEtoWithCompanyAndContractReadonly): Generator<any, any, any> {
   // this is for backwards compatibility with other flows, e.g. investment
   if (eto.contract) {
     yield put(actions.eto.setEtoDataFromContract(eto.previewCode, eto.contract));
@@ -48,16 +49,18 @@ export function* saveEto(eto: TEtoWithCompanyAndContractReadonly): Generator<any
 
 export function* loadInvestorEtoView(
   { logger, notificationCenter }: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
-): Generator<any,any,any> {
+  {
+    payload: { previewCode, routeMatch },
+  }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoView>,
+): Generator<any, any, any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContract,
-      payload.previewCode,
+      previewCode,
     );
     yield call(saveEto, eto);
 
-    const etoData = yield call(loadInvestorEtoViewInternal, eto, payload.routeMatch);
+    const etoData = yield call(loadInvestorEtoViewInternal, eto, routeMatch);
     yield put(actions.etoView.setEtoViewData(etoData));
   } catch (e) {
     logger.error("Could not load eto by preview code", e);
@@ -68,16 +71,18 @@ export function* loadInvestorEtoView(
 
 export function* loadInvestorEtoViewById(
   { logger, notificationCenter }: TGlobalDependencies,
-  { payload }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoViewById>,
-): Generator<any,any,any> {
+  {
+    payload: { etoId, routeMatch },
+  }: TActionFromCreator<typeof actions.etoView.loadInvestorEtoViewById>,
+): Generator<any, any, any> {
   try {
     const eto: TEtoWithCompanyAndContractReadonly = yield neuCall(
       loadEtoWithCompanyAndContractById,
-      payload.etoId,
+      etoId,
     );
     yield call(saveEto, eto);
 
-    const etoData = yield call(loadInvestorEtoViewInternal, eto, payload.routeMatch);
+    const etoData = yield call(loadInvestorEtoViewInternal, eto, routeMatch);
     yield put(actions.etoView.setEtoViewData(etoData));
   } catch (e) {
     logger.error("Could not load eto", e);

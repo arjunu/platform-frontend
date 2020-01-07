@@ -39,16 +39,16 @@ const campaignOverviewData: TCampaignOverviewData = {
 storiesOf("ETO/EtoView", module)
   .addDecorator(withStore(testStore))
   .add("investor view", () => (
-      <EtoViewInvestor
-        eto={testEto}
-        userIsFullyVerified={true}
-        campaignOverviewData={campaignOverviewData}
-      />
+    <EtoViewInvestor
+      eto={testEto}
+      userIsFullyVerified={true}
+      campaignOverviewData={campaignOverviewData}
+    />
   ))
   .add("issuer view", () => (
-      <EtoViewIssuer
-        eto={testEto}
-        campaignOverviewData={campaignOverviewData}
-        userIsFullyVerified={true}
-      />
+    <EtoViewIssuer
+      eto={testEto}
+      campaignOverviewData={campaignOverviewData}
+      userIsFullyVerified={true}
+    />
   ));

@@ -4,9 +4,8 @@ import {
   EEtoViewCampaignOverviewType,
   TEtoViewData,
 } from "../../../../../modules/eto-view/shared/types";
-import { CampaignOverviewWithStatsLayout } from "./CampaignOverviewWithStatsLayout";
 import { CampaignOverviewLayout } from "./CampaignOverviewLayout";
-
+import { CampaignOverviewWithStatsLayout } from "./CampaignOverviewWithStatsLayout";
 
 export const CampaignOverview = compose<{}, TEtoViewData>(
   branch<TEtoViewData>(

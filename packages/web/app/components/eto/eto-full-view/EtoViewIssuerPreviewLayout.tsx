@@ -9,15 +9,16 @@ const EtoViewIssuerPreviewLayout: React.FunctionComponent<TEtoViewData> = ({
   eto,
   userIsFullyVerified,
   campaignOverviewData,
-}) =>
+}) => (
   <EtoViewLayout
     eto={eto}
     userIsFullyVerified={userIsFullyVerified}
     campaignOverviewData={campaignOverviewData}
   >
     <CoverBanner jurisdiction={eto.product.jurisdiction} />
-  </EtoViewLayout>;
+  </EtoViewLayout>
+);
 
 const EtoViewIssuerPreview = initEtoViewLayoutIssuer(EtoViewIssuerPreviewLayout);
 
-export { EtoViewIssuerPreviewLayout,EtoViewIssuerPreview };
+export { EtoViewIssuerPreviewLayout, EtoViewIssuerPreview };

@@ -1,19 +1,16 @@
 import { branch, compose, renderComponent } from "recompose";
 
 import { selectEtoViewData } from "../../../modules/eto-view/shared/selectors";
-import {
-  EEtoViewType, TEtoViewData,
-  TEtoViewState,
-} from "../../../modules/eto-view/shared/types";
+import { EEtoViewType, TEtoViewData, TEtoViewState } from "../../../modules/eto-view/shared/types";
 import { appConnect } from "../../../store";
 import { EProcessState } from "../../../utils/enums/processStates";
-import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { ErrorBoundaryLayout } from "../../shared/errorBoundary/ErrorBoundaryLayout";
+import { LoadingIndicator } from "../../shared/loading-indicator/LoadingIndicator";
 import { EtoViewInvestor } from "./EtoViewInvestorLayout";
-import { EtoViewNonAuthorized } from "./EtoViewNonAuthorizedLayout";
 import { EtoViewIssuer } from "./EtoViewIssuerLayout";
 import { EtoViewIssuerPreview } from "./EtoViewIssuerPreviewLayout";
 import { EtoViewNominee } from "./EtoViewNomineeLayout";
+import { EtoViewNonAuthorized } from "./EtoViewNonAuthorizedLayout";
 
 export const EtoViewMain = compose<{}, {}>(
   appConnect<TEtoViewState, {}, {}>({
@@ -27,8 +24,7 @@ export const EtoViewMain = compose<{}, {}>(
   ),
   branch<TEtoViewState>(
     ({ processState }) =>
-      processState === EProcessState.NOT_STARTED ||
-      processState === EProcessState.IN_PROGRESS,
+      processState === EProcessState.NOT_STARTED || processState === EProcessState.IN_PROGRESS,
     renderComponent(LoadingIndicator),
   ),
   branch<TEtoViewState>(

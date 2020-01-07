@@ -9,8 +9,8 @@ import { WidgetGrid } from "../../../layouts/WidgetGrid";
 import { PersonProfileModal } from "../../../modals/person-profile-modal/PersonProfileModal";
 import { FieldSchemaProvider } from "../../../shared/Field";
 import { EtoOverviewStatus } from "../../overview/EtoOverviewStatus/EtoOverviewStatus";
-import { Cover } from "../shared/cover/Cover";
 import { CampaignOverview } from "../shared/campaign-overview/CampaignOverview";
+import { Cover } from "../shared/cover/Cover";
 
 import * as styles from "../shared/EtoView.module.scss";
 
@@ -21,8 +21,7 @@ const EtoViewLayout: React.FunctionComponent<TEtoViewData> = ({
   eto,
   userIsFullyVerified,
   campaignOverviewData,
-}) =>
-{
+}) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
 
   return (
@@ -37,11 +36,11 @@ const EtoViewLayout: React.FunctionComponent<TEtoViewData> = ({
           companyLogo={
             companyLogo
               ? {
-                alt: brandName,
-                srcSet: {
-                  "1x": companyLogo,
-                },
-              }
+                  alt: brandName,
+                  srcSet: {
+                    "1x": companyLogo,
+                  },
+                }
               : undefined
           }
           companyBanner={{
