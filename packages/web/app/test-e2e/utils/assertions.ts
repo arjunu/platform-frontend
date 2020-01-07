@@ -135,7 +135,7 @@ export const assertWaitForExternalPendingTransactionCount = (
   });
 };
 
-export const assertIsUserVerifiedOnBlockchain = (address: string, timeout: number = 5000) => {
+export const assertIsUserVerifiedOnBlockchain = (address: string, timeout: number = 10000) => {
   expect(timeout, `User not marked as verified on blockchain in ${timeout} ms`).to.be.gt(0);
 
   // TODO: Replace by proper call to universe smart contract
@@ -143,7 +143,7 @@ export const assertIsUserVerifiedOnBlockchain = (address: string, timeout: numbe
 
   getIsUserVerifiedOnBlockchain(identityRegistryAddress, address).then(isVerified => {
     if (!isVerified) {
-      const waitTime = 100;
+      const waitTime = 200;
 
       cy.wait(waitTime);
 
