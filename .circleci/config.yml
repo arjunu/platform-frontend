@@ -142,7 +142,7 @@ jobs:
       - run: yarn workspace @neufund/web codechecks ./codechecks-vis-reg.ts
 
   codechecks-e2e-vis-reg:
-    executor: docker-browsers
+    executor: regviz
 
     steps:
       - checkout
@@ -195,6 +195,7 @@ workflows:
       #temporary only wait for .io tests
       - codechecks-e2e-vis-reg:
           requires:
+            - build-frontend
             - build-docker-test-e2e
 
   nightly:
