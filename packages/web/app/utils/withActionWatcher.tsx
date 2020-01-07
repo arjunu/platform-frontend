@@ -25,8 +25,10 @@ interface IWatchActionOptions {
 export const withActionWatcher: (
   options: IWatchActionOptions,
 ) => (
-  WrappedComponent: React.ComponentType<unknown>,
-) => React.ComponentType<unknown> = options => WrappedComponent =>
+  // tslint:disable-next-line:no-any-on-steroid
+  WrappedComponent: React.ComponentType<any>,
+) => // tslint:disable-next-line:no-any-on-steroid
+React.ComponentType<any> = options => WrappedComponent =>
   appConnect<{}, IActionWatcherDispatchProps>({
     dispatchToProps: dispatch => ({
       watchAction: () => options.actionCreator(dispatch),

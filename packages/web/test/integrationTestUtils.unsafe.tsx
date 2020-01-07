@@ -147,14 +147,14 @@ export function clickFirstTid(component: ReactWrapper, id: string): void {
 
 export async function waitForTid(component: ReactWrapper, id: string): Promise<void> {
   // wait until event queue is empty :/ currently we don't have a better way to solve it
-  let waitTime = 100;
+  let waitTime = 500;
   while (--waitTime > 0 && component.find(tid(id)).length === 0) {
     await Promise.resolve();
     component.update();
   }
 
   if (waitTime === 0) {
-    throw new Error(`Timeout while waiting for '${id}'`);
+    throw new Error(`Timeout while waiting for tid: '${id}'`);
   }
 }
 export async function waitForPredicate(predicate: () => boolean, errorMsg: string): Promise<void> {
@@ -165,7 +165,7 @@ export async function waitForPredicate(predicate: () => boolean, errorMsg: strin
   }
 
   if (waitTime === 0) {
-    throw new Error(`Timeout while waiting for '${errorMsg}'`);
+    throw new Error(`Timeout while waiting for predicate: '${errorMsg}'`);
   }
 }
 
