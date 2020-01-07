@@ -14,6 +14,7 @@ const EtoViewIssuerPreviewLayout: React.FunctionComponent<TEtoViewData> = ({
     eto={eto}
     userIsFullyVerified={userIsFullyVerified}
     campaignOverviewData={campaignOverviewData}
+    publicView={true}
   >
     <CoverBanner jurisdiction={eto.product.jurisdiction} />
   </EtoViewLayout>

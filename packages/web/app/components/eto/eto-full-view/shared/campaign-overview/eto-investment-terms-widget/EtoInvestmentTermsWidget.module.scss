@@ -89,31 +89,4 @@
 .group {
   flex-shrink: 0;
   width: 100%;
-
-  .entry {
-    @include media-breakpoint-up (xl) {
-      flex-direction: row;
-    }
-
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-
-    .label,
-    .value {
-      flex-basis: 60%;
-      overflow-wrap: break-word;
-    }
-
-    .label {
-      text-transform: uppercase;
-    }
-
-    .value {
-      @include media-breakpoint-up (xl) {
-        flex-basis: 40%;
-        padding-left: 20px;
-      }
-    }
-  }
 }

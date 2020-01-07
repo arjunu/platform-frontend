@@ -12,11 +12,10 @@ import { EAssetType, EJurisdiction } from "../../../../../../lib/api/eto/EtoProd
 import { actions } from "../../../../../../modules/actions";
 import { getDocumentByType } from "../../../../../../modules/eto-documents/utils";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../../modules/eto/types";
-import { getEtoEurMinTarget } from "../../../../../../modules/eto/utils";
 import { appConnect } from "../../../../../../store";
-import { TDataTestId, TTranslatedString } from "../../../../../../types";
 import { divideBigNumbers } from "../../../../../../utils/BigNumberUtils";
 import { DocumentButton } from "../../../../../shared/DocumentLink";
+import { Entry } from "../../../../../shared/Entry";
 import { FormatNumber } from "../../../../../shared/formatters/FormatNumber";
 import { FormatNumberRange } from "../../../../../shared/formatters/FormatNumberRange";
 import { Money } from "../../../../../shared/formatters/Money";
@@ -44,24 +43,6 @@ type TExternalProps = {
 type TDispatchProps = {
   downloadDocument: (document: IEtoDocument) => void;
 };
-
-type TEntryExternalProps = {
-  label: TTranslatedString;
-  value: React.ReactNode;
-};
-
-const Entry: React.FunctionComponent<TEntryExternalProps & TDataTestId> = ({
-  label,
-  value,
-  "data-test-id": dataTestId,
-}) => (
-  <div className={styles.entry}>
-    <span className={styles.label}>{label}</span>
-    <span className={styles.value} data-test-id={dataTestId}>
-      {value}
-    </span>
-  </div>
-);
 
 const DownloadIshaOrTermsheetLink: React.FunctionComponent<TExternalProps & TDispatchProps> = ({
   eto,
@@ -113,8 +94,6 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
   const newSharePrice = eto.investmentCalculatedValues
     ? eto.investmentCalculatedValues.sharePrice
     : undefined;
-
-  const minTarget = getEtoEurMinTarget(eto);
 
   return (
     <Panel className={styles.tokenTerms}>
@@ -232,17 +211,7 @@ const EtoInvestmentTermsWidgetLayout: React.FunctionComponent<TExternalProps & T
               }
               data-test-id="eto-public-view-new-share-price"
             />
-            <Entry
-              label={
-                minTarget ? (
-                  <FormattedMessage id="eto.public-view.token-terms.investment-amount-with-discount" />
-                ) : (
-                  <FormattedMessage id="eto.public-view.token-terms.investment-amount" />
-                )
-              }
-              value={<InvestmentAmount etoData={eto} />}
-              data-test-id="eto-public-view-investment-amount"
-            />
+            <InvestmentAmount eto={eto} />
             <DownloadIshaOrTermsheetLink
               eto={eto}
               downloadDocument={downloadDocument}
@@ -511,4 +480,4 @@ const EtoInvestmentTermsWidget = compose<TExternalProps & TDispatchProps, TExter
   }),
 )(EtoInvestmentTermsWidgetLayout);
 
-export { EtoInvestmentTermsWidget, EtoInvestmentTermsWidgetLayout };
+export { EtoInvestmentTermsWidget, EtoInvestmentTermsWidgetLayout, Entry };

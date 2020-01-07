@@ -1,5 +1,6 @@
 import { divideBigNumbers, multiplyBigNumbers } from "../../../utils/BigNumberUtils";
 import { convertFromUlps } from "../../../utils/NumberUtils";
+import { TBigNumberVariants } from "../../web3/types";
 import { TPartialEtoSpecData } from "./EtoApi.interfaces.unsafe";
 
 export const calcInvestmentAmount = (eto: TPartialEtoSpecData, sharePrice: number | undefined) => ({
@@ -145,10 +146,10 @@ const calcMaxInvestmentAmount = (sharePrice = 0, shares = 0) => {
 };
 
 export const calculateTarget = (
-  sharesToIssue: string,
-  equityTokensPerShare: string,
-  totalTokensInt: string,
-  totalEquivEurUlps: string,
+  sharesToIssue: TBigNumberVariants,
+  equityTokensPerShare: TBigNumberVariants,
+  totalTokensInt: TBigNumberVariants,
+  totalEquivEurUlps: TBigNumberVariants,
 ) => {
   if (totalTokensInt === "0" || totalEquivEurUlps === "0") {
     return undefined;
@@ -159,4 +160,21 @@ export const calculateTarget = (
   const averageTokenPrice = divideBigNumbers(totalEquivEur, totalTokensInt);
   const targetTokens = multiplyBigNumbers([sharesToIssue, equityTokensPerShare]);
   return multiplyBigNumbers([averageTokenPrice, targetTokens]);
+};
+
+export const calculateCurrentInvestmentProgressPercentage = (
+  totalTokensInt: string,
+  minimumNewSharesToIssue: string,
+  equityTokensPerShare: string,
+) => {
+  const minimumNewTokensToIssue = multiplyBigNumbers([
+    minimumNewSharesToIssue,
+    equityTokensPerShare,
+  ]);
+  const currentInvestmentProgressFraction = divideBigNumbers(
+    totalTokensInt,
+    minimumNewTokensToIssue,
+  );
+
+  return multiplyBigNumbers([currentInvestmentProgressFraction, "100"]);
 };

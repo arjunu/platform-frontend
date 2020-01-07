@@ -1,5 +1,6 @@
 .investment-widget {
-  @include font-button-small;
+  @include nds-label;
+
   width: 100%;
   text-transform: uppercase;
 }

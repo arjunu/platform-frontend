@@ -5,24 +5,17 @@ import { FormattedMessage } from "react-intl-phraseapp";
 import { EEtoState } from "../../../../../lib/api/eto/EtoApi.interfaces.unsafe";
 import { InvalidETOStateError } from "../../../../../modules/eto/errors";
 import { TEtoWithCompanyAndContractReadonly } from "../../../../../modules/eto/types";
-import {
-  getCurrentInvestmentProgressPercentage,
-  getEtoEurMinTarget,
-  isEtoSoftCapReached,
-  isOnChain,
-} from "../../../../../modules/eto/utils";
-import { nonNullable } from "../../../../../utils/nonNullable";
+import { isOnChain } from "../../../../../modules/eto/utils";
 import { FormatNumber } from "../../../../shared/formatters/FormatNumber";
 import { Money } from "../../../../shared/formatters/Money";
 import {
   ECurrency,
-  ENumberFormat,
   ENumberInputFormat,
   ENumberOutputFormat,
 } from "../../../../shared/formatters/utils";
-import { ProgressBarSimple } from "../../../../shared/ProgressBarSimple";
-import { Tooltip } from "../../../../shared/tooltips/Tooltip";
-import { ECustomTooltipTextPosition } from "../../../../shared/tooltips/TooltipBase";
+import { InvestmentProgress } from "../../../shared/InvestmentProgress";
+import { InvestmentProgressPercentage } from "../../InvestmentProgressPercentage";
+import { InvestmentTarget } from "./InvestmentTarget";
 
 import * as styles from "./InvestmentStatusWidget.module.scss";
 
@@ -44,32 +37,12 @@ const InvestmentStatusWidget: React.FunctionComponent<IInvestmentStatsProps> = (
     throw new InvalidETOStateError(eto.state, EEtoState.ON_CHAIN);
   }
 
-  const investmentCalculatedValues = nonNullable(eto.investmentCalculatedValues);
-
-  const currentProgressPercentage = getCurrentInvestmentProgressPercentage(eto);
-  const isSoftCapReached = isEtoSoftCapReached(eto);
-  const target = getEtoEurMinTarget(eto);
-  const originalTarget = investmentCalculatedValues.minInvestmentAmount.toString();
-
   const totalInvestors = eto.contract.totalInvestment.totalInvestors;
   return (
     <section className={cn(size)}>
       <div className={styles.row}>
         <span className={styles.funded}>
-          <FormattedMessage
-            id="shared-component.eto-overview.investment-stats.funded-percentage"
-            values={{
-              funded: (
-                <Money
-                  data-test-id="investment-widget-funded-percentage"
-                  value={currentProgressPercentage.toString()}
-                  inputFormat={ENumberInputFormat.FLOAT}
-                  outputFormat={ENumberOutputFormat.FULL}
-                  valueType={ENumberFormat.PERCENTAGE}
-                />
-              ),
-            }}
-          />
+          <InvestmentProgressPercentage eto={eto} />
         </span>
         <span>
           <FormattedMessage
@@ -87,7 +60,7 @@ const InvestmentStatusWidget: React.FunctionComponent<IInvestmentStatsProps> = (
           />
         </span>
       </div>
-      <ProgressBarSimple progress={isSoftCapReached ? 100 : currentProgressPercentage} />
+      <InvestmentProgress eto={eto} />
       <div className={styles.row}>
         <span>
           <FormattedMessage
@@ -105,44 +78,7 @@ const InvestmentStatusWidget: React.FunctionComponent<IInvestmentStatsProps> = (
             }}
           />
         </span>
-        <span>
-          <FormattedMessage
-            id="shared-component.eto-overview.investment-stats.target"
-            values={{
-              amountRaised: (
-                <Money
-                  data-test-id="investment-widget-nEur-target"
-                  value={target ? target : originalTarget}
-                  inputFormat={ENumberInputFormat.FLOAT}
-                  valueType={ECurrency.EUR}
-                  outputFormat={ENumberOutputFormat.FULL}
-                />
-              ),
-            }}
-          />
-          {target && (
-            <Tooltip
-              textPosition={ECustomTooltipTextPosition.LEFT}
-              content={
-                <FormattedMessage
-                  id="shared-component.eto-overview.investment-stats.target.tooltip"
-                  values={{
-                    lineBreak: <br />,
-                    target: (
-                      <Money
-                        data-test-id="investment-widget-nEur-original-target"
-                        value={originalTarget}
-                        inputFormat={ENumberInputFormat.FLOAT}
-                        valueType={ECurrency.EUR}
-                        outputFormat={ENumberOutputFormat.FULL}
-                      />
-                    ),
-                  }}
-                />
-              }
-            />
-          )}
-        </span>
+        <InvestmentTarget eto={eto} />
       </div>
     </section>
   );

@@ -16,11 +16,12 @@ import * as styles from "../shared/EtoView.module.scss";
 
 const EtoViewSchema = EtoCompanyInformationType.toYup().concat(EtoPitchType.toYup());
 
-const EtoViewLayout: React.FunctionComponent<TEtoViewData> = ({
+const EtoViewLayout: React.FunctionComponent<TEtoViewData & { publicView: boolean }> = ({
   children,
   eto,
   userIsFullyVerified,
   campaignOverviewData,
+  publicView, //TODO this is for backwards compatibility, should go after component refactoring
 }) => {
   const { categories, brandName, companyOneliner, companyLogo, companyBanner } = eto.company;
 
@@ -51,7 +52,7 @@ const EtoViewLayout: React.FunctionComponent<TEtoViewData> = ({
           }}
           tags={categories}
         />
-        <EtoOverviewStatus eto={eto} publicView={true} isEmbedded={false} />
+        <EtoOverviewStatus eto={eto} publicView={publicView} isEmbedded={false} />
         <CampaignOverview
           eto={eto}
           userIsFullyVerified={userIsFullyVerified}

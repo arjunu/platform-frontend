@@ -1,11 +1,13 @@
 .investment-widget {
-  @include font-button-small;
+  @include nds-button-label;
+
   width: 100%;
   text-transform: uppercase;
 }
 
 .header {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   text-transform: uppercase;
 }
